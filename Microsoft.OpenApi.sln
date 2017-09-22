@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiWorkbench", "src\OpenApiWorkbench\OpenApiWorkbench.csproj", "{6A5E91E5-0441-46EE-AEB9-8334981B7F08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApi.Readers", "src\OpenApi.Readers\OpenApi.Readers.csproj", "{79933258-0126-4382-8755-D50820ECC483}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,10 +36,10 @@ Global
 		{6A5E91E5-0441-46EE-AEB9-8334981B7F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A5E91E5-0441-46EE-AEB9-8334981B7F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A5E91E5-0441-46EE-AEB9-8334981B7F08}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAA05247-2640-459A-A1CE-0D66F21EE2AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAA05247-2640-459A-A1CE-0D66F21EE2AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAA05247-2640-459A-A1CE-0D66F21EE2AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAA05247-2640-459A-A1CE-0D66F21EE2AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79933258-0126-4382-8755-D50820ECC483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79933258-0126-4382-8755-D50820ECC483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79933258-0126-4382-8755-D50820ECC483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79933258-0126-4382-8755-D50820ECC483}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
