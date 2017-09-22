@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Darrel Miller</Authors>
+    <Company>Tavis Software Inc.</Company>
+    <Product>Tavis.OpenApi</Product>
+    <PackageId>Tavis.OpenApi</PackageId>
+    <Version>0.8.4</Version>
+    <Description>Parser for OpenAPI descriptions</Description>
+    <AssemblyName>Tavis.OpenApi</AssemblyName>
+    <RootNamespace>Tavis.OpenApi</RootNamespace>
+    <LicenseUrl>https://raw.githubusercontent.com/tavis-software/Tavis.OpenApi/master/License.txt</LicenseUrl>
+    <ProjectUrl>https://github.com/tavis-software/Tavis.OpenApi</ProjectUrl>
+    <SignAssembly>true</SignAssembly>
+    <PackageReleaseNotes>https://github.com/tavis-software/Tavis.OpenApi/blob/master/ReleaseNotes.md</PackageReleaseNotes>
+    <AssemblyOriginatorKeyFile>Tavis.OpenApi.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpYaml" Version="1.6.1" />
+  </ItemGroup>
+
+</Project>

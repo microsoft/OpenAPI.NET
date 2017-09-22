@@ -1,0 +1,37 @@
+﻿@model OpenApiWebApp.Models.HomeViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@*<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+
+</div>*@
+<div class="row">
+@using (Html.BeginForm())
+{
+    <fieldset>
+        @Html.LabelFor(model => model.Input) <span>(OpenAPI V2 or V3 in YAML or JSON format)</span>
+        <div>
+            @Html.TextAreaFor(model => model.Input, new { cols = "300", rows = "15" })
+        </div>
+    </fieldset>
+    <input type="submit" value="Process" style="margin-top:5px;margin-bottom:5px "/>
+}
+</div>
+<div class="row">
+
+    @Html.LabelFor(model => model.Errors)
+    <div>
+        @Html.TextAreaFor(model => model.Errors, new { cols = "300", rows = "5" })
+    </div>
+</div>
+<div class="row">
+
+    @Html.LabelFor(model => model.Output) <span>(OpenAPI V3 in YAML format)</span>
+    <div>
+        @Html.TextAreaFor(model => model.Output, new { cols = "300", rows = "15" })
+    </div>
+</div>

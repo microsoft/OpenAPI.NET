@@ -1,0 +1,8 @@
+﻿swagger: 2.0
+info: 
+  title: This is a simple example
+  version: 1.0.0
+host: example.org
+basePath: /api
+schemes: ["http", "https"]
+paths: {}
