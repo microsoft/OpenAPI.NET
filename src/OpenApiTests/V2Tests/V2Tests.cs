@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tavis.OpenApi;
+using Microsoft.OpenApi;
 using Xunit;
+using Microsoft.OpenApi.Readers;
 
 namespace OpenApiTests.V2Tests
 {

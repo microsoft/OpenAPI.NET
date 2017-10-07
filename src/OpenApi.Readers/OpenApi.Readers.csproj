@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
+    <RootNamespace>Microsoft..OpenApi.Readers</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpYaml" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenApi\OpenApi.csproj" />
+  </ItemGroup>
 
 </Project>

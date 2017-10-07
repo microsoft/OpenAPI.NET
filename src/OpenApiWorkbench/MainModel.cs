@@ -6,8 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tavis.OpenApi;
-using Tavis.OpenApi.Export;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Writers;
+using Microsoft.OpenApi.Readers;
 
 namespace OpenApiWorkbench
 {
@@ -122,7 +123,7 @@ namespace OpenApiWorkbench
 
 
 
-        private string WriteContents(Tavis.OpenApi.Model.OpenApiDocument doc)
+        private string WriteContents(OpenApiDocument doc)
         {
             Func<Stream, IParseNodeWriter> writerFactory = s => (this.format == "Yaml" ? (IParseNodeWriter)new YamlParseNodeWriter(s) : (IParseNodeWriter)new JsonParseNodeWriter(s));
             IOpenApiWriter writer;

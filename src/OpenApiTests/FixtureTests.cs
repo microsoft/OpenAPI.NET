@@ -1,12 +1,12 @@
-﻿using SharpYaml.Serialization;
+﻿using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
+using SharpYaml.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tavis.OpenApi;
-using Tavis.OpenApi.Model;
 using Xunit;
 
 namespace OpenApiTests

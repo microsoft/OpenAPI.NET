@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tavis.OpenApi;
-using Tavis.OpenApi.Model;
+using Microsoft.OpenApi;
 using Xunit;
+using Microsoft.OpenApi.Readers;
 
 namespace OpenApiTests
 {

@@ -18,8 +18,4 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="SharpYaml" Version="1.6.1" />
-  </ItemGroup>
-
 </Project>

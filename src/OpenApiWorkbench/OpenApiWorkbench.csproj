@@ -122,6 +122,10 @@
     <Resource Include="Themes\Metro\HowToApplyTheme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenApi.Readers\OpenApi.Readers.csproj">
+      <Project>{79933258-0126-4382-8755-d50820ecc483}</Project>
+      <Name>OpenApi.Readers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenApi\OpenApi.csproj">
       <Project>{a8e50143-69b2-472a-9d45-3f9a05d13202}</Project>
       <Name>OpenApi</Name>

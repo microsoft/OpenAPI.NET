@@ -1,6 +1,5 @@
-﻿using Tavis.OpenApi.Model;
-
-namespace Tavis.OpenApi
+﻿
+namespace Microsoft.OpenApi
 {
     public interface IReferenceService
     {
