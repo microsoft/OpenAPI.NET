@@ -164,7 +164,26 @@ namespace Microsoft.OpenApi.Writers
 
         public void WriteRaw(string value)
         {
-            writer.Write(value);
+            // Currently the same as string, but we will need to test this with many different examples.
+            if (value.Contains("\n"))
+            {
+                writer.WriteLine(" |-"); // Block flow with "strip" chomping.
+                IncreaseIndent();
+                writer.WriteLine(this.Indent + value.Replace("\n", "\n" + this.Indent));
+                DecreaseIndent();
+            }
+            else if (value.Contains("#"))  //Yaml treats hash as a comment so we need to quote it
+            {
+                writer.Write("\"");
+                writer.Write(value);
+                writer.WriteLine("\"");
+            }
+            else
+            {
+                writer.WriteLine(value);
+            }
+            if (InProperty()) state.Pop();
+
         }
 
         public void WriteValue(Decimal value)

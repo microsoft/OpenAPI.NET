@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Writers;
+﻿using Microsoft.OpenApi;
+using Microsoft.OpenApi.Writers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,5 +45,7 @@ namespace OpenApiTests
             Assert.Equal(0, debug.StackState.Count);
             Assert.Equal("", debug.Indent);
         }
+
+
+        }
     }
-}
