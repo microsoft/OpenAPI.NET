@@ -1,13 +1,14 @@
-﻿using Microsoft.OpenApi.Services;
-using SharpYaml.Serialization;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 
 namespace Microsoft.OpenApi.Readers
 {
-    public class ListNode : ParseNode, IEnumerable<ParseNode>, IListNode
+    using SharpYaml.Serialization;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    public class ListNode : ParseNode, IEnumerable<ParseNode>
     {
         YamlSequenceNode nodeList;
         ParsingContext context;
@@ -17,7 +18,7 @@ namespace Microsoft.OpenApi.Readers
             nodeList = sequenceNode;
         }
 
-        public override List<T> CreateList<T>(Func<IMapNode, T> map)
+        public override List<T> CreateList<T>(Func<MapNode, T> map)
         {
             var yamlSequence = nodeList as YamlSequenceNode;
             if (yamlSequence == null) throw new DomainParseException($"Expected list at line {nodeList.Start.Line} while parsing {typeof(T).Name}");
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Readers
             return yamlSequence.Select(n => map(new MapNode(this.context,n as YamlMappingNode))).Where(i => i != null).ToList();
         }
 
-        public override List<T> CreateSimpleList<T>(Func<IValueNode, T> map)
+        public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
             var yamlSequence = this.nodeList as YamlSequenceNode;
             if (yamlSequence == null) throw new DomainParseException($"Expected list at line {nodeList.Start.Line} while parsing {typeof(T).Name}");

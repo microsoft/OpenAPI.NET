@@ -2,9 +2,7 @@
 
 namespace Microsoft.OpenApi.Readers
 {
-    using Microsoft.OpenApi.Services;
     using SharpYaml.Serialization;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     

@@ -1,7 +1,6 @@
 ﻿
 namespace Microsoft.OpenApi.Readers
 {
-    using Microsoft.OpenApi.Services;
     using SharpYaml.Serialization;
     using System.IO;
     using System.Linq;
@@ -10,11 +9,6 @@ namespace Microsoft.OpenApi.Readers
     {
 
         
-        public static ParseNode Create(ParsingContext context, string yaml)
-        {
-            return Create(context, YamlHelper.ParseYaml(yaml));
-        }
-
         public static ParseNode Create(ParsingContext context, YamlNode node)
         {
             var listNode = node as YamlSequenceNode;

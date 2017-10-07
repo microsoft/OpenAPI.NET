@@ -2,13 +2,12 @@
 
 namespace Microsoft.OpenApi.Readers
 {
-    using Microsoft.OpenApi.Services;
     using SharpYaml.Serialization;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class PropertyNode : ParseNode, IPropertyNode
+    public class PropertyNode : ParseNode
     {
         public PropertyNode(ParsingContext ctx, string name, YamlNode node) : base(ctx)
         {
@@ -18,17 +17,17 @@ namespace Microsoft.OpenApi.Readers
 
 
         public string Name { get;  set; }
-        public IParseNode Value { get; set; }
+        public ParseNode Value { get; set; }
 
 
         public void ParseField<T>(
                             T parentInstance,
-                            IDictionary<string, Action<T, IParseNode>> fixedFields,
-                            IDictionary<Func<string, bool>, Action<T, string, IParseNode>> patternFields
+                            IDictionary<string, Action<T, ParseNode>> fixedFields,
+                            IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields
             )
         {
 
-            Action<T, IParseNode> fixedFieldMap;
+            Action<T, ParseNode> fixedFieldMap;
             var found = fixedFields.TryGetValue(this.Name, out fixedFieldMap);
 
             if (fixedFieldMap != null)

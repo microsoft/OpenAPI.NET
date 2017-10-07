@@ -1,14 +1,13 @@
 ﻿
 namespace Microsoft.OpenApi.Readers
 {
-    using Microsoft.OpenApi.Services;
     using SharpYaml.Serialization;
     using System;
 
     /// <summary>
     /// Wrapper class around YamlDocument to isolate semantic parsing from details of Yaml DOM.
     /// </summary>
-    public class RootNode : ParseNode, IRootNode
+    public class RootNode : ParseNode
     {
         YamlDocument yamlDocument;
         public RootNode(ParsingContext ctx, YamlDocument yamlDocument) : base(ctx)
@@ -21,7 +20,7 @@ namespace Microsoft.OpenApi.Readers
             return new MapNode(Context, (YamlMappingNode)yamlDocument.RootNode);
         }
 
-        public IParseNode Find(JsonPointer refPointer)
+        public ParseNode Find(JsonPointer refPointer)
         {
             var yamlNode = refPointer.Find(this.yamlDocument.RootNode);
             if (yamlNode == null) return null;

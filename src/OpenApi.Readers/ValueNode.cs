@@ -1,10 +1,9 @@
 ﻿
 namespace Microsoft.OpenApi.Readers
 {
-    using Microsoft.OpenApi.Services;
     using SharpYaml.Serialization;
 
-    public class ValueNode : ParseNode, IValueNode
+    public class ValueNode : ParseNode
     {
         YamlScalarNode node;
         public ValueNode(ParsingContext ctx, YamlScalarNode scalarNode) : base(ctx)

@@ -1,5 +1,5 @@
 ﻿
-namespace Microsoft.OpenApi.Services
+namespace Microsoft.OpenApi.Readers
 {
     using System;
     using System.Collections.Generic;

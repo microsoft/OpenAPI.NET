@@ -2,7 +2,6 @@
 
 namespace Microsoft.OpenApi.Readers
 {
-    using Microsoft.OpenApi.Services;
     using SharpYaml.Serialization;
     using System;
     using System.Collections;
@@ -13,10 +12,10 @@ namespace Microsoft.OpenApi.Readers
     /// <summary>
     /// Abstraction of a Map to isolate semantic parsing from details of 
     /// </summary>
-    public class MapNode : ParseNode,  IMapNode
+    public class MapNode : ParseNode, IEnumerable<PropertyNode>
     {
         YamlMappingNode node;
-        private List<IPropertyNode> nodes;
+        private List<PropertyNode> nodes;
 
         public static MapNode Create(string yaml)
         {
@@ -29,10 +28,10 @@ namespace Microsoft.OpenApi.Readers
         {
             if (node == null) throw new DomainParseException($"Expected map");
             this.node = node;
-            nodes = this.node.Children.Select(kvp => new PropertyNode(Context, kvp.Key.GetScalarValue(), kvp.Value)).Cast<IPropertyNode>().ToList();
+            nodes = this.node.Children.Select(kvp => new PropertyNode(Context, kvp.Key.GetScalarValue(), kvp.Value)).Cast<PropertyNode>().ToList();
         }
 
-        public IEnumerator<IPropertyNode> GetEnumerator()
+        public IEnumerator<PropertyNode> GetEnumerator()
         {
             return this.nodes.GetEnumerator();
         }
@@ -89,7 +88,7 @@ namespace Microsoft.OpenApi.Readers
             return domainObject;
         }
 
-        public override Dictionary<string, T> CreateMap<T>(Func<IMapNode, T> map)
+        public override Dictionary<string, T> CreateMap<T>(Func<MapNode, T> map)
         {
             var yamlMap = this.node;
             if (yamlMap == null) throw new DomainParseException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
@@ -97,7 +96,7 @@ namespace Microsoft.OpenApi.Readers
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, T> CreateMapWithReference<T>(string refpointerbase, Func<IMapNode, T> map) 
+        public override Dictionary<string, T> CreateMapWithReference<T>(string refpointerbase, Func<MapNode, T> map) 
         {
 
             var yamlMap = this.node;
@@ -109,7 +108,7 @@ namespace Microsoft.OpenApi.Readers
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, T> CreateSimpleMap<T>(Func<IValueNode, T> map)
+        public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
             var yamlMap = this.node;
             if (yamlMap == null) throw new DomainParseException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");

@@ -1,12 +1,10 @@
 ﻿
 namespace Microsoft.OpenApi.Readers
 {
-    using Microsoft.OpenApi.Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+
 
     public static class OpenApiV2Reader
     {
@@ -94,7 +92,7 @@ namespace Microsoft.OpenApi.Readers
         };
 
 
-        public static Info LoadInfo(IParseNode node)
+        public static Info LoadInfo(ParseNode node)
         {
             var mapNode = node.CheckMapNode("Info");
 
@@ -124,7 +122,7 @@ namespace Microsoft.OpenApi.Readers
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) }
         };
 
-        public static Contact LoadContact(IParseNode node)
+        public static Contact LoadContact(ParseNode node)
         {
             var mapNode = node as MapNode;
             var contact = new Contact();
@@ -148,7 +146,7 @@ namespace Microsoft.OpenApi.Readers
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) }
         };
 
-        internal static License LoadLicense(IParseNode node)
+        internal static License LoadLicense(ParseNode node)
         {
             var mapNode = node.CheckMapNode("License");
 
@@ -173,9 +171,9 @@ namespace Microsoft.OpenApi.Readers
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) }
         };
 
-        public static Paths LoadPaths(IParseNode node)
+        public static Paths LoadPaths(ParseNode node)
         {
-            IMapNode mapNode = node.CheckMapNode("Paths");
+            MapNode mapNode = node.CheckMapNode("Paths");
 
             Paths domainObject = new Paths();
 
@@ -202,7 +200,7 @@ namespace Microsoft.OpenApi.Readers
         };
 
 
-        public static PathItem LoadPathItem(IParseNode node)
+        public static PathItem LoadPathItem(ParseNode node)
         {
             var mapNode = node.CheckMapNode("PathItem");
 
@@ -237,7 +235,7 @@ namespace Microsoft.OpenApi.Readers
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) },
         };
 
-        internal static Operation LoadOperation(IParseNode node)
+        internal static Operation LoadOperation(ParseNode node)
         {
             var mapNode = node.CheckMapNode("Operation");
 
@@ -318,7 +316,7 @@ namespace Microsoft.OpenApi.Readers
         };
 
 
-        public static ExternalDocs LoadExternalDocs(IParseNode node)
+        public static ExternalDocs LoadExternalDocs(ParseNode node)
         {
             var mapNode = node.CheckMapNode("externalDocs");
 
@@ -397,7 +395,7 @@ namespace Microsoft.OpenApi.Readers
             return p.Schema;
         }
 
-        private static void ProcessIn(Parameter o, IParseNode n)
+        private static void ProcessIn(Parameter o, ParseNode n)
         {
 
             string value = n.GetScalarValue();
@@ -428,7 +426,7 @@ namespace Microsoft.OpenApi.Readers
         };
 
 
-        public static Parameter LoadParameter(IParseNode node)
+        public static Parameter LoadParameter(ParseNode node)
         {
             var mapNode = node.CheckMapNode("parameter");
 
@@ -474,7 +472,7 @@ namespace Microsoft.OpenApi.Readers
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) },
         };
 
-        public static Response LoadResponse(IParseNode node)
+        public static Response LoadResponse(ParseNode node)
         {
             var mapNode = node.CheckMapNode("response");
 
@@ -534,7 +532,7 @@ namespace Microsoft.OpenApi.Readers
         };
 
 
-        public static Header LoadHeader(IParseNode node)
+        public static Header LoadHeader(ParseNode node)
         {
             var mapNode = node.CheckMapNode("header");
             var header = new Header();
@@ -565,7 +563,7 @@ namespace Microsoft.OpenApi.Readers
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) }
         };
 
-        public static Example LoadExample(IParseNode node)
+        public static Example LoadExample(ParseNode node)
         {
             var mapNode = node.CheckMapNode("Example");
             var example = new Example();
@@ -581,7 +579,7 @@ namespace Microsoft.OpenApi.Readers
         #endregion
 
         #region TagObject
-        internal static Tag LoadTag(IParseNode n)
+        internal static Tag LoadTag(ParseNode n)
         {
             var mapNode = n.CheckMapNode("tag");
 
@@ -654,9 +652,9 @@ namespace Microsoft.OpenApi.Readers
         };
 
 
-        public static Schema LoadSchema(IParseNode node)
+        public static Schema LoadSchema(ParseNode node)
         {
-            IMapNode mapNode = node.CheckMapNode("schema");
+            MapNode mapNode = node.CheckMapNode("schema");
 
             var refpointer = mapNode.GetReferencePointer();
             if (refpointer != null)
@@ -699,7 +697,7 @@ namespace Microsoft.OpenApi.Readers
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) }
         };
 
-        public static SecurityScheme LoadSecurityScheme(IParseNode node)
+        public static SecurityScheme LoadSecurityScheme(ParseNode node)
         {
             var mapNode = node.CheckMapNode("securityScheme");
 
@@ -715,7 +713,7 @@ namespace Microsoft.OpenApi.Readers
         #endregion
 
         #region SecurityRequirement
-        public static SecurityRequirement LoadSecurityRequirement(IParseNode node)
+        public static SecurityRequirement LoadSecurityRequirement(ParseNode node)
         {
 
             var mapNode = node.CheckMapNode("security");
@@ -800,7 +798,7 @@ namespace Microsoft.OpenApi.Readers
         public static IReference LoadReference(OpenApiReference reference, object rootNode)
         {
             IReference referencedObject = null;
-            IParseNode node = ((RootNode)rootNode).Find(GetPointer(reference));
+            ParseNode node = ((RootNode)rootNode).Find(GetPointer(reference));
 
             if (node == null &&  reference.ReferenceType != ReferenceType.Tags ) return null;
             switch (reference.ReferenceType)
@@ -841,7 +839,7 @@ namespace Microsoft.OpenApi.Readers
             return referencedObject;
         }
 
-        private static void ParseMap<T>(IMapNode mapNode, T domainObject, FixedFieldMap<T> fixedFieldMap, PatternFieldMap<T> patternFieldMap, List<string> requiredFields  = null)
+        private static void ParseMap<T>(MapNode mapNode, T domainObject, FixedFieldMap<T> fixedFieldMap, PatternFieldMap<T> patternFieldMap, List<string> requiredFields  = null)
         {
             if (mapNode == null) return;
 
@@ -852,7 +850,7 @@ namespace Microsoft.OpenApi.Readers
             }
         }
 
-        private static void ReportMissing(IParseNode node, List<string> required)
+        private static void ReportMissing(ParseNode node, List<string> required)
         {
             node.Context.ParseErrors.AddRange(required.Select(r => new OpenApiError("", $"{r} is a required property")));
         }
