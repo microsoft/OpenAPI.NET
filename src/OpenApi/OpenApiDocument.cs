@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi
                     version = value;
                 } else
                 {
-                    throw new DomainParseException("`openapi` property does not match the required format major.minor.patch");
+                    throw new OpenApiException("`openapi` property does not match the required format major.minor.patch");
                 }
             } } // Swagger
 

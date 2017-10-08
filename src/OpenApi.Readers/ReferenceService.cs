@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers
             var referenceObject = this.loadReference(reference,this.rootNode);
             if (referenceObject == null)
             {
-                throw new DomainParseException($"Cannot locate $ref {reference.ToString()}");
+                throw new OpenApiException($"Cannot locate $ref {reference.ToString()}");
             }
             return referenceObject;
         }

@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Readers
 
         public static PatternFieldMap<Paths> PathsPatternFields = new PatternFieldMap<Paths>
         {
-            { (s)=> s.StartsWith("/"), (o,k,n)=> o.PathItems.Add(k, LoadPathItem(n)    ) },
+            { (s)=> s.StartsWith("/"), (o,k,n)=> o.Add(k, LoadPathItem(n)    ) },
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) }
         };
 
@@ -815,7 +815,7 @@ namespace Microsoft.OpenApi.Readers
 
                     break;
                 default:
-                    throw new DomainParseException($"Unknown type of $ref {pointer.ReferenceType} at {pointer.ToString()}");
+                    throw new OpenApiException($"Unknown type of $ref {pointer.ReferenceType} at {pointer.ToString()}");
 
             }
             return referencedObject;

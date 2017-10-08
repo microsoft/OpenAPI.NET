@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi
             var successResponse = operation.Responses.Keys.Where(k => k.StartsWith("2")).Any();
             if (!successResponse)
             {
-             throw new DomainParseException("An operation requires a successful response");
+             throw new OpenApiException("An operation requires a successful response");
             }
 
 

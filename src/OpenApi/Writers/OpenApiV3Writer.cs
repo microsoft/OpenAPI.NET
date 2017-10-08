@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WritePaths(IParseNodeWriter writer, Paths paths)
         {
 
-            foreach (var pathItem in paths.PathItems)
+            foreach (var pathItem in paths)
             {
                 writer.WritePropertyName(pathItem.Key);
                 WritePathItem(writer, pathItem.Value);

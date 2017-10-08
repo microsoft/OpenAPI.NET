@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers
         public override List<T> CreateList<T>(Func<MapNode, T> map)
         {
             var yamlSequence = nodeList as YamlSequenceNode;
-            if (yamlSequence == null) throw new DomainParseException($"Expected list at line {nodeList.Start.Line} while parsing {typeof(T).Name}");
+            if (yamlSequence == null) throw new OpenApiException($"Expected list at line {nodeList.Start.Line} while parsing {typeof(T).Name}");
 
             return yamlSequence.Select(n => map(new MapNode(this.context,n as YamlMappingNode))).Where(i => i != null).ToList();
         }
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers
         public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
             var yamlSequence = this.nodeList as YamlSequenceNode;
-            if (yamlSequence == null) throw new DomainParseException($"Expected list at line {nodeList.Start.Line} while parsing {typeof(T).Name}");
+            if (yamlSequence == null) throw new OpenApiException($"Expected list at line {nodeList.Start.Line} while parsing {typeof(T).Name}");
 
             return yamlSequence.Select(n => map(new ValueNode(this.Context,(YamlScalarNode)n))).ToList();
         }

@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers
                 {
                     this.Context.StartObject(this.Name);
                     fixedFieldMap(parentInstance, this.Value);
-                } catch (DomainParseException ex)
+                } catch (OpenApiException ex)
                 {
                     ex.Pointer = this.Context.GetLocation();
                     this.Context.ParseErrors.Add(new OpenApiError(ex));
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers
                         this.Context.StartObject(this.Name);
                         map(parentInstance, this.Name, this.Value);
                     }
-                    catch (DomainParseException ex)
+                    catch (OpenApiException ex)
                     {
                         ex.Pointer = this.Context.GetLocation();
                         this.Context.ParseErrors.Add(new OpenApiError(ex));

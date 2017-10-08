@@ -20,7 +20,7 @@ namespace OpenApiTests
             var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.petstore30.yaml");
 
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
-            var operation = openApiDoc.Paths.PathItems["/pets"].Operations["get"];
+            var operation = openApiDoc.Paths["/pets"].Operations["get"];
             var schema = operation.Responses["200"].Content["application/json"].Schema;
             Assert.NotNull(schema);
 

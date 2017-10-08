@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi
             {
                 if (!Uri.IsWellFormedUriString(value, UriKind.RelativeOrAbsolute))
                 {
-                    throw new DomainParseException("`info.termsOfService` MUST be a URL");
+                    throw new OpenApiException("`info.termsOfService` MUST be a URL");
                 };
                 this.termsOfService = value;
             }

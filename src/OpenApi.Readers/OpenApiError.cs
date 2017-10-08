@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
         string pointer;
         string message;
 
-        public OpenApiError(DomainParseException ex)
+        public OpenApiError(OpenApiException ex)
         {
             this.message = ex.Message;
             this.pointer = ex.Pointer;

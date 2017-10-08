@@ -19,7 +19,7 @@ namespace OpenApiTests
             var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.CallbackSample.yaml");
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
 
-            PathItem path = openApiDoc.Paths.PathItems.First().Value;
+            PathItem path = openApiDoc.Paths.First().Value;
             Operation subscribeOperation = path.Operations["post"];
 
             var callback = subscribeOperation.Callbacks["mainHook"];
@@ -38,7 +38,7 @@ namespace OpenApiTests
 
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
 
-            var path = openApiDoc.Paths.PathItems.First().Value;
+            var path = openApiDoc.Paths.First().Value;
             var operation = path.Operations.First().Value;
 
             var callbackPair = operation.Callbacks.First();

@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers
 
         public MapNode(ParsingContext ctx, YamlMappingNode node) : base(ctx)
         {
-            if (node == null) throw new DomainParseException($"Expected map");
+            if (node == null) throw new OpenApiException($"Expected map");
             this.node = node;
             nodes = this.node.Children.Select(kvp => new PropertyNode(Context, kvp.Key.GetScalarValue(), kvp.Value)).Cast<PropertyNode>().ToList();
         }
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Readers
         public string GetScalarValue(ValueNode key)
         {
             var scalarNode = this.node.Children[new YamlScalarNode(key.GetScalarValue())] as YamlScalarNode;
-            if (scalarNode == null) throw new DomainParseException($"Expected scalar at line {this.node.Start.Line} for key {key.GetScalarValue()}");
+            if (scalarNode == null) throw new OpenApiException($"Expected scalar at line {this.node.Start.Line} for key {key.GetScalarValue()}");
 
             return scalarNode.Value;
         }
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Readers
         public override Dictionary<string, T> CreateMap<T>(Func<MapNode, T> map)
         {
             var yamlMap = this.node;
-            if (yamlMap == null) throw new DomainParseException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
+            if (yamlMap == null) throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
             var nodes = yamlMap.Select(n => new { key = n.Key.GetScalarValue(), value = map(new MapNode(this.Context,n.Value as YamlMappingNode)) });
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Readers
         {
 
             var yamlMap = this.node;
-            if (yamlMap == null) throw new DomainParseException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
+            if (yamlMap == null) throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
             var nodes = yamlMap.Select(n => new { key = n.Key.GetScalarValue(),
                 value = this.GetReferencedObject<T>(refpointerbase + n.Key.GetScalarValue()) 
                 ?? map(new MapNode(this.Context, (YamlMappingNode)n.Value))
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers
         public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
             var yamlMap = this.node;
-            if (yamlMap == null) throw new DomainParseException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
+            if (yamlMap == null) throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
             var nodes = yamlMap.Select(n => new { key = n.Key.GetScalarValue(), value = map(new ValueNode(this.Context, (YamlScalarNode)n.Value)) });
             return nodes.ToDictionary(k => k.key, v => v.value);
         }

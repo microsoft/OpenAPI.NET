@@ -37,29 +37,29 @@ namespace Microsoft.OpenApi.Readers
 
         public virtual string GetScalarValue()
         {
-            throw new DomainParseException("Cannot get scalar value");
+            throw new OpenApiException("Cannot get scalar value");
         }
 
         public virtual Dictionary<string, T> CreateMap<T>(Func<MapNode, T> map)
         {
-            throw new DomainParseException("Cannot create map");
+            throw new OpenApiException("Cannot create map");
         }
         public virtual Dictionary<string, T> CreateMapWithReference<T>(string refpointer, Func<MapNode, T> map) where T : class, IReference
         {
-            throw new DomainParseException("Cannot create map from reference");
+            throw new OpenApiException("Cannot create map from reference");
         }
         public virtual Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
-            throw new DomainParseException("Cannot create simple map");
+            throw new OpenApiException("Cannot create simple map");
         }
         public virtual List<T> CreateList<T>(Func<MapNode, T> map)
         {
-            throw new DomainParseException("Cannot create list");
+            throw new OpenApiException("Cannot create list");
 
         }
         public virtual List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
-            throw new DomainParseException("Cannot create simple list");
+            throw new OpenApiException("Cannot create simple list");
         }
 
         internal string CheckRegex(string value, Regex versionRegex, string defaultValue)

@@ -75,7 +75,7 @@ namespace OpenApiTests
                 } } }
             };
             pathItem.AddOperation(OperationType.Get, operation);
-            openApiDoc.Paths.PathItems.Add("/resource", pathItem);
+            openApiDoc.Paths.Add("/resource", pathItem);
 
             JObject jObject = ExportV2ToJObject(openApiDoc);
 
@@ -109,7 +109,7 @@ namespace OpenApiTests
                 } } }
             };
             pathItem.AddOperation(OperationType.Post, operation);
-            openApiDoc.Paths.PathItems.Add("/resource", pathItem);
+            openApiDoc.Paths.Add("/resource", pathItem);
 
             JObject jObject = ExportV2ToJObject(openApiDoc);
 
@@ -140,7 +140,7 @@ namespace OpenApiTests
                 } } }
             };
             pathItem.AddOperation(OperationType.Get, operation);
-            openApiDoc.Paths.PathItems.Add("/resource", pathItem);
+            openApiDoc.Paths.Add("/resource", pathItem);
 
             JObject jObject = ExportV2ToJObject(openApiDoc);
 
@@ -172,7 +172,7 @@ namespace OpenApiTests
                 } } }
             };
             pathItem.AddOperation(OperationType.Get, operation);
-            openApiDoc.Paths.AddPathItem("/resource", pathItem);
+            openApiDoc.Paths.Add("/resource", pathItem);
 
             JObject jObject = ExportV2ToJObject(openApiDoc);
 

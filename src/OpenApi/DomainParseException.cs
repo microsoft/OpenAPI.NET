@@ -2,10 +2,10 @@
 
 namespace Microsoft.OpenApi
 {
-    public class DomainParseException : Exception
+    public class OpenApiException : Exception
     {
         public string Pointer { get; set; }
-        public DomainParseException(string message) : base(message)
+        public OpenApiException(string message) : base(message)
         {
 
         }

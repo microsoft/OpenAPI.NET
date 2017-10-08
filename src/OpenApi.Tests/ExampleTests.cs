@@ -34,7 +34,7 @@ namespace OpenApi.Tests
             var pathItem = new PathItem();
             pathItem.AddOperation(OperationType.Get, op);
 
-            doc.Paths.AddPathItem("/test", pathItem);
+            doc.Paths.Add("/test", pathItem);
 
             var stream = new MemoryStream();
             doc.Save(stream);
