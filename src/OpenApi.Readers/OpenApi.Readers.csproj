@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
-    <RootNamespace>Microsoft..OpenApi.Readers</RootNamespace>
+    <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
+    <PackageId>Microsoft.OpenApi.Readers</PackageId>
+    <Version>0.9.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
