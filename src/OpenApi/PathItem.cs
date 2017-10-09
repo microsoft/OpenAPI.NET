@@ -1,7 +1,7 @@
 ﻿
 namespace Microsoft.OpenApi
 {
-
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -18,6 +18,13 @@ namespace Microsoft.OpenApi
         public List<Parameter> Parameters { get; set; } = new List<Parameter>();
         public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
+        public void CreateOperation(OperationType operationType, Action<Operation> configure)
+        {
+            var operation = new Operation();
+            configure(operation);
+            AddOperation(operationType, operation);
+        }
+
         public void AddOperation(OperationType operationType, Operation operation)
         {
             var successResponse = operation.Responses.Keys.Where(k => k.StartsWith("2")).Any();
@@ -25,7 +32,6 @@ namespace Microsoft.OpenApi
             {
              throw new OpenApiException("An operation requires a successful response");
             }
-
 
             this.operations.Add(operationType.GetOperationTypeName(), operation);
         }

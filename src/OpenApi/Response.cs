@@ -18,6 +18,15 @@ namespace Microsoft.OpenApi
             get; set;
         }
 
+        public void CreateContent(string mediatype, Action<MediaType> configure)
+        {
+            var m = new MediaType();
+            configure(m);
+            if (Content == null) {
+                Content = new Dictionary<string, MediaType>();
+            }
 
+            Content.Add(mediatype, m);
+        }
     }
 }

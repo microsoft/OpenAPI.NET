@@ -22,5 +22,12 @@ namespace Microsoft.OpenApi
         public List<Server> Servers { get; set; } = new List<Server>();
         public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
+        public void CreateResponse(string key, Action<Response> configure)
+        {
+            var response = new Response();
+            configure(response);
+            Responses.Add(key, response);
+        } 
+
     }
 }

@@ -35,6 +35,11 @@ namespace Microsoft.OpenApi.Readers
             return mapNode;
         }
 
+        public virtual string GetRaw()
+        {
+            throw new OpenApiException("Cannot get raw value");
+        }
+        
         public virtual string GetScalarValue()
         {
             throw new OpenApiException("Cannot get scalar value");
@@ -52,6 +57,7 @@ namespace Microsoft.OpenApi.Readers
         {
             throw new OpenApiException("Cannot create simple map");
         }
+
         public virtual List<T> CreateList<T>(Func<MapNode, T> map)
         {
             throw new OpenApiException("Cannot create list");

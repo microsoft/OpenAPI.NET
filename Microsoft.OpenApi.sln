@@ -5,13 +5,10 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApi", "src\OpenApi\OpenApi.csproj", "{A8E50143-69B2-472A-9D45-3F9A05D13202}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApi.Readers.Tests", "src\OpenApiTests\OpenApi.Readers.Tests.csproj", "{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AEDAD90-F854-4940-BFEE-6374CC92CAB0}"
 	ProjectSection(SolutionItems) = preProject
-		License.txt = License.txt
+		build.cmd = build.cmd
 		readme.md = readme.md
-		ReleaseNotes.md = ReleaseNotes.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiWorkbench", "src\OpenApiWorkbench\OpenApiWorkbench.csproj", "{6A5E91E5-0441-46EE-AEB9-8334981B7F08}"
@@ -19,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApi.Readers", "src\OpenApi.Readers\OpenApi.Readers.csproj", "{79933258-0126-4382-8755-D50820ECC483}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApi.Tests", "src\OpenApi.Tests\OpenApi.Tests.csproj", "{AD83F991-DBF3-4251-8613-9CC54C826964}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApi.Readers.Tests", "src\OpenApi.Readers.Tests\OpenApi.Readers.Tests.csproj", "{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,10 +29,6 @@ Global
 		{A8E50143-69B2-472A-9D45-3F9A05D13202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8E50143-69B2-472A-9D45-3F9A05D13202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8E50143-69B2-472A-9D45-3F9A05D13202}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A5E91E5-0441-46EE-AEB9-8334981B7F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A5E91E5-0441-46EE-AEB9-8334981B7F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A5E91E5-0441-46EE-AEB9-8334981B7F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -46,6 +41,10 @@ Global
 		{AD83F991-DBF3-4251-8613-9CC54C826964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD83F991-DBF3-4251-8613-9CC54C826964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD83F991-DBF3-4251-8613-9CC54C826964}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -33,9 +33,12 @@ namespace Microsoft.OpenApi
 
         private static Regex versionRegex = new Regex(@"\d+\.\d+\.\d+");
 
-
+        public void CreatePath(string key, Action<PathItem> configure)
+        {
+            var pathItem = new PathItem();
+            configure(pathItem);
+            Paths.Add(key, pathItem);
+        }
 
     }
-
-
 }

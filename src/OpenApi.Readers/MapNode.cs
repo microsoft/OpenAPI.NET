@@ -2,6 +2,7 @@
 
 namespace Microsoft.OpenApi.Readers
 {
+    using SharpYaml.Schemas;
     using SharpYaml.Serialization;
     using System;
     using System.Collections;
@@ -55,6 +56,14 @@ namespace Microsoft.OpenApi.Readers
                 }
             }
         }
+
+        public override string GetRaw()
+        {
+            var x = new Serializer(new SerializerSettings(new JsonSchema()) { EmitJsonComptible = true } );
+            return x.Serialize(this.node);
+            
+        }
+
         public string GetScalarValue(ValueNode key)
         {
             var scalarNode = this.node.Children[new YamlScalarNode(key.GetScalarValue())] as YamlScalarNode;
