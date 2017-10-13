@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
     <PackageId>Microsoft.OpenApi.Readers</PackageId>
@@ -13,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.OpenApi.Core\Microsoft.OpenApi.Core.csproj" />
+    <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
   </ItemGroup>
 
 </Project>

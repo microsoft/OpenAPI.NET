@@ -7,8 +7,8 @@
     <ProjectGuid>{AD83F991-DBF3-4251-8613-9CC54C826964}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenApi.Tests</RootNamespace>
-    <AssemblyName>OpenApi.Tests</AssemblyName>
+    <RootNamespace>Microsoft.OpenApi.Tests</RootNamespace>
+    <AssemblyName>Microsoft.OpenApi.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -51,7 +51,7 @@
       <Project>{79933258-0126-4382-8755-D50820ECC483}</Project>
       <Name>Microsoft.OpenApi.Readers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Microsoft.OpenApi.Core\Microsoft.OpenApi.Core.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj">
       <Project>{a8e50143-69b2-472a-9d45-3f9a05d13202}</Project>
       <Name>Microsoft.OpenApi.Core</Name>
     </ProjectReference>

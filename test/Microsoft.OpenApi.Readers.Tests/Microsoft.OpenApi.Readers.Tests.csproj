@@ -8,8 +8,8 @@
     <ProjectGuid>{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenApiTests</RootNamespace>
-    <AssemblyName>OpenApiTests</AssemblyName>
+    <RootNamespace>Microsoft.OpenApi.Readers.Tests</RootNamespace>
+    <AssemblyName>Microsoft.OpenApi.Readers.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -101,7 +101,7 @@
       <Project>{79933258-0126-4382-8755-d50820ecc483}</Project>
       <Name>Microsoft.OpenApi.Readers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Microsoft.OpenApi.Core\Microsoft.OpenApi.Core.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj">
       <Project>{a8e50143-69b2-472a-9d45-3f9a05d13202}</Project>
       <Name>Microsoft.OpenApi.Core</Name>
     </ProjectReference>
