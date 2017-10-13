@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenApi\OpenApi.csproj" />
+    <ProjectReference Include="..\Microsoft.OpenApi.Core\Microsoft.OpenApi.Core.csproj" />
   </ItemGroup>
 
 </Project>

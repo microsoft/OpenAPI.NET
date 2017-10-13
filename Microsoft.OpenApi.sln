@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApi", "src\OpenApi\OpenApi.csproj", "{A8E50143-69B2-472A-9D45-3F9A05D13202}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.Core", "src\Microsoft.OpenApi.Core\Microsoft.OpenApi.Core.csproj", "{A8E50143-69B2-472A-9D45-3F9A05D13202}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AEDAD90-F854-4940-BFEE-6374CC92CAB0}"
 	ProjectSection(SolutionItems) = preProject
@@ -11,13 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiWorkbench", "src\OpenApiWorkbench\OpenApiWorkbench.csproj", "{6A5E91E5-0441-46EE-AEB9-8334981B7F08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Workbench", "src\Microsoft.OpenApi.Workbench\Microsoft.OpenApi.Workbench.csproj", "{6A5E91E5-0441-46EE-AEB9-8334981B7F08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApi.Readers", "src\OpenApi.Readers\OpenApi.Readers.csproj", "{79933258-0126-4382-8755-D50820ECC483}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.Readers", "src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj", "{79933258-0126-4382-8755-D50820ECC483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApi.Tests", "src\OpenApi.Tests\OpenApi.Tests.csproj", "{AD83F991-DBF3-4251-8613-9CC54C826964}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Core.Tests", "test\Microsoft.OpenApi.Core.Tests\Microsoft.OpenApi.Core.Tests.csproj", "{AD83F991-DBF3-4251-8613-9CC54C826964}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApi.Readers.Tests", "src\OpenApi.Readers.Tests\OpenApi.Readers.Tests.csproj", "{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Readers.Tests", "test\Microsoft.OpenApi.Readers.Tests\Microsoft.OpenApi.Readers.Tests.csproj", "{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E546B92F-20A8-49C3-8323-4B25BB78F3E1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6357D7FD-2DE4-4900-ADB9-ABC37052040A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +52,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A8E50143-69B2-472A-9D45-3F9A05D13202} = {E546B92F-20A8-49C3-8323-4B25BB78F3E1}
+		{6A5E91E5-0441-46EE-AEB9-8334981B7F08} = {E546B92F-20A8-49C3-8323-4B25BB78F3E1}
+		{79933258-0126-4382-8755-D50820ECC483} = {E546B92F-20A8-49C3-8323-4B25BB78F3E1}
+		{AD83F991-DBF3-4251-8613-9CC54C826964} = {6357D7FD-2DE4-4900-ADB9-ABC37052040A}
+		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237} = {6357D7FD-2DE4-4900-ADB9-ABC37052040A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F171EFC-0DB5-4B10-ABFA-AF48D52CC565}

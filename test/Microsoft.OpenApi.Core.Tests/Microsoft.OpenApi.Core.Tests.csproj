@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OpenApi.Tests</RootNamespace>
     <AssemblyName>OpenApi.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,13 +47,13 @@
     <Compile Include="ValidationTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenApi.Readers\OpenApi.Readers.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj">
       <Project>{79933258-0126-4382-8755-D50820ECC483}</Project>
-      <Name>OpenApi.Readers</Name>
+      <Name>Microsoft.OpenApi.Readers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenApi\OpenApi.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi.Core\Microsoft.OpenApi.Core.csproj">
       <Project>{a8e50143-69b2-472a-9d45-3f9a05d13202}</Project>
-      <Name>OpenApi</Name>
+      <Name>Microsoft.OpenApi.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
