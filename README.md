@@ -1,3 +1,21 @@
+<!---
+category: OpenAPI REST Swagger
+-->
+
+![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
+
+# OpenAPI.Net
+
+The **OpenAPI.NET** SDK contains a usefull object model for OpenAPI V3 documents in .NET along with a common serializer to extract raw OAI JSON documents from the model.
+
+**See more information on the Open API spec and it's history here: <a href="https://www.openapis.org"/>Open API Initiative</a>**
+
+Project Objectives
+
+- blah blah blah
+- blah blah blah
+- blah blah blah
+- blah blah blah
 
 # Contributing
 
