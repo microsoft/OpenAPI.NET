@@ -28,7 +28,7 @@ namespace OpenApiTests
 
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
-            Assert.Equal("1.0.1", info.Version);
+            Assert.Equal("1.0.1", info.Version.ToString());
             Assert.Equal("support@swagger.io", info.Contact.Email);
             Assert.Equal(0, ctx.ParseErrors.Count);
         }
@@ -45,7 +45,7 @@ namespace OpenApiTests
 
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
-            Assert.Equal("1.0.1", info.Version);
+            Assert.Equal("1.0.1", info.Version.ToString());
             Assert.Equal(0, ctx.ParseErrors.Count);
         }
 

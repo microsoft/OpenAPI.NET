@@ -1,8 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="OpenApiValidator.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.OpenApi.Sevices
 {
@@ -15,7 +17,7 @@ namespace Microsoft.OpenApi.Sevices
         {
             this.openApiException = new List<OpenApiException>();
         }
-        public override void Visit(Response response)
+        public override void Visit(OpenApiResponse response)
         {
             if (string.IsNullOrEmpty(response.Description))
             {

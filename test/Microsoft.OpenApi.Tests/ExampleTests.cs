@@ -17,10 +17,10 @@ namespace OpenApi.Tests
         {
             var doc = new OpenApiDocument
             {
-                Info = new Info()
+                Info = new OpenApiInfo()
                 {
                     Title = "test",
-                    Version = "1.0"
+                    Version = new Version(1, 0)
                 }
             };
 

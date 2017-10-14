@@ -1,4 +1,9 @@
-﻿
+﻿//---------------------------------------------------------------------
+// <copyright file="WriterExtensions.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 namespace Microsoft.OpenApi.Writers
 {
     using Microsoft.OpenApi;
@@ -6,10 +11,8 @@ namespace Microsoft.OpenApi.Writers
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    public static class WriterExtensions {
-
-
-
+    public static class WriterExtensions
+    {
         public static void Save(this OpenApiDocument doc, Stream stream, IOpenApiWriter openApiWriter = null)
         {
             if (openApiWriter == null)

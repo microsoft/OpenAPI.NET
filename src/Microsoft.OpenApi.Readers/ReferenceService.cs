@@ -31,10 +31,10 @@ namespace Microsoft.OpenApi.Readers
             return this.parseReference(pointer);
         }
 
-        public static SecurityScheme LoadSecuritySchemeByReference(ParsingContext context, string schemeName)
+        public static OpenApiSecurityScheme LoadSecuritySchemeByReference(ParsingContext context, string schemeName)
         {
 
-            var schemeObject = (SecurityScheme)context.GetReferencedObject(new OpenApiReference()
+            var schemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(new OpenApiReference()
             {
                 ReferenceType = ReferenceType.SecurityScheme,
                 TypeName = schemeName
@@ -44,14 +44,14 @@ namespace Microsoft.OpenApi.Readers
         }
 
 
-        public static Tag LoadTagByReference(ParsingContext context, string tagName)
+        public static OpenApiTag LoadTagByReference(ParsingContext context, string tagName)
         {
 
-            var tagObject = (Tag)context.GetReferencedObject($"#/tags/{tagName}");
+            var tagObject = (OpenApiTag)context.GetReferencedObject($"#/tags/{tagName}");
 
             if (tagObject == null)
             {
-                tagObject = new Tag() { Name = tagName };
+                tagObject = new OpenApiTag() { Name = tagName };
             }
             return tagObject;
         }

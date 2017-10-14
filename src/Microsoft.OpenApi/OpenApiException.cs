@@ -1,14 +1,22 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IReferenceService.cs" company="Microsoft">
+// <copyright file="OpenApiException.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OpenApi
 {
-    public interface IReferenceService
+    public class OpenApiException : Exception
     {
-        IReference LoadReference(OpenApiReference reference);
-        OpenApiReference ParseReference(string pointer);
+        public string Pointer { get; set; }
+        public OpenApiException(string message) : base(message)
+        {
+
+        }
+
     }
+
+
 }
