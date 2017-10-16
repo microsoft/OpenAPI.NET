@@ -14,9 +14,4 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Writers\JsonParseNodeWriter.cs" />
-    <Compile Remove="Writers\YamlParseNodeWriter.cs" />
-  </ItemGroup>
-
 </Project>
