@@ -21,6 +21,11 @@ namespace Microsoft.OpenApi
         /// </summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// Additional external documentation for this tag.
+        /// </summary>
+        public OpenApiExternalDocs ExternalDocs { get; set; }
+
         OpenApiReference IReference.Pointer
         {
             get; set;
