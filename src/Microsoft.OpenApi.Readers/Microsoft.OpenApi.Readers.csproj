@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
+    <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
+    <PackageId>Microsoft.OpenApi.Readers</PackageId>
+    <Version>0.9.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SharpYaml" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
+  </ItemGroup>
+
+</Project>

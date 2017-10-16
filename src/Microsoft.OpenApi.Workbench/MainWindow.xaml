@@ -1,0 +1,43 @@
+﻿<Window x:Class="OpenApiWorkbench.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenApiWorkbench"
+        mc:Ignorable="d"
+        Title="OpenAPI Workbench" Height="600" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="txtInput" Text="{Binding Input}" Margin="10" TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" />
+        <DockPanel Grid.Column="1" Margin="0,10" >
+      <StackPanel Orientation="Horizontal"  DockPanel.Dock="Top">
+        <Button Content="Convert" VerticalAlignment="Center" HorizontalAlignment="Left" Height="20" Margin="10" Width="131" Click="Button_Click" Grid.Column="1"/>
+        <StackPanel Orientation="Vertical"  DockPanel.Dock="Top">
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Label>Format:</Label>
+            <RadioButton GroupName="Format" Content="Yaml" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsYaml }" />
+            <RadioButton GroupName="Format" Content="JSON" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsJson }" />
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Label>Version:</Label>
+            <RadioButton GroupName="Format" Content="V3" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV3 }" />
+            <RadioButton GroupName="Format" Content="V2" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV2 }" />
+          </StackPanel>
+        </StackPanel>
+      </StackPanel>
+            
+            <TextBox x:Name="txtErrors"  Margin="10,10,10,10" TextWrapping="Wrap" Text="{Binding Errors}"  Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" DockPanel.Dock="Top" MaxHeight="100" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" />
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <Label>Parsing: </Label>
+                <TextBlock x:Name="txtParseTime" Text="{Binding ParseTime}" Width="100" VerticalAlignment="Center"/>
+                <Label>Rendering:</Label>
+                <TextBlock x:Name="txtRenderTime" Text="{Binding RenderTime}" VerticalAlignment="Center"/>
+            </StackPanel>
+            <TextBox x:Name="txtOutput" Text="{Binding Output}" VerticalScrollBarVisibility="Auto" Margin="10,10,10,10" VerticalAlignment="Stretch" TextWrapping="Wrap" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" FontFamily="Consolas" IsReadOnlyCaretVisible="True" VerticalContentAlignment="Stretch" IsManipulationEnabled="True" HorizontalScrollBarVisibility="Auto" DockPanel.Dock="Top" />
+      
+    </DockPanel>
+    </Grid>
+</Window>
