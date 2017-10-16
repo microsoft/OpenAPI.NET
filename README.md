@@ -1,3 +1,28 @@
+<!---
+category: OpenAPI REST Swagger
+-->
+
+![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
+
+# OpenAPI.Net
+
+The **OpenAPI.NET** SDK contains a useful object model for OpenAPI V3 documents in .NET along with a common serializer to extract raw OAI JSON documents from the model.
+
+**See more information on the Open API spec and it's history here: <a href="https://www.openapis.org"/>Open API Initiative</a>**
+
+Project Objectives
+
+- blah blah blah
+- blah blah blah
+- blah blah blah
+- blah blah blah
+
+# Readers
+The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by individual "readers"
+
+- EMD Reader Repo: <a href="https://github.com/">Link</a>
+- .NET Comment Reader Repo: <a href="https://github.com/">Link</a>
+- YAML/JSON Reader Repo <a href="https://github.com/">Link</a>
 
 # Contributing
 
