@@ -7,7 +7,7 @@ using Microsoft.OpenApi;
 using Xunit;
 using Microsoft.OpenApi.Readers;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
 
     public class CallbackTests
@@ -16,7 +16,7 @@ namespace OpenApiTests
         public void LoadSimpleCallback()
         {
 
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.CallbackSample.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(CallbackTests),"Samples.CallbackSample.yaml");
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
 
             PathItem path = openApiDoc.Paths.First().Value;
@@ -34,7 +34,7 @@ namespace OpenApiTests
         public void LoadSimpleCallbackWithRefs()
         {
 
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.CallbackSampleWithRef.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(CallbackTests), "Samples.CallbackSampleWithRef.yaml");
 
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
 

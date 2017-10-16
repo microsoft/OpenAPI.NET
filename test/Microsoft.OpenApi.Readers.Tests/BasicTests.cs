@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class BasicTests
     {
@@ -33,7 +33,7 @@ namespace OpenApiTests
         public void ParseSimplestOpenApiEver()
         {
 
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.Simplest.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.Simplest.yaml");
 
              
             var context = OpenApiParser.Parse(stream);
@@ -51,7 +51,7 @@ namespace OpenApiTests
         public void ParseBrokenSimplest()
         {
 
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.BrokenSimplest.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(BasicTests),"Samples.BrokenSimplest.yaml");
 
             var context = OpenApiParser.Parse(stream);
 
@@ -65,7 +65,7 @@ namespace OpenApiTests
         public void CheckOpenAPIVersion()
         {
 
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.petstore30.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.petstore30.yaml");
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
 
             Assert.Equal("3.0.0", openApiDoc.Version);

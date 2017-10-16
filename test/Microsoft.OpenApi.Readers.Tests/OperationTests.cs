@@ -7,7 +7,7 @@ using Microsoft.OpenApi;
 using Xunit;
 using Microsoft.OpenApi.Readers;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class OperationTests
     {
@@ -17,7 +17,7 @@ namespace OpenApiTests
         public OperationTests()
         {
             
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.petstore30.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(OperationTests), "Samples.petstore30.yaml");
             _PetStoreDoc = OpenApiParser.Parse(stream).OpenApiDocument;
             //_PostOperation = _PetStoreDoc.Paths.PathMap.Where(pm=>pm.Key == "/pets").Value
             //    .Operations.Where()

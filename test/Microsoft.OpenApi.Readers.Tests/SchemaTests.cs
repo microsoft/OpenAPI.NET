@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi;
 using Xunit;
-using Microsoft.OpenApi.Readers;
 
-namespace OpenApiTests
+
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class SchemaTests
     {
@@ -17,7 +17,7 @@ namespace OpenApiTests
         [Fact]
         public void CheckPetStoreApiInfo()
         {
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.petstore30.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(SchemaTests), "Samples.petstore30.yaml");
 
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
             var operation = openApiDoc.Paths["/pets"].Operations["get"];
