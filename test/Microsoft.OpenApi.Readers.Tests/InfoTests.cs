@@ -4,7 +4,7 @@ using System.Linq;
 using Xunit;
 using Microsoft.OpenApi.Readers;
 
-namespace OpenApiTests.Samples
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class InfoTests
     {
@@ -13,7 +13,7 @@ namespace OpenApiTests.Samples
         [Fact]
         public void CheckPetStoreApiInfo()
         {
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.petstore30.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.petstore30.yaml");
 
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
             var info = openApiDoc.Info;
@@ -28,7 +28,7 @@ namespace OpenApiTests.Samples
         public void ParseCompleteHeaderOpenApi()
         {
 
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.CompleteHeader.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.CompleteHeader.yaml");
 
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
 

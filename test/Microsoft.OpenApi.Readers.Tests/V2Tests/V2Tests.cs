@@ -8,7 +8,7 @@ using Microsoft.OpenApi;
 using Xunit;
 using Microsoft.OpenApi.Readers;
 
-namespace OpenApiTests.V2Tests
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class V2Tests
     {
@@ -17,8 +17,8 @@ namespace OpenApiTests.V2Tests
             InlineData("host")]
         public void Tests(string filename)
         {
-            var v2stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.V2Tests.V2Samples.simplest.2.yaml");
-            var v3stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.V2Tests.V2Samples.simplest.3.yaml");
+            var v2stream = this.GetType().Assembly.GetManifestResourceStream(typeof(V2Tests), "V2Tests.V2Samples.simplest.2.yaml");
+            var v3stream = this.GetType().Assembly.GetManifestResourceStream(typeof(V2Tests), "V2Tests.V2Samples.simplest.3.yaml");
 
             var openApiDoc2 = OpenApiParser.Parse(v2stream).OpenApiDocument;
 
