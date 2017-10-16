@@ -20,9 +20,9 @@ Project Objectives
 # Readers
 The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by individual "readers"
 
--EMD Reader Repo: <a href="https://github.com/">Link</a>
--.NET Comment Reader Repo: <a href="https://github.com/">Link</a>
--YANL/JSON Reader Repo <a href="https://github.com/">Link</a>
+- EMD Reader Repo: <a href="https://github.com/">Link</a>
+- .NET Comment Reader Repo: <a href="https://github.com/">Link</a>
+- YANL/JSON Reader Repo <a href="https://github.com/">Link</a>
 
 # Contributing
 
