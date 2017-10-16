@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="ExampleTests.cs" />
     <Compile Include="OpenApiDocumentTests.cs" />
+    <Compile Include="OpenApiExternalDocsTests.cs" />
+    <Compile Include="OpenApiTagTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidationTests.cs" />
   </ItemGroup>
