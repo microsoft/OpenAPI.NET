@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿//---------------------------------------------------------------------
+// <copyright file="OpenApiWalker.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
@@ -74,7 +80,7 @@ namespace Microsoft.OpenApi
             }
         }
 
-        private void WalkContent(Dictionary<string, MediaType> content)
+        private void WalkContent(Dictionary<string, OpenApiMediaType> content)
         {
             if (content == null) return;
 

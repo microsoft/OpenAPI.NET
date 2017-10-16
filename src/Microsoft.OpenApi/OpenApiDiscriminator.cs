@@ -1,14 +1,15 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IReferenceService.cs" company="Microsoft">
+// <copyright file="OpenApiDiscriminator.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OData.OpenAPI
 {
-    public interface IReferenceService
+    /// <summary>
+    /// Discriminator object.
+    /// </summary>
+    internal class OpenApiDiscriminator
     {
-        IReference LoadReference(OpenApiReference reference);
-        OpenApiReference ParseReference(string pointer);
     }
 }

@@ -16,7 +16,7 @@ namespace OpenApiTests
             InlineData("foo","foo")]
         public void SerializeStrings(string value, string expected)
         {
-            var parameter = new Parameter() {
+            var parameter = new OpenApiParameter() {
 
             };
 
@@ -29,7 +29,7 @@ namespace OpenApiTests
          InlineData("foo bar", "foo%20bar")]
         public void SerializeEscapedStrings(string value, string expected)
         {
-            var parameter = new Parameter()
+            var parameter = new OpenApiParameter()
             {
                 AllowReserved = false
             };
@@ -44,7 +44,7 @@ namespace OpenApiTests
             InlineData("matrix", "", ";foo")]
         public void SerializePrefixedStrings(string style,string value, string expected)
         {
-            var parameter = new Parameter()
+            var parameter = new OpenApiParameter()
             {
                 Name = "foo",
                 Style = style
@@ -61,7 +61,7 @@ namespace OpenApiTests
             InlineData("exploded-label", new[] { "a", "b" }, ".a.b")]
         public void SerializeArrays(string style, string[] value, string expected)
         {
-            var parameter = new Parameter()
+            var parameter = new OpenApiParameter()
             {
                 Name = "bar",
                 Style = style
@@ -84,7 +84,7 @@ namespace OpenApiTests
         public void SerializeMaps(string style, string expected)
         {
             var value = new Dictionary<string, string> { { "a", "1" }, { "b", "2" } };
-            var parameter = new Parameter()
+            var parameter = new OpenApiParameter()
             {
                 Name = "bar",
                 Style = style
@@ -95,7 +95,7 @@ namespace OpenApiTests
         }
         // Is it possible to write code based on the information in Parameter
         // to serialize the value like RFC6570 does!
-        private string SerializeParameterValue(Parameter parameter, object value )
+        private string SerializeParameterValue(OpenApiParameter parameter, object value )
         {
             string output;
  

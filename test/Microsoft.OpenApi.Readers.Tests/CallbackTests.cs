@@ -19,8 +19,8 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(CallbackTests),"Samples.CallbackSample.yaml");
             var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
 
-            PathItem path = openApiDoc.Paths.First().Value;
-            Operation subscribeOperation = path.Operations["post"];
+            OpenApiPathItem path = openApiDoc.Paths.First().Value;
+            OpenApiOperation subscribeOperation = path.Operations["post"];
 
             var callback = subscribeOperation.Callbacks["mainHook"];
             var pathItem = callback.PathItems.First().Value;
@@ -44,14 +44,14 @@ namespace Microsoft.OpenApi.Readers.Tests
             var callbackPair = operation.Callbacks.First();
             Assert.Equal("simplehook", callbackPair.Key);
 
-            Callback callback = callbackPair.Value;
+            OpenApiCallback callback = callbackPair.Value;
             var pathItemPair = callback.PathItems.First();
             Assert.Equal("$request.body(/url)", pathItemPair.Key.Expression);
 
-            PathItem pathItem = pathItemPair.Value;
+            OpenApiPathItem pathItem = pathItemPair.Value;
 
             var operationPair = pathItem.Operations.First();
-            Operation cboperation = operationPair.Value;
+            OpenApiOperation cboperation = operationPair.Value;
             Assert.Equal("post", operationPair.Key);
 
             Assert.NotNull(callback);

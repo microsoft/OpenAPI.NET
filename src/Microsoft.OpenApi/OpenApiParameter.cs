@@ -1,11 +1,14 @@
-﻿
+﻿//---------------------------------------------------------------------
+// <copyright file="OpenApiParameter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+
 namespace Microsoft.OpenApi
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-
     public enum InEnum
     {
         path = 1,
@@ -13,7 +16,10 @@ namespace Microsoft.OpenApi
         header = 3
     }
 
-    public class Parameter : IReference
+    /// <summary>
+    /// Parameter Object.
+    /// </summary>
+    public class OpenApiParameter : IReference
     {
         public OpenApiReference Pointer { get; set; }
         public string Name { get; set; }
@@ -49,10 +55,10 @@ namespace Microsoft.OpenApi
         public string Style { get; set; }
         public bool Explode { get; set; }
         public bool AllowReserved { get; set; }
-        public Schema Schema { get; set; }
-        public List<Example> Examples { get; set; } = new List<Example>();
+        public OpenApiSchema Schema { get; set; }
+        public List<OpenApiExample> Examples { get; set; } = new List<OpenApiExample>();
         public string Example { get; set; }
-        public Dictionary<string, MediaType> Content { get; set; }
+        public Dictionary<string, OpenApiMediaType> Content { get; set; }
         public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         

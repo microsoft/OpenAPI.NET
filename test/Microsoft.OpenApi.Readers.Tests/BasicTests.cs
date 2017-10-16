@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             Assert.Equal("1.0.0", openApiDoc.Version);
             Assert.Equal(0, openApiDoc.Paths.Count());
             Assert.Equal("The Api", openApiDoc.Info.Title);
-            Assert.Equal("0.9.1", openApiDoc.Info.Version);
+            Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());
             Assert.Equal(0, context.ParseErrors.Count);
 
         }

@@ -1,12 +1,16 @@
-﻿
+﻿//---------------------------------------------------------------------
+// <copyright file="OpenApiV2Writer.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+
 namespace Microsoft.OpenApi.Writers
 {
-    using System;
-    using System.IO;
-    using Microsoft.OpenApi;
-    using System.Linq;
-    using System.Collections.Generic;
-
     public class OpenApiV2Writer : IOpenApiWriter
     {
         Func<Stream, IParseNodeWriter> defaultWriterFactory = s => new YamlParseNodeWriter(s);
@@ -58,7 +62,7 @@ namespace Microsoft.OpenApi.Writers
 
         }
 
-        private static void WriteHostInfo(IParseNodeWriter writer, IList<Server> servers)
+        private static void WriteHostInfo(IParseNodeWriter writer, IList<OpenApiServer> servers)
         {
             if (servers == null || servers.Count == 0) return;
             var firstServer = servers.First();
@@ -75,7 +79,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndList();
         }
 
-        public static void WriteInfo(IParseNodeWriter writer, Info info)
+        public static void WriteInfo(IParseNodeWriter writer, OpenApiInfo info)
         {
             writer.WriteStartMap();
 
@@ -84,12 +88,12 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteStringProperty("termsOfService", info.TermsOfService);
             writer.WriteObject("contact", info.Contact, WriteContact);
             writer.WriteObject("license", info.License, WriteLicense);
-            writer.WriteStringProperty("version", info.Version);
+            writer.WriteStringProperty("version", info.Version.ToString());
 
             writer.WriteEndMap();
         }
 
-        public static void WriteContact(IParseNodeWriter writer, Contact contact)
+        public static void WriteContact(IParseNodeWriter writer, OpenApiContact contact)
         {
 
             writer.WriteStartMap();
@@ -101,7 +105,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndMap();
         }
 
-        public static void WriteLicense(IParseNodeWriter writer, License license)
+        public static void WriteLicense(IParseNodeWriter writer, OpenApiLicense license)
         {
             writer.WriteStartMap();
 
@@ -110,7 +114,7 @@ namespace Microsoft.OpenApi.Writers
 
             writer.WriteEndMap();
         }
-        public static void WriteTag(IParseNodeWriter writer, Tag tag)
+        public static void WriteTag(IParseNodeWriter writer, OpenApiTag tag)
         {
             writer.WriteStartMap();
             writer.WriteStringProperty("name", tag.Name);
@@ -118,11 +122,11 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndMap();
         }
 
-        public static void WriteTagRef(IParseNodeWriter writer, Tag tag)
+        public static void WriteTagRef(IParseNodeWriter writer, OpenApiTag tag)
         {
             writer.WriteValue(tag.Name);
         }
-        public static void WriteComponents(IParseNodeWriter writer, Components components)
+        public static void WriteComponents(IParseNodeWriter writer, OpenApiComponents components)
         {
             writer.WriteMap("definitions", components.Schemas, WriteSchema);
             writer.WriteMap("responses", components.Responses, WriteResponse);
@@ -131,7 +135,7 @@ namespace Microsoft.OpenApi.Writers
 
         }
         
-        public static void WriteExternalDocs(IParseNodeWriter writer, ExternalDocs externalDocs)
+        public static void WriteExternalDocs(IParseNodeWriter writer, OpenApiExternalDocs externalDocs)
         {
             writer.WriteStartMap();
             writer.WriteStringProperty("description", externalDocs.Description);
@@ -140,7 +144,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
 
-        public static void WriteSecurityRequirement(IParseNodeWriter writer, SecurityRequirement securityRequirement)
+        public static void WriteSecurityRequirement(IParseNodeWriter writer, OpenApiSecurityRequirement securityRequirement)
         {
 
             writer.WriteStartMap();
@@ -163,7 +167,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
 
-        public static void WritePaths(IParseNodeWriter writer, Paths paths)
+        public static void WritePaths(IParseNodeWriter writer, OpenApiPaths paths)
         {
             foreach (var pathItem in paths)
             {
@@ -172,7 +176,7 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        public static void WritePathItem(IParseNodeWriter writer, PathItem pathItem)
+        public static void WritePathItem(IParseNodeWriter writer, OpenApiPathItem pathItem)
         {
             writer.WriteStartMap();
             writer.WriteStringProperty("x-summary", pathItem.Summary);
@@ -199,7 +203,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
 
-        public static void WriteOperation(IParseNodeWriter writer, Operation operation)
+        public static void WriteOperation(IParseNodeWriter writer, OpenApiOperation operation)
         {
             writer.WriteStartMap();
             writer.WriteList("tags", operation.Tags, WriteTagRef);
@@ -209,9 +213,9 @@ namespace Microsoft.OpenApi.Writers
 
             writer.WriteStringProperty("operationId", operation.OperationId);
 
-            var parameters = new List<Parameter>(operation.Parameters);
+            var parameters = new List<OpenApiParameter>(operation.Parameters);
 
-            Parameter bodyParameter = null;
+            OpenApiParameter bodyParameter = null;
             if (operation.RequestBody != null)
             {
                 writer.WritePropertyName("consumes");
@@ -246,15 +250,15 @@ namespace Microsoft.OpenApi.Writers
                 writer.WriteEndList();
             }
 
-            writer.WriteList<Parameter>("parameters", parameters, WriteParameterOrReference);
-            writer.WriteMap<Response>("responses", operation.Responses, WriteResponseOrReference);
-            writer.WriteBoolProperty("deprecated", operation.Deprecated, Operation.DeprecatedDefault);
+            writer.WriteList<OpenApiParameter>("parameters", parameters, WriteParameterOrReference);
+            writer.WriteMap<OpenApiResponse>("responses", operation.Responses, WriteResponseOrReference);
+            writer.WriteBoolProperty("deprecated", operation.Deprecated, OpenApiOperation.DeprecatedDefault);
             writer.WriteList("security", operation.Security, WriteSecurityRequirement);
 
             writer.WriteEndMap();
         }
 
-        public static void WriteParameterOrReference(IParseNodeWriter writer, Parameter parameter)
+        public static void WriteParameterOrReference(IParseNodeWriter writer, OpenApiParameter parameter)
         {
             if (parameter.IsReference())
             {
@@ -266,7 +270,7 @@ namespace Microsoft.OpenApi.Writers
                 WriteParameter(writer, parameter);
             }
         }
-        public static void WriteParameter(IParseNodeWriter writer, Parameter parameter)
+        public static void WriteParameter(IParseNodeWriter writer, OpenApiParameter parameter)
         {
             writer.WriteStartMap();
             writer.WriteStringProperty("name", parameter.Name);
@@ -299,7 +303,7 @@ namespace Microsoft.OpenApi.Writers
 
 
 
-        public static void WriteResponseOrReference(IParseNodeWriter writer, Response response)
+        public static void WriteResponseOrReference(IParseNodeWriter writer, OpenApiResponse response)
         {
             if (response.IsReference())
             {
@@ -311,7 +315,7 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        public static void WriteResponse(IParseNodeWriter writer, Response response)
+        public static void WriteResponse(IParseNodeWriter writer, OpenApiResponse response)
         {
             writer.WriteStartMap();
 
@@ -342,7 +346,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
 
-        public static void WriteSchemaOrReference(IParseNodeWriter writer, Schema schema)
+        public static void WriteSchemaOrReference(IParseNodeWriter writer, OpenApiSchema schema)
         {
             if (schema.IsReference())
             {
@@ -354,7 +358,7 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        public static void WriteSchema(IParseNodeWriter writer, Schema schema)
+        public static void WriteSchema(IParseNodeWriter writer, OpenApiSchema schema)
         {
             writer.WriteStartMap();
 
@@ -363,7 +367,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndMap();
         }
 
-        private static void WriteSchemaProperties(IParseNodeWriter writer, Schema schema)
+        private static void WriteSchemaProperties(IParseNodeWriter writer, OpenApiSchema schema)
         {
             writer.WriteStringProperty("title", schema.Title);
             writer.WriteStringProperty("type", schema.Type);
@@ -420,7 +424,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteList("enum", schema.Enum, (nodeWriter, s) => nodeWriter.WriteValue(s));
         }
 
-        public static void WriteHeaderOrReference(IParseNodeWriter writer, Header header)
+        public static void WriteHeaderOrReference(IParseNodeWriter writer, OpenApiHeader header)
         {
             if (header.IsReference())
             {
@@ -432,7 +436,7 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        public static void WriteHeader(IParseNodeWriter writer, Header header)
+        public static void WriteHeader(IParseNodeWriter writer, OpenApiHeader header)
         {
             writer.WriteStartMap();
 
@@ -451,7 +455,7 @@ namespace Microsoft.OpenApi.Writers
 
         
 
-        public static void WriteSecurityScheme(IParseNodeWriter writer, SecurityScheme securityScheme)
+        public static void WriteSecurityScheme(IParseNodeWriter writer, OpenApiSecurityScheme securityScheme)
         {
             writer.WriteStartMap();
             if (securityScheme.Type == "http")
@@ -479,12 +483,9 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndMap();
 
         }
-
-
-
     }
 
-    internal class BodyParameter : Parameter
+    internal class BodyParameter : OpenApiParameter
     {
 
     }
