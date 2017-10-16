@@ -1,135 +1,135 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="JsonParseNodeWriter.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿////---------------------------------------------------------------------
+//// <copyright file="JsonParseNodeWriter.cs" company="Microsoft">
+////      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+//// </copyright>
+////---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
+//using System;
+//using System.Collections.Generic;
+//using System.IO;
 
-namespace Microsoft.OpenApi.Writers
-{
-    public class JsonParseNodeWriter : IParseNodeWriter
-    {
-        enum ParseState
-        {
-            Initial,
-            InList,
-            InMap
-        };
+//namespace Microsoft.OpenApi.Writers
+//{
+//    public class JsonParseNodeWriter : IOpenApiWriter
+//    {
+//        enum ParseState
+//        {
+//            Initial,
+//            InList,
+//            InMap
+//        };
 
-        Stack<ParseState> state = new Stack<ParseState>();
-        StreamWriter writer;
+//        Stack<ParseState> state = new Stack<ParseState>();
+//        StreamWriter writer;
 
-        public JsonParseNodeWriter(Stream stream)
-        {
-            this.writer = new StreamWriter(stream)
-            {
-                NewLine = "\n"
-            };
-        }
+//        public JsonParseNodeWriter(Stream stream)
+//        {
+//            this.writer = new StreamWriter(stream)
+//            {
+//                NewLine = "\n"
+//            };
+//        }
 
-        public void Flush()
-        {
-            this.writer.Flush();
-        }
+//        public void Flush()
+//        {
+//            this.writer.Flush();
+//        }
 
-        string Indent = "";
-        bool first = true;
-        void IncreaseIndent()
-        {
-            Indent += "  ";
-        }
-        void DecreaseIndent()
-        {
-            Indent = Indent.Substring(0,Indent.Length -2 );
-        }
-        public void WriteStartDocument() { }
-        public void WriteEndDocument() { }
-        public void WriteStartList() {
-            writer.WriteLine(" [");
-            state.Push(ParseState.InList);
-            IncreaseIndent();
-            first = true;
-        }
-        public void WriteEndList() {
-            writer.WriteLine();
-            writer.Write(Indent + "]");
-            state.Pop();
-            DecreaseIndent();
-        }
+//        string Indent = "";
+//        bool first = true;
+//        void IncreaseIndent()
+//        {
+//            Indent += "  ";
+//        }
+//        void DecreaseIndent()
+//        {
+//            Indent = Indent.Substring(0,Indent.Length -2 );
+//        }
+//        public void WriteStartDocument() { }
+//        public void WriteEndDocument() { }
+//        public void WriteStartList() {
+//            writer.WriteLine(" [");
+//            state.Push(ParseState.InList);
+//            IncreaseIndent();
+//            first = true;
+//        }
+//        public void WriteEndList() {
+//            writer.WriteLine();
+//            writer.Write(Indent + "]");
+//            state.Pop();
+//            DecreaseIndent();
+//        }
 
-        public void WriteListItem<T>(T item, Action<IParseNodeWriter, T> parser)
-        {
-            if (!first)
-            {
-                writer.Write(",");
-                writer.WriteLine();
-                writer.Write(Indent);
-            }
-            else
-            {
-                writer.Write(Indent);
-                first = false;
-            }
+//        public void WriteListItem<T>(T item, Action<IOpenApiWriter, T> parser)
+//        {
+//            if (!first)
+//            {
+//                writer.Write(",");
+//                writer.WriteLine();
+//                writer.Write(Indent);
+//            }
+//            else
+//            {
+//                writer.Write(Indent);
+//                first = false;
+//            }
 
-            if (item != null)
-                parser(this, item);
-            else
-                WriteNull();
-        }
+//            if (item != null)
+//                parser(this, item);
+//            else
+//                WriteNull();
+//        }
 
-        public void WriteStartMap() {
-            writer.WriteLine(Indent + "{");
-            state.Push(ParseState.InMap);
-            IncreaseIndent();
-            first = true;
-        }
-        public void WriteEndMap() {
-            writer.WriteLine();
-            writer.Write(Indent + "}");
-            state.Pop();
-            DecreaseIndent();
-            first = false;
-        }
+//        public void WriteStartMap() {
+//            writer.WriteLine(Indent + "{");
+//            state.Push(ParseState.InMap);
+//            IncreaseIndent();
+//            first = true;
+//        }
+//        public void WriteEndMap() {
+//            writer.WriteLine();
+//            writer.Write(Indent + "}");
+//            state.Pop();
+//            DecreaseIndent();
+//            first = false;
+//        }
 
-        public void WritePropertyName(string name) {
-            if (!first)
-            {
-                writer.WriteLine(",");
-            } else
-            {
-                first = false;
-            }
-            writer.Write(Indent + "\"" + name + "\": " );
-        }
+//        public void WritePropertyName(string name) {
+//            if (!first)
+//            {
+//                writer.WriteLine(",");
+//            } else
+//            {
+//                first = false;
+//            }
+//            writer.Write(Indent + "\"" + name + "\": " );
+//        }
 
-        public void WriteValue(string value) {
-            value = value.Replace("\n", "\\n");
-            writer.Write("\"" + value + "\"");
-        }
+//        public void WriteValue(string value) {
+//            value = value.Replace("\n", "\\n");
+//            writer.Write("\"" + value + "\"");
+//        }
 
-        public void WriteValue(Decimal value) {
-            writer.WriteLine(value.ToString());  //TODO deal with culture issues
-        }
+//        public void WriteValue(Decimal value) {
+//            writer.WriteLine(value.ToString());  //TODO deal with culture issues
+//        }
 
-        public void WriteValue(int value) {
-            writer.Write(value.ToString());  //TODO deal with culture issues
-       }
+//        public void WriteValue(int value) {
+//            writer.Write(value.ToString());  //TODO deal with culture issues
+//       }
 
-        public void WriteValue(bool value) {
-            writer.Write(value.ToString().ToLower());  //TODO deal with culture issues
-        }
+//        public void WriteValue(bool value) {
+//            writer.Write(value.ToString().ToLower());  //TODO deal with culture issues
+//        }
 
-        public void WriteRaw(string value)
-        {
-            writer.Write(value);  
-        }
+//        public void WriteRaw(string value)
+//        {
+//            writer.Write(value);  
+//        }
 
-        public void WriteNull()
-        {
-            writer.WriteLine("null");
-        }
-    }
-}
+//        public void WriteNull()
+//        {
+//            writer.WriteLine("null");
+//        }
+//    }
+//}

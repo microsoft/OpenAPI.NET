@@ -15,11 +15,11 @@ namespace Microsoft.OpenApi.Writers
             return reference.Pointer != null;
         }
 
-        public static void WriteRef(this IReference reference, IParseNodeWriter writer)
+        public static void WriteRef(this IReference reference, IOpenApiWriter writer)
         {
-            writer.WriteStartMap();
+            writer.WriteStartObject();
             writer.WriteStringProperty("$ref", reference.Pointer.ToString());
-            writer.WriteEndMap();
+            writer.WriteEndObject();
         }
 
     }
