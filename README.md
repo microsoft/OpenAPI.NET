@@ -6,7 +6,7 @@ category: OpenAPI REST Swagger
 
 # OpenAPI.Net
 
-The **OpenAPI.NET** SDK contains a usefull object model for OpenAPI V3 documents in .NET along with a common serializer to extract raw OAI JSON documents from the model.
+The **OpenAPI.NET** SDK contains a useful object model for OpenAPI V3 documents in .NET along with a common serializer to extract raw OAI JSON documents from the model.
 
 **See more information on the Open API spec and it's history here: <a href="https://www.openapis.org"/>Open API Initiative</a>**
 
