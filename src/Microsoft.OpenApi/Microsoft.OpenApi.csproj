@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors></Authors>
+    <Company>Microsoft</Company>
+    <Product>Microsoft.OpenApi</Product>
+    <PackageId>Microsoft.OpenApi</PackageId>
+    <Version>0.9.0</Version>
+    <Description>Parser for OpenAPI descriptions</Description>
+    <AssemblyName>Microsoft.OpenApi</AssemblyName>
+    <RootNamespace>Microsoft.OpenApi</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

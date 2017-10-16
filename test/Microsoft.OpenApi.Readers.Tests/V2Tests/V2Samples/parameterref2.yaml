@@ -1,0 +1,13 @@
+﻿swagger: 2.0
+info: 
+  title: A referenced parameter
+  version: 1.0.0
+paths: 
+  /resource:
+    parameters:
+    - $ref: "#/parameters/reusable"
+parameters:
+  reusable:
+    name: boo
+    type: string
+    in: query
