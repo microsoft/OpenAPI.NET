@@ -22,7 +22,7 @@ The OpenAPI.NET project holds the base object model for representing OAI documen
 
 - EMD Reader Repo: <a href="https://github.com/">Link</a>
 - .NET Comment Reader Repo: <a href="https://github.com/">Link</a>
-- YANL/JSON Reader Repo <a href="https://github.com/">Link</a>
+- YAML/JSON Reader Repo <a href="https://github.com/">Link</a>
 
 # Contributing
 
