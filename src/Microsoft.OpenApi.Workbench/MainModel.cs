@@ -123,8 +123,8 @@ namespace OpenApiWorkbench
 
         private string WriteContents(OpenApiDocument doc)
         {
-            Func<Stream, IParseNodeWriter> writerFactory = s => (this.format == "Yaml" ? (IParseNodeWriter)new YamlParseNodeWriter(s) : (IParseNodeWriter)new JsonParseNodeWriter(s));
-            IOpenApiWriter writer;
+            Func<Stream, IOpenApiWriter> writerFactory = s => (this.format == "Yaml" ? new OpenApiYamlWriter(new StreamWriter(s)) : (IOpenApiWriter)new OpenApiJsonWriter(new StreamWriter(s)));
+            IOpenApiStructureWriter writer;
             if (IsV3)
             {
                 writer = new OpenApiV3Writer(writerFactory);

@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Writers
     using System.Linq;
     public static class WriterExtensions
     {
-        public static void Save(this OpenApiDocument doc, Stream stream, IOpenApiWriter openApiWriter = null)
+        public static void Save(this OpenApiDocument doc, Stream stream, IOpenApiStructureWriter openApiWriter = null)
         {
             if (openApiWriter == null)
             {
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Writers
             openApiWriter.Write(stream, doc);
         }
 
-        public static void WriteObject<T>(this IParseNodeWriter writer, string propertyName, T entity, Action<IParseNodeWriter, T> parser)
+        public static void WriteObject<T>(this IOpenApiWriter writer, string propertyName, T entity, Action<IOpenApiWriter, T> parser)
         {
             if (entity != null)
             {
@@ -32,27 +32,27 @@ namespace Microsoft.OpenApi.Writers
 
         }
 
-        public static void WriteList<T>(this IParseNodeWriter writer, string propertyName, IList<T> list, Action<IParseNodeWriter, T> parser)
+        public static void WriteList<T>(this IOpenApiWriter writer, string propertyName, IList<T> list, Action<IOpenApiWriter, T> parser)
         {
             if (list != null && list.Any())
             {
                 writer.WritePropertyName(propertyName);
-                writer.WriteStartList();
+                writer.WriteStartArray();
                 foreach (var item in list)
                 {
-                    writer.WriteListItem(item, parser);
+                    parser(writer,item);
                 }
-                writer.WriteEndList();
+                writer.WriteEndArray();
             }
 
         }
 
-        public static void WriteMap<T>(this IParseNodeWriter writer, string propertyName, IDictionary<string, T> list, Action<IParseNodeWriter, T> parser)
+        public static void WriteMap<T>(this IOpenApiWriter writer, string propertyName, IDictionary<string, T> list, Action<IOpenApiWriter, T> parser)
         {
             if (list != null && list.Count() > 0)
             {
                 writer.WritePropertyName(propertyName);
-                writer.WriteStartMap();
+                writer.WriteStartObject();
                 foreach (var item in list)
                 {
                     writer.WritePropertyName(item.Key);
@@ -65,12 +65,12 @@ namespace Microsoft.OpenApi.Writers
                         writer.WriteNull();
                     }
                 }
-                writer.WriteEndMap();
+                writer.WriteEndObject();
             }
 
         }
 
-        public static void WriteStringProperty(this IParseNodeWriter writer, string name, string value)
+        public static void WriteStringProperty(this IOpenApiWriter writer, string name, string value)
         {
             if (!String.IsNullOrEmpty(value))
             {
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Writers
                 writer.WriteValue(value);
             }
         }
-        public static void WriteBoolProperty(this IParseNodeWriter writer, string name, bool value, bool? defaultValue = null)
+        public static void WriteBoolProperty(this IOpenApiWriter writer, string name, bool value, bool? defaultValue = null)
         {
             if (defaultValue == null || value != defaultValue)
             {
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        public static void WriteNumberProperty(this IParseNodeWriter writer, string name, decimal value, decimal? defaultValue = null)
+        public static void WriteNumberProperty(this IOpenApiWriter writer, string name, decimal value, decimal? defaultValue = null)
         {
             if (defaultValue == null || value != defaultValue)
             {
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        public static void WriteNumberProperty(this IParseNodeWriter writer, string name, int? value)
+        public static void WriteNumberProperty(this IOpenApiWriter writer, string name, int? value)
         {
             if (value != null)
             {
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        public static void WriteNumberProperty(this IParseNodeWriter writer, string name, decimal? value)
+        public static void WriteNumberProperty(this IOpenApiWriter writer, string name, decimal? value)
         {
             if (value != null)
             {

@@ -183,7 +183,7 @@ namespace OpenApiTests
         private static JObject ExportV2ToJObject(OpenApiDocument openApiDoc)
         {
             var outputStream = new MemoryStream();
-            openApiDoc.Save(outputStream, new OpenApiV2Writer((s) => new JsonParseNodeWriter(s)));
+            openApiDoc.Save(outputStream, new OpenApiV2Writer((s) => new OpenApiJsonWriter(new StreamWriter(s))));
             outputStream.Position = 0;
             var json = new StreamReader(outputStream).ReadToEnd();
             var jObject = JObject.Parse(json);

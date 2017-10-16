@@ -16,19 +16,16 @@ namespace OpenApiTests
         [Fact]
         public void WriteMap()
         {
-            var outputStream = new MemoryStream();
-            var writer = new JsonParseNodeWriter(outputStream);
-            writer.WriteStartDocument();
-            writer.WriteStartMap();
+            var outputString = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputString);
+            writer.WriteStartObject();
             writer.WriteStringProperty("hello","world");
             writer.WriteStringProperty("good", "bye");
-            writer.WriteEndMap();
-            writer.WriteEndDocument();
+            writer.WriteEndObject();
             writer.Flush();
 
-            outputStream.Position = 0;
-            var json = new StreamReader(outputStream).ReadToEnd();
-            var jObject = JObject.Parse(json);
+
+            var jObject = JObject.Parse(outputString.GetStringBuilder().ToString());
 
             Assert.Equal("world", jObject["hello"]);
         }
@@ -36,19 +33,15 @@ namespace OpenApiTests
         [Fact]
         public void WriteList()
         {
-            var outputStream = new MemoryStream();
-            var writer = new JsonParseNodeWriter(outputStream);
-            writer.WriteStartDocument();
-            writer.WriteStartList();
-            writer.WriteListItem("hello", (w,s) => w.WriteValue(s));
-            writer.WriteListItem("world", (w, s) => w.WriteValue(s));
-            writer.WriteEndList();
-            writer.WriteEndDocument();
+            var outputString = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputString);
+            writer.WriteStartArray();
+            writer.WriteValue("hello");
+            writer.WriteValue("world");
+            writer.WriteEndArray();
             writer.Flush();
 
-            outputStream.Position = 0;
-            var json = new StreamReader(outputStream).ReadToEnd();
-            var jarray = JArray.Parse(json);
+            var jarray = JArray.Parse(outputString.GetStringBuilder().ToString());
 
             Assert.Equal(2, jarray.Count);
         }
@@ -56,27 +49,23 @@ namespace OpenApiTests
         [Fact]
         public void WriteNestedMap()
         {
-            var outputStream = new MemoryStream();
-            var writer = new JsonParseNodeWriter(outputStream);
-            writer.WriteStartDocument();
-                writer.WriteStartMap();
+            var outputString = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputString);
+                writer.WriteStartObject();
                     writer.WritePropertyName("intro");
-                    writer.WriteStartMap();
+                    writer.WriteStartObject();
                     writer.WriteStringProperty("hello", "world");
-                    writer.WriteEndMap();
+                    writer.WriteEndObject();
 
                     writer.WritePropertyName("outro");
-                    writer.WriteStartMap();
+                    writer.WriteStartObject();
                     writer.WriteStringProperty("good", "bye");
-                    writer.WriteEndMap();
+                    writer.WriteEndObject();
 
-                writer.WriteEndMap();
-            writer.WriteEndDocument();
+                writer.WriteEndObject();
             writer.Flush();
 
-            outputStream.Position = 0;
-            var json = new StreamReader(outputStream).ReadToEnd();
-            var jObject = JObject.Parse(json);
+            var jObject = JObject.Parse(outputString.GetStringBuilder().ToString());
 
             Assert.Equal("world", jObject["intro"]["hello"]);
         }
@@ -84,26 +73,23 @@ namespace OpenApiTests
         [Fact]
         public void WriteNestedEmptyMap()
         {
-            var outputStream = new MemoryStream();
-            var writer = new JsonParseNodeWriter(outputStream);
-            writer.WriteStartDocument();
-            writer.WriteStartMap();
+            var outputString = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputString);
+
+            writer.WriteStartObject();
             writer.WritePropertyName("intro");
-            writer.WriteStartMap();
-            writer.WriteEndMap();
+            writer.WriteStartObject();
+            writer.WriteEndObject();
 
             writer.WritePropertyName("outro");
-            writer.WriteStartMap();
+            writer.WriteStartObject();
             writer.WriteStringProperty("good", "bye");
-            writer.WriteEndMap();
+            writer.WriteEndObject();
 
-            writer.WriteEndMap();
-            writer.WriteEndDocument();
+            writer.WriteEndObject();
             writer.Flush();
 
-            outputStream.Position = 0;
-            var json = new StreamReader(outputStream).ReadToEnd();
-            var jObject = JObject.Parse(json);
+            var jObject = JObject.Parse(outputString.GetStringBuilder().ToString());
 
             Assert.Equal("bye", jObject["outro"]["good"]);
         }
