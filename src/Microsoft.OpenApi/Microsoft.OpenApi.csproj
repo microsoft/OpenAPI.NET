@@ -19,8 +19,4 @@
     <Compile Remove="Writers\YamlParseNodeWriter.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
 </Project>
