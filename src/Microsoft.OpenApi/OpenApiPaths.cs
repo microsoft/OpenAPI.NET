@@ -1,30 +1,38 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="OpenApiPaths.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
-    public class Paths : IDictionary<string,PathItem>
+    /// <summary>
+    /// Paths object.
+    /// </summary>
+    public class OpenApiPaths : IDictionary<string, OpenApiPathItem>
     {
-        public PathItem this[string key] { get => this.PathItems[key]; set => this.PathItems[key] = value; }
+        public OpenApiPathItem this[string key] { get => this.PathItems[key]; set => this.PathItems[key] = value; }
 
-        private IDictionary<string, PathItem> PathItems { get; set; } = new Dictionary<string, PathItem>();
+        private IDictionary<string, OpenApiPathItem> PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
         public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         public ICollection<string> Keys => this.PathItems.Keys;
 
-        public ICollection<PathItem> Values => this.PathItems.Values;
+        public ICollection<OpenApiPathItem> Values => this.PathItems.Values;
 
         public int Count => this.PathItems.Count;
 
         public bool IsReadOnly => this.PathItems.IsReadOnly;
 
-        public void Add(string key, PathItem value)
+        public void Add(string key, OpenApiPathItem value)
         {
             PathItems.Add(key, value); 
         }
 
-        public void Add(KeyValuePair<string, PathItem> item)
+        public void Add(KeyValuePair<string, OpenApiPathItem> item)
         {
             PathItems.Add(item);
         }
@@ -34,7 +42,7 @@ namespace Microsoft.OpenApi
             this.PathItems.Clear();
         }
 
-        public bool Contains(KeyValuePair<string, PathItem> item)
+        public bool Contains(KeyValuePair<string, OpenApiPathItem> item)
         {
             return this.PathItems.Contains(item);
         }
@@ -44,7 +52,7 @@ namespace Microsoft.OpenApi
             return this.PathItems.ContainsKey(key);
         }
 
-        public void CopyTo(KeyValuePair<string, PathItem>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<string, OpenApiPathItem>[] array, int arrayIndex)
         {
             this.PathItems.CopyTo(array, arrayIndex);
         }
@@ -55,12 +63,12 @@ namespace Microsoft.OpenApi
             return this.PathItems.Remove(key);
         }
 
-        public bool Remove(KeyValuePair<string, PathItem> item)
+        public bool Remove(KeyValuePair<string, OpenApiPathItem> item)
         {
             return this.PathItems.Remove(item);
         }
 
-        public bool TryGetValue(string key, out PathItem value)
+        public bool TryGetValue(string key, out OpenApiPathItem value)
         {
             return this.PathItems.TryGetValue(key, out value);
         }
@@ -75,7 +83,7 @@ namespace Microsoft.OpenApi
             return this.PathItems.GetEnumerator();
         }
 
-        IEnumerator<KeyValuePair<string, PathItem>> IEnumerable<KeyValuePair<string, PathItem>>.GetEnumerator()
+        IEnumerator<KeyValuePair<string, OpenApiPathItem>> IEnumerable<KeyValuePair<string, OpenApiPathItem>>.GetEnumerator()
         {
             return this.PathItems.GetEnumerator();
         }

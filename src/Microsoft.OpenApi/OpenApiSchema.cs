@@ -1,12 +1,17 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="OpenApiSchema.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Microsoft.OpenApi
 {
- 
-    public class Schema : IReference
-
+    /// <summary>
+    /// Schema Object.
+    /// </summary>
+    public class OpenApiSchema : IReference
     {
         public string Title { get; set; }
         public string Type { get; set; }
@@ -23,25 +28,25 @@ namespace Microsoft.OpenApi
         public string Default { get; set; }
         public bool ReadOnly { get; set; }
         public bool WriteOnly { get; set; }
-        public List<Schema> AllOf { get; set; }
-        public List<Schema> OneOf { get; set; }
-        public List<Schema> AnyOf { get; set; }
-        public Schema Not { get; set; }
+        public List<OpenApiSchema> AllOf { get; set; }
+        public List<OpenApiSchema> OneOf { get; set; }
+        public List<OpenApiSchema> AnyOf { get; set; }
+        public OpenApiSchema Not { get; set; }
         public string[] Required { get; set; }
-        public Schema Items { get; set; }
+        public OpenApiSchema Items { get; set; }
         public int? MaxItems { get; set; }
         public int? MinItems { get; set; }
         public bool UniqueItems { get; set; }
-        public Dictionary<string,Schema> Properties { get; set; }
+        public Dictionary<string,OpenApiSchema> Properties { get; set; }
         public int? MaxProperties { get; set; }
         public int? MinProperties { get; set; }
         public bool AdditionalPropertiesAllowed { get; set; }
-        public Schema AdditionalProperties { get; set; }
+        public OpenApiSchema AdditionalProperties { get; set; }
 
         public string Example { get; set; }
         public List<string> Enum { get; set; } = new List<string>();
         public bool Nullable { get; set; }
-        public ExternalDocs ExternalDocs { get; set; }
+        public OpenApiExternalDocs ExternalDocs { get; set; }
         public bool Deprecated { get; set; }
 
         public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
@@ -51,8 +56,5 @@ namespace Microsoft.OpenApi
             get;
             set;
         }
-
-
-        
     }
 }

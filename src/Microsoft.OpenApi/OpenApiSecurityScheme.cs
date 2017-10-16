@@ -1,10 +1,18 @@
-﻿
+﻿//---------------------------------------------------------------------
+// <copyright file="OpenApiSecuritySchema.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+
 namespace Microsoft.OpenApi
 {
-    using System;
-    using System.Collections.Generic;
-
-    public class SecurityScheme : IReference
+    /// <summary>
+    /// Security Scheme Object.
+    /// </summary>
+    public class OpenApiSecurityScheme : IReference
     {
         public string Key { get; set; }
         public string Type { get; set; }
@@ -25,7 +33,5 @@ namespace Microsoft.OpenApi
         {
             get; set;
         }
-
-
     }
 }

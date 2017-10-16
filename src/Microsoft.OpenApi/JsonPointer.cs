@@ -1,10 +1,14 @@
-﻿
+﻿//---------------------------------------------------------------------
+// <copyright file="JsonPointer.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
+using System.Linq;
 
 namespace Microsoft.OpenApi
 {
-    using System;
-    using System.Linq;
-
     public class JsonPointer
     {
         private readonly string[] _Tokens;

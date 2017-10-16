@@ -44,8 +44,8 @@ namespace OpenApiTests
         public void HostTest()
         {
             var openApiDoc = new OpenApiDocument();
-            openApiDoc.Servers.Add(new Server() { Url = "http://example.org/api" });
-            openApiDoc.Servers.Add(new Server() { Url = "https://example.org/api" });
+            openApiDoc.Servers.Add(new OpenApiServer() { Url = "http://example.org/api" });
+            openApiDoc.Servers.Add(new OpenApiServer() { Url = "https://example.org/api" });
 
             JObject jObject = ExportV2ToJObject(openApiDoc);
 
@@ -58,19 +58,19 @@ namespace OpenApiTests
         public void TestConsumes()
         {
             var openApiDoc = new OpenApiDocument();
-            var pathItem = new PathItem();
-            var operation = new Operation
+            var pathItem = new OpenApiPathItem();
+            var operation = new OpenApiOperation
             {
-                RequestBody = new RequestBody
+                RequestBody = new OpenApiRequestBody
                 {
-                    Content = new Dictionary<string,MediaType>() {
-                        { "application/vnd.collection+json", new MediaType
+                    Content = new Dictionary<string,OpenApiMediaType>() {
+                        { "application/vnd.collection+json", new OpenApiMediaType
                                 {
                                 }
                         }
                     }
                 }, 
-                Responses = new Dictionary<string,Response> { { "200", new Response() {
+                Responses = new Dictionary<string, OpenApiResponse> { { "200", new OpenApiResponse() {
                     Description = "Success"
                 } } }
             };
@@ -87,15 +87,15 @@ namespace OpenApiTests
         public void TestRequestBody()
         {
             var openApiDoc = new OpenApiDocument();
-            var pathItem = new PathItem();
-            var operation = new Operation
+            var pathItem = new OpenApiPathItem();
+            var operation = new OpenApiOperation
             {
-                RequestBody = new RequestBody
+                RequestBody = new OpenApiRequestBody
                 {
-                    Content = new Dictionary<string, MediaType>() {
-                        { "application/vnd.collection+json", new MediaType
+                    Content = new Dictionary<string, OpenApiMediaType>() {
+                        { "application/vnd.collection+json", new OpenApiMediaType
                                 {
-                                    Schema = new Schema
+                                    Schema = new OpenApiSchema
                                     {
                                         Type = "string",
                                         MaxLength = 100
@@ -104,7 +104,7 @@ namespace OpenApiTests
                         }
                     }
                 },
-                Responses = new Dictionary<string, Response> { { "200", new Response() {
+                Responses = new Dictionary<string, OpenApiResponse> { { "200", new OpenApiResponse() {
                     Description = "Success"
                 } } }
             };
@@ -124,13 +124,13 @@ namespace OpenApiTests
         public void TestProduces()
         {
             var openApiDoc = new OpenApiDocument();
-            var pathItem = new PathItem();
-            var operation = new Operation
+            var pathItem = new OpenApiPathItem();
+            var operation = new OpenApiOperation
             {
-                Responses = new Dictionary<string, Response> { { "200", new Response() {
+                Responses = new Dictionary<string, OpenApiResponse> { { "200", new OpenApiResponse() {
                     Description = "Success",
-                    Content = new Dictionary<string, MediaType>() {
-                        { "application/vnd.collection+json", new MediaType
+                    Content = new Dictionary<string, OpenApiMediaType>() {
+                        { "application/vnd.collection+json", new OpenApiMediaType
                                 {
                                 }
                         },
@@ -154,20 +154,20 @@ namespace OpenApiTests
         public void TestParameter()
         {
             var openApiDoc = new OpenApiDocument();
-            var pathItem = new PathItem();
-            var operation = new Operation
+            var pathItem = new OpenApiPathItem();
+            var operation = new OpenApiOperation
             {
-                Parameters = new List<Parameter> {
-                new Parameter {
+                Parameters = new List<OpenApiParameter> {
+                new OpenApiParameter {
                     Name = "param1",
                     In = InEnum.query,
-                    Schema = new Schema
+                    Schema = new OpenApiSchema
                     {
                         Type = "string"
                     }
 
                 } },
-                Responses = new Dictionary<string, Response> { { "200", new Response() {
+                Responses = new Dictionary<string, OpenApiResponse> { { "200", new OpenApiResponse() {
                     Description = "Success"
                 } } }
             };
