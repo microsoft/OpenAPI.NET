@@ -1,14 +1,11 @@
-﻿
-namespace Microsoft.OpenApi.Readers
-{
-    using SharpYaml.Serialization;
-    using System.IO;
-    using System.Linq;
+﻿using SharpYaml.Serialization;
+using System.IO;
+using System.Linq;
 
+namespace Microsoft.OpenApi.Readers.YamlReaders
+{
     public static class YamlHelper
     {
-
-        
         public static ParseNode Create(ParsingContext context, YamlNode node)
         {
             var listNode = node as YamlSequenceNode;

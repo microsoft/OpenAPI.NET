@@ -4,8 +4,9 @@
 // ------------------------------------------------------------
 
 using System.IO;
+using Microsoft.OpenApi.Readers.Interface;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
     /// <summary>
     /// Service class for converting strings into OpenApiDocument instances

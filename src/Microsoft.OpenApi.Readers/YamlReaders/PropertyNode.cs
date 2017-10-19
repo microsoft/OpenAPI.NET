@@ -1,12 +1,10 @@
-﻿
+﻿using SharpYaml.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    using SharpYaml.Serialization;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
     public class PropertyNode : ParseNode
     {
         public PropertyNode(ParsingContext ctx, string name, YamlNode node) : base(ctx)

@@ -1,9 +1,8 @@
-﻿
-namespace Microsoft.OpenApi.Readers
-{
-    using SharpYaml.Serialization;
-    using System;
+﻿using SharpYaml.Serialization;
+using System;
 
+namespace Microsoft.OpenApi.Readers.YamlReaders
+{
     /// <summary>
     /// Wrapper class around YamlDocument to isolate semantic parsing from details of Yaml DOM.
     /// </summary>

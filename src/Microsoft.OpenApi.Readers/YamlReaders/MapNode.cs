@@ -1,15 +1,13 @@
-﻿
+﻿using SharpYaml.Schemas;
+using SharpYaml.Serialization;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    using SharpYaml.Schemas;
-    using SharpYaml.Serialization;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-
     /// <summary>
     /// Abstraction of a Map to isolate semantic parsing from details of 
     /// </summary>

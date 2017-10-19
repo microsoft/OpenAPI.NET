@@ -1,8 +1,5 @@
-﻿
-
-namespace Microsoft.OpenApi
+﻿namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-
     public class OpenApiError
     {
         string pointer;

@@ -1,5 +1,7 @@
 ﻿
 
+using Microsoft.OpenApi.Readers.YamlReaders;
+
 namespace OpenApiTests
 {
     using System;

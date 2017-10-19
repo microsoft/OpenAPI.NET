@@ -1,13 +1,11 @@
-﻿
+﻿using SharpYaml.Serialization;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    using SharpYaml.Serialization;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-
     public class ListNode : ParseNode, IEnumerable<ParseNode>
     {
         YamlSequenceNode nodeList;

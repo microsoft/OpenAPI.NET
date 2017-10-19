@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Readers.YamlReaders;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
     public class InfoTests
     {
-
-
         [Fact]
         public void CheckPetStoreApiInfo()
         {
@@ -21,10 +20,8 @@ namespace Microsoft.OpenApi.Readers.Tests
             Assert.Equal("Swagger Petstore (Simple)", openApiDoc.Info.Title);
             Assert.Equal("A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification", info.Description);
             Assert.Equal("1.0.0", info.Version.ToString());
-
         }
-
-
+        
         [Fact]
         public void ParseCompleteHeaderOpenApi()
         {

@@ -5,10 +5,11 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.OpenApi.Readers.Interface;
 using SharpYaml;
 using SharpYaml.Serialization;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
     /// <summary>
     /// Service class for converting streams into OpenApiDocument instances

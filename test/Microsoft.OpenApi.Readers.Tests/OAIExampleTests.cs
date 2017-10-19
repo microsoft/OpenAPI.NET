@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi;
 using Xunit;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Readers.YamlReaders;
 
 namespace OpenApiTests
 {

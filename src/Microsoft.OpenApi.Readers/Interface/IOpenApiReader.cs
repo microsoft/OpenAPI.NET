@@ -3,7 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.Interface
 {
     /// <summary>
     /// Interface for open API readers.
