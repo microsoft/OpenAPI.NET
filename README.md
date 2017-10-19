@@ -12,17 +12,17 @@ The **OpenAPI.NET** SDK contains a useful object model for OpenAPI V3 documents 
 
 Project Objectives
 
-- blah blah blah
-- blah blah blah
-- blah blah blah
-- blah blah blah
+- Provide a single shared object model in .Net for Open API documents.
+- Include the most primitive Reader for ingesting OAI JSON and YAML documents.
+- Enable developers to create Readers that translate different data formats into Open API documents. 
 
 # Readers
-The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by individual "readers"
+The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by individual "Readers"
 
-- EMD Reader Repo: <a href="https://github.com/">Link</a>
-- .NET Comment Reader Repo: <a href="https://github.com/">Link</a>
-- YAML/JSON Reader Repo <a href="https://github.com/">Link</a>
+The base JSON and YAML Readers are built into this project as documented "here". Below are a few other custom Readers developed externally. 
+
+- EMD/OData Reader Repo: <a href="https://github.com/Microsoft/OpenAPI.NET.OData.Reader">Link</a>
+- .NET Comment Reader Repo: <a href="https://github.com/Microsoft/OpenAPI.NET.CSharpComment.Reader">Link</a>
 
 # Contributing
 
