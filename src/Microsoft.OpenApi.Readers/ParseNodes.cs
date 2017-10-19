@@ -1,13 +1,11 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.OpenApi.Readers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-
     public class FixedFieldMap<T> : Dictionary<string, Action<T, ParseNode>>
     {
     }
@@ -15,12 +13,14 @@ namespace Microsoft.OpenApi.Readers
     public class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode>>
     {
     }
+
     public abstract class ParseNode 
     {
         public ParseNode(ParsingContext ctx)
         {
             this.Context = ctx;
         }
+
         public ParsingContext Context { get; }
         public string DomainType { get; internal set; }
 

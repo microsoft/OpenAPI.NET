@@ -11,14 +11,14 @@ namespace Microsoft.OpenApi.Readers.Tests
 {
     public class OperationTests
     {
-
         private OpenApiDocument _PetStoreDoc;
   //      private Operation _PostOperation;
+
         public OperationTests()
         {
             
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(OperationTests), "Samples.petstore30.yaml");
-            _PetStoreDoc = OpenApiParser.Parse(stream).OpenApiDocument;
+            _PetStoreDoc = new OpenApiStreamReader().Read(stream, out var context);
             //_PostOperation = _PetStoreDoc.Paths.PathMap.Where(pm=>pm.Key == "/pets").Value
             //    .Operations.Where()
         }
@@ -73,7 +73,6 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void GetResponses()
         {
-
             var getOperation = _PetStoreDoc.Paths["/pets"].Operations["get"];
 
             var responses = getOperation.Responses;
@@ -83,7 +82,6 @@ namespace Microsoft.OpenApi.Readers.Tests
             var content = response.Content["application/json"];
 
             Assert.NotNull(content.Schema);
-
         }
 
 

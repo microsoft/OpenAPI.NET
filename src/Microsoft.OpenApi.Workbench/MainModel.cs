@@ -81,7 +81,9 @@ namespace OpenApiWorkbench
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var context = OpenApiParser.Parse(stream);
+            
+
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
             stopwatch.Stop();
             ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
 

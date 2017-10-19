@@ -20,10 +20,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var v2stream = this.GetType().Assembly.GetManifestResourceStream(typeof(V2Tests), "V2Tests.V2Samples.simplest.2.yaml");
             var v3stream = this.GetType().Assembly.GetManifestResourceStream(typeof(V2Tests), "V2Tests.V2Samples.simplest.3.yaml");
 
-            var openApiDoc2 = OpenApiParser.Parse(v2stream).OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(v2stream, out var context);
 
             Assert.True(AreStreamsEqual(v2stream, v3stream));
-
         }
 
         private bool AreStreamsEqual(Stream expected, Stream actual)

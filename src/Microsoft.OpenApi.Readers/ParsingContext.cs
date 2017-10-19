@@ -1,45 +1,44 @@
-﻿
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Microsoft.OpenApi.Readers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
     public class ParsingContext
     {
-        public string Version { get; set; }
-        public List<OpenApiError> ParseErrors { get; set; } = new List<OpenApiError>();
-        public OpenApiDocument OpenApiDocument { get; set; }
+        private readonly Stack<string> currentLocation = new Stack<string>();
 
-        private Dictionary<string, object> tempStorage = new Dictionary<string, object>();
-
-        private Dictionary<string, IReference> referenceStore = new Dictionary<string, IReference>();
+        private readonly Stack<string> previousPointers = new Stack<string>();
 
         private IReferenceService referenceService;
 
-        private Stack<string> currentLocation = new Stack<string>();
+        private readonly Dictionary<string, IReference> referenceStore = new Dictionary<string, IReference>();
 
-        public void SetReferenceService(IReferenceService referenceService)
-        {
-            this.referenceService = referenceService;
-        }
+        private readonly Dictionary<string, object> tempStorage = new Dictionary<string, object>();
 
-        public void StartObject(string objectName)
-        {
-            this.currentLocation.Push(objectName);
-        }
+        public OpenApiDocument OpenApiDocument { get; set; }
+
+        public List<OpenApiError> ParseErrors { get; set; } = new List<OpenApiError>();
+
+        public string Version { get; set; }
 
         public void EndObject()
         {
-            this.currentLocation.Pop();
+            currentLocation.Pop();
         }
-        public string GetLocation() {
-            return "#/" + String.Join("/", this.currentLocation.Reverse().ToArray());
+
+        public string GetLocation()
+        {
+            return "#/" + string.Join("/", currentLocation.Reverse().ToArray());
         }
 
         public IReference GetReferencedObject(string pointer)
         {
-            var reference = this.referenceService.ParseReference(pointer);
+            var reference = referenceService.ParseReference(pointer);
             return GetReferencedObject(reference);
         }
 
@@ -54,8 +53,9 @@ namespace Microsoft.OpenApi.Readers
                 {
                     return null; // Return reference object?
                 }
+
                 previousPointers.Push(reference.ToString());
-                returnValue = this.referenceService.LoadReference(reference);
+                returnValue = referenceService.LoadReference(reference);
                 previousPointers.Pop();
                 if (returnValue != null)
                 {
@@ -64,29 +64,37 @@ namespace Microsoft.OpenApi.Readers
                 }
                 else
                 {
-                    ParseErrors.Add(new OpenApiError(this.GetLocation(), $"Cannot resolve $ref {reference.ToString()}"));
+                    ParseErrors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
                 }
             }
 
             return returnValue;
         }
 
-        private Stack<string> previousPointers = new Stack<string>();
-
-        public void SetTempStorage(string key, object value)
-        {
-            this.tempStorage[key] = value;
-        }
-        public T GetTempStorage<T>(string key)  where T:class
+        public T GetTempStorage<T>(string key) where T : class
         {
             object value;
-            if (this.tempStorage.TryGetValue(key,out value))
+            if (tempStorage.TryGetValue(key, out value))
             {
                 return (T)value;
             }
+
             return null;
         }
+
+        public void SetReferenceService(IReferenceService referenceService)
+        {
+            this.referenceService = referenceService;
+        }
+
+        public void SetTempStorage(string key, object value)
+        {
+            tempStorage[key] = value;
+        }
+
+        public void StartObject(string objectName)
+        {
+            currentLocation.Push(objectName);
+        }
     }
-
-
 }

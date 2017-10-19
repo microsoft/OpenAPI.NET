@@ -47,7 +47,7 @@ namespace OpenApiTests
         public void TranslateV2Reference()
         {
             
-            var reference = OpenApiV2Reader.ParseReference("#/definitions/blahblah");
+            var reference = OpenApiV2Builder.ParseReference("#/definitions/blahblah");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
             Assert.Equal(string.Empty, reference.ExternalFilePath);
@@ -58,7 +58,7 @@ namespace OpenApiTests
         public void TranslateV2LocalReference()
         {
 
-            var reference = OpenApiV2Reader.ParseReference("blahblah");
+            var reference = OpenApiV2Builder.ParseReference("blahblah");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
             Assert.Equal(string.Empty, reference.ExternalFilePath);
@@ -69,7 +69,7 @@ namespace OpenApiTests
         public void TranslateV2ExternalReference()
         {
 
-            var reference = OpenApiV2Reader.ParseReference("swagger.json#/parameters/blahblah");
+            var reference = OpenApiV2Builder.ParseReference("swagger.json#/parameters/blahblah");
 
             Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
             Assert.Equal("swagger.json", reference.ExternalFilePath);

@@ -19,12 +19,10 @@ namespace OpenApiTests
         {
             var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.Simplest.yaml");
 
-            var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             var outputStream = new MemoryStream();
             openApiDoc.Save(outputStream, new OpenApiV2Writer());
-
-
         }
 
         [Fact]
