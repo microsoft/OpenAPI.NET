@@ -6,18 +6,18 @@ category: OpenAPI REST Swagger
 
 # OpenAPI.Net
 
-The **OpenAPI.NET** SDK contains a useful object model for OpenAPI V3 documents in .NET along with a common serializer to extract raw OAI JSON documents from the model.
+The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OAI JSON and YAML documents from the model.
 
-**See more information on the Open API spec and it's history here: <a href="https://www.openapis.org"/>Open API Initiative</a>**
+**See more information on the Open API spec and its history here: <a href="https://www.openapis.org">Open API Initiative</a>**
 
 Project Objectives
 
-- Provide a single shared object model in .Net for Open API documents.
+- Provide a single shared object model in .NET for Open API documents.
 - Include the most primitive Reader for ingesting OAI JSON and YAML documents.
 - Enable developers to create Readers that translate different data formats into Open API documents. 
 
 # Readers
-The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by individual "Readers"
+The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by individual "Readers".
 
 The base JSON and YAML Readers are built into this project as documented "here". Below are a few other custom Readers developed externally. 
 
