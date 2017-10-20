@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public static class YamlHelper
+    internal static class YamlHelper
     {
         public static ParseNode Create(ParsingContext context, YamlNode node)
         {

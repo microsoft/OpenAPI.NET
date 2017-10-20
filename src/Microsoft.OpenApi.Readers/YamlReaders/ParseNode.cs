@@ -6,15 +6,15 @@ using System.Text.RegularExpressions;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public class FixedFieldMap<T> : Dictionary<string, Action<T, ParseNode>>
+    internal class FixedFieldMap<T> : Dictionary<string, Action<T, ParseNode>>
     {
     }
 
-    public class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode>>
+    internal class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode>>
     {
     }
 
-    public abstract class ParseNode 
+    internal abstract class ParseNode 
     {
         public ParseNode(ParsingContext ctx)
         {

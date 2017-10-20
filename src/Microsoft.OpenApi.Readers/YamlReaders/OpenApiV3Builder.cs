@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public static class OpenApiV3Builder
+    internal static class OpenApiV3Builder
     {
         #region OpenApiObject
         public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument> {

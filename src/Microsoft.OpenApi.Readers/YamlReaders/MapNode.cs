@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
     /// <summary>
     /// Abstraction of a Map to isolate semantic parsing from details of 
     /// </summary>
-    public class MapNode : ParseNode, IEnumerable<PropertyNode>
+    internal class MapNode : ParseNode, IEnumerable<PropertyNode>
     {
         YamlMappingNode node;
         private List<PropertyNode> nodes;

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public class PropertyNode : ParseNode
+    internal class PropertyNode : ParseNode
     {
         public PropertyNode(ParsingContext ctx, string name, YamlNode node) : base(ctx)
         {

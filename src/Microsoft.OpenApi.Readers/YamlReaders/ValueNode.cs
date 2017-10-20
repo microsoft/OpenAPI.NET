@@ -3,7 +3,7 @@ using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public class ValueNode : ParseNode
+    internal class ValueNode : ParseNode
     {
         YamlScalarNode node;
         public ValueNode(ParsingContext ctx, YamlScalarNode scalarNode) : base(ctx)

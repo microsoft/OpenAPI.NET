@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public class ListNode : ParseNode, IEnumerable<ParseNode>
+    internal class ListNode : ParseNode, IEnumerable<ParseNode>
     {
         YamlSequenceNode nodeList;
         ParsingContext context;

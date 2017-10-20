@@ -3,7 +3,7 @@ using Microsoft.OpenApi;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public class ReferenceService : IReferenceService
+    internal class ReferenceService : IReferenceService
     {
         public Func<OpenApiReference, object, IReference> loadReference { get; set; }
         public Func<string, OpenApiReference> parseReference { get; set; }
