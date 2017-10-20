@@ -17,6 +17,6 @@ namespace Microsoft.OpenApi
 
         public OpenApiReference Pointer { get; set; }
 
-        public Dictionary<string, string> Extensions { get; set; }
+        public Dictionary<string, IOpenApiAny> Extensions { get; set; }
     }
 }
