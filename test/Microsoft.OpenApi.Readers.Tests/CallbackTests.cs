@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi;
 using Xunit;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Readers.YamlReaders;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -17,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
 
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(CallbackTests),"Samples.CallbackSample.yaml");
-            var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             OpenApiPathItem path = openApiDoc.Paths.First().Value;
             OpenApiOperation subscribeOperation = path.Operations["post"];
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(CallbackTests), "Samples.CallbackSampleWithRef.yaml");
 
-            var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             var path = openApiDoc.Paths.First().Value;
             var operation = path.Operations.First().Value;

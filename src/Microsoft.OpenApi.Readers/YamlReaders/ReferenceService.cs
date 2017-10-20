@@ -1,11 +1,9 @@
-﻿
+﻿using System;
+using Microsoft.OpenApi;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    using System;
-    using Microsoft.OpenApi;
-
-    public class ReferenceService : IReferenceService
+    internal class ReferenceService : IReferenceService
     {
         public Func<OpenApiReference, object, IReference> loadReference { get; set; }
         public Func<string, OpenApiReference> parseReference { get; set; }

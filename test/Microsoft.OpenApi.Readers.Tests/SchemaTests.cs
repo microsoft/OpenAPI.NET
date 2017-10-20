@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi;
+using Microsoft.OpenApi.Readers.YamlReaders;
 using Xunit;
 
 
@@ -19,7 +20,8 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(SchemaTests), "Samples.petstore30.yaml");
 
-            var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+
             var operation = openApiDoc.Paths["/pets"].Operations["get"];
             var schema = operation.Responses["200"].Content["application/json"].Schema;
             Assert.NotNull(schema);
@@ -33,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var mapNode = MapNode.Create(jsonSchema);
 
-            var schema = OpenApiV3Reader.LoadSchema(mapNode);
+            var schema = OpenApiV3Builder.LoadSchema(mapNode);
 
             Assert.NotNull(schema);
             Assert.Equal("int", schema.Type);

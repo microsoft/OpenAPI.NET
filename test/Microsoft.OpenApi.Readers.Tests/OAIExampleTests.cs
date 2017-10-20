@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi;
 using Xunit;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Readers.YamlReaders;
 
 namespace OpenApiTests
 {
@@ -23,40 +24,36 @@ namespace OpenApiTests
         public async Task SimplePetStore()
         {
             var stream = await client.GetStreamAsync("petstore.yaml");
-            var context = OpenApiParser.Parse(stream);
-            var openApiDoc = context.OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(0,context.ParseErrors.Count());
+            Assert.Empty(context.Errors);
         }
 
         [Fact]
         public async Task UberExample()
         {
             var stream = await client.GetStreamAsync("uber.yaml");
-            var context = OpenApiParser.Parse(stream);
-            var openApiDoc = context.OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(0, context.ParseErrors.Count());
+            Assert.Empty(context.Errors);
         }
 
         [Fact]
         public async Task PetStoreExpandedExample()
         {
             var stream = await client.GetStreamAsync("petstore-expanded.yaml");
-            var context = OpenApiParser.Parse(stream);
-            var openApiDoc = context.OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(0, context.ParseErrors.Count());
+            Assert.Empty(context.Errors);
         }
 
         [Fact(Skip = "Example is not updated yet")]
         public async Task ApiWithExamples()
         {
             var stream = await client.GetStreamAsync("api-with-examples.yaml");
-            var context = OpenApiParser.Parse(stream);
-            var openApiDoc = context.OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(0, context.ParseErrors.Count());
+            Assert.Empty(context.Errors);
         }
     }
 }
