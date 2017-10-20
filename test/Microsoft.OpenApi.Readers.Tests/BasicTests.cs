@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Readers.YamlReaders;
 using Xunit;
+using Microsoft.OpenApi.Readers.Interface;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -42,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             Assert.Empty(openApiDoc.Paths);
             Assert.Equal("The Api", openApiDoc.Info.Title);
             Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());
-            Assert.Empty(context.ParseErrors);
+            Assert.Empty(context.Errors);
         }
 
         [Fact]
@@ -53,9 +54,9 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(2, context.ParseErrors.Count);
-            Assert.NotNull(context.ParseErrors.Where(s=> s.ToString() == "`openapi` property does not match the required format major.minor.patch at #/openapi").FirstOrDefault());
-            Assert.NotNull(context.ParseErrors.Where(s => s.ToString() == "title is a required property of #/info").FirstOrDefault());
+            Assert.Equal(2, context.Errors.Count);
+            Assert.NotNull(context.Errors.Where(s=> s.ToString() == "`openapi` property does not match the required format major.minor.patch at #/openapi").FirstOrDefault());
+            Assert.NotNull(context.Errors.Where(s => s.ToString() == "title is a required property of #/info").FirstOrDefault());
 
         }
 

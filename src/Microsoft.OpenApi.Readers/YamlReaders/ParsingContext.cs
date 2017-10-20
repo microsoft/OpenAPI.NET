@@ -5,10 +5,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Readers.Interface;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public class ParsingContext
+    public class ParsingContext : ILog<OpenApiError>
     {
         private readonly Stack<string> currentLocation = new Stack<string>();
 
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public OpenApiDocument OpenApiDocument { get; set; }
 
-        public List<OpenApiError> ParseErrors { get; set; } = new List<OpenApiError>();
+        public IList<OpenApiError> Errors { get; set; } = new List<OpenApiError>();
 
         public string Version { get; set; }
 
@@ -64,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 }
                 else
                 {
-                    ParseErrors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
+                    Errors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
                 }
             }
 

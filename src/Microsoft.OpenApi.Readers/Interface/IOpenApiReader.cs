@@ -3,6 +3,8 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using SharpYaml.Serialization.Logging;
+
 namespace Microsoft.OpenApi.Readers.Interface
 {
     /// <summary>
@@ -10,7 +12,8 @@ namespace Microsoft.OpenApi.Readers.Interface
     /// </summary>
     /// <typeparam name="TInput">The type of input to read from.</typeparam>
     /// <typeparam name="TLog">The type of log for information from reading process.</typeparam>
-    public interface IOpenApiReader<TInput, TLog>
+    /// <typeparam name="TError">The type of the recorded error from the reading process.</typeparam>
+    public interface IOpenApiReader<TInput, TLog, TError> where TLog : ILog<TError>
     {
         /// <summary>
         /// Reads the input and parses it into an Open API document.

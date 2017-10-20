@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             var mapNode = this as MapNode;
             if (mapNode == null)
             {
-                this.Context.ParseErrors.Add(new OpenApiError("", $"{nodeName} must be a map/object at " + this.Context.GetLocation() ));
+                this.Context.Errors.Add(new OpenApiError("", $"{nodeName} must be a map/object at " + this.Context.GetLocation() ));
             }
 
             return mapNode;
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             if (!versionRegex.IsMatch(value))
             {
-                this.Context.ParseErrors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex.ToString()));
+                this.Context.Errors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex.ToString()));
                 return defaultValue;
             }
             return value;

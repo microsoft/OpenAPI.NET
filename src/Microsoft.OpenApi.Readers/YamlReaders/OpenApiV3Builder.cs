@@ -840,7 +840,10 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             if (required != null && required.Count > 0)
             {
-                node.Context.ParseErrors.AddRange(required.Select(r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}")));
+                foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}")).ToList())
+                {
+                    node.Context.Errors.Add(error);
+                }
             }
         }
 

@@ -723,7 +723,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                     obj.Schemes.Add(scheme, property.Value.CreateSimpleList<string>(n2 => n2.GetScalarValue()));
                 } else
                 {
-                    node.Context.ParseErrors.Add(new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
+                    node.Context.Errors.Add(new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
                 }
             }
             return obj;
@@ -847,8 +847,10 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static void ReportMissing(ParseNode node, List<string> required)
         {
-            node.Context.ParseErrors.AddRange(required.Select(r => new OpenApiError("", $"{r} is a required property")));
+            foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property")).ToList() )
+            {
+                node.Context.Errors.Add(error);
+            }
         }
-
     }
 }

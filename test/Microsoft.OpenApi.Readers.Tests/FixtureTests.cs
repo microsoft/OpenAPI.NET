@@ -31,7 +31,7 @@ namespace OpenApiTests
             Assert.Equal("Swagger Sample App", info.Title);
             Assert.Equal("1.0.1", info.Version.ToString());
             Assert.Equal("support@swagger.io", info.Contact.Email);
-            Assert.Empty(ctx.ParseErrors);
+            Assert.Empty(ctx.Errors);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace OpenApiTests
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
             Assert.Equal("1.0.1", info.Version.ToString());
-            Assert.Empty(ctx.ParseErrors);
+            Assert.Empty(ctx.Errors);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace OpenApiTests
             var info = OpenApiV3Builder.LoadInfo(node);
 
             Assert.NotNull(info);
-            Assert.Equal(2, ctx.ParseErrors.Count);
+            Assert.Equal(2, ctx.Errors.Count);
         }
 
         private YamlNode LoadNode(string filePath)

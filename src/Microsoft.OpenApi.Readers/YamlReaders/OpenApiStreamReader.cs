@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
     /// <summary>
     /// Service class for converting streams into OpenApiDocument instances
     /// </summary>
-    public class OpenApiStreamReader : IOpenApiReader<Stream, ParsingContext>
+    public class OpenApiStreamReader : IOpenApiReader<Stream, ParsingContext, OpenApiError>
     {
         /// <summary>
         /// Gets the version of the Open API document.
@@ -43,48 +43,52 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             RootNode rootNode;
             context = new ParsingContext();
+            
+                try
+                {
+                    using (var streamReader = new StreamReader(input))
+                    {
 
-            try
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(input));
+                        var yamlStream = new YamlStream();
+                        yamlStream.Load(streamReader);
 
-                var yamlDocument = yamlStream.Documents.First();
-                rootNode = new RootNode(context, yamlDocument);
-            }
-            catch (SyntaxErrorException ex)
-            {
-                context.ParseErrors.Add(new OpenApiError("", ex.Message));
-                context.OpenApiDocument = new OpenApiDocument(); // Could leave this null?
+                        var yamlDocument = yamlStream.Documents.First();
+                        rootNode = new RootNode(context, yamlDocument);
+                    }
+                }
+                catch (SyntaxErrorException ex)
+                {
+                    context.Errors.Add(new OpenApiError(string.Empty, ex.Message));
+                    context.OpenApiDocument = new OpenApiDocument(); // Could leave this null?
+
+                    return context.OpenApiDocument;
+                }
+
+                var inputVersion = GetVersion(rootNode);
+
+                switch (inputVersion)
+                {
+                    case "2.0":
+                        context.SetReferenceService(
+                            new ReferenceService(rootNode)
+                            {
+                                loadReference = OpenApiV2Builder.LoadReference,
+                                parseReference = p => OpenApiV2Builder.ParseReference(p)
+                            });
+                        context.OpenApiDocument = OpenApiV2Builder.LoadOpenApi(rootNode);
+                        break;
+                    default:
+                        context.SetReferenceService(
+                            new ReferenceService(rootNode)
+                            {
+                                loadReference = OpenApiV3Builder.LoadReference,
+                                parseReference = p => new OpenApiReference(p)
+                            });
+                        context.OpenApiDocument = OpenApiV3Builder.LoadOpenApi(rootNode);
+                        break;
+                }
 
                 return context.OpenApiDocument;
-            }
-
-            var inputVersion = GetVersion(rootNode);
-
-            switch (inputVersion)
-            {
-                case "2.0":
-                    context.SetReferenceService(
-                        new ReferenceService(rootNode)
-                        {
-                            loadReference = OpenApiV2Builder.LoadReference,
-                            parseReference = p => OpenApiV2Builder.ParseReference(p)
-                        });
-                    context.OpenApiDocument = OpenApiV2Builder.LoadOpenApi(rootNode);
-                    break;
-                default:
-                    context.SetReferenceService(
-                        new ReferenceService(rootNode)
-                        {
-                            loadReference = OpenApiV3Builder.LoadReference,
-                            parseReference = p => new OpenApiReference(p)
-                        });
-                    context.OpenApiDocument = OpenApiV3Builder.LoadOpenApi(rootNode);
-                    break;
-            }
-
-            return context.OpenApiDocument;
         }
     }
 }

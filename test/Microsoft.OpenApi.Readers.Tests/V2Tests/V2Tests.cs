@@ -1,37 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.OpenApi;
-using Xunit;
-using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Readers.YamlReaders;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Readers.Tests
+using Microsoft.OpenApi.Readers.YamlReaders;
+using Xunit;
+
+namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
     public class V2Tests
     {
-        [Theory, 
-            InlineData("simplest"),
-            InlineData("host")]
-        public void Tests(string filename)
+        [Theory]
+        [InlineData("simplest")]
+        [InlineData("host")]
+        public void Tests(string fileName)
         {
-            var v2stream = this.GetType().Assembly.GetManifestResourceStream(typeof(V2Tests), "V2Tests.V2Samples.simplest.2.yaml");
-            var v3stream = this.GetType().Assembly.GetManifestResourceStream(typeof(V2Tests), "V2Tests.V2Samples.simplest.3.yaml");
+            var v2stream = GetType()
+                .Assembly.GetManifestResourceStream(typeof(V2Tests), $"V2Samples.{fileName}.2.yaml");
+            var v3stream = GetType()
+                .Assembly.GetManifestResourceStream(typeof(V2Tests), $"V2Samples.{fileName}.3.yaml");
 
-            var openApiDoc = new OpenApiStreamReader().Read(v2stream, out var context);
+            var openApiDocV2 = new OpenApiStreamReader().Read(v2stream, out var contextV2);
+            var openApiDocV3 = new OpenApiStreamReader().Read(v3stream, out var contextV3);
 
-            Assert.True(AreStreamsEqual(v2stream, v3stream));
-        }
-
-        private bool AreStreamsEqual(Stream expected, Stream actual)
-        {
-            var reader1 = new StreamReader(expected);
-            var reader2 = new StreamReader(expected);
-
-            return reader1.ReadToEnd() == reader2.ReadToEnd();
+            // TODO: Add fluent assertion to make this assert possible without implementing equality ourselves.
+            // Assert.Equal(openApiDocV2, openApiDocV3);
         }
     }
 }

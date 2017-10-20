@@ -88,7 +88,7 @@ namespace OpenApiWorkbench
             stopwatch.Stop();
             ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
 
-            if (context.ParseErrors.Count == 0)
+            if (context.Errors.Count == 0)
             {
                 Errors = "OK";
 
@@ -96,7 +96,7 @@ namespace OpenApiWorkbench
             else
             {
                 var errorReport = new StringBuilder();
-                foreach (var error in context.ParseErrors)
+                foreach (var error in context.Errors)
                 {
                     errorReport.AppendLine(error.ToString());
                 }

@@ -1,4 +1,6 @@
-﻿namespace Microsoft.OpenApi.Readers.YamlReaders
+﻿using Microsoft.OpenApi.Readers.Interface;
+
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
     public class OpenApiError
     {
@@ -18,9 +20,7 @@
 
         public override string ToString()
         {
-            return this.message + (!string.IsNullOrEmpty(this.pointer) ? " at " + this.pointer : "");
+           return this.message + (!string.IsNullOrEmpty(this.pointer) ? " at " + this.pointer : "");
         }
     }
-
-
 }

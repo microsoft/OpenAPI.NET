@@ -26,7 +26,7 @@ namespace OpenApiTests
             var stream = await client.GetStreamAsync("petstore.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Empty(context.ParseErrors);
+            Assert.Empty(context.Errors);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace OpenApiTests
             var stream = await client.GetStreamAsync("uber.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Empty(context.ParseErrors);
+            Assert.Empty(context.Errors);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace OpenApiTests
             var stream = await client.GetStreamAsync("petstore-expanded.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Empty(context.ParseErrors);
+            Assert.Empty(context.Errors);
         }
 
         [Fact(Skip = "Example is not updated yet")]
@@ -53,7 +53,7 @@ namespace OpenApiTests
             var stream = await client.GetStreamAsync("api-with-examples.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Empty(context.ParseErrors);
+            Assert.Empty(context.Errors);
         }
     }
 }
