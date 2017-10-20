@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi;
 using Xunit;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Readers.YamlReaders;
 using Microsoft.OpenApi.Writers;
 
 namespace OpenApiTests
@@ -19,12 +20,10 @@ namespace OpenApiTests
         {
             var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.Simplest.yaml");
 
-            var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             var outputStream = new MemoryStream();
             openApiDoc.Save(outputStream, new OpenApiV2Writer());
-
-
         }
 
         [Fact]

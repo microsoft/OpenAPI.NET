@@ -1,13 +1,11 @@
-﻿
+﻿using SharpYaml.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    using SharpYaml.Serialization;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    public class PropertyNode : ParseNode
+    internal class PropertyNode : ParseNode
     {
         public PropertyNode(ParsingContext ctx, string name, YamlNode node) : base(ctx)
         {
@@ -39,7 +37,7 @@ namespace Microsoft.OpenApi.Readers
                 } catch (OpenApiException ex)
                 {
                     ex.Pointer = this.Context.GetLocation();
-                    this.Context.ParseErrors.Add(new OpenApiError(ex));
+                    this.Context.Errors.Add(new OpenApiError(ex));
                 }
                 finally
                 {
@@ -59,7 +57,7 @@ namespace Microsoft.OpenApi.Readers
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = this.Context.GetLocation();
-                        this.Context.ParseErrors.Add(new OpenApiError(ex));
+                        this.Context.Errors.Add(new OpenApiError(ex));
                     }
                     finally
                     {
@@ -68,7 +66,7 @@ namespace Microsoft.OpenApi.Readers
                 }
                 else
                 {
-                    this.Context.ParseErrors.Add(new OpenApiError("", $"{this.Name} is not a valid property at {this.Context.GetLocation()}" ));
+                    this.Context.Errors.Add(new OpenApiError("", $"{this.Name} is not a valid property at {this.Context.GetLocation()}" ));
                 }
             }
         }

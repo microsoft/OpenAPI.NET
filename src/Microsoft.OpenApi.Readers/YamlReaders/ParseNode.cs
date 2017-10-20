@@ -1,26 +1,26 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-
-    public class FixedFieldMap<T> : Dictionary<string, Action<T, ParseNode>>
+    internal class FixedFieldMap<T> : Dictionary<string, Action<T, ParseNode>>
     {
     }
 
-    public class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode>>
+    internal class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode>>
     {
     }
-    public abstract class ParseNode 
+
+    internal abstract class ParseNode 
     {
         public ParseNode(ParsingContext ctx)
         {
             this.Context = ctx;
         }
+
         public ParsingContext Context { get; }
         public string DomainType { get; internal set; }
 
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers
             var mapNode = this as MapNode;
             if (mapNode == null)
             {
-                this.Context.ParseErrors.Add(new OpenApiError("", $"{nodeName} must be a map/object at " + this.Context.GetLocation() ));
+                this.Context.Errors.Add(new OpenApiError("", $"{nodeName} must be a map/object at " + this.Context.GetLocation() ));
             }
 
             return mapNode;
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Readers
         {
             if (!versionRegex.IsMatch(value))
             {
-                this.Context.ParseErrors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex.ToString()));
+                this.Context.Errors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex.ToString()));
                 return defaultValue;
             }
             return value;

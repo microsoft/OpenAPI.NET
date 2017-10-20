@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Writers;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Readers.YamlReaders;
 
 namespace OpenApiWorkbench
 {
@@ -81,11 +82,13 @@ namespace OpenApiWorkbench
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var context = OpenApiParser.Parse(stream);
+            
+
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
             stopwatch.Stop();
             ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
 
-            if (context.ParseErrors.Count == 0)
+            if (context.Errors.Count == 0)
             {
                 Errors = "OK";
 
@@ -93,7 +96,7 @@ namespace OpenApiWorkbench
             else
             {
                 var errorReport = new StringBuilder();
-                foreach (var error in context.ParseErrors)
+                foreach (var error in context.Errors)
                 {
                     errorReport.AppendLine(error.ToString());
                 }

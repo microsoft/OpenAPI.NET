@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Readers.YamlReaders;
 using Xunit;
+using Microsoft.OpenApi.Readers.Interface;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -34,17 +36,14 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
 
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.Simplest.yaml");
-
-             
-            var context = OpenApiParser.Parse(stream);
-            var openApiDoc = context.OpenApiDocument;
+            
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             Assert.Equal("1.0.0", openApiDoc.Version);
-            Assert.Equal(0, openApiDoc.Paths.Count());
+            Assert.Empty(openApiDoc.Paths);
             Assert.Equal("The Api", openApiDoc.Info.Title);
             Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());
-            Assert.Equal(0, context.ParseErrors.Count);
-
+            Assert.Empty(context.Errors);
         }
 
         [Fact]
@@ -53,11 +52,11 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(BasicTests),"Samples.BrokenSimplest.yaml");
 
-            var context = OpenApiParser.Parse(stream);
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(2, context.ParseErrors.Count);
-            Assert.NotNull(context.ParseErrors.Where(s=> s.ToString() == "`openapi` property does not match the required format major.minor.patch at #/openapi").FirstOrDefault());
-            Assert.NotNull(context.ParseErrors.Where(s => s.ToString() == "title is a required property of #/info").FirstOrDefault());
+            Assert.Equal(2, context.Errors.Count);
+            Assert.NotNull(context.Errors.Where(s=> s.ToString() == "`openapi` property does not match the required format major.minor.patch at #/openapi").FirstOrDefault());
+            Assert.NotNull(context.Errors.Where(s => s.ToString() == "title is a required property of #/info").FirstOrDefault());
 
         }
 
@@ -66,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
 
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.petstore30.yaml");
-            var openApiDoc = OpenApiParser.Parse(stream).OpenApiDocument;
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             Assert.Equal("3.0.0", openApiDoc.Version);
 
@@ -75,9 +74,8 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void InlineExample()
         {
-
-            
-            var openApiDoc = OpenApiParser.Parse(@"
+            var openApiDoc = new OpenApiStringReader().Read(
+                @"
                     openapi: 3.0.0
                     info:
                         title: A simple inline example
@@ -88,7 +86,8 @@ namespace Microsoft.OpenApi.Readers.Tests
                           responses:
                             200:
                               description: A home document
-                    ").OpenApiDocument;
+                    ",
+                out var parsingContext);
 
             Assert.Equal("3.0.0", openApiDoc.Version);
 
