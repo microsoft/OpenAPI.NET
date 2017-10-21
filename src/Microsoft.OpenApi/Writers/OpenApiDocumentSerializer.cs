@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Writers
     /// <summary>
     /// Base class for Open API document serializer.
     /// </summary>
-    public abstract class OpenApiDocumentSerializer
+    internal abstract class OpenApiDocumentSerializer
     {
         private Func<Stream, IOpenApiWriter> _writerFactory;
 

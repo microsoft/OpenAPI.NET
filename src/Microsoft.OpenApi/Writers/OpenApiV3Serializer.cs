@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Writers
     /// <summary>
     /// Class to serialize Open API v3.0 document.
     /// </summary>
-    public class OpenApiV3Serializer : OpenApiDocumentSerializer
+    internal class OpenApiV3Serializer : OpenApiDocumentSerializer
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiV3Serializer"/> class.
