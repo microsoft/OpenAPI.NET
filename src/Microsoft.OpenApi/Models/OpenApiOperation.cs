@@ -12,23 +12,23 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Operation Object.
     /// </summary>
-    public class OpenApiOperation
+    public class OpenApiOperation : IOpenApiExtension
     {
-        public List<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
         public string Summary { get; set; }
         public string Description { get; set; }
         public OpenApiExternalDocs ExternalDocs { get; set; } 
         public string OperationId { get; set; }
-        public List<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
         public OpenApiRequestBody RequestBody { get; set; }
-        public Dictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
-        public Dictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
 
         public const bool DeprecatedDefault = false;
         public bool Deprecated { get; set; } = DeprecatedDefault;
-        public List<OpenApiSecurityRequirement> Security { get; set; } = new List<OpenApiSecurityRequirement>();
-        public List<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IList<OpenApiSecurityRequirement> Security { get; set; } = new List<OpenApiSecurityRequirement>();
+        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public void CreateResponse(string key, Action<OpenApiResponse> configure)
         {

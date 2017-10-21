@@ -12,12 +12,12 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Paths object.
     /// </summary>
-    public class OpenApiPaths : IDictionary<string, OpenApiPathItem>
+    public class OpenApiPaths : IDictionary<string, OpenApiPathItem>, IOpenApiExtension
     {
         public OpenApiPathItem this[string key] { get => this.PathItems[key]; set => this.PathItems[key] = value; }
 
         private IDictionary<string, OpenApiPathItem> PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public ICollection<string> Keys => this.PathItems.Keys;
 

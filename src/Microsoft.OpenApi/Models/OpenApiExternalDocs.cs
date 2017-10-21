@@ -5,13 +5,14 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
     /// <summary>
     /// ExternalDocs object.
     /// </summary>
-    public class OpenApiExternalDocs
+    public class OpenApiExternalDocs : IOpenApiExtension
     {
         /// <summary>
         /// REQUIRED.The URL for the target documentation. Value MUST be in the format of a URL.
@@ -22,5 +23,10 @@ namespace Microsoft.OpenApi
         /// A short description of the target documentation.
         /// </summary>
         public Uri Url { get; set; }
+
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
+        /// </summary>
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }
 }

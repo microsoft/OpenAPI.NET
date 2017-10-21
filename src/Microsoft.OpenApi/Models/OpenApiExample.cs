@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IReference
+    public class OpenApiExample : IOpenApiReference, IOpenApiExtension
     {
         /// <summary>
         /// Short description for the example.
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public OpenApiReference Pointer
         {

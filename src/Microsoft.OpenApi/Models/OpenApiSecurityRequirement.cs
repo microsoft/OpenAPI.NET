@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Security Requirement Object
     /// </summary>
-    public class OpenApiSecurityRequirement
+    public class OpenApiSecurityRequirement : IOpenApiElement
     {
         public Dictionary<OpenApiSecurityScheme, List<string>> Schemes { get; set; } = new Dictionary<OpenApiSecurityScheme, List<string>>();
     }

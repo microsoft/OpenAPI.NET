@@ -13,17 +13,17 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem
+    public class OpenApiPathItem : IOpenApiExtension
     {
         public string Summary { get; set; }
         public string Description { get; set; }
 
-        public IReadOnlyDictionary<string, OpenApiOperation> Operations { get { return operations; } }
+        public IDictionary<string, OpenApiOperation> Operations { get { return operations; } }
         private Dictionary<string, OpenApiOperation> operations = new Dictionary<string, OpenApiOperation>();
 
-        public List<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
-        public List<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public void CreateOperation(OperationType operationType, Action<OpenApiOperation> configure)
         {

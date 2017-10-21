@@ -25,7 +25,6 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void ParseCompleteHeaderOpenApi()
         {
-
             var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.CompleteHeader.yaml");
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);

@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi
         Tags
     }
 
-    public class OpenApiReference
+    public class OpenApiReference : IOpenApiElement
     {
         public ReferenceType ReferenceType { get; set; }
         public string TypeName { get; set; }

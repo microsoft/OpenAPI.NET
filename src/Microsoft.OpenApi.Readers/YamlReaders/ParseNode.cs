@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             throw new OpenApiException("Cannot create map");
         }
-        public virtual Dictionary<string, T> CreateMapWithReference<T>(string refpointer, Func<MapNode, T> map) where T : class, IReference
+        public virtual Dictionary<string, T> CreateMapWithReference<T>(string refpointer, Func<MapNode, T> map) where T : class, IOpenApiReference
         {
             throw new OpenApiException("Cannot create map from reference");
         }
