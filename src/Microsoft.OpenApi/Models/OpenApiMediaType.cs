@@ -11,12 +11,12 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Media Type Object.
     /// </summary>
-    public class OpenApiMediaType
+    public class OpenApiMediaType : IOpenApiExtension
     {
         public OpenApiSchema Schema { get; set; }
-        public Dictionary<string, OpenApiExample> Examples { get; set; }
+        public IDictionary<string, OpenApiExample> Examples { get; set; }
         public string Example { get; set; }
 
-        public Dictionary<string, string> Extensions { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }
 }

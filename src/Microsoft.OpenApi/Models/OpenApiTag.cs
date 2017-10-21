@@ -4,12 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Microsoft.OpenApi
 {
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : IReference
+    public class OpenApiTag : IOpenApiReference, IOpenApiExtension
     {
         /// <summary>
         /// The name of the tag.
@@ -26,7 +28,12 @@ namespace Microsoft.OpenApi
         /// </summary>
         public OpenApiExternalDocs ExternalDocs { get; set; }
 
-        OpenApiReference IReference.Pointer
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
+        /// </summary>
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+
+        OpenApiReference IOpenApiReference.Pointer
         {
             get; set;
         }

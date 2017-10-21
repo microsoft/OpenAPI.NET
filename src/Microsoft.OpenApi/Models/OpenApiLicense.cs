@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// License Object.
     /// </summary>
-    public class OpenApiLicense
+    public class OpenApiLicense : IOpenApiExtension
     {
         // <summary>
         /// REQUIRED.The license name used for the API.
@@ -27,6 +27,6 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }
 }

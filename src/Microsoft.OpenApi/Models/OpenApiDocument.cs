@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Describes an Open API Document. See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument
+    public class OpenApiDocument : IOpenApiExtension
     {
         string version;
         public string Version { get { return version; }
@@ -29,13 +29,13 @@ namespace Microsoft.OpenApi
 
 
         public OpenApiInfo Info { get; set; } = new OpenApiInfo();
-        public List<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
-        public List<OpenApiSecurityRequirement> SecurityRequirements { get; set; }
+        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; }
         public OpenApiPaths Paths { get; set; } = new OpenApiPaths();
         public OpenApiComponents Components { get; set; } = new OpenApiComponents();
-        public List<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
         public OpenApiExternalDocs ExternalDocs { get; set; } = new OpenApiExternalDocs();
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         private static Regex versionRegex = new Regex(@"\d+\.\d+\.\d+");
 
@@ -45,6 +45,5 @@ namespace Microsoft.OpenApi
             configure(pathItem);
             Paths.Add(key, pathItem);
         }
-
     }
 }

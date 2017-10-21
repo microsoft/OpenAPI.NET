@@ -11,18 +11,18 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Components Object.
     /// </summary>
-    public class OpenApiComponents
+    public class OpenApiComponents : IOpenApiExtension
     {
-        public Dictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
-        public Dictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
-        public Dictionary<string, OpenApiParameter> Parameters { get; set; } = new Dictionary<string, OpenApiParameter>();
-        public Dictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
-        public Dictionary<string, OpenApiRequestBody> RequestBodies { get; set; } = new Dictionary<string, OpenApiRequestBody>();
-        public Dictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
-        public Dictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } = new Dictionary<string, OpenApiSecurityScheme>();
-        public Dictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
-        public Dictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
+        public IDictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public IDictionary<string, OpenApiParameter> Parameters { get; set; } = new Dictionary<string, OpenApiParameter>();
+        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; } = new Dictionary<string, OpenApiRequestBody>();
+        public IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
+        public IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } = new Dictionary<string, OpenApiSecurityScheme>();
+        public IDictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
+        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public bool IsEmpty()
         {
@@ -34,9 +34,7 @@ namespace Microsoft.OpenApi
                 || this.Headers.Count > 0 
                 || this.SecuritySchemes.Count > 0
                 || this.Links.Count > 0
-                || this.Callbacks.Count > 0 
-                || this.Extensions.Count > 0);
-
+                || this.Callbacks.Count > 0);
         }
     }
 }

@@ -3,9 +3,9 @@ using Microsoft.OpenApi;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    internal class ReferenceService : IReferenceService
+    internal class ReferenceService : IOpenApiReferenceService
     {
-        public Func<OpenApiReference, object, IReference> loadReference { get; set; }
+        public Func<OpenApiReference, object, IOpenApiReference> loadReference { get; set; }
         public Func<string, OpenApiReference> parseReference { get; set; }
 
         private object rootNode;
@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             this.rootNode = rootNode;
         }
-        public IReference LoadReference(OpenApiReference reference)
+        public IOpenApiReference LoadReference(OpenApiReference reference)
         {
             var referenceObject = this.loadReference(reference,this.rootNode);
             if (referenceObject == null)

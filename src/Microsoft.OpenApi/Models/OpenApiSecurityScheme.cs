@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
-    public class OpenApiSecurityScheme : IReference
+    public class OpenApiSecurityScheme : IOpenApiReference, IOpenApiExtension
     {
         public string Key { get; set; }
         public string Type { get; set; }
@@ -25,9 +25,9 @@ namespace Microsoft.OpenApi
         public string Flow { get; set; }
         public Uri AuthorizationUrl { get; set; }
         public Uri TokenUrl { get; set; }
-        public Dictionary<string,string> Scopes { get; set; }
+        public IDictionary<string,string> Scopes { get; set; }
 
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public OpenApiReference Pointer
         {

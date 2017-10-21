@@ -15,9 +15,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private readonly Stack<string> previousPointers = new Stack<string>();
 
-        private IReferenceService referenceService;
+        private IOpenApiReferenceService referenceService;
 
-        private readonly Dictionary<string, IReference> referenceStore = new Dictionary<string, IReference>();
+        private readonly Dictionary<string, IOpenApiReference> referenceStore = new Dictionary<string, IOpenApiReference>();
 
         private readonly Dictionary<string, object> tempStorage = new Dictionary<string, object>();
 
@@ -37,15 +37,15 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             return "#/" + string.Join("/", currentLocation.Reverse().ToArray());
         }
 
-        public IReference GetReferencedObject(string pointer)
+        public IOpenApiReference GetReferencedObject(string pointer)
         {
             var reference = referenceService.ParseReference(pointer);
             return GetReferencedObject(reference);
         }
 
-        public IReference GetReferencedObject(OpenApiReference reference)
+        public IOpenApiReference GetReferencedObject(OpenApiReference reference)
         {
-            IReference returnValue = null;
+            IOpenApiReference returnValue = null;
             referenceStore.TryGetValue(reference.ToString(), out returnValue);
 
             if (returnValue == null)
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             return null;
         }
 
-        public void SetReferenceService(IReferenceService referenceService)
+        public void SetReferenceService(IOpenApiReferenceService referenceService)
         {
             this.referenceService = referenceService;
         }

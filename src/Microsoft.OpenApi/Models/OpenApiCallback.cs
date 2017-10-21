@@ -11,12 +11,12 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallback : IReference
+    public class OpenApiCallback : IOpenApiReference, IOpenApiExtension
     {
         public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; } = new Dictionary<RuntimeExpression, OpenApiPathItem>();
 
         public OpenApiReference Pointer { get; set; }
 
-        public Dictionary<string, IOpenApiAny> Extensions { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }
 }

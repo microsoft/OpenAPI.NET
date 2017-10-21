@@ -11,12 +11,12 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Server Object: an object representing a Server.
     /// </summary>
-    public class OpenApiServer
+    public class OpenApiServer : IOpenApiExtension
     {
         public string Description { get; set; }
         public string Url { get; set; }
-        public Dictionary<string, OpenApiServerVariable> Variables { get; set; } = new Dictionary<string, OpenApiServerVariable>();
+        public IDictionary<string, OpenApiServerVariable> Variables { get; set; } = new Dictionary<string, OpenApiServerVariable>();
 
-        public Dictionary<string, string> Extensions { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }
 }

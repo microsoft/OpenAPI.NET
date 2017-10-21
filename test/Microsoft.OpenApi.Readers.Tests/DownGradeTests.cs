@@ -116,7 +116,6 @@ namespace OpenApiTests
             Assert.Equal("body", (string)bodyparam["in"]);
             Assert.Equal("string", (string)bodyparam["schema"]["type"]);
             Assert.Equal("100", (string)bodyparam["schema"]["maxLength"]);
-
         }
 
         [Fact]
