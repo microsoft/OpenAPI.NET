@@ -9,12 +9,19 @@ using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
+    public enum SecuritySchemeTypeKind
+    {
+        ApiKey,
+        Http,
+        OAuth2,
+        OpenIdConnect
+    }
+
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
     public class OpenApiSecurityScheme : IOpenApiReference, IOpenApiExtension
     {
-        public string Key { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
@@ -22,10 +29,6 @@ namespace Microsoft.OpenApi
         public string Scheme { get; set; }
         public string BearerFormat { get; set; }
         public Uri OpenIdConnectUrl { get; set; }
-        public string Flow { get; set; }
-        public Uri AuthorizationUrl { get; set; }
-        public Uri TokenUrl { get; set; }
-        public IDictionary<string,string> Scopes { get; set; }
 
         /// <summary>
         /// REQUIRED. An object containing configuration information for the flow types supported.
