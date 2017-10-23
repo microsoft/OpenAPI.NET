@@ -710,10 +710,10 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields = new FixedFieldMap<OpenApiSecurityScheme>
         {
-            { "type", (o,n) => { o.Type = n.GetScalarValue();  } },
+            { "type", (o,n) => { o.Type = (SecuritySchemeTypeKind)Enum.Parse(typeof(SecuritySchemeTypeKind), n.GetScalarValue());  } },
             { "description", (o,n) => { o.Description = n.GetScalarValue();  } },
             { "name", (o,n) => { o.Name = n.GetScalarValue();  } },
-            { "in", (o,n) => { o.In = n.GetScalarValue();  } },
+            { "in", (o,n) => { o.In = (InEnum)Enum.Parse(typeof(InEnum), n.GetScalarValue()); } },
             { "scheme", (o,n) => { o.Scheme = n.GetScalarValue();  } },
             { "bearerFormat", (o,n) => { o.BearerFormat = n.GetScalarValue();  } },
             { "openIdConnectUrl", (o,n) => { o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);  } },
@@ -758,13 +758,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             var mapNode = node.CheckMapNode("OAuthFlows");
 
-            var oauthFlows = new OpenApiOAuthFlows();
+            var oAuthFlows = new OpenApiOAuthFlows();
             foreach (var property in mapNode)
             {
-                property.ParseField(oauthFlows, OAuthFlowsFixedFileds, OAuthFlowsPatternFields);
+                property.ParseField(oAuthFlows, OAuthFlowsFixedFileds, OAuthFlowsPatternFields);
             }
 
-            return oauthFlows;
+            return oAuthFlows;
         }
         #endregion
 

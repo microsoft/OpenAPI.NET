@@ -9,12 +9,18 @@ using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
+    /// <summary>
+    /// The type of the security scheme
+    /// </summary>
     public enum SecuritySchemeTypeKind
     {
-        ApiKey,
-        Http,
-        OAuth2,
-        OpenIdConnect
+        apiKey,
+
+        http,
+
+        oauth2,
+
+        openIdConnect
     }
 
     /// <summary>
@@ -22,18 +28,45 @@ namespace Microsoft.OpenApi
     /// </summary>
     public class OpenApiSecurityScheme : IOpenApiReference, IOpenApiExtension
     {
-        public string Type { get; set; }
+        /// <summary>
+        /// REQUIRED. The type of the security scheme.
+        /// </summary>
+        public SecuritySchemeTypeKind Type { get; set; }
+
+        /// <summary>
+        /// A short description for security scheme.
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// REQUIRED. The name of the header, query or cookie parameter to be used.
+        /// </summary>
         public string Name { get; set; }
-        public string In { get; set; }
+
+        /// <summary>
+        /// REQUIRED. The location of the API key
+        /// </summary>
+        public InEnum In { get; set; }
+
+        /// <summary>
+        /// REQUIRED. The name of the HTTP Authorization scheme to be used.
+        /// </summary>
         public string Scheme { get; set; }
+
+        /// <summary>
+        /// A hint to the client to identify how the bearer token is formatted.
+        /// </summary>
         public string BearerFormat { get; set; }
-        public Uri OpenIdConnectUrl { get; set; }
 
         /// <summary>
         /// REQUIRED. An object containing configuration information for the flow types supported.
         /// </summary>
         public OpenApiOAuthFlows Flows { get; set; }
+
+        /// <summary>
+        /// REQUIRED. OpenId Connect URL to discover OAuth2 configuration values.
+        /// </summary>
+        public Uri OpenIdConnectUrl { get; set; }
 
         /// <summary>
         /// Specification Extensions.

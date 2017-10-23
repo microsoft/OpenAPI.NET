@@ -24,12 +24,12 @@ namespace Microsoft.OpenApi.Writers
         {
 
             var writer = writerFactory(stream);
-           // writer.WriteStartDocument();
-            WriteOpenApiDocument(writer,document);
-           // writer.WriteEndDocument();
+            // writer.WriteStartDocument();
+            WriteOpenApiDocument(writer, document);
+            // writer.WriteEndDocument();
             writer.Flush();
         }
-        
+
         public static void WriteOpenApiDocument(IOpenApiWriter writer, OpenApiDocument doc)
         {
             writer.WriteStartObject();
@@ -268,7 +268,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteBoolProperty("allowReserved", parameter.AllowReserved, false);
             writer.WriteObject("schema", parameter.Schema, WriteSchemaOrReference);
             writer.WriteList("examples", parameter.Examples, WriteExample);
-            writer.WriteObject("example", parameter.Example, (w,s)=> w.WriteRaw(s));
+            writer.WriteObject("example", parameter.Example, (w, s) => w.WriteRaw(s));
             writer.WriteMap("content", parameter.Content, WriteMediaType);
             writer.WriteEndObject();
         }
@@ -444,7 +444,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteBoolProperty("allowReserved", header.AllowReserved, false);
             writer.WriteObject("schema", header.Schema, WriteSchema);
             writer.WriteList("examples", header.Examples, WriteExampleOrReference);
-            writer.WriteObject("example", header.Example, (w,s)=> w.WriteRaw(s));
+            writer.WriteObject("example", header.Example, (w, s) => w.WriteRaw(s));
             writer.WriteMap("content", header.Content, WriteMediaType);
 
             writer.WriteEndObject();
@@ -455,7 +455,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteStartObject();
 
             writer.WriteObject("schema", mediaType.Schema, WriteSchemaOrReference);
-            writer.WriteObject("example", mediaType.Example, (w,s) => w.WriteRaw(s));
+            writer.WriteObject("example", mediaType.Example, (w, s) => w.WriteRaw(s));
             writer.WriteMap("examples", mediaType.Examples, WriteExampleOrReference);
 
             writer.WriteEndObject();
@@ -476,7 +476,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteCallback(IOpenApiWriter writer, OpenApiCallback callback)
         {
             writer.WriteStartObject();
-            foreach(var item in callback.PathItems)
+            foreach (var item in callback.PathItems)
             {
                 writer.WriteObject<OpenApiPathItem>(item.Key.Expression, item.Value, WritePathItem);
             }
@@ -508,31 +508,59 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-
         public static void WriteSecurityScheme(IOpenApiWriter writer, OpenApiSecurityScheme securityScheme)
         {
             writer.WriteStartObject();
-            writer.WriteStringProperty("type", securityScheme.Type);
+            writer.WriteStringProperty("type", securityScheme.Type.ToString());
             switch (securityScheme.Type)
             {
-                case "http":
+                case SecuritySchemeTypeKind.http:
                     writer.WriteStringProperty("scheme", securityScheme.Scheme);
                     writer.WriteStringProperty("bearerFormat", securityScheme.BearerFormat);
                     break;
-                case "oauth2":
+                case SecuritySchemeTypeKind.oauth2:
                 //writer.WriteStringProperty("scheme", this.Scheme);
                 //TODO:
-                case "apiKey":
-                    writer.WriteStringProperty("in", securityScheme.In);
+                case SecuritySchemeTypeKind.apiKey:
+                    writer.WriteStringProperty("in", securityScheme.In.ToString());
                     writer.WriteStringProperty("name", securityScheme.Name);
 
                     break;
             }
-            writer.WriteEndObject();
 
+            writer.WriteObject("flows", securityScheme.Flows, WriteOAuthFlows);
+
+            writer.WriteStringProperty("openIdConnectUrl", securityScheme.OpenIdConnectUrl?.ToString());
+
+            writer.WriteEndObject();
         }
 
+        public static void WriteOAuthFlows(IOpenApiWriter writer, OpenApiOAuthFlows oAuthFlows)
+        {
+            writer.WriteStartObject();
 
+            writer.WriteObject("implicit", oAuthFlows.Implicit, WriteOAuthFlow);
+            writer.WriteObject("password", oAuthFlows.Password, WriteOAuthFlow);
+            writer.WriteObject("clientCredentials", oAuthFlows.ClientCredentials, WriteOAuthFlow);
+            writer.WriteObject("authorizationCode", oAuthFlows.AuthorizationCode, WriteOAuthFlow);
 
+            writer.WriteEndObject();
+        }
+
+        public static void WriteOAuthFlow(IOpenApiWriter writer, OpenApiOAuthFlow oAuthFlow)
+        {
+            writer.WriteStartObject();
+
+            writer.WriteStringProperty("authorizationUrl", oAuthFlow.AuthorizationUrl?.ToString());
+            writer.WriteStringProperty("tokenUrl", oAuthFlow.TokenUrl?.ToString());
+            writer.WriteStringProperty("refreshUrl", oAuthFlow.RefreshUrl?.ToString());
+            writer.WriteMap("scopes", oAuthFlow.Scopes, WriteValue);
+            writer.WriteEndObject();
+        }
+
+        private static void WriteValue(IOpenApiWriter writer, string value)
+        {
+            writer.WriteValue(value);
+        }
     }
 }
