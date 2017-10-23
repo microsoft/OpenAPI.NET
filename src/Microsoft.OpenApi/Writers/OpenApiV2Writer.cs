@@ -453,12 +453,10 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-        
-
         public static void WriteSecurityScheme(IOpenApiWriter writer, OpenApiSecurityScheme securityScheme)
         {
             writer.WriteStartObject();
-            if (securityScheme.Type == "http")
+            if (securityScheme.Type == SecuritySchemeTypeKind.http)
             {
                 if (securityScheme.Scheme == "basic")
                 {
@@ -467,21 +465,51 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                writer.WriteStringProperty("type", securityScheme.Type);
+                writer.WriteStringProperty("type", securityScheme.Type.ToString());
             }
             switch (securityScheme.Type)
             {
-                case "oauth2":
+                case SecuritySchemeTypeKind.oauth2:
                 //writer.WriteStringProperty("scheme", this.Scheme);
                 //TODO:
-                case "apiKey":
-                    writer.WriteStringProperty("in", securityScheme.In);
+                case SecuritySchemeTypeKind.apiKey:
+                    writer.WriteStringProperty("in", securityScheme.In.ToString());
                     writer.WriteStringProperty("name", securityScheme.Name);
 
                     break;
             }
-            writer.WriteEndObject();
 
+            writer.WriteObject("flows", securityScheme.Flows, WriteOAuthFlows);
+
+            writer.WriteEndObject();
+        }
+
+        public static void WriteOAuthFlows(IOpenApiWriter writer, OpenApiOAuthFlows oAuthFlows)
+        {
+            writer.WriteStartObject();
+
+            writer.WriteObject("implicit", oAuthFlows.Implicit, WriteOAuthFlow);
+            writer.WriteObject("password", oAuthFlows.Password, WriteOAuthFlow);
+            writer.WriteObject("clientCredentials", oAuthFlows.ClientCredentials, WriteOAuthFlow);
+            writer.WriteObject("authorizationCode", oAuthFlows.AuthorizationCode, WriteOAuthFlow);
+
+            writer.WriteEndObject();
+        }
+
+        public static void WriteOAuthFlow(IOpenApiWriter writer, OpenApiOAuthFlow oAuthFlow)
+        {
+            writer.WriteStartObject();
+
+            writer.WriteStringProperty("authorizationUrl", oAuthFlow.AuthorizationUrl?.ToString());
+            writer.WriteStringProperty("tokenUrl", oAuthFlow.TokenUrl?.ToString());
+            writer.WriteStringProperty("refreshUrl", oAuthFlow.RefreshUrl?.ToString());
+            writer.WriteMap("scopes", oAuthFlow.Scopes, WriteValue);
+            writer.WriteEndObject();
+        }
+
+        private static void WriteValue(IOpenApiWriter writer, string value)
+        {
+            writer.WriteValue(value);
         }
     }
 
