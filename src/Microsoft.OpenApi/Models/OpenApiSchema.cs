@@ -49,6 +49,14 @@ namespace Microsoft.OpenApi
         public OpenApiExternalDocs ExternalDocs { get; set; }
         public bool Deprecated { get; set; }
 
+        /// <summary>
+        /// Adds additional metadata to describe the XML representation of this property.
+        /// </summary>
+        public OpenApiXml Xml { get; set; }
+
+        /// <summary>
+        /// Specification Extensions.
+        /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public OpenApiReference Pointer
