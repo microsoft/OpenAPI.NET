@@ -56,18 +56,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new PatternFieldMap<OpenApiInfo>
         {
-            {
-                (s) => s.StartsWith("x-"),
-                (o,k,n) =>
-                {
-                    if (o.Extensions == null)
-                    {
-                        o.Extensions = new Dictionary<string, IOpenApiAny>();
-                    }
-
-                    o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()));
-                }
-            }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiInfo LoadInfo(ParseNode node)
@@ -95,18 +84,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static PatternFieldMap<OpenApiContact> ContactPatternFields = new PatternFieldMap<OpenApiContact>
         {
-            {
-                (s)=> s.StartsWith("x-"),
-                (o,k,n)=>
-                {
-                    if (o.Extensions == null)
-                    {
-                        o.Extensions = new Dictionary<string, IOpenApiAny>();
-                    }
-
-                    o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()));
-                }
-            }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiContact LoadContact(ParseNode node)
@@ -130,18 +108,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static PatternFieldMap<OpenApiLicense> LicensePatternFields = new PatternFieldMap<OpenApiLicense>
         {
-            {
-                (s) => s.StartsWith("x-"),
-                (o,k,n) =>
-                {
-                    if (o.Extensions == null)
-                    {
-                        o.Extensions = new Dictionary<string, IOpenApiAny>();
-                    }
-
-                    o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()));
-                }
-            }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         internal static OpenApiLicense LoadLicense(ParseNode node)
