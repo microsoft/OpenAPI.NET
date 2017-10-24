@@ -1,15 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.OpenApi;
-using Xunit;
+﻿using System.IO;
 using Microsoft.OpenApi.Writers;
+using Newtonsoft.Json.Linq;
+using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class JsonWriterTests
     {

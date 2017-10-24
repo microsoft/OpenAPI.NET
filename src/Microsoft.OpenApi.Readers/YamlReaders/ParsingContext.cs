@@ -5,11 +5,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Readers.Interface;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    public class ParsingContext : ILog<OpenApiError>
+    public class ParsingContext
     {
         private readonly Stack<string> currentLocation = new Stack<string>();
 
@@ -20,11 +19,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private readonly Dictionary<string, IOpenApiReference> referenceStore = new Dictionary<string, IOpenApiReference>();
 
         private readonly Dictionary<string, object> tempStorage = new Dictionary<string, object>();
-
-        public OpenApiDocument OpenApiDocument { get; set; }
-
-        public IList<OpenApiError> Errors { get; set; } = new List<OpenApiError>();
-
+        
         public string Version { get; set; }
 
         public void EndObject()
@@ -37,13 +32,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             return "#/" + string.Join("/", currentLocation.Reverse().ToArray());
         }
 
-        public IOpenApiReference GetReferencedObject(string pointer)
+        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic log, string pointer)
         {
             var reference = referenceService.ParseReference(pointer);
-            return GetReferencedObject(reference);
+            return GetReferencedObject(log, reference);
         }
 
-        public IOpenApiReference GetReferencedObject(OpenApiReference reference)
+        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic log, OpenApiReference reference)
         {
             IOpenApiReference returnValue = null;
             referenceStore.TryGetValue(reference.ToString(), out returnValue);
@@ -58,6 +53,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 previousPointers.Push(reference.ToString());
                 returnValue = referenceService.LoadReference(reference);
                 previousPointers.Pop();
+
                 if (returnValue != null)
                 {
                     returnValue.Pointer = reference;
@@ -65,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 }
                 else
                 {
-                    Errors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
+                    log.Errors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
                 }
             }
 

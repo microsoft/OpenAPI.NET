@@ -29,23 +29,24 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             return this.parseReference(pointer);
         }
 
-        public static OpenApiSecurityScheme LoadSecuritySchemeByReference(ParsingContext context, string schemeName)
+        public static OpenApiSecurityScheme LoadSecuritySchemeByReference(ParsingContext context, OpenApiDiagnostic log, string schemeName)
         {
+            var securitySchemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(
+                log, 
+                new OpenApiReference()
+                {
+                    ReferenceType = ReferenceType.SecurityScheme,
+                    TypeName = schemeName
+                });
 
-            var schemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(new OpenApiReference()
-            {
-                ReferenceType = ReferenceType.SecurityScheme,
-                TypeName = schemeName
-            });
-
-            return schemeObject;
+            return securitySchemeObject;
         }
 
 
-        public static OpenApiTag LoadTagByReference(ParsingContext context, string tagName)
+        public static OpenApiTag LoadTagByReference(ParsingContext context, OpenApiDiagnostic log, string tagName)
         {
 
-            var tagObject = (OpenApiTag)context.GetReferencedObject($"#/tags/{tagName}");
+            var tagObject = (OpenApiTag)context.GetReferencedObject(log, $"#/tags/{tagName}");
 
             if (tagObject == null)
             {

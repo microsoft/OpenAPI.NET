@@ -65,10 +65,10 @@
   <ItemGroup>
     <Compile Include="BasicTests.cs" />
     <Compile Include="CallbackTests.cs" />
-    <Compile Include="DownGradeTests.cs" />
+    <Compile Include="DowngradeTests.cs" />
     <Compile Include="FixtureTests.cs" />
     <Compile Include="JsonWriterTests.cs" />
-    <Compile Include="OAIExampleTests.cs" />
+    <Compile Include="OpenApiExampleTests.cs" />
     <Compile Include="OpenApiReferenceTests.cs" />
     <Compile Include="OperationTests.cs" />
     <Compile Include="ParameterTests.cs" />

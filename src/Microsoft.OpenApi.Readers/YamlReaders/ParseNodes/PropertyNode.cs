@@ -3,28 +3,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Microsoft.OpenApi.Readers.YamlReaders
+namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
     internal class PropertyNode : ParseNode
     {
-        public PropertyNode(ParsingContext ctx, string name, YamlNode node) : base(ctx)
+        public PropertyNode(ParsingContext context, OpenApiDiagnostic log, string name, YamlNode node) : base(context, log)
         {
-            this.Name = name;
-            Value = YamlHelper.Create(ctx,node);
+            Name = name;
+            Value = Create(context, log, node);
         }
-
-
+        
         public string Name { get;  set; }
+
         public ParseNode Value { get; set; }
 
-
         public void ParseField<T>(
-                            T parentInstance,
-                            IDictionary<string, Action<T, ParseNode>> fixedFields,
-                            IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields
-            )
+            T parentInstance,
+            IDictionary<string, Action<T, ParseNode>> fixedFields,
+            IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields)
         {
-
             Action<T, ParseNode> fixedFieldMap;
             var found = fixedFields.TryGetValue(this.Name, out fixedFieldMap);
 
@@ -37,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 } catch (OpenApiException ex)
                 {
                     ex.Pointer = this.Context.GetLocation();
-                    this.Context.Errors.Add(new OpenApiError(ex));
+                    this.Log.Errors.Add(new OpenApiError(ex));
                 }
                 finally
                 {
@@ -57,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = this.Context.GetLocation();
-                        this.Context.Errors.Add(new OpenApiError(ex));
+                        this.Log.Errors.Add(new OpenApiError(ex));
                     }
                     finally
                     {
@@ -66,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 }
                 else
                 {
-                    this.Context.Errors.Add(new OpenApiError("", $"{this.Name} is not a valid property at {this.Context.GetLocation()}" ));
+                    this.Log.Errors.Add(new OpenApiError("", $"{this.Name} is not a valid property at {this.Context.GetLocation()}" ));
                 }
             }
         }

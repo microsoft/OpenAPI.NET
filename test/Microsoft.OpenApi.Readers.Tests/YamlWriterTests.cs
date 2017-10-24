@@ -1,14 +1,8 @@
-﻿using Microsoft.OpenApi;
+﻿using System.IO;
 using Microsoft.OpenApi.Writers;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class YamlWriterTests
     {

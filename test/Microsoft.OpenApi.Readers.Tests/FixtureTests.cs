@@ -1,16 +1,11 @@
-﻿using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Services;
-using SharpYaml.Serialization;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Readers.YamlReaders;
+using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
+using SharpYaml.Serialization;
 using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class FixtureTests
     {
@@ -24,14 +19,16 @@ namespace OpenApiTests
             var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/basicInfoObject.json");
 
             var ctx = new ParsingContext();
-            var node = new MapNode(ctx, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Builder.LoadInfo(node);
+            var log = new OpenApiDiagnostic();
+
+            var node = new MapNode(ctx, log, (YamlMappingNode)yamlNode);
+            var info = OpenApiV3Translator.LoadInfo(node);
 
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
             Assert.Equal("1.0.1", info.Version.ToString());
             Assert.Equal("support@swagger.io", info.Contact.Email);
-            Assert.Empty(ctx.Errors);
+            Assert.Empty(log.Errors);
         }
 
         [Fact]
@@ -41,13 +38,15 @@ namespace OpenApiTests
             var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/minimalInfoObject.json");
 
             var ctx = new ParsingContext();
-            var node = new MapNode(ctx, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Builder.LoadInfo(node);
+            var log = new OpenApiDiagnostic();
+            
+            var node = new MapNode(ctx, log, (YamlMappingNode)yamlNode);
+            var info = OpenApiV3Translator.LoadInfo(node);
 
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
             Assert.Equal("1.0.1", info.Version.ToString());
-            Assert.Empty(ctx.Errors);
+            Assert.Empty(log.Errors);
         }
 
         [Fact]
@@ -57,11 +56,13 @@ namespace OpenApiTests
             var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/negative/negativeInfoObject.json");
 
             var ctx = new ParsingContext();
-            var node = new MapNode(ctx, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Builder.LoadInfo(node);
+            var log = new OpenApiDiagnostic();
+
+            var node = new MapNode(ctx, log, (YamlMappingNode)yamlNode);
+            var info = OpenApiV3Translator.LoadInfo(node);
 
             Assert.NotNull(info);
-            Assert.Equal(2, ctx.Errors.Count);
+            Assert.Equal(2, log.Errors.Count);
         }
 
         private YamlNode LoadNode(string filePath)

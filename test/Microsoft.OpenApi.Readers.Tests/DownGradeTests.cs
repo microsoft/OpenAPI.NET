@@ -1,24 +1,18 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.OpenApi;
-using Xunit;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Readers.YamlReaders;
 using Microsoft.OpenApi.Writers;
+using Newtonsoft.Json.Linq;
+using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
-    public class DownGradeTests
+    public class DowngradeTests
     {
+        [Fact]
         public void SimpleTest()
         {
-            var stream = this.GetType().Assembly.GetManifestResourceStream("OpenApiTests.Samples.Simplest.yaml");
+            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(DowngradeTests), "Samples.Simplest.yaml");
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
@@ -35,7 +29,6 @@ namespace OpenApiTests
 
             Assert.Equal("2.0", jObject["swagger"]);
             Assert.NotNull(jObject["info"]);
-
         }
 
 

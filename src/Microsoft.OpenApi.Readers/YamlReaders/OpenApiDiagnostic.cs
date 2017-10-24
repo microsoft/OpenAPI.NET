@@ -4,18 +4,12 @@
 // ------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Readers.Interface;
 
-namespace Microsoft.OpenApi.Readers.Interface
+namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    /// <summary>
-    /// Interface for the log
-    /// </summary>
-    /// <typeparam name="TError">Type of recorded errors</typeparam>
-    public interface ILog<TError>
+    public class OpenApiDiagnostic : IDiagnostic
     {
-        /// <summary>
-        /// List of recorded errors.
-        /// </summary>
-        IList<TError> Errors { get; set; }
+        public IList<OpenApiError> Errors { get; set; } = new List<OpenApiError>();
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    internal static class OpenApiV2Builder
+    internal static class OpenApiV2Translator
     {
         #region OpenApiObject
+
         public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument> {
             { "swagger", (o,n) => { /* Ignore it */} },
             { "info", (o,n) => o.Info = LoadInfo(n) },
@@ -23,9 +25,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "security", (o,n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)},
             { "tags", (o,n) => o.Tags = n.CreateList(LoadTag)},
             { "externalDocs", (o,n) => o.ExternalDocs = LoadExternalDocs(n) }
-            };
-
-
+        };
 
         private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context)
         {
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static PatternFieldMap<OpenApiPaths> PathsPatternFields = new PatternFieldMap<OpenApiPaths>
         {
-            { (s)=> s.StartsWith("/"), (o,k,n)=> o.Add(k, OpenApiV2Builder.LoadPathItem(n)    ) },
+            { (s)=> s.StartsWith("/"), (o,k,n)=> o.Add(k, OpenApiV2Translator.LoadPathItem(n)    ) },
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static FixedFieldMap<OpenApiPathItem> PathItemFixedFields = new FixedFieldMap<OpenApiPathItem>
         {
             { "$ref", (o,n) => { /* Not supported yet */} },
-            { "parameters", (o,n) => { o.Parameters = n.CreateList(OpenApiV2Builder.LoadParameter); } },
+            { "parameters", (o,n) => { o.Parameters = n.CreateList(OpenApiV2Translator.LoadParameter); } },
 
         };
 
@@ -192,7 +192,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) },
             { (s)=> "get,put,post,delete,patch,options,head,patch".Contains(s),
-                (o,k,n)=> o.AddOperation(OperationTypeExtensions.ParseOperationType(k), OpenApiV2Builder.LoadOperation(n)    ) }
+                (o,k,n)=> o.AddOperation(OperationTypeExtensions.ParseOperationType(k), OpenApiV2Translator.LoadOperation(n)    ) }
         };
 
 
@@ -213,7 +213,8 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static FixedFieldMap<OpenApiOperation> OperationFixedFields = new FixedFieldMap<OpenApiOperation>
         {
-            { "tags", (o,n) => o.Tags = n.CreateSimpleList((v) => ReferenceService.LoadTagByReference(v.Context,v.GetScalarValue()))},
+            { "tags", (o,n) => o.Tags = n.CreateSimpleList((valueNode) => 
+                ReferenceService.LoadTagByReference(valueNode.Context, valueNode.Log, valueNode.GetScalarValue()))},
             { "summary", (o,n) => { o.Summary = n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
             { "externalDocs", (o,n) => { o.ExternalDocs = LoadExternalDocs(n); } },
@@ -710,20 +711,19 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         #region SecurityRequirement
         public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
         {
-
             var mapNode = node.CheckMapNode("security");
 
             var obj = new OpenApiSecurityRequirement();
 
             foreach (var property in mapNode)
             {
-                var scheme = ReferenceService.LoadSecuritySchemeByReference(mapNode.Context, property.Name);
+                var scheme = ReferenceService.LoadSecuritySchemeByReference(mapNode.Context, mapNode.Log, property.Name);
                 if (scheme != null)
                 {
                     obj.Schemes.Add(scheme, property.Value.CreateSimpleList<string>(n2 => n2.GetScalarValue()));
                 } else
                 {
-                    node.Context.Errors.Add(new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
+                    node.Log.Errors.Add(new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
                 }
             }
             return obj;
@@ -799,13 +799,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             switch (reference.ReferenceType)
             {
                 case ReferenceType.Schema:
-                    referencedObject = OpenApiV2Builder.LoadSchema(node);
+                    referencedObject = OpenApiV2Translator.LoadSchema(node);
                     break;
                 case ReferenceType.Parameter:
-                    referencedObject = OpenApiV2Builder.LoadParameter(node);
+                    referencedObject = OpenApiV2Translator.LoadParameter(node);
                     break;
                 case ReferenceType.SecurityScheme:
-                    referencedObject = OpenApiV2Builder.LoadSecurityScheme(node);
+                    referencedObject = OpenApiV2Translator.LoadSecurityScheme(node);
                     break;
                 case ReferenceType.Tags:
                     ListNode list = (ListNode)node;
@@ -813,7 +813,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                     {
                         foreach (var item in list)
                         {
-                            var tag = OpenApiV2Builder.LoadTag(item);
+                            var tag = OpenApiV2Translator.LoadTag(item);
 
                             if (tag.Name == reference.TypeName)
                             {
@@ -849,7 +849,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property")).ToList() )
             {
-                node.Context.Errors.Add(error);
+                node.Log.Errors.Add(error);
             }
         }
     }

@@ -1,18 +1,11 @@
 ﻿
 
+using System;
 using Microsoft.OpenApi.Readers.YamlReaders;
+using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Microsoft.OpenApi;
-    using Xunit;
-    using Microsoft.OpenApi.Readers;
-
     public class OpenApiReferenceTests
     {
         [Fact]
@@ -49,7 +42,7 @@ namespace OpenApiTests
         public void TranslateV2Reference()
         {
             
-            var reference = OpenApiV2Builder.ParseReference("#/definitions/blahblah");
+            var reference = OpenApiV2Translator.ParseReference("#/definitions/blahblah");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
             Assert.Equal(string.Empty, reference.ExternalFilePath);
@@ -60,7 +53,7 @@ namespace OpenApiTests
         public void TranslateV2LocalReference()
         {
 
-            var reference = OpenApiV2Builder.ParseReference("blahblah");
+            var reference = OpenApiV2Translator.ParseReference("blahblah");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
             Assert.Equal(string.Empty, reference.ExternalFilePath);
@@ -71,7 +64,7 @@ namespace OpenApiTests
         public void TranslateV2ExternalReference()
         {
 
-            var reference = OpenApiV2Builder.ParseReference("swagger.json#/parameters/blahblah");
+            var reference = OpenApiV2Translator.ParseReference("swagger.json#/parameters/blahblah");
 
             Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
             Assert.Equal("swagger.json", reference.ExternalFilePath);

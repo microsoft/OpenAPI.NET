@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Readers.YamlReaders;
 using Xunit;
-
+using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -33,9 +33,12 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             var jsonSchema = " { \"type\" : \"int\" } ";
 
-            var mapNode = MapNode.Create(jsonSchema);
+            var context = new ParsingContext();
+            var log = new OpenApiDiagnostic();
 
-            var schema = OpenApiV3Builder.LoadSchema(mapNode);
+            var mapNode = new MapNode(context, log, jsonSchema);
+
+            var schema = OpenApiV3Translator.LoadSchema(mapNode);
 
             Assert.NotNull(schema);
             Assert.Equal("int", schema.Type);

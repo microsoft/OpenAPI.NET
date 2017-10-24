@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.OpenApi;
-using Xunit;
-using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Readers.YamlReaders;
+using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
-    public class OAIExampleTests
+    public class OpenApiExampleTests
     {
         HttpClient client;
-        public OAIExampleTests()
+        public OpenApiExampleTests()
         {
             client = new HttpClient();
             client.BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/OpenAPI.next/examples/v3.0/");
