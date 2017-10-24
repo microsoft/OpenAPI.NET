@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OpenApi.Any;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;

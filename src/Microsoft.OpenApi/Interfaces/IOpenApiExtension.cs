@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OpenApi.Any;
 using System.Collections.Generic;
 
 namespace Microsoft.OpenApi

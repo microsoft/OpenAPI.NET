@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {

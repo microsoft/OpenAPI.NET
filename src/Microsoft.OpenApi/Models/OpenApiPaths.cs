@@ -6,6 +6,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi
 {

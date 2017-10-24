@@ -2,13 +2,14 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
     /// Extensions methods for writing the <see cref="IOpenApiAny"/>
     /// </summary>
-    public static class WriterOpenApiAnyExtensions
+    public static class OpenApiWriterAnyExtensions
     {
         /// <summary>
         /// Write the specification extensions
@@ -68,7 +69,6 @@ namespace Microsoft.OpenApi.Writers
                     writer.WriteNull();
                     break;
 
-                case AnyTypeKind.None:
                 default:
                     break;
             }
