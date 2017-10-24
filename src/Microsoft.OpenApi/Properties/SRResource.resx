@@ -124,7 +124,7 @@
     <value>The filed name of extension doesn't begin with x-.</value>
   </data>
   <data name="OpenApiExceptionGeneralError" xml:space="preserve">
-    <value>An error occurred while processing the OData message.</value>
+    <value>An error occurred while processing the Open API document.</value>
   </data>
   <data name="OpenApiObjectElementIsRequired" xml:space="preserve">
     <value>The object element name '{0}' is required.</value>

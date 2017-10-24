@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var firstParameter = firstOperation.Parameters.First();
 
             Assert.Equal("tags", firstParameter.Name);
-            Assert.Equal(InEnum.query, firstParameter.In);
+            Assert.Equal(ParameterLocation.query, firstParameter.In);
             Assert.Equal("tags to filter by", firstParameter.Description);
         }
 
