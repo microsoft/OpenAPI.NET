@@ -10,20 +10,6 @@ using System.Collections.Generic;
 namespace Microsoft.OpenApi
 {
     /// <summary>
-    /// The type of the security scheme
-    /// </summary>
-    public enum SecuritySchemeTypeKind
-    {
-        apiKey,
-
-        http,
-
-        oauth2,
-
-        openIdConnect
-    }
-
-    /// <summary>
     /// Security Scheme Object.
     /// </summary>
     public class OpenApiSecurityScheme : IOpenApiReference, IOpenApiExtension
@@ -46,7 +32,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// REQUIRED. The location of the API key
         /// </summary>
-        public InEnum In { get; set; }
+        public ParameterLocation In { get; set; }
 
         /// <summary>
         /// REQUIRED. The name of the HTTP Authorization scheme to be used.

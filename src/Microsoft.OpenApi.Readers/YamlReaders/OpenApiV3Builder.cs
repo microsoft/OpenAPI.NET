@@ -334,7 +334,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static FixedFieldMap<OpenApiParameter> ParameterFixedFields = new FixedFieldMap<OpenApiParameter>
         {
             { "name",           (o,n) => { o.Name = n.GetScalarValue(); } },
-            { "in",             (o,n) => { o.In = (InEnum)Enum.Parse(typeof(InEnum), n.GetScalarValue()); } },
+            { "in",             (o,n) => { o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()); } },
             { "description",    (o,n) => { o.Description = n.GetScalarValue(); } },
             { "required",       (o,n) => { o.Required = bool.Parse(n.GetScalarValue()); } },
             { "deprecated",     (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
@@ -713,7 +713,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "type", (o,n) => { o.Type = (SecuritySchemeTypeKind)Enum.Parse(typeof(SecuritySchemeTypeKind), n.GetScalarValue());  } },
             { "description", (o,n) => { o.Description = n.GetScalarValue();  } },
             { "name", (o,n) => { o.Name = n.GetScalarValue();  } },
-            { "in", (o,n) => { o.In = (InEnum)Enum.Parse(typeof(InEnum), n.GetScalarValue()); } },
+            { "in", (o,n) => { o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()); } },
             { "scheme", (o,n) => { o.Scheme = n.GetScalarValue();  } },
             { "bearerFormat", (o,n) => { o.BearerFormat = n.GetScalarValue();  } },
             { "openIdConnectUrl", (o,n) => { o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);  } },
