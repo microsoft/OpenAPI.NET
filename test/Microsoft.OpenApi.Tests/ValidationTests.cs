@@ -1,13 +1,10 @@
-﻿using Microsoft.OpenApi;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using Microsoft.OpenApi.Sevices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace OpenApi.Tests
+namespace Microsoft.OpenApi.Tests
 {
     public class ValidationTests
     {
