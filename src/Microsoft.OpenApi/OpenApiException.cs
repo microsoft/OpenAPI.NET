@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Exception type representing exceptions in the Open API library.
     /// </summary>
-    public class OpenApiException : InvalidOperationException
+    public class OpenApiException : Exception
     {
         /// <summary>
         /// The reference pointer.
