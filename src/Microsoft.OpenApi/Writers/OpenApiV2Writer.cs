@@ -506,13 +506,8 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteStringProperty("flow", flow);
             writer.WriteStringProperty("authorizationUrl", oAuthFlow.AuthorizationUrl?.ToString());
             writer.WriteStringProperty("tokenUrl", oAuthFlow.TokenUrl?.ToString());
-            writer.WriteMap("scopes", oAuthFlow.Scopes, WriteValue);
+            writer.WriteMap("scopes", oAuthFlow.Scopes, (w,s) => w.WriteValue(s));
             return true;
-        }
-
-        private static void WriteValue(IOpenApiWriter writer, string value)
-        {
-            writer.WriteValue(value);
         }
     }
 
