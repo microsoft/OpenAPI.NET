@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 {
                     case "2.0":
                         context.SetReferenceService(
-                            new ReferenceService(rootNode)
+                            new OpenApiReferenceService(rootNode)
                             {
                                 loadReference = OpenApiV2Translator.LoadReference,
                                 parseReference = p => OpenApiV2Translator.ParseReference(p)
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
                     default:
                         context.SetReferenceService(
-                            new ReferenceService(rootNode)
+                            new OpenApiReferenceService(rootNode)
                             {
                                 loadReference = OpenApiV3Translator.LoadReference,
                                 parseReference = p => new OpenApiReference(p)

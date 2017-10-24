@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static FixedFieldMap<OpenApiOperation> OperationFixedFields = new FixedFieldMap<OpenApiOperation>
         {
             { "tags", (o,n) => o.Tags = n.CreateSimpleList((valueNode) => 
-                ReferenceService.LoadTagByReference(valueNode.Context, valueNode.Log, valueNode.GetScalarValue()))},
+                OpenApiReferenceService.LoadTagByReference(valueNode.Context, valueNode.Diagnostic, valueNode.GetScalarValue()))},
             { "summary", (o,n) => { o.Summary = n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
             { "externalDocs", (o,n) => { o.ExternalDocs = LoadExternalDocs(n); } },
@@ -750,7 +750,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
             foreach (var property in mapNode)
             {
-                var scheme = ReferenceService.LoadSecuritySchemeByReference(mapNode.Context, mapNode.Log, property.Name);
+                var scheme = OpenApiReferenceService.LoadSecuritySchemeByReference(mapNode.Context, mapNode.Diagnostic, property.Name);
 
                 obj.Schemes.Add(scheme, property.Value.CreateSimpleList<string>(n2 => n2.GetScalarValue()));
             }
@@ -837,7 +837,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             {
                 foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}")).ToList())
                 {
-                    node.Log.Errors.Add(error);
+                    node.Diagnostic.Errors.Add(error);
                 }
             }
         }

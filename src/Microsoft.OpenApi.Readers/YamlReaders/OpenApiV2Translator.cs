@@ -214,14 +214,21 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static FixedFieldMap<OpenApiOperation> OperationFixedFields = new FixedFieldMap<OpenApiOperation>
         {
             { "tags", (o,n) => o.Tags = n.CreateSimpleList((valueNode) => 
-                ReferenceService.LoadTagByReference(valueNode.Context, valueNode.Log, valueNode.GetScalarValue()))},
+                OpenApiReferenceService.LoadTagByReference(
+                    valueNode.Context, 
+                    valueNode.Diagnostic, 
+                    valueNode.GetScalarValue()))},
             { "summary", (o,n) => { o.Summary = n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
             { "externalDocs", (o,n) => { o.ExternalDocs = LoadExternalDocs(n); } },
             { "operationId", (o,n) => { o.OperationId = n.GetScalarValue(); } },
             { "parameters", (o,n) => { o.Parameters = n.CreateList(LoadParameter); } },
-            { "consumes", (o,n) => n.Context.SetTempStorage("operationconsumes", n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
-            { "produces", (o,n) => n.Context.SetTempStorage("operationproduces", n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
+            { "consumes", (o,n) => n.Context.SetTempStorage(
+                "operationconsumes",
+                n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
+            { "produces", (o,n) => n.Context.SetTempStorage(
+                "operationproduces",
+                n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
             { "responses", (o,n) => { o.Responses = n.CreateMap(LoadResponse); } },
             { "deprecated", (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
             { "security", (o,n) => { o.Security = n.CreateList(LoadSecurityRequirement); } },
@@ -717,13 +724,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
             foreach (var property in mapNode)
             {
-                var scheme = ReferenceService.LoadSecuritySchemeByReference(mapNode.Context, mapNode.Log, property.Name);
+                var scheme = OpenApiReferenceService.LoadSecuritySchemeByReference(mapNode.Context, mapNode.Diagnostic, property.Name);
                 if (scheme != null)
                 {
                     obj.Schemes.Add(scheme, property.Value.CreateSimpleList<string>(n2 => n2.GetScalarValue()));
                 } else
                 {
-                    node.Log.Errors.Add(new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
+                    node.Diagnostic.Errors.Add(new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
                 }
             }
             return obj;
@@ -849,7 +856,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property")).ToList() )
             {
-                node.Log.Errors.Add(error);
+                node.Diagnostic.Errors.Add(error);
             }
         }
     }

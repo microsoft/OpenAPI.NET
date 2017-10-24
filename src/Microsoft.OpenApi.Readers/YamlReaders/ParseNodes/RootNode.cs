@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 
         public MapNode GetMap()
         {
-            return new MapNode(Context, Log, (YamlMappingNode)yamlDocument.RootNode);
+            return new MapNode(Context, Diagnostic, (YamlMappingNode)yamlDocument.RootNode);
         }
 
         public ParseNode Find(JsonPointer refPointer)
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
                 return null;
             }
 
-            return Create(Context, Log, yamlNode);
+            return Create(Context, Diagnostic, yamlNode);
         }
     }
 

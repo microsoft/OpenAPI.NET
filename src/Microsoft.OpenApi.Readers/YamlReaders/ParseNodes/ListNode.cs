@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             var yamlSequence = nodeList as YamlSequenceNode;
             if (yamlSequence == null) throw new OpenApiException($"Expected list at line {nodeList.Start.Line} while parsing {typeof(T).Name}");
 
-            return yamlSequence.Select(n => map(new MapNode(Context, Log, n as YamlMappingNode))).Where(i => i != null).ToList();
+            return yamlSequence.Select(n => map(new MapNode(Context, Diagnostic, n as YamlMappingNode))).Where(i => i != null).ToList();
         }
 
         public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
@@ -28,12 +28,12 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             var yamlSequence = this.nodeList as YamlSequenceNode;
             if (yamlSequence == null) throw new OpenApiException($"Expected list at line {nodeList.Start.Line} while parsing {typeof(T).Name}");
 
-            return yamlSequence.Select(n => map(new ValueNode(Context, Log, (YamlScalarNode)n))).ToList();
+            return yamlSequence.Select(n => map(new ValueNode(Context, Diagnostic, (YamlScalarNode)n))).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()
         {
-            return nodeList.Select(n => Create(Context, Log, n)).ToList().GetEnumerator();
+            return nodeList.Select(n => Create(Context, Diagnostic, n)).ToList().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

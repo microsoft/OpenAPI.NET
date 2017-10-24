@@ -9,12 +9,12 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
     internal abstract class ParseNode 
     {
-        public OpenApiDiagnostic Log { get; }
+        public OpenApiDiagnostic Diagnostic { get; }
 
-        protected ParseNode(ParsingContext parsingContext, OpenApiDiagnostic log)
+        protected ParseNode(ParsingContext parsingContext, OpenApiDiagnostic diagnostic)
         {
             this.Context = parsingContext;
-            this.Log = log;
+            this.Diagnostic = diagnostic;
         }
 
         public ParsingContext Context { get; }
@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             var mapNode = this as MapNode;
             if (mapNode == null)
             {
-                this.Log.Errors.Add(new OpenApiError("", $"{nodeName} must be a map/object at " + this.Context.GetLocation() ));
+                this.Diagnostic.Errors.Add(new OpenApiError("", $"{nodeName} must be a map/object at " + this.Context.GetLocation() ));
             }
 
             return mapNode;
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
         {
             if (!versionRegex.IsMatch(value))
             {
-                this.Log.Errors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex.ToString()));
+                this.Diagnostic.Errors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex.ToString()));
                 return defaultValue;
             }
             return value;

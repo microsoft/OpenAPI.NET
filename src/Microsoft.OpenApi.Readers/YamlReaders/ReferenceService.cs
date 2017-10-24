@@ -3,17 +3,18 @@ using Microsoft.OpenApi;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    internal class ReferenceService : IOpenApiReferenceService
+    internal class OpenApiReferenceService : IOpenApiReferenceService
     {
         public Func<OpenApiReference, object, IOpenApiReference> loadReference { get; set; }
         public Func<string, OpenApiReference> parseReference { get; set; }
 
-        private object rootNode;
+        private readonly object rootNode;
 
-        public ReferenceService(object rootNode)
+        public OpenApiReferenceService(object rootNode)
         {
             this.rootNode = rootNode;
         }
+
         public IOpenApiReference LoadReference(OpenApiReference reference)
         {
             var referenceObject = this.loadReference(reference,this.rootNode);
@@ -21,6 +22,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             {
                 throw new OpenApiException($"Cannot locate $ref {reference.ToString()}");
             }
+
             return referenceObject;
         }
 
@@ -29,10 +31,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             return this.parseReference(pointer);
         }
 
-        public static OpenApiSecurityScheme LoadSecuritySchemeByReference(ParsingContext context, OpenApiDiagnostic log, string schemeName)
+        public static OpenApiSecurityScheme LoadSecuritySchemeByReference(
+            ParsingContext context, 
+            OpenApiDiagnostic diagnostic,
+            string schemeName)
         {
             var securitySchemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(
-                log, 
+                diagnostic, 
                 new OpenApiReference()
                 {
                     ReferenceType = ReferenceType.SecurityScheme,
@@ -41,17 +46,21 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
             return securitySchemeObject;
         }
-
-
-        public static OpenApiTag LoadTagByReference(ParsingContext context, OpenApiDiagnostic log, string tagName)
+        
+        public static OpenApiTag LoadTagByReference(
+            ParsingContext context, 
+            OpenApiDiagnostic diagnostic,
+            string tagName)
         {
-
-            var tagObject = (OpenApiTag)context.GetReferencedObject(log, $"#/tags/{tagName}");
+            var tagObject = (OpenApiTag)context.GetReferencedObject(
+                diagnostic,
+                $"#/tags/{tagName}");
 
             if (tagObject == null)
             {
                 tagObject = new OpenApiTag() { Name = tagName };
             }
+
             return tagObject;
         }
     }

@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
                 } catch (OpenApiException ex)
                 {
                     ex.Pointer = this.Context.GetLocation();
-                    this.Log.Errors.Add(new OpenApiError(ex));
+                    this.Diagnostic.Errors.Add(new OpenApiError(ex));
                 }
                 finally
                 {
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = this.Context.GetLocation();
-                        this.Log.Errors.Add(new OpenApiError(ex));
+                        this.Diagnostic.Errors.Add(new OpenApiError(ex));
                     }
                     finally
                     {
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
                 }
                 else
                 {
-                    this.Log.Errors.Add(new OpenApiError("", $"{this.Name} is not a valid property at {this.Context.GetLocation()}" ));
+                    this.Diagnostic.Errors.Add(new OpenApiError("", $"{this.Name} is not a valid property at {this.Context.GetLocation()}" ));
                 }
             }
         }
