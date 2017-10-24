@@ -1,15 +1,13 @@
-﻿using Microsoft.OpenApi;
-using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Writers;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
 using SharpYaml.Serialization;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Microsoft.OpenApi.Readers.YamlReaders;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
-namespace OpenApi.Tests
+namespace Microsoft.OpenApi.Tests
 {
     public class ExampleTests
     {

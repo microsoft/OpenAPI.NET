@@ -6,22 +6,7 @@
 
 namespace Microsoft.OpenApi
 {
-    public enum PrimitiveTypeKind
-    {
-        Integer,
-        Long,
-        Float,
-        Double,
-        String,
-        Byte,
-        Binary,
-        Boolean,
-        Date,
-        DateTime,
-        Password
-    }
-
-    public abstract class OpenApiPrimitive<T> : IOpenApiAny
+    public abstract class OpenApiPrimitive<T> : IOpenApiPrimitive
     {
         public AnyTypeKind AnyKind { get; } = AnyTypeKind.Primitive;
 
