@@ -336,7 +336,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static FixedFieldMap<OpenApiParameter> ParameterFixedFields = new FixedFieldMap<OpenApiParameter>
         {
             { "name",           (o,n) => { o.Name = n.GetScalarValue(); } },
-            { "in",             (o,n) => { o.In = (InEnum)Enum.Parse(typeof(InEnum), n.GetScalarValue()); } },
+            { "in",             (o,n) => { o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()); } },
             { "description",    (o,n) => { o.Description = n.GetScalarValue(); } },
             { "required",       (o,n) => { o.Required = bool.Parse(n.GetScalarValue()); } },
             { "deprecated",     (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
@@ -707,17 +707,14 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields = new FixedFieldMap<OpenApiSecurityScheme>
         {
-            { "type", (o,n) => { o.Type = n.GetScalarValue();  } },
+            { "type", (o,n) => { o.Type = (SecuritySchemeTypeKind)Enum.Parse(typeof(SecuritySchemeTypeKind), n.GetScalarValue());  } },
             { "description", (o,n) => { o.Description = n.GetScalarValue();  } },
             { "name", (o,n) => { o.Name = n.GetScalarValue();  } },
-            { "in", (o,n) => { o.In = n.GetScalarValue();  } },
+            { "in", (o,n) => { o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()); } },
             { "scheme", (o,n) => { o.Scheme = n.GetScalarValue();  } },
             { "bearerFormat", (o,n) => { o.BearerFormat = n.GetScalarValue();  } },
             { "openIdConnectUrl", (o,n) => { o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);  } },
-            { "flow", (o,n) => { o.Flow = n.GetScalarValue();  } },
-            { "authorizationUrl", (o,n) => { o.AuthorizationUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);  } },
-            { "tokenUrl", (o,n) => { o.TokenUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);  } },
-            { "scopes", (o,n) => { o.Scopes= n.CreateMap<string>(v => v.GetScalarValue()  ); } },
+            { "flows", (o,n) => { o.Flows = LoadOAuthFlows(n); } }
         };
 
         private static PatternFieldMap<OpenApiSecurityScheme> SecuritySchemePatternFields = new PatternFieldMap<OpenApiSecurityScheme>
@@ -737,7 +734,64 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
             return securityScheme;
         }
+        #endregion
 
+        #region OAuthFlowsObject
+
+        private static FixedFieldMap<OpenApiOAuthFlows> OAuthFlowsFixedFileds = new FixedFieldMap<OpenApiOAuthFlows>
+        {
+            { "implicit", (o,n) => o.Implicit = LoadOAuthFlow(n) },
+            { "password", (o,n) => o.Password = LoadOAuthFlow(n) },
+            { "clientCredentials", (o,n) => o.ClientCredentials = LoadOAuthFlow(n) },
+            { "authorizationCode", (o,n) => o.AuthorizationCode = LoadOAuthFlow(n) }
+        };
+
+        private static PatternFieldMap<OpenApiOAuthFlows> OAuthFlowsPatternFields = new PatternFieldMap<OpenApiOAuthFlows>
+        {
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
+        };
+
+        public static OpenApiOAuthFlows LoadOAuthFlows(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("OAuthFlows");
+
+            var oAuthFlows = new OpenApiOAuthFlows();
+            foreach (var property in mapNode)
+            {
+                property.ParseField(oAuthFlows, OAuthFlowsFixedFileds, OAuthFlowsPatternFields);
+            }
+
+            return oAuthFlows;
+        }
+        #endregion
+
+        #region OAuthFlowObject
+
+        private static FixedFieldMap<OpenApiOAuthFlow> OAuthFlowFixedFileds = new FixedFieldMap<OpenApiOAuthFlow>
+        {
+            { "authorizationUrl", (o,n) => o.AuthorizationUrl = new Uri(n.GetScalarValue()) },
+            { "tokenUrl", (o,n) => o.TokenUrl = new Uri(n.GetScalarValue()) },
+            { "refreshUrl", (o,n) => o.RefreshUrl = new Uri(n.GetScalarValue()) },
+            { "scopes", (o,n) => o.Scopes = n.CreateMap(LoadString) }
+        };
+
+        private static PatternFieldMap<OpenApiOAuthFlow> OAuthFlowPatternFields = new PatternFieldMap<OpenApiOAuthFlow>
+        {
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
+        };
+
+        public static OpenApiOAuthFlow LoadOAuthFlow(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("OAuthFlow");
+
+            var oauthFlow = new OpenApiOAuthFlow();
+            foreach (var property in mapNode)
+            {
+                property.ParseField(oauthFlow, OAuthFlowFixedFileds, OAuthFlowPatternFields);
+            }
+
+            return oauthFlow;
+        }
         #endregion
 
         #region SecurityRequirement
@@ -842,5 +896,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             }
         }
 
+        private static string LoadString(ParseNode node)
+        {
+            return node.GetScalarValue();
+        }
     }
 }

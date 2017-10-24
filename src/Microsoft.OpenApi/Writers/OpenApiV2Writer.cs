@@ -453,12 +453,10 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-        
-
         public static void WriteSecurityScheme(IOpenApiWriter writer, OpenApiSecurityScheme securityScheme)
         {
             writer.WriteStartObject();
-            if (securityScheme.Type == "http")
+            if (securityScheme.Type == SecuritySchemeTypeKind.http)
             {
                 if (securityScheme.Scheme == "basic")
                 {
@@ -467,21 +465,52 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                writer.WriteStringProperty("type", securityScheme.Type);
+                writer.WriteStringProperty("type", securityScheme.Type.ToString());
             }
             switch (securityScheme.Type)
             {
-                case "oauth2":
+                case SecuritySchemeTypeKind.oauth2:
                 //writer.WriteStringProperty("scheme", this.Scheme);
                 //TODO:
-                case "apiKey":
-                    writer.WriteStringProperty("in", securityScheme.In);
+                case SecuritySchemeTypeKind.apiKey:
+                    writer.WriteStringProperty("in", securityScheme.In.ToString());
                     writer.WriteStringProperty("name", securityScheme.Name);
 
                     break;
             }
-            writer.WriteEndObject();
 
+            if (securityScheme.Flows != null)
+            {
+                if (securityScheme.Flows.Implicit != null)
+                {
+                    writer.WriteStringProperty("flow", "implicit");
+                    WriteOAuthFlow(writer, securityScheme.Flows.Implicit);
+                }
+                else if (securityScheme.Flows.Password != null)
+                {
+                    writer.WriteStringProperty("flow", "password");
+                    WriteOAuthFlow(writer, securityScheme.Flows.Password);
+                }
+                else if (securityScheme.Flows.ClientCredentials != null)
+                {
+                    writer.WriteStringProperty("flow", "application");
+                    WriteOAuthFlow(writer, securityScheme.Flows.ClientCredentials);
+                }
+                else if (securityScheme.Flows.AuthorizationCode != null)
+                {
+                    writer.WriteStringProperty("flow", "accessCode");
+                    WriteOAuthFlow(writer, securityScheme.Flows.AuthorizationCode);
+                }
+            }
+
+            writer.WriteEndObject();
+        }
+
+        private static void WriteOAuthFlow(IOpenApiWriter writer, OpenApiOAuthFlow oAuthFlow)
+        {
+            writer.WriteStringProperty("authorizationUrl", oAuthFlow.AuthorizationUrl?.ToString());
+            writer.WriteStringProperty("tokenUrl", oAuthFlow.TokenUrl?.ToString());
+            writer.WriteMap("scopes", oAuthFlow.Scopes, (w,s) => w.WriteValue(s));
         }
     }
 

@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                 Parameters = new List<OpenApiParameter> {
                 new OpenApiParameter {
                     Name = "param1",
-                    In = InEnum.query,
+                    In = ParameterLocation.query,
                     Schema = new OpenApiSchema
                     {
                         Type = "string"
