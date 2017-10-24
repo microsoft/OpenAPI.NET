@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Readers.Interface;
@@ -73,21 +72,21 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                         context.SetReferenceService(
                             new OpenApiReferenceService(rootNode)
                             {
-                                loadReference = OpenApiV2Translator.LoadReference,
-                                parseReference = p => OpenApiV2Translator.ParseReference(p)
+                                loadReference = OpenApiV2Deserializer.LoadReference,
+                                parseReference = p => OpenApiV2Deserializer.ParseReference(p)
                             });
 
-                        return OpenApiV2Translator.LoadOpenApi(rootNode);
+                        return OpenApiV2Deserializer.LoadOpenApi(rootNode);
 
                     default:
                         context.SetReferenceService(
                             new OpenApiReferenceService(rootNode)
                             {
-                                loadReference = OpenApiV3Translator.LoadReference,
+                                loadReference = OpenApiV3Deserializer.LoadReference,
                                 parseReference = p => new OpenApiReference(p)
                             });
 
-                        return OpenApiV3Translator.LoadOpenApi(rootNode);
+                        return OpenApiV3Deserializer.LoadOpenApi(rootNode);
                 }
         }
     }

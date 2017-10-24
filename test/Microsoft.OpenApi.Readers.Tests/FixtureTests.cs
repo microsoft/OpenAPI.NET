@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var log = new OpenApiDiagnostic();
 
             var node = new MapNode(ctx, log, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Translator.LoadInfo(node);
+            var info = OpenApiV3Deserializer.LoadInfo(node);
 
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var log = new OpenApiDiagnostic();
             
             var node = new MapNode(ctx, log, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Translator.LoadInfo(node);
+            var info = OpenApiV3Deserializer.LoadInfo(node);
 
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var log = new OpenApiDiagnostic();
 
             var node = new MapNode(ctx, log, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Translator.LoadInfo(node);
+            var info = OpenApiV3Deserializer.LoadInfo(node);
 
             Assert.NotNull(info);
             Assert.Equal(2, log.Errors.Count);

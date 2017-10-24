@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var mapNode = new MapNode(context, log, jsonSchema);
 
-            var schema = OpenApiV3Translator.LoadSchema(mapNode);
+            var schema = OpenApiV3Deserializer.LoadSchema(mapNode);
 
             Assert.NotNull(schema);
             Assert.Equal("int", schema.Type);
