@@ -1,41 +1,51 @@
-﻿using SharpYaml.Serialization;
-using System;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Readers.YamlReaders
+using System;
+using SharpYaml.Serialization;
+
+namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
     /// <summary>
     /// Wrapper class around YamlDocument to isolate semantic parsing from details of Yaml DOM.
     /// </summary>
     internal class RootNode : ParseNode
     {
-        YamlDocument yamlDocument;
-        public RootNode(ParsingContext ctx, YamlDocument yamlDocument) : base(ctx)
+        private readonly YamlDocument yamlDocument;
+
+        public RootNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlDocument yamlDocument) : base(context, diagnostic)
         {
             this.yamlDocument = yamlDocument;
         }
 
-        public MapNode GetMap()
-        {
-            return new MapNode(Context, (YamlMappingNode)yamlDocument.RootNode);
-        }
-
         public ParseNode Find(JsonPointer refPointer)
         {
-            var yamlNode = refPointer.Find(this.yamlDocument.RootNode);
-            if (yamlNode == null) return null;
-            return YamlHelper.Create(this.Context, yamlNode);
+            var yamlNode = refPointer.Find(yamlDocument.RootNode);
+            if (yamlNode == null)
+            {
+                return null;
+            }
+
+            return Create(Context, Diagnostic, yamlNode);
+        }
+
+        public MapNode GetMap()
+        {
+            return new MapNode(Context, Diagnostic, (YamlMappingNode)yamlDocument.RootNode);
         }
     }
 
     public static class JsonPointerExtensions
     {
-
         public static YamlNode Find(this JsonPointer currentpointer, YamlNode sample)
         {
             if (currentpointer.Tokens.Length == 0)
             {
                 return sample;
             }
+
             try
             {
                 var pointer = sample;
@@ -58,6 +68,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                         }
                     }
                 }
+
                 return pointer;
             }
             catch (Exception ex)
@@ -65,6 +76,5 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 throw new ArgumentException("Failed to dereference pointer", ex);
             }
         }
-
     }
 }

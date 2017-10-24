@@ -75,43 +75,40 @@ namespace OpenApiWorkbench
 
         internal void Validate()
         {
-            try { 
+            try
+            { 
 
-            MemoryStream stream = CreateStream(input);
+                MemoryStream stream = CreateStream(input);
 
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            
+                var openApiDocument = new OpenApiStreamReader().Read(stream, out var context);
+                stopwatch.Stop();
+                ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
 
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
-            stopwatch.Stop();
-            ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
-
-            if (context.Errors.Count == 0)
-            {
-                Errors = "OK";
-
-            }
-            else
-            {
-                var errorReport = new StringBuilder();
-                foreach (var error in context.Errors)
+                if (context.Errors.Count == 0)
                 {
-                    errorReport.AppendLine(error.ToString());
+                    Errors = "OK";
+
                 }
-                Errors = errorReport.ToString();
+                else
+                {
+                    var errorReport = new StringBuilder();
+                    foreach (var error in context.Errors)
+                    {
+                        errorReport.AppendLine(error.ToString());
+                    }
+                    Errors = errorReport.ToString();
+                }
+
+                stopwatch.Reset();
+                stopwatch.Start();
+                Output = WriteContents(openApiDocument);
+                stopwatch.Stop();
+
+                RenderTime = $"{stopwatch.ElapsedMilliseconds} ms";
             }
-
-            stopwatch.Reset();
-            stopwatch.Start();
-            Output = WriteContents(context.OpenApiDocument);
-            stopwatch.Stop();
-
-            RenderTime = $"{stopwatch.ElapsedMilliseconds} ms";
-
-
-        }
             catch (Exception ex)
             {
                 Errors = "Failed to parse input: " + ex.Message;
@@ -119,11 +116,8 @@ namespace OpenApiWorkbench
 
             // Verify output is valid JSON or YAML
             //var dummy = YamlHelper.ParseYaml(Output);
-
         }
-
-
-
+        
         private string WriteContents(OpenApiDocument doc)
         {
             Func<Stream, IOpenApiWriter> writerFactory = s => (this.format == "Yaml" ? new OpenApiYamlWriter(new StreamWriter(s)) : (IOpenApiWriter)new OpenApiJsonWriter(new StreamWriter(s)));

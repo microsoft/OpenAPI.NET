@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
-    internal static class OpenApiV3Builder
+    /// <summary>
+    /// Class containing logic to deserialize Open API V3 document into
+    /// runtime Open API object model.
+    /// </summary>
+    internal static class OpenApiV3Deserializer
     {
         #region OpenApiObject
         public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument> {
@@ -270,7 +275,8 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static FixedFieldMap<OpenApiOperation> OperationFixedFields = new FixedFieldMap<OpenApiOperation>
         {
-            { "tags", (o,n) => o.Tags = n.CreateSimpleList((v) => ReferenceService.LoadTagByReference(v.Context,v.GetScalarValue()))},
+            { "tags", (o,n) => o.Tags = n.CreateSimpleList((valueNode) => 
+                OpenApiReferenceService.LoadTagByReference(valueNode.Context, valueNode.Diagnostic, valueNode.GetScalarValue()))},
             { "summary", (o,n) => { o.Summary = n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
             { "externalDocs", (o,n) => { o.ExternalDocs = LoadExternalDocs(n); } },
@@ -677,11 +683,6 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
-        public static OpenApiSchema LoadSchema(string schema)
-        {
-            return LoadSchema(MapNode.Create(schema));
-        }
-
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
 
@@ -807,7 +808,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
             foreach (var property in mapNode)
             {
-                var scheme = ReferenceService.LoadSecuritySchemeByReference(mapNode.Context, property.Name);
+                var scheme = OpenApiReferenceService.LoadSecuritySchemeByReference(mapNode.Context, mapNode.Diagnostic, property.Name);
 
                 obj.Schemes.Add(scheme, property.Value.CreateSimpleList<string>(n2 => n2.GetScalarValue()));
             }
@@ -826,31 +827,36 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             switch (pointer.ReferenceType)
             {
                 case ReferenceType.Schema:
-                    referencedObject = OpenApiV3Builder.LoadSchema(node);
+                    referencedObject = LoadSchema(node);
                     break;
-                case ReferenceType.Parameter:
 
-                    referencedObject = OpenApiV3Builder.LoadParameter(node);
+                case ReferenceType.Parameter:
+                    referencedObject = LoadParameter(node);
                     break;
+
                 case ReferenceType.Callback:
-                    referencedObject = OpenApiV3Builder.LoadCallback(node);
+                    referencedObject = LoadCallback(node);
                     break;
+
                 case ReferenceType.SecurityScheme:
-                    referencedObject = OpenApiV3Builder.LoadSecurityScheme(node);
+                    referencedObject = LoadSecurityScheme(node);
                     break;
+
                 case ReferenceType.Link:
-                    referencedObject = OpenApiV3Builder.LoadLink(node);
+                    referencedObject = LoadLink(node);
                     break;
+
                 case ReferenceType.Example:
-                    referencedObject = OpenApiV3Builder.LoadExample(node);
+                    referencedObject = LoadExample(node);
                     break;
+
                 case ReferenceType.Tags:
                     ListNode list = (ListNode)node;
                     if (list != null)
                     {
                         foreach (var item in list)
                         {
-                            var tag = OpenApiV3Builder.LoadTag(item);
+                            var tag = OpenApiV3Deserializer.LoadTag(item);
 
                             if (tag.Name == pointer.TypeName)
                             {
@@ -864,10 +870,11 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                     }
 
                     break;
+
                 default:
                     throw new OpenApiException($"Unknown type of $ref {pointer.ReferenceType} at {pointer.ToString()}");
-
             }
+
             return referencedObject;
         }
 
@@ -878,8 +885,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField<T>(domainObject, fixedFieldMap, patternFieldMap);
-                if (requiredFields != null) requiredFields.Remove(propertyNode.Name);
+                requiredFields?.Remove(propertyNode.Name);
             }
+
             ReportMissing(mapNode, requiredFields);
         }
 
@@ -888,14 +896,17 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             var value = node.GetScalarValue();
             return new RuntimeExpression(value);
         }
-        private static void ReportMissing(ParseNode node, List<string> required)
+
+        private static void ReportMissing(ParseNode node, IList<string> required)
         {
-            if (required != null && required.Count > 0)
+            if (required == null || !required.Any() )
             {
-                foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}")).ToList())
-                {
-                    node.Context.Errors.Add(error);
-                }
+                return;
+            }
+
+            foreach (var error in required.Select(r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}")).ToList())
+            {
+                node.Diagnostic.Errors.Add(error);
             }
         }
 

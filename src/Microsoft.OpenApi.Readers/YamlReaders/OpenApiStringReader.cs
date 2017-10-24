@@ -11,12 +11,12 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
     /// <summary>
     /// Service class for converting strings into OpenApiDocument instances
     /// </summary>
-    public class OpenApiStringReader : IOpenApiReader<string, ParsingContext, OpenApiError>
+    public class OpenApiStringReader : IOpenApiReader<string, OpenApiDiagnostic>
     {
         /// <summary>
         /// Reads the string input and parses it into an Open API document.
         /// </summary>
-        public OpenApiDocument Read(string input, out ParsingContext context)
+        public OpenApiDocument Read(string input, out OpenApiDiagnostic diagnostic)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 writer.Flush();
                 memoryStream.Position = 0;
 
-                return new OpenApiStreamReader().Read(memoryStream, out context);
+                return new OpenApiStreamReader().Read(memoryStream, out diagnostic);
             }
         }
     }

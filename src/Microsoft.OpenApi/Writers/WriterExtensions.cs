@@ -19,99 +19,114 @@ namespace Microsoft.OpenApi.Writers
             {
                 openApiWriter = new OpenApiV3Writer();
             }
+
             openApiWriter.Write(stream, doc);
         }
 
         public static void WriteObject<T>(this IOpenApiWriter writer, string propertyName, T entity, Action<IOpenApiWriter, T> parser)
         {
-            if (entity != null)
+            if (entity == null)
             {
-                writer.WritePropertyName(propertyName);
-                parser(writer, entity);
+                return;
             }
 
+            writer.WritePropertyName(propertyName);
+            parser(writer, entity);
         }
 
         public static void WriteList<T>(this IOpenApiWriter writer, string propertyName, IList<T> list, Action<IOpenApiWriter, T> parser)
         {
-            if (list != null && list.Any())
+            if (list == null || !list.Any())
             {
-                writer.WritePropertyName(propertyName);
-                writer.WriteStartArray();
-                foreach (var item in list)
-                {
-                    parser(writer,item);
-                }
-                writer.WriteEndArray();
+                return;
             }
 
+            writer.WritePropertyName(propertyName);
+            writer.WriteStartArray();
+            foreach (var item in list)
+            {
+                parser(writer,item);
+            }
+
+            writer.WriteEndArray();
         }
 
         public static void WriteMap<T>(this IOpenApiWriter writer, string propertyName, IDictionary<string, T> list, Action<IOpenApiWriter, T> parser)
         {
-            if (list != null && list.Count() > 0)
+            if (list == null || !list.Any())
             {
-                writer.WritePropertyName(propertyName);
-                writer.WriteStartObject();
-                foreach (var item in list)
-                {
-                    writer.WritePropertyName(item.Key);
-                    if (item.Value != null)
-                    {
-                        parser(writer, item.Value);
-                    }
-                    else
-                    {
-                        writer.WriteNull();
-                    }
-                }
-                writer.WriteEndObject();
+                return;
             }
 
+            writer.WritePropertyName(propertyName);
+            writer.WriteStartObject();
+            foreach (var item in list)
+            {
+                writer.WritePropertyName(item.Key);
+                if (item.Value != null)
+                {
+                    parser(writer, item.Value);
+                }
+                else
+                {
+                    writer.WriteNull();
+                }
+            }
+            writer.WriteEndObject();
         }
 
         public static void WriteStringProperty(this IOpenApiWriter writer, string name, string value)
         {
-            if (!String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
-                writer.WritePropertyName(name);
-                writer.WriteValue(value);
+                return;
             }
+
+            writer.WritePropertyName(name);
+            writer.WriteValue(value);
         }
         public static void WriteBoolProperty(this IOpenApiWriter writer, string name, bool value, bool? defaultValue = null)
         {
-            if (defaultValue == null || value != defaultValue)
+            if (defaultValue != null && value == defaultValue)
             {
-                writer.WritePropertyName(name);
-                writer.WriteValue(value);
+                return;
             }
+
+            writer.WritePropertyName(name);
+            writer.WriteValue(value);
         }
 
         public static void WriteNumberProperty(this IOpenApiWriter writer, string name, decimal value, decimal? defaultValue = null)
         {
-            if (defaultValue == null || value != defaultValue)
+            if (defaultValue != null && value == defaultValue)
             {
-                writer.WritePropertyName(name);
-                writer.WriteValue(value);
+                return;
             }
+
+            writer.WritePropertyName(name);
+            writer.WriteValue(value);
         }
 
         public static void WriteNumberProperty(this IOpenApiWriter writer, string name, int? value)
         {
-            if (value != null)
+            if (value == null)
             {
-                writer.WritePropertyName(name);
-                writer.WriteValue((int)value);
+                return;
             }
+
+            writer.WritePropertyName(name);
+            writer.WriteValue((int)value);
         }
 
         public static void WriteNumberProperty(this IOpenApiWriter writer, string name, decimal? value)
         {
-            if (value != null)
+            if (value == null)
             {
-                writer.WritePropertyName(name);
-                writer.WriteValue((decimal)value);
+                return;
             }
+
+            writer.WritePropertyName(name);
+            writer.WriteValue((decimal)value);
         }
        
     }

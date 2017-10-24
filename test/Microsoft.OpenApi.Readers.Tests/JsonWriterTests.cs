@@ -1,35 +1,17 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.OpenApi;
-using Xunit;
-using Microsoft.OpenApi.Writers;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
-namespace OpenApiTests
+using System.IO;
+using Microsoft.OpenApi.Writers;
+using Newtonsoft.Json.Linq;
+using Xunit;
+
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class JsonWriterTests
     {
-        [Fact]
-        public void WriteMap()
-        {
-            var outputString = new StringWriter();
-            var writer = new OpenApiJsonWriter(outputString);
-            writer.WriteStartObject();
-            writer.WriteStringProperty("hello","world");
-            writer.WriteStringProperty("good", "bye");
-            writer.WriteEndObject();
-            writer.Flush();
-
-
-            var jObject = JObject.Parse(outputString.GetStringBuilder().ToString());
-
-            Assert.Equal("world", jObject["hello"]);
-        }
-
         [Fact]
         public void WriteList()
         {
@@ -47,27 +29,19 @@ namespace OpenApiTests
         }
 
         [Fact]
-        public void WriteNestedMap()
+        public void WriteMap()
         {
             var outputString = new StringWriter();
             var writer = new OpenApiJsonWriter(outputString);
-                writer.WriteStartObject();
-                    writer.WritePropertyName("intro");
-                    writer.WriteStartObject();
-                    writer.WriteStringProperty("hello", "world");
-                    writer.WriteEndObject();
-
-                    writer.WritePropertyName("outro");
-                    writer.WriteStartObject();
-                    writer.WriteStringProperty("good", "bye");
-                    writer.WriteEndObject();
-
-                writer.WriteEndObject();
+            writer.WriteStartObject();
+            writer.WriteStringProperty("hello", "world");
+            writer.WriteStringProperty("good", "bye");
+            writer.WriteEndObject();
             writer.Flush();
 
             var jObject = JObject.Parse(outputString.GetStringBuilder().ToString());
 
-            Assert.Equal("world", jObject["intro"]["hello"]);
+            Assert.Equal("world", jObject["hello"]);
         }
 
         [Fact]
@@ -94,5 +68,28 @@ namespace OpenApiTests
             Assert.Equal("bye", jObject["outro"]["good"]);
         }
 
+        [Fact]
+        public void WriteNestedMap()
+        {
+            var outputString = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputString);
+            writer.WriteStartObject();
+            writer.WritePropertyName("intro");
+            writer.WriteStartObject();
+            writer.WriteStringProperty("hello", "world");
+            writer.WriteEndObject();
+
+            writer.WritePropertyName("outro");
+            writer.WriteStartObject();
+            writer.WriteStringProperty("good", "bye");
+            writer.WriteEndObject();
+
+            writer.WriteEndObject();
+            writer.Flush();
+
+            var jObject = JObject.Parse(outputString.GetStringBuilder().ToString());
+
+            Assert.Equal("world", jObject["intro"]["hello"]);
+        }
     }
 }

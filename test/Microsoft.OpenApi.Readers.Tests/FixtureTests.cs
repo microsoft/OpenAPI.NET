@@ -1,79 +1,79 @@
-﻿using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Services;
-using SharpYaml.Serialization;
-using System;
-using System.Collections.Generic;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Readers.YamlReaders;
+using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
+using SharpYaml.Serialization;
 using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class FixtureTests
     {
+        private YamlNode LoadNode(string filePath)
+        {
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                var yamlStream = new YamlStream();
+                yamlStream.Load(new StreamReader(stream));
+                return yamlStream.Documents.First().RootNode;
+            }
+        }
         // Load json,yaml for both 2.0 and 3.0.  Ensure resulting DOM is not empty and equivalent?
         // Load files from ../../fixtures/(v3.0|v2.0|v1.0 ???)/(json|yaml)/general/basicInfoObject.json
 
         [Fact]
         public void TestBasicInfoObject()
         {
-
             var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/basicInfoObject.json");
 
-            var ctx = new ParsingContext();
-            var node = new MapNode(ctx, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Builder.LoadInfo(node);
+            var context = new ParsingContext();
+            var diagnostic = new OpenApiDiagnostic();
+
+            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var info = OpenApiV3Deserializer.LoadInfo(node);
 
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
             Assert.Equal("1.0.1", info.Version.ToString());
             Assert.Equal("support@swagger.io", info.Contact.Email);
-            Assert.Empty(ctx.Errors);
+            Assert.Empty(diagnostic.Errors);
         }
 
         [Fact]
         public void TestMinimalInfoObject()
         {
-
             var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/minimalInfoObject.json");
 
-            var ctx = new ParsingContext();
-            var node = new MapNode(ctx, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Builder.LoadInfo(node);
+            var context = new ParsingContext();
+            var diagnostic = new OpenApiDiagnostic();
+
+            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var info = OpenApiV3Deserializer.LoadInfo(node);
 
             Assert.NotNull(info);
             Assert.Equal("Swagger Sample App", info.Title);
             Assert.Equal("1.0.1", info.Version.ToString());
-            Assert.Empty(ctx.Errors);
+            Assert.Empty(diagnostic.Errors);
         }
 
         [Fact]
         public void TestNegativeInfoObject()
         {
-
             var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/negative/negativeInfoObject.json");
 
-            var ctx = new ParsingContext();
-            var node = new MapNode(ctx, (YamlMappingNode)yamlNode);
-            var info = OpenApiV3Builder.LoadInfo(node);
+            var context = new ParsingContext();
+            var diagnostic = new OpenApiDiagnostic();
+
+            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var info = OpenApiV3Deserializer.LoadInfo(node);
 
             Assert.NotNull(info);
-            Assert.Equal(2, ctx.Errors.Count);
-        }
-
-        private YamlNode LoadNode(string filePath)
-        {
-            using (var stream = new FileStream(filePath, FileMode.Open))
-            {
-
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                return yamlStream.Documents.First().RootNode;
-            }
+            Assert.Equal(2, diagnostic.Errors.Count);
         }
     }
 }
-

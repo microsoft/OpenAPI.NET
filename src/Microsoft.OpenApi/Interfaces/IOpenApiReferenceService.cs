@@ -9,6 +9,7 @@ namespace Microsoft.OpenApi
     public interface IOpenApiReferenceService
     {
         IOpenApiReference LoadReference(OpenApiReference reference);
+
         OpenApiReference ParseReference(string pointer);
     }
 }

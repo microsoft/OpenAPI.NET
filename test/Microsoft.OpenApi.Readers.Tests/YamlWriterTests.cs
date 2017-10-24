@@ -1,31 +1,16 @@
-﻿using Microsoft.OpenApi;
-using Microsoft.OpenApi.Writers;
-using System;
-using System.Collections.Generic;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
-namespace OpenApiTests
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class YamlWriterTests
     {
-        [Fact]
-        public void WriteMap()
-        {
-            var outputString = new StringWriter();
-            var writer = new OpenApiYamlWriter(outputString);
-
-            writer.WriteStartObject();
-            writer.WriteEndObject();
-            
-
-            //Assert.Equal(0, debug.StackState.Count);
-            //Assert.Equal("", debug.Indent);
-        }
-
         [Fact]
         public void WriteList()
         {
@@ -41,6 +26,17 @@ namespace OpenApiTests
             //Assert.Equal("", debug.Indent);
         }
 
+        [Fact]
+        public void WriteMap()
+        {
+            var outputString = new StringWriter();
+            var writer = new OpenApiYamlWriter(outputString);
 
+            writer.WriteStartObject();
+            writer.WriteEndObject();
+
+            //Assert.Equal(0, debug.StackState.Count);
+            //Assert.Equal("", debug.Indent);
         }
     }
+}

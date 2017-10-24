@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-using Microsoft.OpenApi.Readers;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
 using Microsoft.OpenApi.Readers.YamlReaders;
+using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -12,20 +13,22 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void CheckPetStoreApiInfo()
         {
-            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.petstore30.yaml");
+            var stream = GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.petstore30.yaml");
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             var info = openApiDoc.Info;
             Assert.Equal("Swagger Petstore (Simple)", openApiDoc.Info.Title);
-            Assert.Equal("A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification", info.Description);
+            Assert.Equal(
+                "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
+                info.Description);
             Assert.Equal("1.0.0", info.Version.ToString());
         }
-        
+
         [Fact]
         public void ParseCompleteHeaderOpenApi()
         {
-            var stream = this.GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.CompleteHeader.yaml");
+            var stream = GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.CompleteHeader.yaml");
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
@@ -37,8 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             Assert.Equal("This is an api", openApiDoc.Info.Description);
             Assert.Equal("http://example.org/Dowhatyouwant", openApiDoc.Info.TermsOfService);
             Assert.Equal("Darrel Miller", openApiDoc.Info.Contact.Name);
-         //   Assert.Equal("@darrel_miller", openApiDoc.Info.Contact.Extensions["x-twitter"].GetValueNode().GetScalarValue());
+            //   Assert.Equal("@darrel_miller", openApiDoc.Info.Contact.Extensions["x-twitter"].GetValueNode().GetScalarValue());
         }
-
     }
 }

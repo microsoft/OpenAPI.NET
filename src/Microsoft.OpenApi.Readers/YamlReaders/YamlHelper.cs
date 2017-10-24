@@ -11,23 +11,6 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 {
     internal static class YamlHelper
     {
-        public static ParseNode Create(ParsingContext context, YamlNode node)
-        {
-            var listNode = node as YamlSequenceNode;
-            if (listNode != null)
-            {
-                return new ListNode(context, listNode);
-            }
-
-            var mapNode = node as YamlMappingNode;
-            if (mapNode != null)
-            {
-                return new MapNode(context, mapNode);
-            }
-
-            return new ValueNode(context, node as YamlScalarNode);
-        }
-
         public static string GetScalarValue(this YamlNode node)
         {
             var scalarNode = node as YamlScalarNode;
@@ -39,9 +22,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             return scalarNode.Value;
         }
 
-        public static YamlNode ParseYaml(string yaml)
+        public static YamlNode ParseYamlString(string yamlString)
         {
-            var reader = new StringReader(yaml);
+            var reader = new StringReader(yamlString);
             var yamlStream = new YamlStream();
             yamlStream.Load(reader);
             var yamlDocument = yamlStream.Documents.First();
