@@ -1,26 +1,44 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="IOpenApiAny.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Any type kind.
+    /// </summary>
     public enum AnyTypeKind
     {
-        None,
-
+        /// <summary>
+        /// Primitive.
+        /// </summary>
         Primitive,
 
+        /// <summary>
+        /// Null.
+        /// </summary>
         Null,
 
+        /// <summary>
+        /// Array.
+        /// </summary>
         Array,
 
+        /// <summary>
+        /// Object.
+        /// </summary>
         Object
     }
 
+    /// <summary>
+    /// Base interface for the Open Api Any.
+    /// </summary>
     public interface IOpenApiAny
     {
+        /// <summary>
+        /// Any type kind.
+        /// </summary>
         AnyTypeKind AnyKind { get; }
     }
 }
