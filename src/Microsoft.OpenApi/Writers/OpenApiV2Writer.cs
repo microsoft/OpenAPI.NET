@@ -481,33 +481,36 @@ namespace Microsoft.OpenApi.Writers
 
             if (securityScheme.Flows != null)
             {
-                if (!WriteOAuthFlow(writer, securityScheme.Flows.Implicit, "implicit"))
+                if (securityScheme.Flows.Implicit != null)
                 {
-                    if (!WriteOAuthFlow(writer, securityScheme.Flows.Password, "password"))
-                    {
-                        if (!WriteOAuthFlow(writer, securityScheme.Flows.ClientCredentials, "application"))
-                        {
-                            WriteOAuthFlow(writer, securityScheme.Flows.AuthorizationCode, "accessCode");
-                        }
-                    }
+                    writer.WriteStringProperty("flow", "implicit");
+                    WriteOAuthFlow(writer, securityScheme.Flows.Implicit);
+                }
+                else if (securityScheme.Flows.Password != null)
+                {
+                    writer.WriteStringProperty("flow", "password");
+                    WriteOAuthFlow(writer, securityScheme.Flows.Password);
+                }
+                else if (securityScheme.Flows.ClientCredentials != null)
+                {
+                    writer.WriteStringProperty("flow", "application");
+                    WriteOAuthFlow(writer, securityScheme.Flows.ClientCredentials);
+                }
+                else if (securityScheme.Flows.AuthorizationCode != null)
+                {
+                    writer.WriteStringProperty("flow", "accessCode");
+                    WriteOAuthFlow(writer, securityScheme.Flows.AuthorizationCode);
                 }
             }
 
             writer.WriteEndObject();
         }
 
-        private static bool WriteOAuthFlow(IOpenApiWriter writer, OpenApiOAuthFlow oAuthFlow, string flow)
+        private static void WriteOAuthFlow(IOpenApiWriter writer, OpenApiOAuthFlow oAuthFlow)
         {
-            if (oAuthFlow == null)
-            {
-                return false;
-            }
-
-            writer.WriteStringProperty("flow", flow);
             writer.WriteStringProperty("authorizationUrl", oAuthFlow.AuthorizationUrl?.ToString());
             writer.WriteStringProperty("tokenUrl", oAuthFlow.TokenUrl?.ToString());
             writer.WriteMap("scopes", oAuthFlow.Scopes, (w,s) => w.WriteValue(s));
-            return true;
         }
     }
 

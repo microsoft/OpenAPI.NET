@@ -9,13 +9,6 @@ using System.Collections.Generic;
 
 namespace Microsoft.OpenApi
 {
-    public enum InEnum
-    {
-        path = 1,
-        query = 2,
-        header = 3
-    }
-
     /// <summary>
     /// Parameter Object.
     /// </summary>
@@ -23,26 +16,26 @@ namespace Microsoft.OpenApi
     {
         public OpenApiReference Pointer { get; set; }
         public string Name { get; set; }
-        public InEnum In
+        public ParameterLocation In
         {
             get { return @in; }
             set
             {
                 @in = value;
-                if (@in == InEnum.path)
+                if (@in == ParameterLocation.path)
                 {
                     Required = true;
                 }
             }
         }
-        private InEnum @in;
+        private ParameterLocation @in;
         public string Description { get; set; }
         public bool Required
         {
             get { return required; }
             set
             {
-                if (In == InEnum.path && value == false)
+                if (In == ParameterLocation.path && value == false)
                 {
                     throw new ArgumentException("Required cannot be set to false when in is path");
                 }
