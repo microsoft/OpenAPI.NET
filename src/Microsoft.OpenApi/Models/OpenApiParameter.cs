@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IReference
+    public class OpenApiParameter : IOpenApiReference, IOpenApiExtension
     {
         public OpenApiReference Pointer { get; set; }
         public string Name { get; set; }
@@ -56,11 +56,9 @@ namespace Microsoft.OpenApi
         public bool Explode { get; set; }
         public bool AllowReserved { get; set; }
         public OpenApiSchema Schema { get; set; }
-        public List<OpenApiExample> Examples { get; set; } = new List<OpenApiExample>();
+        public IList<OpenApiExample> Examples { get; set; } = new List<OpenApiExample>();
         public string Example { get; set; }
-        public Dictionary<string, OpenApiMediaType> Content { get; set; }
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        
+        public IDictionary<string, OpenApiMediaType> Content { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }
-    }
+}

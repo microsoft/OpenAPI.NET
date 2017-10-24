@@ -12,13 +12,13 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : IReference
+    public class OpenApiResponse : IOpenApiReference, IOpenApiExtension
     {
         public string Description { get; set; }
-        public Dictionary<string, OpenApiMediaType> Content { get; set; }
-        public Dictionary<string, OpenApiHeader> Headers { get; set; }
-        public Dictionary<string, OpenApiLink> Links { get; set; }
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; }
+        public IDictionary<string, OpenApiMediaType> Content { get; set; }
+        public IDictionary<string, OpenApiHeader> Headers { get; set; }
+        public IDictionary<string, OpenApiLink> Links { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public OpenApiReference Pointer
         {

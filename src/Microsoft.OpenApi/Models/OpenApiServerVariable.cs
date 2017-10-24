@@ -11,12 +11,12 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Server Variable Object.
     /// </summary>
-    public class OpenApiServerVariable
+    public class OpenApiServerVariable : IOpenApiExtension
     {
         public string Description { get; set; }
         public string Default { get; set; }
         public List<string> Enum { get; set; } = new List<string>();
 
-        public Dictionary<string, string> Extensions { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }
 }

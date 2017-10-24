@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object 
     /// </summary>
-    public class OpenApiHeader : IReference
+    public class OpenApiHeader : IOpenApiReference, IOpenApiExtension
     {
         public OpenApiReference Pointer { get; set; }
         public string Description { get; set; }
@@ -24,9 +24,9 @@ namespace Microsoft.OpenApi
         public bool AllowReserved { get; set; }
         public OpenApiSchema Schema { get; set; }
         public string Example { get; set; }
-        public List<OpenApiExample> Examples { get; set; }
-        public Dictionary<string, OpenApiMediaType> Content { get; set; }
+        public IList<OpenApiExample> Examples { get; set; }
+        public IDictionary<string, OpenApiMediaType> Content { get; set; }
 
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }
 }

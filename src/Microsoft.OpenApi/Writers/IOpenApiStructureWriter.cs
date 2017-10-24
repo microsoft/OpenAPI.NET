@@ -17,20 +17,4 @@ namespace Microsoft.OpenApi.Writers
     {
         bool Save(OpenApiDocument document);
     }
-
-    public class OpenApiV3Serializer : IOpenApiDocumentSerializer
-    {
-        public bool Save(OpenApiDocument document)
-        {
-            return true;
-        }
-    }
-
-    public class OpenApiV2Serializer : IOpenApiDocumentSerializer
-    {
-        public bool Save(OpenApiDocument document)
-        {
-            return true;
-        }
-    }
 }

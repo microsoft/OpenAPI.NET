@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi
             }
         }
 
-        private void WalkContent(Dictionary<string, OpenApiMediaType> content)
+        private void WalkContent(IDictionary<string, OpenApiMediaType> content)
         {
             if (content == null) return;
 

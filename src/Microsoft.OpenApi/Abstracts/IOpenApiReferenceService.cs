@@ -1,13 +1,14 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IReference.cs" company="Microsoft">
+// <copyright file="IOpenApiReferenceService.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 namespace Microsoft.OpenApi
 {
-    public interface IReference
+    public interface IOpenApiReferenceService
     {
-        OpenApiReference Pointer { get; set; }
+        IOpenApiReference LoadReference(OpenApiReference reference);
+        OpenApiReference ParseReference(string pointer);
     }
 }

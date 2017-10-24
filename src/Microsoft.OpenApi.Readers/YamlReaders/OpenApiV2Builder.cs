@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
 
 
-        private static void MakeServers(List<OpenApiServer> servers, ParsingContext context)
+        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context)
         {
             string host = context.GetTempStorage<string>("host");
             string basePath = context.GetTempStorage<string>("basePath");
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         public static PatternFieldMap<OpenApiDocument> OpenApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new PatternFieldMap<OpenApiInfo>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
         };
 
 
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static PatternFieldMap<OpenApiContact> ContactPatternFields = new PatternFieldMap<OpenApiContact>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiContact LoadContact(ParseNode node)
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static PatternFieldMap<OpenApiLicense> LicensePatternFields = new PatternFieldMap<OpenApiLicense>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
         };
 
         internal static OpenApiLicense LoadLicense(ParseNode node)
@@ -164,7 +164,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         public static PatternFieldMap<OpenApiPaths> PathsPatternFields = new PatternFieldMap<OpenApiPaths>
         {
             { (s)=> s.StartsWith("/"), (o,k,n)=> o.Add(k, OpenApiV2Builder.LoadPathItem(n)    ) },
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiPaths LoadPaths(ParseNode node)
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiPathItem> PathItemPatternFields = new PatternFieldMap<OpenApiPathItem>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) },
             { (s)=> "get,put,post,delete,patch,options,head,patch".Contains(s),
                 (o,k,n)=> o.AddOperation(OperationTypeExtensions.ParseOperationType(k), OpenApiV2Builder.LoadOperation(n)    ) }
         };
@@ -228,7 +228,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiOperation> OperationPatternFields = new PatternFieldMap<OpenApiOperation>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
         };
 
         internal static OpenApiOperation LoadOperation(ParseNode node)
@@ -418,7 +418,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiParameter> ParameterPatternFields = new PatternFieldMap<OpenApiParameter>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
         };
 
 
@@ -465,7 +465,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiResponse> ResponsePatternFields = new PatternFieldMap<OpenApiResponse>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) },
         };
 
         public static OpenApiResponse LoadResponse(ParseNode node)
@@ -523,7 +523,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiHeader> HeaderPatternFields = new PatternFieldMap<OpenApiHeader>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) },
         };
 
 
@@ -555,7 +555,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiExample> ExamplePatternFields = new PatternFieldMap<OpenApiExample>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new GenericOpenApiExtension(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiExample LoadExample(ParseNode node)
@@ -643,7 +643,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiSchema> SchemaPatternFields = new PatternFieldMap<OpenApiSchema>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
 
@@ -689,7 +689,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiSecurityScheme> SecuritySchemePatternFields = new PatternFieldMap<OpenApiSecurityScheme>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new GenericOpenApiExtension(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
@@ -790,9 +790,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         }
 
 
-        public static IReference LoadReference(OpenApiReference reference, object rootNode)
+        public static IOpenApiReference LoadReference(OpenApiReference reference, object rootNode)
         {
-            IReference referencedObject = null;
+            IOpenApiReference referencedObject = null;
             ParseNode node = ((RootNode)rootNode).Find(GetPointer(reference));
 
             if (node == null &&  reference.ReferenceType != ReferenceType.Tags ) return null;

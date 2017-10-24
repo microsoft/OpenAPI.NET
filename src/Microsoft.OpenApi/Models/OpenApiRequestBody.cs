@@ -12,13 +12,13 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IReference
+    public class OpenApiRequestBody : IOpenApiReference, IOpenApiExtension
     {
         public OpenApiReference Pointer { get; set; }
 
         public string Description { get; set; }
         public Boolean Required { get; set; }
-        public Dictionary<string, OpenApiMediaType> Content { get; set; }
-        public Dictionary<string,string> Extensions { get; set; }
+        public IDictionary<string, OpenApiMediaType> Content { get; set; }
+        public IDictionary<string,IOpenApiAny> Extensions { get; set; }
     }
 }

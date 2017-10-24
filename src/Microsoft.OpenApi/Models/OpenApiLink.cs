@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink :  IReference
+    public class OpenApiLink :  IOpenApiReference, IOpenApiExtension
     {
         public string Href { get; set; }
         public string OperationId { get; set; }
@@ -19,11 +19,9 @@ namespace Microsoft.OpenApi
         public RuntimeExpression RequestBody { get; set; }
 
         public string Description { get; set; }
-        public Dictionary<string, string> Extensions { get; set; }
+
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         public OpenApiReference Pointer { get; set; }
-
-
-        
     }
 }

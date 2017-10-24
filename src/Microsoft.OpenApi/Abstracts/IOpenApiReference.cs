@@ -1,17 +1,19 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="GenericOpenApiExtension.cs" company="Microsoft">
+// <copyright file="IOpenApiReference.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 namespace Microsoft.OpenApi
 {
-    public class GenericOpenApiExtension : IOpenApiExtension
+    /// <summary>
+    /// Represents an Open API element is referencable.
+    /// </summary>
+    public interface IOpenApiReference : IOpenApiElement
     {
-        string node;
-        public GenericOpenApiExtension(string n)
-        {
-            this.node = n;
-        }
+        /// <summary>
+        /// Reference object.
+        /// </summary>
+        OpenApiReference Pointer { get; set; }
     }
 }

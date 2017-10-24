@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Contact Object.
     /// </summary>
-    public class OpenApiContact
+    public class OpenApiContact : IOpenApiExtension
     {
         /// <summary>
         /// The identifying name of the contact person/organization.
@@ -33,6 +33,6 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public Dictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
     }
 }

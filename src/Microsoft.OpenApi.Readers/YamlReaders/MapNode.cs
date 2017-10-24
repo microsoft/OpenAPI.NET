@@ -70,11 +70,11 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             return scalarNode.Value;
         }
 
-        public T GetReferencedObject<T>(string refPointer) where T : IReference
+        public T GetReferencedObject<T>(string refPointer) where T : IOpenApiReference
         {
             return (T)this.Context.GetReferencedObject(refPointer); 
         }
-        public T CreateOrReferenceDomainObject<T>(Func<T> factory) where T: IReference
+        public T CreateOrReferenceDomainObject<T>(Func<T> factory) where T: IOpenApiReference
         {
             T domainObject;
             var refPointer = GetReferencePointer(); // What should the DOM of a reference look like?
