@@ -23,28 +23,25 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static string GetVersion(RootNode rootNode)
         {
             var versionNode = rootNode.Find(new JsonPointer("/openapi"));
+
             if (versionNode != null)
             {
                 return versionNode.GetScalarValue();
             }
 
             versionNode = rootNode.Find(new JsonPointer("/swagger"));
-            if (versionNode != null)
-            {
-                return versionNode.GetScalarValue();
-            }
 
-            return null;
+            return versionNode?.GetScalarValue();
         }
 
         /// <summary>
         /// Reads the stream input and parses it into an Open API document.
         /// </summary>
-        public OpenApiDocument Read(Stream input, out OpenApiDiagnostic log)
+        public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
             RootNode rootNode;
             var context = new ParsingContext();
-            log = new OpenApiDiagnostic();
+            diagnostic = new OpenApiDiagnostic();
 
                 try
                 {
@@ -54,12 +51,12 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                         yamlStream.Load(streamReader);
 
                         var yamlDocument = yamlStream.Documents.First();
-                        rootNode = new RootNode(context, log, yamlDocument);
+                        rootNode = new RootNode(context, diagnostic, yamlDocument);
                     }
                 }
                 catch (SyntaxErrorException ex)
                 {
-                    log.Errors.Add(new OpenApiError(string.Empty, ex.Message));
+                    diagnostic.Errors.Add(new OpenApiError(string.Empty, ex.Message));
 
                     return new OpenApiDocument();
                 }

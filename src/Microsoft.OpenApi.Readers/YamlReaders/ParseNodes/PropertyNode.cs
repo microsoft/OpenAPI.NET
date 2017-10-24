@@ -12,12 +12,12 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
     internal class PropertyNode : ParseNode
     {
-        public PropertyNode(ParsingContext context, OpenApiDiagnostic log, string name, YamlNode node) : base(
+        public PropertyNode(ParsingContext context, OpenApiDiagnostic diagnostic, string name, YamlNode node) : base(
             context,
-            log)
+            diagnostic)
         {
             Name = name;
-            Value = Create(context, log, node);
+            Value = Create(context, diagnostic, node);
         }
 
         public string Name { get; set; }

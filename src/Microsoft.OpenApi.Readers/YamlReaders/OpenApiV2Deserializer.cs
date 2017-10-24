@@ -865,13 +865,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             switch (reference.ReferenceType)
             {
                 case ReferenceType.Schema:
-                    referencedObject = OpenApiV2Deserializer.LoadSchema(node);
+                    referencedObject = LoadSchema(node);
                     break;
                 case ReferenceType.Parameter:
-                    referencedObject = OpenApiV2Deserializer.LoadParameter(node);
+                    referencedObject = LoadParameter(node);
                     break;
                 case ReferenceType.SecurityScheme:
-                    referencedObject = OpenApiV2Deserializer.LoadSecurityScheme(node);
+                    referencedObject = LoadSecurityScheme(node);
                     break;
                 case ReferenceType.Tags:
                     ListNode list = (ListNode)node;
@@ -879,7 +879,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                     {
                         foreach (var item in list)
                         {
-                            var tag = OpenApiV2Deserializer.LoadTag(item);
+                            var tag = LoadTag(item);
 
                             if (tag.Name == reference.TypeName)
                             {
@@ -907,11 +907,11 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField<T>(domainObject, fixedFieldMap, patternFieldMap);
-                if (requiredFields != null) requiredFields.Remove(propertyNode.Name);
+                requiredFields?.Remove(propertyNode.Name);
             }
         }
 
-        private static void ReportMissing(ParseNode node, List<string> required)
+        private static void ReportMissing(ParseNode node, IList<string> required)
         {
             foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property")).ToList() )
             {

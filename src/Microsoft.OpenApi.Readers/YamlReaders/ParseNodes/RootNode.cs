@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
     {
         private readonly YamlDocument yamlDocument;
 
-        public RootNode(ParsingContext context, OpenApiDiagnostic log, YamlDocument yamlDocument) : base(context, log)
+        public RootNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlDocument yamlDocument) : base(context, diagnostic)
         {
             this.yamlDocument = yamlDocument;
         }

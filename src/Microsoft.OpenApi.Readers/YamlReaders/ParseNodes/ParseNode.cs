@@ -47,22 +47,22 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             return value;
         }
 
-        public static ParseNode Create(ParsingContext context, OpenApiDiagnostic log, YamlNode node)
+        public static ParseNode Create(ParsingContext context, OpenApiDiagnostic diagnostic, YamlNode node)
         {
             var listNode = node as YamlSequenceNode;
 
             if (listNode != null)
             {
-                return new ListNode(context, log, listNode);
+                return new ListNode(context, diagnostic, listNode);
             }
 
             var mapNode = node as YamlMappingNode;
             if (mapNode != null)
             {
-                return new MapNode(context, log, mapNode);
+                return new MapNode(context, diagnostic, mapNode);
             }
 
-            return new ValueNode(context, log, node as YamlScalarNode);
+            return new ValueNode(context, diagnostic, node as YamlScalarNode);
         }
 
         public virtual List<T> CreateList<T>(Func<MapNode, T> map)

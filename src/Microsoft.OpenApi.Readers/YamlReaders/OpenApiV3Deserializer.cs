@@ -827,24 +827,29 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             switch (pointer.ReferenceType)
             {
                 case ReferenceType.Schema:
-                    referencedObject = OpenApiV3Deserializer.LoadSchema(node);
+                    referencedObject = LoadSchema(node);
                     break;
-                case ReferenceType.Parameter:
 
-                    referencedObject = OpenApiV3Deserializer.LoadParameter(node);
+                case ReferenceType.Parameter:
+                    referencedObject = LoadParameter(node);
                     break;
+
                 case ReferenceType.Callback:
-                    referencedObject = OpenApiV3Deserializer.LoadCallback(node);
+                    referencedObject = LoadCallback(node);
                     break;
+
                 case ReferenceType.SecurityScheme:
-                    referencedObject = OpenApiV3Deserializer.LoadSecurityScheme(node);
+                    referencedObject = LoadSecurityScheme(node);
                     break;
+
                 case ReferenceType.Link:
-                    referencedObject = OpenApiV3Deserializer.LoadLink(node);
+                    referencedObject = LoadLink(node);
                     break;
+
                 case ReferenceType.Example:
-                    referencedObject = OpenApiV3Deserializer.LoadExample(node);
+                    referencedObject = LoadExample(node);
                     break;
+
                 case ReferenceType.Tags:
                     ListNode list = (ListNode)node;
                     if (list != null)
@@ -865,10 +870,11 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                     }
 
                     break;
+
                 default:
                     throw new OpenApiException($"Unknown type of $ref {pointer.ReferenceType} at {pointer.ToString()}");
-
             }
+
             return referencedObject;
         }
 
@@ -879,8 +885,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField<T>(domainObject, fixedFieldMap, patternFieldMap);
-                if (requiredFields != null) requiredFields.Remove(propertyNode.Name);
+                requiredFields?.Remove(propertyNode.Name);
             }
+
             ReportMissing(mapNode, requiredFields);
         }
 
@@ -889,14 +896,17 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             var value = node.GetScalarValue();
             return new RuntimeExpression(value);
         }
-        private static void ReportMissing(ParseNode node, List<string> required)
+
+        private static void ReportMissing(ParseNode node, IList<string> required)
         {
-            if (required != null && required.Count > 0)
+            if (required == null || !required.Any() )
             {
-                foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}")).ToList())
-                {
-                    node.Diagnostic.Errors.Add(error);
-                }
+                return;
+            }
+
+            foreach (var error in required.Select(r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}")).ToList())
+            {
+                node.Diagnostic.Errors.Add(error);
             }
         }
 

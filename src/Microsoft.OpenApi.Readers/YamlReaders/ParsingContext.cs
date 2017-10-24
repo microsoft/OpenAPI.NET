@@ -32,13 +32,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             return "#/" + string.Join("/", currentLocation.Reverse().ToArray());
         }
 
-        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic log, string pointer)
+        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, string pointer)
         {
             var reference = referenceService.ParseReference(pointer);
-            return GetReferencedObject(log, reference);
+            return GetReferencedObject(diagnostic, reference);
         }
 
-        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic log, OpenApiReference reference)
+        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, OpenApiReference reference)
         {
             IOpenApiReference returnValue = null;
             referenceStore.TryGetValue(reference.ToString(), out returnValue);
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 }
                 else
                 {
-                    log.Errors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
+                    diagnostic.Errors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
                 }
             }
 

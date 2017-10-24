@@ -15,9 +15,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
     {
         private readonly YamlSequenceNode nodeList;
 
-        public ListNode(ParsingContext context, OpenApiDiagnostic log, YamlSequenceNode sequenceNode) : base(
+        public ListNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlSequenceNode sequenceNode) : base(
             context,
-            log)
+            diagnostic)
         {
             nodeList = sequenceNode;
         }

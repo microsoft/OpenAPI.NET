@@ -20,12 +20,12 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
         private readonly YamlMappingNode node;
         private readonly List<PropertyNode> nodes;
 
-        public MapNode(ParsingContext context, OpenApiDiagnostic log, string yamlString) :
-            this(context, log, (YamlMappingNode)YamlHelper.ParseYamlString(yamlString))
+        public MapNode(ParsingContext context, OpenApiDiagnostic diagnostic, string yamlString) :
+            this(context, diagnostic, (YamlMappingNode)YamlHelper.ParseYamlString(yamlString))
         {
         }
 
-        public MapNode(ParsingContext context, OpenApiDiagnostic log, YamlMappingNode node) : base(context, log)
+        public MapNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlMappingNode node) : base(context, diagnostic)
         {
             if (node == null)
             {
