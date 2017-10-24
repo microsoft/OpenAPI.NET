@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Readers.YamlReaders;
@@ -8,25 +13,19 @@ namespace Microsoft.OpenApi.Readers.Tests
 {
     public class OpenApiExampleTests
     {
-        HttpClient client;
+        private readonly HttpClient client;
+
         public OpenApiExampleTests()
         {
             client = new HttpClient();
-            client.BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/OpenAPI.next/examples/v3.0/");
-        }
-        [Fact]
-        public async Task SimplePetStore()
-        {
-            var stream = await client.GetStreamAsync("petstore.yaml");
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
-
-            Assert.Empty(context.Errors);
+            client.BaseAddress = new Uri(
+                "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/OpenAPI.next/examples/v3.0/");
         }
 
-        [Fact]
-        public async Task UberExample()
+        [Fact(Skip = "Example is not updated yet")]
+        public async Task ApiWithExamples()
         {
-            var stream = await client.GetStreamAsync("uber.yaml");
+            var stream = await client.GetStreamAsync("api-with-examples.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             Assert.Empty(context.Errors);
@@ -41,10 +40,19 @@ namespace Microsoft.OpenApi.Readers.Tests
             Assert.Empty(context.Errors);
         }
 
-        [Fact(Skip = "Example is not updated yet")]
-        public async Task ApiWithExamples()
+        [Fact]
+        public async Task SimplePetStore()
         {
-            var stream = await client.GetStreamAsync("api-with-examples.yaml");
+            var stream = await client.GetStreamAsync("petstore.yaml");
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+
+            Assert.Empty(context.Errors);
+        }
+
+        [Fact]
+        public async Task UberExample()
+        {
+            var stream = await client.GetStreamAsync("uber.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             Assert.Empty(context.Errors);

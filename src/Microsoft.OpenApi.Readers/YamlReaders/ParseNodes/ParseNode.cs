@@ -1,21 +1,26 @@
-﻿using System;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
-    internal abstract class ParseNode 
+    internal abstract class ParseNode
     {
-        public OpenApiDiagnostic Diagnostic { get; }
-
         protected ParseNode(ParsingContext parsingContext, OpenApiDiagnostic diagnostic)
         {
-            this.Context = parsingContext;
-            this.Diagnostic = diagnostic;
+            Context = parsingContext;
+            Diagnostic = diagnostic;
         }
 
         public ParsingContext Context { get; }
+
+        public OpenApiDiagnostic Diagnostic { get; }
 
         public string DomainType { get; internal set; }
 
@@ -24,10 +29,22 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             var mapNode = this as MapNode;
             if (mapNode == null)
             {
-                this.Diagnostic.Errors.Add(new OpenApiError("", $"{nodeName} must be a map/object at " + this.Context.GetLocation() ));
+                Diagnostic.Errors.Add(
+                    new OpenApiError("", $"{nodeName} must be a map/object at " + Context.GetLocation()));
             }
 
             return mapNode;
+        }
+
+        internal string CheckRegex(string value, Regex versionRegex, string defaultValue)
+        {
+            if (!versionRegex.IsMatch(value))
+            {
+                Diagnostic.Errors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex));
+                return defaultValue;
+            }
+
+            return value;
         }
 
         public static ParseNode Create(ParsingContext context, OpenApiDiagnostic log, YamlNode node)
@@ -48,14 +65,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             return new ValueNode(context, log, node as YamlScalarNode);
         }
 
-        public virtual string GetRaw()
+        public virtual List<T> CreateList<T>(Func<MapNode, T> map)
         {
-            throw new OpenApiException("Cannot get raw value");
-        }
-        
-        public virtual string GetScalarValue()
-        {
-            throw new OpenApiException("Cannot get scalar value");
+            throw new OpenApiException("Cannot create list");
         }
 
         public virtual Dictionary<string, T> CreateMap<T>(Func<MapNode, T> map)
@@ -63,9 +75,15 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             throw new OpenApiException("Cannot create map");
         }
 
-        public virtual Dictionary<string, T> CreateMapWithReference<T>(string refpointer, Func<MapNode, T> map) where T : class, IOpenApiReference
+        public virtual Dictionary<string, T> CreateMapWithReference<T>(string refpointer, Func<MapNode, T> map)
+            where T : class, IOpenApiReference
         {
             throw new OpenApiException("Cannot create map from reference");
+        }
+
+        public virtual List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
+        {
+            throw new OpenApiException("Cannot create simple list");
         }
 
         public virtual Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
@@ -73,25 +91,14 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             throw new OpenApiException("Cannot create simple map");
         }
 
-        public virtual List<T> CreateList<T>(Func<MapNode, T> map)
+        public virtual string GetRaw()
         {
-            throw new OpenApiException("Cannot create list");
-
-        }
-        public virtual List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
-        {
-            throw new OpenApiException("Cannot create simple list");
+            throw new OpenApiException("Cannot get raw value");
         }
 
-        internal string CheckRegex(string value, Regex versionRegex, string defaultValue)
+        public virtual string GetScalarValue()
         {
-            if (!versionRegex.IsMatch(value))
-            {
-                this.Diagnostic.Errors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex.ToString()));
-                return defaultValue;
-            }
-            return value;
+            throw new OpenApiException("Cannot get scalar value");
         }
     }
-    
 }

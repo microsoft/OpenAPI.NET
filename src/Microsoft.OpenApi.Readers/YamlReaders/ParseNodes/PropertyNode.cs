@@ -1,19 +1,26 @@
-﻿using SharpYaml.Serialization;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
     internal class PropertyNode : ParseNode
     {
-        public PropertyNode(ParsingContext context, OpenApiDiagnostic log, string name, YamlNode node) : base(context, log)
+        public PropertyNode(ParsingContext context, OpenApiDiagnostic log, string name, YamlNode node) : base(
+            context,
+            log)
         {
             Name = name;
             Value = Create(context, log, node);
         }
-        
-        public string Name { get;  set; }
+
+        public string Name { get; set; }
 
         public ParseNode Value { get; set; }
 
@@ -23,52 +30,51 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields)
         {
             Action<T, ParseNode> fixedFieldMap;
-            var found = fixedFields.TryGetValue(this.Name, out fixedFieldMap);
+            var found = fixedFields.TryGetValue(Name, out fixedFieldMap);
 
             if (fixedFieldMap != null)
             {
                 try
                 {
-                    this.Context.StartObject(this.Name);
-                    fixedFieldMap(parentInstance, this.Value);
-                } catch (OpenApiException ex)
+                    Context.StartObject(Name);
+                    fixedFieldMap(parentInstance, Value);
+                }
+                catch (OpenApiException ex)
                 {
-                    ex.Pointer = this.Context.GetLocation();
-                    this.Diagnostic.Errors.Add(new OpenApiError(ex));
+                    ex.Pointer = Context.GetLocation();
+                    Diagnostic.Errors.Add(new OpenApiError(ex));
                 }
                 finally
                 {
-                    this.Context.EndObject();
+                    Context.EndObject();
                 }
             }
             else
             {
-                var map = patternFields.Where(p => p.Key(this.Name)).Select(p => p.Value).FirstOrDefault();
+                var map = patternFields.Where(p => p.Key(Name)).Select(p => p.Value).FirstOrDefault();
                 if (map != null)
                 {
                     try
                     {
-                        this.Context.StartObject(this.Name);
-                        map(parentInstance, this.Name, this.Value);
+                        Context.StartObject(Name);
+                        map(parentInstance, Name, Value);
                     }
                     catch (OpenApiException ex)
                     {
-                        ex.Pointer = this.Context.GetLocation();
-                        this.Diagnostic.Errors.Add(new OpenApiError(ex));
+                        ex.Pointer = Context.GetLocation();
+                        Diagnostic.Errors.Add(new OpenApiError(ex));
                     }
                     finally
                     {
-                        this.Context.EndObject();
+                        Context.EndObject();
                     }
                 }
                 else
                 {
-                    this.Diagnostic.Errors.Add(new OpenApiError("", $"{this.Name} is not a valid property at {this.Context.GetLocation()}" ));
+                    Diagnostic.Errors.Add(
+                        new OpenApiError("", $"{Name} is not a valid property at {Context.GetLocation()}"));
                 }
             }
         }
-
     }
-
-
 }

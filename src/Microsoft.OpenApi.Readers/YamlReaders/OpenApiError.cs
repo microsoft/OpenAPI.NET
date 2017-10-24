@@ -1,17 +1,21 @@
-﻿using Microsoft.OpenApi.Readers.Interface;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
     public class OpenApiError
     {
-        string pointer;
-        string message;
+        private readonly string message;
+        private readonly string pointer;
 
-        public OpenApiError(OpenApiException ex)
+        public OpenApiError(OpenApiException exception)
         {
-            this.message = ex.Message;
-            this.pointer = ex.Pointer;
+            message = exception.Message;
+            pointer = exception.Pointer;
         }
+
         public OpenApiError(string pointer, string message)
         {
             this.pointer = pointer;
@@ -20,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public override string ToString()
         {
-           return this.message + (!string.IsNullOrEmpty(this.pointer) ? " at " + this.pointer : "");
+            return message + (!string.IsNullOrEmpty(pointer) ? " at " + pointer : "");
         }
     }
 }

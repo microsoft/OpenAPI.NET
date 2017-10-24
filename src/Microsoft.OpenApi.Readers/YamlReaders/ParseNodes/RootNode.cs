@@ -1,5 +1,10 @@
-﻿using SharpYaml.Serialization;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
 using System;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
@@ -8,20 +13,16 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
     /// </summary>
     internal class RootNode : ParseNode
     {
-        YamlDocument yamlDocument;
+        private readonly YamlDocument yamlDocument;
+
         public RootNode(ParsingContext context, OpenApiDiagnostic log, YamlDocument yamlDocument) : base(context, log)
         {
             this.yamlDocument = yamlDocument;
         }
 
-        public MapNode GetMap()
-        {
-            return new MapNode(Context, Diagnostic, (YamlMappingNode)yamlDocument.RootNode);
-        }
-
         public ParseNode Find(JsonPointer refPointer)
         {
-            var yamlNode = refPointer.Find(this.yamlDocument.RootNode);
+            var yamlNode = refPointer.Find(yamlDocument.RootNode);
             if (yamlNode == null)
             {
                 return null;
@@ -29,11 +30,15 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 
             return Create(Context, Diagnostic, yamlNode);
         }
+
+        public MapNode GetMap()
+        {
+            return new MapNode(Context, Diagnostic, (YamlMappingNode)yamlDocument.RootNode);
+        }
     }
 
     public static class JsonPointerExtensions
     {
-
         public static YamlNode Find(this JsonPointer currentpointer, YamlNode sample)
         {
             if (currentpointer.Tokens.Length == 0)
@@ -63,6 +68,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
                         }
                     }
                 }
+
                 return pointer;
             }
             catch (Exception ex)
@@ -70,6 +76,5 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
                 throw new ArgumentException("Failed to dereference pointer", ex);
             }
         }
-
     }
 }
