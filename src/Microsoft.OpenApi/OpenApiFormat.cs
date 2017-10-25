@@ -6,18 +6,18 @@
 namespace Microsoft.OpenApi
 {
     /// <summary>
-    /// Represents the Open Api specification version.
+    /// Represents the Open Api document format.
     /// </summary>
-    public enum OpenApiSpecVersion
+    public enum OpenApiFormat
     {
         /// <summary>
-        /// Open Api v2.0
+        /// JSON format.
         /// </summary>
-        OpenApi2_0,
+        Json,
 
         /// <summary>
-        /// Open Api v3.0
+        /// Yaml format.
         /// </summary>
-        OpenApi3_0
+        Yaml
     }
 }

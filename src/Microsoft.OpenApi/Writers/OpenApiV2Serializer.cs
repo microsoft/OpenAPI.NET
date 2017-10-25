@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiV2Serializer"/> class.
         /// </summary>
-        public OpenApiV2Serializer(OpenApiWriterSettings settings)
+        public OpenApiV2Serializer(OpenApiSerializerSettings settings)
             : base(settings)
         {
         }

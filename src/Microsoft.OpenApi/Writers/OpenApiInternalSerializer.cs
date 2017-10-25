@@ -10,9 +10,9 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     internal abstract class OpenApiInternalSerializer
     {
-        public OpenApiWriterSettings Settings { get; }
+        public OpenApiSerializerSettings Settings { get; }
 
-        public OpenApiInternalSerializer(OpenApiWriterSettings settings)
+        public OpenApiInternalSerializer(OpenApiSerializerSettings settings)
         {
             Settings = settings;
         }
