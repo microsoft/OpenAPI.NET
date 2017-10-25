@@ -8,11 +8,11 @@ namespace Microsoft.OpenApi.Writers
     /// <summary>
     /// Base class for Open API document internal serializer.
     /// </summary>
-    internal abstract class OpenApiInternalSerializer
+    internal abstract class OpenApiSerializerBase
     {
         public OpenApiSerializerSettings Settings { get; }
 
-        public OpenApiInternalSerializer(OpenApiSerializerSettings settings)
+        public OpenApiSerializerBase(OpenApiSerializerSettings settings)
         {
             Settings = settings;
         }

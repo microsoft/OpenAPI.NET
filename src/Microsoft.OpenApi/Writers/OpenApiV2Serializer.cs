@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Writers
     /// <summary>
     /// Class to serialize Open API v2.0 document.
     /// </summary>
-    internal class OpenApiV2Serializer : OpenApiInternalSerializer
+    internal class OpenApiV2Serializer : OpenApiSerializerBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiV2Serializer"/> class.

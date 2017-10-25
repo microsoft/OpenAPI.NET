@@ -76,9 +76,9 @@ namespace Microsoft.OpenApi
         /// </summary>
         /// <param name="parameterName">The name of the parameter that caused the current exception.</param>
         /// <returns>The logged <see cref="Exception"/>.</returns>
-        internal static ArgumentException ArgumentNullOrEmpty(string parameterName)
+        internal static ArgumentException ArgumentNullOrWhiteSpace(string parameterName)
         {
-            return Error.Argument(parameterName, SRResource.ArgumentNullOrEmpty, parameterName);
+            return Error.Argument(parameterName, SRResource.ArgumentNullOrWhiteSpace, parameterName);
         }
 
         /// <summary>
