@@ -13,16 +13,6 @@ namespace Microsoft.OpenApi
     public sealed class OpenApiSerializerSettings
     {
         /// <summary>
-        /// Base Uri for the Open API services.
-        /// </summary>
-        public Uri BaseUri { get; set; } = new Uri("http://localhost");
-
-        /// <summary>
-        /// Metadata version for the <see cref="OpenApiInfo"/>
-        /// </summary>
-        public Version MetadataVersion { get; set; } = new Version(1, 0, 1);
-
-        /// <summary>
         /// Open Api specification version
         /// </summary>
         public OpenApiSpecVersion SpecVersion { get; set; } = OpenApiSpecVersion.OpenApi3_0;
