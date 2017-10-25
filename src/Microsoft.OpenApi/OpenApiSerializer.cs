@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi
                 throw Error.ArgumentNull(nameof(document));
             }
 
-            OpenApiInternalSerializer serializer;
+            OpenApiSerializerBase serializer;
             switch(Settings.SpecVersion)
             {
                 case OpenApiSpecVersion.OpenApi3_0:

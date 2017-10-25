@@ -8,12 +8,12 @@ namespace Microsoft.OpenApi.Writers
     /// <summary>
     /// Class to serialize Open API v3.0 document.
     /// </summary>
-    internal class OpenApiV3Serializer : OpenApiInternalSerializer
+    internal class OpenApiV3Serializer : OpenApiSerializerBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiV3Serializer"/> class.
         /// </summary>
-        public OpenApiV3Serializer(OpenApiWriterSettings settings)
+        public OpenApiV3Serializer(OpenApiSerializerSettings settings)
             : base(settings)
         {
         }

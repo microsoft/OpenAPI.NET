@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         public OpenApiJsonWriter(TextWriter textWriter)
-            : this(textWriter, new OpenApiWriterSettings())
+            : this(textWriter, new OpenApiSerializerSettings())
         {
         }
 
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">The writer settings.</param>
-        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings settings)
+        public OpenApiJsonWriter(TextWriter textWriter, OpenApiSerializerSettings settings)
             : base(textWriter, settings)
         {
         }

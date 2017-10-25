@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Writers
 
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw Error.ArgumentNullOrEmpty(nameof(name));
+                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
             if (action == null)

@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Number which specifies the level of indentation. Starts with 0 which means no indentation.
         /// </summary>
-        private OpenApiWriterSettings settings;
+        private OpenApiSerializerSettings settings;
 
         /// <summary>
         /// Indentent shift value.
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">The writer settings.</param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings)
+        public OpenApiWriterBase(TextWriter textWriter, OpenApiSerializerSettings settings)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
@@ -302,7 +302,7 @@ namespace Microsoft.OpenApi.Writers
         {
             if (String.IsNullOrWhiteSpace(name))
             {
-                throw Error.ArgumentNullOrEmpty(nameof(name));
+                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
             if (this.scopes.Count == 0)
