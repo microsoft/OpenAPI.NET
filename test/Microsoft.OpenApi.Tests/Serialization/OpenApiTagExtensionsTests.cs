@@ -3,18 +3,18 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Tests
+namespace Microsoft.OpenApi.Serialization.Tests
 {
-    public class OpenApiExternalDocsTests
+    public class OpenApiTagTests
     {
-        public static OpenApiExternalDocs BasicExDocs = new OpenApiExternalDocs();
-        public static OpenApiExternalDocs AdvanceExDocs = new OpenApiExternalDocs()
+        public static OpenApiTag BasicTag = new OpenApiTag();
+        public static OpenApiTag AdvanceTag = new OpenApiTag()
         {
-            Url = new Uri("https://example.com"),
-            Description = "Find more info here"
+            Name = "pet",
+            Description = "Pets operations",
+            ExternalDocs = OpenApiExternalDocsExtensionsTests.AdvanceExDocs
         };
     }
 }

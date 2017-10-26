@@ -5,6 +5,7 @@
 
 using System.IO;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Serialization;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
@@ -15,26 +16,14 @@ namespace Microsoft.OpenApi
     public class OpenApiSerializer
     {
         /// <summary>
-        /// The Open Api serializer settings.
+        /// Open Api specification version
         /// </summary>
-        public OpenApiSerializerSettings Settings { get; }
+        public OpenApiSpecVersion SpecVersion { get; set; } = OpenApiSpecVersion.OpenApi3_0;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiSerializer"/> class.
+        /// Open Api document format.
         /// </summary>
-        public OpenApiSerializer()
-            : this(new OpenApiSerializerSettings())
-        {
-        }
-
-        /// <summary>
-        ///  Initializes a new instance of the <see cref="OpenApiSerializer"/> class.
-        /// </summary>
-        /// <param name="settings">The write setting.</param>
-        public OpenApiSerializer(OpenApiSerializerSettings settings)
-        {
-            Settings = settings ?? throw Error.ArgumentNull(nameof(settings));
-        }
+        public OpenApiFormat Format { get; set; } = OpenApiFormat.Json;
 
         /// <summary>
         /// Serialize the <see cref="OpenApiDocument"/> to the given stream.
@@ -48,13 +37,8 @@ namespace Microsoft.OpenApi
                 throw Error.ArgumentNull(nameof(stream));
             }
 
-            if (document == null)
-            {
-                throw Error.ArgumentNull(nameof(document));
-            }
-
             IOpenApiWriter writer;
-            switch (Settings.Format)
+            switch (Format)
             {
                 case OpenApiFormat.Json:
                     writer = new OpenApiJsonWriter(new StreamWriter(stream));
@@ -81,27 +65,21 @@ namespace Microsoft.OpenApi
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (document == null)
-            {
-                throw Error.ArgumentNull(nameof(document));
-            }
-
-            OpenApiSerializerBase serializer;
-            switch(Settings.SpecVersion)
+            switch(SpecVersion)
             {
                 case OpenApiSpecVersion.OpenApi3_0:
-                    serializer = new OpenApiV3Serializer(Settings);
+                    document.SerializeV3(writer);
                     break;
 
                 case OpenApiSpecVersion.OpenApi2_0:
-                    serializer = new OpenApiV2Serializer(Settings);
+                    document.SerializeV2(writer);
                     break;
 
                 default:
                     throw new OpenApiException("Unknown Open API specification version.");
             }
 
-            serializer.Write(writer, document);
+            writer.Flush();
         }
     }
 }

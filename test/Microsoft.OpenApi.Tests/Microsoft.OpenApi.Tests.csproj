@@ -43,9 +43,10 @@
   <ItemGroup>
     <Compile Include="ExampleTests.cs" />
     <Compile Include="OpenApiDocumentTests.cs" />
-    <Compile Include="OpenApiExternalDocsTests.cs" />
-    <Compile Include="OpenApiTagTests.cs" />
+    <Compile Include="Serialization\OpenApiExternalDocsExtensionsTests.cs" />
+    <Compile Include="Serialization\OpenApiTagExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\OpenApiSerializerTestHelper.cs" />
     <Compile Include="ValidationTests.cs" />
     <Compile Include="OpenApiWriterAnyExtensionsTests.cs" />
   </ItemGroup>

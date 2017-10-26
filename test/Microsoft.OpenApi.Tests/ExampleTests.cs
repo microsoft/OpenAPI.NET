@@ -39,7 +39,8 @@ namespace Microsoft.OpenApi.Tests
                 })));
 
             var stream = new MemoryStream();
-            doc.Save(stream);
+            OpenApiSerializer serializer = new OpenApiSerializer();
+            serializer.Serialize(stream, doc);
             stream.Position = 0;
 
             var yamlStream = new YamlStream();
