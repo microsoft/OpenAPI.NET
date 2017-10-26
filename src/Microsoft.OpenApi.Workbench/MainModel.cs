@@ -8,6 +8,7 @@ using Microsoft.OpenApi;
 using Microsoft.OpenApi.Writers;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Readers.YamlReaders;
+using Microsoft.OpenApi.Models;
 
 namespace OpenApiWorkbench
 {

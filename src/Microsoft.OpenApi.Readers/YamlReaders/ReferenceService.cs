@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.OpenApi;
+using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {

@@ -6,6 +6,7 @@
 using SharpYaml.Serialization;
 using System;
 using System.IO;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 

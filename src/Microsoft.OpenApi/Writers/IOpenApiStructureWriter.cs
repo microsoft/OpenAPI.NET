@@ -1,13 +1,14 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="IOpenApiStructureWriter.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
+using System.IO;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Writers
 {
-    using System.IO;
-    using Microsoft.OpenApi;
     public interface IOpenApiStructureWriter
     {
         void Write(Stream stream, OpenApiDocument document);

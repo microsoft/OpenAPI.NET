@@ -3,6 +3,8 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Models;
+
 namespace Microsoft.OpenApi.Tests
 {
     public class OpenApiTagTests
