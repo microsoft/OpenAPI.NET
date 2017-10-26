@@ -1,15 +1,13 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiYamlWriter.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
 using System;
+using System.IO;
 
 namespace Microsoft.OpenApi.Writers
 {
-    using System.IO;
-
     /// <summary>
     /// YAML writer.
     /// </summary>
@@ -22,7 +20,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         public OpenApiYamlWriter(TextWriter textWriter)
-            : this(textWriter, new OpenApiWriterSettings())
+            : this(textWriter, new OpenApiSerializerSettings())
         {
         }
 
@@ -31,7 +29,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">The writer settings.</param>
-        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings)
+        public OpenApiYamlWriter(TextWriter textWriter, OpenApiSerializerSettings settings)
             : base(textWriter, settings)
         {
         }

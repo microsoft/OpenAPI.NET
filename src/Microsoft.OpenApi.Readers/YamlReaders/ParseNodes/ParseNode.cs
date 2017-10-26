@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using SharpYaml.Serialization;
+using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {

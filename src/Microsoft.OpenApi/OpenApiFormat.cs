@@ -3,12 +3,21 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Interfaces
+namespace Microsoft.OpenApi
 {
     /// <summary>
-    /// Represents an Open API element.
+    /// Represents the Open Api document format.
     /// </summary>
-    public interface IOpenApiElement
+    public enum OpenApiFormat
     {
+        /// <summary>
+        /// JSON format.
+        /// </summary>
+        Json,
+
+        /// <summary>
+        /// Yaml format.
+        /// </summary>
+        Yaml
     }
 }

@@ -1,8 +1,7 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="Error.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
 using System;
 using System.Globalization;
@@ -76,9 +75,9 @@ namespace Microsoft.OpenApi
         /// </summary>
         /// <param name="parameterName">The name of the parameter that caused the current exception.</param>
         /// <returns>The logged <see cref="Exception"/>.</returns>
-        internal static ArgumentException ArgumentNullOrEmpty(string parameterName)
+        internal static ArgumentException ArgumentNullOrWhiteSpace(string parameterName)
         {
-            return Error.Argument(parameterName, SRResource.ArgumentNullOrEmpty, parameterName);
+            return Error.Argument(parameterName, SRResource.ArgumentNullOrWhiteSpace, parameterName);
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests

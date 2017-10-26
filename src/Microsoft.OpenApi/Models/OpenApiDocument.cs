@@ -1,15 +1,15 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiDocument.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
-using Microsoft.OpenApi.Any;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Describes an Open API Document. See: https://swagger.io/specification

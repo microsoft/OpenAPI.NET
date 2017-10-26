@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ArgumentNullOrEmpty" xml:space="preserve">
-    <value>The argument '{0}' is null or empty.</value>
+  <data name="ArgumentNullOrWhiteSpace" xml:space="preserve">
+    <value>The argument '{0}' is null, empty or consists only of white-space.</value>
   </data>
   <data name="ExtensionFieldNameMustBeginWithXMinus" xml:space="preserve">
     <value>The filed name of extension doesn't begin with x-.</value>

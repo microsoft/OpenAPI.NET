@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SharpYaml.Schemas;
 using SharpYaml.Serialization;
+using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {

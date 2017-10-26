@@ -15,8 +15,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\SRResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRResource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Properties\SRResource.resx">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SRResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

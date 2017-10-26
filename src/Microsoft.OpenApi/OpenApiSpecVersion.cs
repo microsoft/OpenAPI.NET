@@ -3,12 +3,21 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Interfaces
+namespace Microsoft.OpenApi
 {
     /// <summary>
-    /// Represents an Open API element.
+    /// Represents the Open Api specification version.
     /// </summary>
-    public interface IOpenApiElement
+    public enum OpenApiSpecVersion
     {
+        /// <summary>
+        /// Open Api v2.0
+        /// </summary>
+        OpenApi2_0,
+
+        /// <summary>
+        /// Open Api v3.0
+        /// </summary>
+        OpenApi3_0
     }
 }

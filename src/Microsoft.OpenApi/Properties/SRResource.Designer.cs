@@ -62,11 +62,11 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The argument &apos;{0}&apos; is null or empty..
+        ///   Looks up a localized string similar to The argument &apos;{0}&apos; is null, empty or consists only of white-space..
         /// </summary>
-        internal static string ArgumentNullOrEmpty {
+        internal static string ArgumentNullOrWhiteSpace {
             get {
-                return ResourceManager.GetString("ArgumentNullOrEmpty", resourceCulture);
+                return ResourceManager.GetString("ArgumentNullOrWhiteSpace", resourceCulture);
             }
         }
         
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred while processing the OData message..
+        ///   Looks up a localized string similar to An error occurred while processing the Open API document..
         /// </summary>
         internal static string OpenApiExceptionGeneralError {
             get {
