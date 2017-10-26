@@ -136,9 +136,11 @@ namespace Microsoft.OpenApi.Tests
         [MemberData(nameof(ComplexMapData))]
         public void WriteMap(IDictionary<string, object> inputMap)
         {
+            // Arrange
             var outputString = new StringWriter();
             var writer = new OpenApiJsonWriter(outputString);
 
+            // Act
             writer.WriteStartObject();
 
             foreach (var keyValue in inputMap)
