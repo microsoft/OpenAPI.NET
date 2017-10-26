@@ -1,15 +1,14 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiV3Writer.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
+using System.IO;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Writers
 {
-    using System;
-    using System.IO;
-    using Microsoft.OpenApi;
-
     public class OpenApiV3Writer : IOpenApiStructureWriter
     {
         Func<Stream, IOpenApiWriter> defaultWriterFactory = s => new OpenApiYamlWriter(new StreamWriter(s));

@@ -1,12 +1,12 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiValidator.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Sevices
+namespace Microsoft.OpenApi.Services
 {
     public class OpenApiValidator : OpenApiVisitorBase
     {

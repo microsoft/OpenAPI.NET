@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.IO;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
