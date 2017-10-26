@@ -1,13 +1,12 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiCallback.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.

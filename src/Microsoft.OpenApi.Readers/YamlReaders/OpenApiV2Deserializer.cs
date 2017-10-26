@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
@@ -27,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "parameters", (o,n) =>  o.Components.Parameters = n.CreateMapWithReference("#/parameters/",LoadParameter) },
             { "responses", (o,n) => o.Components.Responses = n.CreateMap(LoadResponse) },
             { "securityDefinitions", (o,n) => o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme) },
-            { "security", (o,n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)},
+            { "security", (o,n) => o.Security = n.CreateList(LoadSecurityRequirement)},
             { "tags", (o,n) => o.Tags = n.CreateList(LoadTag)},
             { "externalDocs", (o,n) => o.ExternalDocs = LoadExternalDocs(n) }
         };
@@ -43,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 foreach (var scheme in schemes)
                 {
                     var server = new OpenApiServer();
-                    server.Url = scheme + "://" + (host ?? "example.org/") + (basePath ?? "/");
+                    server.Url = new Uri(scheme + "://" + (host ?? "example.org/") + (basePath ?? "/"));
                     servers.Add(server);
                 }
             }
@@ -81,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             { "title",      (o,n) => { o.Title = n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
-            { "termsOfService", (o,n) => { o.TermsOfService = n.GetScalarValue(); } },
+            { "termsOfService", (o,n) => { o.TermsOfService = new Uri(n.GetScalarValue()); } },
             { "contact",    (o,n) => { o.Contact = LoadContact(n); } },
             { "license",    (o,n) => { o.License = LoadLicense(n); } },
             { "version",    (o,n) => { o.Version = new Version(n.GetScalarValue()); } }

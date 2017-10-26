@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.IO;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
@@ -85,22 +86,21 @@ namespace Microsoft.OpenApi
                 throw Error.ArgumentNull(nameof(document));
             }
 
-            OpenApiSerializerBase serializer;
             switch(Settings.SpecVersion)
             {
                 case OpenApiSpecVersion.OpenApi3_0:
-                    serializer = new OpenApiV3Serializer(Settings);
+                    OpenApiV3Serializer.Write(writer, document);
                     break;
 
                 case OpenApiSpecVersion.OpenApi2_0:
-                    serializer = new OpenApiV2Serializer(Settings);
+                    OpenApiV2Serializer.Write(writer, document);
                     break;
 
                 default:
                     throw new OpenApiException("Unknown Open API specification version.");
             }
 
-            serializer.Write(writer, document);
+            writer.Flush();
         }
     }
 }

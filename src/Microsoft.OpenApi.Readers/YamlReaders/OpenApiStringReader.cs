@@ -5,6 +5,7 @@
 
 using System.IO;
 using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {

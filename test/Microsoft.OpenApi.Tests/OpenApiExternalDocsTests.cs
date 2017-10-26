@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Tests
 {

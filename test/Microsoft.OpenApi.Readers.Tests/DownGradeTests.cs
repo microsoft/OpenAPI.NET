@@ -6,9 +6,11 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Readers.YamlReaders;
-using Microsoft.OpenApi.Writers;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
+using System;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -28,7 +30,11 @@ namespace Microsoft.OpenApi.Readers.Tests
         private static JObject ExportV2ToJObject(OpenApiDocument openApiDoc)
         {
             var outputStream = new MemoryStream();
-            openApiDoc.Save(outputStream, new OpenApiV2Writer(s => new OpenApiJsonWriter(new StreamWriter(s))));
+            OpenApiSerializerSettings settings = new OpenApiSerializerSettings
+            {
+                SpecVersion = OpenApiSpecVersion.OpenApi2_0
+            };
+            new OpenApiSerializer().Serialize(outputStream, openApiDoc);
             outputStream.Position = 0;
             var json = new StreamReader(outputStream).ReadToEnd();
             var jObject = JObject.Parse(json);
@@ -39,8 +45,8 @@ namespace Microsoft.OpenApi.Readers.Tests
         public void HostTest()
         {
             var openApiDoc = new OpenApiDocument();
-            openApiDoc.Servers.Add(new OpenApiServer {Url = "http://example.org/api"});
-            openApiDoc.Servers.Add(new OpenApiServer {Url = "https://example.org/api"});
+            openApiDoc.Servers.Add(new OpenApiServer {Url = new Uri("http://example.org/api") });
+            openApiDoc.Servers.Add(new OpenApiServer {Url = new Uri("https://example.org/api") });
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
@@ -56,7 +62,14 @@ namespace Microsoft.OpenApi.Readers.Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             var outputStream = new MemoryStream();
-            openApiDoc.Save(outputStream, new OpenApiV2Writer());
+
+            OpenApiSerializerSettings settings = new OpenApiSerializerSettings
+            {
+                SpecVersion = OpenApiSpecVersion.OpenApi2_0
+            };
+
+            OpenApiSerializer serializer = new OpenApiSerializer(settings);
+            serializer.Serialize(outputStream, openApiDoc);
         }
 
         [Fact]

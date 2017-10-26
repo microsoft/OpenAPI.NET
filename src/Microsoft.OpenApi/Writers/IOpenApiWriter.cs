@@ -1,8 +1,7 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="IOpenApiWriter.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -25,7 +24,6 @@ namespace Microsoft.OpenApi.Writers
         /// Write the start array.
         /// </summary>
         void WriteStartArray();
-
 
         /// <summary>
         /// Write the end array.
@@ -61,7 +59,6 @@ namespace Microsoft.OpenApi.Writers
         /// Write the null value.
         /// </summary>
         void WriteNull();
-
 
         /// <summary>
         /// Write the raw content value.

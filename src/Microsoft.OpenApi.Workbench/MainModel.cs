@@ -8,6 +8,7 @@ using Microsoft.OpenApi;
 using Microsoft.OpenApi.Writers;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Readers.YamlReaders;
+using Microsoft.OpenApi.Models;
 
 namespace OpenApiWorkbench
 {
@@ -120,18 +121,14 @@ namespace OpenApiWorkbench
         
         private string WriteContents(OpenApiDocument doc)
         {
-            Func<Stream, IOpenApiWriter> writerFactory = s => (this.format == "Yaml" ? new OpenApiYamlWriter(new StreamWriter(s)) : (IOpenApiWriter)new OpenApiJsonWriter(new StreamWriter(s)));
-            IOpenApiStructureWriter writer;
-            if (IsV3)
+            OpenApiSerializerSettings settings = new OpenApiSerializerSettings
             {
-                writer = new OpenApiV3Writer(writerFactory);
-            } else
-            {
-                writer = new OpenApiV2Writer(writerFactory);
-            }
+                SpecVersion = IsV3 ? OpenApiSpecVersion.OpenApi3_0 : OpenApiSpecVersion.OpenApi2_0,
+                Format = this.format == "Yaml" ? OpenApiFormat.Yaml : OpenApiFormat.Json
+            };
 
             var outputstream = new MemoryStream();
-            writer.Write(outputstream, doc);
+            new OpenApiSerializer(settings).Serialize(outputstream, doc);
             outputstream.Position = 0;
 
             return new StreamReader(outputstream).ReadToEnd();

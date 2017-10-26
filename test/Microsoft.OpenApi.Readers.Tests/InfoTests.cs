@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Readers.YamlReaders;
+using System;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -32,13 +33,13 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal("1.0.0", openApiDoc.Version);
+            Assert.Equal(new Version(1, 0, 0), openApiDoc.Version);
 
             Assert.Empty(openApiDoc.Paths);
             Assert.Equal("The Api", openApiDoc.Info.Title);
             Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());
             Assert.Equal("This is an api", openApiDoc.Info.Description);
-            Assert.Equal("http://example.org/Dowhatyouwant", openApiDoc.Info.TermsOfService);
+            Assert.Equal("http://example.org/Dowhatyouwant", openApiDoc.Info.TermsOfService.OriginalString);
             Assert.Equal("Darrel Miller", openApiDoc.Info.Contact.Name);
             //   Assert.Equal("@darrel_miller", openApiDoc.Info.Contact.Extensions["x-twitter"].GetValueNode().GetScalarValue());
         }

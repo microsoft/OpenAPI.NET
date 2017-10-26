@@ -34,8 +34,8 @@ namespace Microsoft.OpenApi.Readers.Tests
             var outputString = new StringWriter();
             var writer = new OpenApiJsonWriter(outputString);
             writer.WriteStartObject();
-            writer.WriteStringProperty("hello", "world");
-            writer.WriteStringProperty("good", "bye");
+            writer.WriteRequiredProperty("hello", "world");
+            writer.WriteRequiredProperty("good", "bye");
             writer.WriteEndObject();
             writer.Flush();
 
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             writer.WritePropertyName("outro");
             writer.WriteStartObject();
-            writer.WriteStringProperty("good", "bye");
+            writer.WriteRequiredProperty("good", "bye");
             writer.WriteEndObject();
 
             writer.WriteEndObject();
@@ -76,12 +76,12 @@ namespace Microsoft.OpenApi.Readers.Tests
             writer.WriteStartObject();
             writer.WritePropertyName("intro");
             writer.WriteStartObject();
-            writer.WriteStringProperty("hello", "world");
+            writer.WriteRequiredProperty("hello", "world");
             writer.WriteEndObject();
 
             writer.WritePropertyName("outro");
             writer.WriteStartObject();
-            writer.WriteStringProperty("good", "bye");
+            writer.WriteRequiredProperty("good", "bye");
             writer.WriteEndObject();
 
             writer.WriteEndObject();
