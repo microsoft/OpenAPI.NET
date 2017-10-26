@@ -67,7 +67,6 @@
     <Compile Include="CallbackTests.cs" />
     <Compile Include="DowngradeTests.cs" />
     <Compile Include="FixtureTests.cs" />
-    <Compile Include="JsonWriterTests.cs" />
     <Compile Include="OpenApiExampleTests.cs" />
     <Compile Include="OpenApiReferenceTests.cs" />
     <Compile Include="OperationTests.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InfoTests.cs" />
     <Compile Include="V2Tests\V2Tests.cs" />
-    <Compile Include="YamlWriterTests.cs" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Samples\CallbackSample.yaml" />
     <Compile Include="SchemaTests.cs" />

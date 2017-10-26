@@ -14,4 +14,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\SRResource.resx">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

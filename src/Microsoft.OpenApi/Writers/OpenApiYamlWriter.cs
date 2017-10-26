@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -40,15 +41,15 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteStartObject()
         {
-            Scope preScope = CurrentScope();
+            Scope previousScope = CurrentScope();
 
-            Scope curScope = StartScope(ScopeType.Object);
+            Scope currentScope = StartScope(ScopeType.Object);
 
             IncreaseIndentation();
 
-            if (preScope != null && preScope.Type == ScopeType.Array)
+            if (previousScope != null && previousScope.Type == ScopeType.Array)
             {
-                curScope.IsInArray = true;
+                currentScope.IsInArray = true;
             }
         }
 
@@ -57,13 +58,12 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndObject()
         {
-            Scope current = EndScope(ScopeType.Object);
-
-            /*
-            if (current.ObjectCount == 0)
+            Scope currentScope = EndScope(ScopeType.Object);
+            
+            if (currentScope.ObjectCount == 0)
             {
                 Writer.Write(WriterConstants.WhiteSpaceForEmptyObjectArray);
-            }*/
+            }
 
             DecreaseIndentation();
         }
@@ -96,8 +96,8 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WritePropertyName(string name)
         {
-            ValifyCanWritePropertyName(name);
-
+            VerifyCanWritePropertyName(name);
+            
             Scope current = CurrentScope();
 
             if (current.ObjectCount == 0)
@@ -112,10 +112,7 @@ namespace Microsoft.OpenApi.Writers
                 }
                 else
                 {
-                    if (!IsTopLevelObjectScope())
-                    {
-                        Writer.WriteLine();
-                    }
+                    Writer.WriteLine();
                     WriteIndentation();
                 }
             }

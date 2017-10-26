@@ -16,26 +16,27 @@ namespace Microsoft.OpenApi.Tests
         public void WriteOpenApiNullAsJsonWorks()
         {
             // Arrange
-            OpenApiNull nullValue = new OpenApiNull();
+            var nullValue = new OpenApiNull();
 
-            // Act
-            string json = WriteAsJson(nullValue);
+            var json = WriteAsJson(nullValue);
 
             // Assert
             Assert.Equal("null", json);
         }
 
-        [Fact]
-        public void WriteOpenApiIntergerAsJsonWorks()
+        [Theory]
+        [InlineData(-100)]
+        [InlineData(0)]
+        [InlineData(42)]
+        public void WriteOpenApiIntergerAsJsonWorks(int input)
         {
             // Arrange
-            OpenApiInteger intValue = new OpenApiInteger(42);
+            var intValue = new OpenApiInteger(input);
 
-            // Act
-            string json = WriteAsJson(intValue);
+            var json = WriteAsJson(intValue);
 
             // Assert
-            Assert.Equal("42", json);
+            Assert.Equal(input.ToString(), json);
         }
 
         [Theory]
@@ -44,54 +45,76 @@ namespace Microsoft.OpenApi.Tests
         public void WriteOpenApiBooleanAsJsonWorks(bool input)
         {
             // Arrange
-            OpenApiBoolean boolValue = new OpenApiBoolean(input);
+            var boolValue = new OpenApiBoolean(input);
 
-            // Act
-            string json = WriteAsJson(boolValue);
+            var json = WriteAsJson(boolValue);
 
             // Assert
             Assert.Equal(input.ToString().ToLower(), json);
         }
 
-        private static OpenApiObject openApiObject = new OpenApiObject
-        {
-            { "stringProp", new OpenApiString("stringValue1") },
-            { "objProp", new OpenApiObject() },
-            {
-                "arrayProp",
-                new OpenApiArray
-                {
-                    new OpenApiBoolean(false)
-                }
-            }
-        };
-
         [Fact]
         public void WriteOpenApiObjectAsJsonWorks()
         {
             // Arrange
-            string expect = @"
-{
+            var openApiObject = new OpenApiObject
+            {
+                {"stringProp", new OpenApiString("stringValue1")},
+                {"objProp", new OpenApiObject()},
+                {
+                    "arrayProp",
+                    new OpenApiArray
+                    {
+                        new OpenApiBoolean(false)
+                    }
+                }
+            };
+
+            var actualJson = WriteAsJson(openApiObject);
+
+            // Assert
+
+            var expectedJson = @"{
   ""stringProp"": ""stringValue1"",
   ""objProp"": { },
   ""arrayProp"": [
     false
   ]
 }";
+            expectedJson = expectedJson.MakeLineBreaksEnvironmentNeutral();
 
-            // Act
-            string json = WriteAsJson(openApiObject);
-
-            // Assert
-            Assert.Equal(expect, json);
+            Assert.Equal(expectedJson, actualJson);
         }
 
         [Fact]
         public void WriteOpenApiArrayAsJsonWorks()
         {
             // Arrange
-            string expect = @"
-[
+            var openApiObject = new OpenApiObject
+            {
+                {"stringProp", new OpenApiString("stringValue1")},
+                {"objProp", new OpenApiObject()},
+                {
+                    "arrayProp",
+                    new OpenApiArray
+                    {
+                        new OpenApiBoolean(false)
+                    }
+                }
+            };
+
+            var array = new OpenApiArray
+            {
+                new OpenApiBoolean(false),
+                openApiObject,
+                new OpenApiString("stringValue2")
+            };
+
+            var actualJson = WriteAsJson(array);
+
+            // Assert
+
+            var expectedJson = @"[
   false,
   {
     ""stringProp"": ""stringValue1"",
@@ -103,38 +126,29 @@ namespace Microsoft.OpenApi.Tests
   ""stringValue2""
 ]";
 
-            OpenApiArray array = new OpenApiArray
-            {
-                new OpenApiBoolean(false),
-                openApiObject,
-                new OpenApiString("stringValue2")
-            };
+            expectedJson = expectedJson.MakeLineBreaksEnvironmentNeutral();
 
-            // Act
-            string json = WriteAsJson(array);
-
-            // Assert
-            Assert.Equal(expect, json);
+            Assert.Equal(expectedJson, actualJson);
         }
 
         private static string WriteAsJson(IOpenApiAny any)
         {
-            MemoryStream stream = new MemoryStream();
+            // Arrange (continued)
+            var stream = new MemoryStream();
             IOpenApiWriter writer = new OpenApiJsonWriter(new StreamWriter(stream));
             writer.WriteAny(any);
             writer.Flush();
             stream.Position = 0;
-            string value = new StreamReader(stream).ReadToEnd();
+
+            // Act
+            var value = new StreamReader(stream).ReadToEnd();
 
             if (any.AnyKind == AnyTypeKind.Primitive || any.AnyKind == AnyTypeKind.Null)
             {
                 return value;
             }
-            else
-            {
-                // add "\r\n" at the head because the expect string has a newline at starting.
-                return "\r\n" + value.Replace("\n", "\r\n");
-            }
+
+            return value.MakeLineBreaksEnvironmentNeutral();
         }
     }
 }
