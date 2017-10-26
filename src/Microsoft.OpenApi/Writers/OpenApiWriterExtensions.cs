@@ -5,10 +5,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -17,16 +15,6 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public static class OpenApiWriterExtensions
     {
-        public static void Save(this OpenApiDocument doc, Stream stream, IOpenApiStructureWriter openApiWriter = null)
-        {
-            if (openApiWriter == null)
-            {
-                openApiWriter = new OpenApiV3Writer();
-            }
-
-            openApiWriter.Write(stream, doc);
-        }
-
         public static void WriteObject<T>(this IOpenApiWriter writer, string propertyName, T entity, Action<IOpenApiWriter, T> parser)
         {
             if (entity == null)

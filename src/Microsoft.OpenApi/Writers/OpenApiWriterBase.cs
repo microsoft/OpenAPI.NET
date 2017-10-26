@@ -32,11 +32,6 @@ namespace Microsoft.OpenApi.Writers
         protected readonly Stack<Scope> scopes;
 
         /// <summary>
-        /// Number which specifies the level of indentation. Starts with 0 which means no indentation.
-        /// </summary>
-        private OpenApiSerializerSettings settings;
-
-        /// <summary>
         /// Indentent shift value.
         /// </summary>
         protected virtual int IndentShift { get { return 0; } }
@@ -51,13 +46,12 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">The writer settings.</param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiSerializerSettings settings)
+        public OpenApiWriterBase(TextWriter textWriter)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
 
             this.scopes = new Stack<Scope>();
-            this.settings = settings;
         }
 
         /// <summary>
