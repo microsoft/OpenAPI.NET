@@ -1,13 +1,12 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiHeader.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Header Object.
@@ -24,7 +23,7 @@ namespace Microsoft.OpenApi
         public bool Explode { get; set; }
         public bool AllowReserved { get; set; }
         public OpenApiSchema Schema { get; set; }
-        public string Example { get; set; }
+        public IOpenApiAny Example { get; set; }
         public IList<OpenApiExample> Examples { get; set; }
         public IDictionary<string, OpenApiMediaType> Content { get; set; }
 

@@ -3,6 +3,9 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Models;
+using System;
+
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
@@ -24,5 +27,27 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer">The Open Api writer.</param>
         /// <returns>True for successful, false for errors.</returns>
         public abstract void Write(IOpenApiWriter writer, OpenApiDocument document);
+
+        /// <summary>
+        /// Write the Open Api document.
+        /// </summary>
+        /// <param name="writer">The Open Api writer.</param>
+        /// <param name="action">The Open Api writing action.</param>
+        protected static void Write(IOpenApiWriter writer, Action<IOpenApiWriter> action)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (action == null)
+            {
+                throw Error.ArgumentNull(nameof(action));
+            }
+
+            writer.WriteStartObject();
+            action(writer);
+            writer.WriteEndObject();
+        }
     }
 }

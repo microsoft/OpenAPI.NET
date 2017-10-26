@@ -9,32 +9,37 @@ using Microsoft.OpenApi.Any;
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// OAuth Flows Object.
+    /// Encoding Object.
     /// </summary>
-    public class OpenApiOAuthFlows : IOpenApiExtension
+    public class OpenApiEncoding : IOpenApiExtension
     {
         /// <summary>
-        /// Configuration for the OAuth Implicit flow
+        /// The Content-Type for encoding a specific property.
         /// </summary>
-        public OpenApiOAuthFlow Implicit { get; set; }
+        public string ContentType { get; set; }
 
         /// <summary>
-        /// Configuration for the OAuth Resource Owner Password flow.
+        /// A map allowing additional information to be provided as headers.
         /// </summary>
-        public OpenApiOAuthFlow Password { get; set; }
+        public IDictionary<string, OpenApiHeader> Headers { get; set; }
 
         /// <summary>
-        /// Configuration for the OAuth Client Credentials flow.
+        /// Describes how a specific property value will be serialized depending on its type. 
         /// </summary>
-        public OpenApiOAuthFlow ClientCredentials { get; set; }
+        public ParameterStyle? Style { get; set; }
 
         /// <summary>
-        /// Configuration for the OAuth Authorization Code flow.
+        /// Explode
         /// </summary>
-        public OpenApiOAuthFlow AuthorizationCode { get; set; }
+        public bool? Explode { get; set; }
 
         /// <summary>
-        /// Specification Extensions.
+        /// AllowReserved
+        /// </summary>
+        public bool? AllowReserved { get; set; }
+
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
     }

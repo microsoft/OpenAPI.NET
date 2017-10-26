@@ -6,6 +6,7 @@
 using System.Linq;
 using Microsoft.OpenApi.Readers.YamlReaders;
 using Xunit;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {

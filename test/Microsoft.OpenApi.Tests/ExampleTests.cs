@@ -8,6 +8,8 @@ using System;
 using System.IO;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Tests
 {
@@ -33,12 +35,13 @@ namespace Microsoft.OpenApi.Tests
                      r.Description = "foo";
                      r.CreateContent("application/json", c =>
                      {
-                         c.Example = "xyz"; ///"{ \"foo\": \"bar\" }"; This doesn't work because parser treats it as a node
+                         c.Example = new OpenApiString("xyz"); ///"{ \"foo\": \"bar\" }"; This doesn't work because parser treats it as a node
                      });
                 })));
 
             var stream = new MemoryStream();
-            doc.Save(stream);
+            OpenApiSerializer serializer = new OpenApiSerializer();
+            serializer.Serialize(stream, doc);
             stream.Position = 0;
 
             var yamlStream = new YamlStream();

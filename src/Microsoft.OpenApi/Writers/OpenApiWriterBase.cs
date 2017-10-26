@@ -1,21 +1,16 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiWriterBase.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
-
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Writers
 {
-
-    using Microsoft.OpenApi.Properties;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-
-
     /// <summary>
     /// Base class for Open API writer.
     /// </summary>
@@ -37,11 +32,6 @@ namespace Microsoft.OpenApi.Writers
         protected readonly Stack<Scope> scopes;
 
         /// <summary>
-        /// Number which specifies the level of indentation. Starts with 0 which means no indentation.
-        /// </summary>
-        private OpenApiSerializerSettings settings;
-
-        /// <summary>
         /// Indentent shift value.
         /// </summary>
         protected virtual int IndentShift { get { return 0; } }
@@ -56,13 +46,12 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">The writer settings.</param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiSerializerSettings settings)
+        public OpenApiWriterBase(TextWriter textWriter)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
 
             this.scopes = new Stack<Scope>();
-            this.settings = settings;
         }
 
         /// <summary>

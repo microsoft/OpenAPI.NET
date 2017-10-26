@@ -1,13 +1,13 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiExample.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Example Object.
@@ -27,7 +27,12 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Embedded literal example.
         /// </summary>
-        public string Value { get; set; }
+        public IOpenApiAny Value { get; set; }
+
+        /// <summary>
+        /// A URL that points to the literal example. 
+        /// </summary>
+        public Uri ExternalValue { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.

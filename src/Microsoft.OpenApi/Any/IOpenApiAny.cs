@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Any
     /// <summary>
     /// Base interface for the Open Api Any.
     /// </summary>
-    public interface IOpenApiAny
+    public interface IOpenApiAny : IOpenApiElement
     {
         /// <summary>
         /// Any type kind.

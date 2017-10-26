@@ -1,15 +1,14 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="OpenApiPathItem.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.

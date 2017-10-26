@@ -3,28 +3,19 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Models;
+
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
     /// Class to serialize Open API v2.0 document.
     /// </summary>
-    internal class OpenApiV2Serializer : OpenApiSerializerBase
+    internal static class OpenApiV2Serializer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiV2Serializer"/> class.
+        /// Write <see cref="OpenApiDocument"/>
         /// </summary>
-        public OpenApiV2Serializer(OpenApiSerializerSettings settings)
-            : base(settings)
-        {
-        }
-
-        /// <summary>
-        /// Write the Open Api document to v2.0.
-        /// </summary>
-        /// <param name="document">The Open API document.</param>
-        /// <param name="writer">The Open Api writer.</param>
-        /// <returns>True for successful, false for errors.</returns>
-        public override void Write(IOpenApiWriter writer, OpenApiDocument document)
+        public static void Write(this IOpenApiWriter writer, OpenApiDocument document)
         {
             if (document == null)
             {

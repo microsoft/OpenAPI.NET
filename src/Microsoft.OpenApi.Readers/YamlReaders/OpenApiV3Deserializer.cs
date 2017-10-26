@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders
 {
@@ -14,14 +15,14 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
     {
         #region OpenApiObject
         public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument> {
-            { "openapi", (o,n) => { o.Version = n.GetScalarValue(); } },
+            { "openapi", (o,n) => { o.Version = new Version(n.GetScalarValue()); } },
             { "info", (o,n) => o.Info = LoadInfo(n) },
             { "servers", (o,n) => o.Servers = n.CreateList(LoadServer) },
             { "paths", (o,n) => o.Paths = LoadPaths(n) },
             { "components", (o,n) => o.Components = LoadComponents(n) },
             { "tags", (o,n) => o.Tags = n.CreateList(LoadTag)},
             { "externalDocs", (o,n) => o.ExternalDocs = LoadExternalDocs(n) },
-            { "security", (o,n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}
+            { "security", (o,n) => o.Security = n.CreateList(LoadSecurityRequirement)}
 
             };
 
@@ -55,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "title",      (o,n) => { o.Title = n.GetScalarValue(); } },
             { "version",    (o,n) => { o.Version = new Version(n.GetScalarValue()); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
-            { "termsOfService", (o,n) => { o.TermsOfService = n.GetScalarValue(); } },
+            { "termsOfService", (o,n) => { o.TermsOfService = new Uri(n.GetScalarValue()); } },
             { "contact",    (o,n) => { o.Contact = LoadContact(n); } },
             { "license",    (o,n) => { o.License = LoadLicense(n); } }
         };
@@ -134,7 +135,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static FixedFieldMap<OpenApiServer> ServerFixedFields = new FixedFieldMap<OpenApiServer>
         {
-            { "url", (o,n) => { o.Url=  n.GetScalarValue(); } },
+            { "url", (o,n) => { o.Url=  new Uri(n.GetScalarValue()); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue();  } },
             { "variables", (o,n) => {  o.Variables = n.CreateMap(LoadServerVariable); } }
         };
@@ -414,7 +415,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             { "schema", (o,n) => { o.Schema = LoadSchema(n); } },
             { "examples", (o,n) => { o.Examples = n.CreateMap(LoadExample); } },
-            { "example", (o,n) => { o.Example = n.GetScalarValue(); } },
+            { "example", (o,n) => { o.Example = new OpenApiString(n.GetScalarValue()); } },
             //Encoding
         };
 
@@ -509,7 +510,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static FixedFieldMap<OpenApiLink> LinkFixedFields = new FixedFieldMap<OpenApiLink>
         {
-            { "href", (o,n) => { o.Href = n.GetScalarValue(); } },
+            { "operationRef", (o,n) => { o.OperationRef = n.GetScalarValue(); } },
             { "operationId", (o,n) => { o.OperationId = n.GetScalarValue(); } },
             { "parameters", (o,n) => { o.Parameters = n.CreateSimpleMap(LoadRuntimeExpression); } },
             { "requestBody", (o,n) => { o.RequestBody = LoadRuntimeExpression(n); } },
@@ -575,7 +576,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             { "summary", (o,n) => { o.Summary= n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
-            { "value", (o,n) => { o.Value = n.GetScalarValue(); } },
+            { "value", (o,n) => { o.Value = new OpenApiString(n.GetScalarValue()); } },
         };
 
         private static PatternFieldMap<OpenApiExample> ExamplePatternFields = new PatternFieldMap<OpenApiExample>
