@@ -3,8 +3,9 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using Microsoft.OpenApi.Interfaces;
 using System;
+using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -130,6 +131,22 @@ namespace Microsoft.OpenApi.Models
         public JsonPointer GetLocalPointer()
         {
             return new JsonPointer("#/components/" + GetReferenceTypeName(this.ReferenceType) + "/" + TypeName);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            // nothing here
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            // nothing here
         }
     }
 }

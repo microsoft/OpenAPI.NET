@@ -3,12 +3,30 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
+
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Discriminator object.
     /// </summary>
-    internal class OpenApiDiscriminator
+    public class OpenApiDiscriminator : IOpenApiElement
     {
+        /// <summary>
+        /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            // nothing here
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            // nothing here
+        }
     }
 }

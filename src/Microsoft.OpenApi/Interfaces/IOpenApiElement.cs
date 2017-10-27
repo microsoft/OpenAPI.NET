@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Interfaces
     /// <summary>
     /// Represents an Open API element.
     /// </summary>
-    public interface IOpenApiElement
+    public interface IOpenApiElement : IOpenApiWritable
     {
     }
 }

@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         private static JObject ExportV2ToJObject(OpenApiDocument openApiDoc)
         {
             var outputStream = new MemoryStream();
-            openApiDoc.Save(outputStream, new OpenApiV2Writer(s => new OpenApiJsonWriter(new StreamWriter(s))));
+            openApiDoc.SerializeAsJson(outputStream, OpenApiSpecVersion.OpenApi2_0);
             outputStream.Position = 0;
             var json = new StreamReader(outputStream).ReadToEnd();
             var jObject = JObject.Parse(json);
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             var outputStream = new MemoryStream();
-            openApiDoc.Save(outputStream, new OpenApiV2Writer());
+            openApiDoc.SerializeAsJson(outputStream, OpenApiSpecVersion.OpenApi2_0);
         }
 
         [Fact]

@@ -4,9 +4,11 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -35,6 +37,78 @@ namespace Microsoft.OpenApi.Models
             }
 
             Content.Add(mediatype, m);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (this.IsReference())
+            {
+                this.WriteRef(writer);
+            }
+            else
+            {
+                writer.WriteStartObject();
+
+                writer.WriteStringProperty("description", Description);
+                writer.WriteMap("content", Content, (w, c) => c.WriteAsV3(w));
+
+                writer.WriteMap("headers", Headers, (w, h) => h.WriteAsV3(w));
+                writer.WriteMap("links", Links, (w, l) => l.WriteAsV3(w));
+
+                //Links
+                writer.WriteEndObject();
+            }
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiResponse"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (this.IsReference())
+            {
+                this.WriteRef(writer);
+            }
+            else
+            {
+                writer.WriteStartObject();
+
+                writer.WriteStringProperty("description", Description);
+                if (Content != null)
+                {
+                    var mediatype = Content.FirstOrDefault();
+                    if (mediatype.Value != null)
+                    {
+
+                        writer.WriteObject("schema", mediatype.Value.Schema, (w, s) => s.WriteAsV2(w));
+
+                        if (mediatype.Value.Example != null)
+                        {
+                            writer.WritePropertyName("examples");
+                            writer.WriteStartObject();
+                            writer.WritePropertyName(mediatype.Key);
+                            writer.WriteValue(mediatype.Value.Example);
+                            writer.WriteEndObject();
+                        }
+                    }
+                }
+                writer.WriteMap("headers", Headers, (w, h) => h.WriteAsV2(w));
+
+                writer.WriteEndObject();
+            }
         }
     }
 }

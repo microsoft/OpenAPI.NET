@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -63,6 +64,101 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Pointer
         {
             get; set;
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteStringProperty("type", Type.ToString());
+            switch (Type)
+            {
+                case SecuritySchemeTypeKind.http:
+                    writer.WriteStringProperty("scheme", Scheme);
+                    writer.WriteStringProperty("bearerFormat", BearerFormat);
+                    break;
+                case SecuritySchemeTypeKind.oauth2:
+                //writer.WriteStringProperty("scheme", this.Scheme);
+                //TODO:
+                case SecuritySchemeTypeKind.apiKey:
+                    writer.WriteStringProperty("in", In.ToString());
+                    writer.WriteStringProperty("name", Name);
+
+                    break;
+            }
+
+            writer.WriteObject("flows", Flows, (w, o) => o.WriteAsV3(w));
+
+            writer.WriteStringProperty("openIdConnectUrl", OpenIdConnectUrl?.ToString());
+
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            if (Type == SecuritySchemeTypeKind.http)
+            {
+                if (Scheme == "basic")
+                {
+                    writer.WriteStringProperty("type", "basic");
+                }
+            }
+            else
+            {
+                writer.WriteStringProperty("type", Type.ToString());
+            }
+            switch (Type)
+            {
+                case SecuritySchemeTypeKind.oauth2:
+                //writer.WriteStringProperty("scheme", this.Scheme);
+                //TODO:
+                case SecuritySchemeTypeKind.apiKey:
+                    writer.WriteStringProperty("in", In.ToString());
+                    writer.WriteStringProperty("name", Name);
+
+                    break;
+            }
+
+            if (Flows != null)
+            {
+                if (Flows.Implicit != null)
+                {
+                    writer.WriteStringProperty("flow", "implicit");
+                    Flows.Implicit.WriteAsV2(writer);
+                }
+                else if (Flows.Password != null)
+                {
+                    writer.WriteStringProperty("flow", "password");
+                    Flows.Password.WriteAsV2(writer);
+                }
+                else if (Flows.ClientCredentials != null)
+                {
+                    writer.WriteStringProperty("flow", "application");
+                    Flows.ClientCredentials.WriteAsV2(writer);
+                }
+                else if (Flows.AuthorizationCode != null)
+                {
+                    writer.WriteStringProperty("flow", "accessCode");
+                    Flows.AuthorizationCode.WriteAsV2(writer);
+                }
+            }
+            writer.WriteEndObject();
         }
     }
 }

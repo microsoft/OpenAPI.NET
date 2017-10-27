@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -64,6 +65,166 @@ namespace Microsoft.OpenApi.Models
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiSchema"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (this.IsReference())
+            {
+                this.WriteRef(writer);
+            }
+            else
+            {
+                writer.WriteStartObject();
+
+                writer.WriteStringProperty("title", Title);
+                writer.WriteStringProperty("type", Type);
+                writer.WriteStringProperty("format", Format);
+                writer.WriteStringProperty("description", Description);
+
+                writer.WriteNumberProperty("maxLength", MaxLength);
+                writer.WriteNumberProperty("minLength", MinLength);
+                writer.WriteStringProperty("pattern", Pattern);
+                writer.WriteStringProperty("default", Default);
+
+                writer.WriteList("required", Required, (nodeWriter, s) => nodeWriter.WriteValue(s));
+
+                writer.WriteNumberProperty("maximum", Maximum);
+                writer.WriteBoolProperty("exclusiveMaximum", ExclusiveMaximum, false);
+                writer.WriteNumberProperty("minimum", Minimum);
+                writer.WriteBoolProperty("exclusiveMinimum", ExclusiveMinimum, false);
+
+                if (AdditionalProperties != null)
+                {
+                    writer.WritePropertyName("additionalProperties");
+                    AdditionalProperties.WriteAsV3(writer);
+                }
+
+                if (Items != null)
+                {
+                    writer.WritePropertyName("items");
+                    Items.WriteAsV3(writer);
+                }
+                writer.WriteNumberProperty("maxItems", MaxItems);
+                writer.WriteNumberProperty("minItems", MinItems);
+
+                if (Properties != null)
+                {
+                    writer.WritePropertyName("properties");
+                    writer.WriteStartObject();
+                    foreach (var prop in Properties)
+                    {
+                        writer.WritePropertyName(prop.Key);
+                        if (prop.Value != null)
+                        {
+                            prop.Value.WriteAsV3(writer);
+                        }
+                        else
+                        {
+                            writer.WriteValue("null");
+                        }
+                    }
+                    writer.WriteEndObject();
+                }
+                writer.WriteNumberProperty("maxProperties", MaxProperties);
+                writer.WriteNumberProperty("minProperties", MinProperties);
+
+                writer.WriteList("enum", Enum, (nodeWriter, s) => nodeWriter.WriteValue(s));
+
+                writer.WriteEndObject();
+            }
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (this.IsReference())
+            {
+                this.WriteRef(writer);
+            }
+            else
+            {
+                writer.WriteStartObject();
+                SerializeSchemaProperties(writer);
+                writer.WriteEndObject();
+            }
+        }
+
+        public void SerializeSchemaProperties(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStringProperty("title", Title);
+            writer.WriteStringProperty("type", Type);
+            writer.WriteStringProperty("format", Format);
+            writer.WriteStringProperty("description", Description);
+
+            writer.WriteNumberProperty("maxLength", MaxLength);
+            writer.WriteNumberProperty("minLength", MinLength);
+            writer.WriteStringProperty("pattern", Pattern);
+            writer.WriteStringProperty("default", Default);
+
+            writer.WriteList("required", Required, (nodeWriter, s) => nodeWriter.WriteValue(s));
+
+            writer.WriteNumberProperty("maximum", Maximum);
+            writer.WriteBoolProperty("exclusiveMaximum", ExclusiveMaximum, false);
+            writer.WriteNumberProperty("minimum", Minimum);
+            writer.WriteBoolProperty("exclusiveMinimum", ExclusiveMinimum, false);
+
+            if (AdditionalProperties != null)
+            {
+                writer.WritePropertyName("additionalProperties");
+                AdditionalProperties.WriteAsV2(writer);
+            }
+
+            if (Items != null)
+            {
+                writer.WritePropertyName("items");
+                Items.WriteAsV2(writer);
+            }
+            writer.WriteNumberProperty("maxItems", MaxItems);
+            writer.WriteNumberProperty("minItems", MinItems);
+
+            if (Properties != null)
+            {
+                writer.WritePropertyName("properties");
+                writer.WriteStartObject();
+                foreach (var prop in Properties)
+                {
+                    writer.WritePropertyName(prop.Key);
+                    if (prop.Value != null)
+                    {
+                        prop.Value.WriteAsV2(writer);
+                    }
+                    else
+                    {
+                        writer.WriteValue("null");
+                    }
+                }
+                writer.WriteEndObject();
+            }
+            writer.WriteNumberProperty("maxProperties", MaxProperties);
+            writer.WriteNumberProperty("minProperties", MinProperties);
+
+            writer.WriteList("enum", Enum, (nodeWriter, s) => nodeWriter.WriteValue(s));
         }
     }
 }
