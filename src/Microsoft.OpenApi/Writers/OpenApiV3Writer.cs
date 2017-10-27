@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Writers
 
             writer.WriteStringProperty("title", info.Title);
             writer.WriteStringProperty("description", info.Description);
-            writer.WriteStringProperty("termsOfService", info.TermsOfService);
+            writer.WriteStringProperty("termsOfService", info.TermsOfService.OriginalString);
             writer.WriteObject("contact", info.Contact, WriteContact);
             writer.WriteObject("license", info.License, WriteLicense);
             writer.WriteStringProperty("version", info.Version.ToString());

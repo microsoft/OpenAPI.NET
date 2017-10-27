@@ -3,6 +3,8 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OpenApi.Models
 {
     internal static class OpenApiConstants
@@ -192,5 +194,17 @@ namespace Microsoft.OpenApi.Models
         public const string OpenApiDocPatch = "patch";
 
         public const string OpenApiDocTrace = "trace";
+
+        public const string OpenApiDocDefaultName = "Default Name";
+
+        public const string OpenApiDocDefaultDefault = "Default Default";
+
+        public const string OpenApiDocDefaultTitle = "Default Title";
+
+        public static Version OpenApiDocDefaultVersion = new Version(3, 0, 0);
+
+        public static Uri OpenApiDocDefaultUrl = new Uri("http://localhost/");
+
+        public const string OpenApiDocDefaultDescription = "Default Description";
     }
 }
