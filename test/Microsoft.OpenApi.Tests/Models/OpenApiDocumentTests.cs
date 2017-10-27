@@ -5,7 +5,7 @@
 
 using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Tests
+namespace Microsoft.OpenApi.Models.Tests
 {
     public class OpenApiDocumentTests
     {
