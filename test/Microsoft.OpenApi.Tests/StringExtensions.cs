@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Tests
 {
     public static class StringExtensions
     {
