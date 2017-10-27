@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.OpenApi.Tests
+namespace Microsoft.OpenApi.Tests.Writers
 {
     public class OpenApiYamlWriterTests
     {

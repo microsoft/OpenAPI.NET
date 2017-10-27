@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.OpenApi.Tests
+namespace Microsoft.OpenApi.Tests.Writers
 {
     public class OpenApiJsonWriterTests
     {

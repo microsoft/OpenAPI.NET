@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests
+namespace Microsoft.OpenApi.Tests.Writers
 {
     public class OpenApiWriterAnyExtensionsTests
     {
@@ -136,6 +136,7 @@ namespace Microsoft.OpenApi.Tests
             // Arrange (continued)
             var stream = new MemoryStream();
             IOpenApiWriter writer = new OpenApiJsonWriter(new StreamWriter(stream));
+
             writer.WriteAny(any);
             writer.Flush();
             stream.Position = 0;
