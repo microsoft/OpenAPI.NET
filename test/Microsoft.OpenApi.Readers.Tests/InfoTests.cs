@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             Assert.Equal("The Api", openApiDoc.Info.Title);
             Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());
             Assert.Equal("This is an api", openApiDoc.Info.Description);
-            Assert.Equal("http://example.org/Dowhatyouwant", openApiDoc.Info.TermsOfService);
+            Assert.Equal("http://example.org/Dowhatyouwant", openApiDoc.Info.TermsOfService.OriginalString);
             Assert.Equal("Darrel Miller", openApiDoc.Info.Contact.Name);
             //   Assert.Equal("@darrel_miller", openApiDoc.Info.Contact.Extensions["x-twitter"].GetValueNode().GetScalarValue());
         }

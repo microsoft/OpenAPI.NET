@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The title of the application.
         /// </summary>
-        public string Title { get; set; } = "[Title Required]";
+        public string Title { get; set; } = OpenApiConstants.OpenApiDocDefaultTitle;
 
         /// <summary>
         /// A short description of the application.
@@ -35,19 +35,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A URL to the Terms of Service for the API. MUST be in the format of a URL.
         /// </summary>
-        public string TermsOfService
-        {
-            get { return this.termsOfService; }
-            set
-            {
-                if (!Uri.IsWellFormedUriString(value, UriKind.RelativeOrAbsolute))
-                {
-                    throw new OpenApiException("`info.termsOfService` MUST be a URL");
-                };
-                this.termsOfService = value;
-            }
-        }
-        string termsOfService;
+        public Uri TermsOfService { get; set; }
 
         /// <summary>
         /// The contact information for the exposed API.
@@ -64,9 +52,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
-        private static Regex versionRegex = new Regex(@"\d+\.\d+\.\d+");
-
-
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
         /// </summary>
@@ -78,12 +63,28 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("title", Title);
-            writer.WriteStringProperty("description", Description);
-            writer.WriteStringProperty("termsOfService", TermsOfService);
-            writer.WriteObject("contact", Contact, (w, c) => c.WriteAsV3(w));
-            writer.WriteObject("license", License, (w, l) => l.WriteAsV3(w));
-            writer.WriteStringProperty("version", Version.ToString());
+
+            // title
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTitle, Title);
+
+            // description
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+
+            // termsOfService
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTermsOfService, TermsOfService?.OriginalString);
+
+            // contact object
+            writer.WriteObject(OpenApiConstants.OpenApiDocContact, Contact, (w, c) => c.WriteAsV3(w));
+
+            // license object
+            writer.WriteObject(OpenApiConstants.OpenApiDocLicense, License, (w, l) => l.WriteAsV3(w));
+
+            // version
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocVersion, Version?.ToString());
+
+            // specification extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
 
@@ -98,17 +99,28 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("title", Title);
 
-            writer.WriteStringProperty("description", Description);
+            // title
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTitle, Title);
 
-            writer.WriteStringProperty("termsOfService", TermsOfService);
+            // description
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
 
-            writer.WriteObject("contact", Contact, (w, c) => c.WriteAsV2(w));
+            // termsOfService
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTermsOfService, TermsOfService?.OriginalString);
 
-            writer.WriteObject("license", License, (w, l) => l.WriteAsV2(w));
+            // contact object
+            writer.WriteObject(OpenApiConstants.OpenApiDocContact, Contact, (w, c) => c.WriteAsV2(w));
 
-            writer.WriteStringProperty("version", Version.ToString());
+            // license object
+            writer.WriteObject(OpenApiConstants.OpenApiDocLicense, License, (w, l) => l.WriteAsV2(w));
+
+            // version
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocVersion, Version?.ToString());
+
+            // specification extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
     }

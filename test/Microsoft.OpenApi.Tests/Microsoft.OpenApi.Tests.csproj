@@ -45,6 +45,8 @@
     <Compile Include="Writers\OpenApiJsonWriterTests.cs" />
 	<Compile Include="Writers\OpenApiWriterAnyExtensionsTests.cs" />
     <Compile Include="Writers\OpenApiYamlWriterTests.cs" />
+    <Compile Include="Models\OpenApiInfoTests.cs" />
+    <Compile Include="Models\OpenApiLicenseTests.cs" />
     <Compile Include="Models\OpenApiContactTests.cs" />
     <Compile Include="Models\OpenApiExternalDocsTests.cs" />
     <Compile Include="Models\OpenApiSerializerTestHelper.cs" />

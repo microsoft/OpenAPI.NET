@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             { "title",      (o,n) => { o.Title = n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
-            { "termsOfService", (o,n) => { o.TermsOfService = n.GetScalarValue(); } },
+            { "termsOfService", (o,n) => { o.TermsOfService = new Uri(n.GetScalarValue()); } },
             { "contact",    (o,n) => { o.Contact = LoadContact(n); } },
             { "license",    (o,n) => { o.License = LoadLicense(n); } },
             { "version",    (o,n) => { o.Version = new Version(n.GetScalarValue()); } }

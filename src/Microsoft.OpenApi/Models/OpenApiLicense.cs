@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models
         // <summary>
         /// REQUIRED.The license name used for the API.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = OpenApiConstants.OpenApiDocDefaultName;
 
         /// <summary>
         /// The URL pointing to the contact information. MUST be in the format of a URL.
@@ -55,8 +55,16 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("name", Name);
-            writer.WriteStringProperty("url", Url?.OriginalString);
+
+            // name
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocName, Name);
+
+            // url
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocUrl, Url?.OriginalString);
+
+            // specification extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
     }
