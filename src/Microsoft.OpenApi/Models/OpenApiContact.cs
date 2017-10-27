@@ -61,9 +61,19 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("name", Name);
-            writer.WriteStringProperty("url", Url?.OriginalString);
-            writer.WriteStringProperty("email", Email);
+
+            // name
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocName, Name);
+
+            // url
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocUrl, Url?.OriginalString);
+
+            // email
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocEmail, Email);
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
     }

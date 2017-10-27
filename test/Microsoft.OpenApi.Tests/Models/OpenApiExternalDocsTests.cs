@@ -25,7 +25,6 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expect)
         {
             // Arrange & Act
-            MemoryStream stream = new MemoryStream();
             string actual = BasicExDocs.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Models.Tests
         }
 
         [Fact]
-        public void SerializeAdvanceExDocssAsV3JsonWorks()
+        public void SerializeAdvanceExDocsAsV3JsonWorks()
         {
             // Arrange
             string expect = @"
@@ -50,7 +49,7 @@ namespace Microsoft.OpenApi.Models.Tests
         }
 
         [Fact]
-        public void SerializeAdvanceExDocssAsV3YamlWorks()
+        public void SerializeAdvanceExDocsAsV3YamlWorks()
         {
             // Arrange
             string expect = @"
