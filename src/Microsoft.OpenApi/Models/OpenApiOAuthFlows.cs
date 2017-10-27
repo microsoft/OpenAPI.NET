@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -38,5 +39,31 @@ namespace Microsoft.OpenApi.Models
         /// Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteObject("implicit", Implicit, (w, o) => o.WriteAsV3(w));
+            writer.WriteObject("password", Password, (w, o) => o.WriteAsV3(w));
+            writer.WriteObject("clientCredentials", ClientCredentials, (w, o) => o.WriteAsV3(w));
+            writer.WriteObject("authorizationCode", AuthorizationCode, (w, o) => o.WriteAsV3(w));
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            // nothing here
+        }
     }
 }

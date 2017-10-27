@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -35,5 +36,35 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            WriteInternal(writer);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiContact"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            WriteInternal(writer);
+        }
+
+        private void WriteInternal(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteStringProperty("name", Name);
+            writer.WriteStringProperty("url", Url?.OriginalString);
+            writer.WriteStringProperty("email", Email);
+            writer.WriteEndObject();
+        }
     }
 }

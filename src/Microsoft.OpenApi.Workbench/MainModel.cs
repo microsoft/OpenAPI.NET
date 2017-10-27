@@ -121,18 +121,11 @@ namespace OpenApiWorkbench
         
         private string WriteContents(OpenApiDocument doc)
         {
-            Func<Stream, IOpenApiWriter> writerFactory = s => (this.format == "Yaml" ? new OpenApiYamlWriter(new StreamWriter(s)) : (IOpenApiWriter)new OpenApiJsonWriter(new StreamWriter(s)));
-            IOpenApiStructureWriter writer;
-            if (IsV3)
-            {
-                writer = new OpenApiV3Writer(writerFactory);
-            } else
-            {
-                writer = new OpenApiV2Writer(writerFactory);
-            }
-
             var outputstream = new MemoryStream();
-            writer.Write(outputstream, doc);
+            doc.Serialize(outputstream,
+                IsV3 ? OpenApiSpecVersion.OpenApi3_0 : OpenApiSpecVersion.OpenApi2_0,
+                this.format == "Yaml" ? OpenApiFormat.Yaml : OpenApiFormat.Json);
+
             outputstream.Position = 0;
 
             return new StreamReader(outputstream).ReadToEnd();

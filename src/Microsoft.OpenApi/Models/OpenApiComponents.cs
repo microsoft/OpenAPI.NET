@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -36,6 +37,47 @@ namespace Microsoft.OpenApi.Models
                 || this.SecuritySchemes.Count > 0
                 || this.Links.Count > 0
                 || this.Callbacks.Count > 0);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteMap("schemas", Schemas, (w, s) => s.WriteAsV3(w));
+            writer.WriteMap("responses", Responses, (w, r) => r.WriteAsV3(w));
+            writer.WriteMap("parameters", Parameters, (w, p) => p.WriteAsV3(w));
+            writer.WriteMap("examples", Examples, (w, e) => e.WriteAsV3(w));
+            writer.WriteMap("requestBodies", RequestBodies, (w, r) => r.WriteAsV3(w));
+            writer.WriteMap("headers", Headers, (w, h) => h.WriteAsV3(w));
+            writer.WriteMap("securitySchemes", SecuritySchemes, (w, s) => s.WriteAsV3(w));
+            writer.WriteMap("links", Links, (w, link) => link.WriteAsV3(w));
+            writer.WriteMap("callbacks", Callbacks, (w, c) => c.WriteAsV3(w));
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteMap("definitions", Schemas, (w, s) => s.WriteAsV2(w));
+            writer.WriteMap("responses", Responses, (w, r) => r.WriteAsV2(w));
+            writer.WriteMap("parameters", Parameters, (w, p) => p.WriteAsV2(w));
+            writer.WriteMap("securityDefinitions", SecuritySchemes, (w, s) => s.WriteAsV2(w));
+            writer.WriteEndObject();
         }
     }
 }

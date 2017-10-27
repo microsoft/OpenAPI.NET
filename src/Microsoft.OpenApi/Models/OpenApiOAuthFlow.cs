@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -39,5 +40,40 @@ namespace Microsoft.OpenApi.Models
         /// Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteStringProperty("authorizationUrl", AuthorizationUrl?.ToString());
+            writer.WriteStringProperty("tokenUrl", TokenUrl?.ToString());
+            writer.WriteStringProperty("refreshUrl", RefreshUrl?.ToString());
+            writer.WriteMap("scopes", Scopes, (w, s) => w.WriteValue(s));
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteStringProperty("authorizationUrl", AuthorizationUrl?.ToString());
+            writer.WriteStringProperty("tokenUrl", TokenUrl?.ToString());
+            writer.WriteMap("scopes", Scopes, (w, s) => w.WriteValue(s));
+            writer.WriteEndObject();
+        }
     }
 }

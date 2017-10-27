@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -64,5 +65,51 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         private static Regex versionRegex = new Regex(@"\d+\.\d+\.\d+");
+
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteStringProperty("title", Title);
+            writer.WriteStringProperty("description", Description);
+            writer.WriteStringProperty("termsOfService", TermsOfService);
+            writer.WriteObject("contact", Contact, (w, c) => c.WriteAsV3(w));
+            writer.WriteObject("license", License, (w, l) => l.WriteAsV3(w));
+            writer.WriteStringProperty("version", Version.ToString());
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteStringProperty("title", Title);
+
+            writer.WriteStringProperty("description", Description);
+
+            writer.WriteStringProperty("termsOfService", TermsOfService);
+
+            writer.WriteObject("contact", Contact, (w, c) => c.WriteAsV2(w));
+
+            writer.WriteObject("license", License, (w, l) => l.WriteAsV2(w));
+
+            writer.WriteStringProperty("version", Version.ToString());
+            writer.WriteEndObject();
+        }
     }
 }

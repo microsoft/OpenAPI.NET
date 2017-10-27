@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -37,6 +38,38 @@ namespace Microsoft.OpenApi.Models
         OpenApiReference IOpenApiReference.Pointer
         {
             get; set;
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteStringProperty("name", Name);
+            writer.WriteStringProperty("description", Description);
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+            writer.WriteStringProperty("name", Name);
+            writer.WriteStringProperty("description", Description);
+            writer.WriteEndObject();
         }
     }
 }

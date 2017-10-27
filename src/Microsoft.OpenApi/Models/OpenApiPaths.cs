@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -87,6 +88,44 @@ namespace Microsoft.OpenApi.Models
         IEnumerator<KeyValuePair<string, OpenApiPathItem>> IEnumerable<KeyValuePair<string, OpenApiPathItem>>.GetEnumerator()
         {
             return this.PathItems.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiPaths"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV3(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            //writer.WriteStartObject();
+            foreach (var pathItem in this)
+            {
+                writer.WritePropertyName(pathItem.Key);
+                pathItem.Value.WriteAsV3(writer);
+            }
+            //writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiPaths"/> to Open Api v3.0
+        /// </summary>
+        public virtual void WriteAsV2(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            //writer.WriteStartObject();
+            foreach (var pathItem in this)
+            {
+                writer.WritePropertyName(pathItem.Key);
+                pathItem.Value.WriteAsV2(writer);
+            }
+            //writer.WriteEndObject();
         }
     }
 }
