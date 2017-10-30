@@ -161,6 +161,12 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocXml = "xml";
 
+        public const string OpenApiDocFlow = "flow";
+
+        public const string OpenApiDocApplication = "application";
+
+        public const string OpenApiDocAccessCode = "accessCode";
+
         public const string OpenApiDocImplicit = "implicit";
 
         public const string OpenApiDocPassword = "password";
