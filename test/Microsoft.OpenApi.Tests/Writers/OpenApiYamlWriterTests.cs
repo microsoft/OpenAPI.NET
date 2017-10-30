@@ -232,9 +232,11 @@ property4:
 
             writer.WriteEndObject();
 
-            var actualYaml = outputString.GetStringBuilder()
+            var actualYaml = outputString.GetStringBuilder().Insert(0, "\r\n")
                 .ToString()
                 .MakeLineBreaksEnvironmentNeutral();
+
+            expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
             Assert.Equal(expectedYaml, actualYaml);
