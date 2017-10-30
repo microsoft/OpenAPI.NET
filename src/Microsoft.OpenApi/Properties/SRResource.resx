@@ -126,6 +126,9 @@
   <data name="OpenApiExceptionGeneralError" xml:space="preserve">
     <value>An error occurred while processing the Open API document.</value>
   </data>
+  <data name="OpenApiFormatNotSupported" xml:space="preserve">
+    <value>The given OpenAPI format '{0}' is not supported.</value>
+  </data>
   <data name="OpenApiObjectElementIsRequired" xml:space="preserve">
     <value>The object element name '{0}' is required.</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="OpenApiParameterRequiredPropertyMandatory" xml:space="preserve">
     <value>If the parameter location is "path", this property is REQUIRED and its value MUST be true</value>
+  </data>
+  <data name="OpenApiSpecVersionNotSupported" xml:space="preserve">
+    <value>The given OpenAPI specification version '{0}' is not supported.</value>
   </data>
   <data name="OpenApiUnsupportedValueType" xml:space="preserve">
     <value>The type '{0}' is not supported in Open API document.</value>
