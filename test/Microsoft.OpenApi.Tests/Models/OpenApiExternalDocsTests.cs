@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models.Tests
         #region OpenAPI V3
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiFormat.Yaml, " ")]
+        [InlineData(OpenApiFormat.Yaml, "")]
         public void SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expect)
         {
             // Arrange & Act
