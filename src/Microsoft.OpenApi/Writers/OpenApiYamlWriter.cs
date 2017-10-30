@@ -110,7 +110,10 @@ namespace Microsoft.OpenApi.Writers
                 }
                 else
                 {
-                    Writer.WriteLine();
+                    if (!IsTopLevelObjectScope())
+                    {
+                        Writer.WriteLine();
+                    }
                     WriteIndentation();
                 }
             }
