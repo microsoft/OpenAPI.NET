@@ -39,8 +39,7 @@ namespace Microsoft.OpenApi.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = 
-                        new global::System.Resources.ResourceManager(typeof(SRResource).FullName, typeof(SRResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OpenApi.Properties.SRResource", typeof(SRResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -89,6 +88,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given OpenAPI format &apos;{0}&apos; is not supported..
+        /// </summary>
+        internal static string OpenApiFormatNotSupported {
+            get {
+                return ResourceManager.GetString("OpenApiFormatNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The object element name &apos;{0}&apos; is required..
         /// </summary>
         internal static string OpenApiObjectElementIsRequired {
@@ -112,6 +120,15 @@ namespace Microsoft.OpenApi.Properties {
         internal static string OpenApiParameterRequiredPropertyMandatory {
             get {
                 return ResourceManager.GetString("OpenApiParameterRequiredPropertyMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given OpenAPI specification version &apos;{0}&apos; is not supported..
+        /// </summary>
+        internal static string OpenApiSpecVersionNotSupported {
+            get {
+                return ResourceManager.GetString("OpenApiSpecVersionNotSupported", resourceCulture);
             }
         }
         

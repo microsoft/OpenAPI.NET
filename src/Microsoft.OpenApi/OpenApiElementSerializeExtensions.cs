@@ -3,8 +3,10 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.IO;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
@@ -95,7 +97,7 @@ namespace Microsoft.OpenApi
                     writer = new OpenApiYamlWriter(new StreamWriter(stream));
                     break;
                 default:
-                    throw new OpenApiException("Not supported Open Api document format!");
+                    throw new OpenApiException(String.Format(SRResource.OpenApiFormatNotSupported, format));
             }
 
             switch (specVersion)
@@ -109,7 +111,7 @@ namespace Microsoft.OpenApi
                     break;
 
                 default:
-                    throw new OpenApiException("Unknown Open API specification version.");
+                    throw new OpenApiException(String.Format(SRResource.OpenApiSpecVersionNotSupported, specVersion));
             }
 
             writer.Flush();
