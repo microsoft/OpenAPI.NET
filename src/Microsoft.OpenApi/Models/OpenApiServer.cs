@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Server Object: an object representing a Server.
     /// </summary>
-    public class OpenApiServer : IOpenApiExtension
+    public class OpenApiServer : OpenApiElement, IOpenApiExtension
     {
         public string Description { get; set; }
         public string Url { get; set; }
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiServer"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiServer"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             // nothing here
         }

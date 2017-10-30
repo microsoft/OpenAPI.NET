@@ -12,14 +12,14 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Security Requirement Object
     /// </summary>
-    public class OpenApiSecurityRequirement : IOpenApiElement
+    public class OpenApiSecurityRequirement : OpenApiElement, IOpenApiElement
     {
         public Dictionary<OpenApiSecurityScheme, List<string>> Schemes { get; set; } = new Dictionary<OpenApiSecurityScheme, List<string>>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

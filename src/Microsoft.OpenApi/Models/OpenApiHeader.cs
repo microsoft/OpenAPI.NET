@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object 
     /// </summary>
-    public class OpenApiHeader : IOpenApiReference, IOpenApiExtension
+    public class OpenApiHeader : OpenApiElement, IOpenApiReference, IOpenApiExtension
     {
         public OpenApiReference Pointer { get; set; }
         public string Description { get; set; }
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

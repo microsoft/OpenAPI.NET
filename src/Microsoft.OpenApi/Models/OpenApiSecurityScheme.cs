@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
-    public class OpenApiSecurityScheme : IOpenApiReference, IOpenApiExtension
+    public class OpenApiSecurityScheme : OpenApiElement, IOpenApiReference, IOpenApiExtension
     {
         /// <summary>
         /// REQUIRED. The type of the security scheme.
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

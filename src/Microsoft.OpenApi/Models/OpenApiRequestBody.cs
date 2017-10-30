@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiReference, IOpenApiExtension
+    public class OpenApiRequestBody : OpenApiElement, IOpenApiReference, IOpenApiExtension
     {
         public OpenApiReference Pointer { get; set; }
 
@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             // nothing here
         }

@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// License Object.
     /// </summary>
-    public class OpenApiLicense : IOpenApiExtension
+    public class OpenApiLicense : OpenApiElement, IOpenApiExtension
     {
         // <summary>
         /// REQUIRED.The license name used for the API.
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             WriteInternal(writer);
         }
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             WriteInternal(writer);
         }

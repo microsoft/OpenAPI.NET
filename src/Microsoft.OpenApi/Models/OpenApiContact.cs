@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Contact Object.
     /// </summary>
-    public class OpenApiContact : IOpenApiExtension
+    public class OpenApiContact : OpenApiElement, IOpenApiExtension
     {
         /// <summary>
         /// The identifying name of the contact person/organization.
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             WriteInternal(writer);
         }
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             WriteInternal(writer);
         }

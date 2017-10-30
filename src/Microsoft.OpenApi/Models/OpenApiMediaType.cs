@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Media Type Object.
     /// </summary>
-    public class OpenApiMediaType : IOpenApiExtension
+    public class OpenApiMediaType : OpenApiElement, IOpenApiExtension
     {
         public OpenApiSchema Schema { get; set; }
         public IDictionary<string, OpenApiExample> Examples { get; set; }
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             // nothing here
         }
