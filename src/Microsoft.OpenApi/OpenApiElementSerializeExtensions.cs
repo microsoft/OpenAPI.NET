@@ -12,15 +12,15 @@ using Microsoft.OpenApi.Writers;
 namespace Microsoft.OpenApi
 {
     /// <summary>
-    /// Represents the Open Api serializer.
+    /// Extension methods for <see cref="OpenApiElement"/> serialization.
     /// </summary>
     public static class OpenApiElementSerializeExtensions
     {
         /// <summary>
-        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as JSON (v3.0)
+        /// Serialize the <see cref="OpenApiElement"/> to the Open API document (JSON, v3.0) using the given stream.
         /// </summary>
-        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
-        /// <param name="element">The Open Api element.</param>
+        /// <typeparam name="T">the <see cref="OpenApiElement"/></typeparam>
+        /// <param name="element">The Open API element.</param>
         /// <param name="stream">The output stream.</param>
         public static void SerializeAsJson<T>(this T element, Stream stream)
             where T : OpenApiElement
@@ -29,12 +29,12 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as JSON.
+        /// Serialize the <see cref="OpenApiElement"/> to the Open API document (JSON) using the given stream and specification version.
         /// </summary>
         /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
-        /// <param name="element">The Open Api element.</param>
+        /// <param name="element">The Open API element.</param>
         /// <param name="stream">The output stream.</param>
-        /// <param name="specVersion">The Open Api specification version</param>
+        /// <param name="specVersion">The Open API specification version.</param>
         public static void SerializeAsJson<T>(this T element, Stream stream, OpenApiSpecVersion specVersion)
             where T : OpenApiElement
         {
@@ -42,10 +42,10 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as YAML (V3.0)
+        /// Serialize the <see cref="OpenApiElement"/> to the Open API document (YAML, v3.0) using the given stream.
         /// </summary>
         /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
-        /// <param name="element">The Open Api element.</param>
+        /// <param name="element">The Open API element.</param>
         /// <param name="stream">The output stream.</param>
         public static void SerializeAsYaml<T>(this T element, Stream stream)
             where T : OpenApiElement
@@ -54,12 +54,12 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as YAML.
+        /// Serialize the <see cref="OpenApiElement"/> to the Open API document (YAML) using the given stream and specification version.
         /// </summary>
-        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
-        /// <param name="element">The Open Api element.</param>
+        /// <typeparam name="T">the <see cref="OpenApiElement"/></typeparam>
+        /// <param name="element">The Open API element.</param>
         /// <param name="stream">The output stream.</param>
-        /// <param name="specVersion">The Open Api specification version.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
         public static void SerializeAsYaml<T>(this T element, Stream stream, OpenApiSpecVersion specVersion)
             where T : OpenApiElement
         {
@@ -67,12 +67,13 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Serialize the <see cref="IOpenApiElement"/> to the given stream.
+        /// Serialize the <see cref="OpenApiElement"/> to the Open API document using
+        /// the given stream, specification version and the format.
         /// </summary>
-        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
-        /// <param name="element">The Open Api element.</param>
+        /// <typeparam name="T">the <see cref="OpenApiElement"/></typeparam>
+        /// <param name="element">The Open API element.</param>
         /// <param name="stream">The given stream.</param>
-        /// <param name="specVersion">The Open Api specification version.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
         public static void Serialize<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiFormat format)
             where T : OpenApiElement
@@ -99,10 +100,10 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as JSON (v3.0)
+        /// Serialize the <see cref="OpenApiElement"/> to Open API document (v3.0) using the given writer.
         /// </summary>
-        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
-        /// <param name="element">The Open Api element.</param>
+        /// <typeparam name="T">the <see cref="OpenApiElement"/></typeparam>
+        /// <param name="element">The Open API element.</param>
         /// <param name="writer">The output writer.</param>
         public static void Serialize<T>(this T element, IOpenApiWriter writer)
             where T : OpenApiElement
@@ -111,12 +112,12 @@ namespace Microsoft.OpenApi
         }
 
         /// <summary>
-        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as JSON.
+        /// Serialize the <see cref="OpenApiElement"/> to Open API document using the given specification version and writer.
         /// </summary>
-        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
-        /// <param name="element">The Open Api element.</param>
+        /// <typeparam name="T">the <see cref="OpenApiElement"/></typeparam>
+        /// <param name="element">The Open API element.</param>
         /// <param name="writer">The output writer.</param>
-        /// <param name="specVersion">The Open Api specification version</param>
+        /// <param name="specVersion">The Open API specification version.</param>
         public static void Serialize<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion)
             where T : OpenApiElement
         {
