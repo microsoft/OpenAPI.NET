@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an Open API Document. See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiExtension
+    public class OpenApiDocument : OpenApiElement, IOpenApiExtension
     {
         string version;
         public string Version { get { return version; }
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

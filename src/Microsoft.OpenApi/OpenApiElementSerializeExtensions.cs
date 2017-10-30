@@ -4,7 +4,7 @@
 // ------------------------------------------------------------
 
 using System.IO;
-using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi
         /// <param name="element">The Open Api element.</param>
         /// <param name="stream">The output stream.</param>
         public static void SerializeAsJson<T>(this T element, Stream stream)
-            where T : IOpenApiElement
+            where T : OpenApiElement
         {
             element.SerializeAsJson(stream, OpenApiSpecVersion.OpenApi3_0);
         }
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi
         /// <param name="stream">The output stream.</param>
         /// <param name="specVersion">The Open Api specification version</param>
         public static void SerializeAsJson<T>(this T element, Stream stream, OpenApiSpecVersion specVersion)
-            where T : IOpenApiElement
+            where T : OpenApiElement
         {
             element.Serialize(stream, specVersion, OpenApiFormat.Json);
         }
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi
         /// <param name="element">The Open Api element.</param>
         /// <param name="stream">The output stream.</param>
         public static void SerializeAsYaml<T>(this T element, Stream stream)
-            where T : IOpenApiElement
+            where T : OpenApiElement
         {
             element.SerializeAsYaml(stream, OpenApiSpecVersion.OpenApi3_0);
         }
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi
         /// <param name="stream">The output stream.</param>
         /// <param name="specVersion">The Open Api specification version.</param>
         public static void SerializeAsYaml<T>(this T element, Stream stream, OpenApiSpecVersion specVersion)
-            where T : IOpenApiElement
+            where T : OpenApiElement
         {
             element.Serialize(stream, specVersion, OpenApiFormat.Yaml);
         }
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi
         /// <param name="specVersion">The Open Api specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
         public static void Serialize<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiFormat format)
-            where T : IOpenApiElement
+            where T : OpenApiElement
         {
             if (element == null)
             {

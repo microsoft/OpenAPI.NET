@@ -11,12 +11,12 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Discriminator object.
     /// </summary>
-    public class OpenApiDiscriminator : IOpenApiElement
+    public class OpenApiDiscriminator : OpenApiElement
     {
         /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             // nothing here
         }
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v2.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             // nothing here
         }

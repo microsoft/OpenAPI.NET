@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Paths object.
     /// </summary>
-    public class OpenApiPaths : IDictionary<string, OpenApiPathItem>, IOpenApiExtension
+    public class OpenApiPaths : OpenApiElement, IDictionary<string, OpenApiPathItem>, IOpenApiExtension
     {
         public OpenApiPathItem this[string key] { get => this.PathItems[key]; set => this.PathItems[key] = value; }
 
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPaths"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV3(IOpenApiWriter writer)
+        internal override void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPaths"/> to Open Api v3.0
         /// </summary>
-        public virtual void WriteAsV2(IOpenApiWriter writer)
+        internal override void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
