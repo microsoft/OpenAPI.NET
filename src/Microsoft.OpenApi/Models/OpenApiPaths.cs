@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiPaths"/> to Open Api v3.0
+        /// Serialize <see cref="OpenApiPaths"/> to Open Api v2.0
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
