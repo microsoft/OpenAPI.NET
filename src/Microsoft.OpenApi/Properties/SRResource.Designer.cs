@@ -39,7 +39,8 @@ namespace Microsoft.OpenApi.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OpenApi.Properties.SRResource", typeof(SRResource).Assembly);
+                    global::System.Resources.ResourceManager temp = 
+                        new global::System.Resources.ResourceManager(typeof(SRResource).FullName, typeof(SRResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

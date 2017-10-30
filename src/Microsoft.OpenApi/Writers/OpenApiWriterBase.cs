@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Writers
             return scopes.Peek().Type == type;
         }
 
-        protected void ValifyCanWritePropertyName(string name)
+        protected void VerifyCanWritePropertyName(string name)
         {
             if (String.IsNullOrWhiteSpace(name))
             {

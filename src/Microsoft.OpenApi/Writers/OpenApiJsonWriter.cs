@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Writers
         /// public override void WritePropertyName(string name)
         public override void WritePropertyName(string name)
         {
-            ValifyCanWritePropertyName(name);
+            VerifyCanWritePropertyName(name);
 
             Scope currentScope = CurrentScope();
             if (currentScope.ObjectCount != 0)
