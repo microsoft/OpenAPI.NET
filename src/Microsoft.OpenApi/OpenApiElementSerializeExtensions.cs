@@ -15,17 +15,40 @@ namespace Microsoft.OpenApi
     public static class OpenApiElementSerializeExtensions
     {
         /// <summary>
+        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as JSON (v3.0)
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
+        /// <param name="element">The Open Api element.</param>
+        /// <param name="stream">The output stream.</param>
+        public static void SerializeAsJson<T>(this T element, Stream stream)
+            where T : IOpenApiElement
+        {
+            element.SerializeAsJson(stream, OpenApiSpecVersion.OpenApi3_0);
+        }
+
+        /// <summary>
         /// Serialize the <see cref="IOpenApiElement"/> to the given stream as JSON.
         /// </summary>
         /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
         /// <param name="element">The Open Api element.</param>
         /// <param name="stream">The output stream.</param>
-        /// <param name="specVersion">The Open Api specification version, default is 3.0.</param>
-        public static void SerializeAsJson<T>(this T element, Stream stream,
-            OpenApiSpecVersion specVersion = OpenApiSpecVersion.OpenApi3_0)
+        /// <param name="specVersion">The Open Api specification version</param>
+        public static void SerializeAsJson<T>(this T element, Stream stream, OpenApiSpecVersion specVersion)
             where T : IOpenApiElement
         {
             element.Serialize(stream, specVersion, OpenApiFormat.Json);
+        }
+
+        /// <summary>
+        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as YAML (V3.0)
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
+        /// <param name="element">The Open Api element.</param>
+        /// <param name="stream">The output stream.</param>
+        public static void SerializeAsYaml<T>(this T element, Stream stream)
+            where T : IOpenApiElement
+        {
+            element.SerializeAsYaml(stream, OpenApiSpecVersion.OpenApi3_0);
         }
 
         /// <summary>
@@ -34,9 +57,8 @@ namespace Microsoft.OpenApi
         /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
         /// <param name="element">The Open Api element.</param>
         /// <param name="stream">The output stream.</param>
-        /// <param name="specVersion">The Open Api specification version, default is 3.0.</param>
-        public static void SerializeAsYaml<T>(this T element, Stream stream,
-            OpenApiSpecVersion specVersion = OpenApiSpecVersion.OpenApi3_0)
+        /// <param name="specVersion">The Open Api specification version.</param>
+        public static void SerializeAsYaml<T>(this T element, Stream stream, OpenApiSpecVersion specVersion)
             where T : IOpenApiElement
         {
             element.Serialize(stream, specVersion, OpenApiFormat.Yaml);

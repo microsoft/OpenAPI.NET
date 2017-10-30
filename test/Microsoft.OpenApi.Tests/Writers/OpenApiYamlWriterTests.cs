@@ -236,8 +236,6 @@ property4:
                 .ToString()
                 .MakeLineBreaksEnvironmentNeutral();
 
-            expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
-
             // Assert
             Assert.Equal(expectedYaml, actualYaml);
         }
