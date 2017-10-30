@@ -77,11 +77,6 @@ namespace Microsoft.OpenApi
         public static void Serialize<T>(this T element, Stream stream, OpenApiSpecVersion specVersion, OpenApiFormat format)
             where T : OpenApiElement
         {
-            if (element == null)
-            {
-                throw Error.ArgumentNull(nameof(element));
-            }
-
             if (stream == null)
             {
                 throw Error.ArgumentNull(nameof(stream));
@@ -98,6 +93,41 @@ namespace Microsoft.OpenApi
                     break;
                 default:
                     throw new OpenApiException(String.Format(SRResource.OpenApiFormatNotSupported, format));
+            }
+
+            element.Serialize(writer, specVersion);
+        }
+
+        /// <summary>
+        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as JSON (v3.0)
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
+        /// <param name="element">The Open Api element.</param>
+        /// <param name="writer">The output writer.</param>
+        public static void Serialize<T>(this T element, IOpenApiWriter writer)
+            where T : OpenApiElement
+        {
+            element.Serialize(writer, OpenApiSpecVersion.OpenApi3_0);
+        }
+
+        /// <summary>
+        /// Serialize the <see cref="IOpenApiElement"/> to the given stream as JSON.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiElement"/></typeparam>
+        /// <param name="element">The Open Api element.</param>
+        /// <param name="writer">The output writer.</param>
+        /// <param name="specVersion">The Open Api specification version</param>
+        public static void Serialize<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion)
+            where T : OpenApiElement
+        {
+            if (element == null)
+            {
+                throw Error.ArgumentNull(nameof(element));
+            }
+
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
             }
 
             switch (specVersion)
