@@ -131,7 +131,6 @@ namespace Microsoft.OpenApi.Models
                 case SecuritySchemeTypeKind.apiKey:
                     writer.WriteStringProperty("in", In.ToString());
                     writer.WriteStringProperty("name", Name);
-
                     break;
             }
 
@@ -139,26 +138,37 @@ namespace Microsoft.OpenApi.Models
             {
                 if (Flows.Implicit != null)
                 {
-                    writer.WriteStringProperty("flow", "implicit");
-                    Flows.Implicit.WriteAsV2(writer);
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocImplicit, Flows.AuthorizationCode);
                 }
                 else if (Flows.Password != null)
                 {
-                    writer.WriteStringProperty("flow", "password");
-                    Flows.Password.WriteAsV2(writer);
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocPassword, Flows.AuthorizationCode);
                 }
                 else if (Flows.ClientCredentials != null)
                 {
-                    writer.WriteStringProperty("flow", "application");
-                    Flows.ClientCredentials.WriteAsV2(writer);
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocApplication, Flows.AuthorizationCode);
                 }
                 else if (Flows.AuthorizationCode != null)
                 {
-                    writer.WriteStringProperty("flow", "accessCode");
-                    Flows.AuthorizationCode.WriteAsV2(writer);
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocAccessCode, Flows.AuthorizationCode);
                 }
             }
             writer.WriteEndObject();
+        }
+
+        private static void WriteOAuthFlowForV2(IOpenApiWriter writer, string flowValue, OpenApiOAuthFlow flow)
+        {
+            // flow
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocFlow, flowValue);
+
+            // authorizationUrl
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocAuthorizationUrl, flow.AuthorizationUrl?.ToString());
+
+            // tokenUrl
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTokenUrl, flow.TokenUrl?.ToString());
+
+            // scopes
+            writer.WriteMap(OpenApiConstants.OpenApiDocScopes, flow.Scopes, (w, s) => w.WriteValue(s));
         }
     }
 }

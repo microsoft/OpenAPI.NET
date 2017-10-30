@@ -64,16 +64,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-            writer.WriteStringProperty("authorizationUrl", AuthorizationUrl?.ToString());
-            writer.WriteStringProperty("tokenUrl", TokenUrl?.ToString());
-            writer.WriteMap("scopes", Scopes, (w, s) => w.WriteValue(s));
-            writer.WriteEndObject();
+            // nothing here
         }
     }
 }
