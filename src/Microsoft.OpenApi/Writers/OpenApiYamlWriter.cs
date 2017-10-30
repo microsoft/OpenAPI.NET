@@ -57,12 +57,6 @@ namespace Microsoft.OpenApi.Writers
         public override void WriteEndObject()
         {
             Scope currentScope = EndScope(ScopeType.Object);
-            
-            if (currentScope.ObjectCount == 0)
-            {
-                Writer.Write(WriterConstants.WhiteSpaceForEmptyObjectArray);
-            }
-
             DecreaseIndentation();
         }
 
@@ -81,11 +75,6 @@ namespace Microsoft.OpenApi.Writers
         public override void WriteEndArray()
         {
             Scope current = EndScope(ScopeType.Array);
-            /*
-            if (current.ObjectCount == 0)
-            {
-                Writer.Write(WriterConstants.WhiteSpaceForEmptyObjectArray);
-            }*/
             DecreaseIndentation();
         }
 
