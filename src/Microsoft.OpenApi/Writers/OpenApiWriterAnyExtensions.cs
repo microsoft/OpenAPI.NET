@@ -51,6 +51,7 @@ namespace Microsoft.OpenApi.Writers
             if (any == null)
             {
                 writer.WriteNull();
+                return;
             }
 
             switch (any.AnyKind)
