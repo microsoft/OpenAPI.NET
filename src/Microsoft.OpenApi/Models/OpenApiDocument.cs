@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED.This string MUST be the semantic version number of the OpenAPI Specification version that the OpenAPI document uses.
         /// </summary>
-        public Version Version { get; set; } = OpenApiConstants.OpenApiDocDefaultVersion;
+        public Version SpecVersion { get; set; } = OpenApiConstants.OpenApiDocDefaultVersion;
 
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocOpenApi, "3.0.0");
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocOpenApi, SpecVersion.ToString());
 
             // info
             writer.WriteObject(OpenApiConstants.OpenApiDocInfo, Info, (w, i) => i.WriteAsV3(w));
@@ -123,10 +123,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // swagger
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSwagger, "2.0");
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSwagger, OpenApiConstants.OpenApiDocSwaggerVersion);
 
             // info
-            writer.WriteObject("info", Info, (w, i) => i.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.OpenApiDocInfo, Info, (w, i) => i.WriteAsV2(w));
 
             // host, basePath, schemes, consumes, produces
             SerializeHostInfo(writer, Servers);

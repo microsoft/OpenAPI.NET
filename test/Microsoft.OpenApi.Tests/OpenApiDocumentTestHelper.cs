@@ -10,11 +10,11 @@ namespace Microsoft.OpenApi.Tests
 {
     internal static class OpenApiDocumentTestHelper
     {
-        public static void CreatePath(this OpenApiDocument doc, string key, Action<OpenApiPathItem> configure)
+        public static void CreatePath(this OpenApiDocument document, string key, Action<OpenApiPathItem> configure)
         {
             var pathItem = new OpenApiPathItem();
             configure(pathItem);
-            doc.Paths.Add(key, pathItem);
+            document.Paths.Add(key, pathItem);
         }
     }
 }

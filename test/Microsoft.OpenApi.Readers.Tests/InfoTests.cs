@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal("1.0.0", openApiDoc.Version.ToString());
+            Assert.Equal("1.0.0", openApiDoc.SpecVersion.ToString());
 
             Assert.Empty(openApiDoc.Paths);
             Assert.Equal("The Api", openApiDoc.Info.Title);
