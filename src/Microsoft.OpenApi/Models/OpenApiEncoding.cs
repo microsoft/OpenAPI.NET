@@ -17,6 +17,8 @@ namespace Microsoft.OpenApi.Models
     {
         /// <summary>
         /// The Content-Type for encoding a specific property.
+        /// The value can be a specific media type (e.g. application/json),
+        /// a wildcard media type (e.g. image/*), or a comma-separated list of the two types.
         /// </summary>
         public string ContentType { get; set; }
 
@@ -31,12 +33,19 @@ namespace Microsoft.OpenApi.Models
         public ParameterStyle? Style { get; set; }
 
         /// <summary>
-        /// Explode
+        /// When this is true, property values of type array or object generate separate parameters
+        /// for each value of the array, or key-value-pair of the map. For other types of properties
+        /// this property has no effect. When style is form, the default value is true.
+        /// For all other styles, the default value is false.
+        /// This property SHALL be ignored if the request body media type is not application/x-www-form-urlencoded.
         /// </summary>
         public bool? Explode { get; set; }
 
         /// <summary>
-        /// AllowReserved
+        /// Determines whether the parameter value SHOULD allow reserved characters,
+        /// as defined by RFC3986 :/?#[]@!$&'()*+,;= to be included without percent-encoding.
+        /// The default value is false. This property SHALL be ignored
+        /// if the request body media type is not application/x-www-form-urlencoded.
         /// </summary>
         public bool? AllowReserved { get; set; }
 
@@ -55,34 +64,26 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull("writer");
             }
 
-            // { for json, empty for YAML
             writer.WriteStartObject();
 
-            // contentType
             writer.WriteStringProperty(OpenApiConstants.OpenApiDocContentType, ContentType);
 
-            // headers
             writer.WriteMap(OpenApiConstants.OpenApiDocHeaders, Headers, (w, h) => h.WriteAsV3(w));
 
-            // style
             writer.WriteStringProperty(OpenApiConstants.OpenApiDocStyle, Style?.ToString());
 
-            // explode
             if (Explode != null)
             {
                 writer.WriteBoolProperty(OpenApiConstants.OpenApiDocExplode, Explode.Value, false);
             }
 
-            // allowReserved
             if (AllowReserved != null)
             {
                 writer.WriteBoolProperty(OpenApiConstants.OpenApiDocAllowReserved, AllowReserved.Value, false);
             }
 
-            // specification extensions
             writer.WriteExtensions(Extensions);
 
-            // } for json, empty for YAML
             writer.WriteEndObject();
         }
 

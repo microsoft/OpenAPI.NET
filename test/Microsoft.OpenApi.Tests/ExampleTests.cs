@@ -6,6 +6,7 @@
 using SharpYaml.Serialization;
 using System;
 using System.IO;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -33,7 +34,7 @@ namespace Microsoft.OpenApi.Tests
                      r.Description = "foo";
                      r.CreateContent("application/json", c =>
                      {
-                         c.Example = "xyz"; ///"{ \"foo\": \"bar\" }"; This doesn't work because parser treats it as a node
+                         c.Example = new OpenApiString("xyz"); ///"{ \"foo\": \"bar\" }"; This doesn't work because parser treats it as a node
                      });
                 })));
 
