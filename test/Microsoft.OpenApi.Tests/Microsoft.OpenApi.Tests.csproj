@@ -42,8 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExampleTests.cs" />
+    <Compile Include="Models\OpenApiEncodingTests.cs" />
     <Compile Include="Writers\OpenApiJsonWriterTests.cs" />
-	<Compile Include="Writers\OpenApiWriterAnyExtensionsTests.cs" />
+    <Compile Include="Writers\OpenApiWriterAnyExtensionsTests.cs" />
     <Compile Include="Writers\OpenApiYamlWriterTests.cs" />
     <Compile Include="Models\OpenApiInfoTests.cs" />
     <Compile Include="Models\OpenApiLicenseTests.cs" />
