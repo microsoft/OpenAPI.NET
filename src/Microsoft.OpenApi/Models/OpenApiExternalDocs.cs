@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0
+        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
         internal override void WriteAsV3(IOpenApiWriter writer)
         {
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0
+        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
@@ -55,8 +55,16 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("description", Description);
-            writer.WriteStringProperty("url", Url?.OriginalString);
+
+            // description
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+
+            // url
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocUrl, Url?.OriginalString);
+
+            // Specification Extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
     }
