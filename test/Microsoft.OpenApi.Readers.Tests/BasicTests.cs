@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.petstore30.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal("3.0.0", openApiDoc.Version);
+            Assert.Equal("3.0.0", openApiDoc.Version.ToString());
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                     ",
                 out var parsingContext);
 
-            Assert.Equal("3.0.0", openApiDoc.Version);
+            Assert.Equal("3.0.0", openApiDoc.Version.ToString());
         }
 
         [Fact]
@@ -52,13 +52,8 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(2, context.Errors.Count);
-            Assert.NotNull(
-                context.Errors.Where(
-                        s => s.ToString() ==
-                            "`openapi` property does not match the required format major.minor.patch at #/openapi")
-                    .FirstOrDefault());
-            Assert.NotNull(
+            Assert.Equal(1, context.Errors.Count);
+              Assert.NotNull(
                 context.Errors.Where(s => s.ToString() == "title is a required property of #/info").FirstOrDefault());
         }
 
@@ -69,7 +64,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal("1.0.0", openApiDoc.Version);
+            Assert.Equal("1.0.0", openApiDoc.Version.ToString());
             Assert.Empty(openApiDoc.Paths);
             Assert.Equal("The Api", openApiDoc.Info.Title);
             Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());

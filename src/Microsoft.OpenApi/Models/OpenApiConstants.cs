@@ -212,5 +212,16 @@ namespace Microsoft.OpenApi.Models
         public static Uri OpenApiDocDefaultUrl = new Uri("http://localhost/");
 
         public const string OpenApiDocDefaultDescription = "Default Description";
+
+        #region V2
+        public const string OpenApiDocHost = "host";
+
+        public const string OpenApiDocSwagger = "swagger";
+
+        public const string OpenApiDocBasePath = "basePath";
+
+        public const string OpenApiDocSchemes = "schemes";
+
+        #endregion
     }
 }
