@@ -416,7 +416,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         {
             { "schema", (o,n) => { o.Schema = LoadSchema(n); } },
             { "examples", (o,n) => { o.Examples = n.CreateMap(LoadExample); } },
-            { "example", (o,n) => { o.Example = n.GetScalarValue(); } },
+            { "example", (o,n) => { o.Example = new OpenApiString(n.GetScalarValue()); } },
             //Encoding
         };
 
