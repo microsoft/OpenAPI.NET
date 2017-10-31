@@ -218,6 +218,8 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocSwagger = "swagger";
 
+        public const string OpenApiDocSwaggerVersion = "2.0.0";
+
         public const string OpenApiDocBasePath = "basePath";
 
         public const string OpenApiDocSchemes = "schemes";

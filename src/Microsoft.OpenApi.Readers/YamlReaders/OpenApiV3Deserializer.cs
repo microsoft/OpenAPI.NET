@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
     {
         #region OpenApiObject
         public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument> {
-            { "openapi", (o,n) => { o.Version = new Version(n.GetScalarValue()); } },
+            { "openapi", (o,n) => { o.SpecVersion = new Version(n.GetScalarValue()); } },
             { "info", (o,n) => o.Info = LoadInfo(n) },
             { "servers", (o,n) => o.Servers = n.CreateList(LoadServer) },
             { "paths", (o,n) => o.Paths = LoadPaths(n) },
