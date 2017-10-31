@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteObject(OpenApiConstants.OpenApiDocInfo, Info, (w, i) => i.WriteAsV2(w));
 
             // host, basePath, schemes, consumes, produces
-            SerializeHostInfo(writer, Servers);
+            WriteHostInfo(writer, Servers);
 
             // paths
             writer.WriteObject(OpenApiConstants.OpenApiDocPaths, Paths, (w, p) => p.WriteAsV2(w));
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private static void SerializeHostInfo(IOpenApiWriter writer, IList<OpenApiServer> servers)
+        private static void WriteHostInfo(IOpenApiWriter writer, IList<OpenApiServer> servers)
         {
             if (servers == null || !servers.Any())
             {
