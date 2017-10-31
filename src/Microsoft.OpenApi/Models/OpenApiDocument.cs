@@ -4,9 +4,8 @@
 // ------------------------------------------------------------
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -18,39 +17,53 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiDocument : OpenApiElement, IOpenApiExtension
     {
-        string version;
-        public string Version { get { return version; }
-            set {
-                if (versionRegex.IsMatch(value))
-                {
-                    version = value;
-                } else
-                {
-                    throw new OpenApiException("`openapi` property does not match the required format major.minor.patch");
-                }
-            } } // Swagger
-
-
-        public OpenApiInfo Info { get; set; } = new OpenApiInfo();
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
-        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; }
-        public OpenApiPaths Paths { get; set; } = new OpenApiPaths();
-        public OpenApiComponents Components { get; set; } = new OpenApiComponents();
-        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
-        public OpenApiExternalDocs ExternalDocs { get; set; } = new OpenApiExternalDocs();
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
-
-        private static Regex versionRegex = new Regex(@"\d+\.\d+\.\d+");
-
-        public void CreatePath(string key, Action<OpenApiPathItem> configure)
-        {
-            var pathItem = new OpenApiPathItem();
-            configure(pathItem);
-            Paths.Add(key, pathItem);
-        }
+        /// <summary>
+        /// REQUIRED.This string MUST be the semantic version number of the OpenAPI Specification version that the OpenAPI document uses.
+        /// </summary>
+        public Version Version { get; set; } = OpenApiConstants.OpenApiDocDefaultVersion;
 
         /// <summary>
-        /// Serialize <see cref="OpenApiDocument"/> to Open Api v3.0
+        /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
+        /// </summary>
+        public OpenApiInfo Info { get; set; } = new OpenApiInfo();
+
+        /// <summary>
+        /// An array of Server Objects, which provide connectivity information to a target server.
+        /// </summary>
+        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+
+        /// <summary>
+        /// REQUIRED. The available paths and operations for the API.
+        /// </summary>
+        public OpenApiPaths Paths { get; set; } = new OpenApiPaths();
+
+        /// <summary>
+        /// An element to hold various schemas for the specification.
+        /// </summary>
+        public OpenApiComponents Components { get; set; } = new OpenApiComponents();
+
+        /// <summary>
+        /// A declaration of which security mechanisms can be used across the API.
+        /// </summary>
+        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; }
+
+        /// <summary>
+        /// A list of tags used by the specification with additional metadata.
+        /// </summary>
+        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+
+        /// <summary>
+        /// Additional external documentation.
+        /// </summary>
+        public OpenApiExternalDocs ExternalDocs { get; set; } = new OpenApiExternalDocs();
+
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
+        /// </summary>
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/> to Open Api v3.0.
         /// </summary>
         internal override void WriteAsV3(IOpenApiWriter writer)
         {
@@ -60,32 +73,45 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("openapi");
-            writer.WriteValue("3.0.0");
 
-            writer.WriteObject("info", Info, (w, i) => i.WriteAsV3(w));
-            writer.WriteList("servers", Servers, (w, s) => s.WriteAsV3(w));
-            writer.WritePropertyName("paths");
+            // openapi
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocOpenApi, "3.0.0");
 
-            writer.WriteStartObject();
-            Paths.WriteAsV3(writer);
-            writer.WriteEndObject();
+            // info
+            writer.WriteObject(OpenApiConstants.OpenApiDocInfo, Info, (w, i) => i.WriteAsV3(w));
 
-            writer.WriteList("tags", Tags, (w, t) => t.WriteAsV3(w));
+            // servers
+            writer.WriteList(OpenApiConstants.OpenApiDocServers, Servers, (w, s) => s.WriteAsV3(w));
+
+            // paths
+            writer.WriteObject(OpenApiConstants.OpenApiDocPaths, Paths, (w, p) => p.WriteAsV3(w));
+
+            // components
             if (!Components.IsEmpty())
             {
-                writer.WriteObject("components", Components, (w, c) => c.WriteAsV3(w));
+                writer.WriteObject(OpenApiConstants.OpenApiDocComponents, Components, (w, c) => c.WriteAsV3(w));
             }
+
+            // security
+            writer.WriteList(OpenApiConstants.OpenApiDocSecurity, SecurityRequirements, (w, s) => s.WriteAsV3(w));
+
+            // tags
+            writer.WriteList(OpenApiConstants.OpenApiDocTags, Tags, (w, t) => t.WriteAsV3(w));
+
+            // external docs
             if (ExternalDocs.Url != null)
             {
-                writer.WriteObject("externalDocs", ExternalDocs, (w, e) => e.WriteAsV3(w));
+                writer.WriteObject(OpenApiConstants.OpenApiDocExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
             }
-            writer.WriteList("security", SecurityRequirements, (w, s) => s.WriteAsV3(w));
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiDocument"/> to Open Api v2.0
+        /// Serialize <see cref="OpenApiDocument"/> to Open Api v2.0.
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
@@ -95,34 +121,45 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WritePropertyName("swagger");
-            writer.WriteValue("2.0");
 
+            // swagger
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSwagger, "2.0");
+
+            // info
             writer.WriteObject("info", Info, (w, i) => i.WriteAsV2(w));
+
+            // host, basePath, schemes, consumes, produces
             SerializeHostInfo(writer, Servers);
 
-            writer.WritePropertyName("paths");
+            // paths
+            writer.WriteObject(OpenApiConstants.OpenApiDocPaths, Paths, (w, p) => p.WriteAsV2(w));
 
-            writer.WriteStartObject();
-            Paths.WriteAsV2(writer);
-            writer.WriteEndObject();
+            // definitions
+            // parameters
+            // responses
+            // securityDefinitions
 
-            writer.WriteList("tags", Tags, (w, t) => t.WriteAsV2(w));
-            if (!Components.IsEmpty())
-            {
-                Components.WriteAsV2(writer);
-            }
+            // security
+            writer.WriteList(OpenApiConstants.OpenApiDocSecurity, SecurityRequirements, (w, s) => s.WriteAsV2(w));
+
+            // tags
+            writer.WriteList(OpenApiConstants.OpenApiDocTags, Tags, (w, t) => t.WriteAsV2(w));
+
+            // externalDocs
             if (ExternalDocs.Url != null)
             {
-                writer.WriteObject("externalDocs", ExternalDocs, (w, e) => e.WriteAsV2(w));
+                writer.WriteObject(OpenApiConstants.OpenApiDocExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
             }
-            writer.WriteList("security", SecurityRequirements, (w, s) => s.WriteAsV2(w));
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
 
         private static void SerializeHostInfo(IOpenApiWriter writer, IList<OpenApiServer> servers)
         {
-            if (servers == null || servers.Count == 0)
+            if (servers == null || !servers.Any())
             {
                 return;
             }
@@ -131,13 +168,16 @@ namespace Microsoft.OpenApi.Models
 
             var url = new Uri(firstServer.Url);
 
-            writer.WriteStringProperty("host", url.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
+            // host
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocHost, url.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
 
-            writer.WriteStringProperty("basePath", url.AbsolutePath);
+            // basePath
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocBasePath, url.AbsolutePath);
 
+            // schemes
             var schemes = servers.Select(s => new Uri(s.Url).Scheme).Distinct();
 
-            writer.WritePropertyName("schemes");
+            writer.WritePropertyName(OpenApiConstants.OpenApiDocSchemes);
 
             writer.WriteStartArray();
 
