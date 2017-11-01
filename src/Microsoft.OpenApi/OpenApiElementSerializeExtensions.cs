@@ -5,6 +5,7 @@
 
 using System;
 using System.IO;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;

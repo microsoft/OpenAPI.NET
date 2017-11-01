@@ -4,10 +4,10 @@
 // ------------------------------------------------------------
 
 using System;
+using Microsoft.OpenApi.Models;
 using Xunit;
-using System.IO;
 
-namespace Microsoft.OpenApi.Models.Tests
+namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiExternalDocsTests
     {
@@ -35,8 +35,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceExDocsAsV3JsonWorks()
         {
             // Arrange
-            string expect = @"
-{
+            string expect = 
+@"{
   ""description"": ""Find more info here"",
   ""url"": ""https://example.com""
 }";
@@ -52,8 +52,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceExDocsAsV3YamlWorks()
         {
             // Arrange
-            string expect = @"
-description: Find more info here
+            string expect = 
+@"description: Find more info here
 url: https://example.com";
 
             // Act

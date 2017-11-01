@@ -207,9 +207,9 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocDefaultTitle = "Default Title";
 
-        public static Version OpenApiDocDefaultVersion = new Version(3, 0, 0);
+        public static readonly Version OpenApiDocDefaultVersion = new Version(3, 0, 0);
 
-        public static Uri OpenApiDocDefaultUrl = new Uri("http://localhost/");
+        public static readonly Uri OpenApiDocDefaultUrl = new Uri("http://localhost/");
 
         public const string OpenApiDocDefaultDescription = "Default Description";
 
@@ -218,7 +218,7 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocSwagger = "swagger";
 
-        public const string OpenApiDocSwaggerVersion = "2.0.0";
+        public static readonly Version OpenApiDocSwaggerVersion = new Version(2, 0);
 
         public const string OpenApiDocBasePath = "basePath";
 

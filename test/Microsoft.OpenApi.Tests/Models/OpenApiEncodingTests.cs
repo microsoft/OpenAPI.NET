@@ -3,9 +3,10 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Models;
 using Xunit;
 
-namespace Microsoft.OpenApi.Models.Tests
+namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiEncodingTests
     {
@@ -34,8 +35,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceEncodingAsV3JsonWorks()
         {
             // Arrange
-            string expect = @"
-{
+            string expect = 
+@"{
   ""contentType"": ""image/png, image/jpeg"",
   ""style"": ""simple"",
   ""explode"": true,
@@ -53,8 +54,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceEncodingAsV3YamlWorks()
         {
             // Arrange
-            string expect = @"
-contentType: image/png, image/jpeg
+            string expect = 
+@"contentType: image/png, image/jpeg
 style: simple
 explode: true
 allowReserved: true";

@@ -3,28 +3,32 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.IO;
-using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Models.Tests
+namespace Microsoft.OpenApi.Tests.Models
 {
     public static class OpenApiSerializerTestHelper
     {
-        public static string SerializeAsJson<T>(this T element,
-               OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
-               where T : OpenApiElement
+        public static string SerializeAsJson<T>(
+            this T element,
+            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+            where T : OpenApiElement
         {
             return element.Serialize(version, OpenApiFormat.Json);
         }
 
-        public static string SerializeAsYaml<T>(this T element,
-               OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
-               where T : OpenApiElement
+        public static string SerializeAsYaml<T>(
+            this T element,
+            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+            where T : OpenApiElement
         {
             return element.Serialize(version, OpenApiFormat.Yaml);
         }
 
-        public static string Serialize<T>(this T element,
+        public static string Serialize<T>(
+            this T element,
             OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0,
             OpenApiFormat format = OpenApiFormat.Json)
             where T : OpenApiElement
@@ -34,19 +38,12 @@ namespace Microsoft.OpenApi.Models.Tests
                 throw Error.ArgumentNull(nameof(element));
             }
 
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
             element.Serialize(stream, version, format);
             stream.Position = 0;
-            string value = new StreamReader(stream).ReadToEnd();
+            var value = new StreamReader(stream).ReadToEnd();
 
-            if (value.IndexOf("\n") == -1)
-            {
-                return value;
-            }
-            else
-            {
-                return "\r\n" + value.Replace("\n", "\r\n");
-            }
+            return value.MakeLineBreaksEnvironmentNeutral();
         }
     }
 }

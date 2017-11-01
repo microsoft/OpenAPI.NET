@@ -123,13 +123,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // swagger
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSwagger, OpenApiConstants.OpenApiDocSwaggerVersion);
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSwagger, SpecVersion.ToString());
 
             // info
             writer.WriteObject(OpenApiConstants.OpenApiDocInfo, Info, (w, i) => i.WriteAsV2(w));
 
             // host, basePath, schemes, consumes, produces
-            WriteHostInfo(writer, Servers);
+            WriteHostInfoV2(writer, Servers);
 
             // paths
             writer.WriteObject(OpenApiConstants.OpenApiDocPaths, Paths, (w, p) => p.WriteAsV2(w));
@@ -137,7 +137,9 @@ namespace Microsoft.OpenApi.Models
             // definitions
             // parameters
             // responses
+
             // securityDefinitions
+            Components.WriteSecurityDefinitionsV2(writer);
 
             // security
             writer.WriteList(OpenApiConstants.OpenApiDocSecurity, SecurityRequirements, (w, s) => s.WriteAsV2(w));
@@ -157,25 +159,34 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private static void WriteHostInfo(IOpenApiWriter writer, IList<OpenApiServer> servers)
+        private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
         {
             if (servers == null || !servers.Any())
             {
                 return;
             }
 
+            // Arbitrarily choose the first server given that V2 only allows 
+            // one host, port, and base path.
             var firstServer = servers.First();
 
-            var url = new Uri(firstServer.Url);
+            firstServer.WriteAsV2(writer);
 
-            // host
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocHost, url.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
-
-            // basePath
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocBasePath, url.AbsolutePath);
-
-            // schemes
-            var schemes = servers.Select(s => new Uri(s.Url).Scheme).Distinct();
+            // Consider all schemes of the URLs in the server list that have the same
+            // host, port, and base path as the first server.
+            var firstServerUrl = new Uri(firstServer.Url);
+            
+            var schemes = servers.Select(s => new Uri(s.Url))
+                .Where(
+                    u => Uri.Compare(
+                            u,
+                            firstServerUrl,
+                            UriComponents.Host | UriComponents.Port | UriComponents.Path,
+                            UriFormat.SafeUnescaped,
+                            StringComparison.OrdinalIgnoreCase) ==
+                        0)
+                .Select( u => u.Scheme )
+                .Distinct();
 
             writer.WritePropertyName(OpenApiConstants.OpenApiDocSchemes);
 

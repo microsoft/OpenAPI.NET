@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -15,10 +16,27 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiServer : OpenApiElement, IOpenApiExtension
     {
+        /// <summary>
+        /// An optional string describing the host designated by the URL. CommonMark syntax MAY be used for rich text representation.
+        /// </summary>
         public string Description { get; set; }
-        public string Url { get; set; }
-        public IDictionary<string, OpenApiServerVariable> Variables { get; set; } = new Dictionary<string, OpenApiServerVariable>();
 
+        /// <summary>
+        /// REQUIRED. A URL to the target host. This URL supports Server Variables and MAY be relative,
+        /// to indicate that the host location is relative to the location where the OpenAPI document is being served.
+        /// Variable substitutions will be made when a variable is named in {brackets}.
+        /// </summary>
+        public string Url { get; set; }
+
+        /// <summary>
+        /// A map between a variable name and its value. The value is used for substitution in the server's URL template.
+        /// </summary>
+        public IDictionary<string, OpenApiServerVariable> Variables { get; set; } =
+            new Dictionary<string, OpenApiServerVariable>();
+
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
+        /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         /// <summary>
@@ -43,7 +61,20 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            // nothing here
+            // No StartObject and EndObject should be written given that the server information
+            // fits into the main Swagger Object in V2, as opposed to a separate object.
+
+            // Divide the URL in the Url property into host and basePath required in OpenAPI V2
+            // The Url property cannotcontain path templating to be valid for V2 serialization.
+            var url = new Uri(Url);
+
+            // host
+            writer.WriteStringProperty(
+                OpenApiConstants.OpenApiDocHost,
+                url.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
+
+            // basePath
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocBasePath, url.AbsolutePath);
         }
     }
 }

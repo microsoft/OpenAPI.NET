@@ -64,6 +64,7 @@ namespace Microsoft.OpenApi.Writers
                     writer.WriteNull();
                 }
             }
+
             writer.WriteEndObject();
         }
 

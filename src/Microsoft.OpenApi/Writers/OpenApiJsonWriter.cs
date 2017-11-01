@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Writers
             Scope preScope = CurrentScope();
 
             StartScope(ScopeType.Object);
-
+            
             if (preScope != null && preScope.Type == ScopeType.Array)
             {
                 Writer.WriteLine();
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write JSOn end object.
+        /// Write JSON end object.
         /// </summary>
         public override void WriteEndObject()
         {

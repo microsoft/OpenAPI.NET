@@ -4,12 +4,12 @@
 // ------------------------------------------------------------
 
 using System;
-using System.IO;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
-namespace Microsoft.OpenApi.Models.Tests
+namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiContactTests
     {
@@ -46,8 +46,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceContactAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = @"
-{
+            string expect = 
+@"{
   ""name"": ""API Support"",
   ""url"": ""http://www.example.com/support"",
   ""email"": ""support@example.com"",
@@ -67,8 +67,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceContactAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = @"
-name: API Support
+            string expect = 
+@"name: API Support
 url: http://www.example.com/support
 email: support@example.com
 x-internal-id: 42";

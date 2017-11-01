@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.IO;
 
 namespace Microsoft.OpenApi.Writers
@@ -13,8 +12,6 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public class OpenApiYamlWriter : OpenApiWriterBase
     {
-        protected override int IndentShift { get { return -1; } }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiYamlWriter"/> class.
         /// </summary>
@@ -34,14 +31,22 @@ namespace Microsoft.OpenApi.Writers
         {
         }
 
+        protected override int IndentShift
+        {
+            get
+            {
+                return -1;
+            }
+        }
+
         /// <summary>
         /// Write YAML start object.
         /// </summary>
         public override void WriteStartObject()
         {
-            Scope previousScope = CurrentScope();
+            var previousScope = CurrentScope();
 
-            Scope currentScope = StartScope(ScopeType.Object);
+            var currentScope = StartScope(ScopeType.Object);
 
             IncreaseIndentation();
 
@@ -56,7 +61,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndObject()
         {
-            Scope currentScope = EndScope(ScopeType.Object);
+            var currentScope = EndScope(ScopeType.Object);
             DecreaseIndentation();
         }
 
@@ -74,7 +79,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndArray()
         {
-            Scope current = EndScope(ScopeType.Array);
+            var current = EndScope(ScopeType.Array);
             DecreaseIndentation();
         }
 
@@ -84,8 +89,8 @@ namespace Microsoft.OpenApi.Writers
         public override void WritePropertyName(string name)
         {
             VerifyCanWritePropertyName(name);
-            
-            Scope current = CurrentScope();
+
+            var current = CurrentScope();
 
             if (current.ObjectCount == 0)
             {
@@ -99,10 +104,12 @@ namespace Microsoft.OpenApi.Writers
                 }
                 else
                 {
-                    if (!IsTopLevelObjectScope())
+                    // If this object is the outermost scope, there is no need to insert a newline.
+                    if (!IsTopLevelScope())
                     {
                         Writer.WriteLine();
                     }
+
                     WriteIndentation();
                 }
             }
@@ -150,7 +157,12 @@ namespace Microsoft.OpenApi.Writers
         {
             if (IsArrayScope())
             {
-                Writer.WriteLine();
+                // If array is the outermost scope and this is the first item, there is no need to insert a newline.
+                if (!IsTopLevelScope() || CurrentScope().ObjectCount != 0)
+                {
+                    Writer.WriteLine();
+                }
+
                 WriteIndentation();
                 Writer.Write(WriterConstants.PrefixOfArrayItem);
 

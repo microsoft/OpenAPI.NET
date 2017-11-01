@@ -12,8 +12,12 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Security Requirement Object
     /// </summary>
-    public class OpenApiSecurityRequirement : OpenApiElement, IOpenApiElement
+    public class OpenApiSecurityRequirement : OpenApiElement
     {
+        /// <summary>
+        /// Lists the required security schemes along with a list of strings populated with scopes
+        /// only when the security scheme is OAuth2 or OpenIdConnect.
+        /// </summary>
         public Dictionary<OpenApiSecurityScheme, List<string>> Schemes { get; set; } = new Dictionary<OpenApiSecurityScheme, List<string>>();
 
         /// <summary>
@@ -31,19 +35,15 @@ namespace Microsoft.OpenApi.Models
             foreach (var scheme in Schemes)
             {
                 writer.WritePropertyName(scheme.Key.Pointer.TypeName);
-                if (scheme.Value.Count > 0)
+                
+                writer.WriteStartArray();
+
+                foreach (var scope in scheme.Value)
                 {
-                    writer.WriteStartArray();
-                    foreach (var scope in scheme.Value)
-                    {
-                        writer.WriteValue(scope);
-                    }
-                    writer.WriteEndArray();
+                    writer.WriteValue(scope);
                 }
-                else
-                {
-                    writer.WriteValue("[]");
-                }
+
+                writer.WriteEndArray();
             }
             writer.WriteEndObject();
         }
@@ -63,6 +63,7 @@ namespace Microsoft.OpenApi.Models
             foreach (var scheme in Schemes)
             {
                 writer.WritePropertyName(scheme.Key.Pointer.TypeName);
+
                 writer.WriteStartArray();
 
                 foreach (var scope in scheme.Value)
@@ -72,6 +73,7 @@ namespace Microsoft.OpenApi.Models
 
                 writer.WriteEndArray();
             }
+
             writer.WriteEndObject();
         }
     }
