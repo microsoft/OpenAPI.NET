@@ -77,24 +77,24 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("type", Type.ToString());
-            writer.WriteStringProperty("description", Description);
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocType, Type.ToString());
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
 
             switch (Type)
             {
                 case SecuritySchemeType.http:
-                    writer.WriteStringProperty("scheme", Scheme);
-                    writer.WriteStringProperty("bearerFormat", BearerFormat);
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocScheme, Scheme);
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocBearerFormat, BearerFormat);
                     break;
                 case SecuritySchemeType.oauth2:
-                    writer.WriteObject("flows", Flows, (w, o) => o.WriteAsV3(w));
+                    writer.WriteObject(OpenApiConstants.OpenApiDocFlows, Flows, (w, o) => o.WriteAsV3(w));
                     break;
                 case SecuritySchemeType.apiKey:
-                    writer.WriteStringProperty("in", In.ToString());
-                    writer.WriteStringProperty("name", Name);
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocIn, In.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocName, Name);
                     break;
                 case SecuritySchemeType.openIdConnect:
-                    writer.WriteStringProperty("openIdConnectUrl", OpenIdConnectUrl?.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocOpenIdConnectUrl, OpenIdConnectUrl?.ToString());
                     break;
             }
 
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Type == SecuritySchemeType.http && Scheme != "basic")
+            if (Type == SecuritySchemeType.http && Scheme != OpenApiConstants.OpenApiDocBasic)
             {
                 // Bail because V2 does not support non-basic HTTP scheme
                 writer.WriteStartObject();
@@ -132,22 +132,22 @@ namespace Microsoft.OpenApi.Models
             switch (Type)
             {
                 case SecuritySchemeType.http:
-                    writer.WriteStringProperty("type", "basic");
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocType, OpenApiConstants.OpenApiDocBasic);
                     break;
 
                 case SecuritySchemeType.oauth2:
-                    writer.WriteStringProperty("type", "oauth2");
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocType, Type.ToString());
                     WriteOAuthFlowForV2(writer, Flows);
                     break;
 
                 case SecuritySchemeType.apiKey:
-                    writer.WriteStringProperty("type", "apiKey");
-                    writer.WriteStringProperty("in", In.ToString());
-                    writer.WriteStringProperty("name", Name);
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocType, Type.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocIn, In.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocName, Name);
                     break;
             }
 
-            writer.WriteStringProperty("description", Description);
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
             writer.WriteEndObject();
         }
 

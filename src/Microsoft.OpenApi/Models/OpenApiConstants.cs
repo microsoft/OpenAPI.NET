@@ -205,6 +205,14 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocMapping = "mapping";
 
+        public const string OpenApiDocScheme = "scheme";
+
+        public const string OpenApiDocBearerFormat = "bearerFormat";
+
+        public const string OpenApiDocFlows = "flows";
+
+        public const string OpenApiDocOpenIdConnectUrl = "openIdConnectUrl";
+
         public const string OpenApiDocDefaultName = "Default Name";
 
         public const string OpenApiDocDefaultDefault = "Default Default";
@@ -231,6 +239,12 @@ namespace Microsoft.OpenApi.Models
         public const string OpenApiDocSecurityDefinitions = "securityDefinitions";
 
         public const string OpenApiDocDefinitions = "definitions";
+
+        public const string OpenApiDocBasic = "basic";
+
+        public const string OpenApiDocConsumes = "consumes";
+
+        public const string OpenApiDocProducts = "produces";
 
         #endregion
     }

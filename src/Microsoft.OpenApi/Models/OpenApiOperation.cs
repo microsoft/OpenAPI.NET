@@ -158,19 +158,19 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // tags
-            writer.WriteList("tags", Tags, (w, t) => t.WriteAsV2(w));
+            writer.WriteList(OpenApiConstants.OpenApiDocTags, Tags, (w, t) => t.WriteAsV2(w));
 
             // summary
-            writer.WriteStringProperty("summary", Summary);
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSummary, Summary);
 
             // description
-            writer.WriteStringProperty("description", Description);
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
 
             // externalDocs
-            writer.WriteObject("externalDocs", ExternalDocs, (w, e) => e.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.OpenApiDocExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
 
             // operationId
-            writer.WriteStringProperty("operationId", OperationId);
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocOperationId, OperationId);
             
             var parameters = new List<OpenApiParameter>(Parameters);
             
