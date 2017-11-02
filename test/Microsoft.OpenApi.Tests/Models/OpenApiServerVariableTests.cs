@@ -12,8 +12,8 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiServerVariableTests
     {
-        public static OpenApiServerVariable BasicVariable = new OpenApiServerVariable();
-        public static OpenApiServerVariable AdvanceVariable = new OpenApiServerVariable()
+        public static OpenApiServerVariable BasicServerVariable = new OpenApiServerVariable();
+        public static OpenApiServerVariable AdvancedServerVariable = new OpenApiServerVariable()
         {
             Default = "8443",
             Enum = new List<string>
@@ -30,14 +30,14 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicServerVariableAsV3Works(OpenApiFormat format, string expect)
         {
             // Arrange & Act
-            string actual = BasicVariable.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
+            string actual = BasicServerVariable.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
             actual.Should().Be(expect);
         }
 
         [Fact]
-        public void SerializeAdvanceServerVariableAsV3JsonWorks()
+        public void SerializeAdvancedServerVariableAsV3JsonWorks()
         {
             // Arrange
             string expect = 
@@ -51,14 +51,14 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvanceVariable.SerializeAsJson();
+            string actual = AdvancedServerVariable.SerializeAsJson();
 
             // Assert
             actual.Should().Be(expect);
         }
 
         [Fact]
-        public void SerializeAdvanceServerVariableAsV3YamlWorks()
+        public void SerializeAdvancedServerVariableAsV3YamlWorks()
         {
             // Arrange
             string expect = 
@@ -69,7 +69,7 @@ enum:
   - 443";
 
             // Act
-            string actual = AdvanceVariable.SerializeAsYaml();
+            string actual = AdvancedServerVariable.SerializeAsYaml();
 
             // Assert
             actual.Should().Be(expect);
