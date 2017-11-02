@@ -3,8 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using Microsoft.OpenApi.Readers.YamlReaders;
-using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
+using Microsoft.OpenApi.Readers.ParseNodes;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests

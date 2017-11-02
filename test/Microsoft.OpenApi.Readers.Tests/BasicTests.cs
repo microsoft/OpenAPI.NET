@@ -6,7 +6,6 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.OpenApi.Readers.YamlReaders;
 using SharpYaml.Serialization;
 using Xunit;
 

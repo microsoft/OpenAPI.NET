@@ -7,7 +7,7 @@ using System;
 using SharpYaml.Serialization;
 using Microsoft.OpenApi.Any;
 
-namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
+namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal class ValueNode : ParseNode
     {

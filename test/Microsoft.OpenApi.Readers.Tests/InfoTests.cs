@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Readers.YamlReaders;
 using System.Linq;
 using Xunit;
 

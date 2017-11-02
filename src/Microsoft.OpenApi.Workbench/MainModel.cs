@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.YamlReaders;
+using Microsoft.OpenApi.Readers;
 
 namespace Microsoft.OpenApi.Workbench
 {

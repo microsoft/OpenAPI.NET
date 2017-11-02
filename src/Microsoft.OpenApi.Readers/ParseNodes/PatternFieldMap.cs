@@ -3,13 +3,12 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Readers.Interface;
 
-namespace Microsoft.OpenApi.Readers.YamlReaders
+namespace Microsoft.OpenApi.Readers.ParseNodes
 {
-    public class OpenApiDiagnostic : IDiagnostic
+    internal class PatternFieldMap<T> : Dictionary<Func<string, bool>, Action<T, string, ParseNode>>
     {
-        public IList<OpenApiError> Errors { get; set; } = new List<OpenApiError>();
     }
 }

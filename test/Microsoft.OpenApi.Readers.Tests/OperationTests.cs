@@ -4,9 +4,8 @@
 // ------------------------------------------------------------
 
 using System.Linq;
-using Microsoft.OpenApi.Readers.YamlReaders;
-using Xunit;
 using Microsoft.OpenApi.Models;
+using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
