@@ -64,14 +64,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            // authorizationUrl
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocAuthorizationUrl, AuthorizationUrl?.ToString());
-
-            // tokenUrl
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTokenUrl, TokenUrl?.ToString());
-
-            // scopes
-            writer.WriteMap(OpenApiConstants.OpenApiDocScopes, Scopes, (w, s) => w.WriteValue(s));
+            // OAuthFlow object does not exist in V2.
         }
     }
 }

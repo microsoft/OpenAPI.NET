@@ -201,6 +201,10 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocTrace = "trace";
 
+        public const string OpenApiDocPropertyName = "propertyName";
+
+        public const string OpenApiDocMapping = "mapping";
+
         public const string OpenApiDocDefaultName = "Default Name";
 
         public const string OpenApiDocDefaultDefault = "Default Default";
@@ -223,6 +227,10 @@ namespace Microsoft.OpenApi.Models
         public const string OpenApiDocBasePath = "basePath";
 
         public const string OpenApiDocSchemes = "schemes";
+
+        public const string OpenApiDocSecurityDefinitions = "securityDefinitions";
+
+        public const string OpenApiDocDefinitions = "definitions";
 
         #endregion
     }

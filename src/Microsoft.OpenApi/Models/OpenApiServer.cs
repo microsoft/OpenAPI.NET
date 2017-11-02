@@ -61,20 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            // No StartObject and EndObject should be written given that the server information
-            // fits into the main Swagger Object in V2, as opposed to a separate object.
-
-            // Divide the URL in the Url property into host and basePath required in OpenAPI V2
-            // The Url property cannotcontain path templating to be valid for V2 serialization.
-            var url = new Uri(Url);
-
-            // host
-            writer.WriteStringProperty(
-                OpenApiConstants.OpenApiDocHost,
-                url.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
-
-            // basePath
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocBasePath, url.AbsolutePath);
+            // Server object does not exist in V2.
         }
     }
 }

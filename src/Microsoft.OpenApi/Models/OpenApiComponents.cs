@@ -109,22 +109,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteMap("definitions", Schemas, (w, s) => s.WriteAsV2(w));
-            writer.WriteMap("responses", Responses, (w, r) => r.WriteAsV2(w));
-            writer.WriteMap("parameters", Parameters, (w, p) => p.WriteAsV2(w));
-        }
-
-        /// <summary>
-        /// Serialize <see cref="SecuritySchemes"/> in <see cref="OpenApiComponents"/> to OpenApi V2
-        /// </summary>
-        internal void WriteSecurityDefinitionsV2(IOpenApiWriter writer)
-        {
-            writer.WriteMap("securityDefinitions", SecuritySchemes, (w, s) => s.WriteAsV2(w));
+            // Components object does not exist in V2.
         }
     }
 }

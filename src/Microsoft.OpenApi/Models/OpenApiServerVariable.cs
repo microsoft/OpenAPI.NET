@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            // This element has no equivalence in V2.
+            // ServerVariable does not exist in V2.
         }
     }
 }

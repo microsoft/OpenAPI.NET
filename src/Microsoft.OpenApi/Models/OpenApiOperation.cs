@@ -156,30 +156,49 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
+
+            // tags
             writer.WriteList("tags", Tags, (w, t) => t.WriteAsV2(w));
+
+            // summary
             writer.WriteStringProperty("summary", Summary);
+
+            // description
             writer.WriteStringProperty("description", Description);
+
+            // externalDocs
             writer.WriteObject("externalDocs", ExternalDocs, (w, e) => e.WriteAsV2(w));
 
+            // operationId
             writer.WriteStringProperty("operationId", OperationId);
-
+            
             var parameters = new List<OpenApiParameter>(Parameters);
-
+            
             if (RequestBody != null)
             {
-                RequestBody.WriteAsV2(writer);
+                // consumes
+                writer.WritePropertyName("consumes");
+                writer.WriteStartArray();
+                var consumes = RequestBody.Content.Keys.Distinct().ToList();
+                foreach (var mediaType in consumes)
+                {
+                    writer.WriteValue(mediaType);
+                }
 
-                // Create bodyParameter
+                writer.WriteEndArray();
+
+                // Create a parameter as BodyParameter type and add to Parameters.
+                // This type will be used to populate the In property as "body" when Parameters is serialized.
                 var bodyParameter = new BodyParameter
                 {
-                    Name = "body",
                     Description = RequestBody.Description,
-                    Schema = RequestBody.Content.First().Value.Schema
+                    Schema = RequestBody.Content.First().Value.Schema,
+                    Format = new List<string>(consumes)
                 };
-                // add to parameters
+                
                 parameters.Add(bodyParameter);
             }
-
+            
             var produces = Responses.Where(r => r.Value.Content != null)
                 .SelectMany(r => r.Value.Content?.Keys)
                 .Distinct()
@@ -187,6 +206,7 @@ namespace Microsoft.OpenApi.Models
 
             if (produces.Any())
             {
+                // produces
                 writer.WritePropertyName("produces");
                 writer.WriteStartArray();
                 foreach (var mediaType in produces)
@@ -197,12 +217,38 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteEndArray();
             }
 
+            // parameters
             // Use the parameters created locally to include request body if exists.
-            writer.WriteList("parameters", parameters, (w, p) => p.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocParameters, parameters, (w, p) => p.WriteAsV2(w));
 
-            writer.WriteMap("responses", Responses, (w, r) => r.WriteAsV2(w));
-            writer.WriteBoolProperty("deprecated", Deprecated, DeprecatedDefault);
-            writer.WriteList("security", Security, (w, s) => s.WriteAsV2(w));
+            // responses
+            writer.WriteOptionalMap(OpenApiConstants.OpenApiDocResponses, Responses, (w, r) => r.WriteAsV2(w));
+
+            // schemes
+            // All schemes in the Servers are extracted, regardless of whether the host matches
+            // the host defined in the outermost Swagger object. This is due to the 
+            // inaccessibility of information for that host in the context of an inner object like this Operation.
+            var schemes = Servers.Select(
+                    s =>
+                    {
+                        Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
+                        return url?.Scheme;
+                    })
+                .Where(s => s != null)
+                .Distinct()
+                .ToList();
+
+            writer.WriteList(OpenApiConstants.OpenApiDocSchemes, schemes, (w, s) => w.WriteValue(s));
+            
+            // deprecated
+            writer.WriteBoolProperty(OpenApiConstants.OpenApiDocDeprecated, Deprecated, false);
+
+            // security
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocSecurity, Security, (w, s) => s.WriteAsV2(w));
+
+            // specification extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
     }

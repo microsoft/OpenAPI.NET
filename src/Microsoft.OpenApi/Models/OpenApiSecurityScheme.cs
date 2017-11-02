@@ -64,10 +64,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Pointer
-        {
-            get; set;
-        }
+        public OpenApiReference Pointer { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
@@ -100,7 +97,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteStringProperty("openIdConnectUrl", OpenIdConnectUrl?.ToString());
                     break;
             }
-            
+
             writer.WriteEndObject();
         }
 
@@ -140,7 +137,7 @@ namespace Microsoft.OpenApi.Models
 
                 case SecuritySchemeType.oauth2:
                     writer.WriteStringProperty("type", "oauth2");
-                    WriteFlowOAuth2V2(writer);
+                    WriteOAuthFlowForV2(writer, Flows);
                     break;
 
                 case SecuritySchemeType.apiKey:
@@ -154,33 +151,42 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private void WriteFlowOAuth2V2(IOpenApiWriter writer)
+        private static void WriteOAuthFlowForV2(IOpenApiWriter writer, OpenApiOAuthFlows flows)
         {
-            if (Flows == null)
+            if (flows != null)
             {
-                return;
+                if (flows.Implicit != null)
+                {
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocImplicit, flows.Implicit);
+                }
+                else if (flows.Password != null)
+                {
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocPassword, flows.Password);
+                }
+                else if (flows.ClientCredentials != null)
+                {
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocApplication, flows.ClientCredentials);
+                }
+                else if (flows.AuthorizationCode != null)
+                {
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocAccessCode, flows.AuthorizationCode);
+                }
             }
+        }
 
-            if (Flows.Implicit != null)
-            {
-                writer.WriteStringProperty(OpenApiConstants.OpenApiDocFlow, OpenApiConstants.OpenApiDocImplicit);
-                Flows.Implicit.WriteAsV2(writer);
-            }
-            else if (Flows.Password != null)
-            {
-                writer.WriteStringProperty(OpenApiConstants.OpenApiDocPassword, OpenApiConstants.OpenApiDocImplicit);
-                Flows.Password.WriteAsV2(writer);
-            }
-            else if (Flows.ClientCredentials != null)
-            {
-                writer.WriteStringProperty(OpenApiConstants.OpenApiDocApplication, OpenApiConstants.OpenApiDocImplicit);
-                Flows.ClientCredentials.WriteAsV2(writer);
-            }
-            else if (Flows.AuthorizationCode != null)
-            {
-                writer.WriteStringProperty(OpenApiConstants.OpenApiDocAccessCode, OpenApiConstants.OpenApiDocImplicit);
-                Flows.AuthorizationCode.WriteAsV2(writer);
-            }
+        private static void WriteOAuthFlowForV2(IOpenApiWriter writer, string flowValue, OpenApiOAuthFlow flow)
+        {
+            // flow
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocFlow, flowValue);
+
+            // authorizationUrl
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocAuthorizationUrl, flow.AuthorizationUrl?.ToString());
+
+            // tokenUrl
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTokenUrl, flow.TokenUrl?.ToString());
+
+            // scopes
+            writer.WriteMap(OpenApiConstants.OpenApiDocScopes, flow.Scopes, (w, s) => w.WriteValue(s));
         }
     }
 }

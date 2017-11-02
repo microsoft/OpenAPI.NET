@@ -74,15 +74,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            writer.WritePropertyName("consumes");
-            writer.WriteStartArray();
-            var consumes = Content.Keys.Distinct();
-            foreach (var mediaType in consumes)
-            {
-                writer.WriteValue(mediaType);
-            }
-
-            writer.WriteEndArray();
+            // RequestBody object does not exist in V2.
         }
     }
 }

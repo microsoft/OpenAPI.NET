@@ -360,9 +360,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "maxLength", (o,n) => { GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue()); } },
             { "minLength", (o,n) => { GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue()); } },
             { "readOnly", (o,n) => { GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue()); } },
-            { "default", (o,n) => { GetOrCreateSchema(o).Default = n.GetScalarValue(); } },
+            { "default", (o,n) => { GetOrCreateSchema(o).Default =  new OpenApiString(n.GetScalarValue()); } },
             { "pattern", (o,n) => { GetOrCreateSchema(o).Pattern = n.GetScalarValue(); } },
-            { "enum", (o,n) => { GetOrCreateSchema(o).Enum = n.CreateSimpleList<String>(l=>l.GetScalarValue()); } },
+            { "enum", (o,n) => { GetOrCreateSchema(o).Enum = n.CreateSimpleList<IOpenApiAny>(l=> new OpenApiString(l.GetScalarValue()) ); } },
             { "schema", (o,n) => { o.Schema = LoadSchema(n); } },
         };
 
@@ -634,24 +634,26 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 { "maxProperties", (o,n) => { o.MaxProperties = int.Parse(n.GetScalarValue()); } },
                 { "minProperties", (o,n) => { o.MinProperties = int.Parse(n.GetScalarValue()); } },
                 { "required", (o,n) => { o.Required = n.CreateSimpleList<string>(n2 => n2.GetScalarValue()).ToArray(); } },
-                { "enum", (o,n) => { o.Enum =  n.CreateSimpleList<string>((s)=> s.GetScalarValue()); } },
+                { "enum", (o,n) => { o.Enum =  n.CreateSimpleList<IOpenApiAny>((s)=> new OpenApiString(s.GetScalarValue())); } },
 
                 { "type", (o,n) => { o.Type = n.GetScalarValue(); } },
                 { "allOf", (o,n) => { o.AllOf = n.CreateList(LoadSchema); } },
                 { "items", (o,n) => { o.Items = LoadSchema(n); } },
                 { "properties", (o,n) => { o.Properties = n.CreateMap(LoadSchema); } },
-                { "additionalProperties", (o,n) => { if (n is ValueNode) { o.AdditionalPropertiesAllowed = bool.Parse(n.GetScalarValue()); }
-                                                     else { o.AdditionalProperties = LoadSchema(n); }
-                                                    } },
+                { "additionalProperties", (o,n) => { o.AdditionalProperties = LoadSchema(n); }
+                                                     },
                 { "description", (o,n) => { o.Type = n.GetScalarValue(); } },
                 { "format", (o,n) => { o.Description = n.GetScalarValue(); } },
-                { "default", (o,n) => { o.Default = n.GetScalarValue(); } },
+                { "default", (o,n) =>
+                {
+                    o.Default = new OpenApiString(n.GetScalarValue());
+                } },
 
                 // discriminator
                 { "readOnly", (o,n) => { o.ReadOnly = bool.Parse(n.GetScalarValue()); } },
                 // xml
                 { "externalDocs", (o,n) => { o.ExternalDocs = LoadExternalDocs(n); } },
-                { "example", (o,n) => { o.Example = n.GetScalarValue(); } },
+                { "example", (o,n) => { o.Example =new OpenApiString( n.GetScalarValue()); } },
 
 
         };

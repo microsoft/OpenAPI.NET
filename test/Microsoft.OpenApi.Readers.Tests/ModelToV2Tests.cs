@@ -205,12 +205,14 @@ namespace Microsoft.OpenApi.Readers.Tests
                     }
                 }
             };
+
             pathItem.AddOperation(OperationType.Post, operation);
             openApiDoc.Paths.Add("/resource", pathItem);
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
             var bodyparam = jObject["paths"]["/resource"]["post"]["parameters"][0];
+
             Assert.Equal("body", (string)bodyparam["in"]);
             Assert.Equal("string", (string)bodyparam["schema"]["type"]);
             Assert.Equal("100", (string)bodyparam["schema"]["maxLength"]);
