@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                         }
                     }
                 },
-                Responses = new Dictionary<string, OpenApiResponse>
+                Responses = new OpenApiResponses
                 {
                     {
                         "200", new OpenApiResponse
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                         }
                     }
                 },
-                Responses = new Dictionary<string, OpenApiResponse>
+                Responses = new OpenApiResponses
                 {
                     {
                         "200", new OpenApiResponse
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var pathItem = new OpenApiPathItem();
             var operation = new OpenApiOperation
             {
-                Responses = new Dictionary<string, OpenApiResponse>
+                Responses = new OpenApiResponses
                 {
                     {
                         "200", new OpenApiResponse
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                         }
                     }
                 },
-                Responses = new Dictionary<string, OpenApiResponse>
+                Responses = new OpenApiResponses
                 {
                     {
                         "200", new OpenApiResponse

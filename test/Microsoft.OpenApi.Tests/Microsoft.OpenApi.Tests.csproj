@@ -48,7 +48,6 @@
     <Compile Include="Models\OpenApiSecuritySchemeTests.cs" />
     <Compile Include="Models\OpenApiMediaTypeTests.cs" />
     <Compile Include="Models\OpenApiEncodingTests.cs" />
-    <Compile Include="OpenApiDocumentTestHelper.cs" />
     <Compile Include="Writers\OpenApiJsonWriterTests.cs" />
     <Compile Include="Writers\OpenApiWriterAnyExtensionsTests.cs" />
     <Compile Include="Writers\OpenApiYamlWriterTests.cs" />

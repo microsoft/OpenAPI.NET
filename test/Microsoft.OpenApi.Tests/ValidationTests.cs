@@ -15,9 +15,9 @@ namespace Microsoft.OpenApi.Tests
         public void ResponseMustHaveADescription()
         {
             var doc = new OpenApiDocument();
-            doc.CreatePath("/test", 
-                p => p.CreateOperation(OperationType.Get, 
-                    o => o.CreateResponse("200", 
+            doc.AddPathItem("/test",
+                p => p.AddOperation(OperationType.Get,
+                    o => o.AddResponse("200",
                         r => { }
                    )
                )
