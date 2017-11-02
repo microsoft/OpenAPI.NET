@@ -121,7 +121,7 @@
     <value>The argument '{0}' is null, empty or consists only of white-space.</value>
   </data>
   <data name="ExtensionFieldNameMustBeginWithXDash" xml:space="preserve">
-    <value>The filed name of extension doesn't begin with x-.</value>
+    <value>The filed name '{0}' of extension doesn't begin with x-.</value>
   </data>
   <data name="OpenApiExceptionGeneralError" xml:space="preserve">
     <value>An error occurred while processing the Open API document.</value>
