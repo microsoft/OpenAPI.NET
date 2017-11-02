@@ -244,7 +244,7 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocConsumes = "consumes";
 
-        public const string OpenApiDocProducts = "produces";
+        public const string OpenApiDocProduces = "produces";
 
         #endregion
     }

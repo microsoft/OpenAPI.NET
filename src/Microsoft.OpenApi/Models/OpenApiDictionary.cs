@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// Generic dictionary type for Open API dictionary element.
     /// </summary>
     /// <typeparam name="T">The Open API element, <see cref="IOpenApiElement"/></typeparam>
-    public abstract class OpenApiDictionaryElement<T> : OpenApiElement, IDictionary<string, T>
+    public abstract class OpenApiDictionary<T> : OpenApiElement, IDictionary<string, T>
         where T : IOpenApiElement
     {
         protected IDictionary<string, T> Items { get; set; } = new Dictionary<string, T>();

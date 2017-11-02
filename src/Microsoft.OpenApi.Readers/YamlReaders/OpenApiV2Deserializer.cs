@@ -191,15 +191,19 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static FixedFieldMap<OpenApiPathItem> PathItemFixedFields = new FixedFieldMap<OpenApiPathItem>
         {
             { "$ref", (o,n) => { /* Not supported yet */} },
+            { "get", (o, n) => o.AddOperation(OperationType.Get, LoadOperation(n)) },
+            { "put", (o, n) => o.AddOperation(OperationType.Put, LoadOperation(n)) },
+            { "post", (o, n) => o.AddOperation(OperationType.Post, LoadOperation(n)) },
+            { "delete", (o, n) => o.AddOperation(OperationType.Delete, LoadOperation(n)) },
+            { "options", (o, n) => o.AddOperation(OperationType.Options, LoadOperation(n)) },
+            { "head", (o, n) => o.AddOperation(OperationType.Head, LoadOperation(n)) },
+            { "patch", (o, n) => o.AddOperation(OperationType.Patch, LoadOperation(n)) },
             { "parameters", (o,n) => { o.Parameters = n.CreateList(OpenApiV2Deserializer.LoadParameter); } },
-
         };
 
         private static PatternFieldMap<OpenApiPathItem> PathItemPatternFields = new PatternFieldMap<OpenApiPathItem>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) },
-            { (s)=> "get,put,post,delete,patch,options,head,patch".Contains(s),
-                (o,k,n)=> o.AddOperation(OperationTypeExtensions.ParseOperationType(k), OpenApiV2Deserializer.LoadOperation(n)    ) }
+            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) },
         };
 
 
@@ -236,7 +240,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "produces", (o,n) => n.Context.SetTempStorage(
                 "operationproduces",
                 n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
-            { "responses", (o,n) => { o.Responses = n.CreateMap(LoadResponse); } },
+            { "responses", (o,n) => { o.Responses = LoadResponses(n); } },
             { "deprecated", (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
             { "security", (o,n) => { o.Security = n.CreateList(LoadSecurityRequirement); } },
           };
@@ -269,9 +273,33 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 }
             }
 
-
             return operation;
         }
+
+        #region Responses Object
+
+        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>
+        {
+        };
+
+        public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
+        {
+            { (s)=> !s.StartsWith("x-"), (o, p, n)=> o.Add(p, LoadResponse(n)) },
+            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) }
+        };
+
+        public static OpenApiResponses LoadResponses(ParseNode node)
+        {
+            MapNode mapNode = node.CheckMapNode("Responses");
+
+            OpenApiResponses domainObject = new OpenApiResponses();
+
+            ParseMap(mapNode, domainObject, ResponsesFixedFields, ResponsesPatternFields);
+
+            return domainObject;
+        }
+
+        #endregion
 
         private static OpenApiRequestBody CreateFormBody(List<OpenApiParameter> formParameters)
         {

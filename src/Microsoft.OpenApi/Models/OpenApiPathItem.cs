@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
@@ -17,32 +16,54 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiPathItem : OpenApiElement, IOpenApiExtension
     {
+        private IDictionary<OperationType, OpenApiOperation> _operations
+                    = new Dictionary<OperationType, OpenApiOperation>();
+
+        /// <summary>
+        /// An optional, string summary, intended to apply to all operations in this path.
+        /// </summary>
         public string Summary { get; set; }
+
+        /// <summary>
+        /// An optional, string description, intended to apply to all operations in this path.
+        /// </summary>
         public string Description { get; set; }
 
-        public IDictionary<string, OpenApiOperation> Operations { get { return operations; } }
-        private Dictionary<string, OpenApiOperation> operations = new Dictionary<string, OpenApiOperation>();
-
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
-        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
-
-        public void CreateOperation(OperationType operationType, Action<OpenApiOperation> configure)
+        /// <summary>
+        /// Gets the definition of operations on this path.
+        /// </summary>
+        public IReadOnlyDictionary<string, OpenApiOperation> Operations
         {
-            var operation = new OpenApiOperation();
-            configure(operation);
-            AddOperation(operationType, operation);
+            get
+            {
+                return _operations.ToDictionary(o => o.Key.GetDisplayName(), o => o.Value);
+            }
         }
 
+        /// <summary>
+        /// An alternative server array to service all operations in this path.
+        /// </summary>
+        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+
+        /// <summary>
+        /// A list of parameters that are applicable for all the operations described under this path.
+        /// These parameters can be overridden at the operation level, but cannot be removed there. 
+        /// </summary>
+        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
+        /// </summary>
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+
+        /// <summary>
+        /// Add one operation into this path item.
+        /// </summary>
+        /// <param name="operationType">The operation type kind.</param>
+        /// <param name="operation">The operation item.</param>
         public void AddOperation(OperationType operationType, OpenApiOperation operation)
         {
-            var successResponse = operation.Responses.Keys.Where(k => k.StartsWith("2")).Any();
-            if (!successResponse)
-            {
-             throw new OpenApiException("An operation requires a successful response");
-            }
-
-            this.operations.Add(operationType.GetOperationTypeName(), operation);
+            _operations[operationType] = operation;
         }
 
         /// <summary>
@@ -56,26 +77,28 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("summary", Summary);
-            writer.WriteStringProperty("description", Description);
-            if (Parameters != null && Parameters.Count > 0)
-            {
-                writer.WritePropertyName("parameters");
-                writer.WriteStartArray();
-                foreach (var parameter in Parameters)
-                {
-                    parameter.WriteAsV3(writer);
-                }
-                writer.WriteEndArray();
 
-            }
-            writer.WriteList("servers", Servers, (w, s) => s.WriteAsV3(w));
+            // summary
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSummary, Summary);
 
-            foreach (var operationPair in Operations)
+            // description
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+
+            // opertions
+            foreach (var operation in _operations)
             {
-                writer.WritePropertyName(operationPair.Key);
-                operationPair.Value.WriteAsV3(writer);
+                writer.WriteOptionalObject(operation.Key.GetDisplayName(), operation.Value, (w, o) => o.WriteAsV3(w));
             }
+
+            // servers
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocServers, Servers, (w, s) => s.WriteAsV3(w));
+
+            // parameters
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocParameters, Parameters, (w, p) => p.WriteAsV3(w));
+
+            // specification extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
 
@@ -90,26 +113,28 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("x-summary", Summary);
-            writer.WriteStringProperty("x-description", Description);
-            if (Parameters != null && Parameters.Count > 0)
+
+            // opertions except "trace"
+            foreach (var operation in _operations)
             {
-                writer.WritePropertyName("parameters");
-                writer.WriteStartArray();
-                foreach (var parameter in Parameters)
+                if (operation.Key != OperationType.Trace)
                 {
-                    parameter.WriteAsV2(writer);
+                    writer.WriteOptionalObject(operation.Key.GetDisplayName(), operation.Value, (w, o) => o.WriteAsV2(w));
                 }
-                writer.WriteEndArray();
-
             }
-            //writer.WriteList("x-servers", Servers, WriteServer);
 
-            foreach (var operationPair in Operations)
-            {
-                writer.WritePropertyName(operationPair.Key);
-                operationPair.Value.WriteAsV2(writer);
-            }
+            // parameters
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocParameters, Parameters, (w, p) => p.WriteAsV2(w));
+
+            // write "summary" as extensions
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocExtensionFieldNamePrefix + OpenApiConstants.OpenApiDocSummary, Summary);
+
+            // write "description" as extensions
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocExtensionFieldNamePrefix + OpenApiConstants.OpenApiDocDescription, Description);
+
+            // specification extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
     }
