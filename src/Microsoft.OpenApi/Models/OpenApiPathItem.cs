@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Models
             // description
             writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
 
-            // opertions
+            // operations
             foreach (var operation in _operations)
             {
                 writer.WriteOptionalObject(operation.Key.GetDisplayName(), operation.Value, (w, o) => o.WriteAsV3(w));
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            // opertions except "trace"
+            // operations except "trace"
             foreach (var operation in _operations)
             {
                 if (operation.Key != OperationType.Trace)

@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Models
         Trace
     }
 
-    public static class OperationTypeKindExtensions
+    public static class OperationTypeExtensions
     {
         /// <summary>
         /// Gets the enum display name.
