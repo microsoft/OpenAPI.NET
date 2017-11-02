@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi
 
             if (!name.StartsWith(OpenApiConstants.OpenApiDocExtensionFieldNamePrefix))
             {
-                throw new OpenApiException(SRResource.ExtensionFieldNameMustBeginWithXDash);
+                throw new OpenApiException(String.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
             }
         }
     }

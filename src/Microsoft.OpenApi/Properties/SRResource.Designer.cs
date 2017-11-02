@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The filed name of extension doesn&apos;t begin with x-..
+        ///   Looks up a localized string similar to The filed name &apos;{0}&apos; of extension doesn&apos;t begin with x-..
         /// </summary>
         internal static string ExtensionFieldNameMustBeginWithXDash {
             get {
