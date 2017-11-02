@@ -101,6 +101,21 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write the optional of collection string.
+        /// </summary>
+        /// <param name="writer">The Open API writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="elements">The collection values.</param>
+        /// <param name="action">The collection element writer action.</param>
+        public static void WriteOptionalCollection(this IOpenApiWriter writer, string name, IEnumerable<string> elements, Action<IOpenApiWriter, string> action)
+        {
+            if (elements != null && elements.Any())
+            {
+                writer.WriteCollectionInternal(name, elements, action);
+            }
+        }
+
+        /// <summary>
         /// Write the optional Open API object/element collection.
         /// </summary>
         /// <typeparam name="T">The Open API element type. <see cref="IOpenApiElement"/></typeparam>
@@ -109,10 +124,11 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="elements">The collection values.</param>
         /// <param name="action">The collection element writer action.</param>
         public static void WriteOptionalCollection<T>(this IOpenApiWriter writer, string name, IEnumerable<T> elements, Action<IOpenApiWriter, T> action)
+            where T : IOpenApiElement
         {
-            if (elements != null)
+            if (elements != null && elements.Any())
             {
-                writer.WriteRequiredCollection(name, elements, action);
+                writer.WriteCollectionInternal(name, elements, action);
             }
         }
 
@@ -126,11 +142,15 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="action">The collection element writer action.</param>
         public static void WriteRequiredCollection<T>(this IOpenApiWriter writer, string name, IEnumerable<T> elements, Action<IOpenApiWriter, T> action)
         {
+            writer.WriteCollectionInternal(name, elements, action);
+        }
+
+        private static void WriteCollectionInternal<T>(this IOpenApiWriter writer, string name, IEnumerable<T> elements, Action<IOpenApiWriter, T> action)
+        {
             CheckArguments(writer, name, action);
 
             writer.WritePropertyName(name);
             writer.WriteStartArray();
-
             if (elements != null)
             {
                 foreach (var item in elements)
@@ -138,7 +158,6 @@ namespace Microsoft.OpenApi.Writers
                     action(writer, item);
                 }
             }
-
             writer.WriteEndArray();
         }
 
