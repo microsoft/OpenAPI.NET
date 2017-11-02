@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SharpYaml.Serialization;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
@@ -56,6 +57,20 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Create a <see cref="OpenApiArray"/>
+        /// </summary>
+        /// <returns>The created Any object.</returns>
+        public override IOpenApiAny CreateAny()
+        {
+            var array = new OpenApiArray();
+            foreach (var node in this)
+            {
+                array.Add(node.CreateAny());
+            }
+            return array;
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SharpYaml.Schemas;
 using SharpYaml.Serialization;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
@@ -169,6 +170,21 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             }
 
             return scalarNode.Value;
+        }
+
+        /// <summary>
+        /// Create a <see cref="OpenApiObject"/>
+        /// </summary>
+        /// <returns>The created Any object.</returns>
+        public override IOpenApiAny CreateAny()
+        {
+            var apiObject = new OpenApiObject();
+            foreach (var node in this)
+            {
+                apiObject.Add(node.Name, node.Value.CreateAny());
+            }
+
+            return apiObject;
         }
     }
 }

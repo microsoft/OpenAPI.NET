@@ -3,7 +3,9 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using SharpYaml.Serialization;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
@@ -26,6 +28,36 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
             }
 
             return scalarNode.Value;
+        }
+
+        /// <summary>
+        /// Create a <see cref="IOpenApiPrimitive"/>
+        /// </summary>
+        /// <returns></returns>
+        public override IOpenApiAny CreateAny()
+        {
+            string value = GetScalarValue();
+
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                return new OpenApiNull();
+            }
+
+            if (value == "true")
+            {
+                return new OpenApiBoolean(true);
+            }
+
+            if (value == "false")
+            {
+                return new OpenApiBoolean(false);
+            }
+
+            // TODO: add more codes to identify each primitive types
+
+
+            // if we can't identify the type of value, return it as string.
+            return new OpenApiString(value);
         }
     }
 }

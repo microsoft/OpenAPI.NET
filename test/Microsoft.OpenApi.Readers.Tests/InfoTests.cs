@@ -3,7 +3,9 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Readers.YamlReaders;
+using System.Linq;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -28,19 +30,40 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void ParseCompleteHeaderOpenApi()
         {
+            // Arrange
             var stream = GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.CompleteHeader.yaml");
 
+            // Act
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
+            // Assert
             Assert.Equal("1.0.0", openApiDoc.SpecVersion.ToString());
 
             Assert.Empty(openApiDoc.Paths);
-            Assert.Equal("The Api", openApiDoc.Info.Title);
-            Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());
-            Assert.Equal("This is an api", openApiDoc.Info.Description);
-            Assert.Equal("http://example.org/Dowhatyouwant", openApiDoc.Info.TermsOfService.OriginalString);
-            Assert.Equal("Darrel Miller", openApiDoc.Info.Contact.Name);
-            //   Assert.Equal("@darrel_miller", openApiDoc.Info.Contact.Extensions["x-twitter"].GetValueNode().GetScalarValue());
+
+            // verify info
+            var info = openApiDoc.Info;
+            Assert.NotNull(info);
+            Assert.Equal("The Api", info.Title);
+            Assert.Equal("0.9.1", info.Version.ToString());
+            Assert.Equal("This is an api", info.Description);
+            Assert.Equal("http://example.org/Dowhatyouwant", info.TermsOfService.OriginalString);
+            Assert.Equal("Darrel Miller", info.Contact.Name);
+
+            // verify info's extensions
+            Assert.NotNull(info.Extensions);
+            Assert.Equal(3, info.Extensions.Count);
+
+            OpenApiString stringValue = Assert.IsType<OpenApiString>(info.Extensions["x-something"]);
+            Assert.Equal("Why does it start with x-, sigh", stringValue.Value);
+
+            OpenApiObject objValue = Assert.IsType<OpenApiObject>(info.Extensions["x-contact"]);
+            Assert.Equal(3, objValue.Count);
+            Assert.Equal(new[] { "name", "url", "email" }, objValue.Keys);
+
+            OpenApiArray arrayValue = Assert.IsType<OpenApiArray>(info.Extensions["x-list"]);
+            Assert.Equal(2, arrayValue.Count);
+            Assert.Equal(new[] { "1", "2" }, arrayValue.Select(e => ((OpenApiString)e).Value));
         }
     }
 }
