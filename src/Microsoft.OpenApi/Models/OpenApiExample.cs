@@ -35,6 +35,9 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
+        /// <summary>
+        /// Reference object.
+        /// </summary>
         public OpenApiReference Pointer
         {
             get; set;

@@ -208,6 +208,17 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteValue(value);
         }
 
+        public static void WriteBoolProperty(this IOpenApiWriter writer, string name, bool? value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            writer.WritePropertyName(name);
+            writer.WriteValue((bool)value);
+        }
+
         public static void WriteNumberProperty(this IOpenApiWriter writer, string name, decimal value, decimal? defaultValue = null)
         {
             if (defaultValue != null && value == defaultValue)

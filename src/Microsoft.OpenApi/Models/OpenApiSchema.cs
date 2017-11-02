@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public bool ExclusiveMaximum { get; set; } = false;
+        public bool? ExclusiveMaximum { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public bool ExclusiveMinimum { get; set; } = false;
+        public bool? ExclusiveMinimum { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public decimal MultipleOf { get; set; }
+        public decimal? MultipleOf { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public bool UniqueItems { get; set; }
+        public bool? UniqueItems { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -260,13 +260,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
             writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
             writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
@@ -331,17 +331,17 @@ namespace Microsoft.OpenApi.Models
             // default
             writer.WriteAnyProperty(OpenApiConstants.Default, Default);
 
-            // readOnly
-            writer.WriteBoolProperty(OpenApiConstants.Nullable, Nullable);
+            // nullable
+            writer.WriteBoolProperty(OpenApiConstants.Nullable, Nullable, false);
 
             // discriminator
             writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.WriteAsV3(w));
 
             // readOnly
-            writer.WriteBoolProperty(OpenApiConstants.ReadOnly, ReadOnly);
+            writer.WriteBoolProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
 
             // writeOnly
-            writer.WriteBoolProperty(OpenApiConstants.WriteOnly, WriteOnly);
+            writer.WriteBoolProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
 
             // xml
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.WriteAsV2(w));
@@ -353,7 +353,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteAnyProperty(OpenApiConstants.Example, Example);
 
             // deprecated
-            writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated);
+            writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -413,13 +413,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
             writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
             writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
@@ -472,13 +472,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
             writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
             writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
@@ -529,7 +529,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
 
             // readOnly
-            writer.WriteBoolProperty(OpenApiConstants.ReadOnly, ReadOnly);
+            writer.WriteBoolProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
 
             // xml
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.WriteAsV2(w));

@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         /// Furthermore, if referencing a schema which contains an example,
         /// the examples value SHALL override the example provided by the schema.
         /// </summary>
-        public IList<OpenApiExample> Examples { get; set; } = new List<OpenApiExample>();
+        public IList<OpenApiExample> Examples { get; set; }
 
         /// <summary>
         /// Example of the media type. The example SHOULD match the specified schema and encoding properties
