@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED.This string MUST be the semantic version number of the OpenAPI Specification version that the OpenAPI document uses.
         /// </summary>
-        public Version SpecVersion { get; set; } = OpenApiConstants.OpenApiDocDefaultVersion;
+        public Version SpecVersion { get; set; } = OpenApiConstants.DefaultVersion;
 
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
@@ -75,33 +75,33 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocOpenApi, SpecVersion.ToString());
+            writer.WriteStringProperty(OpenApiConstants.OpenApi, SpecVersion.ToString());
 
             // info
-            writer.WriteObject(OpenApiConstants.OpenApiDocInfo, Info, (w, i) => i.WriteAsV3(w));
+            writer.WriteObject(OpenApiConstants.Info, Info, (w, i) => i.WriteAsV3(w));
 
             // servers
-            writer.WriteList(OpenApiConstants.OpenApiDocServers, Servers, (w, s) => s.WriteAsV3(w));
+            writer.WriteList(OpenApiConstants.Servers, Servers, (w, s) => s.WriteAsV3(w));
 
             // paths
-            writer.WriteObject(OpenApiConstants.OpenApiDocPaths, Paths, (w, p) => p.WriteAsV3(w));
+            writer.WriteObject(OpenApiConstants.Paths, Paths, (w, p) => p.WriteAsV3(w));
 
             // components
             if (!Components.IsEmpty())
             {
-                writer.WriteObject(OpenApiConstants.OpenApiDocComponents, Components, (w, c) => c.WriteAsV3(w));
+                writer.WriteObject(OpenApiConstants.Components, Components, (w, c) => c.WriteAsV3(w));
             }
 
             // security
-            writer.WriteList(OpenApiConstants.OpenApiDocSecurity, SecurityRequirements, (w, s) => s.WriteAsV3(w));
+            writer.WriteList(OpenApiConstants.Security, SecurityRequirements, (w, s) => s.WriteAsV3(w));
 
             // tags
-            writer.WriteList(OpenApiConstants.OpenApiDocTags, Tags, (w, t) => t.WriteAsV3(w));
+            writer.WriteList(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV3(w));
 
             // external docs
             if (ExternalDocs.Url != null)
             {
-                writer.WriteObject(OpenApiConstants.OpenApiDocExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
+                writer.WriteObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
             }
 
             // extensions
@@ -123,39 +123,39 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // swagger
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSwagger, SpecVersion.ToString());
+            writer.WriteStringProperty(OpenApiConstants.Swagger, SpecVersion.ToString());
 
             // info
-            writer.WriteObject(OpenApiConstants.OpenApiDocInfo, Info, (w, i) => i.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.Info, Info, (w, i) => i.WriteAsV2(w));
 
             // host, basePath, schemes, consumes, produces
             WriteHostInfoV2(writer, Servers);
 
             // paths
-            writer.WriteObject(OpenApiConstants.OpenApiDocPaths, Paths, (w, p) => p.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.Paths, Paths, (w, p) => p.WriteAsV2(w));
 
             // definitions
-            writer.WriteMap(OpenApiConstants.OpenApiDocDefinitions, Components.Schemas, (w, s) => s.WriteAsV2(w));
+            writer.WriteMap(OpenApiConstants.Definitions, Components.Schemas, (w, s) => s.WriteAsV2(w));
 
             // parameters
-            writer.WriteMap(OpenApiConstants.OpenApiDocParameters, Components.Parameters, (w, p) => p.WriteAsV2(w));
+            writer.WriteMap(OpenApiConstants.Parameters, Components.Parameters, (w, p) => p.WriteAsV2(w));
             
             // responses
-            writer.WriteMap(OpenApiConstants.OpenApiDocResponses, Components.Responses, (w, r) => r.WriteAsV2(w));
+            writer.WriteMap(OpenApiConstants.Responses, Components.Responses, (w, r) => r.WriteAsV2(w));
             
             // securityDefinitions
-            writer.WriteMap(OpenApiConstants.OpenApiDocSecurityDefinitions, Components.SecuritySchemes, (w, s) => s.WriteAsV2(w));
+            writer.WriteMap(OpenApiConstants.SecurityDefinitions, Components.SecuritySchemes, (w, s) => s.WriteAsV2(w));
             
             // security
-            writer.WriteList(OpenApiConstants.OpenApiDocSecurity, SecurityRequirements, (w, s) => s.WriteAsV2(w));
+            writer.WriteList(OpenApiConstants.Security, SecurityRequirements, (w, s) => s.WriteAsV2(w));
 
             // tags
-            writer.WriteList(OpenApiConstants.OpenApiDocTags, Tags, (w, t) => t.WriteAsV2(w));
+            writer.WriteList(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV2(w));
 
             // externalDocs
             if (ExternalDocs.Url != null)
             {
-                writer.WriteObject(OpenApiConstants.OpenApiDocExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
+                writer.WriteObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
             }
 
             // extensions
@@ -181,11 +181,11 @@ namespace Microsoft.OpenApi.Models
 
             // host
             writer.WriteStringProperty(
-                OpenApiConstants.OpenApiDocHost,
+                OpenApiConstants.Host,
                 firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
 
             // basePath
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocBasePath, firstServerUrl.AbsolutePath);
+            writer.WriteStringProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
 
             // Consider all schemes of the URLs in the server list that have the same
             // host, port, and base path as the first server.
@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Models
                 .Distinct()
                 .ToList();
 
-            writer.WriteList(OpenApiConstants.OpenApiDocSchemes, schemes, (w, s) => w.WriteValue(s));
+            writer.WriteList(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
         }
     }
 }

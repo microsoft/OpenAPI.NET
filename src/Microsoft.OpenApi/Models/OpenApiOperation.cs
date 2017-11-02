@@ -158,19 +158,19 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // tags
-            writer.WriteList(OpenApiConstants.OpenApiDocTags, Tags, (w, t) => t.WriteAsV2(w));
+            writer.WriteList(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV2(w));
 
             // summary
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSummary, Summary);
+            writer.WriteStringProperty(OpenApiConstants.Summary, Summary);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // externalDocs
-            writer.WriteObject(OpenApiConstants.OpenApiDocExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
 
             // operationId
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocOperationId, OperationId);
+            writer.WriteStringProperty(OpenApiConstants.OperationId, OperationId);
             
             var parameters = new List<OpenApiParameter>(Parameters);
             
@@ -219,10 +219,10 @@ namespace Microsoft.OpenApi.Models
 
             // parameters
             // Use the parameters created locally to include request body if exists.
-            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocParameters, parameters, (w, p) => p.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, parameters, (w, p) => p.WriteAsV2(w));
 
             // responses
-            writer.WriteOptionalMap(OpenApiConstants.OpenApiDocResponses, Responses, (w, r) => r.WriteAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.WriteAsV2(w));
 
             // schemes
             // All schemes in the Servers are extracted, regardless of whether the host matches
@@ -238,13 +238,13 @@ namespace Microsoft.OpenApi.Models
                 .Distinct()
                 .ToList();
 
-            writer.WriteList(OpenApiConstants.OpenApiDocSchemes, schemes, (w, s) => w.WriteValue(s));
+            writer.WriteList(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
             
             // deprecated
-            writer.WriteBoolProperty(OpenApiConstants.OpenApiDocDeprecated, Deprecated, false);
+            writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // security
-            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocSecurity, Security, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.WriteAsV2(w));
 
             // specification extensions
             writer.WriteExtensions(Extensions);

@@ -9,242 +9,242 @@ namespace Microsoft.OpenApi.Models
 {
     internal static class OpenApiConstants
     {
-        public const string OpenApiDocOpenApi = "openapi";
+        public const string OpenApi = "openapi";
 
-        public const string OpenApiDocInfo = "info";
+        public const string Info = "info";
 
-        public const string OpenApiDocTitle = "title";
+        public const string Title = "title";
 
-        public const string OpenApiDocType = "type";
+        public const string Type = "type";
 
-        public const string OpenApiDocFormat = "format";
+        public const string Format = "format";
 
-        public const string OpenApiDocVersion = "version";
+        public const string Version = "version";
 
-        public const string OpenApiDocContact = "contact";
+        public const string Contact = "contact";
 
-        public const string OpenApiDocLicense = "license";
+        public const string License = "license";
 
-        public const string OpenApiDocTermsOfService = "termsOfService";
+        public const string TermsOfService = "termsOfService";
 
-        public const string OpenApiDocServers = "servers";
+        public const string Servers = "servers";
 
-        public const string OpenApiDocServer = "server";
+        public const string Server = "server";
 
-        public const string OpenApiDocPaths = "paths";
+        public const string Paths = "paths";
 
-        public const string OpenApiDocComponents = "components";
+        public const string Components = "components";
 
-        public const string OpenApiDocSecurity = "security";
+        public const string Security = "security";
 
-        public const string OpenApiDocTags = "tags";
+        public const string Tags = "tags";
 
-        public const string OpenApiDocExternalDocs = "externalDocs";
+        public const string ExternalDocs = "externalDocs";
 
-        public const string OpenApiDocOperationRef = "operationRef";
+        public const string OperationRef = "operationRef";
 
-        public const string OpenApiDocOperationId = "operationId";
+        public const string OperationId = "operationId";
 
-        public const string OpenApiDocParameters = "parameters";
+        public const string Parameters = "parameters";
 
-        public const string OpenApiDocRequestBody = "requestBody";
+        public const string RequestBody = "requestBody";
 
-        public const string OpenApiDocExtensionFieldNamePrefix = "x-";
+        public const string ExtensionFieldNamePrefix = "x-";
 
-        public const string OpenApiDocName = "name";
+        public const string Name = "name";
 
-        public const string OpenApiDocIn = "in";
+        public const string In = "in";
 
-        public const string OpenApiDocSummary = "summary";
+        public const string Summary = "summary";
 
-        public const string OpenApiDocVariables = "variables";
+        public const string Variables = "variables";
 
-        public const string OpenApiDocDescription = "description";
+        public const string Description = "description";
 
-        public const string OpenApiDocRequired = "required";
+        public const string Required = "required";
 
-        public const string OpenApiDocDeprecated = "deprecated";
+        public const string Deprecated = "deprecated";
 
-        public const string OpenApiDocStyle = "style";
+        public const string Style = "style";
 
-        public const string OpenApiDocExplode = "explode";
+        public const string Explode = "explode";
 
-        public const string OpenApiDocAllowReserved = "allowReserved";
+        public const string AllowReserved = "allowReserved";
 
-        public const string OpenApiDocSchema = "schema";
+        public const string Schema = "schema";
 
-        public const string OpenApiDocSchemas = "schemas";
+        public const string Schemas = "schemas";
 
-        public const string OpenApiDocResponses = "responses";
+        public const string Responses = "responses";
 
-        public const string OpenApiDocExample = "example";
+        public const string Example = "example";
 
-        public const string OpenApiDocExamples = "examples";
+        public const string Examples = "examples";
 
-        public const string OpenApiDocEncoding = "encoding";
+        public const string Encoding = "encoding";
 
-        public const string OpenApiDocRequestBodies = "requestBodies";
+        public const string RequestBodies = "requestBodies";
 
-        public const string OpenApiDocAllowEmptyValue = "allowEmptyValue";
+        public const string AllowEmptyValue = "allowEmptyValue";
 
-        public const string OpenApiDocValue = "value";
+        public const string Value = "value";
 
-        public const string OpenApiDocExternalValue = "externalValue";
+        public const string ExternalValue = "externalValue";
 
-        public const string OpenApiDocDollarRef = "$ref";
+        public const string DollarRef = "$ref";
 
-        public const string OpenApiDocHeaders = "headers";
+        public const string Headers = "headers";
 
-        public const string OpenApiDocSecuritySchemes = "securitySchemes";
+        public const string SecuritySchemes = "securitySchemes";
 
-        public const string OpenApiDocContent = "content";
+        public const string Content = "content";
 
-        public const string OpenApiDocLinks = "links";
+        public const string Links = "links";
 
-        public const string OpenApiDocCallbacks = "callbacks";
+        public const string Callbacks = "callbacks";
 
-        public const string OpenApiDocUrl = "url";
+        public const string Url = "url";
 
-        public const string OpenApiDocEmail = "email";
+        public const string Email = "email";
 
-        public const string OpenApiDocDefault = "default";
+        public const string Default = "default";
 
-        public const string OpenApiDocEnum = "enum";
+        public const string Enum = "enum";
 
-        public const string OpenApiDocMultipleOf = "multipleOf";
+        public const string MultipleOf = "multipleOf";
 
-        public const string OpenApiDocMaximum = "maximum";
+        public const string Maximum = "maximum";
 
-        public const string OpenApiDocExclusiveMaximum = "exclusiveMaximum";
+        public const string ExclusiveMaximum = "exclusiveMaximum";
 
-        public const string OpenApiDocMinimum = "minimum";
+        public const string Minimum = "minimum";
 
-        public const string OpenApiDocExclusiveMinimum = "exclusiveMinimum";
+        public const string ExclusiveMinimum = "exclusiveMinimum";
 
-        public const string OpenApiDocMaxLength = "maxLength";
+        public const string MaxLength = "maxLength";
 
-        public const string OpenApiDocMinLength = "minLength";
+        public const string MinLength = "minLength";
 
-        public const string OpenApiDocPattern = "pattern";
+        public const string Pattern = "pattern";
 
-        public const string OpenApiDocMaxItems = "maxItems";
+        public const string MaxItems = "maxItems";
 
-        public const string OpenApiDocMinItems = "minItems";
+        public const string MinItems = "minItems";
 
-        public const string OpenApiDocUniqueItems = "uniqueItems";
+        public const string UniqueItems = "uniqueItems";
 
-        public const string OpenApiDocMaxProperties = "maxProperties";
+        public const string MaxProperties = "maxProperties";
 
-        public const string OpenApiDocMinProperties = "minProperties";
+        public const string MinProperties = "minProperties";
 
-        public const string OpenApiDocAllOf = "allOf";
+        public const string AllOf = "allOf";
 
-        public const string OpenApiDocOneOf = "oneOf";
+        public const string OneOf = "oneOf";
 
-        public const string OpenApiDocAnyOf = "anyOf";
+        public const string AnyOf = "anyOf";
 
-        public const string OpenApiDocNot = "not";
+        public const string Not = "not";
 
-        public const string OpenApiDocItems = "items";
+        public const string Items = "items";
 
-        public const string OpenApiDocProperties = "properties";
+        public const string Properties = "properties";
 
-        public const string OpenApiDocAdditionalProperties = "additionalProperties";
+        public const string AdditionalProperties = "additionalProperties";
 
-        public const string OpenApiDocNullable = "nullable";
+        public const string Nullable = "nullable";
 
-        public const string OpenApiDocDiscriminator = "discriminator";
+        public const string Discriminator = "discriminator";
 
-        public const string OpenApiDocReadOnly = "readOnly";
+        public const string ReadOnly = "readOnly";
 
-        public const string OpenApiDocWriteOnly = "writeOnly";
+        public const string WriteOnly = "writeOnly";
 
-        public const string OpenApiDocXml = "xml";
+        public const string Xml = "xml";
 
-        public const string OpenApiDocFlow = "flow";
+        public const string Flow = "flow";
 
-        public const string OpenApiDocApplication = "application";
+        public const string Application = "application";
 
-        public const string OpenApiDocAccessCode = "accessCode";
+        public const string AccessCode = "accessCode";
 
-        public const string OpenApiDocImplicit = "implicit";
+        public const string Implicit = "implicit";
 
-        public const string OpenApiDocPassword = "password";
+        public const string Password = "password";
 
-        public const string OpenApiDocClientCredentials = "clientCredentials";
+        public const string ClientCredentials = "clientCredentials";
 
-        public const string OpenApiDocAuthorizationCode = "authorizationCode";
+        public const string AuthorizationCode = "authorizationCode";
 
-        public const string OpenApiDocAuthorizationUrl = "authorizationUrl";
+        public const string AuthorizationUrl = "authorizationUrl";
 
-        public const string OpenApiDocTokenUrl = "tokenUrl";
+        public const string TokenUrl = "tokenUrl";
 
-        public const string OpenApiDocRefreshUrl = "refreshUrl";
+        public const string RefreshUrl = "refreshUrl";
 
-        public const string OpenApiDocScopes = "scopes";
+        public const string Scopes = "scopes";
 
-        public const string OpenApiDocContentType = "contentType";
+        public const string ContentType = "contentType";
 
-        public const string OpenApiDocGet = "get";
+        public const string Get = "get";
 
-        public const string OpenApiDocPut = "put";
+        public const string Put = "put";
 
-        public const string OpenApiDocPost = "post";
+        public const string Post = "post";
 
-        public const string OpenApiDocDelete = "delete";
+        public const string Delete = "delete";
 
-        public const string OpenApiDocOptions = "options";
+        public const string Options = "options";
 
-        public const string OpenApiDocHead = "head";
+        public const string Head = "head";
 
-        public const string OpenApiDocPatch = "patch";
+        public const string Patch = "patch";
 
-        public const string OpenApiDocTrace = "trace";
+        public const string Trace = "trace";
 
-        public const string OpenApiDocPropertyName = "propertyName";
+        public const string PropertyName = "propertyName";
 
-        public const string OpenApiDocMapping = "mapping";
+        public const string Mapping = "mapping";
 
-        public const string OpenApiDocScheme = "scheme";
+        public const string Scheme = "scheme";
 
-        public const string OpenApiDocBearerFormat = "bearerFormat";
+        public const string BearerFormat = "bearerFormat";
 
-        public const string OpenApiDocFlows = "flows";
+        public const string Flows = "flows";
 
-        public const string OpenApiDocOpenIdConnectUrl = "openIdConnectUrl";
+        public const string OpenIdConnectUrl = "openIdConnectUrl";
 
-        public const string OpenApiDocDefaultName = "Default Name";
+        public const string DefaultName = "Default Name";
 
-        public const string OpenApiDocDefaultDefault = "Default Default";
+        public const string DefaultDefault = "Default Default";
 
-        public const string OpenApiDocDefaultTitle = "Default Title";
+        public const string DefaultTitle = "Default Title";
 
-        public static readonly Version OpenApiDocDefaultVersion = new Version(3, 0, 0);
+        public static readonly Version DefaultVersion = new Version(3, 0, 0);
 
-        public static readonly Uri OpenApiDocDefaultUrl = new Uri("http://localhost/");
+        public static readonly Uri DefaultUrl = new Uri("http://localhost/");
 
-        public const string OpenApiDocDefaultDescription = "Default Description";
+        public const string DefaultDescription = "Default Description";
 
         #region V2
-        public const string OpenApiDocHost = "host";
+        public const string Host = "host";
 
-        public const string OpenApiDocSwagger = "swagger";
+        public const string Swagger = "swagger";
 
-        public static readonly Version OpenApiDocSwaggerVersion = new Version(2, 0);
+        public static readonly Version SwaggerVersion = new Version(2, 0);
 
-        public const string OpenApiDocBasePath = "basePath";
+        public const string BasePath = "basePath";
 
-        public const string OpenApiDocSchemes = "schemes";
+        public const string Schemes = "schemes";
 
-        public const string OpenApiDocSecurityDefinitions = "securityDefinitions";
+        public const string SecurityDefinitions = "securityDefinitions";
 
-        public const string OpenApiDocDefinitions = "definitions";
+        public const string Definitions = "definitions";
 
-        public const string OpenApiDocBasic = "basic";
+        public const string Basic = "basic";
 
-        public const string OpenApiDocConsumes = "consumes";
+        public const string Consumes = "consumes";
 
-        public const string OpenApiDocProducts = "produces";
+        public const string Products = "produces";
 
         #endregion
     }

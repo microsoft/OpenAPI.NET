@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
-            if (!name.StartsWith(OpenApiConstants.OpenApiDocExtensionFieldNamePrefix))
+            if (!name.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix))
             {
                 throw new OpenApiException(String.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
             }
