@@ -16,11 +16,19 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiParameter : OpenApiElement, IOpenApiReference, IOpenApiExtension
     {
+        private ParameterLocation @in;
+        private bool required;
+
         public OpenApiReference Pointer { get; set; }
+
         public string Name { get; set; }
+
         public ParameterLocation In
         {
-            get { return @in; }
+            get
+            {
+                return @in;
+            }
             set
             {
                 @in = value;
@@ -30,30 +38,44 @@ namespace Microsoft.OpenApi.Models
                 }
             }
         }
-        private ParameterLocation @in;
+
         public string Description { get; set; }
+
         public bool Required
         {
-            get { return required; }
+            get
+            {
+                return required;
+            }
             set
             {
                 if (In == ParameterLocation.path && value == false)
                 {
                     throw new ArgumentException("Required cannot be set to false when in is path");
                 }
+
                 required = value;
             }
         }
-        private bool required = false;
+
         public bool Deprecated { get; set; } = false;
+
         public bool AllowEmptyValue { get; set; } = false;
+
         public string Style { get; set; }
+
         public bool Explode { get; set; }
+
         public bool AllowReserved { get; set; }
+
         public OpenApiSchema Schema { get; set; }
+
         public IList<OpenApiExample> Examples { get; set; } = new List<OpenApiExample>();
+
         public string Example { get; set; }
+
         public IDictionary<string, OpenApiMediaType> Content { get; set; }
+
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         /// <summary>
@@ -73,6 +95,7 @@ namespace Microsoft.OpenApi.Models
             else
             {
                 writer.WriteStartObject();
+
                 writer.WriteStringProperty("name", Name);
                 writer.WriteStringProperty("in", In.ToString());
                 writer.WriteStringProperty("description", Description);
@@ -82,12 +105,28 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStringProperty("style", Style);
                 writer.WriteBoolProperty("explode", Explode, false);
                 writer.WriteBoolProperty("allowReserved", AllowReserved, false);
-                writer.WriteObject("schema", Schema, (w, s) => s.WriteAsV3(w));
-                writer.WriteList("examples", Examples, (w, e) => e.WriteAsV3(w));
-                writer.WriteObject("example", Example, (w, s) => w.WriteRaw(s));
+                writer.WriteOptionalObject("schema", Schema, (w, s) => s.WriteAsV3(w));
+                writer.WriteOptionalObject("example", Example, (w, s) => w.WriteRaw(s));
+                writer.WriteOptionalCollection("examples", Examples, (w, e) => e.WriteAsV3(w));
                 writer.WriteMap("content", Content, (w, c) => c.WriteAsV3(w));
                 writer.WriteEndObject();
             }
+        }
+
+        private bool IsBodyParameter()
+        {
+            return this is BodyParameter parameter &&
+                !(
+                    parameter.Format.Contains("application/x-www-form-urlencoded") ||
+                    parameter.Format.Contains("multipart/form-data"));
+        }
+
+        private bool IsFormDataParameter()
+        {
+            return this is BodyParameter parameter &&
+            (
+                parameter.Format.Contains("application/x-www-form-urlencoded") ||
+                parameter.Format.Contains("multipart/form-data"));
         }
 
         /// <summary>
@@ -105,40 +144,50 @@ namespace Microsoft.OpenApi.Models
                 this.WriteRef(writer);
                 return;
             }
+
+            writer.WriteStartObject();
+
+            if (IsFormDataParameter())
+            {
+                writer.WriteStringProperty("name", "formData");
+                writer.WriteStringProperty("in", "formData");
+            }
+            else if (IsBodyParameter())
+            {
+                writer.WriteStringProperty("name", "body");
+                writer.WriteStringProperty("in", "body");
+            }
             else
             {
-                writer.WriteStartObject();
                 writer.WriteStringProperty("name", Name);
-                if (this is BodyParameter)
-                {
-                    writer.WriteStringProperty("in", "body");   // form?
-                }
-                else
-                {
-                    writer.WriteStringProperty("in", In.ToString());
-                }
-                writer.WriteStringProperty("description", Description);
-                writer.WriteBoolProperty("required", Required, false);
-                writer.WriteBoolProperty("deprecated", Deprecated, false);
-                writer.WriteBoolProperty("allowEmptyValue", AllowEmptyValue, false);
-
-                writer.WriteBoolProperty("allowReserved", AllowReserved, false);
-                if (this is BodyParameter)
-                {
-                    writer.WriteObject("schema", Schema, (w, s) => s.WriteAsV2(w));
-                }
-                else
-                {
-                    Schema.SerializeSchemaProperties(writer);
-                }
-                //            writer.WriteList("examples", Examples, AnyNode.Write);
-                //            writer.WriteObject("example", Example, AnyNode.Write);
-                writer.WriteEndObject();
+                writer.WriteStringProperty("in", In.ToString());
             }
+
+            writer.WriteStringProperty("description", Description);
+            writer.WriteBoolProperty("required", Required, false);
+
+            writer.WriteBoolProperty("deprecated", Deprecated, false);
+
+            if (IsBodyParameter())
+            {
+                writer.WriteObject("schema", Schema, (w, s) => s.WriteAsV2(w));
+            }
+            else
+            {
+                Schema.WriteAsItemsProperties(writer);
+
+                writer.WriteBoolProperty("allowEmptyValue", AllowEmptyValue);
+            }
+
+            writer.WriteEndObject();
         }
     }
 
     internal class BodyParameter : OpenApiParameter
     {
+        /// <summary>
+        /// Format of the parameter. This should be the same as the "consumes" property in Operation.
+        /// </summary>
+        public IList<string> Format { get; set; }
     }
 }

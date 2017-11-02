@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            // nothing here
+            // OAuthFlows object does not exist in V2.
         }
     }
 }

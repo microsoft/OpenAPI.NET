@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The type of the security scheme
     /// </summary>
-    public enum SecuritySchemeTypeKind
+    public enum SecuritySchemeType
     {
         apiKey,
 

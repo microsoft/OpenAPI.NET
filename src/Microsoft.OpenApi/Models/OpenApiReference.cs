@@ -25,16 +25,32 @@ namespace Microsoft.OpenApi.Models
 
     public class OpenApiReference : OpenApiElement
     {
+        /// <summary>
+        /// The element type referenced.
+        /// </summary>
         public ReferenceType ReferenceType { get; set; }
+
+        /// <summary>
+        /// The given name of the object being referenced.
+        /// </summary>
         public string TypeName { get; set; }
 
+        /// <summary>
+        /// External file path in the reference.
+        /// </summary>
         public string ExternalFilePath { get; set; } = String.Empty;
 
+        /// <summary>
+        /// Initializes <see cref="OpenApiReference"/>.
+        /// </summary>
         public OpenApiReference()
         {
 
         }
 
+        /// <summary>
+        /// Initializes <see cref="OpenApiReference"/>.
+        /// </summary>
         public OpenApiReference(string pointer)
         {
             var pointerbits = pointer.Split('#');
@@ -51,10 +67,12 @@ namespace Microsoft.OpenApi.Models
         private void ParseLocalPointer(string pointer)
         {
             var pointerbits = pointer.Split('/');
+
             if (pointerbits.Length == 0)
             {
                 throw new ArgumentException();
-            } else if (pointerbits.Length == 1)
+            }
+            else if (pointerbits.Length == 1)
             {
                 ReferenceType = ReferenceType.Schema;
                 TypeName = pointerbits[0];
@@ -62,7 +80,8 @@ namespace Microsoft.OpenApi.Models
             else if (pointerbits.Length == 3) {  //tags
                 ReferenceType = ParseReferenceType(pointerbits[1]);
                 TypeName = pointerbits[2];
-            } else if (pointerbits.Length == 4)
+            }
+            else if (pointerbits.Length == 4)
             {
                 ReferenceType = ParseReferenceType(pointerbits[2]);
                 TypeName = pointerbits[3];

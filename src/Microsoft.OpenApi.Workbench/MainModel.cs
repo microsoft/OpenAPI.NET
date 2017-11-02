@@ -2,15 +2,11 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using Microsoft.OpenApi;
-using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Readers.YamlReaders;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.YamlReaders;
 
-namespace OpenApiWorkbench
+namespace Microsoft.OpenApi.Workbench
 {
     public class MainModel : INotifyPropertyChanged
     {

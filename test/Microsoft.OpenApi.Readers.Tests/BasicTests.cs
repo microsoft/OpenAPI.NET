@@ -27,8 +27,8 @@ namespace Microsoft.OpenApi.Readers.Tests
         public void InlineExample()
         {
             var openApiDoc = new OpenApiStringReader().Read(
-                @"
-                    openapi: 3.0.0
+                
+@"                    openapi: 3.0.0
                     info:
                         title: A simple inline example
                         version: 1.0.0

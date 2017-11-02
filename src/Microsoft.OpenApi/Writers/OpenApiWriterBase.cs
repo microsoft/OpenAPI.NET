@@ -263,14 +263,9 @@ namespace Microsoft.OpenApi.Writers
             return scopes.Pop();
         }
 
-        protected bool IsTopLevelObjectScope()
+        protected bool IsTopLevelScope()
         {
-            if (scopes.Count != 1)
-            {
-                return false;
-            }
-
-            return scopes.Peek().Type == ScopeType.Object;
+            return scopes.Count == 1;
         }
 
         protected bool IsObjectScope()

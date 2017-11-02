@@ -64,6 +64,7 @@ namespace Microsoft.OpenApi.Writers
                     writer.WriteNull();
                 }
             }
+
             writer.WriteEndObject();
         }
 
@@ -76,7 +77,6 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The property value.</param>
         /// <param name="action">The proprety value writer action.</param>
         public static void WriteOptionalObject<T>(this IOpenApiWriter writer, string name, T value, Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
         {
             if (value != null)
             {
@@ -93,7 +93,6 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The property value.</param>
         /// <param name="action">The proprety value writer action.</param>
         public static void WriteRequiredObject<T>(this IOpenApiWriter writer, string name, T value, Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
         {
             CheckArguments(writer, name, action);
 
@@ -110,7 +109,6 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="elements">The collection values.</param>
         /// <param name="action">The collection element writer action.</param>
         public static void WriteOptionalCollection<T>(this IOpenApiWriter writer, string name, IEnumerable<T> elements, Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
         {
             if (elements != null)
             {
@@ -127,7 +125,6 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="elements">The collection values.</param>
         /// <param name="action">The collection element writer action.</param>
         public static void WriteRequiredCollection<T>(this IOpenApiWriter writer, string name, IEnumerable<T> elements, Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
         {
             CheckArguments(writer, name, action);
 

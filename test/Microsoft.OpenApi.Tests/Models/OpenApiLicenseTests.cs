@@ -4,12 +4,12 @@
 // ------------------------------------------------------------
 
 using System;
-using System.IO;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
-namespace Microsoft.OpenApi.Models.Tests
+namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiLicenseTests
     {
@@ -30,8 +30,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeBasicLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = @"
-{
+            string expect = 
+@"{
   ""name"": ""Default Name""
 }";
 
@@ -60,8 +60,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = @"
-{
+            string expect = 
+@"{
   ""name"": ""Apache 2.0"",
   ""url"": ""http://www.apache.org/licenses/LICENSE-2.0.html"",
   ""x-copyright"": ""Abc""
@@ -80,8 +80,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = @"
-name: Apache 2.0
+            string expect = 
+@"name: Apache 2.0
 url: http://www.apache.org/licenses/LICENSE-2.0.html
 x-copyright: Abc";
 

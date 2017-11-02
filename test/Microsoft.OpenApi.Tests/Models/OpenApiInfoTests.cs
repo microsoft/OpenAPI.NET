@@ -6,9 +6,10 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
-namespace Microsoft.OpenApi.Models.Tests
+namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiInfoTests
     {
@@ -34,8 +35,8 @@ namespace Microsoft.OpenApi.Models.Tests
             {
                 yield return new object[]
                 {
-                    specVersion, @"
-{
+                    specVersion, 
+@"{
   ""title"": ""Default Title"",
   ""version"": ""1.0""
 }"
@@ -61,8 +62,8 @@ namespace Microsoft.OpenApi.Models.Tests
             {
                 yield return new object[]
                 {
-                    specVersion, @"
-title: Default Title
+                    specVersion, 
+@"title: Default Title
 version: 1.0"
                 };
             }
@@ -86,8 +87,8 @@ version: 1.0"
             {
                 yield return new object[]
                 {
-                    specVersion, @"
-{
+                    specVersion, 
+@"{
   ""title"": ""Sample Pet Store App"",
   ""description"": ""This is a sample server for a pet store."",
   ""termsOfService"": ""http://example.com/terms/"",
@@ -127,8 +128,8 @@ version: 1.0"
             {
                 yield return new object[]
                 {
-                    specVersion, @"
-title: Sample Pet Store App
+                    specVersion, 
+@"title: Sample Pet Store App
 description: This is a sample server for a pet store.
 termsOfService: http://example.com/terms/
 contact:

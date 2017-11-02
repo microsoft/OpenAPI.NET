@@ -5,9 +5,10 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
-namespace Microsoft.OpenApi.Models.Tests
+namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiMediaTypeTests
     {
@@ -37,8 +38,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceMediaTypeAsV3JsonWorks()
         {
             // Arrange
-            string expect = @"
-{
+            string expect = 
+@"{
   ""example"": 42,
   ""encoding"": {
     ""testEncoding"": {
@@ -61,8 +62,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceMediaTypeAsV3YamlWorks()
         {
             // Arrange
-            string expect = @"
-example: 42
+            string expect = 
+@"example: 42
 encoding:
   testEncoding:
     contentType: image/png, image/jpeg

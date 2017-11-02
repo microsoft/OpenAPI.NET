@@ -5,24 +5,27 @@
 
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.OpenApi.Readers.YamlReaders;
-using Microsoft.OpenApi.Writers;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.YamlReaders;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
-    public class DowngradeTests
+    // TODO: This needs to be moved to each individual model test in OpenApi.Tests
+    public class ModelToV2Tests
     {
         [Fact]
         public void EmptyTest()
         {
-            var openApiDoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument
+            {
+                SpecVersion = OpenApiConstants.OpenApiDocSwaggerVersion
+            };
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
-            Assert.Equal("2.0", jObject["swagger"]);
+            Assert.Equal("2.0", jObject["swagger"].ToString());
             Assert.NotNull(jObject["info"]);
         }
 
@@ -47,12 +50,13 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             Assert.Equal("example.org", (string)jObject["host"]);
             Assert.Equal("/api", (string)jObject["basePath"]);
+            Assert.Equal(new List<string> {"http", "https"}, jObject["schemes"].ToObject<List<string>>());
         }
 
         [Fact]
         public void SimpleTest()
         {
-            var stream = GetType().Assembly.GetManifestResourceStream(typeof(DowngradeTests), "Samples.Simplest.yaml");
+            var stream = GetType().Assembly.GetManifestResourceStream(typeof(ModelToV2Tests), "Samples.Simplest.yaml");
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
@@ -201,12 +205,14 @@ namespace Microsoft.OpenApi.Readers.Tests
                     }
                 }
             };
+
             pathItem.AddOperation(OperationType.Post, operation);
             openApiDoc.Paths.Add("/resource", pathItem);
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
             var bodyparam = jObject["paths"]["/resource"]["post"]["parameters"][0];
+
             Assert.Equal("body", (string)bodyparam["in"]);
             Assert.Equal("string", (string)bodyparam["schema"]["type"]);
             Assert.Equal("100", (string)bodyparam["schema"]["maxLength"]);

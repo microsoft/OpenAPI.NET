@@ -6,6 +6,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
@@ -36,8 +37,8 @@ namespace Microsoft.OpenApi.Tests.Writers
                     "string7",
                     "string8"
                 },
-                @"
-- string1
+                
+@"- string1
 - string2
 - string3
 - string4
@@ -50,8 +51,8 @@ namespace Microsoft.OpenApi.Tests.Writers
             yield return new object[]
             {
                 new[] {"string1", "string1", "string1", "string1"},
-                @"
-- string1
+                
+@"- string1
 - string1
 - string1
 - string1"
@@ -83,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            Assert.Equal(expectedYaml, actualYaml);
+            actualYaml.Should().Be(expectedYaml);
         }
 
         public static IEnumerable<object[]> WriteMapAsYamlShouldMatchExpectedTestCasesSimple()
@@ -97,8 +98,8 @@ namespace Microsoft.OpenApi.Tests.Writers
                     ["property3"] = "value3",
                     ["property4"] = "value4"
                 },
-                @"
-property1: value1
+                
+@"property1: value1
 property2: value2
 property3: value3
 property4: value4"
@@ -113,8 +114,8 @@ property4: value4"
                     ["property3"] = "value1",
                     ["property4"] = "value1"
                 },
-                @"
-property1: value1
+                
+@"property1: value1
 property2: value1
 property3: value1
 property4: value1"
@@ -154,8 +155,8 @@ property4: value1"
                     },
                     ["property4"] = "value4"
                 },
-                @"
-property1:
+                
+@"property1:
   innerProperty1: innerValue1
 property2: value2
 property3:
@@ -175,8 +176,8 @@ property4: value4"
                     },
                     ["property4"] = new List<object> {"listValue1", "listValue2"}
                 },
-                @"
-property1: value1
+                
+@"property1: value1
 property2: value2
 property3:
   innerProperty1: innerValue1
@@ -232,14 +233,12 @@ property4:
 
             writer.WriteEndObject();
 
-            var actualYaml = outputString.GetStringBuilder().Insert(0, "\r\n")
-                .ToString()
-                .MakeLineBreaksEnvironmentNeutral();
+            var actualYaml = outputString.ToString().MakeLineBreaksEnvironmentNeutral();
 
             expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            Assert.Equal(expectedYaml, actualYaml);
+            actualYaml.Should().Be(expectedYaml);
         }
     }
 }

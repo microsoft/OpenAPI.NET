@@ -201,15 +201,27 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocTrace = "trace";
 
+        public const string OpenApiDocPropertyName = "propertyName";
+
+        public const string OpenApiDocMapping = "mapping";
+
+        public const string OpenApiDocScheme = "scheme";
+
+        public const string OpenApiDocBearerFormat = "bearerFormat";
+
+        public const string OpenApiDocFlows = "flows";
+
+        public const string OpenApiDocOpenIdConnectUrl = "openIdConnectUrl";
+
         public const string OpenApiDocDefaultName = "Default Name";
 
         public const string OpenApiDocDefaultDefault = "Default Default";
 
         public const string OpenApiDocDefaultTitle = "Default Title";
 
-        public static Version OpenApiDocDefaultVersion = new Version(3, 0, 0);
+        public static readonly Version OpenApiDocDefaultVersion = new Version(3, 0, 0);
 
-        public static Uri OpenApiDocDefaultUrl = new Uri("http://localhost/");
+        public static readonly Uri OpenApiDocDefaultUrl = new Uri("http://localhost/");
 
         public const string OpenApiDocDefaultDescription = "Default Description";
 
@@ -218,11 +230,21 @@ namespace Microsoft.OpenApi.Models
 
         public const string OpenApiDocSwagger = "swagger";
 
-        public const string OpenApiDocSwaggerVersion = "2.0.0";
+        public static readonly Version OpenApiDocSwaggerVersion = new Version(2, 0);
 
         public const string OpenApiDocBasePath = "basePath";
 
         public const string OpenApiDocSchemes = "schemes";
+
+        public const string OpenApiDocSecurityDefinitions = "securityDefinitions";
+
+        public const string OpenApiDocDefinitions = "definitions";
+
+        public const string OpenApiDocBasic = "basic";
+
+        public const string OpenApiDocConsumes = "consumes";
+
+        public const string OpenApiDocProducts = "produces";
 
         #endregion
     }

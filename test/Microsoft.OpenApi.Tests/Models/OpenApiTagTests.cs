@@ -5,9 +5,10 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
-namespace Microsoft.OpenApi.Models.Tests
+namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiTagTests
     {
@@ -44,8 +45,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceTagAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = @"
-{
+            string expect = 
+@"{
   ""name"": ""pet"",
   ""description"": ""Pets operations"",
   ""externalDocs"": {
@@ -68,8 +69,8 @@ namespace Microsoft.OpenApi.Models.Tests
         public void SerializeAdvanceTagAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = @"
-name: pet
+            string expect = 
+@"name: pet
 description: Pets operations
 externalDocs:
   description: Find more info here
