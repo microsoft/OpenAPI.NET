@@ -6,7 +6,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.YamlReaders;
 using Newtonsoft.Json.Linq;
 using Xunit;
 

@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using SharpYaml.Serialization;
 
-namespace Microsoft.OpenApi.Readers.YamlReaders
+namespace Microsoft.OpenApi.Readers
 {
     internal static class YamlHelper
     {

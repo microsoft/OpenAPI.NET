@@ -6,7 +6,7 @@
 using System;
 using SharpYaml.Serialization;
 
-namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
+namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     /// <summary>
     /// Wrapper class around YamlDocument to isolate semantic parsing from details of Yaml DOM.

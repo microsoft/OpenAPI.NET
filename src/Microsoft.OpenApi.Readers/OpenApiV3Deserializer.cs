@@ -1,55 +1,36 @@
-﻿using System;
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.YamlReaders
+namespace Microsoft.OpenApi.Readers
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static class OpenApiV2Deserializer
+    internal static class OpenApiV3Deserializer
     {
         #region OpenApiObject
-
         public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument> {
-            { "swagger", (o,n) => { /* Ignore it */} },
+            { "openapi", (o,n) => { o.SpecVersion = new Version(n.GetScalarValue()); } },
             { "info", (o,n) => o.Info = LoadInfo(n) },
-            { "host", (o,n) => n.Context.SetTempStorage("host", n.GetScalarValue()) },
-            { "basePath", (o,n) => n.Context.SetTempStorage("basePath",n.GetScalarValue()) },
-            { "schemes", (o,n) => n.Context.SetTempStorage("schemes", n.CreateSimpleList<String>((s) => { return s.GetScalarValue(); })) },
-            { "consumes", (o,n) => n.Context.SetTempStorage("globalconsumes", n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
-            { "produces", (o,n) => n.Context.SetTempStorage("globalproduces", n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
+            { "servers", (o,n) => o.Servers = n.CreateList(LoadServer) },
             { "paths", (o,n) => o.Paths = LoadPaths(n) },
-            { "definitions", (o,n) =>  o.Components.Schemas = n.CreateMapWithReference("#/definitions/",LoadSchema)  },
-            { "parameters", (o,n) =>  o.Components.Parameters = n.CreateMapWithReference("#/parameters/",LoadParameter) },
-            { "responses", (o,n) => o.Components.Responses = n.CreateMap(LoadResponse) },
-            { "securityDefinitions", (o,n) => o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme) },
-            { "security", (o,n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)},
+            { "components", (o,n) => o.Components = LoadComponents(n) },
             { "tags", (o,n) => o.Tags = n.CreateList(LoadTag)},
-            { "externalDocs", (o,n) => o.ExternalDocs = LoadExternalDocs(n) }
-        };
+            { "externalDocs", (o,n) => o.ExternalDocs = LoadExternalDocs(n) },
+            { "security", (o,n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}
 
-        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context)
-        {
-            string host = context.GetTempStorage<string>("host");
-            string basePath = context.GetTempStorage<string>("basePath");
-            List<string> schemes = context.GetTempStorage<List<string>>("schemes");
-
-            if (schemes != null)
-            {
-                foreach (var scheme in schemes)
-                {
-                    var server = new OpenApiServer();
-                    server.Url = scheme + "://" + (host ?? "example.org/") + (basePath ?? "/");
-                    servers.Add(server);
-                }
-            }
-        }
+            };
 
         public static PatternFieldMap<OpenApiDocument> OpenApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
@@ -63,14 +44,11 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
             var openApiNode = rootNode.GetMap();
 
-            var required = new List<string>() { "info", "swagger", "paths" };
+            var required = new List<string>() { "info", "openapi", "paths" };
 
             ParseMap(openApiNode, openApidoc, OpenApiFixedFields, OpenApiPatternFields, required);
 
             ReportMissing(openApiNode, required);
-
-            // Post Process OpenApi Object
-            MakeServers(openApidoc.Servers, openApiNode.Context);
 
             return openApidoc;
         }
@@ -82,18 +60,17 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         public static FixedFieldMap<OpenApiInfo> InfoFixedFields = new FixedFieldMap<OpenApiInfo>
         {
             { "title",      (o,n) => { o.Title = n.GetScalarValue(); } },
+            { "version",    (o,n) => { o.Version = new Version(n.GetScalarValue()); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
             { "termsOfService", (o,n) => { o.TermsOfService = new Uri(n.GetScalarValue()); } },
             { "contact",    (o,n) => { o.Contact = LoadContact(n); } },
-            { "license",    (o,n) => { o.License = LoadLicense(n); } },
-            { "version",    (o,n) => { o.Version = new Version(n.GetScalarValue()); } }
+            { "license",    (o,n) => { o.License = LoadLicense(n); } }
         };
 
         public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new PatternFieldMap<OpenApiInfo>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.AddExtension(k, n.CreateAny()) }
         };
-
 
         public static OpenApiInfo LoadInfo(ParseNode node)
         {
@@ -103,8 +80,6 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             var required = new List<string>() { "title", "version" };
 
             ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields, required);
-
-            ReportMissing(node, required);
 
             return info;
         }
@@ -116,13 +91,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static FixedFieldMap<OpenApiContact> ContactFixedFields = new FixedFieldMap<OpenApiContact> {
             { "name", (o,n) => { o.Name = n.GetScalarValue(); } },
-            { "url", (o,n) => { o.Url = new Uri(n.GetScalarValue()); } },
             { "email", (o,n) => { o.Email = n.GetScalarValue(); } },
+            { "url", (o,n) => { o.Url = new Uri(n.GetScalarValue()); } },
         };
 
         public static PatternFieldMap<OpenApiContact> ContactPatternFields = new PatternFieldMap<OpenApiContact>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiContact LoadContact(ParseNode node)
@@ -141,23 +116,108 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static FixedFieldMap<OpenApiLicense> LicenseFixedFields = new FixedFieldMap<OpenApiLicense> {
             { "name", (o,n) => { o.Name = n.GetScalarValue(); } },
-            { "url", (o,n) => { o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute); } },
+            { "url", (o,n) => { o.Url = new Uri(n.GetScalarValue()); } },
         };
 
         public static PatternFieldMap<OpenApiLicense> LicensePatternFields = new PatternFieldMap<OpenApiLicense>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         internal static OpenApiLicense LoadLicense(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("OpenApiLicense");
+            var mapNode = node.CheckMapNode("License");
 
             var license = new OpenApiLicense();
 
             ParseMap(mapNode, license, LicenseFixedFields, LicensePatternFields);
 
             return license;
+        }
+
+        #endregion
+
+        #region ServerObject
+
+        private static FixedFieldMap<OpenApiServer> ServerFixedFields = new FixedFieldMap<OpenApiServer>
+        {
+            { "url", (o,n) => { o.Url=  n.GetScalarValue(); } },
+            { "description", (o,n) => { o.Description = n.GetScalarValue();  } },
+            { "variables", (o,n) => {  o.Variables = n.CreateMap(LoadServerVariable); } }
+        };
+
+        private static PatternFieldMap<OpenApiServer> ServerPatternFields = new PatternFieldMap<OpenApiServer>
+        {
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
+        };
+
+        public static OpenApiServer LoadServer(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("server");
+
+            var server = new OpenApiServer();
+
+            ParseMap(mapNode, server, ServerFixedFields, ServerPatternFields);
+
+            return server;
+        }
+
+        #endregion
+
+        #region ServerVariable
+
+        private static FixedFieldMap<OpenApiServerVariable> ServerVariableFixedFields = new FixedFieldMap<OpenApiServerVariable>
+        {
+            { "enum", (o,n) => { o.Enum =  n.CreateSimpleList<string>((s)=> s.GetScalarValue()); } },
+            { "default", (o,n) => { o.Default =  n.GetScalarValue(); } },
+            { "description", (o,n) => { o.Description = n.GetScalarValue();  } },
+        };
+
+        private static PatternFieldMap<OpenApiServerVariable> ServerVariablePatternFields = new PatternFieldMap<OpenApiServerVariable>
+        {
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
+        };
+
+        public static OpenApiServerVariable LoadServerVariable(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("serverVariable");
+
+            var serverVariable = new OpenApiServerVariable();
+
+            ParseMap(mapNode, serverVariable, ServerVariableFixedFields, ServerVariablePatternFields);
+
+            return serverVariable;
+        }
+
+        #endregion
+
+        #region ComponentsObject
+
+        public static FixedFieldMap<OpenApiComponents> ComponentsFixedFields = new FixedFieldMap<OpenApiComponents> {
+            { "schemas", (o,n) => { o.Schemas = n.CreateMap(LoadSchema); } },
+            { "responses", (o,n) => o.Responses = n.CreateMap(LoadResponse) },
+            { "parameters", (o,n) => o.Parameters = n.CreateMap(LoadParameter) },
+            { "examples", (o,n) => o.Examples = n.CreateMap(LoadExample) },
+            { "requestBodies", (o,n) => o.RequestBodies = n.CreateMap(LoadRequestBody) },
+            { "headers", (o,n) => o.Headers = n.CreateMap(LoadHeader) },
+            { "securitySchemes", (o,n) => o.SecuritySchemes = n.CreateMap(LoadSecurityScheme) },
+            { "links", (o,n) => o.Links = n.CreateMap(LoadLink) },
+            { "callbacks", (o,n) => o.Callbacks = n.CreateMap(LoadCallback) },
+         };
+
+        public static PatternFieldMap<OpenApiComponents> ComponentsPatternFields = new PatternFieldMap<OpenApiComponents>
+        {
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
+        };
+
+        public static OpenApiComponents LoadComponents(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("components");
+            var components = new OpenApiComponents();
+
+            ParseMap(mapNode, components, ComponentsFixedFields, ComponentsPatternFields);
+
+            return components;
         }
 
         #endregion
@@ -170,13 +230,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         public static PatternFieldMap<OpenApiPaths> PathsPatternFields = new PatternFieldMap<OpenApiPaths>
         {
-            { (s)=> s.StartsWith("/"), (o,k,n)=> o.Add(k, OpenApiV2Deserializer.LoadPathItem(n)    ) },
+            { (s)=> s.StartsWith("/"), (o,k,n)=> o.Add(k, LoadPathItem(n)    ) },
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiPaths LoadPaths(ParseNode node)
         {
-            MapNode mapNode = node.CheckMapNode("Paths");
+            var mapNode = node.CheckMapNode("Paths");
 
             OpenApiPaths domainObject = new OpenApiPaths();
 
@@ -190,7 +250,9 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static FixedFieldMap<OpenApiPathItem> PathItemFixedFields = new FixedFieldMap<OpenApiPathItem>
         {
-            { "$ref", (o,n) => { /* Not supported yet */} },
+            // $ref
+            { "summary", (o,n) => { o.Summary = n.GetScalarValue(); } },
+            { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
             { "get", (o, n) => o.AddOperation(OperationType.Get, LoadOperation(n)) },
             { "put", (o, n) => o.AddOperation(OperationType.Put, LoadOperation(n)) },
             { "post", (o, n) => o.AddOperation(OperationType.Post, LoadOperation(n)) },
@@ -198,12 +260,14 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "options", (o, n) => o.AddOperation(OperationType.Options, LoadOperation(n)) },
             { "head", (o, n) => o.AddOperation(OperationType.Head, LoadOperation(n)) },
             { "patch", (o, n) => o.AddOperation(OperationType.Patch, LoadOperation(n)) },
-            { "parameters", (o,n) => { o.Parameters = n.CreateList(OpenApiV2Deserializer.LoadParameter); } },
+            { "trace", (o, n) => o.AddOperation(OperationType.Trace, LoadOperation(n)) },
+            { "servers", (o,n) => o.Servers = n.CreateList(LoadServer) },
+            { "parameters", (o,n) => o.Parameters = n.CreateList(LoadParameter) }
         };
 
         private static PatternFieldMap<OpenApiPathItem> PathItemPatternFields = new PatternFieldMap<OpenApiPathItem>
         {
-            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) },
+            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) }
         };
 
 
@@ -225,56 +289,37 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static FixedFieldMap<OpenApiOperation> OperationFixedFields = new FixedFieldMap<OpenApiOperation>
         {
             { "tags", (o,n) => o.Tags = n.CreateSimpleList((valueNode) => 
-                OpenApiReferenceService.LoadTagByReference(
-                    valueNode.Context, 
-                    valueNode.Diagnostic, 
-                    valueNode.GetScalarValue()))},
+                OpenApiReferenceService.LoadTagByReference(valueNode.Context, valueNode.Diagnostic, valueNode.GetScalarValue()))},
             { "summary", (o,n) => { o.Summary = n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
             { "externalDocs", (o,n) => { o.ExternalDocs = LoadExternalDocs(n); } },
             { "operationId", (o,n) => { o.OperationId = n.GetScalarValue(); } },
             { "parameters", (o,n) => { o.Parameters = n.CreateList(LoadParameter); } },
-            { "consumes", (o,n) => n.Context.SetTempStorage(
-                "operationconsumes",
-                n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
-            { "produces", (o,n) => n.Context.SetTempStorage(
-                "operationproduces",
-                n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
+            { "requestBody", (o,n) => { o.RequestBody = LoadRequestBody(n)    ; } },
             { "responses", (o,n) => { o.Responses = LoadResponses(n); } },
+            { "callbacks", (o,n) => { o.Callbacks = n.CreateMap(LoadCallback); } },
             { "deprecated", (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
             { "security", (o,n) => { o.Security = n.CreateList(LoadSecurityRequirement); } },
-          };
+            { "servers", (o,n) => { o.Servers = n.CreateList(LoadServer); }},
+        };
 
         private static PatternFieldMap<OpenApiOperation> OperationPatternFields = new PatternFieldMap<OpenApiOperation>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) },
         };
 
         internal static OpenApiOperation LoadOperation(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("OpenApiOperation");
+            var mapNode = node.CheckMapNode("Operation");
 
             OpenApiOperation operation = new OpenApiOperation();
 
             ParseMap(mapNode, operation, OperationFixedFields, OperationPatternFields);
 
-            // Build request body based on information determined while parsing OpenApiOperation
-            var bodyParameter = node.Context.GetTempStorage<OpenApiParameter>("bodyParameter");
-            if (bodyParameter != null)
-            {
-                operation.RequestBody = CreateRequestBody(node.Context, bodyParameter);
-            }
-            else
-            {
-                var formParameters = node.Context.GetTempStorage<List<OpenApiParameter>>("formParameters");
-                if (formParameters != null)
-                {
-                    operation.RequestBody = CreateFormBody(formParameters);
-                }
-            }
-
             return operation;
         }
+
+        #endregion
 
         #region Responses Object
 
@@ -287,7 +332,6 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { (s)=> !s.StartsWith("x-"), (o, p, n)=> o.Add(p, LoadResponse(n)) },
             { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) }
         };
-
         public static OpenApiResponses LoadResponses(ParseNode node)
         {
             MapNode mapNode = node.CheckMapNode("Responses");
@@ -297,46 +341,6 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             ParseMap(mapNode, domainObject, ResponsesFixedFields, ResponsesPatternFields);
 
             return domainObject;
-        }
-
-        #endregion
-
-        private static OpenApiRequestBody CreateFormBody(List<OpenApiParameter> formParameters)
-        {
-                var mediaType = new OpenApiMediaType()
-                {
-                    Schema = new OpenApiSchema()
-                    {
-                        Properties = formParameters.ToDictionary(k => k.Name, v => v.Schema)
-                    }
-                };
-
-                var formBody = new OpenApiRequestBody()
-                {
-                    Content = new Dictionary<string, OpenApiMediaType>() {
-                            { "application/x-www-form-urlencoded", mediaType } }
-                };
-
-                return formBody;
-        }
-
-        private static OpenApiRequestBody CreateRequestBody(ParsingContext context, OpenApiParameter bodyParameter)
-        {
-            var consumes = context.GetTempStorage<List<string>>("operationproduces")
-                      ?? context.GetTempStorage<List<string>>("globalproduces")
-                      ?? new List<string>() { "application/json" };
-
-            var requestBody = new OpenApiRequestBody()
-            {
-                Description = bodyParameter.Description,
-                Required = bodyParameter.Required,
-                Content = consumes.ToDictionary(k => k, v => new OpenApiMediaType()
-                {
-                    Schema = bodyParameter.Schema  // Should we clone this?
-                })
-            };
-
-            return requestBody;
         }
 
         #endregion
@@ -373,91 +377,18 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         private static FixedFieldMap<OpenApiParameter> ParameterFixedFields = new FixedFieldMap<OpenApiParameter>
         {
             { "name",           (o,n) => { o.Name = n.GetScalarValue(); } },
-            { "in",             (o,n) => { ProcessIn(o,n); } },
+            { "in",             (o,n) => { o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()); } },
             { "description",    (o,n) => { o.Description = n.GetScalarValue(); } },
             { "required",       (o,n) => { o.Required = bool.Parse(n.GetScalarValue()); } },
             { "deprecated",     (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
             { "allowEmptyValue", (o,n) => { o.AllowEmptyValue = bool.Parse(n.GetScalarValue()); } },
+            { "allowReserved",  (o,n) => { o.AllowReserved = bool.Parse(n.GetScalarValue()); } },
+            { "style",          (o,n) => { o.Style = n.GetScalarValue(); } },
+            { "schema",         (o,n) => { o.Schema = LoadSchema(n); } },
+            { "content",         (o,n) => { o.Content = n.CreateMap(LoadMediaType); } },
+            { "examples",       (o,n) => { o.Examples = ((ListNode)n).Select(s=> LoadExample(s)).ToList(); } },
             { "example",        (o,n) => { o.Example = n.GetScalarValue(); } },
-            { "type", (o,n) => { GetOrCreateSchema(o).Type = n.GetScalarValue(); } },
-            { "items", (o,n) => { GetOrCreateSchema(o).Items = LoadSchema(n); } },
-            { "collectionFormat", (o,n) => { LoadStyle(o,n.GetScalarValue());  } },
-            { "format", (o,n) => { GetOrCreateSchema(o).Format = n.GetScalarValue(); } },
-            { "minimum", (o,n) => { GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue()); } },
-            { "maximum", (o,n) => { GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue()); } },
-            { "maxLength", (o,n) => { GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue()); } },
-            { "minLength", (o,n) => { GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue()); } },
-            { "readOnly", (o,n) => { GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue()); } },
-            { "default", (o,n) => { GetOrCreateSchema(o).Default =  new OpenApiString(n.GetScalarValue()); } },
-            { "pattern", (o,n) => { GetOrCreateSchema(o).Pattern = n.GetScalarValue(); } },
-            { "enum", (o,n) => { GetOrCreateSchema(o).Enum = n.CreateSimpleList<IOpenApiAny>(l=> new OpenApiString(l.GetScalarValue()) ); } },
-            { "schema", (o,n) => { o.Schema = LoadSchema(n); } },
         };
-
-        private static void LoadStyle(OpenApiParameter p, string v)
-        {
-            switch (v)
-            {
-                case "csv":
-                    p.Style = "simple";
-                    return;
-                case "ssv":
-                    p.Style = "spaceDelimited";
-                    return;
-                case "pipes":
-                    p.Style = "pipeDelimited";
-                    return;
-                case "tsv":
-                    throw new NotSupportedException();
-                case "multi":
-                    p.Style = "form";
-                    p.Explode = true;
-                    return;
-            }
-        }
-
-        private static OpenApiSchema GetOrCreateSchema(OpenApiParameter p)
-        {
-            if (p.Schema == null)
-            {
-                p.Schema = new OpenApiSchema();
-            }
-            return p.Schema;
-        }
-
-        private static OpenApiSchema GetOrCreateSchema(OpenApiHeader p)
-        {
-            if (p.Schema == null)
-            {
-                p.Schema = new OpenApiSchema();
-            }
-            return p.Schema;
-        }
-
-        private static void ProcessIn(OpenApiParameter o, ParseNode n)
-        {
-
-            string value = n.GetScalarValue();
-            switch(value)
-            {
-                case "body":
-                    n.Context.SetTempStorage("bodyParameter",o);
-                    break;
-                case "form":
-                    var formParameters = n.Context.GetTempStorage<List<OpenApiParameter>>("formParameters");
-                    if (formParameters == null)
-                    {
-                        formParameters = new List<OpenApiParameter>();
-                        n.Context.SetTempStorage("formParameters", formParameters);
-                    }
-                    formParameters.Add(o);
-                    break;
-                default:
-                    o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), value);
-                    break;
-            }
-            
-        }
 
         private static PatternFieldMap<OpenApiParameter> ParameterPatternFields = new PatternFieldMap<OpenApiParameter>
         {
@@ -476,77 +407,170 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             }
 
             var parameter = new OpenApiParameter();
+            var required = new List<string>() { "name", "in" };
 
-            ParseMap(mapNode, parameter, ParameterFixedFields, ParameterPatternFields);
-
-            var schema = node.Context.GetTempStorage<OpenApiSchema>("schema");
-            if (schema != null)
-            {
-                parameter.Schema = schema;
-                node.Context.SetTempStorage("schema", null);
-            }
-
-            if (parameter.In == 0)
-            {
-                return null; // Don't include Form or Body parameters in OpenApiOperation.Parameters list
-            }
+            ParseMap(mapNode, parameter, ParameterFixedFields, ParameterPatternFields,required);
 
             return parameter;
         }
         #endregion
-        
+
+        #region OpenApiRequestBody
+
+        private static FixedFieldMap<OpenApiRequestBody> RequestBodyFixedFields = new FixedFieldMap<OpenApiRequestBody>
+        {
+            { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
+            { "content", (o,n) => { o.Content = n.CreateMap(LoadMediaType);  } },
+            { "required", (o,n) => { o.Required = bool.Parse(n.GetScalarValue()); } },
+        };
+
+        private static PatternFieldMap<OpenApiRequestBody> RequestBodyPatternFields = new PatternFieldMap<OpenApiRequestBody>
+        {
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
+        };
+
+        public static OpenApiRequestBody LoadRequestBody(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("requestBody");
+
+            var requestBody = new OpenApiRequestBody();
+            foreach (var property in mapNode)
+            {
+                property.ParseField(requestBody, RequestBodyFixedFields, RequestBodyPatternFields);
+            }
+
+            return requestBody;
+        }
+
+        #endregion
+
+       
+        #region MediaTypeObject
+        private static FixedFieldMap<OpenApiMediaType> MediaTypeFixedFields = new FixedFieldMap<OpenApiMediaType>
+        {
+            { "schema", (o,n) => { o.Schema = LoadSchema(n); } },
+            { "examples", (o,n) => { o.Examples = n.CreateMap(LoadExample); } },
+            { "example", (o,n) => { o.Example = new OpenApiString(n.GetScalarValue()); } },
+            //Encoding
+        };
+
+        private static PatternFieldMap<OpenApiMediaType> MediaTypePatternFields = new PatternFieldMap<OpenApiMediaType>
+        {
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
+        };
+
+        public static OpenApiMediaType LoadMediaType(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("contentType");
+
+            if (mapNode.Count() == 0) return null;
+
+            var contentType = new OpenApiMediaType();
+
+            ParseMap(mapNode, contentType, MediaTypeFixedFields, MediaTypePatternFields);
+
+            return contentType;
+        }
+
+        #endregion
+
+        #region EncodingObject
+
+        #endregion
+
+
+        #region ResponsesObject
+        // Validate status codes
+        #endregion
+
         #region ResponseObject
 
         private static FixedFieldMap<OpenApiResponse> ResponseFixedFields = new FixedFieldMap<OpenApiResponse>
         {
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
             { "headers", (o,n) => { o.Headers = n.CreateMap(LoadHeader); } },
-            { "examples",       (o,n) => { /*o.Examples = ((ListNode)n).Select(s=> new AnyNode(s)).ToList();*/ } },
-            { "schema", (o,n) => { n.Context.SetTempStorage("operationschema", LoadSchema(n)); } },
-
+            { "content", (o,n) => { o.Content = n.CreateMap(LoadMediaType); } },
+            { "links", (o,n) => { o.Links = n.CreateMap(LoadLink); } }
         };
 
         private static PatternFieldMap<OpenApiResponse> ResponsePatternFields = new PatternFieldMap<OpenApiResponse>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
         };
 
         public static OpenApiResponse LoadResponse(ParseNode node)
         {
             var mapNode = node.CheckMapNode("response");
 
+            var required = new List<string>() { "description" };
             var response = new OpenApiResponse();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(response, ResponseFixedFields, ResponsePatternFields);
-            }
-
-            ProcessProduces(response, node.Context);
+            ParseMap(mapNode, response, ResponseFixedFields, ResponsePatternFields, required);
 
             return response;
         }
 
-        private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
+        #endregion
+
+        #region CallbackObject
+        private static FixedFieldMap<OpenApiCallback> CallbackFixedFields = new FixedFieldMap<OpenApiCallback>
         {
+        };
 
-            var produces = context.GetTempStorage<List<string>>("operationproduces") 
-                  ?? context.GetTempStorage<List<string>>("globalproduces") 
-                  ?? new List<string>() { "application/json" };
+        private static PatternFieldMap<OpenApiCallback> CallbackPatternFields = new PatternFieldMap<OpenApiCallback>
+        {
+             { (s)=> s.StartsWith("$"),
+                (o,k,n)=> o.PathItems.Add(new RuntimeExpression(k), LoadPathItem(n)    ) }
+        };
 
-            response.Content = new Dictionary<string, OpenApiMediaType>();
-            foreach (var mt in produces)
+        public static OpenApiCallback LoadCallback(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("callback");
+
+            var refpointer = mapNode.GetReferencePointer();
+            if (refpointer != null)
             {
-                var schema = context.GetTempStorage<OpenApiSchema>("operationschema");
-                OpenApiMediaType mediaType = null;
-                if (schema != null)
-                {
-                    mediaType = new OpenApiMediaType()
-                    {
-                        Schema = schema
-                    };
-                }
-                response.Content.Add(mt, mediaType);
+                return mapNode.GetReferencedObject<OpenApiCallback>(refpointer);
             }
+
+            var domainObject = new OpenApiCallback();
+
+            ParseMap(mapNode, domainObject, CallbackFixedFields, CallbackPatternFields);
+
+            return domainObject;
+        }
+
+        #endregion
+
+        #region LinkObject
+
+        private static FixedFieldMap<OpenApiLink> LinkFixedFields = new FixedFieldMap<OpenApiLink>
+        {
+            { "href", (o,n) => { o.Href = n.GetScalarValue(); } },
+            { "operationId", (o,n) => { o.OperationId = n.GetScalarValue(); } },
+            { "parameters", (o,n) => { o.Parameters = n.CreateSimpleMap(LoadRuntimeExpression); } },
+            { "requestBody", (o,n) => { o.RequestBody = LoadRuntimeExpression(n); } },
+            { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
+        };
+
+        private static PatternFieldMap<OpenApiLink> LinkPatternFields = new PatternFieldMap<OpenApiLink>
+        {
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
+        };
+
+        public static OpenApiLink LoadLink(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("link");
+            var link = new OpenApiLink();
+
+            var refpointer = mapNode.GetReferencePointer();
+            if (refpointer != null)
+            {
+                return mapNode.GetReferencedObject<OpenApiLink>(refpointer);
+            }
+
+            ParseMap(mapNode, link, LinkFixedFields, LinkPatternFields);
+
+            return link;
         }
 
         #endregion
@@ -559,14 +583,12 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "deprecated", (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
             { "allowReserved", (o,n) => { o.AllowReserved = bool.Parse(n.GetScalarValue()); } },
             { "style", (o,n) => { o.Style = n.GetScalarValue(); } },
-            { "type", (o,n) => { GetOrCreateSchema(o).Type = n.GetScalarValue(); } },
-            { "format", (o,n) => { GetOrCreateSchema(o).Format = n.GetScalarValue(); } },
-
+            { "schema", (o,n) => { o.Schema = LoadSchema(n); } }
         };
 
         private static PatternFieldMap<OpenApiHeader> HeaderPatternFields = new PatternFieldMap<OpenApiHeader>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
         };
 
 
@@ -579,13 +601,6 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 property.ParseField(header, HeaderFixedFields, HeaderPatternFields);
             }
 
-            var schema = node.Context.GetTempStorage<OpenApiSchema>("schema");
-            if (schema != null)
-            {
-                header.Schema = schema;
-                node.Context.SetTempStorage("schema", null);
-            }
-
             return header;
         }
 
@@ -594,16 +609,27 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         #region ExampleObject
         private static FixedFieldMap<OpenApiExample> ExampleFixedFields = new FixedFieldMap<OpenApiExample>
         {
+            { "summary", (o,n) => { o.Summary= n.GetScalarValue(); } },
+            { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
+            { "value", (o,n) => { o.Value = n.GetScalarValue(); } },
         };
 
         private static PatternFieldMap<OpenApiExample> ExamplePatternFields = new PatternFieldMap<OpenApiExample>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
+            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
         public static OpenApiExample LoadExample(ParseNode node)
         {
             var mapNode = node.CheckMapNode("Example");
+
+            var refpointer = mapNode.GetReferencePointer();
+            if (refpointer != null)
+            {
+                return mapNode.GetReferencedObject<OpenApiExample>(refpointer);
+            }
+
+
             var example = new OpenApiExample();
             foreach (var property in mapNode)
             {
@@ -662,27 +688,32 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 { "maxProperties", (o,n) => { o.MaxProperties = int.Parse(n.GetScalarValue()); } },
                 { "minProperties", (o,n) => { o.MinProperties = int.Parse(n.GetScalarValue()); } },
                 { "required", (o,n) => { o.Required = n.CreateSimpleList<string>(n2 => n2.GetScalarValue()).ToArray(); } },
-                { "enum", (o,n) => { o.Enum =  n.CreateSimpleList<IOpenApiAny>((s)=> new OpenApiString(s.GetScalarValue())); } },
-
+                { "enum", (o, n) =>
+                    {
+                        o.Enum = n.CreateSimpleList<IOpenApiAny>((s) => new OpenApiString(s.GetScalarValue()));
+                    }
+                },
                 { "type", (o,n) => { o.Type = n.GetScalarValue(); } },
                 { "allOf", (o,n) => { o.AllOf = n.CreateList(LoadSchema); } },
+                { "oneOf", (o,n) => { o.OneOf = n.CreateList(LoadSchema); } },
+                { "anyOf", (o,n) => { o.AnyOf = n.CreateList(LoadSchema); } },
+                { "not", (o,n) => { o.Not= LoadSchema(n); } },
                 { "items", (o,n) => { o.Items = LoadSchema(n); } },
                 { "properties", (o,n) => { o.Properties = n.CreateMap(LoadSchema); } },
                 { "additionalProperties", (o,n) => { o.AdditionalProperties = LoadSchema(n); }
                                                      },
-                { "description", (o,n) => { o.Type = n.GetScalarValue(); } },
-                { "format", (o,n) => { o.Description = n.GetScalarValue(); } },
-                { "default", (o,n) =>
-                {
-                    o.Default = new OpenApiString(n.GetScalarValue());
-                } },
+                { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
+                { "format", (o,n) => { o.Format = n.GetScalarValue(); } },
+                { "default", (o,n) => { o.Default =  new OpenApiString( n.GetScalarValue() ); } },
 
+                { "nullable", (o,n) => { o.Nullable = bool.Parse(n.GetScalarValue()); } },
                 // discriminator
                 { "readOnly", (o,n) => { o.ReadOnly = bool.Parse(n.GetScalarValue()); } },
+                { "writeOnly", (o,n) => { o.WriteOnly = bool.Parse(n.GetScalarValue()); } },
                 // xml
                 { "externalDocs", (o,n) => { o.ExternalDocs = LoadExternalDocs(n); } },
-                { "example", (o,n) => { o.Example =new OpenApiString( n.GetScalarValue()); } },
-
+                { "example", (o,n) => { o.Example =  new OpenApiString(n.GetScalarValue()); } },
+                { "deprecated", (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
 
         };
 
@@ -691,10 +722,10 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
         };
 
-
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
-            MapNode mapNode = node.CheckMapNode("schema");
+
+            var mapNode = node.CheckMapNode("schema");
 
             var refpointer = mapNode.GetReferencePointer();
             if (refpointer != null)
@@ -719,14 +750,14 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields = new FixedFieldMap<OpenApiSecurityScheme>
         {
-            { "type", (o,n) => o.Type = (SecuritySchemeType)Enum.Parse(typeof(SecuritySchemeType), n.GetScalarValue())  },
-            { "description", (o,n) => o.Description = n.GetScalarValue() },
-            { "name", (o,n) => o.Name = n.GetScalarValue() },
-            { "in", (o,n) => o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()) },
-            { "scheme", (o,n) => o.Scheme = n.GetScalarValue() },
-            { "bearerFormat", (o,n) => o.BearerFormat = n.GetScalarValue() },
-            { "openIdConnectUrl", (o,n) => o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute) },
-            { "flows", (o,n) => o.Flows = LoadOAuthFlows(n) }
+            { "type", (o,n) => { o.Type = (SecuritySchemeType)Enum.Parse(typeof(SecuritySchemeType), n.GetScalarValue());  } },
+            { "description", (o,n) => { o.Description = n.GetScalarValue();  } },
+            { "name", (o,n) => { o.Name = n.GetScalarValue();  } },
+            { "in", (o,n) => { o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()); } },
+            { "scheme", (o,n) => { o.Scheme = n.GetScalarValue();  } },
+            { "bearerFormat", (o,n) => { o.BearerFormat = n.GetScalarValue();  } },
+            { "openIdConnectUrl", (o,n) => { o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);  } },
+            { "flows", (o,n) => { o.Flows = LoadOAuthFlows(n); } }
         };
 
         private static PatternFieldMap<OpenApiSecurityScheme> SecuritySchemePatternFields = new PatternFieldMap<OpenApiSecurityScheme>
@@ -746,7 +777,6 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
             return securityScheme;
         }
-
         #endregion
 
         #region OAuthFlowsObject
@@ -810,6 +840,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
         #region SecurityRequirement
         public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
         {
+
             var mapNode = node.CheckMapNode("security");
 
             var obj = new OpenApiSecurityRequirement();
@@ -817,104 +848,56 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             foreach (var property in mapNode)
             {
                 var scheme = OpenApiReferenceService.LoadSecuritySchemeByReference(mapNode.Context, mapNode.Diagnostic, property.Name);
-                if (scheme != null)
-                {
-                    obj.Schemes.Add(scheme, property.Value.CreateSimpleList<string>(n2 => n2.GetScalarValue()));
-                } else
-                {
-                    node.Diagnostic.Errors.Add(new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
-                }
+
+                obj.Schemes.Add(scheme, property.Value.CreateSimpleList<string>(n2 => n2.GetScalarValue()));
             }
             return obj;
         }
 
         #endregion
 
-        public static OpenApiReference ParseReference(string pointer)
-        {
-            var pointerbits = pointer.Split('#');
-
-            if (pointerbits.Length == 1)
-            {
-                return new OpenApiReference()
-                {
-                    ReferenceType = ReferenceType.Schema,
-                    TypeName = pointerbits[0]
-                }; 
-            }
-            else
-            {
-                var pointerParts = pointerbits[1].Split('/');
-                return new OpenApiReference()
-                {
-                    ExternalFilePath = pointerbits[0],
-                    ReferenceType = ParseReferenceTypeName(pointerParts[1]),
-                    TypeName = pointerParts[2]
-                };
-            }
-
-        }
-
-        public static JsonPointer GetPointer(OpenApiReference reference)
-        {
-            return new JsonPointer("#/" + GetReferenceTypeName(reference.ReferenceType) + "/" + reference.TypeName); 
-        }
-
-        private static ReferenceType ParseReferenceTypeName(string referenceTypeName)
-        {
-            switch (referenceTypeName)
-            {
-                case "definitions": return ReferenceType.Schema;
-                case "parameters": return ReferenceType.Parameter;
-                case "responses": return ReferenceType.Response;
-                case "headers": return ReferenceType.Header;
-                case "tags": return ReferenceType.Tags;
-                case "securityDefinitions": return ReferenceType.SecurityScheme;
-                default: throw new ArgumentException();
-            }
-        }
-
-        private static string GetReferenceTypeName(ReferenceType referenceType)
-        {
-            switch (referenceType)
-            {
-                case ReferenceType.Schema: return "definitions";
-                case ReferenceType.Parameter: return "parameters";
-                case ReferenceType.Response: return "responses";
-                case ReferenceType.Header: return "headers";
-                case ReferenceType.Tags: return "tags";
-                case ReferenceType.SecurityScheme: return "securityDefinitions";
-                default: throw new ArgumentException();
-            }
-        }
-
-
-        public static IOpenApiReference LoadReference(OpenApiReference reference, object rootNode)
+        public static IOpenApiReference LoadReference(OpenApiReference pointer, object rootNode)
         {
             IOpenApiReference referencedObject = null;
-            ParseNode node = ((RootNode)rootNode).Find(GetPointer(reference));
 
-            if (node == null &&  reference.ReferenceType != ReferenceType.Tags ) return null;
-            switch (reference.ReferenceType)
+            var node = ((RootNode)rootNode).Find(pointer.GetLocalPointer());
+            if (node == null && pointer.ReferenceType != ReferenceType.Tags) return null;
+
+            switch (pointer.ReferenceType)
             {
                 case ReferenceType.Schema:
                     referencedObject = LoadSchema(node);
                     break;
+
                 case ReferenceType.Parameter:
                     referencedObject = LoadParameter(node);
                     break;
+
+                case ReferenceType.Callback:
+                    referencedObject = LoadCallback(node);
+                    break;
+
                 case ReferenceType.SecurityScheme:
                     referencedObject = LoadSecurityScheme(node);
                     break;
+
+                case ReferenceType.Link:
+                    referencedObject = LoadLink(node);
+                    break;
+
+                case ReferenceType.Example:
+                    referencedObject = LoadExample(node);
+                    break;
+
                 case ReferenceType.Tags:
                     ListNode list = (ListNode)node;
                     if (list != null)
                     {
                         foreach (var item in list)
                         {
-                            var tag = LoadTag(item);
+                            var tag = OpenApiV3Deserializer.LoadTag(item);
 
-                            if (tag.Name == reference.TypeName)
+                            if (tag.Name == pointer.TypeName)
                             {
                                 return tag;
                             }
@@ -922,12 +905,13 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                     }
                     else
                     {
-                        return new OpenApiTag() { Name = reference.TypeName };
+                        return new OpenApiTag() { Name = pointer.TypeName };
                     }
+
                     break;
 
                 default:
-                    throw new OpenApiException($"Unknown $ref {reference.ReferenceType} at {reference.ToString()}");
+                    throw new OpenApiException($"Unknown type of $ref {pointer.ReferenceType} at {pointer.ToString()}");
             }
 
             return referencedObject;
@@ -942,11 +926,24 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
                 propertyNode.ParseField<T>(domainObject, fixedFieldMap, patternFieldMap);
                 requiredFields?.Remove(propertyNode.Name);
             }
+
+            ReportMissing(mapNode, requiredFields);
+        }
+
+        private static RuntimeExpression LoadRuntimeExpression(ParseNode node)
+        {
+            var value = node.GetScalarValue();
+            return new RuntimeExpression(value);
         }
 
         private static void ReportMissing(ParseNode node, IList<string> required)
         {
-            foreach ( var error in required.Select(r => new OpenApiError("", $"{r} is a required property")).ToList() )
+            if (required == null || !required.Any() )
+            {
+                return;
+            }
+
+            foreach (var error in required.Select(r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}")).ToList())
             {
                 node.Diagnostic.Errors.Add(error);
             }

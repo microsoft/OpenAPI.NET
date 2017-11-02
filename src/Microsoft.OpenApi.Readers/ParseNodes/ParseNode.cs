@@ -10,7 +10,7 @@ using SharpYaml.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 
-namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
+namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal abstract class ParseNode
     {

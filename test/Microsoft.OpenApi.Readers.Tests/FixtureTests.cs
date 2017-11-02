@@ -5,8 +5,7 @@
 
 using System.IO;
 using System.Linq;
-using Microsoft.OpenApi.Readers.YamlReaders;
-using Microsoft.OpenApi.Readers.YamlReaders.ParseNodes;
+using Microsoft.OpenApi.Readers.ParseNodes;
 using SharpYaml.Serialization;
 using Xunit;
 
