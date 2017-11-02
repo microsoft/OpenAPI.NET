@@ -33,12 +33,12 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
         /// <summary>
         /// Create a <see cref="IOpenApiPrimitive"/>
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The created Any object.</returns>
         public override IOpenApiAny CreateAny()
         {
             string value = GetScalarValue();
 
-            if (String.IsNullOrWhiteSpace(value))
+            if (value == null || value == "null")
             {
                 return new OpenApiNull();
             }

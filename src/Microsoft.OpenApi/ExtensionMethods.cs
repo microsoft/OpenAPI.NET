@@ -21,25 +21,25 @@ namespace Microsoft.OpenApi
         /// Add extension into the Extensions
         /// </summary>
         /// <typeparam name="T"><see cref="IOpenApiExtension"/>.</typeparam>
-        /// <param name="extension">The extensible Open API element. </param>
+        /// <param name="element">The extensible Open API element. </param>
         /// <param name="name">The extension name.</param>
         /// <param name="any">The extension value.</param>
-        public static void AddExtension<T>(this T extension, string name, IOpenApiAny any)
+        public static void AddExtension<T>(this T element, string name, IOpenApiAny any)
             where T : IOpenApiExtension
         {
-            if (extension == null)
+            if (element == null)
             {
-                throw Error.ArgumentNull(nameof(extension));
+                throw Error.ArgumentNull(nameof(element));
             }
 
             VerifyExtensionName(name);
 
-            if (extension.Extensions == null)
+            if (element.Extensions == null)
             {
-                extension.Extensions = new Dictionary<string, IOpenApiAny>();
+                element.Extensions = new Dictionary<string, IOpenApiAny>();
             }
 
-            extension.Extensions[name] = any ?? throw Error.ArgumentNull(nameof(any));
+            element.Extensions[name] = any ?? throw Error.ArgumentNull(nameof(any));
         }
 
         private static void VerifyExtensionName(string name)
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi
 
             if (!name.StartsWith(OpenApiConstants.OpenApiDocExtensionFieldNamePrefix))
             {
-                throw new OpenApiException(SRResource.ExtensionFieldNameMustBeginWithXMinus);
+                throw new OpenApiException(SRResource.ExtensionFieldNameMustBeginWithXDash);
             }
         }
     }

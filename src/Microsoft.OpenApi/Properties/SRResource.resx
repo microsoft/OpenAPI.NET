@@ -120,7 +120,7 @@
   <data name="ArgumentNullOrWhiteSpace" xml:space="preserve">
     <value>The argument '{0}' is null, empty or consists only of white-space.</value>
   </data>
-  <data name="ExtensionFieldNameMustBeginWithXMinus" xml:space="preserve">
+  <data name="ExtensionFieldNameMustBeginWithXDash" xml:space="preserve">
     <value>The filed name of extension doesn't begin with x-.</value>
   </data>
   <data name="OpenApiExceptionGeneralError" xml:space="preserve">

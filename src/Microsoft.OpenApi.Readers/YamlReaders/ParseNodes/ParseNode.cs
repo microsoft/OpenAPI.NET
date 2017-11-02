@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
         /// <returns></returns>
         public virtual IOpenApiAny CreateAny()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public virtual string GetRaw()
