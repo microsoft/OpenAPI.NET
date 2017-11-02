@@ -49,13 +49,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // default
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDefault, Default);
+            writer.WriteStringProperty(OpenApiConstants.Default, Default);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // enums
-            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocEnum, Enum, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteValue(s));
 
             // specification extensions
             writer.WriteExtensions(Extensions);

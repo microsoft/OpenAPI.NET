@@ -79,10 +79,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // summary
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSummary, Summary);
+            writer.WriteStringProperty(OpenApiConstants.Summary, Summary);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // operations
             foreach (var operation in _operations)
@@ -91,10 +91,10 @@ namespace Microsoft.OpenApi.Models
             }
 
             // servers
-            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocServers, Servers, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.WriteAsV3(w));
 
             // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocParameters, Parameters, (w, p) => p.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV3(w));
 
             // specification extensions
             writer.WriteExtensions(Extensions);
@@ -124,13 +124,13 @@ namespace Microsoft.OpenApi.Models
             }
 
             // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocParameters, Parameters, (w, p) => p.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV2(w));
 
             // write "summary" as extensions
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocExtensionFieldNamePrefix + OpenApiConstants.OpenApiDocSummary, Summary);
+            writer.WriteStringProperty(OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Summary, Summary);
 
             // write "description" as extensions
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocExtensionFieldNamePrefix + OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Description, Description);
 
             // specification extensions
             writer.WriteExtensions(Extensions);
