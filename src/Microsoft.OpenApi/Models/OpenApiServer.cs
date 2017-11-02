@@ -31,8 +31,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map between a variable name and its value. The value is used for substitution in the server's URL template.
         /// </summary>
-        public IDictionary<string, OpenApiServerVariable> Variables { get; set; } =
-            new Dictionary<string, OpenApiServerVariable>();
+        public IDictionary<string, OpenApiServerVariable> Variables { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -50,9 +49,19 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty("url", Url);
-            writer.WriteStringProperty("description", Description);
-            writer.WriteMap("variables", Variables, (w, v) => v.WriteAsV3(w));
+
+            // url
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocUrl, Url);
+
+            // description
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+
+            // variables
+            writer.WriteOptionalMap(OpenApiConstants.OpenApiDocVariables, Variables, (w, v) => v.WriteAsV3(w));
+
+            // specification extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
 

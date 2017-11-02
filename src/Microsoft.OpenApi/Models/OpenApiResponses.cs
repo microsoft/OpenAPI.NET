@@ -6,9 +6,9 @@
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// Paths object.
+    /// Responses object.
     /// </summary>
-    public class OpenApiPaths : OpenApiExtensibleDictionary<OpenApiPathItem>
+    public class OpenApiResponses : OpenApiExtensibleDictionary<OpenApiResponse>
     {
     }
 }

@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
         /// </summary>
-        public IDictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public OpenApiResponses Responses { get; set; }
 
         /// <summary>
         /// A map of possible out-of band callbacks related to the parent operation. 
@@ -129,19 +129,46 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteList("tags", Tags, (w, t) => t.WriteAsV3(w));
-            writer.WriteStringProperty("summary", Summary);
-            writer.WriteStringProperty("description", Description);
-            writer.WriteObject("externalDocs", ExternalDocs, (w, e) => e.WriteAsV3(w));
 
-            writer.WriteStringProperty("operationId", OperationId);
-            writer.WriteList("parameters", Parameters, (w, p) => p.WriteAsV3(w));
-            writer.WriteObject("requestBody", RequestBody, (w, r) => r.WriteAsV3(w));
-            writer.WriteMap("responses", Responses, (w, r) => r.WriteAsV3(w));
-            writer.WriteMap("callbacks", Callbacks, (w, c) => c.WriteAsV3(w));
-            writer.WriteBoolProperty("deprecated", Deprecated, DeprecatedDefault);
-            writer.WriteList("security", Security, (w, s) => s.WriteAsV3(w));
-            writer.WriteList("servers", Servers, (w, s) => s.WriteAsV3(w));
+            // tags
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocTags, Tags, (w, t) => t.WriteAsV3(w));
+
+            // summary
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocSummary, Summary);
+
+            // description
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+
+            // externalDocs
+            writer.WriteOptionalObject(OpenApiConstants.OpenApiDocExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
+
+            // operationId
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocOperationId, OperationId);
+
+            // parameters
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocParameters, Parameters, (w, p) => p.WriteAsV3(w));
+
+            // requestBody
+            writer.WriteOptionalObject(OpenApiConstants.OpenApiDocRequestBody, RequestBody, (w, r) => r.WriteAsV3(w));
+
+            // responses
+            writer.WriteOptionalObject(OpenApiConstants.OpenApiDocResponses, Responses, (w, r) => r.WriteAsV3(w));
+
+            // callbacks
+            writer.WriteOptionalMap(OpenApiConstants.OpenApiDocCallbacks, Callbacks, (w, c) => c.WriteAsV3(w));
+
+            // deprecated
+            writer.WriteBoolProperty(OpenApiConstants.OpenApiDocDeprecated, Deprecated, false);
+
+            // security
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocSecurity, Security, (w, s) => s.WriteAsV3(w));
+
+            // servers
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocServers, Servers, (w, s) => s.WriteAsV3(w));
+
+            // specification extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
 
@@ -177,7 +204,7 @@ namespace Microsoft.OpenApi.Models
             if (RequestBody != null)
             {
                 // consumes
-                writer.WritePropertyName("consumes");
+                writer.WritePropertyName(OpenApiConstants.OpenApiDocConsumes);
                 writer.WriteStartArray();
                 var consumes = RequestBody.Content.Keys.Distinct().ToList();
                 foreach (var mediaType in consumes)
@@ -198,23 +225,26 @@ namespace Microsoft.OpenApi.Models
                 
                 parameters.Add(bodyParameter);
             }
-            
-            var produces = Responses.Where(r => r.Value.Content != null)
-                .SelectMany(r => r.Value.Content?.Keys)
-                .Distinct()
-                .ToList();
 
-            if (produces.Any())
+            if (Responses != null)
             {
-                // produces
-                writer.WritePropertyName("produces");
-                writer.WriteStartArray();
-                foreach (var mediaType in produces)
-                {
-                    writer.WriteValue(mediaType);
-                }
+                var produces = Responses.Where(r => r.Value.Content != null)
+                  .SelectMany(r => r.Value.Content?.Keys)
+                  .Distinct()
+                  .ToList();
 
-                writer.WriteEndArray();
+                if (produces.Any())
+                {
+                    // produces
+                    writer.WritePropertyName(OpenApiConstants.OpenApiDocProduces);
+                    writer.WriteStartArray();
+                    foreach (var mediaType in produces)
+                    {
+                        writer.WriteValue(mediaType);
+                    }
+
+                    writer.WriteEndArray();
+                }
             }
 
             // parameters

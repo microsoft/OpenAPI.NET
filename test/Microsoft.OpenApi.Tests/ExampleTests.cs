@@ -27,9 +27,9 @@ namespace Microsoft.OpenApi.Tests
                 }
             };
 
-            doc.CreatePath("/test", 
-                p => p.CreateOperation(OperationType.Get, 
-                  o => o.CreateResponse("200", r =>
+            doc.AddPathItem("/test",
+                p => p.AddOperation(OperationType.Get,
+                  o => o.AddResponse("200", r =>
                  {
                      r.Description = "foo";
                      r.CreateContent("application/json", c =>

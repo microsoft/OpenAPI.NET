@@ -248,16 +248,21 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             // $ref
             { "summary", (o,n) => { o.Summary = n.GetScalarValue(); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
-            { "servers", (o,n) => { o.Servers = n.CreateList(LoadServer); } },
-            { "parameters", (o,n) => { o.Parameters = n.CreateList(LoadParameter); } },
-
+            { "get", (o, n) => o.AddOperation(OperationType.Get, LoadOperation(n)) },
+            { "put", (o, n) => o.AddOperation(OperationType.Put, LoadOperation(n)) },
+            { "post", (o, n) => o.AddOperation(OperationType.Post, LoadOperation(n)) },
+            { "delete", (o, n) => o.AddOperation(OperationType.Delete, LoadOperation(n)) },
+            { "options", (o, n) => o.AddOperation(OperationType.Options, LoadOperation(n)) },
+            { "head", (o, n) => o.AddOperation(OperationType.Head, LoadOperation(n)) },
+            { "patch", (o, n) => o.AddOperation(OperationType.Patch, LoadOperation(n)) },
+            { "trace", (o, n) => o.AddOperation(OperationType.Trace, LoadOperation(n)) },
+            { "servers", (o,n) => o.Servers = n.CreateList(LoadServer) },
+            { "parameters", (o,n) => o.Parameters = n.CreateList(LoadParameter) }
         };
 
         private static PatternFieldMap<OpenApiPathItem> PathItemPatternFields = new PatternFieldMap<OpenApiPathItem>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
-            { (s)=> "get,put,post,delete,patch,options,head,patch,trace".Contains(s),
-                (o,k,n)=> o.AddOperation(OperationTypeExtensions.ParseOperationType(k), LoadOperation(n)    ) }
+            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) }
         };
 
 
@@ -286,7 +291,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             { "operationId", (o,n) => { o.OperationId = n.GetScalarValue(); } },
             { "parameters", (o,n) => { o.Parameters = n.CreateList(LoadParameter); } },
             { "requestBody", (o,n) => { o.RequestBody = LoadRequestBody(n)    ; } },
-            { "responses", (o,n) => { o.Responses = n.CreateMap(LoadResponse); } },
+            { "responses", (o,n) => { o.Responses = LoadResponses(n); } },
             { "callbacks", (o,n) => { o.Callbacks = n.CreateMap(LoadCallback); } },
             { "deprecated", (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
             { "security", (o,n) => { o.Security = n.CreateList(LoadSecurityRequirement); } },
@@ -295,7 +300,7 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
 
         private static PatternFieldMap<OpenApiOperation> OperationPatternFields = new PatternFieldMap<OpenApiOperation>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) },
         };
 
         internal static OpenApiOperation LoadOperation(ParseNode node)
@@ -307,6 +312,30 @@ namespace Microsoft.OpenApi.Readers.YamlReaders
             ParseMap(mapNode, operation, OperationFixedFields, OperationPatternFields);
 
             return operation;
+        }
+
+        #endregion
+
+        #region Responses Object
+
+        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>
+        {
+        };
+
+        public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
+        {
+            { (s)=> !s.StartsWith("x-"), (o, p, n)=> o.Add(p, LoadResponse(n)) },
+            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) }
+        };
+        public static OpenApiResponses LoadResponses(ParseNode node)
+        {
+            MapNode mapNode = node.CheckMapNode("Responses");
+
+            OpenApiResponses domainObject = new OpenApiResponses();
+
+            ParseMap(mapNode, domainObject, ResponsesFixedFields, ResponsesPatternFields);
+
+            return domainObject;
         }
 
         #endregion

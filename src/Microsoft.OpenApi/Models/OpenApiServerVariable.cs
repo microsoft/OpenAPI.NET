@@ -48,10 +48,16 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            writer.WriteStringProperty("default", Default);
-            writer.WriteStringProperty("description", Description);
-            writer.WriteList("enum", Enum, (w, s) => w.WriteValue(s));
+            // default
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDefault, Default);
 
+            // description
+            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+
+            // enums
+            writer.WriteOptionalCollection(OpenApiConstants.OpenApiDocEnum, Enum, (w, s) => w.WriteValue(s));
+
+            // specification extensions
             writer.WriteExtensions(Extensions);
 
             writer.WriteEndObject();

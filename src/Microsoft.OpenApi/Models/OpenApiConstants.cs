@@ -244,7 +244,7 @@ namespace Microsoft.OpenApi.Models
 
         public const string Consumes = "consumes";
 
-        public const string Products = "produces";
+        public const string Produces = "produces";
 
         #endregion
     }
