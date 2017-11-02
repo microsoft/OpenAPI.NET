@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using SharpYaml.Serialization;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
@@ -90,6 +91,15 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
         public virtual Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
             throw new OpenApiException("Cannot create simple map");
+        }
+
+        /// <summary>
+        /// Create a <see cref="IOpenApiAny"/>
+        /// </summary>
+        /// <returns></returns>
+        public virtual IOpenApiAny CreateAny()
+        {
+            throw new NotImplementedException();
         }
 
         public virtual string GetRaw()

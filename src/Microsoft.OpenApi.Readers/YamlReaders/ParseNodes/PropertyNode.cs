@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharpYaml.Serialization;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
 {
@@ -75,6 +76,11 @@ namespace Microsoft.OpenApi.Readers.YamlReaders.ParseNodes
                         new OpenApiError("", $"{Name} is not a valid property at {Context.GetLocation()}"));
                 }
             }
+        }
+
+        public override IOpenApiAny CreateAny()
+        {
+            throw new NotImplementedException();
         }
     }
 }
