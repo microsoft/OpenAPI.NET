@@ -16,6 +16,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Lists the required security schemes along with a list of strings populated with scopes
         /// only when the security scheme is OAuth2 or OpenIdConnect.
+        /// For other security scheme types, the array MUST be empty.
         /// </summary>
         public Dictionary<OpenApiSecurityScheme, List<string>> Schemes { get; set; } =
             new Dictionary<OpenApiSecurityScheme, List<string>>();

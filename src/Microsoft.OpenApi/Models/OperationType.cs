@@ -57,23 +57,4 @@ namespace Microsoft.OpenApi.Models
         [Display("trace")]
         Trace
     }
-
-    public static class OperationTypeExtensions
-    {
-        /// <summary>
-        /// Gets the enum display name.
-        /// </summary>
-        /// <param name="enumValue">The enum value.</param>
-        /// <returns></returns>
-        public static string GetDisplayName(this OperationType enumValue)
-        {
-            var attribute = enumValue.GetAttributeOfType<DisplayAttribute>();
-            if (attribute == null)
-            {
-                return enumValue.ToString();
-            }
-
-            return attribute.Name;
-        }
-    }
 }

@@ -13,6 +13,13 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiParameterTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiParameterTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         public static OpenApiParameter BasicParameter = new OpenApiParameter
         {
             Name = "name1",
@@ -43,13 +50,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiParameterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Fact]
         public void SerializeBasicParameterAsV3JsonWorks()

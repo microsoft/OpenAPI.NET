@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Commons;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -750,7 +751,10 @@ namespace Microsoft.OpenApi.Readers
 
         private static FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields = new FixedFieldMap<OpenApiSecurityScheme>
         {
-            { "type", (o,n) => { o.Type = (SecuritySchemeType)Enum.Parse(typeof(SecuritySchemeType), n.GetScalarValue());  } },
+            { "type", (o,n) =>
+            {
+                o.Type = n.GetScalarValue().GetEnumFromDisplayName<SecuritySchemeType>();
+            } },
             { "description", (o,n) => { o.Description = n.GetScalarValue();  } },
             { "name", (o,n) => { o.Name = n.GetScalarValue();  } },
             { "in", (o,n) => { o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()); } },
