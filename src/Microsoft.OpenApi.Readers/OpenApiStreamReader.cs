@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Readers.ParseNodes;
 using SharpYaml;
 using SharpYaml.Serialization;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.OpenApiV2Deserializer;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -74,7 +75,7 @@ namespace Microsoft.OpenApi.Readers
                             parseReference = p => OpenApiV2Deserializer.OpenApiV2Deserializer.ParseReference(p)
                         });
 
-                    return OpenApiV2Deserializer.OpenApiV2Deserializer.LoadOpenApi(rootNode);
+                    return OpenApiV2Deserializer.LoadOpenApi(rootNode);
 
                 default:
                     context.SetReferenceService(
