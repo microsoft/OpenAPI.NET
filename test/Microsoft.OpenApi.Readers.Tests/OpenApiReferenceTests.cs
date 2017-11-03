@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TranslateV2ExternalReference()
         {
-            var reference = OpenApiV2Deserializer.ParseReference("swagger.json#/parameters/blahblah");
+            var reference = OpenApiV2Deserializer.OpenApiV2Deserializer.ParseReference("swagger.json#/parameters/blahblah");
 
             Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
             Assert.Equal("swagger.json", reference.ExternalFilePath);
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TranslateV2LocalReference()
         {
-            var reference = OpenApiV2Deserializer.ParseReference("blahblah");
+            var reference = OpenApiV2Deserializer.OpenApiV2Deserializer.ParseReference("blahblah");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
             Assert.Equal(string.Empty, reference.ExternalFilePath);
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TranslateV2Reference()
         {
-            var reference = OpenApiV2Deserializer.ParseReference("#/definitions/blahblah");
+            var reference = OpenApiV2Deserializer.OpenApiV2Deserializer.ParseReference("#/definitions/blahblah");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
             Assert.Equal(string.Empty, reference.ExternalFilePath);
