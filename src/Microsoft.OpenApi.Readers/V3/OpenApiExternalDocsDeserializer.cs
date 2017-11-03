@@ -7,13 +7,13 @@ using System;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V2
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV2Deserializer
+    internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiExternalDocs> ExternalDocsFixedFields =
             new FixedFieldMap<OpenApiExternalDocs>

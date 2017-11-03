@@ -8,13 +8,13 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V2
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV2Deserializer
+    internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiResponse> ResponseFixedFields = new FixedFieldMap<OpenApiResponse>
         {
@@ -31,17 +31,17 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
             {
-                "examples", (o, n) =>
+                "content", (o, n) =>
                 {
-                    /*o.Examples = ((ListNode)n).Select(s=> new AnyNode(s)).ToList();*/
+                    o.Content = n.CreateMap(LoadMediaType);
                 }
             },
             {
-                "schema", (o, n) =>
+                "links", (o, n) =>
                 {
-                    n.Context.SetTempStorage("operationschema", LoadSchema(n));
+                    o.Links = n.CreateMap(LoadLink);
                 }
-            },
+            }
         };
 
         private static readonly PatternFieldMap<OpenApiResponse> ResponsePatternFields =
@@ -54,36 +54,11 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mapNode = node.CheckMapNode("response");
 
+            var required = new List<string> {"description"};
             var response = new OpenApiResponse();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(response, ResponseFixedFields, ResponsePatternFields);
-            }
-
-            ProcessProduces(response, node.Context);
+            ParseMap(mapNode, response, ResponseFixedFields, ResponsePatternFields, required);
 
             return response;
-        }
-
-        private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
-        {
-            var produces = context.GetTempStorage<List<string>>("operationproduces") ??
-                context.GetTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
-
-            response.Content = new Dictionary<string, OpenApiMediaType>();
-            foreach (var mt in produces)
-            {
-                var schema = context.GetTempStorage<OpenApiSchema>("operationschema");
-                OpenApiMediaType mediaType = null;
-                if (schema != null)
-                {
-                    mediaType = new OpenApiMediaType
-                    {
-                        Schema = schema
-                    };
-                }
-                response.Content.Add(mt, mediaType);
-            }
         }
     }
 }

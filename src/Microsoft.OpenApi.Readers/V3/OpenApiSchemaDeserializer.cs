@@ -7,13 +7,13 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V2
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV2Deserializer
+    internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiSchema> SchemaFixedFields = new FixedFieldMap<OpenApiSchema>
         {
@@ -113,7 +113,6 @@ namespace Microsoft.OpenApi.Readers.V2
                     o.Enum = n.CreateSimpleList<IOpenApiAny>(s => new OpenApiString(s.GetScalarValue()));
                 }
             },
-
             {
                 "type", (o, n) =>
                 {
@@ -124,6 +123,24 @@ namespace Microsoft.OpenApi.Readers.V2
                 "allOf", (o, n) =>
                 {
                     o.AllOf = n.CreateList(LoadSchema);
+                }
+            },
+            {
+                "oneOf", (o, n) =>
+                {
+                    o.OneOf = n.CreateList(LoadSchema);
+                }
+            },
+            {
+                "anyOf", (o, n) =>
+                {
+                    o.AnyOf = n.CreateList(LoadSchema);
+                }
+            },
+            {
+                "not", (o, n) =>
+                {
+                    o.Not = LoadSchema(n);
                 }
             },
             {
@@ -147,13 +164,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "description", (o, n) =>
                 {
-                    o.Type = n.GetScalarValue();
+                    o.Description = n.GetScalarValue();
                 }
             },
             {
                 "format", (o, n) =>
                 {
-                    o.Description = n.GetScalarValue();
+                    o.Format = n.GetScalarValue();
                 }
             },
             {
@@ -163,11 +180,23 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
 
+            {
+                "nullable", (o, n) =>
+                {
+                    o.Nullable = bool.Parse(n.GetScalarValue());
+                }
+            },
             // discriminator
             {
                 "readOnly", (o, n) =>
                 {
                     o.ReadOnly = bool.Parse(n.GetScalarValue());
+                }
+            },
+            {
+                "writeOnly", (o, n) =>
+                {
+                    o.WriteOnly = bool.Parse(n.GetScalarValue());
                 }
             },
             // xml
@@ -181,6 +210,12 @@ namespace Microsoft.OpenApi.Readers.V2
                 "example", (o, n) =>
                 {
                     o.Example = new OpenApiString(n.GetScalarValue());
+                }
+            },
+            {
+                "deprecated", (o, n) =>
+                {
+                    o.Deprecated = bool.Parse(n.GetScalarValue());
                 }
             },
         };

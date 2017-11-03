@@ -8,15 +8,15 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V2
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV2Deserializer
+    internal static partial class OpenApiV3Deserializer
     {
-        public static FixedFieldMap<OpenApiLicense> LicenseFixedFields = new FixedFieldMap<OpenApiLicense>
+        public static FixedFieldMap<OpenApiContact> ContactFixedFields = new FixedFieldMap<OpenApiContact>
         {
             {
                 "name", (o, n) =>
@@ -25,27 +25,32 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
             {
+                "email", (o, n) =>
+                {
+                    o.Email = n.GetScalarValue();
+                }
+            },
+            {
                 "url", (o, n) =>
                 {
-                    o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                    o.Url = new Uri(n.GetScalarValue());
                 }
             },
         };
 
-        public static PatternFieldMap<OpenApiLicense> LicensePatternFields = new PatternFieldMap<OpenApiLicense>
+        public static PatternFieldMap<OpenApiContact> ContactPatternFields = new PatternFieldMap<OpenApiContact>
         {
             {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))}
         };
 
-        internal static OpenApiLicense LoadLicense(ParseNode node)
+        public static OpenApiContact LoadContact(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("OpenApiLicense");
+            var mapNode = node as MapNode;
+            var contact = new OpenApiContact();
 
-            var license = new OpenApiLicense();
+            ParseMap(mapNode, contact, ContactFixedFields, ContactPatternFields);
 
-            ParseMap(mapNode, license, LicenseFixedFields, LicensePatternFields);
-
-            return license;
+            return contact;
         }
     }
 }

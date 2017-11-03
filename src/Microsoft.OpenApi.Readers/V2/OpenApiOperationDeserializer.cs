@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
@@ -18,41 +17,88 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        #region OperationObject
+        private static readonly FixedFieldMap<OpenApiOperation> OperationFixedFields =
+            new FixedFieldMap<OpenApiOperation>
+            {
+                {
+                    "tags", (o, n) => o.Tags = n.CreateSimpleList(
+                        valueNode =>
+                            OpenApiReferenceService.LoadTagByReference(
+                                valueNode.Context,
+                                valueNode.Diagnostic,
+                                valueNode.GetScalarValue()))
+                },
+                {
+                    "summary", (o, n) =>
+                    {
+                        o.Summary = n.GetScalarValue();
+                    }
+                },
+                {
+                    "description", (o, n) =>
+                    {
+                        o.Description = n.GetScalarValue();
+                    }
+                },
+                {
+                    "externalDocs", (o, n) =>
+                    {
+                        o.ExternalDocs = LoadExternalDocs(n);
+                    }
+                },
+                {
+                    "operationId", (o, n) =>
+                    {
+                        o.OperationId = n.GetScalarValue();
+                    }
+                },
+                {
+                    "parameters", (o, n) =>
+                    {
+                        o.Parameters = n.CreateList(LoadParameter);
+                    }
+                },
+                {
+                    "consumes", (o, n) => n.Context.SetTempStorage(
+                        "operationconsumes",
+                        n.CreateSimpleList(s => s.GetScalarValue()))
+                },
+                {
+                    "produces", (o, n) => n.Context.SetTempStorage(
+                        "operationproduces",
+                        n.CreateSimpleList(s => s.GetScalarValue()))
+                },
+                {
+                    "responses", (o, n) =>
+                    {
+                        o.Responses = LoadResponses(n);
+                    }
+                },
+                {
+                    "deprecated", (o, n) =>
+                    {
+                        o.Deprecated = bool.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "security", (o, n) =>
+                    {
+                        o.Security = n.CreateList(LoadSecurityRequirement);
+                    }
+                },
+            };
 
-        private static FixedFieldMap<OpenApiOperation> OperationFixedFields = new FixedFieldMap<OpenApiOperation>
-        {
-            { "tags", (o,n) => o.Tags = n.CreateSimpleList((valueNode) =>
-                OpenApiReferenceService.LoadTagByReference(
-                    valueNode.Context,
-                    valueNode.Diagnostic,
-                    valueNode.GetScalarValue()))},
-            { "summary", (o,n) => { o.Summary = n.GetScalarValue(); } },
-            { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
-            { "externalDocs", (o,n) => { o.ExternalDocs = LoadExternalDocs(n); } },
-            { "operationId", (o,n) => { o.OperationId = n.GetScalarValue(); } },
-            { "parameters", (o,n) => { o.Parameters = n.CreateList(LoadParameter); } },
-            { "consumes", (o,n) => n.Context.SetTempStorage(
-                "operationconsumes",
-                n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
-            { "produces", (o,n) => n.Context.SetTempStorage(
-                "operationproduces",
-                n.CreateSimpleList<String>((s) => s.GetScalarValue()))},
-            { "responses", (o,n) => { o.Responses = LoadResponses(n); } },
-            { "deprecated", (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
-            { "security", (o,n) => { o.Security = n.CreateList(LoadSecurityRequirement); } },
-          };
-
-        private static PatternFieldMap<OpenApiOperation> OperationPatternFields = new PatternFieldMap<OpenApiOperation>
-        {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
-        };
+        private static readonly PatternFieldMap<OpenApiOperation> OperationPatternFields =
+            new PatternFieldMap<OpenApiOperation>
+            {
+                {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))},
+            };
 
         internal static OpenApiOperation LoadOperation(ParseNode node)
         {
             var mapNode = node.CheckMapNode("OpenApiOperation");
 
-            OpenApiOperation operation = new OpenApiOperation();
+            var operation = new OpenApiOperation();
 
             ParseMap(mapNode, operation, OperationFixedFields, OperationPatternFields);
 
@@ -73,46 +119,42 @@ namespace Microsoft.OpenApi.Readers.V2
 
             return operation;
         }
-
-        #region Responses Object
-
-        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>
-        {
-        };
+       
+        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>();
 
         public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
         {
-            { (s)=> !s.StartsWith("x-"), (o, p, n)=> o.Add(p, LoadResponse(n)) },
-            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) }
+            {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
 
         public static OpenApiResponses LoadResponses(ParseNode node)
         {
-            MapNode mapNode = node.CheckMapNode("Responses");
+            var mapNode = node.CheckMapNode("Responses");
 
-            OpenApiResponses domainObject = new OpenApiResponses();
+            var domainObject = new OpenApiResponses();
 
             ParseMap(mapNode, domainObject, ResponsesFixedFields, ResponsesPatternFields);
 
             return domainObject;
         }
 
-        #endregion
-
         private static OpenApiRequestBody CreateFormBody(List<OpenApiParameter> formParameters)
         {
-            var mediaType = new OpenApiMediaType()
+            var mediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema()
+                Schema = new OpenApiSchema
                 {
                     Properties = formParameters.ToDictionary(k => k.Name, v => v.Schema)
                 }
             };
 
-            var formBody = new OpenApiRequestBody()
+            var formBody = new OpenApiRequestBody
             {
-                Content = new Dictionary<string, OpenApiMediaType>() {
-                            { "application/x-www-form-urlencoded", mediaType } }
+                Content = new Dictionary<string, OpenApiMediaType>
+                {
+                    {"application/x-www-form-urlencoded", mediaType}
+                }
             };
 
             return formBody;
@@ -120,23 +162,22 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static OpenApiRequestBody CreateRequestBody(ParsingContext context, OpenApiParameter bodyParameter)
         {
-            var consumes = context.GetTempStorage<List<string>>("operationproduces")
-                      ?? context.GetTempStorage<List<string>>("globalproduces")
-                      ?? new List<string>() { "application/json" };
+            var consumes = context.GetTempStorage<List<string>>("operationproduces") ??
+                context.GetTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
 
-            var requestBody = new OpenApiRequestBody()
+            var requestBody = new OpenApiRequestBody
             {
                 Description = bodyParameter.Description,
                 Required = bodyParameter.Required,
-                Content = consumes.ToDictionary(k => k, v => new OpenApiMediaType()
-                {
-                    Schema = bodyParameter.Schema  // Should we clone this?
-                })
+                Content = consumes.ToDictionary(
+                    k => k,
+                    v => new OpenApiMediaType
+                    {
+                        Schema = bodyParameter.Schema // Should we clone this?
+                    })
             };
 
             return requestBody;
         }
-
-        #endregion
     }
 }

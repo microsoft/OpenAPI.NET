@@ -6,13 +6,13 @@
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V2
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV2Deserializer
+    internal static partial class OpenApiV3Deserializer
     {
         public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
         {
@@ -26,15 +26,8 @@ namespace Microsoft.OpenApi.Readers.V2
                     mapNode.Context,
                     mapNode.Diagnostic,
                     property.Name);
-                if (scheme != null)
-                {
-                    obj.Schemes.Add(scheme, property.Value.CreateSimpleList(n2 => n2.GetScalarValue()));
-                }
-                else
-                {
-                    node.Diagnostic.Errors.Add(
-                        new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
-                }
+
+                obj.Schemes.Add(scheme, property.Value.CreateSimpleList(n2 => n2.GetScalarValue()));
             }
 
             return obj;

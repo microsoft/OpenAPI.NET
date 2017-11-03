@@ -8,13 +8,13 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V2
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV2Deserializer
+    internal static partial class OpenApiV3Deserializer
     {
         public static FixedFieldMap<OpenApiLicense> LicenseFixedFields = new FixedFieldMap<OpenApiLicense>
         {
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "url", (o, n) =>
                 {
-                    o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                    o.Url = new Uri(n.GetScalarValue());
                 }
             },
         };
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         internal static OpenApiLicense LoadLicense(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("OpenApiLicense");
+            var mapNode = node.CheckMapNode("License");
 
             var license = new OpenApiLicense();
 

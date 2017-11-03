@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Readers.V3;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests

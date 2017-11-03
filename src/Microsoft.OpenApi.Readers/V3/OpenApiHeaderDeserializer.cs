@@ -7,13 +7,13 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V2
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV2Deserializer
+    internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiHeader> HeaderFixedFields = new FixedFieldMap<OpenApiHeader>
         {
@@ -48,17 +48,11 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
             {
-                "type", (o, n) =>
+                "schema", (o, n) =>
                 {
-                    GetOrCreateSchema(o).Type = n.GetScalarValue();
+                    o.Schema = LoadSchema(n);
                 }
-            },
-            {
-                "format", (o, n) =>
-                {
-                    GetOrCreateSchema(o).Format = n.GetScalarValue();
-                }
-            },
+            }
         };
 
         private static readonly PatternFieldMap<OpenApiHeader> HeaderPatternFields = new PatternFieldMap<OpenApiHeader>
@@ -73,13 +67,6 @@ namespace Microsoft.OpenApi.Readers.V2
             foreach (var property in mapNode)
             {
                 property.ParseField(header, HeaderFixedFields, HeaderPatternFields);
-            }
-
-            var schema = node.Context.GetTempStorage<OpenApiSchema>("schema");
-            if (schema != null)
-            {
-                header.Schema = schema;
-                node.Context.SetTempStorage("schema", null);
             }
 
             return header;
