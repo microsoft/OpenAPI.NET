@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var callback = callbackPair.Value;
             var pathItemPair = callback.PathItems.First();
-            Assert.Equal("$request.body(/url)", pathItemPair.Key.Expression);
+            Assert.Equal("$request.body#/url", pathItemPair.Key.Expression);
 
             var pathItem = pathItemPair.Value;
 

@@ -7,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Commons;
+using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Commons;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -519,8 +520,8 @@ namespace Microsoft.OpenApi.Readers
 
         private static PatternFieldMap<OpenApiCallback> CallbackPatternFields = new PatternFieldMap<OpenApiCallback>
         {
-             { (s)=> s.StartsWith("$"),
-                (o,k,n)=> o.PathItems.Add(new RuntimeExpression(k), LoadPathItem(n)    ) }
+             { (s)=> s.StartsWith("$"), (o, p, n)=> o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n) ) },
+             { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny() ) },
         };
 
         public static OpenApiCallback LoadCallback(ParseNode node)
@@ -546,16 +547,17 @@ namespace Microsoft.OpenApi.Readers
 
         private static FixedFieldMap<OpenApiLink> LinkFixedFields = new FixedFieldMap<OpenApiLink>
         {
-            { "href", (o,n) => { o.Href = n.GetScalarValue(); } },
+            { "operationRef", (o,n) => { o.OperationRef = n.GetScalarValue(); } },
             { "operationId", (o,n) => { o.OperationId = n.GetScalarValue(); } },
-            { "parameters", (o,n) => { o.Parameters = n.CreateSimpleMap(LoadRuntimeExpression); } },
-            { "requestBody", (o,n) => { o.RequestBody = LoadRuntimeExpression(n); } },
+            { "parameters", (o,n) => { o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper); } },
+            { "requestBody", (o,n) => { o.RequestBody = LoadRuntimeExpressionAnyWrapper(n); } },
             { "description", (o,n) => { o.Description = n.GetScalarValue(); } },
+            { "server", (o, n) => o.Server = LoadServer(n) }
         };
 
         private static PatternFieldMap<OpenApiLink> LinkPatternFields = new PatternFieldMap<OpenApiLink>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
+            { (s)=> s.StartsWith("x-"), (o, p, n)=> o.AddExtension(p, n.CreateAny()) },
         };
 
         public static OpenApiLink LoadLink(ParseNode node)
@@ -938,7 +940,26 @@ namespace Microsoft.OpenApi.Readers
         private static RuntimeExpression LoadRuntimeExpression(ParseNode node)
         {
             var value = node.GetScalarValue();
-            return new RuntimeExpression(value);
+            return RuntimeExpression.Build(value);
+        }
+        private static RuntimeExpressionAnyWrapper LoadRuntimeExpressionAnyWrapper(ParseNode node)
+        {
+            var value = node.GetScalarValue();
+
+            if (value != null && value.StartsWith("$"))
+            {
+                return new RuntimeExpressionAnyWrapper
+                {
+                    Expression = RuntimeExpression.Build(value)
+                };
+            }
+            else
+            {
+                return new RuntimeExpressionAnyWrapper
+                {
+                    Any = node.CreateAny()
+                };
+            }
         }
 
         private static void ReportMissing(ParseNode node, IList<string> required)

@@ -158,5 +158,32 @@ namespace Microsoft.OpenApi.Properties {
                 return ResourceManager.GetString("OpenApiWriterMustHaveActiveScope", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The runtime expression &apos;{0}&apos; has invalid format..
+        /// </summary>
+        internal static string RuntimeExpressionHasInvalidFormat {
+            get {
+                return ResourceManager.GetString("RuntimeExpressionHasInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The runtime expression &apos;{0}&apos; should start with &apos;$&apos;.
+        /// </summary>
+        internal static string RuntimeExpressionMustBeginWithDollar {
+            get {
+                return ResourceManager.GetString("RuntimeExpressionMustBeginWithDollar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The source expression &apos;{0}&apos; has invalid format..
+        /// </summary>
+        internal static string SourceExpressionHasInvalidFormat {
+            get {
+                return ResourceManager.GetString("SourceExpressionHasInvalidFormat", resourceCulture);
+            }
+        }
     }
 }

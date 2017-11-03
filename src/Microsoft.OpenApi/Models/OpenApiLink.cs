@@ -15,15 +15,44 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiLink : OpenApiElement, IOpenApiReference, IOpenApiExtension
     {
-        public string Href { get; set; }
-        public string OperationId { get; set; }
-        public Dictionary<string, RuntimeExpression> Parameters { get; set; }
-        public RuntimeExpression RequestBody { get; set; }
+        /// <summary>
+        /// A relative or absolute reference to an OAS operation.
+        /// </summary>
+        public string OperationRef { get; set; }
 
+        /// <summary>
+        /// The name of an existing, resolvable OAS operation, as defined with a unique operationId
+        /// </summary>
+        public string OperationId { get; set; }
+
+        /// <summary>
+        /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
+        /// </summary>
+        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; }
+
+        /// <summary>
+        /// A literal value or {expression} to use as a request body when calling the target operation.
+        /// </summary>
+        public RuntimeExpressionAnyWrapper RequestBody { get; set; }
+
+        /// <summary>
+        /// A description of the link.
+        /// </summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// A server object to be used by the target operation.
+        /// </summary>
+        public OpenApiServer Server { get; set; }
+
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
+        /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
+        /// <summary>
+        /// Reference pointer.
+        /// </summary>
         public OpenApiReference Pointer { get; set; }
 
         /// <summary>
@@ -43,19 +72,35 @@ namespace Microsoft.OpenApi.Models
             else
             {
                 writer.WriteStartObject();
-                writer.WriteStringProperty("href", Href);
-                writer.WriteStringProperty("operationId", OperationId);
-                writer.WriteMap("parameters", Parameters, (w, x) => { w.WriteValue(x.ToString()); });
+
+                // operationRef
+                writer.WriteStringProperty(OpenApiConstants.OperationRef, OperationRef);
+
+                // operationId
+                writer.WriteStringProperty(OpenApiConstants.OperationId, OperationId);
+
+                // parameters
+                writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteValue(w));
+
+                // requestBody
+                writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, (w, r) => r.WriteValue(w));
+
+                // description
+                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+
+                // server
+                writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.WriteAsV3(w));
+
                 writer.WriteEndObject();
             }
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiLink"/> to Open Api v3.0
+        /// Serialize <see cref="OpenApiLink"/> to Open Api v2.0
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            // nothing here
+            // link object does not exist in V2.
         }
     }
 }
