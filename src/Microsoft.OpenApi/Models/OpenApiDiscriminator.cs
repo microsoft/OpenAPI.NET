@@ -36,10 +36,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // propertyName
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocPropertyName, PropertyName);
+            writer.WriteStringProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteMap(OpenApiConstants.OpenApiDocMapping, Mapping, (w, s) => w.WriteValue(s));
+            writer.WriteMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
 
             writer.WriteEndObject();
         }

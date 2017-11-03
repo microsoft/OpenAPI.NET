@@ -63,13 +63,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // name
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocName, Name);
+            writer.WriteStringProperty(OpenApiConstants.Name, Name);
 
             // url
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocUrl, Url?.OriginalString);
+            writer.WriteStringProperty(OpenApiConstants.Url, Url?.OriginalString);
 
             // email
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocEmail, Email);
+            writer.WriteStringProperty(OpenApiConstants.Email, Email);
 
             // extensions
             writer.WriteExtensions(Extensions);

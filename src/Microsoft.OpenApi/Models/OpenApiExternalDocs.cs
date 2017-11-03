@@ -17,12 +17,12 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiExternalDocs : OpenApiElement, IOpenApiExtension
     {
         /// <summary>
-        /// REQUIRED.The URL for the target documentation. Value MUST be in the format of a URL.
+        /// A short description of the target documentation.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// A short description of the target documentation.
+        /// REQUIRED. The URL for the target documentation. Value MUST be in the format of a URL.
         /// </summary>
         public Uri Url { get; set; }
 
@@ -56,9 +56,9 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocUrl, Url?.OriginalString);
+            writer.WriteStringProperty(OpenApiConstants.Url, Url?.OriginalString);
 
             writer.WriteExtensions(Extensions);
 

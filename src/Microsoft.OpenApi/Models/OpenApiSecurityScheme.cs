@@ -77,24 +77,24 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocType, Type.ToString());
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.Type, Type.ToString());
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             switch (Type)
             {
                 case SecuritySchemeType.http:
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocScheme, Scheme);
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocBearerFormat, BearerFormat);
+                    writer.WriteStringProperty(OpenApiConstants.Scheme, Scheme);
+                    writer.WriteStringProperty(OpenApiConstants.BearerFormat, BearerFormat);
                     break;
                 case SecuritySchemeType.oauth2:
-                    writer.WriteObject(OpenApiConstants.OpenApiDocFlows, Flows, (w, o) => o.WriteAsV3(w));
+                    writer.WriteObject(OpenApiConstants.Flows, Flows, (w, o) => o.WriteAsV3(w));
                     break;
                 case SecuritySchemeType.apiKey:
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocIn, In.ToString());
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocName, Name);
+                    writer.WriteStringProperty(OpenApiConstants.In, In.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.Name, Name);
                     break;
                 case SecuritySchemeType.openIdConnect:
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocOpenIdConnectUrl, OpenIdConnectUrl?.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.OpenIdConnectUrl, OpenIdConnectUrl?.ToString());
                     break;
             }
 
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Type == SecuritySchemeType.http && Scheme != OpenApiConstants.OpenApiDocBasic)
+            if (Type == SecuritySchemeType.http && Scheme != OpenApiConstants.Basic)
             {
                 // Bail because V2 does not support non-basic HTTP scheme
                 writer.WriteStartObject();
@@ -132,22 +132,22 @@ namespace Microsoft.OpenApi.Models
             switch (Type)
             {
                 case SecuritySchemeType.http:
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocType, OpenApiConstants.OpenApiDocBasic);
+                    writer.WriteStringProperty(OpenApiConstants.Type, OpenApiConstants.Basic);
                     break;
 
                 case SecuritySchemeType.oauth2:
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocType, Type.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.Type, Type.ToString());
                     WriteOAuthFlowForV2(writer, Flows);
                     break;
 
                 case SecuritySchemeType.apiKey:
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocType, Type.ToString());
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocIn, In.ToString());
-                    writer.WriteStringProperty(OpenApiConstants.OpenApiDocName, Name);
+                    writer.WriteStringProperty(OpenApiConstants.Type, Type.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.In, In.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.Name, Name);
                     break;
             }
 
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
             writer.WriteEndObject();
         }
 
@@ -157,19 +157,19 @@ namespace Microsoft.OpenApi.Models
             {
                 if (flows.Implicit != null)
                 {
-                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocImplicit, flows.Implicit);
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.Implicit, flows.Implicit);
                 }
                 else if (flows.Password != null)
                 {
-                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocPassword, flows.Password);
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.Password, flows.Password);
                 }
                 else if (flows.ClientCredentials != null)
                 {
-                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocApplication, flows.ClientCredentials);
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.Application, flows.ClientCredentials);
                 }
                 else if (flows.AuthorizationCode != null)
                 {
-                    WriteOAuthFlowForV2(writer, OpenApiConstants.OpenApiDocAccessCode, flows.AuthorizationCode);
+                    WriteOAuthFlowForV2(writer, OpenApiConstants.AccessCode, flows.AuthorizationCode);
                 }
             }
         }
@@ -177,16 +177,16 @@ namespace Microsoft.OpenApi.Models
         private static void WriteOAuthFlowForV2(IOpenApiWriter writer, string flowValue, OpenApiOAuthFlow flow)
         {
             // flow
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocFlow, flowValue);
+            writer.WriteStringProperty(OpenApiConstants.Flow, flowValue);
 
             // authorizationUrl
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocAuthorizationUrl, flow.AuthorizationUrl?.ToString());
+            writer.WriteStringProperty(OpenApiConstants.AuthorizationUrl, flow.AuthorizationUrl?.ToString());
 
             // tokenUrl
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTokenUrl, flow.TokenUrl?.ToString());
+            writer.WriteStringProperty(OpenApiConstants.TokenUrl, flow.TokenUrl?.ToString());
 
             // scopes
-            writer.WriteMap(OpenApiConstants.OpenApiDocScopes, flow.Scopes, (w, s) => w.WriteValue(s));
+            writer.WriteMap(OpenApiConstants.Scopes, flow.Scopes, (w, s) => w.WriteValue(s));
         }
     }
 }

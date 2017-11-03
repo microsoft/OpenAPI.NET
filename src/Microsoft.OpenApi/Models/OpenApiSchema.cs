@@ -15,84 +15,221 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiSchema : OpenApiElement, IOpenApiReference, IOpenApiExtension
     {
+        /// <summary>
+        /// Follow JSON Schema definition. Short text providing information about the data.
+        /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// Value MUST be a string. Multiple types via an array are not supported.
+        /// </summary>
         public string Type { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// While relying on JSON Schema's defined formats, 
+        /// the OAS offers a few additional predefined formats.
+        /// </summary>
         public string Format { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// CommonMark syntax MAY be used for rich text representation.
+        /// </summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public decimal? Maximum { get; set; }
 
-        public bool ExclusiveMaximum { get; set; } = false;
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        public bool? ExclusiveMaximum { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public decimal? Minimum { get; set; }
 
-        public bool ExclusiveMinimum { get; set; } = false;
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        public bool? ExclusiveMinimum { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public int? MaxLength { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public int? MinLength { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// This string SHOULD be a valid regular expression, according to the ECMA 262 regular expression dialect
+        /// </summary>
         public string Pattern { get; set; }
 
-        public decimal MultipleOf { get; set; }
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        public decimal? MultipleOf { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// The default value represents what would be assumed by the consumer of the input as the value of the schema if one is not provided.
+        /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
+        /// For example, if type is string, then default can be "foo" but cannot be 1.
+        /// </summary>
         public IOpenApiAny Default { get; set; }
 
+        /// <summary>
+        /// Relevant only for Schema "properties" definitions. Declares the property as "read only".
+        /// This means that it MAY be sent as part of a response but SHOULD NOT be sent as part of the request.
+        /// If the property is marked as readOnly being true and is in the required list,
+        /// the required will take effect on the response only.
+        /// A property MUST NOT be marked as both readOnly and writeOnly being true.
+        /// Default value is false.
+        /// </summary>
         public bool ReadOnly { get; set; }
 
+        /// <summary>
+        /// Relevant only for Schema "properties" definitions. Declares the property as "write only".
+        /// Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response. 
+        /// If the property is marked as writeOnly being true and is in the required list, 
+        /// the required will take effect on the request only.
+        /// A property MUST NOT be marked as both readOnly and writeOnly being true. 
+        /// Default value is false.
+        /// </summary>
         public bool WriteOnly { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
+        /// </summary>
         public IList<OpenApiSchema> AllOf { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
+        /// </summary>
         public IList<OpenApiSchema> OneOf { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
+        /// </summary>
         public IList<OpenApiSchema> AnyOf { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
+        /// </summary>
         public OpenApiSchema Not { get; set; }
 
-        public string[] Required { get; set; }
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        public IList<string> Required { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// Value MUST be an object and not an array. Inline or referenced schema MUST be of a Schema Object 
+        /// and not a standard JSON Schema. items MUST be present if the type is array.
+        /// </summary>
         public OpenApiSchema Items { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public int? MaxItems { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public int? MinItems { get; set; }
 
-        public bool UniqueItems { get; set; }
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
+        public bool? UniqueItems { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// Property definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced).
+        /// </summary>
         public IDictionary<string, OpenApiSchema> Properties { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public int? MaxProperties { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public int? MinProperties { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// Value can be boolean or object. Inline or referenced schema 
+        /// MUST be of a Schema Object and not a standard JSON Schema.
+        /// </summary>
         public OpenApiSchema AdditionalProperties { get; set; }
 
+        /// <summary>
+        /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate 
+        /// between other schemas which may satisfy the payload description. 
+        /// </summary>
         public OpenApiDiscriminator Discriminator { get; set; }
 
+        /// <summary>
+        /// A free-form property to include an example of an instance for this schema. 
+        /// To represent examples that cannot be naturally represented in JSON or YAML, 
+        /// a string value can be used to contain the example with escaping where necessary.
+        /// </summary>
         public IOpenApiAny Example { get; set; }
 
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// </summary>
         public IList<IOpenApiAny> Enum { get; set; } = new List<IOpenApiAny>();
 
+        /// <summary>
+        /// Allows sending a null value for the defined schema. Default value is false.
+        /// </summary>
         public bool Nullable { get; set; }
 
+        /// <summary>
+        /// Additional external documentation for this schema.
+        /// </summary>
         public OpenApiExternalDocs ExternalDocs { get; set; }
 
+        /// <summary>
+        /// Specifies that a schema is deprecated and SHOULD be transitioned out of usage. 
+        /// Default value is false.
+        /// </summary>
         public bool Deprecated { get; set; }
 
         /// <summary>
+        /// This MAY be used only on properties schemas. It has no effect on root schemas. 
         /// Adds additional metadata to describe the XML representation of this property.
         /// </summary>
         public OpenApiXml Xml { get; set; }
 
         /// <summary>
-        /// Specification Extensions.
+        /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
+        /// <summary>
+        /// Reference object.
+        /// </summary>
         public OpenApiReference Pointer { get; set; }
 
         /// <summary>
@@ -114,109 +251,109 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // title
-            writer.WriteStringProperty("title", Title);
+            writer.WriteStringProperty(OpenApiConstants.Title, Title);
 
             // multipleOf
-            writer.WriteNumberProperty("multipleOf", MultipleOf);
+            writer.WriteNumberProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // maximum
-            writer.WriteNumberProperty("maximum", Maximum);
+            writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty("exclusiveMaximum", ExclusiveMaximum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
-            writer.WriteNumberProperty("minimum", Minimum);
+            writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty("exclusiveMinimum", ExclusiveMinimum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
-            writer.WriteNumberProperty("maxLength", MaxLength);
+            writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
 
             // minLength
-            writer.WriteNumberProperty("minLength", MinLength);
+            writer.WriteNumberProperty(OpenApiConstants.MinLength, MinLength);
 
             // pattern
-            writer.WriteStringProperty("pattern", Pattern);
+            writer.WriteStringProperty(OpenApiConstants.Pattern, Pattern);
 
             // maxItems
-            writer.WriteNumberProperty("maxItems", MaxItems);
+            writer.WriteNumberProperty(OpenApiConstants.MaxItems, MaxItems);
 
             // minItems
-            writer.WriteNumberProperty("minItems", MinItems);
+            writer.WriteNumberProperty(OpenApiConstants.MinItems, MinItems);
 
             // uniqueItems
-            writer.WriteBoolProperty("uniqueItems", UniqueItems);
+            writer.WriteBoolProperty(OpenApiConstants.UniqueItems, UniqueItems);
 
             // maxProperties
-            writer.WriteNumberProperty("maxProperties", MaxProperties);
+            writer.WriteNumberProperty(OpenApiConstants.MaxProperties, MaxProperties);
 
             // minProperties
-            writer.WriteNumberProperty("minProperties", MinProperties);
+            writer.WriteNumberProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
-            writer.WriteList("required", Required, (w, s) => w.WriteValue(s));
+            writer.WriteList(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
 
             // enum
-            writer.WriteList("enum", Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
+            writer.WriteList(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
-            writer.WriteStringProperty("type", Type);
+            writer.WriteStringProperty(OpenApiConstants.Type, Type);
 
             // allOf
-            writer.WriteOptionalCollection("allOf", AllOf, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.WriteAsV3(w));
 
             // anyOf
-            writer.WriteOptionalCollection("anyOf", AnyOf, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => s.WriteAsV3(w));
 
             // oneOf
-            writer.WriteOptionalCollection("oneOf", OneOf, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => s.WriteAsV3(w));
 
             // not
-            writer.WriteOptionalObject("not", Not, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.WriteAsV3(w));
 
             // items
-            writer.WriteObject("items", Items, (w, s) => s.WriteAsV3(w));
+            writer.WriteObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV3(w));
 
             // properties
-            writer.WriteOptionalMap("properties", Properties, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.WriteAsV3(w));
 
             // additionalProperties
-            writer.WriteObject("additionalProperties", AdditionalProperties, (w, s) => s.WriteAsV3(w));
+            writer.WriteObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV3(w));
 
             // description
-            writer.WriteStringProperty("description", Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // format
-            writer.WriteStringProperty("format", Format);
+            writer.WriteStringProperty(OpenApiConstants.Format, Format);
 
             // default
-            writer.WriteAnyProperty("default", Default);
+            writer.WriteAnyProperty(OpenApiConstants.Default, Default);
 
-            // readOnly
-            writer.WriteBoolProperty("nullable", Nullable);
+            // nullable
+            writer.WriteBoolProperty(OpenApiConstants.Nullable, Nullable, false);
 
             // discriminator
-            writer.WriteOptionalObject("discriminator", Discriminator, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.WriteAsV3(w));
 
             // readOnly
-            writer.WriteBoolProperty("readOnly", ReadOnly);
+            writer.WriteBoolProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
 
             // writeOnly
-            writer.WriteBoolProperty("writeOnly", WriteOnly);
+            writer.WriteBoolProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
 
             // xml
-            writer.WriteOptionalObject("xml", Xml, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.WriteAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject("externalDocs", ExternalDocs, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.WriteAsV3(w));
 
             // example
-            writer.WriteAnyProperty("example", Example);
+            writer.WriteAnyProperty(OpenApiConstants.Example, Example);
 
             // deprecated
-            writer.WriteBoolProperty("deprecated", Deprecated);
+            writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -253,51 +390,57 @@ namespace Microsoft.OpenApi.Models
             }
 
             // type
-            writer.WriteStringProperty("type", Type);
+            writer.WriteStringProperty(OpenApiConstants.Type, Type);
 
             // format
-            writer.WriteStringProperty("format", Format);
+            writer.WriteStringProperty(OpenApiConstants.Format, Format);
 
             // items
-            writer.WriteObject("items", Items, (w, s) => s.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
 
             // collectionFormat
+            // We need information from style in parameter to populate this.
+            // The best effort we can make is to pull this information from the first parameter
+            // that leverages this schema. However, that in itself may not be as simple
+            // as the schema directly under parameter might be referencing one in the Components,
+            // so we will need to do a full scan of the object before we can write the value for
+            // this property. This is not supported yet, so we will skip this property at the moment.
 
             // default
-            writer.WriteAnyProperty("default", Default);
+            writer.WriteAnyProperty(OpenApiConstants.Default, Default);
 
             // maximum
-            writer.WriteNumberProperty("maximum", Maximum);
+            writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty("exclusiveMaximum", ExclusiveMaximum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
-            writer.WriteNumberProperty("minimum", Minimum);
+            writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty("exclusiveMinimum", ExclusiveMinimum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
-            writer.WriteNumberProperty("maxLength", MaxLength);
+            writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
 
             // minLength
-            writer.WriteNumberProperty("minLength", MinLength);
+            writer.WriteNumberProperty(OpenApiConstants.MinLength, MinLength);
 
             // pattern
-            writer.WriteStringProperty("pattern", Pattern);
+            writer.WriteStringProperty(OpenApiConstants.Pattern, Pattern);
 
             // maxItems
-            writer.WriteNumberProperty("maxItems", MaxItems);
+            writer.WriteNumberProperty(OpenApiConstants.MaxItems, MaxItems);
 
             // minItems
-            writer.WriteNumberProperty("minItems", MinItems);
+            writer.WriteNumberProperty(OpenApiConstants.MinItems, MinItems);
 
             // enum
-            writer.WriteList("enum", Enum, (w, s) => w.WriteAny(s));
+            writer.WriteList(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
 
             // multipleOf
-            writer.WriteNumberProperty("multipleOf", MultipleOf);
+            writer.WriteNumberProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -311,91 +454,91 @@ namespace Microsoft.OpenApi.Models
             }
 
             // format
-            writer.WriteStringProperty("format", Format);
+            writer.WriteStringProperty(OpenApiConstants.Format, Format);
 
             // title
-            writer.WriteStringProperty("title", Title);
+            writer.WriteStringProperty(OpenApiConstants.Title, Title);
 
             // description
-            writer.WriteStringProperty("description", Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // default
-            writer.WriteAnyProperty("default", Default);
+            writer.WriteAnyProperty(OpenApiConstants.Default, Default);
 
             // multipleOf
-            writer.WriteNumberProperty("multipleOf", MultipleOf);
+            writer.WriteNumberProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // maximum
-            writer.WriteNumberProperty("maximum", Maximum);
+            writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty("exclusiveMaximum", ExclusiveMaximum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
-            writer.WriteNumberProperty("minimum", Minimum);
+            writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty("exclusiveMinimum", ExclusiveMinimum, false);
+            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
-            writer.WriteNumberProperty("maxLength", MaxLength);
+            writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
 
             // minLength
-            writer.WriteNumberProperty("minLength", MinLength);
+            writer.WriteNumberProperty(OpenApiConstants.MinLength, MinLength);
 
             // pattern
-            writer.WriteStringProperty("pattern", Pattern);
+            writer.WriteStringProperty(OpenApiConstants.Pattern, Pattern);
 
             // maxItems
-            writer.WriteNumberProperty("maxItems", MaxItems);
+            writer.WriteNumberProperty(OpenApiConstants.MaxItems, MaxItems);
 
             // minItems
-            writer.WriteNumberProperty("minItems", MinItems);
+            writer.WriteNumberProperty(OpenApiConstants.MinItems, MinItems);
 
             // uniqueItems
-            writer.WriteBoolProperty("uniqueItems", UniqueItems);
+            writer.WriteBoolProperty(OpenApiConstants.UniqueItems, UniqueItems);
 
             // maxProperties
-            writer.WriteNumberProperty("maxProperties", MaxProperties);
+            writer.WriteNumberProperty(OpenApiConstants.MaxProperties, MaxProperties);
 
             // minProperties
-            writer.WriteNumberProperty("minProperties", MinProperties);
+            writer.WriteNumberProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
-            writer.WriteList("required", Required, (w, s) => w.WriteValue(s));
+            writer.WriteList(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
 
             // enum
-            writer.WriteList("enum", Enum, (w, s) => w.WriteAny(s));
+            writer.WriteList(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
 
             // type
-            writer.WriteStringProperty("type", Type);
+            writer.WriteStringProperty(OpenApiConstants.Type, Type);
 
             // items
-            writer.WriteObject("items", Items, (w, s) => s.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
 
             // allOf
-            writer.WriteOptionalCollection("allOf", AllOf, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.WriteAsV2(w));
 
             // properties
-            writer.WriteOptionalMap("properties", Properties, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.WriteAsV2(w));
 
             // additionalProperties
-            writer.WriteObject("additionalProperties", AdditionalProperties, (w, s) => s.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV2(w));
 
             // discriminator
-            writer.WriteStringProperty("discriminator", Discriminator?.PropertyName);
+            writer.WriteStringProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
 
             // readOnly
-            writer.WriteBoolProperty("readOnly", ReadOnly);
+            writer.WriteBoolProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
 
             // xml
-            writer.WriteOptionalObject("xml", Xml, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.WriteAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject("externalDocs", ExternalDocs, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.WriteAsV2(w));
 
             // example
-            writer.WriteAnyProperty("example", Example);
+            writer.WriteAnyProperty(OpenApiConstants.Example, Example);
 
             // extensions
             writer.WriteExtensions(Extensions);

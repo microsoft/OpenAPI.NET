@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The title of the application.
         /// </summary>
-        public string Title { get; set; } = OpenApiConstants.OpenApiDocDefaultTitle;
+        public string Title { get; set; } = OpenApiConstants.DefaultTitle;
 
         /// <summary>
         /// A short description of the application.
@@ -64,22 +64,22 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // title
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTitle, Title);
+            writer.WriteStringProperty(OpenApiConstants.Title, Title);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // termsOfService
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTermsOfService, TermsOfService?.OriginalString);
+            writer.WriteStringProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteObject(OpenApiConstants.OpenApiDocContact, Contact, (w, c) => c.WriteAsV3(w));
+            writer.WriteObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV3(w));
 
             // license object
-            writer.WriteObject(OpenApiConstants.OpenApiDocLicense, License, (w, l) => l.WriteAsV3(w));
+            writer.WriteObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV3(w));
 
             // version
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocVersion, Version?.ToString());
+            writer.WriteStringProperty(OpenApiConstants.Version, Version?.ToString());
 
             // specification extensions
             writer.WriteExtensions(Extensions);
@@ -100,22 +100,22 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // title
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTitle, Title);
+            writer.WriteStringProperty(OpenApiConstants.Title, Title);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocDescription, Description);
+            writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // termsOfService
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocTermsOfService, TermsOfService?.OriginalString);
+            writer.WriteStringProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteObject(OpenApiConstants.OpenApiDocContact, Contact, (w, c) => c.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV2(w));
 
             // license object
-            writer.WriteObject(OpenApiConstants.OpenApiDocLicense, License, (w, l) => l.WriteAsV2(w));
+            writer.WriteObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV2(w));
 
             // version
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocVersion, Version?.ToString());
+            writer.WriteStringProperty(OpenApiConstants.Version, Version?.ToString());
 
             // specification extensions
             writer.WriteExtensions(Extensions);

@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             var openApiDoc = new OpenApiDocument
             {
-                SpecVersion = OpenApiConstants.OpenApiDocSwaggerVersion
+                SpecVersion = OpenApiConstants.SwaggerVersion
             };
 
             var jObject = ExportV2ToJObject(openApiDoc);

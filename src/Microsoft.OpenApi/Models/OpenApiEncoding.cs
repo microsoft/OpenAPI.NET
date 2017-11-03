@@ -66,20 +66,20 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocContentType, ContentType);
+            writer.WriteStringProperty(OpenApiConstants.ContentType, ContentType);
 
-            writer.WriteMap(OpenApiConstants.OpenApiDocHeaders, Headers, (w, h) => h.WriteAsV3(w));
+            writer.WriteMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
 
-            writer.WriteStringProperty(OpenApiConstants.OpenApiDocStyle, Style?.ToString());
+            writer.WriteStringProperty(OpenApiConstants.Style, Style?.ToString());
 
             if (Explode != null)
             {
-                writer.WriteBoolProperty(OpenApiConstants.OpenApiDocExplode, Explode.Value, false);
+                writer.WriteBoolProperty(OpenApiConstants.Explode, Explode.Value, false);
             }
 
             if (AllowReserved != null)
             {
-                writer.WriteBoolProperty(OpenApiConstants.OpenApiDocAllowReserved, AllowReserved.Value, false);
+                writer.WriteBoolProperty(OpenApiConstants.AllowReserved, AllowReserved.Value, false);
             }
 
             writer.WriteExtensions(Extensions);
