@@ -150,4 +150,13 @@
   <data name="OpenApiWriterMustHaveActiveScope" xml:space="preserve">
     <value>There must be an active scope for name '{0}' to be written.</value>
   </data>
+  <data name="RuntimeExpressionHasInvalidFormat" xml:space="preserve">
+    <value>The runtime expression '{0}' has invalid format.</value>
+  </data>
+  <data name="RuntimeExpressionMustBeginWithDollar" xml:space="preserve">
+    <value>The runtime expression '{0}' should start with '$'</value>
+  </data>
+  <data name="SourceExpressionHasInvalidFormat" xml:space="preserve">
+    <value>The source expression '{0}' has invalid format.</value>
+  </data>
 </root>
