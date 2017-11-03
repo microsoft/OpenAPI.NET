@@ -70,11 +70,11 @@ namespace Microsoft.OpenApi.Readers
                     context.SetReferenceService(
                         new OpenApiReferenceService(rootNode)
                         {
-                            loadReference = OpenApiV2Deserializer.LoadReference,
-                            parseReference = p => OpenApiV2Deserializer.ParseReference(p)
+                            loadReference = OpenApiV2Deserializer.OpenApiV2Deserializer.LoadReference,
+                            parseReference = p => OpenApiV2Deserializer.OpenApiV2Deserializer.ParseReference(p)
                         });
 
-                    return OpenApiV2Deserializer.LoadOpenApi(rootNode);
+                    return OpenApiV2Deserializer.OpenApiV2Deserializer.LoadOpenApi(rootNode);
 
                 default:
                     context.SetReferenceService(
