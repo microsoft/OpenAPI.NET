@@ -277,7 +277,7 @@ namespace Microsoft.OpenApi.Models
                 Schema.WriteAsItemsProperties(writer);
 
                 // allowEmptyValue
-                writer.WriteBoolProperty("allowEmptyValue", AllowEmptyValue);
+                writer.WriteBoolProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue);
             }
 
             // extensions
