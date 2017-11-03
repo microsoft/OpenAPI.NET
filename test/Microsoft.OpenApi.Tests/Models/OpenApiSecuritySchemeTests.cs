@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -16,7 +17,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSecurityScheme ApiKeySecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
-            Type = SecuritySchemeType.apiKey,
+            Type = SecuritySchemeType.ApiKey,
             In = ParameterLocation.query,
             Name = "parameterName"
         };
@@ -24,14 +25,14 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSecurityScheme HttpBasicSecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
-            Type = SecuritySchemeType.http,
+            Type = SecuritySchemeType.Http,
             Scheme = "basic"
         };
 
         public static OpenApiSecurityScheme HttpBearerSecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
-            Type = SecuritySchemeType.http,
+            Type = SecuritySchemeType.Http,
             Scheme = "bearer",
             BearerFormat = "JWT"
         };
@@ -39,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
-            Type = SecuritySchemeType.oauth2,
+            Type = SecuritySchemeType.OAuth2,
             Flows = new OpenApiOAuthFlows
             {
                 Implicit = new OpenApiOAuthFlow
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSecurityScheme OAuth2MultipleFlowSecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
-            Type = SecuritySchemeType.oauth2,
+            Type = SecuritySchemeType.OAuth2,
             Flows = new OpenApiOAuthFlows
             {
                 Implicit = new OpenApiOAuthFlow
@@ -95,10 +96,17 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSecurityScheme OpenIdConnectSecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
-            Type = SecuritySchemeType.openIdConnect,
+            Type = SecuritySchemeType.OpenIdConnect,
             Scheme = "openIdConnectUrl",
             OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
         };
+
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiSecuritySchemeTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
 
         [Fact]
         public void SerializeApiKeySecuritySchemeAsV3JsonWorks()
@@ -108,8 +116,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 @"{
   ""type"": ""apiKey"",
   ""description"": ""description1"",
-  ""in"": ""query"",
-  ""name"": ""parameterName""
+  ""name"": ""parameterName"",
+  ""in"": ""query""
 }";
 
             // Act
@@ -126,8 +134,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected =
                 @"type: apiKey
 description: description1
-in: query
-name: parameterName";
+name: parameterName
+in: query";
 
             // Act
             var actual = ApiKeySecurityScheme.SerializeAsYaml();

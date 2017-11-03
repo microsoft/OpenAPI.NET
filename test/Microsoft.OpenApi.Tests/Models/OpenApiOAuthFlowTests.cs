@@ -1,0 +1,118 @@
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using FluentAssertions;
+using Microsoft.OpenApi.Models;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace Microsoft.OpenApi.Tests.Models
+{
+    public class OpenApiOAuthFlowTests
+    {
+        public static OpenApiOAuthFlow BasicOAuthFlow = new OpenApiOAuthFlow();
+
+        public static OpenApiOAuthFlow PartialOAuthFlow = new OpenApiOAuthFlow
+        {
+            AuthorizationUrl = new Uri("http://example.com/authorization"),
+            Scopes = new Dictionary<string, string>
+            {
+                ["scopeName3"] = "description3",
+                ["scopeName4"] = "description4"
+            }
+        };
+
+        public static OpenApiOAuthFlow CompleteOAuthFlow = new OpenApiOAuthFlow
+        {
+            AuthorizationUrl = new Uri("http://example.com/authorization"),
+            TokenUrl = new Uri("http://example.com/token"),
+            RefreshUrl = new Uri("http://example.com/refresh"),
+            Scopes = new Dictionary<string, string>
+            {
+                ["scopeName3"] = "description3",
+                ["scopeName4"] = "description4"
+            }
+        };
+
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiOAuthFlowTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        [Fact]
+        public void SerializeBasicOAuthFlowAsV3JsonWorks()
+        {
+            // Arrange
+            var expected =
+                @"{ }";
+
+            // Act
+            var actual = BasicOAuthFlow.SerializeAsJson();
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeBasicOAuthFlowAsV3YamlWorks()
+        {
+            // Arrange
+            var expected =
+                @"";
+
+            // Act
+            var actual = BasicOAuthFlow.SerializeAsYaml();
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializePartialOAuthFlowAsV3JsonWorks()
+        {
+            // Arrange
+            var expected =
+                @"{
+  ""authorizationUrl"": ""http://example.com/authorization"",
+  ""scopes"": {
+    ""scopeName3"": ""description3"",
+    ""scopeName4"": ""description4""
+  }
+}";
+
+            // Act
+            var actual = PartialOAuthFlow.SerializeAsJson();
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeCompleteOAuthFlowAsV3JsonWorks()
+        {
+            // Arrange
+            var expected =
+                @"{
+  ""authorizationUrl"": ""http://example.com/authorization"",
+  ""tokenUrl"": ""http://example.com/token"",
+  ""refreshUrl"": ""http://example.com/refresh"",
+  ""scopes"": {
+    ""scopeName3"": ""description3"",
+    ""scopeName4"": ""description4""
+  }
+}";
+
+            // Act
+            var actual = CompleteOAuthFlow.SerializeAsJson();
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+    }
+}

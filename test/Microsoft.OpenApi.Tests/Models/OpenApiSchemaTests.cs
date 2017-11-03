@@ -16,6 +16,13 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiSchemaTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiSchemaTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         public static OpenApiSchema BasicSchema = new OpenApiSchema();
 
         public static OpenApiSchema AdvancedSchemaNumber = new OpenApiSchema
@@ -135,14 +142,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Url = new Uri("http://example.com/externalDocs")
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiSchemaTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
+        
         [Fact]
         public void SerializeBasicSchemaAsV3JsonWorks()
         {

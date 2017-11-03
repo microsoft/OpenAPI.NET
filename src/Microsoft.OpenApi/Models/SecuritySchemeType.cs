@@ -3,6 +3,8 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Commons;
+
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -10,13 +12,27 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public enum SecuritySchemeType
     {
-        apiKey,
+        /// <summary>
+        /// Use API key
+        /// </summary>
+        [Display("apiKey")]
+        ApiKey,
 
-        http,
+        /// <summary>
+        /// Use basic or bearer token authorization header.
+        /// </summary>
+        [Display("http")]
+        Http,
 
-        oauth2,
+        /// <summary>
+        /// Use OAuth2
+        /// </summary>
+        [Display("oauth2")]
+        OAuth2,
 
-        openIdConnect
+        // Use OAuth2 with OpenId Connect URL to discover OAuth2 configuration value.
+        [Display("openIdConnect")]
+        OpenIdConnect
     }
 
 }

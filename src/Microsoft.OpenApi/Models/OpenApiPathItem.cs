@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -16,8 +17,8 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiPathItem : OpenApiElement, IOpenApiExtension
     {
-        private IDictionary<OperationType, OpenApiOperation> _operations
-                    = new Dictionary<OperationType, OpenApiOperation>();
+        private readonly IDictionary<OperationType, OpenApiOperation> _operations
+            = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
@@ -47,7 +48,7 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// A list of parameters that are applicable for all the operations described under this path.
-        /// These parameters can be overridden at the operation level, but cannot be removed there. 
+        /// These parameters can be overridden at the operation level, but cannot be removed there.
         /// </summary>
         public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
 
@@ -119,7 +120,10 @@ namespace Microsoft.OpenApi.Models
             {
                 if (operation.Key != OperationType.Trace)
                 {
-                    writer.WriteOptionalObject(operation.Key.GetDisplayName(), operation.Value, (w, o) => o.WriteAsV2(w));
+                    writer.WriteOptionalObject(
+                        operation.Key.GetDisplayName(),
+                        operation.Value,
+                        (w, o) => o.WriteAsV2(w));
                 }
             }
 
@@ -130,7 +134,9 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Summary, Summary);
 
             // write "description" as extensions
-            writer.WriteStringProperty(OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Description, Description);
+            writer.WriteStringProperty(
+                OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Description,
+                Description);
 
             // specification extensions
             writer.WriteExtensions(Extensions);

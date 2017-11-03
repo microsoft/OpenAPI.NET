@@ -18,11 +18,13 @@ namespace Microsoft.OpenApi.Models
     {
         /// <summary>
         /// REQUIRED. The authorization URL to be used for this flow.
+        /// Applies to implicit and authorizationCode OAuthFlow.
         /// </summary>
         public Uri AuthorizationUrl { get; set; }
 
         /// <summary>
         /// REQUIRED. The token URL to be used for this flow.
+        /// Applies to password, clientCredentials, and authorizationCode OAuthFlow.
         /// </summary>
         public Uri TokenUrl { get; set; }
 
@@ -52,10 +54,22 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
+
+            // authorizationUrl
             writer.WriteStringProperty("authorizationUrl", AuthorizationUrl?.ToString());
+
+            // tokenUrl
             writer.WriteStringProperty("tokenUrl", TokenUrl?.ToString());
+
+            // refreshUrl
             writer.WriteStringProperty("refreshUrl", RefreshUrl?.ToString());
+
+            // scopes
             writer.WriteMap("scopes", Scopes, (w, s) => w.WriteValue(s));
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
 
