@@ -17,11 +17,13 @@ namespace Microsoft.OpenApi.Models
     {
         /// <summary>
         /// A relative or absolute reference to an OAS operation.
+        /// This field is mutually exclusive of the operationId field, and MUST point to an Operation Object.
         /// </summary>
         public string OperationRef { get; set; }
 
         /// <summary>
-        /// The name of an existing, resolvable OAS operation, as defined with a unique operationId
+        /// The name of an existing, resolvable OAS operation, as defined with a unique operationId.
+        /// This field is mutually exclusive of the operationRef field.
         /// </summary>
         public string OperationId { get; set; }
 

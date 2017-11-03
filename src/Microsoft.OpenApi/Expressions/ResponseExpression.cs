@@ -12,8 +12,6 @@ namespace Microsoft.OpenApi.Expressions
     {
         public const string Response = "$response.";
 
-        private SourceExpression _source;
-
         /// <summary>
         /// Gets the expression string.
         /// </summary>
@@ -21,9 +19,14 @@ namespace Microsoft.OpenApi.Expressions
         {
             get
             {
-                return Response + _source.Expression;
+                return Response + Source.Expression;
             }
         }
+
+        /// <summary>
+        /// The <see cref="SourceExpression"/> expression.
+        /// </summary>
+        public SourceExpression Source { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResponseExpression"/> class.
@@ -31,7 +34,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <param name="source">The source of the response.</param>
         public ResponseExpression(SourceExpression source)
         {
-            _source = source ?? throw Error.ArgumentNull(nameof(source));
+            Source = source ?? throw Error.ArgumentNull(nameof(source));
         }
     }
 }
