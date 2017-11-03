@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Expressions
     public sealed class BodyExpression : SourceExpression
     {
         public const string Body = "body";
-        public const string Prefix = "#";
+        public const string PointerPrefix = "#";
 
         /// <summary>
         /// Gets the expression string.
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Expressions
                     return Body;
                 }
 
-                return Body + Prefix + Value;
+                return Body + PointerPrefix + Value;
             }
         }
 

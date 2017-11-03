@@ -17,29 +17,137 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static FixedFieldMap<OpenApiParameter> ParameterFixedFields = new FixedFieldMap<OpenApiParameter>
-        {
-            { "name",           (o,n) => { o.Name = n.GetScalarValue(); } },
-            { "in",             (o,n) => { ProcessIn(o,n); } },
-            { "description",    (o,n) => { o.Description = n.GetScalarValue(); } },
-            { "required",       (o,n) => { o.Required = bool.Parse(n.GetScalarValue()); } },
-            { "deprecated",     (o,n) => { o.Deprecated = bool.Parse(n.GetScalarValue()); } },
-            { "allowEmptyValue", (o,n) => { o.AllowEmptyValue = bool.Parse(n.GetScalarValue()); } },
-            { "example",        (o,n) => { o.Example = n.GetScalarValue(); } },
-            { "type", (o,n) => { GetOrCreateSchema(o).Type = n.GetScalarValue(); } },
-            { "items", (o,n) => { GetOrCreateSchema(o).Items = LoadSchema(n); } },
-            { "collectionFormat", (o,n) => { LoadStyle(o,n.GetScalarValue());  } },
-            { "format", (o,n) => { GetOrCreateSchema(o).Format = n.GetScalarValue(); } },
-            { "minimum", (o,n) => { GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue()); } },
-            { "maximum", (o,n) => { GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue()); } },
-            { "maxLength", (o,n) => { GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue()); } },
-            { "minLength", (o,n) => { GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue()); } },
-            { "readOnly", (o,n) => { GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue()); } },
-            { "default", (o,n) => { GetOrCreateSchema(o).Default =  new OpenApiString(n.GetScalarValue()); } },
-            { "pattern", (o,n) => { GetOrCreateSchema(o).Pattern = n.GetScalarValue(); } },
-            { "enum", (o,n) => { GetOrCreateSchema(o).Enum = n.CreateSimpleList<IOpenApiAny>(l=> new OpenApiString(l.GetScalarValue()) ); } },
-            { "schema", (o,n) => { o.Schema = LoadSchema(n); } },
-        };
+        private static readonly FixedFieldMap<OpenApiParameter> ParameterFixedFields =
+            new FixedFieldMap<OpenApiParameter>
+            {
+                {
+                    "name", (o, n) =>
+                    {
+                        o.Name = n.GetScalarValue();
+                    }
+                },
+                {
+                    "in", (o, n) =>
+                    {
+                        ProcessIn(o, n);
+                    }
+                },
+                {
+                    "description", (o, n) =>
+                    {
+                        o.Description = n.GetScalarValue();
+                    }
+                },
+                {
+                    "required", (o, n) =>
+                    {
+                        o.Required = bool.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "deprecated", (o, n) =>
+                    {
+                        o.Deprecated = bool.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "allowEmptyValue", (o, n) =>
+                    {
+                        o.AllowEmptyValue = bool.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "example", (o, n) =>
+                    {
+                        o.Example = n.GetScalarValue();
+                    }
+                },
+                {
+                    "type", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).Type = n.GetScalarValue();
+                    }
+                },
+                {
+                    "items", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).Items = LoadSchema(n);
+                    }
+                },
+                {
+                    "collectionFormat", (o, n) =>
+                    {
+                        LoadStyle(o, n.GetScalarValue());
+                    }
+                },
+                {
+                    "format", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).Format = n.GetScalarValue();
+                    }
+                },
+                {
+                    "minimum", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "maximum", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "maxLength", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "minLength", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "readOnly", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue());
+                    }
+                },
+                {
+                    "default", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).Default = new OpenApiString(n.GetScalarValue());
+                    }
+                },
+                {
+                    "pattern", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).Pattern = n.GetScalarValue();
+                    }
+                },
+                {
+                    "enum", (o, n) =>
+                    {
+                        GetOrCreateSchema(o).Enum =
+                            n.CreateSimpleList<IOpenApiAny>(l => new OpenApiString(l.GetScalarValue()));
+                    }
+                },
+                {
+                    "schema", (o, n) =>
+                    {
+                        o.Schema = LoadSchema(n);
+                    }
+                },
+            };
+
+        private static readonly PatternFieldMap<OpenApiParameter> ParameterPatternFields =
+            new PatternFieldMap<OpenApiParameter>
+            {
+                {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))},
+            };
 
         private static void LoadStyle(OpenApiParameter p, string v)
         {
@@ -83,8 +191,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void ProcessIn(OpenApiParameter o, ParseNode n)
         {
-
-            string value = n.GetScalarValue();
+            var value = n.GetScalarValue();
             switch (value)
             {
                 case "body":
@@ -103,14 +210,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), value);
                     break;
             }
-
         }
-
-        private static PatternFieldMap<OpenApiParameter> ParameterPatternFields = new PatternFieldMap<OpenApiParameter>
-        {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) },
-        };
-
 
         public static OpenApiParameter LoadParameter(ParseNode node)
         {

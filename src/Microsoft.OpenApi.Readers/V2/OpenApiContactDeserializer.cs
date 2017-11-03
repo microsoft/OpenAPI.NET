@@ -16,17 +16,31 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        #region ContactObject
-
-        public static FixedFieldMap<OpenApiContact> ContactFixedFields = new FixedFieldMap<OpenApiContact> {
-            { "name", (o,n) => { o.Name = n.GetScalarValue(); } },
-            { "url", (o,n) => { o.Url = new Uri(n.GetScalarValue()); } },
-            { "email", (o,n) => { o.Email = n.GetScalarValue(); } },
+        public static FixedFieldMap<OpenApiContact> ContactFixedFields = new FixedFieldMap<OpenApiContact>
+        {
+            {
+                "name", (o, n) =>
+                {
+                    o.Name = n.GetScalarValue();
+                }
+            },
+            {
+                "url", (o, n) =>
+                {
+                    o.Url = new Uri(n.GetScalarValue());
+                }
+            },
+            {
+                "email", (o, n) =>
+                {
+                    o.Email = n.GetScalarValue();
+                }
+            },
         };
 
         public static PatternFieldMap<OpenApiContact> ContactPatternFields = new PatternFieldMap<OpenApiContact>
         {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k,  new OpenApiString(n.GetScalarValue())) }
+            {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))}
         };
 
         public static OpenApiContact LoadContact(ParseNode node)
@@ -38,7 +52,5 @@ namespace Microsoft.OpenApi.Readers.V2
 
             return contact;
         }
-
-        #endregion
     }
 }

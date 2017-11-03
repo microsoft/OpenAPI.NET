@@ -16,24 +16,30 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        #region SecuritySchemeObject
+        private static readonly FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields =
+            new FixedFieldMap<OpenApiSecurityScheme>
+            {
+                {
+                    "type",
+                    (o, n) => o.Type = (SecuritySchemeType)Enum.Parse(typeof(SecuritySchemeType), n.GetScalarValue())
+                },
+                {"description", (o, n) => o.Description = n.GetScalarValue()},
+                {"name", (o, n) => o.Name = n.GetScalarValue()},
+                {"in", (o, n) => o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue())},
+                {"scheme", (o, n) => o.Scheme = n.GetScalarValue()},
+                {"bearerFormat", (o, n) => o.BearerFormat = n.GetScalarValue()},
+                {
+                    "openIdConnectUrl",
+                    (o, n) => o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
+                },
+                {"flows", (o, n) => o.Flows = LoadOAuthFlows(n)}
+            };
 
-        private static FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields = new FixedFieldMap<OpenApiSecurityScheme>
-        {
-            { "type", (o,n) => o.Type = (SecuritySchemeType)Enum.Parse(typeof(SecuritySchemeType), n.GetScalarValue())  },
-            { "description", (o,n) => o.Description = n.GetScalarValue() },
-            { "name", (o,n) => o.Name = n.GetScalarValue() },
-            { "in", (o,n) => o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue()) },
-            { "scheme", (o,n) => o.Scheme = n.GetScalarValue() },
-            { "bearerFormat", (o,n) => o.BearerFormat = n.GetScalarValue() },
-            { "openIdConnectUrl", (o,n) => o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute) },
-            { "flows", (o,n) => o.Flows = LoadOAuthFlows(n) }
-        };
-
-        private static PatternFieldMap<OpenApiSecurityScheme> SecuritySchemePatternFields = new PatternFieldMap<OpenApiSecurityScheme>
-        {
-            { (s)=> s.StartsWith("x-"), (o,k,n)=> o.Extensions.Add(k, new OpenApiString(n.GetScalarValue())) }
-        };
+        private static readonly PatternFieldMap<OpenApiSecurityScheme> SecuritySchemePatternFields =
+            new PatternFieldMap<OpenApiSecurityScheme>
+            {
+                {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))}
+            };
 
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
         {
@@ -47,7 +53,5 @@ namespace Microsoft.OpenApi.Readers.V2
 
             return securityScheme;
         }
-
-        #endregion
     }
 }

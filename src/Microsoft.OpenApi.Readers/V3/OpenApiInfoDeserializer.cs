@@ -5,17 +5,16 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V2
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V2 document into
+    /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV2Deserializer
+    internal static partial class OpenApiV3Deserializer
     {
         public static FixedFieldMap<OpenApiInfo> InfoFixedFields = new FixedFieldMap<OpenApiInfo>
         {
@@ -23,6 +22,12 @@ namespace Microsoft.OpenApi.Readers.V2
                 "title", (o, n) =>
                 {
                     o.Title = n.GetScalarValue();
+                }
+            },
+            {
+                "version", (o, n) =>
+                {
+                    o.Version = new Version(n.GetScalarValue());
                 }
             },
             {
@@ -48,18 +53,12 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     o.License = LoadLicense(n);
                 }
-            },
-            {
-                "version", (o, n) =>
-                {
-                    o.Version = new Version(n.GetScalarValue());
-                }
             }
         };
 
         public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new PatternFieldMap<OpenApiInfo>
         {
-            {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))}
+            {s => s.StartsWith("x-"), (o, k, n) => o.AddExtension(k, n.CreateAny())}
         };
 
         public static OpenApiInfo LoadInfo(ParseNode node)
@@ -70,8 +69,6 @@ namespace Microsoft.OpenApi.Readers.V2
             var required = new List<string> {"title", "version"};
 
             ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields, required);
-
-            ReportMissing(node, required);
 
             return info;
         }
