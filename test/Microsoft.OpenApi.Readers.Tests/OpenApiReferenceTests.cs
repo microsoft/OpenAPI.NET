@@ -4,8 +4,8 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.V2;
 using Xunit;
-using Microsoft.OpenApi.Readers.OpenApiV2Deserializer;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {

@@ -4,14 +4,11 @@
 // ------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.OpenApiV2Deserializer
+namespace Microsoft.OpenApi.Readers.V2
 {
     /// <summary>
     /// Class containing logic to deserialize Open API V2 document into
