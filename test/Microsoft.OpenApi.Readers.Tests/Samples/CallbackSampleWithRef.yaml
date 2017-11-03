@@ -19,7 +19,7 @@ paths:
 components:
   callbacks:
     simplehook:
-     '$request.body(/url)':
+     '$request.body#/url':
         post:
           requestBody:
             content:

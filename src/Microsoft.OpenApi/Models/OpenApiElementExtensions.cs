@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
 
