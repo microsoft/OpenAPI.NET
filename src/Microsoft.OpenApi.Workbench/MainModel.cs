@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Workbench
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                var OpenApiDocument = new OpenApiStreamReader().Read(stream, out var context);
+                var document = new OpenApiStreamReader().Read(stream, out var context);
                 stopwatch.Stop();
                 ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
 
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Workbench
 
                 stopwatch.Reset();
                 stopwatch.Start();
-                Output = WriteContents(OpenApiDocument);
+                Output = WriteContents(document);
                 stopwatch.Stop();
 
                 RenderTime = $"{stopwatch.ElapsedMilliseconds} ms";
