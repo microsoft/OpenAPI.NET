@@ -53,16 +53,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // implicit
-            writer.WriteObject("implicit", Implicit, (w, o) => o.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Implicit, Implicit, (w, o) => o.WriteAsV3(w));
 
             // password
-            writer.WriteObject("password", Password, (w, o) => o.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Password, Password, (w, o) => o.WriteAsV3(w));
 
             // clientCredentials
-            writer.WriteObject("clientCredentials", ClientCredentials, (w, o) => o.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ClientCredentials, ClientCredentials, (w, o) => o.WriteAsV3(w));
 
             // authorizationCode
-            writer.WriteObject("authorizationCode", AuthorizationCode, (w, o) => o.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.AuthorizationCode, AuthorizationCode, (w, o) => o.WriteAsV3(w));
 
             // extensions
             writer.WriteExtensions(Extensions);

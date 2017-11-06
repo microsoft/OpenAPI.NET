@@ -23,13 +23,13 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiParameter BasicParameter = new OpenApiParameter
         {
             Name = "name1",
-            In = ParameterLocation.path
+            In = ParameterLocation.Path
         };
 
         public static OpenApiParameter AdvancedPathParameterWithSchema = new OpenApiParameter
         {
             Name = "name1",
-            In = ParameterLocation.path,
+            In = ParameterLocation.Path,
             Description = "description1",
             Required = true,
             Deprecated = false,

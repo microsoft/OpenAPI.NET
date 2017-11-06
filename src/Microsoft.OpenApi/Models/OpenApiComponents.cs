@@ -18,71 +18,55 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
+        public IDictionary<string, OpenApiSchema> Schemas { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public IDictionary<string, OpenApiResponse> Responses { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiParameter"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiParameter> Parameters { get; set; } =
-            new Dictionary<string, OpenApiParameter>();
+        public IDictionary<string, OpenApiParameter> Parameters { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public IDictionary<string, OpenApiExample> Examples { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiRequestBody"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; } =
-            new Dictionary<string, OpenApiRequestBody>();
+        public IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiHeader"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
+        public IDictionary<string, OpenApiHeader> Headers { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } =
-            new Dictionary<string, OpenApiSecurityScheme>();
+        public IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiLink"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
+        public IDictionary<string, OpenApiLink> Links { get; set; }
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, OpenApiCallback> Callbacks { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
-        public bool IsEmpty()
-        {
-            return !(Schemas.Count > 0 ||
-                Responses.Count > 0 ||
-                Parameters.Count > 0 ||
-                Examples.Count > 0 ||
-                RequestBodies.Count > 0 ||
-                Headers.Count > 0 ||
-                SecuritySchemes.Count > 0 ||
-                Links.Count > 0 ||
-                Callbacks.Count > 0);
-        }
-
         /// <summary>
-        /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0
+        /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
         /// </summary>
         internal override void WriteAsV3(IOpenApiWriter writer)
         {
@@ -92,20 +76,42 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            writer.WriteMap("schemas", Schemas, (w, s) => s.WriteAsV3(w));
-            writer.WriteMap("responses", Responses, (w, r) => r.WriteAsV3(w));
-            writer.WriteMap("parameters", Parameters, (w, p) => p.WriteAsV3(w));
-            writer.WriteMap("examples", Examples, (w, e) => e.WriteAsV3(w));
-            writer.WriteMap("requestBodies", RequestBodies, (w, r) => r.WriteAsV3(w));
-            writer.WriteMap("headers", Headers, (w, h) => h.WriteAsV3(w));
-            writer.WriteMap("securitySchemes", SecuritySchemes, (w, s) => s.WriteAsV3(w));
-            writer.WriteMap("links", Links, (w, link) => link.WriteAsV3(w));
-            writer.WriteMap("callbacks", Callbacks, (w, c) => c.WriteAsV3(w));
+
+            // schemas
+            writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, (w, s) => s.WriteAsV3(w));
+
+            // responses
+            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.WriteAsV3(w));
+
+            // parameters
+            writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV3(w));
+
+            // examples
+            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.WriteAsV3(w));
+
+            // requestBodies
+            writer.WriteOptionalMap(OpenApiConstants.RequestBodies, RequestBodies, (w, r) => r.WriteAsV3(w));
+
+            // headers
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
+
+            // securitySchemes
+            writer.WriteOptionalMap(OpenApiConstants.SecuritySchemes, SecuritySchemes, (w, s) => s.WriteAsV3(w));
+
+            // links
+            writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, link) => link.WriteAsV3(w));
+
+            // callbacks
+            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.WriteAsV3(w));
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
             writer.WriteEndObject();
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0
+        /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {

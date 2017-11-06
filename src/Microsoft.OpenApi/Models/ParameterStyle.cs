@@ -3,43 +3,55 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Commons;
+
 namespace Microsoft.OpenApi.Models
 {
+    /// <summary>
+    /// The style of the parameter.
+    /// </summary>
     public enum ParameterStyle
     {
         /// <summary>
         /// Path-style parameters.
         /// </summary>
-        matrix,
+        [Display("matrix")]
+        Matrix,
 
         /// <summary>
         /// Label style parameters.
         /// </summary>
-        label,
+        [Display("label")]
+        Label,
 
         /// <summary>
         /// Form style parameters.
         /// </summary>
-        form,
+        [Display("form")]
+        Form,
 
         /// <summary>
         /// Simple style parameters.
         /// </summary>
-        simple,
+        [Display("simple")]
+        Simple,
 
         /// <summary>
         /// Space separated array values.
         /// </summary>
-        spaceDelimited,
+        [Display("spaceDelimited")]
+        SpaceDelimited,
 
         /// <summary>
-        /// Pipe separated array values. 
+        /// Pipe separated array values.
         /// </summary>
-        pipeDelimited,
+        [Display("pipeDelimited")]
+        PipeDelimited,
 
         /// <summary>
         /// Provides a simple way of rendering nested objects using form parameters.
         /// </summary>
-        deepObject
+        [Display("deepObject")]
+        DeepObject
     }
 }

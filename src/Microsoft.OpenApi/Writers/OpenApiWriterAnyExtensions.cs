@@ -77,29 +77,6 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        /// <summary>
-        /// Write the property name and <see cref="IOpenApiAny"/> value.
-        /// </summary>
-        /// <typeparam name="T">The Open API Any type.</typeparam>
-        /// <param name="writer">The Open API writer.</param>
-        /// <param name="name">Property name</param>
-        /// <param name="any">The Any value</param>
-        public static void WriteAnyProperty<T>(this IOpenApiWriter writer, string name, T any) where T : IOpenApiAny
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (any == null)
-            {
-                return;
-            }
-
-            writer.WritePropertyName(name);
-            writer.WriteAny(any);
-        }
-
         private static void WriteArray(this IOpenApiWriter writer, OpenApiArray array)
         {
             if (writer == null)

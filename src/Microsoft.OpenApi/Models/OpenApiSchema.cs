@@ -293,10 +293,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteNumberProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
-            writer.WriteList(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
 
             // enum
-            writer.WriteList(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
             writer.WriteStringProperty(OpenApiConstants.Type, Type);
@@ -314,13 +314,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.WriteAsV3(w));
 
             // items
-            writer.WriteObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV3(w));
 
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.WriteAsV3(w));
 
             // additionalProperties
-            writer.WriteObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV3(w));
 
             // description
             writer.WriteStringProperty(OpenApiConstants.Description, Description);
@@ -329,7 +329,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.Format, Format);
 
             // default
-            writer.WriteAnyProperty(OpenApiConstants.Default, Default);
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // nullable
             writer.WriteBoolProperty(OpenApiConstants.Nullable, Nullable, false);
@@ -350,7 +350,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.WriteAsV3(w));
 
             // example
-            writer.WriteAnyProperty(OpenApiConstants.Example, Example);
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // deprecated
             writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
@@ -396,7 +396,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.Format, Format);
 
             // items
-            writer.WriteObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
 
             // collectionFormat
             // We need information from style in parameter to populate this.
@@ -407,7 +407,7 @@ namespace Microsoft.OpenApi.Models
             // this property. This is not supported yet, so we will skip this property at the moment.
 
             // default
-            writer.WriteAnyProperty(OpenApiConstants.Default, Default);
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // maximum
             writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
@@ -437,7 +437,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteNumberProperty(OpenApiConstants.MinItems, MinItems);
 
             // enum
-            writer.WriteList(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
 
             // multipleOf
             writer.WriteNumberProperty(OpenApiConstants.MultipleOf, MultipleOf);
@@ -463,7 +463,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // default
-            writer.WriteAnyProperty(OpenApiConstants.Default, Default);
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // multipleOf
             writer.WriteNumberProperty(OpenApiConstants.MultipleOf, MultipleOf);
@@ -505,16 +505,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteNumberProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
-            writer.WriteList(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
 
             // enum
-            writer.WriteList(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
 
             // type
             writer.WriteStringProperty(OpenApiConstants.Type, Type);
 
             // items
-            writer.WriteObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.WriteAsV2(w));
@@ -523,7 +523,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.WriteAsV2(w));
 
             // additionalProperties
-            writer.WriteObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV2(w));
 
             // discriminator
             writer.WriteStringProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
@@ -538,7 +538,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.WriteAsV2(w));
 
             // example
-            writer.WriteAnyProperty(OpenApiConstants.Example, Example);
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // extensions
             writer.WriteExtensions(Extensions);

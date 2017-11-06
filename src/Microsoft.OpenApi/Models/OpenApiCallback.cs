@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Models
                 // path items
                 foreach (var item in PathItems)
                 {
-                    writer.WriteObject(item.Key.Expression, item.Value, (w, p) => p.WriteAsV3(w));
+                    writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => p.WriteAsV3(w));
                 }
 
                 // extensions
