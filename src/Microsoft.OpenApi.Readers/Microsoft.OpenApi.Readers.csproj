@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="V2\OpenApiExternalDocsDeserializer.cs" />
+    <None Include="V2\OpenApiSecuritySchemeDeserializer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SharpYaml" Version="1.6.1" />
   </ItemGroup>
 

@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.V2;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
