@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "in", (o, n) =>
                     {
-                        o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue());
+                        o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
                     }
                 },
                 {

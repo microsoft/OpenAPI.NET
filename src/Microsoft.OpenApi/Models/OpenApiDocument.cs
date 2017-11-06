@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An element to hold various schemas for the specification.
         /// </summary>
-        public OpenApiComponents Components { get; set; } = new OpenApiComponents();
+        public OpenApiComponents Components { get; set; }
 
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
@@ -78,31 +78,25 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.OpenApi, SpecVersion.ToString());
 
             // info
-            writer.WriteObject(OpenApiConstants.Info, Info, (w, i) => i.WriteAsV3(w));
+            writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.WriteAsV3(w));
 
             // servers
-            writer.WriteList(OpenApiConstants.Servers, Servers, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.WriteAsV3(w));
 
             // paths
-            writer.WriteObject(OpenApiConstants.Paths, Paths, (w, p) => p.WriteAsV3(w));
+            writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.WriteAsV3(w));
 
             // components
-            if (!Components.IsEmpty())
-            {
-                writer.WriteObject(OpenApiConstants.Components, Components, (w, c) => c.WriteAsV3(w));
-            }
+            writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => c.WriteAsV3(w));
 
             // security
-            writer.WriteList(OpenApiConstants.Security, SecurityRequirements, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Security, SecurityRequirements, (w, s) => s.WriteAsV3(w));
 
             // tags
-            writer.WriteList(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV3(w));
 
             // external docs
-            if (ExternalDocs.Url != null)
-            {
-                writer.WriteObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
-            }
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -126,37 +120,34 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.Swagger, SpecVersion.ToString());
 
             // info
-            writer.WriteObject(OpenApiConstants.Info, Info, (w, i) => i.WriteAsV2(w));
+            writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.WriteAsV2(w));
 
             // host, basePath, schemes, consumes, produces
             WriteHostInfoV2(writer, Servers);
 
             // paths
-            writer.WriteObject(OpenApiConstants.Paths, Paths, (w, p) => p.WriteAsV2(w));
+            writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.WriteAsV2(w));
 
             // definitions
-            writer.WriteMap(OpenApiConstants.Definitions, Components.Schemas, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Definitions, Components?.Schemas, (w, s) => s.WriteAsV2(w));
 
             // parameters
-            writer.WriteMap(OpenApiConstants.Parameters, Components.Parameters, (w, p) => p.WriteAsV2(w));
-            
+            writer.WriteOptionalMap(OpenApiConstants.Parameters, Components?.Parameters, (w, p) => p.WriteAsV2(w));
+
             // responses
-            writer.WriteMap(OpenApiConstants.Responses, Components.Responses, (w, r) => r.WriteAsV2(w));
-            
+            writer.WriteOptionalMap(OpenApiConstants.Responses, Components?.Responses, (w, r) => r.WriteAsV2(w));
+
             // securityDefinitions
-            writer.WriteMap(OpenApiConstants.SecurityDefinitions, Components.SecuritySchemes, (w, s) => s.WriteAsV2(w));
-            
+            writer.WriteOptionalMap(OpenApiConstants.SecurityDefinitions, Components?.SecuritySchemes, (w, s) => s.WriteAsV2(w));
+
             // security
-            writer.WriteList(OpenApiConstants.Security, SecurityRequirements, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Security, SecurityRequirements, (w, s) => s.WriteAsV2(w));
 
             // tags
-            writer.WriteList(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV2(w));
 
             // externalDocs
-            if (ExternalDocs.Url != null)
-            {
-                writer.WriteObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
-            }
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -207,7 +198,8 @@ namespace Microsoft.OpenApi.Models
                 .Distinct()
                 .ToList();
 
-            writer.WriteList(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+            // schemes
+            writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
         }
     }
 }

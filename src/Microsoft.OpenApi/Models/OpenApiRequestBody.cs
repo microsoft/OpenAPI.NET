@@ -61,9 +61,17 @@ namespace Microsoft.OpenApi.Models
             {
                 writer.WriteStartObject();
 
-                writer.WriteStringProperty("description", Description);
-                writer.WriteBoolProperty("required", Required, false);
-                writer.WriteMap("content", Content, (w, c) => c.WriteAsV3(w));
+                // description
+                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+
+                // content
+                writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.WriteAsV3(w));
+
+                // required
+                writer.WriteBoolProperty(OpenApiConstants.Required, Required, false);
+
+                // extensions
+                writer.WriteExtensions(Extensions);
 
                 writer.WriteEndObject();
             }

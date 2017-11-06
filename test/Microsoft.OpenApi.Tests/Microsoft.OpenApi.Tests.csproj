@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExampleTests.cs" />
+    <Compile Include="Models\OpenApiCallbackTests.cs" />
+    <Compile Include="Models\OpenApiComponentsTests.cs" />
     <Compile Include="Models\OpenApiOAuthFlowTests.cs" />
     <Compile Include="Models\OpenApiOAuthFlowsTests.cs" />
     <Compile Include="Models\OpenApiServerVariableTests.cs" />

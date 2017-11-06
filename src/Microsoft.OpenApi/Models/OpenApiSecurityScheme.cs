@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Models
                     // name
                     // in
                     writer.WriteStringProperty(OpenApiConstants.Name, Name);
-                    writer.WriteStringProperty(OpenApiConstants.In, In.ToString());
+                    writer.WriteStringProperty(OpenApiConstants.In, In.GetDisplayName());
                     break;
                 case SecuritySchemeType.Http:
                     // These properties apply to http type only.
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Models
                 case SecuritySchemeType.OAuth2:
                     // This property apply to oauth2 type only.
                     // flows
-                    writer.WriteObject(OpenApiConstants.Flows, Flows, (w, o) => o.WriteAsV3(w));
+                    writer.WriteOptionalObject(OpenApiConstants.Flows, Flows, (w, o) => o.WriteAsV3(w));
                     break;
                 case SecuritySchemeType.OpenIdConnect:
                     // This property apply to openIdConnect only.
@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.TokenUrl, flow.TokenUrl?.ToString());
 
             // scopes
-            writer.WriteMap(OpenApiConstants.Scopes, flow.Scopes, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalMap(OpenApiConstants.Scopes, flow.Scopes, (w, s) => w.WriteValue(s));
         }
     }
 }

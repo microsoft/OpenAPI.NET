@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -66,22 +67,28 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
+            // contentType
             writer.WriteStringProperty(OpenApiConstants.ContentType, ContentType);
 
-            writer.WriteMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
+            // headers
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
 
-            writer.WriteStringProperty(OpenApiConstants.Style, Style?.ToString());
+            // style
+            writer.WriteStringProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
+            // explode
             if (Explode != null)
             {
                 writer.WriteBoolProperty(OpenApiConstants.Explode, Explode.Value, false);
             }
 
+            // allowReserved
             if (AllowReserved != null)
             {
                 writer.WriteBoolProperty(OpenApiConstants.AllowReserved, AllowReserved.Value, false);
             }
 
+            // extensions
             writer.WriteExtensions(Extensions);
 
             writer.WriteEndObject();

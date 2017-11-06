@@ -73,10 +73,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV3(w));
 
             // license object
-            writer.WriteObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV3(w));
 
             // version
             writer.WriteStringProperty(OpenApiConstants.Version, Version?.ToString());
@@ -109,10 +109,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV2(w));
 
             // license object
-            writer.WriteObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV2(w));
 
             // version
             writer.WriteStringProperty(OpenApiConstants.Version, Version?.ToString());

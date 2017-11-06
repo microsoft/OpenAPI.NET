@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.ApiKey,
-            In = ParameterLocation.query,
+            In = ParameterLocation.Query,
             Name = "parameterName"
         };
 

@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
-            writer.WriteMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
+            writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
 
             writer.WriteEndObject();
         }

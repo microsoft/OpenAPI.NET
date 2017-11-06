@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0
+        /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
         /// </summary>
         internal override void WriteAsV3(IOpenApiWriter writer)
         {
@@ -173,7 +173,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiOperation"/> to Open Api v2.0
+        /// Serialize <see cref="OpenApiOperation"/> to Open Api v2.0.
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // tags
-            writer.WriteList(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV2(w));
 
             // summary
             writer.WriteStringProperty(OpenApiConstants.Summary, Summary);
@@ -194,13 +194,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // externalDocs
-            writer.WriteObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
 
             // operationId
             writer.WriteStringProperty(OpenApiConstants.OperationId, OperationId);
-            
+
             var parameters = new List<OpenApiParameter>(Parameters);
-            
+
             if (RequestBody != null)
             {
                 // consumes
@@ -222,7 +222,7 @@ namespace Microsoft.OpenApi.Models
                     Schema = RequestBody.Content.First().Value.Schema,
                     Format = new List<string>(consumes)
                 };
-                
+
                 parameters.Add(bodyParameter);
             }
 
@@ -268,8 +268,8 @@ namespace Microsoft.OpenApi.Models
                 .Distinct()
                 .ToList();
 
-            writer.WriteList(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
-            
+            writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+
             // deprecated
             writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
 

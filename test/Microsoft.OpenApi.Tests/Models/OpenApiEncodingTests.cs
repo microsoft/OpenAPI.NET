@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiEncoding AdvanceEncoding = new OpenApiEncoding()
         {
             ContentType = "image/png, image/jpeg",
-            Style = ParameterStyle.simple,
+            Style = ParameterStyle.Simple,
             Explode = true,
             AllowReserved = true,
         };

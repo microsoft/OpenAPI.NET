@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -59,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "example", (o, n) =>
                     {
-                        o.Example = n.GetScalarValue();
+                        o.Example = n.CreateAny();
                     }
                 },
                 {
@@ -207,7 +208,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     formParameters.Add(o);
                     break;
                 default:
-                    o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), value);
+                    o.In = value.GetEnumFromDisplayName<ParameterLocation>();
                     break;
             }
         }

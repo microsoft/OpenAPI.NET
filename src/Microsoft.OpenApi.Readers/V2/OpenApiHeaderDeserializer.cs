@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -44,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "style", (o, n) =>
                 {
-                    o.Style = n.GetScalarValue();
+                    o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
                 }
             },
             {

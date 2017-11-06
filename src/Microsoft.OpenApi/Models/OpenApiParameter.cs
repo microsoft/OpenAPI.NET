@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -107,7 +108,7 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
         /// a string value can contain the example with escaping where necessary.
         /// </summary>
-        public string Example { get; set; }
+        public IOpenApiAny Example { get; set; }
 
         /// <summary>
         /// A map containing the representations for the parameter.
@@ -147,7 +148,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStringProperty(OpenApiConstants.Name, Name);
 
                 // in
-                writer.WriteStringProperty(OpenApiConstants.In, In.ToString());
+                writer.WriteStringProperty(OpenApiConstants.In, In.GetDisplayName());
 
                 // description
                 writer.WriteStringProperty(OpenApiConstants.Description, Description);
@@ -174,7 +175,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV3(w));
 
                 // example
-                writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteRaw(s));
+                writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
 
                 // examples
                 writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => e.WriteAsV3(w));
@@ -253,7 +254,7 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (IsBodyParameter())
             {
-                writer.WriteObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV2(w));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV2(w));
             }
             else
             {

@@ -3,10 +3,10 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "in", (o, n) =>
                     {
-                        o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue());
+                        o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
                     }
                 },
                 {
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "example", (o, n) =>
                     {
-                        o.Example = n.GetScalarValue();
+                        o.Example = n.CreateAny();
                     }
                 },
             };

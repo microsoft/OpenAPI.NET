@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var item in this)
             {
-                writer.WriteObject(item.Key, item.Value, (w, p) => p.WriteAsV3(w));
+                writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.WriteAsV3(w));
             }
 
             writer.WriteExtensions(Extensions);
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var item in this)
             {
-                writer.WriteObject(item.Key, item.Value, (w, p) => p.WriteAsV2(w));
+                writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.WriteAsV2(w));
             }
 
             writer.WriteExtensions(Extensions);

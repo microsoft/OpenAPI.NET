@@ -5,6 +5,7 @@
 
 using System;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 },
                 {"description", (o, n) => o.Description = n.GetScalarValue()},
                 {"name", (o, n) => o.Name = n.GetScalarValue()},
-                {"in", (o, n) => o.In = (ParameterLocation)Enum.Parse(typeof(ParameterLocation), n.GetScalarValue())},
+                {"in", (o, n) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>() },
                 {"scheme", (o, n) => o.Scheme = n.GetScalarValue()},
                 {"bearerFormat", (o, n) => o.BearerFormat = n.GetScalarValue()},
                 {

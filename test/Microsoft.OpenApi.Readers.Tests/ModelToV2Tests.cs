@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                     new OpenApiParameter
                     {
                         Name = "param1",
-                        In = ParameterLocation.query,
+                        In = ParameterLocation.Query,
                         Schema = new OpenApiSchema
                         {
                             Type = "string"

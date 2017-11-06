@@ -57,13 +57,20 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            writer.WriteObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV3(w));
+            // schema
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV3(w));
 
-            writer.WriteObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
+            // example
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
-            writer.WriteMap(OpenApiConstants.Examples, Examples, (w, e) => e.WriteAsV3(w));
+            // examples
+            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.WriteAsV3(w));
 
-            writer.WriteMap(OpenApiConstants.Encoding, Encoding, (w, e) => e.WriteAsV3(w));
+            // encoding
+            writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, (w, e) => e.WriteAsV3(w));
+
+            // extensions
+            writer.WriteExtensions(Extensions);
 
             writer.WriteEndObject();
         }
