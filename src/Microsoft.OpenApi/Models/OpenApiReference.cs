@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Models
             {
                 if (String.IsNullOrEmpty(segments[0]) || segments[0].Contains("#"))
                 {
-                    throw new OpenApiException(String.Format(SRResource.RefeneceHasInvalidFormat, reference));
+                    throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
                 }
 
                 ExternalFilePath = segments[0];
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models
             {
                 if (String.IsNullOrEmpty(segments[0]) || !segments[0].EndsWith("#"))
                 {
-                    throw new OpenApiException(String.Format(SRResource.RefeneceHasInvalidFormat, reference));
+                    throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
                 }
 
                 ExternalFilePath = segments[0].Substring(0, segments[0].Length -1);
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Models
                     segments[1] != "components" ||
                     (referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>()) == ReferenceType.Unknown)
                 {
-                    throw new OpenApiException(String.Format(SRResource.RefeneceHasInvalidFormat, reference));
+                    throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
                 }
 
                 ReferenceType = referenceType;
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                throw new OpenApiException(String.Format(SRResource.RefeneceHasInvalidFormat, reference));
+                throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
             }
         }
 

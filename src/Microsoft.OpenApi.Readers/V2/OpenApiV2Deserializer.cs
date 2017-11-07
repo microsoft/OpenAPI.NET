@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 case "parameters": return ReferenceType.Parameter;
                 case "responses": return ReferenceType.Response;
                 case "headers": return ReferenceType.Header;
-                case "tags": return ReferenceType.Tags;
+                case "tags": return ReferenceType.Tag;
                 case "securityDefinitions": return ReferenceType.SecurityScheme;
                 default: throw new ArgumentException();
             }
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     return "responses";
                 case ReferenceType.Header:
                     return "headers";
-                case ReferenceType.Tags:
+                case ReferenceType.Tag:
                     return "tags";
                 case ReferenceType.SecurityScheme:
                     return "securityDefinitions";
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Readers.V2
             IOpenApiReference referencedObject = null;
             var node = ((RootNode)rootNode).Find(GetPointer(reference));
 
-            if (node == null && reference.ReferenceType != ReferenceType.Tags)
+            if (node == null && reference.ReferenceType != ReferenceType.Tag)
             {
                 return null;
             }
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 case ReferenceType.SecurityScheme:
                     referencedObject = LoadSecurityScheme(node);
                     break;
-                case ReferenceType.Tags:
+                case ReferenceType.Tag:
                     var list = (ListNode)node;
                     if (list != null)
                     {

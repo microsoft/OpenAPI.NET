@@ -260,8 +260,8 @@ namespace Microsoft.OpenApi.Models
                 case ReferenceType.Link:
                     return document.Components.Links?[reference.Pointer.TypeName];
 
-                case ReferenceType.Tags:
-                    return document.Tags.FirstOrDefault(e => e.Name == reference.Pointer.TypeName);
+                case ReferenceType.Tag:
+                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.TypeName);
 
                 default:
                     return null;
