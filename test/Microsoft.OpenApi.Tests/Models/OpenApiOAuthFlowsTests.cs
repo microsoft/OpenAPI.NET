@@ -70,6 +70,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = BasicOAuthFlows.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -84,6 +86,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = BasicOAuthFlows.SerializeAsYaml();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -106,6 +110,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = OAuthFlowsWithSingleFlow.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -136,6 +142,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = OAuthFlowsWithMultipleFlows.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
     }

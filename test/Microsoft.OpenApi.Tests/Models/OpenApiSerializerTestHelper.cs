@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Models
             stream.Position = 0;
             var value = new StreamReader(stream).ReadToEnd();
 
-            return value.MakeLineBreaksEnvironmentNeutral();
+            return value;
         }
     }
 }

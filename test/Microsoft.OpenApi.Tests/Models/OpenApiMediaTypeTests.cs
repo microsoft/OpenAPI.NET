@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceMediaTypeAsV3JsonWorks()
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"{
   ""example"": 42,
   ""encoding"": {
@@ -55,14 +55,16 @@ namespace Microsoft.OpenApi.Tests.Models
             string actual = AdvanceMediaType.SerializeAsJson();
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void SerializeAdvanceMediaTypeAsV3YamlWorks()
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"example: 42
 encoding:
   testEncoding:
@@ -75,7 +77,9 @@ encoding:
             string actual = AdvanceMediaType.SerializeAsYaml();
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }

@@ -30,13 +30,15 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "")]
         public void SerializeBasicTagWorks(OpenApiSpecVersion version,
-            OpenApiFormat format, string expect)
+            OpenApiFormat format, string expected)
         {
-            // Arrange & Act
+            // Act
             string actual = BasicTag.Serialize(version, format);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -45,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceTagAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"{
   ""name"": ""pet"",
   ""description"": ""Pets operations"",
@@ -60,7 +62,9 @@ namespace Microsoft.OpenApi.Tests.Models
             string actual = AdvanceTag.SerializeAsJson(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -69,7 +73,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceTagAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"name: pet
 description: Pets operations
 externalDocs:
@@ -81,7 +85,9 @@ x-tag-extension: ";
             string actual = AdvanceTag.SerializeAsYaml(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }

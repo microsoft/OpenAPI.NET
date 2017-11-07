@@ -31,13 +31,15 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "")]
         public void SerializeBasicContactWorks(OpenApiSpecVersion version,
-            OpenApiFormat format, string expect)
+            OpenApiFormat format, string expected)
         {
             // Arrange & Act
             string actual = BasicContact.Serialize(version, format);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -46,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceContactAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"{
   ""name"": ""API Support"",
   ""url"": ""http://www.example.com/support"",
@@ -58,7 +60,9 @@ namespace Microsoft.OpenApi.Tests.Models
             string actual = AdvanceContact.SerializeAsJson(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -67,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceContactAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"name: API Support
 url: http://www.example.com/support
 email: support@example.com
@@ -77,7 +81,9 @@ x-internal-id: 42";
             string actual = AdvanceContact.SerializeAsYaml(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }
