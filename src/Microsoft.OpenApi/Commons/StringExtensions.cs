@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Commons
                 var field = type.GetField(value.ToString());
 
                 var displayAttribute = (DisplayAttribute)field.GetCustomAttribute(typeof(DisplayAttribute));
-                if (displayAttribute.Name == displayName)
+                if (displayAttribute != null && displayAttribute.Name == displayName)
                 {
                     return (T)value;
                 }

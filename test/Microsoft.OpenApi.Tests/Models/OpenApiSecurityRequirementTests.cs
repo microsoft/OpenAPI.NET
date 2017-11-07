@@ -18,39 +18,33 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemes = new Dictionary<OpenApiSecurityScheme, List<string>>
             {
-                [new OpenApiSecurityScheme
-                {
-                    Pointer = new OpenApiReference
+                [
+                    new OpenApiSecurityScheme
                     {
-                        TypeName = "scheme1",
-                        ReferenceType = ReferenceType.SecurityScheme
+                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme1")
                     }
-                }] = new List<string>
+                ] = new List<string>
                 {
                     "scope1",
                     "scope2",
                     "scope3",
                 },
-                [new OpenApiSecurityScheme
-                {
-                    Pointer = new OpenApiReference
+                [
+                    new OpenApiSecurityScheme
                     {
-                        TypeName = "scheme2",
-                        ReferenceType = ReferenceType.SecurityScheme
+                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme2")
                     }
-                }] = new List<string>
+                ] = new List<string>
                 {
                     "scope4",
                     "scope5",
                 },
-                [new OpenApiSecurityScheme
-                {
-                    Pointer = new OpenApiReference
+                [
+                    new OpenApiSecurityScheme
                     {
-                        TypeName = "scheme3",
-                        ReferenceType = ReferenceType.SecurityScheme
+                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme3")
                     }
-                }] = new List<string>()
+                ] = new List<string>()
             }
         };
 

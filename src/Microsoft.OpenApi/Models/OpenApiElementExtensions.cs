@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
@@ -210,6 +211,73 @@ namespace Microsoft.OpenApi.Models
             }
 
             operation.Responses.Add(name, response);
+        }
+
+        /// <summary>
+        /// Try find the referenced element.
+        /// </summary>
+        /// <typeparam name="T"><see cref="IOpenApiReference"/>.</typeparam>
+        /// <param name="reference">The reference element. </param>
+        /// <param name="document">The Open API document.</param>
+        public static IOpenApiElement TryFind<T>(this T reference, OpenApiDocument document)
+            where T : IOpenApiReference
+        {
+            if (reference == null ||
+                document == null ||
+                document.Components == null ||
+                reference.Pointer == null ||
+                reference.Pointer.ExternalFilePath != null)
+            {
+                return null;
+            }
+
+            switch(reference.Pointer.ReferenceType)
+            {
+                case ReferenceType.Schema:
+                    return document.Components.Schemas?[reference.Pointer.TypeName];
+
+                case ReferenceType.Parameter:
+                    return document.Components.Parameters?[reference.Pointer.TypeName];
+
+                case ReferenceType.Header:
+                    return document.Components.Headers?[reference.Pointer.TypeName];
+
+                case ReferenceType.Response:
+                    return document.Components.Responses?[reference.Pointer.TypeName];
+
+                case ReferenceType.RequestBody:
+                    return document.Components.RequestBodies?[reference.Pointer.TypeName];
+
+                case ReferenceType.Example:
+                    return document.Components.Examples?[reference.Pointer.TypeName];
+
+                case ReferenceType.SecurityScheme:
+                    return document.Components.SecuritySchemes?[reference.Pointer.TypeName];
+
+                case ReferenceType.Callback:
+                    return document.Components.Callbacks?[reference.Pointer.TypeName];
+
+                case ReferenceType.Link:
+                    return document.Components.Links?[reference.Pointer.TypeName];
+
+                case ReferenceType.Tags:
+                    return document.Tags.FirstOrDefault(e => e.Name == reference.Pointer.TypeName);
+
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Check the element is reference element or not.
+        /// </summary>
+        /// <typeparam name="T"><see cref="IOpenApiElement"/>.</typeparam>
+        /// <param name="reference">The referencable element.</param>
+        /// <returns>true is reference, otherwise false.</returns>
+        public static bool IsReference<T>(this T element) where T : IOpenApiElement
+        {
+            IOpenApiReference reference = element as IOpenApiReference;
+            return reference?.Pointer != null;
         }
 
         /// <summary>

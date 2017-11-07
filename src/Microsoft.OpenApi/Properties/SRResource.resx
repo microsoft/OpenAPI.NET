@@ -159,6 +159,9 @@
   <data name="PrimitiveTypeNotSupported" xml:space="preserve">
     <value>The given primitive type '{0}' is not supported.</value>
   </data>
+  <data name="RefeneceHasInvalidFormat" xml:space="preserve">
+    <value>The reference string '{0}' has invalid format.</value>
+  </data>
   <data name="RuntimeExpressionHasInvalidFormat" xml:space="preserve">
     <value>The runtime expression '{0}' has invalid format.</value>
   </data>

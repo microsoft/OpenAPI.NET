@@ -187,6 +187,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The reference string &apos;{0}&apos; has invalid format..
+        /// </summary>
+        internal static string RefeneceHasInvalidFormat {
+            get {
+                return ResourceManager.GetString("RefeneceHasInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The runtime expression &apos;{0}&apos; has invalid format..
         /// </summary>
         internal static string RuntimeExpressionHasInvalidFormat {
