@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiOperation> OperationPatternFields =
             new PatternFieldMap<OpenApiOperation>
             {
-                {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))},
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
         internal static OpenApiOperation LoadOperation(ParseNode node)

@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V3
         public static PatternFieldMap<OpenApiDocument> OpenApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
