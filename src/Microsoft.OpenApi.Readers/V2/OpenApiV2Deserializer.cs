@@ -21,24 +21,8 @@ namespace Microsoft.OpenApi.Readers.V2
     {
         public static OpenApiReference ParseReference(string pointer)
         {
-            var pointerbits = pointer.Split('#');
-
-            if (pointerbits.Length == 1)
-            {
-                return new OpenApiReference
-                {
-                    ReferenceType = ReferenceType.Schema,
-                    TypeName = pointerbits[0]
-                };
-            }
-
-            var pointerParts = pointerbits[1].Split('/');
-            return new OpenApiReference
-            {
-                ExternalFilePath = pointerbits[0],
-                ReferenceType = ParseReferenceTypeName(pointerParts[1]),
-                TypeName = pointerParts[2]
-            };
+            pointer = pointer.Replace("definitions", "components");
+            return new OpenApiReference(pointer);
         }
 
         public static JsonPointer GetPointer(OpenApiReference reference)

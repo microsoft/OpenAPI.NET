@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = new OpenApiReference("#/components/parameters/foobar");
 
             Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
-            Assert.Equal(string.Empty, reference.ExternalFilePath);
+            Assert.Null(reference.ExternalFilePath);
             Assert.Equal("foobar", reference.TypeName);
         }
 
@@ -37,14 +37,14 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = new OpenApiReference("foobar");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
-            Assert.Equal(string.Empty, reference.ExternalFilePath);
-            Assert.Equal("foobar", reference.TypeName);
+            Assert.Equal("foobar", reference.ExternalFilePath);
+            Assert.Null(reference.TypeName);
         }
 
         [Fact]
         public void TranslateV2ExternalReference()
         {
-            var reference = OpenApiV2Deserializer.ParseReference("swagger.json#/parameters/blahblah");
+            var reference = OpenApiV2Deserializer.ParseReference("swagger.json#/definitions/parameters/blahblah");
 
             Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
             Assert.Equal("swagger.json", reference.ExternalFilePath);
@@ -57,17 +57,17 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = OpenApiV2Deserializer.ParseReference("blahblah");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
-            Assert.Equal(string.Empty, reference.ExternalFilePath);
-            Assert.Equal("blahblah", reference.TypeName);
+            Assert.Equal("blahblah", reference.ExternalFilePath);
+            Assert.Null(reference.TypeName);
         }
 
         [Fact]
         public void TranslateV2Reference()
         {
-            var reference = OpenApiV2Deserializer.ParseReference("#/definitions/blahblah");
+            var reference = OpenApiV2Deserializer.ParseReference("#/definitions/schemas/blahblah");
 
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
-            Assert.Equal(string.Empty, reference.ExternalFilePath);
+            Assert.Null(reference.ExternalFilePath);
             Assert.Equal("blahblah", reference.TypeName);
         }
     }

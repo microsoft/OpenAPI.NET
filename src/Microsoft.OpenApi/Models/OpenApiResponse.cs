@@ -62,9 +62,9 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (this.IsReference())
+            if (Pointer != null)
             {
-                this.WriteRef(writer);
+                Pointer.WriteAsV3(writer);
             }
             else
             {
@@ -99,9 +99,9 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (this.IsReference())
+            if (Pointer != null)
             {
-                this.WriteRef(writer);
+                Pointer.WriteAsV2(writer);
             }
             else
             {
