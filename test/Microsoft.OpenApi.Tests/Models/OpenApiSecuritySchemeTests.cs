@@ -124,6 +124,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = ApiKeySecurityScheme.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -141,6 +143,8 @@ in: query";
             var actual = ApiKeySecurityScheme.SerializeAsYaml();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -159,6 +163,8 @@ in: query";
             var actual = HttpBasicSecurityScheme.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -178,6 +184,8 @@ in: query";
             var actual = HttpBearerSecurityScheme.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -204,6 +212,8 @@ in: query";
             var actual = OAuth2SingleFlowSecurityScheme.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -246,6 +256,8 @@ in: query";
             var actual = OAuth2MultipleFlowSecurityScheme.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -264,6 +276,8 @@ in: query";
             var actual = OpenIdConnectSecurityScheme.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
     }

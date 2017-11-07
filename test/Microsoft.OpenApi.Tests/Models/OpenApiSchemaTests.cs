@@ -153,6 +153,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = BasicSchema.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -178,6 +180,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = AdvancedSchemaNumber.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -225,6 +229,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = AdvancedSchemaObject.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -275,6 +281,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = AdvancedSchemaWithAllOf.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
     }

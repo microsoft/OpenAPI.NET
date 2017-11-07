@@ -46,13 +46,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [MemberData(nameof(BasicInfoJsonExpect))]
-        public void SerializeBasicInfoAsJsonWorks(OpenApiSpecVersion version, string expect)
+        public void SerializeBasicInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
             string actual = BasicInfo.SerializeAsJson(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         public static IEnumerable<object[]> BasicInfoYamlExpect()
@@ -71,13 +73,15 @@ version: 1.0"
 
         [Theory]
         [MemberData(nameof(BasicInfoYamlExpect))]
-        public void SerializeBasicInfoAsYamlWorks(OpenApiSpecVersion version, string expect)
+        public void SerializeBasicInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
             string actual = BasicInfo.SerializeAsYaml(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         public static IEnumerable<object[]> AdvanceInfoJsonExpect()
@@ -112,13 +116,15 @@ version: 1.0"
 
         [Theory]
         [MemberData(nameof(AdvanceInfoJsonExpect))]
-        public void SerializeAdvanceInfoAsJsonWorks(OpenApiSpecVersion version, string expect)
+        public void SerializeAdvanceInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
             string actual = AdvanceInfo.SerializeAsJson(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         public static IEnumerable<object[]> AdvanceInfoYamlExpect()
@@ -149,13 +155,15 @@ x-updated: metadata"
 
         [Theory]
         [MemberData(nameof(AdvanceInfoYamlExpect))]
-        public void SerializeAdvanceInfoAsYamlWorks(OpenApiSpecVersion version, string expect)
+        public void SerializeAdvanceInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
             string actual = AdvanceInfo.SerializeAsYaml(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }

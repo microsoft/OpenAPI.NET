@@ -22,20 +22,22 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiFormat.Yaml, "")]
-        public void SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expect)
+        public void SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
             string actual = BasicExDocs.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void SerializeAdvanceExDocsAsV3JsonWorks()
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"{
   ""description"": ""Find more info here"",
   ""url"": ""https://example.com""
@@ -45,14 +47,16 @@ namespace Microsoft.OpenApi.Tests.Models
             string actual = AdvanceExDocs.SerializeAsJson();
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void SerializeAdvanceExDocsAsV3YamlWorks()
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"description: Find more info here
 url: https://example.com";
 
@@ -60,7 +64,9 @@ url: https://example.com";
             string actual = AdvanceExDocs.SerializeAsYaml();
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         #endregion

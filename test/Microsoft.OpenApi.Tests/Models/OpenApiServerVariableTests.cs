@@ -27,20 +27,22 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiFormat.Yaml, "")]
-        public void SerializeBasicServerVariableAsV3Works(OpenApiFormat format, string expect)
+        public void SerializeBasicServerVariableAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
             string actual = BasicServerVariable.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
-            actual.Should().Be(expect);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
 
         [Fact]
         public void SerializeAdvancedServerVariableAsV3JsonWorks()
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"{
   ""default"": ""8443"",
   ""description"": ""test description"",
@@ -54,14 +56,16 @@ namespace Microsoft.OpenApi.Tests.Models
             string actual = AdvancedServerVariable.SerializeAsJson();
 
             // Assert
-            actual.Should().Be(expect);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
 
         [Fact]
         public void SerializeAdvancedServerVariableAsV3YamlWorks()
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"default: 8443
 description: test description
 enum:
@@ -72,7 +76,9 @@ enum:
             string actual = AdvancedServerVariable.SerializeAsYaml();
 
             // Assert
-            actual.Should().Be(expect);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
     }
 }

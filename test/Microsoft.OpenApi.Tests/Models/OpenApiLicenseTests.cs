@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"{
   ""name"": ""Default Name""
 }";
@@ -39,7 +39,9 @@ namespace Microsoft.OpenApi.Tests.Models
             string actual = BasicLicense.SerializeAsJson(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -47,11 +49,16 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeBasicLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
-            // Arrange & Act
+            // Arrange
+            string expected = "name: Default Name";
+
+            // Act
             string actual = BasicLicense.SerializeAsYaml(version);
 
             // Assert
-            Assert.Equal("name: Default Name", actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -60,7 +67,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"{
   ""name"": ""Apache 2.0"",
   ""url"": ""http://www.apache.org/licenses/LICENSE-2.0.html"",
@@ -71,7 +78,9 @@ namespace Microsoft.OpenApi.Tests.Models
             string actual = AdvanceLicense.SerializeAsJson(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -80,7 +89,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"name: Apache 2.0
 url: http://www.apache.org/licenses/LICENSE-2.0.html
 x-copyright: Abc";
@@ -89,7 +98,9 @@ x-copyright: Abc";
             string actual = AdvanceLicense.SerializeAsYaml(version);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }

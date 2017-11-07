@@ -60,6 +60,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = BasicServer.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -94,6 +96,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = AdvancedServer.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
     }

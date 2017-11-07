@@ -64,6 +64,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = BasicSecurityRequirement.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
 
@@ -89,6 +91,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = AdvancedSecurityRequirement.SerializeAsJson();
 
             // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
     }

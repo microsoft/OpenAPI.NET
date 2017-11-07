@@ -22,20 +22,22 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiFormat.Yaml, "")]
-        public void SerializeBasicEncodingAsV3Works(OpenApiFormat format, string expect)
+        public void SerializeBasicEncodingAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
             string actual = BasicEncoding.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void SerializeAdvanceEncodingAsV3JsonWorks()
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"{
   ""contentType"": ""image/png, image/jpeg"",
   ""style"": ""simple"",
@@ -47,14 +49,16 @@ namespace Microsoft.OpenApi.Tests.Models
             string actual = AdvanceEncoding.SerializeAsJson();
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void SerializeAdvanceEncodingAsV3YamlWorks()
         {
             // Arrange
-            string expect = 
+            string expected = 
 @"contentType: image/png, image/jpeg
 style: simple
 explode: true
@@ -64,7 +68,9 @@ allowReserved: true";
             string actual = AdvanceEncoding.SerializeAsYaml();
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }
