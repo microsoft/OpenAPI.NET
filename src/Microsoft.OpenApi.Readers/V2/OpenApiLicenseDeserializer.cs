@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         public static PatternFieldMap<OpenApiLicense> LicensePatternFields = new PatternFieldMap<OpenApiLicense>
         {
-            {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
 
         internal static OpenApiLicense LoadLicense(ParseNode node)

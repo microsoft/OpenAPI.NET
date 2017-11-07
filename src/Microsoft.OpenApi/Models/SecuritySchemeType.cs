@@ -34,5 +34,4 @@ namespace Microsoft.OpenApi.Models
         [Display("openIdConnect")]
         OpenIdConnect
     }
-
 }

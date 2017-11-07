@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiMediaType> MediaTypePatternFields =
             new PatternFieldMap<OpenApiMediaType>
             {
-                {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
         public static OpenApiMediaType LoadMediaType(ParseNode node)

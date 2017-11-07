@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiParameter> ParameterPatternFields =
             new PatternFieldMap<OpenApiParameter>
             {
-                {s => s.StartsWith("x-"), (o, k, n) => o.Extensions.Add(k, new OpenApiString(n.GetScalarValue()))},
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
         public static OpenApiParameter LoadParameter(ParseNode node)
