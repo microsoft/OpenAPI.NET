@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = await client.GetStreamAsync("petstore.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.NotEmpty(context.Errors);
+            Assert.Empty(context.Errors);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = await client.GetStreamAsync("uber.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.NotEmpty(context.Errors);
+            Assert.Empty(context.Errors);
         }
     }
 }

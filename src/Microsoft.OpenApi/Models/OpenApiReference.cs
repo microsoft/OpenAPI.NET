@@ -41,45 +41,27 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNullOrWhiteSpace(nameof(reference));
             }
 
-            var segments = reference.Split('/');
+            // the JSON Pointer maybe looks like: http://acme.org/schemas/foo/bar#/components/schemas/xyz'
+            var segments = reference.Split('#');
 
-            if (segments.Length == 1) //  Pet.json
+            if (segments.Length == 1) // Pet.json or http://acme.org/schemas/foo/bar
             {
-                if (String.IsNullOrEmpty(segments[0]) || segments[0].Contains("#"))
-                {
-                    throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
-                }
-
                 ExternalFilePath = segments[0];
                 ReferenceType = ReferenceType.Schema; // it means only to reference schema types
             }
-            else if (segments.Length == 2) // definitions.json#/Pet
+            else if (segments.Length == 2) // definitions.json#/Pet....or #/components/schemas/Pet
             {
-                if (String.IsNullOrEmpty(segments[0]) || !segments[0].EndsWith("#"))
-                {
-                    throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
-                }
+                ExternalFilePath = String.IsNullOrEmpty(segments[0]) ? null : segments[0];
 
-                ExternalFilePath = segments[0].Substring(0, segments[0].Length -1);
-                ReferenceType = ReferenceType.Schema; // it means only to reference schema types
-                TypeName = segments[1];
-            }
-            else if (segments.Length == 4) // #/components/schemas/Pet
-            {
                 ReferenceType referenceType;
-                if (!segments[0].EndsWith("#") ||
-                    segments[1] != "components" ||
-                    (referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>()) == ReferenceType.Unknown)
+                string typeName;
+                if (!ParseLocalPointer(segments[1], out referenceType, out typeName))
                 {
                     throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
                 }
 
                 ReferenceType = referenceType;
-                TypeName = segments[3];
-                if (segments[0] != "#")
-                {
-                    ExternalFilePath = segments[0].Substring(0, segments[0].Length - 1);
-                }
+                TypeName = typeName;
             }
             else
             {
@@ -89,10 +71,11 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiReference"/> class.
+        /// Only for unit test to use.
         /// </summary>
         /// <param name="referenceType">The Reference type.</param>
         /// <param name="typeName">The type name.</param>
-        public OpenApiReference(ReferenceType referenceType, string typeName)
+        internal OpenApiReference(ReferenceType referenceType, string typeName)
         {
             if (String.IsNullOrWhiteSpace(typeName))
             {
@@ -152,6 +135,49 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.DollarRef, GetPointerV2());
 
             writer.WriteEndObject();
+        }
+
+        private bool ParseLocalPointer(string input, out ReferenceType referenceType, out string typeName)
+        {
+            referenceType = ReferenceType.Unknown;
+            typeName = null;
+
+            if (String.IsNullOrWhiteSpace(input) || !input.StartsWith("/"))
+            {
+                return false;
+            }
+
+            var segments = input.Split('/');
+            if (segments.Length == 2) // /blabla
+            {
+                referenceType = ReferenceType.Schema;
+                typeName = segments[1];
+                return true;
+            }
+            else if (segments.Length == 3) // /tags/blabla
+            {
+                referenceType = segments[1].GetEnumFromDisplayName<ReferenceType>();
+                if (referenceType != ReferenceType.Tag)
+                {
+                    return false; // should be tags?
+                }
+
+                typeName = segments[2];
+                return true;
+            }
+            else if (segments.Length == 4) // /components/{type}/blabla
+            {
+                if (segments[1] != OpenApiConstants.Components)
+                {
+                    return false; // should be "components"
+                }
+
+                referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
+                typeName = segments[3];
+                return true;
+            }
+
+            return false;
         }
 
         private string GetPointerV3()
