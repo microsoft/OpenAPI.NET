@@ -9,6 +9,11 @@ namespace Microsoft.OpenApi.Models
 {
     internal static class OpenApiConstants
     {
+        #region commons
+        public const string SegmentSeparator = "/";
+
+        #endregion
+
         public const string OpenApi = "openapi";
 
         public const string Info = "info";
