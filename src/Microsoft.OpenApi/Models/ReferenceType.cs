@@ -72,6 +72,6 @@ namespace Microsoft.OpenApi.Models
         /// Tags item.
         /// </summary>
         [Display("tags")]
-        Tags
+        Tag
     }
 }

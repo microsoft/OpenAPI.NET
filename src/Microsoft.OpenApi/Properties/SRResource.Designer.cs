@@ -189,9 +189,9 @@ namespace Microsoft.OpenApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The reference string &apos;{0}&apos; has invalid format..
         /// </summary>
-        internal static string RefeneceHasInvalidFormat {
+        internal static string ReferenceHasInvalidFormat {
             get {
-                return ResourceManager.GetString("RefeneceHasInvalidFormat", resourceCulture);
+                return ResourceManager.GetString("ReferenceHasInvalidFormat", resourceCulture);
             }
         }
         

@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.V3
             IOpenApiReference referencedObject = null;
 
             var node = ((RootNode)rootNode).Find(pointer.GetLocalPointer());
-            if (node == null && pointer.ReferenceType != ReferenceType.Tags)
+            if (node == null && pointer.ReferenceType != ReferenceType.Tag)
             {
                 return null;
             }
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     referencedObject = LoadExample(node);
                     break;
 
-                case ReferenceType.Tags:
+                case ReferenceType.Tag:
                     var list = (ListNode)node;
                     if (list != null)
                     {

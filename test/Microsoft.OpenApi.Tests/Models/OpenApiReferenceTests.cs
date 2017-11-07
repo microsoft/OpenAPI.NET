@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Action action = () => new OpenApiReference(reference);
 
             // Assert
-            action.ShouldThrow<OpenApiException>(String.Format(SRResource.RefeneceHasInvalidFormat, reference));
+            action.ShouldThrow<OpenApiException>(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
 
         [Theory]

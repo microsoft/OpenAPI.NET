@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
                 // external docs
-                writer.WriteObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
+                writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
 
                 // extensions.
                 writer.WriteExtensions(Extensions);
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
                 // external docs
-                writer.WriteObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
+                writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
 
                 // extensions
                 writer.WriteExtensions(Extensions);
