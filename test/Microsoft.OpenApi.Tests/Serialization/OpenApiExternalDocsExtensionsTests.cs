@@ -4,12 +4,11 @@
 // ------------------------------------------------------------
 
 using System;
+using System.IO;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using System.IO;
-using Microsoft.OpenApi.Tests.Serialization;
 
-namespace Microsoft.OpenApi.Serialization.Tests
+namespace Microsoft.OpenApi.Tests.Serialization
 {
     public class OpenApiExternalDocsExtensionsTests
     {
@@ -24,21 +23,22 @@ namespace Microsoft.OpenApi.Serialization.Tests
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiFormat.Yaml, "")]
-        public void SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expect)
+        public void SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            MemoryStream stream = new MemoryStream();
             string actual = BasicExDocs.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
-
+            
             // Assert
-            Assert.Equal(expect, actual);
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void SerializeAdvanceExDocssAsV3JsonWorks()
         {
             // Arrange
-            string expect = @"
+            string expected = @"
 {
   ""description"": ""Find more info here"",
   ""url"": ""https://example.com""
@@ -48,14 +48,16 @@ namespace Microsoft.OpenApi.Serialization.Tests
             string actual = AdvanceExDocs.SerializeAsJson();
 
             // Assert
-            Assert.Equal(expect, actual);
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void SerializeAdvanceExDocssAsV3YamlWorks()
         {
             // Arrange
-            string expect = @"
+            string expected = @"
 description: Find more info here
 url: https://example.com";
 
@@ -63,7 +65,9 @@ url: https://example.com";
             string actual = AdvanceExDocs.SerializeAsYaml();
 
             // Assert
-            Assert.Equal(expect, actual);
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
 
         #endregion
