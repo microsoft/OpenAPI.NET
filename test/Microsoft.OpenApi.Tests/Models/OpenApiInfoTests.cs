@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     specVersion, 
 @"title: Default Title
-version: 1.0"
+version: '1.0'"
                 };
             }
         }

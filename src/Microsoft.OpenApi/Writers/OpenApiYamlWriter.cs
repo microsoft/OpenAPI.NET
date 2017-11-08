@@ -3,6 +3,8 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
+using System.CodeDom;
 using System.IO;
 
 namespace Microsoft.OpenApi.Writers
@@ -61,8 +63,23 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndObject()
         {
-            var currentScope = EndScope(ScopeType.Object);
+            var previousScope = EndScope(ScopeType.Object);
             DecreaseIndentation();
+
+            var currentScope = CurrentScope();
+
+
+            // If there object is empty, indicate it by writing { }
+            if (previousScope.ObjectCount == 0)
+            {
+                // If we are in an object, write a white space preceding the braces.
+                if (currentScope != null && currentScope.Type == ScopeType.Object)
+                {
+                    Writer.Write(" ");
+                }
+
+                Writer.Write(WriterConstants.EmptyObject);
+            }
         }
 
         /// <summary>
@@ -120,7 +137,6 @@ namespace Microsoft.OpenApi.Writers
             }
 
             Writer.Write(name);
-            // writer.Write(WriterConstants.NameValueSeparator);
             Writer.Write(":");
 
             ++current.ObjectCount;
@@ -135,10 +151,24 @@ namespace Microsoft.OpenApi.Writers
             WriteValueSeparator();
 
             value = value.Replace("\n", "\\n");
+            
+            // If string is the word null, wrap it in quote to ensure it is not recognized as empty scalar null.
+            if (value == "null")
+            {
+                value = "'null'";
+            }
 
+            // If string includes special character, wrap it in quote to avoid conflicts.
             if (value.StartsWith("#"))
             {
-                value = "'" + value + "'";
+                value = $"'{value}'";
+            }
+
+            // If string can be mistaken as a number or a boolean, wrap it in quote to indicate that this is
+            // indeed a string, not a number of a boolean.
+            if (decimal.TryParse(value, out var _) || bool.TryParse(value, out var _))
+            {
+                value = $"'{value}'";
             }
 
             Writer.Write(value);
@@ -149,8 +179,9 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteNull()
         {
+            // YAML allows null value to be represented by either nothing or the word null.
+            // We will write nothing here.
             WriteValueSeparator();
-            // nothing here
         }
 
         protected override void WriteValueSeparator()

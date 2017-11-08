@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Writers
 
             if (type == typeof(string))
             {
-                WriteValue((String)(value));
+                WriteValue((string)(value));
             }
             else if (type == typeof(int) || type == typeof(int?))
             {
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Writers
             {
                 WriteValue((bool)value);
             }
-            else if (type == typeof(decimal) || type == typeof(decimal))
+            else if (type == typeof(decimal) || type == typeof(decimal?))
             {
                 WriteValue((decimal)value);
             }

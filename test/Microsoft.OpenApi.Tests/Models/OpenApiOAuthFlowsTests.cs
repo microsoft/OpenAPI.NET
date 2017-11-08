@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"";
+                @"{ }";
 
             // Act
             var actual = BasicOAuthFlows.SerializeAsYaml();

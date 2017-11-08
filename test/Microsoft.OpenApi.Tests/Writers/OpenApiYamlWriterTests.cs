@@ -37,8 +37,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                     "string7",
                     "string8"
                 },
-                
-@"- string1
+                @"- string1
 - string2
 - string3
 - string4
@@ -51,8 +50,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             yield return new object[]
             {
                 new[] {"string1", "string1", "string1", "string1"},
-                
-@"- string1
+                @"- string1
 - string1
 - string1
 - string1"
@@ -89,6 +87,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> WriteMapAsYamlShouldMatchExpectedTestCasesSimple()
         {
+            // Simple map
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -98,13 +97,13 @@ namespace Microsoft.OpenApi.Tests.Writers
                     ["property3"] = "value3",
                     ["property4"] = "value4"
                 },
-                
-@"property1: value1
+                @"property1: value1
 property2: value2
 property3: value3
 property4: value4"
             };
 
+            // Simple map with duplicate value
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -114,8 +113,7 @@ property4: value4"
                     ["property3"] = "value1",
                     ["property4"] = "value1"
                 },
-                
-@"property1: value1
+                @"property1: value1
 property2: value1
 property3: value1
 property4: value1"
@@ -124,22 +122,51 @@ property4: value1"
 
         public static IEnumerable<object[]> WriteMapAsYamlShouldMatchExpectedTestCasesComplex()
         {
-//            // Disable because our YamlWriter doesn't handle empty object properly
-//            yield return new object[]
-//            {
-//                new Dictionary<string, object>
-//                {
-//                    ["property1"] = new Dictionary<string, object>(),
-//                    ["property2"] = "value2",
-//                    ["property3"] = "value3",
-//                    ["property4"] = "value4"
-//                },
-//                @"property1: {
-//property2: value1
-//property3: value1
-//property4: value1"
-//            };
+            // Empty map
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = new Dictionary<string, object>(),
+                    ["property2"] = "value2",
+                    ["property3"] = "value3",
+                    ["property4"] = "value4"
+                },
+                @"property1: { }
+property2: value2
+property3: value3
+property4: value4"
+            };
 
+            // Number, boolean, and null handling
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = "10.0",
+                    ["property2"] = "10",
+                    ["property3"] = "-5",
+                    ["property4"] = 10.0M,
+                    ["property5"] = 10,
+                    ["property6"] = -5,
+                    ["property7"] = true,
+                    ["property8"] = "true",
+                    ["property9"] = null,
+                    ["property10"] = "null"
+                },
+                @"property1: '10.0'
+property2: '10'
+property3: '-5'
+property4: 10.0
+property5: 10
+property6: -5
+property7: true
+property8: 'true'
+property9: 
+property10: 'null'"
+            };
+
+            // Nested map
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -155,8 +182,7 @@ property4: value1"
                     },
                     ["property4"] = "value4"
                 },
-                
-@"property1:
+                @"property1:
   innerProperty1: innerValue1
 property2: value2
 property3:
@@ -164,6 +190,7 @@ property3:
 property4: value4"
             };
 
+            // Nested map with list
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -176,8 +203,7 @@ property4: value4"
                     },
                     ["property4"] = new List<object> {"listValue1", "listValue2"}
                 },
-                
-@"property1: value1
+                @"property1: value1
 property2: value2
 property3:
   innerProperty1: innerValue1
@@ -199,7 +225,10 @@ property4:
 
             foreach (var keyValue in inputMap)
             {
-                if (keyValue.Value.GetType().IsPrimitive || keyValue.Value.GetType() == typeof(string))
+                if (keyValue.Value == null 
+                    || keyValue.Value.GetType().IsPrimitive 
+                    || keyValue.Value is decimal
+                    || keyValue.Value is string)
                 {
                     writer.WritePropertyName(keyValue.Key);
                     writer.WriteValue(keyValue.Value);

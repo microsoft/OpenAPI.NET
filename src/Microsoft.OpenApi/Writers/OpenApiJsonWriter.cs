@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                Writer.Write(WriterConstants.WhiteSpaceForEmptyObjectArray);
+                Writer.Write(WriterConstants.WhiteSpaceForEmptyObject);
                 DecreaseIndentation();
             }
 
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                Writer.Write(WriterConstants.WhiteSpaceForEmptyObjectArray);
+                Writer.Write(WriterConstants.WhiteSpaceForEmptyArray);
                 DecreaseIndentation();
             }
 

@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiFormat.Yaml, "")]
+        [InlineData(OpenApiFormat.Yaml, "{ }")]
         public void SerializeBasicMediaTypeAsV3Works(OpenApiFormat format, string expect)
         {
             // Arrange & Act
