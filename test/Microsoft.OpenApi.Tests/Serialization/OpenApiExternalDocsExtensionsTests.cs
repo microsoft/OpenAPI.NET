@@ -7,6 +7,7 @@ using System;
 using Microsoft.OpenApi.Models;
 using Xunit;
 using System.IO;
+using Microsoft.OpenApi.Tests.Serialization;
 
 namespace Microsoft.OpenApi.Serialization.Tests
 {

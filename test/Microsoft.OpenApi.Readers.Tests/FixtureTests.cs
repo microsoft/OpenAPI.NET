@@ -9,27 +9,39 @@ using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
+    /// <summary>
+    /// Load JSON and YAML file from the fixtures folder at the root of the solution, and
+    /// verify that the deserializer products expected objects.
+    /// </summary>
+    /// <remarks>The embedding of the file is specified in the csproj of this test project.</remarks>
     public class FixtureTests
     {
-        private YamlNode LoadNode(string filePath)
+        private readonly ITestOutputHelper _output;
+
+        public FixtureTests(ITestOutputHelper output)
         {
-            using (var stream = new FileStream(filePath, FileMode.Open))
+            _output = output;
+        }
+
+        private YamlNode LoadNode(string fileName)
+        {
+            using (var stream = GetType()
+                .Assembly.GetManifestResourceStream(GetType(), fileName))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
                 return yamlStream.Documents.First().RootNode;
             }
         }
-        // Load json,yaml for both 2.0 and 3.0.  Ensure resulting DOM is not empty and equivalent?
-        // Load files from ../../fixtures/(v3.0|v2.0|v1.0 ???)/(json|yaml)/general/basicInfoObject.json
 
         [Fact]
         public void TestBasicInfoObject()
         {
-            var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/basicInfoObject.json");
+            var yamlNode = LoadNode("basicInfoObject.json");
 
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
@@ -47,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TestMinimalInfoObject()
         {
-            var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/minimalInfoObject.json");
+            var yamlNode = LoadNode("minimalInfoObject.json");
 
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
@@ -64,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TestNegativeInfoObject()
         {
-            var yamlNode = LoadNode("../../../../fixtures/v3.0/json/general/negative/negativeInfoObject.json");
+            var yamlNode = LoadNode("negativeInfoObject.json");
 
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
