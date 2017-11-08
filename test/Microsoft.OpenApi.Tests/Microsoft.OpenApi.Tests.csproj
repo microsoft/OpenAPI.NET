@@ -1,22 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net46</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors></Authors>
     <Company>Microsoft</Company>
     <Product>Microsoft.OpenApi.Tests</Product>
     <PackageId>Microsoft.OpenApi.Tests</PackageId>
-    <Version>1.0.0-beta001</Version>
     <Description>Tests for Microsoft.OpenApi</Description>
     <AssemblyName>Microsoft.OpenApi.Tests</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Tests</RootNamespace>
     <SignAssembly>true</SignAssembly>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
-    <DocumentationFile>bin\Debug\net46\Microsoft.OpenApi.Tests.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
-    <DocumentationFile>bin\Release\net46\Microsoft.OpenApi.Tests.xml</DocumentationFile>
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.Tests.xml</DocumentationFile>
   </PropertyGroup>
   
   <ItemGroup>

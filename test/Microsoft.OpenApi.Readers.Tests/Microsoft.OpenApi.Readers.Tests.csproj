@@ -1,24 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net46</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors></Authors>
     <Company>Microsoft</Company>
     <Product>Microsoft.OpenApi.Readers.Tests</Product>
     <PackageId>Microsoft.OpenApi.Readers.Tests</PackageId>
-    <Version>1.0.0-beta001</Version>
     <Description>Tests for Microsoft.OpenApi.Readers</Description>
     <AssemblyName>Microsoft.OpenApi.Readers.Tests</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Readers.Tests</RootNamespace>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
-    <DocumentationFile>bin\Debug\net46\Microsoft.OpenApi.Readers.Tests.xml</DocumentationFile>
+  
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.Readers.Tests.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
-    <DocumentationFile>bin\Release\net46\Microsoft.OpenApi.Readers.Tests.xml</DocumentationFile>
-  </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="4.17.0">
     </PackageReference>
@@ -41,8 +38,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-
-
 
   <ItemGroup>
     <EmbeddedResource Include="Samples\CallbackSample.yaml" />
