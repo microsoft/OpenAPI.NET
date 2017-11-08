@@ -4,22 +4,22 @@
 // ------------------------------------------------------------
 
 using System.IO;
-using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Serialization.Tests
+namespace Microsoft.OpenApi.Tests.Serialization
 {
     public static class OpenApiSerializerTestHelper
     {
         public static string SerializeAsJson<T>(this T element,
                OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
-               where T : IOpenApiElement
+               where T : OpenApiElement
         {
             return element.Serialize(version, OpenApiFormat.Json);
         }
 
         public static string SerializeAsYaml<T>(this T element,
                OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
-               where T : IOpenApiElement
+               where T : OpenApiElement
         {
             return element.Serialize(version, OpenApiFormat.Yaml);
         }
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Serialization.Tests
         public static string Serialize<T>(this T element,
             OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0,
             OpenApiFormat format = OpenApiFormat.Json)
-            where T : IOpenApiElement
+            where T : OpenApiElement
         {
             if (element == null)
             {

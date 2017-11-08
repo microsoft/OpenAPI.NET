@@ -3,16 +3,20 @@
   <PropertyGroup>
     <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors></Authors>
+    <Company>Microsoft</Company>
+    <Product>Microsoft.OpenApi.Readers</Product>
+    <PackageId>Microsoft.OpenApi.Readers</PackageId>
+    <Version>1.0.0-beta001</Version>
+    <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
     <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
-    <PackageId>Microsoft.OpenApi.Readers</PackageId>
-    <Version>0.9.0</Version>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="V2\OpenApiExternalDocsDeserializer.cs" />
-    <None Include="V2\OpenApiSecuritySchemeDeserializer.cs" />
-  </ItemGroup>
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="SharpYaml" Version="1.6.1" />
@@ -29,7 +33,7 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
   </ItemGroup>
-
+  
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>

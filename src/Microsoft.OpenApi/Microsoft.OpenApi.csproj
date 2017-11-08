@@ -7,11 +7,15 @@
     <Company>Microsoft</Company>
     <Product>Microsoft.OpenApi</Product>
     <PackageId>Microsoft.OpenApi</PackageId>
-    <Version>0.9.0</Version>
-    <Description>Parser for OpenAPI descriptions</Description>
+    <Version>1.0.0-beta001</Version>
+    <Description>.NET models and JSON/YAML writers for OpenAPI specification</Description>
     <AssemblyName>Microsoft.OpenApi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi</RootNamespace>
     <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
