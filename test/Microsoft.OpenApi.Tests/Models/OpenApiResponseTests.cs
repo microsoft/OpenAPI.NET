@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Description = "A complex object array response"
             };
 
-            AdvancedResponse.AddContent("text/plain", (m) =>
+            AdvancedResponse.AddMediaType("text/plain", (m) =>
             {
                 m.Schema = new OpenApiSchema
                 {
@@ -58,18 +58,18 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "")]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "")]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
         public void SerializeBasicResponseWorks(OpenApiSpecVersion version,
-            OpenApiFormat format, string expected)
+            OpenApiFormat format)
         {
             // Arrange & Act
             var actual = BasicResponse.Serialize(version, format);
 
             // Assert
-            actual.Should().Be(expected);
+            actual.Should().Be("{ }");
         }
 
         [Fact]
