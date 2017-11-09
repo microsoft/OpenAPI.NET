@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests
                   o => o.AddResponse("200", r =>
                  {
                      r.Description = "foo";
-                     r.AddContent("application/json", c =>
+                     r.AddMediaType("application/json", c =>
                      {
                          c.Example = new OpenApiString("xyz"); ///"{ \"foo\": \"bar\" }"; This doesn't work because parser treats it as a node
                      });

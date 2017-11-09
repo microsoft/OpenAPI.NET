@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="response">The response.</param>
         /// <param name="name">The content name.</param>
         /// <param name="configure">The content configure action.</param>
-        public static void AddContent(this OpenApiResponse response, string name, Action<OpenApiMediaType> configure)
+        public static void AddMediaType(this OpenApiResponse response, string name, Action<OpenApiMediaType> configure)
         {
             if (response == null)
             {
