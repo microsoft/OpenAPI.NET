@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Describes how the header value will be serialized depending on the type of the header value.
         /// </summary>
-        public ParameterStyle Style { get; set; }
+        public ParameterStyle? Style { get; set; }
 
         /// <summary>
         /// When this is true, header values of type array or object generate separate parameters
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteBoolProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
                 // style
-                writer.WriteStringProperty(OpenApiConstants.Style, Style.GetDisplayName());
+                writer.WriteStringProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
                 // explode
                 writer.WriteBoolProperty(OpenApiConstants.Explode, Explode, false);
@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteBoolProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
                 // style
-                writer.WriteStringProperty(OpenApiConstants.Style, Style.GetDisplayName());
+                writer.WriteStringProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
                 // explode
                 writer.WriteBoolProperty(OpenApiConstants.Explode, Explode, false);

@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -45,20 +44,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
+        /// <summary>
+        /// Reference pointer.
+        /// </summary>
         public OpenApiReference Pointer
         {
             get; set;
-        }
-
-        public void CreateContent(string mediatype, Action<OpenApiMediaType> configure)
-        {
-            var m = new OpenApiMediaType();
-            configure(m);
-            if (Content == null) {
-                Content = new Dictionary<string, OpenApiMediaType>();
-            }
-
-            Content.Add(mediatype, m);
         }
 
         /// <summary>
