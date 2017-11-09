@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Expressions

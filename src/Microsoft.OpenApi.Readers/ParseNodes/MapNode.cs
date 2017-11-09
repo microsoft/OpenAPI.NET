@@ -10,6 +10,7 @@ using System.Linq;
 using SharpYaml.Schemas;
 using SharpYaml.Serialization;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes

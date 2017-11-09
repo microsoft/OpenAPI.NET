@@ -32,6 +32,12 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Base Indentation Level. 
+        /// This denotes how many indentations are needed for the property in the base object.
+        /// </summary>
+        protected override int BaseIndentation => 1;
+
+        /// <summary>
         /// Write JSON start object.
         /// </summary>
         public override void WriteStartObject()
@@ -140,11 +146,11 @@ namespace Microsoft.OpenApi.Writers
             {
                 Writer.Write(WriterConstants.ObjectMemberSeparator);
             }
+
             Writer.WriteLine();
 
             currentScope.ObjectCount++;
-
-            // JsonValueUtils.WriteEscapedJsonString(this.writer, name);
+            
             WriteIndentation();
 
             Writer.Write(WriterConstants.QuoteCharacter);
@@ -168,6 +174,9 @@ namespace Microsoft.OpenApi.Writers
             Writer.Write(WriterConstants.QuoteCharacter);
         }
 
+        /// <summary>
+        /// Write null value.
+        /// </summary>
         public override void WriteNull()
         {
             Writer.Write("null");
@@ -184,6 +193,7 @@ namespace Microsoft.OpenApi.Writers
             }
 
             var currentScope = scopes.Peek();
+
             if (currentScope.Type == ScopeType.Array)
             {
                 if (currentScope.ObjectCount != 0)
@@ -195,11 +205,6 @@ namespace Microsoft.OpenApi.Writers
                 WriteIndentation();
                 currentScope.ObjectCount++;
             }
-        }
-
-        public override void WriteRaw(string value)
-        {
-            WriteValue(value); //TODO: fake it for the moment.
         }
     }
 }

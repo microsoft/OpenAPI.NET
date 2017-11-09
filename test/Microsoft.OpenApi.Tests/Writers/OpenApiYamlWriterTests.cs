@@ -129,7 +129,7 @@ property4: value1"
                 {
                     ["property1"] = new Dictionary<string, object>(),
                     ["property2"] = new List<string>(),
-                    ["property3"] = new List<object>()
+                    ["property3"] = new List<object>
                     {
                         new Dictionary<string, object>(),
                     },
@@ -195,7 +195,7 @@ property3:
   innerProperty3: innerValue3
 property4: value4"
             };
-        
+
             // Nested map and list
             yield return new object[]
             {
@@ -203,7 +203,7 @@ property4: value4"
                 {
                     ["property1"] = new Dictionary<string, object>(),
                     ["property2"] = new List<string>(),
-                    ["property3"] = new List<object>()
+                    ["property3"] = new List<object>
                     {
                         new Dictionary<string, object>(),
                         "string1",
@@ -211,9 +211,9 @@ property4: value4"
                         {
                             ["innerProperty1"] = new List<object>(),
                             ["innerProperty2"] = "string2",
-                            ["innerProperty3"] = new List<object>()
+                            ["innerProperty3"] = new List<object>
                             {
-                                new List<string>()
+                                new List<string>
                                 {
                                     "string3"
                                 }
@@ -238,10 +238,7 @@ property4: value4"
 
         private void WriteValueRevursive(OpenApiYamlWriter writer, object value)
         {
-            if (value == null
-                || value.GetType().IsPrimitive
-                || value is decimal
-                || value is string)
+            if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
             {
                 writer.WriteValue(value);
             }
@@ -281,7 +278,7 @@ property4: value4"
 
             // Act
             WriteValueRevursive(writer, inputMap);
-            
+
             var actualYaml = outputString.ToString().MakeLineBreaksEnvironmentNeutral();
 
             expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();

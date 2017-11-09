@@ -5,6 +5,7 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.OpenApi.Exceptions;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers

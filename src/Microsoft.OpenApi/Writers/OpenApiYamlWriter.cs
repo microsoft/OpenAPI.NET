@@ -30,14 +30,12 @@ namespace Microsoft.OpenApi.Writers
             : base(textWriter, settings)
         {
         }
-
-        protected override int IndentShift
-        {
-            get
-            {
-                return -1;
-            }
-        }
+        
+        /// <summary>
+        /// Base Indentation Level. 
+        /// This denotes how many indentations are needed for the property in the base object.
+        /// </summary>
+        protected override int BaseIndentation => 0;
 
         /// <summary>
         /// Write YAML start object.
@@ -132,7 +130,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write the start property.
+        /// Write the property name and the delimiter.
         /// </summary>
         public override void WritePropertyName(string name)
         {
@@ -140,20 +138,16 @@ namespace Microsoft.OpenApi.Writers
 
             var current = CurrentScope();
 
-            if (current.ObjectCount == 0)
+            // If this is NOT the first property in the object, always start a new line and add indentation.
+            if (current.ObjectCount != 0)
             {
-                if (!current.IsInArray)
-                {
-                    // If this object is the outermost scope, there is no need to insert a newline.
-                    if (!IsTopLevelScope())
-                    {
-                        Writer.WriteLine();
-                    }
-
-                    WriteIndentation();
-                }
+                Writer.WriteLine();
+                WriteIndentation();
             }
-            else
+            // Only add newline and indentation when this object is not in the top level scope and not in an array.
+            // The top level scope should have no indentation and it is already in its own line.
+            // The first property of an object inside array can go after the array prefix (-) directly.
+            else if (! IsTopLevelScope() && !current.IsInArray )
             {
                 Writer.WriteLine();
                 WriteIndentation();
@@ -162,7 +156,7 @@ namespace Microsoft.OpenApi.Writers
             Writer.Write(name);
             Writer.Write(":");
 
-            ++current.ObjectCount;
+            current.ObjectCount++;
         }
 
         /// <summary>
@@ -204,7 +198,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// the empty scalar as “null”.
+        /// Write null value.
         /// </summary>
         public override void WriteNull()
         {
@@ -213,6 +207,9 @@ namespace Microsoft.OpenApi.Writers
             WriteValueSeparator();
         }
 
+        /// <summary>
+        /// Write value separator.
+        /// </summary>
         protected override void WriteValueSeparator()
         {
             if (IsArrayScope())
@@ -232,11 +229,6 @@ namespace Microsoft.OpenApi.Writers
             {
                 Writer.Write(" ");
             }
-        }
-
-        public override void WriteRaw(string value)
-        {
-            WriteValue(value); //TODO: fake it for the moment.
         }
     }
 }

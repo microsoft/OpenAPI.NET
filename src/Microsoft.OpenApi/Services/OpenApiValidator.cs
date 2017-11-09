@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services

@@ -60,11 +60,6 @@ namespace Microsoft.OpenApi.Writers
         /// Write the null value.
         /// </summary>
         void WriteNull();
-        
-        /// <summary>
-        /// Write the raw content value.
-        /// </summary>
-        void WriteRaw(string value);
 
         /// <summary>
         /// Write the object value.

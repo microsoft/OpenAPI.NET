@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Writers
@@ -22,29 +23,19 @@ namespace Microsoft.OpenApi.Writers
         private const string IndentationString = "  ";
 
         /// <summary>
-        /// Number which specifies the level of indentation. Starts with 0 which means no indentation.
-        /// </summary>
-        private int indentLevel;
-
-        /// <summary>
         /// Scope of the Open API element - object, array, property.
         /// </summary>
         protected readonly Stack<Scope> scopes;
 
         /// <summary>
-        /// Number which specifies the level of indentation. Starts with 0 which means no indentation.
+        /// Number which specifies the level of indentation.
+        /// </summary>
+        private int _indentLevel;
+
+        /// <summary>
+        /// Settings controlling the format and the version of the serialization.
         /// </summary>
         private OpenApiSerializerSettings settings;
-
-        /// <summary>
-        /// Indentent shift value.
-        /// </summary>
-        protected virtual int IndentShift { get { return 0; } }
-
-        /// <summary>
-        /// The text writer.
-        /// </summary>
-        protected TextWriter Writer { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
@@ -56,9 +47,20 @@ namespace Microsoft.OpenApi.Writers
             Writer = textWriter;
             Writer.NewLine = "\n";
 
-            this.scopes = new Stack<Scope>();
+            scopes = new Stack<Scope>();
             this.settings = settings;
         }
+
+        /// <summary>
+        /// Base Indentation Level.
+        /// This denotes how many indentations are needed for the property in the base object.
+        /// </summary>
+        protected abstract int BaseIndentation { get; }
+
+        /// <summary>
+        /// The text writer.
+        /// </summary>
+        protected TextWriter Writer { get; }
 
         /// <summary>
         /// Write start object.
@@ -96,17 +98,11 @@ namespace Microsoft.OpenApi.Writers
         public abstract void WriteNull();
 
         /// <summary>
-        /// Write raw content value for examples
-        /// </summary>
-        public abstract void WriteRaw(string value);
-
-
-        /// <summary>
         /// Flush the writer.
         /// </summary>
         public void Flush()
         {
-            this.Writer.Flush();
+            Writer.Flush();
         }
 
         /// <summary>
@@ -157,7 +153,7 @@ namespace Microsoft.OpenApi.Writers
                 return;
             }
 
-            Type type = value.GetType();
+            var type = value.GetType();
 
             if (type == typeof(string))
             {
@@ -177,7 +173,7 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                throw new OpenApiException(String.Format(SRResource.OpenApiUnsupportedValueType, type.FullName));
+                throw new OpenApiException(string.Format(SRResource.OpenApiUnsupportedValueType, type.FullName));
             }
         }
 
@@ -186,7 +182,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public virtual void IncreaseIndentation()
         {
-            indentLevel++;
+            _indentLevel++;
         }
 
         /// <summary>
@@ -194,14 +190,18 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public virtual void DecreaseIndentation()
         {
-            Debug.Assert(indentLevel > 0, "Trying to decrease indentation below zero.");
-            if (indentLevel < 1)
+            if (_indentLevel == 0)
             {
-                indentLevel = 0;
+                throw new OpenApiWriterException("Indentation level cannot be lower than 0.");
+            }
+
+            if (_indentLevel < 1)
+            {
+                _indentLevel = 0;
             }
             else
             {
-                indentLevel--;
+                _indentLevel--;
             }
         }
 
@@ -210,15 +210,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public virtual void WriteIndentation()
         {
-            for (int i = 0; i < (indentLevel + IndentShift); i++)
-            {
-                Writer.Write(IndentationString);
-            }
-        }
-
-        public virtual void WritePrefixIndentation()
-        {
-            for (int i = 0; i < (indentLevel + IndentShift - 1); i++)
+            for (var i = 0; i < (BaseIndentation + _indentLevel - 1); i++)
             {
                 Writer.Write(IndentationString);
             }
@@ -241,33 +233,56 @@ namespace Microsoft.OpenApi.Writers
         {
             if (scopes.Count != 0)
             {
-                Scope currentScope = this.scopes.Peek();
+                var currentScope = scopes.Peek();
 
                 currentScope.ObjectCount++;
             }
 
-            Scope scope = new Scope(type);
-            this.scopes.Push(scope);
+            var scope = new Scope(type);
+            scopes.Push(scope);
             return scope;
         }
 
+        /// <summary>
+        /// End the scope of the given scope type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         protected Scope EndScope(ScopeType type)
         {
-            Debug.Assert(scopes.Count > 0, "No scope to end.");
-            Debug.Assert(scopes.Peek().Type == type, "Ending scope does not match.");
+            if (scopes.Count == 0)
+            {
+                throw new OpenApiWriterException("No scope to end.");
+            }
+
+            if (scopes.Peek().Type != type)
+            {
+                throw new OpenApiWriterException("Ending scope does not match.");
+            }
+
             return scopes.Pop();
         }
 
+        /// <summary>
+        /// Whether the current scope is the top level (outermost) scope.
+        /// </summary>
         protected bool IsTopLevelScope()
         {
             return scopes.Count == 1;
         }
 
+        /// <summary>
+        /// Whether the current scope is an object scope.
+        /// </summary>
         protected bool IsObjectScope()
         {
             return IsScopeType(ScopeType.Object);
         }
 
+        /// <summary>
+        /// Whether the current scope is an array scope.
+        /// </summary>
+        /// <returns></returns>
         protected bool IsArrayScope()
         {
             return IsScopeType(ScopeType.Array);
@@ -283,21 +298,26 @@ namespace Microsoft.OpenApi.Writers
             return scopes.Peek().Type == type;
         }
 
+        /// <summary>
+        /// Verifies whether a property name can be written based on whether
+        /// the property name is a valid string and whether the current scope is an object scope.
+        /// </summary>
+        /// <param name="name">property name</param>
         protected void VerifyCanWritePropertyName(string name)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
-            if (this.scopes.Count == 0)
+            if (scopes.Count == 0)
             {
-                throw new OpenApiException(String.Format(SRResource.OpenApiWriterMustHaveActiveScope, name));
+                throw new OpenApiWriterException(string.Format(SRResource.OpenApiWriterMustHaveActiveScope, name));
             }
 
-            if (this.scopes.Peek().Type != ScopeType.Object)
+            if (scopes.Peek().Type != ScopeType.Object)
             {
-                throw new OpenApiException(String.Format(SRResource.OpenApiWriterMustBeObjectScope, name));
+                throw new OpenApiWriterException(string.Format(SRResource.OpenApiWriterMustBeObjectScope, name));
             }
         }
     }

@@ -6,7 +6,7 @@
 using System;
 using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Exceptions
 {
     /// <summary>
     /// Exception type representing exceptions in the Open API library.

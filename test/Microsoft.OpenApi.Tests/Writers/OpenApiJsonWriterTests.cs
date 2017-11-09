@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 {
                     ["property1"] = new Dictionary<string, object>(),
                     ["property2"] = new List<string>(),
-                    ["property3"] = new List<object>()
+                    ["property3"] = new List<object>
                     {
                         new Dictionary<string, object>(),
                     },
@@ -131,7 +131,6 @@ namespace Microsoft.OpenApi.Tests.Writers
                     ["property10"] = "null",
                     ["property11"] = "",
                 }
-                
             };
 
             // Nested map
@@ -150,7 +149,6 @@ namespace Microsoft.OpenApi.Tests.Writers
                     },
                     ["property4"] = "value4"
                 }
-                
             };
 
             // Nested map and list
@@ -160,7 +158,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 {
                     ["property1"] = new Dictionary<string, object>(),
                     ["property2"] = new List<string>(),
-                    ["property3"] = new List<object>()
+                    ["property3"] = new List<object>
                     {
                         new Dictionary<string, object>(),
                         "string1",
@@ -168,9 +166,9 @@ namespace Microsoft.OpenApi.Tests.Writers
                         {
                             ["innerProperty1"] = new List<object>(),
                             ["innerProperty2"] = "string2",
-                            ["innerProperty3"] = new List<object>()
+                            ["innerProperty3"] = new List<object>
                             {
-                                new List<string>()
+                                new List<string>
                                 {
                                     "string3"
                                 }
@@ -184,10 +182,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         private void WriteValueRevursive(OpenApiJsonWriter writer, object value)
         {
-            if (value == null
-                || value.GetType().IsPrimitive
-                || value is decimal
-                || value is string)
+            if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
             {
                 writer.WriteValue(value);
             }

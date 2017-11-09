@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Exceptions;
 
 namespace Microsoft.OpenApi.Writers
 {

@@ -62,11 +62,12 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
                 writer.WriteStringProperty("summary", Summary);
                 writer.WriteStringProperty("description", Description);
+
                 if (Value != null)
                 {
-                    writer.WritePropertyName("value");
-                    writer.WriteRaw(Value);
+                    writer.WriteStringProperty("value", Value);
                 }
+
                 writer.WriteEndObject();
             }
         }
