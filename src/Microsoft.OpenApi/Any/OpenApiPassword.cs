@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiPassword : OpenApiPrimitive<string>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.Password;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Password;
 
         public OpenApiPassword(string value)
             : base(value)

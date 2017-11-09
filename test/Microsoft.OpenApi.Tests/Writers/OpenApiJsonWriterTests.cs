@@ -72,6 +72,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesSimple()
         {
+            // Simple map
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -83,6 +84,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 }
             };
 
+            // Simple map with duplicate values
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -97,31 +99,41 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesComplex()
         {
+            // Empty map and empty list
             yield return new object[]
             {
                 new Dictionary<string, object>
                 {
                     ["property1"] = new Dictionary<string, object>(),
-                    ["property2"] = "value2",
-                    ["property3"] = "value3",
-                    ["property4"] = "value4"
-                }
-            };
-
-            yield return new object[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["property1"] = new Dictionary<string, object>(),
-                    ["property2"] = "value2",
-                    ["property3"] = new Dictionary<string, object>
+                    ["property2"] = new List<string>(),
+                    ["property3"] = new List<object>
                     {
-                        ["innerProperty1"] = "innerValue1"
+                        new Dictionary<string, object>(),
                     },
                     ["property4"] = "value4"
                 }
             };
 
+            // Number, boolean, and null handling
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = "10.0",
+                    ["property2"] = "10",
+                    ["property3"] = "-5",
+                    ["property4"] = 10.0M,
+                    ["property5"] = 10,
+                    ["property6"] = -5,
+                    ["property7"] = true,
+                    ["property8"] = "true",
+                    ["property9"] = null,
+                    ["property10"] = "null",
+                    ["property11"] = "",
+                }
+            };
+
+            // Nested map
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -135,9 +147,68 @@ namespace Microsoft.OpenApi.Tests.Writers
                     {
                         ["innerProperty3"] = "innerValue3"
                     },
-                    ["property4"] = new List<object> {1, "listValue1"}
+                    ["property4"] = "value4"
                 }
             };
+
+            // Nested map and list
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = new Dictionary<string, object>(),
+                    ["property2"] = new List<string>(),
+                    ["property3"] = new List<object>
+                    {
+                        new Dictionary<string, object>(),
+                        "string1",
+                        new Dictionary<string, object>
+                        {
+                            ["innerProperty1"] = new List<object>(),
+                            ["innerProperty2"] = "string2",
+                            ["innerProperty3"] = new List<object>
+                            {
+                                new List<string>
+                                {
+                                    "string3"
+                                }
+                            }
+                        }
+                    },
+                    ["property4"] = "value4"
+                }
+            };
+        }
+
+        private void WriteValueRecursive(OpenApiJsonWriter writer, object value)
+        {
+            if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
+            {
+                writer.WriteValue(value);
+            }
+            else if (value.GetType().IsGenericType &&
+                (typeof(IDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
+                    typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
+            {
+                writer.WriteStartObject();
+                foreach (var elementValue in (dynamic)(value))
+                {
+                    writer.WritePropertyName(elementValue.Key);
+                    WriteValueRecursive(writer, elementValue.Value);
+                }
+
+                writer.WriteEndObject();
+            }
+            else if (typeof(IEnumerable).IsAssignableFrom(value.GetType()))
+            {
+                writer.WriteStartArray();
+                foreach (var elementValue in (IEnumerable)value)
+                {
+                    WriteValueRecursive(writer, elementValue);
+                }
+
+                writer.WriteEndArray();
+            }
         }
 
         [Theory]
@@ -150,42 +221,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var writer = new OpenApiJsonWriter(outputString);
 
             // Act
-            writer.WriteStartObject();
-
-            foreach (var keyValue in inputMap)
-            {
-                if (keyValue.Value.GetType().IsPrimitive || keyValue.Value.GetType() == typeof(string))
-                {
-                    writer.WritePropertyName(keyValue.Key);
-                    writer.WriteValue(keyValue.Value);
-                }
-                else if (keyValue.Value.GetType() == typeof(Dictionary<string, object>))
-                {
-                    writer.WritePropertyName(keyValue.Key);
-                    writer.WriteStartObject();
-
-                    foreach (var elementValue in (Dictionary<string, object>)(keyValue.Value))
-                    {
-                        writer.WritePropertyName(elementValue.Key);
-                        writer.WriteValue(elementValue.Value);
-                    }
-
-                    writer.WriteEndObject();
-                }
-                else if (typeof(IEnumerable).IsAssignableFrom(keyValue.Value.GetType()))
-                {
-                    writer.WritePropertyName(keyValue.Key);
-                    writer.WriteStartArray();
-                    foreach (var elementValue in (IEnumerable)keyValue.Value)
-                    {
-                        writer.WriteValue(elementValue);
-                    }
-
-                    writer.WriteEndArray();
-                }
-            }
-
-            writer.WriteEndObject();
+            WriteValueRecursive(writer, inputMap);
 
             var parsedJToken = JToken.Parse(outputString.GetStringBuilder().ToString());
             var expectedJToken = JToken.FromObject(inputMap);

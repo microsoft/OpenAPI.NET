@@ -6,7 +6,7 @@
 using System;
 using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Exceptions
 {
     /// <summary>
     /// Exception type representing exceptions in the Open API library.
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi
         /// Creates a new instance of the <see cref="OpenApiException" /> class with default values.
         /// </summary>
         public OpenApiException()
-            : this(SRResource.OpenApiExceptionGeneralError)
+            : this(SRResource.OpenApiExceptionGenericError)
         {
         }
 

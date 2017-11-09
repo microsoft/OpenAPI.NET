@@ -6,6 +6,7 @@
 using System;
 using SharpYaml.Serialization;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Exceptions;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {

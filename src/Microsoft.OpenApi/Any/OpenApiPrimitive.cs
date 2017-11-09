@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Any
     {
         public AnyTypeKind AnyKind { get; } = AnyTypeKind.Primitive;
 
-        public abstract PrimitiveTypeKind PrimitiveKind { get; }
+        public abstract PrimitiveType PrimitiveType { get; }
 
         public T Value { get; }
 

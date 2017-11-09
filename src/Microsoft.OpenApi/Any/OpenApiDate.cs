@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiDate : OpenApiPrimitive<DateTime>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.Date;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Date;
 
         public OpenApiDate(DateTime value)
             : base(value)

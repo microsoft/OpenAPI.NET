@@ -32,21 +32,35 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Base Indentation Level. 
+        /// This denotes how many indentations are needed for the property in the base object.
+        /// </summary>
+        protected override int BaseIndentation => 1;
+
+        /// <summary>
         /// Write JSON start object.
         /// </summary>
         public override void WriteStartObject()
         {
-            Scope preScope = CurrentScope();
+            var previousScope = CurrentScope();
 
-            StartScope(ScopeType.Object);
-            
-            if (preScope != null && preScope.Type == ScopeType.Array)
+            var currentScope = StartScope(ScopeType.Object);
+
+            if (previousScope != null && previousScope.Type == ScopeType.Array)
             {
+                currentScope.IsInArray = true;
+
+                if (previousScope.ObjectCount != 1)
+                {
+                    Writer.Write(WriterConstants.ArrayElementSeparator);
+                }
+
                 Writer.WriteLine();
                 WriteIndentation();
             }
 
             Writer.Write(WriterConstants.StartObjectScope);
+
             IncreaseIndentation();
         }
 
@@ -55,8 +69,8 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndObject()
         {
-            Scope current = EndScope(ScopeType.Object);
-            if (current.ObjectCount != 0)
+            var currentScope = EndScope(ScopeType.Object);
+            if (currentScope.ObjectCount != 0)
             {
                 Writer.WriteLine();
                 DecreaseIndentation();
@@ -64,7 +78,7 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                Writer.Write(WriterConstants.WhiteSpaceForEmptyObjectArray);
+                Writer.Write(WriterConstants.WhiteSpaceForEmptyObject);
                 DecreaseIndentation();
             }
 
@@ -76,8 +90,24 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteStartArray()
         {
-            StartScope(ScopeType.Array);
-            this.Writer.Write(WriterConstants.StartArrayScope);
+            var previousScope = CurrentScope();
+
+            var currentScope = StartScope(ScopeType.Array);
+
+            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            {
+                currentScope.IsInArray = true;
+
+                if (previousScope.ObjectCount != 1)
+                {
+                    Writer.Write(WriterConstants.ArrayElementSeparator);
+                }
+
+                Writer.WriteLine();
+                WriteIndentation();
+            }
+
+            Writer.Write(WriterConstants.StartArrayScope);
             IncreaseIndentation();
         }
 
@@ -86,7 +116,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndArray()
         {
-            Scope current = EndScope(ScopeType.Array);
+            var current = EndScope(ScopeType.Array);
             if (current.ObjectCount != 0)
             {
                 Writer.WriteLine();
@@ -95,7 +125,7 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                Writer.Write(WriterConstants.WhiteSpaceForEmptyObjectArray);
+                Writer.Write(WriterConstants.WhiteSpaceForEmptyArray);
                 DecreaseIndentation();
             }
 
@@ -111,16 +141,16 @@ namespace Microsoft.OpenApi.Writers
         {
             VerifyCanWritePropertyName(name);
 
-            Scope currentScope = CurrentScope();
+            var currentScope = CurrentScope();
             if (currentScope.ObjectCount != 0)
             {
                 Writer.Write(WriterConstants.ObjectMemberSeparator);
             }
+
             Writer.WriteLine();
 
             currentScope.ObjectCount++;
-
-            // JsonValueUtils.WriteEscapedJsonString(this.writer, name);
+            
             WriteIndentation();
 
             Writer.Write(WriterConstants.QuoteCharacter);
@@ -144,6 +174,9 @@ namespace Microsoft.OpenApi.Writers
             Writer.Write(WriterConstants.QuoteCharacter);
         }
 
+        /// <summary>
+        /// Write null value.
+        /// </summary>
         public override void WriteNull()
         {
             Writer.Write("null");
@@ -159,7 +192,8 @@ namespace Microsoft.OpenApi.Writers
                 return;
             }
 
-            Scope currentScope = this.scopes.Peek();
+            var currentScope = scopes.Peek();
+
             if (currentScope.Type == ScopeType.Array)
             {
                 if (currentScope.ObjectCount != 0)
@@ -173,9 +207,13 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
+        /// <summary>
+        /// Writes the content raw value.
+        /// </summary>
         public override void WriteRaw(string value)
         {
-            WriteValue(value); //TODO: fake it for the moment.
+            WriteValueSeparator();
+            Writer.Write(value);
         }
     }
 }

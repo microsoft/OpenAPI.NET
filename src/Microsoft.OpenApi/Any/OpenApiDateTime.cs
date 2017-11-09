@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiDateTime : OpenApiPrimitive<DateTimeOffset>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.DateTime;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.DateTime;
 
         public OpenApiDateTime(DateTimeOffset value)
             : base(value)

@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiFormat.Yaml, "")]
+        [InlineData(OpenApiFormat.Yaml, "{ }")]
         public void SerializeBasicServerVariableAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
@@ -66,11 +66,11 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             string expected = 
-@"default: 8443
+@"default: '8443'
 description: test description
 enum:
-  - 8443
-  - 443";
+  - '8443'
+  - '443'";
 
             // Act
             string actual = AdvancedServerVariable.SerializeAsYaml();

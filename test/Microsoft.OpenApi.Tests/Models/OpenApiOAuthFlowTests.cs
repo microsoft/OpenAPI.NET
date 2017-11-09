@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"scopes:";
+                @"scopes: { }";
 
             // Act
             var actual = BasicOAuthFlow.SerializeAsYaml();

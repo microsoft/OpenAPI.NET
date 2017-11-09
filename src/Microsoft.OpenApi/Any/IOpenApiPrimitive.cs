@@ -6,9 +6,9 @@
 namespace Microsoft.OpenApi.Any
 {
     /// <summary>
-    /// Primitive type kind.
+    /// Primitive type.
     /// </summary>
-    public enum PrimitiveTypeKind
+    public enum PrimitiveType
     {
         /// <summary>
         /// Integer
@@ -72,8 +72,8 @@ namespace Microsoft.OpenApi.Any
     public interface IOpenApiPrimitive : IOpenApiAny
     {
         /// <summary>
-        /// Primitive type kind.
+        /// Primitive type.
         /// </summary>
-        PrimitiveTypeKind PrimitiveKind { get; }
+        PrimitiveType PrimitiveType { get; }
     }
 }

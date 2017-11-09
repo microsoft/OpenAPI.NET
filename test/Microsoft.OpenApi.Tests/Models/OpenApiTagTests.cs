@@ -27,8 +27,8 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "")]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "")]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "{ }")]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "{ }")]
         public void SerializeBasicTagWorks(OpenApiSpecVersion version,
             OpenApiFormat format, string expected)
         {

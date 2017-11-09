@@ -37,8 +37,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                     "string7",
                     "string8"
                 },
-                
-@"- string1
+                @"- string1
 - string2
 - string3
 - string4
@@ -51,8 +50,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             yield return new object[]
             {
                 new[] {"string1", "string1", "string1", "string1"},
-                
-@"- string1
+                @"- string1
 - string1
 - string1
 - string1"
@@ -89,6 +87,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> WriteMapAsYamlShouldMatchExpectedTestCasesSimple()
         {
+            // Simple map
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -98,13 +97,13 @@ namespace Microsoft.OpenApi.Tests.Writers
                     ["property3"] = "value3",
                     ["property4"] = "value4"
                 },
-                
-@"property1: value1
+                @"property1: value1
 property2: value2
 property3: value3
 property4: value4"
             };
 
+            // Simple map with duplicate value
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -114,8 +113,7 @@ property4: value4"
                     ["property3"] = "value1",
                     ["property4"] = "value1"
                 },
-                
-@"property1: value1
+                @"property1: value1
 property2: value1
 property3: value1
 property4: value1"
@@ -124,22 +122,57 @@ property4: value1"
 
         public static IEnumerable<object[]> WriteMapAsYamlShouldMatchExpectedTestCasesComplex()
         {
-//            // Disable because our YamlWriter doesn't handle empty object properly
-//            yield return new object[]
-//            {
-//                new Dictionary<string, object>
-//                {
-//                    ["property1"] = new Dictionary<string, object>(),
-//                    ["property2"] = "value2",
-//                    ["property3"] = "value3",
-//                    ["property4"] = "value4"
-//                },
-//                @"property1: {
-//property2: value1
-//property3: value1
-//property4: value1"
-//            };
+            // Empty map and empty list
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = new Dictionary<string, object>(),
+                    ["property2"] = new List<string>(),
+                    ["property3"] = new List<object>
+                    {
+                        new Dictionary<string, object>(),
+                    },
+                    ["property4"] = "value4"
+                },
+                @"property1: { }
+property2: [ ]
+property3:
+  - { }
+property4: value4"
+            };
 
+            // Number, boolean, and null handling
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = "10.0",
+                    ["property2"] = "10",
+                    ["property3"] = "-5",
+                    ["property4"] = 10.0M,
+                    ["property5"] = 10,
+                    ["property6"] = -5,
+                    ["property7"] = true,
+                    ["property8"] = "true",
+                    ["property9"] = null,
+                    ["property10"] = "null",
+                    ["property11"] = "",
+                },
+                @"property1: '10.0'
+property2: '10'
+property3: '-5'
+property4: 10.0
+property5: 10
+property6: -5
+property7: true
+property8: 'true'
+property9: 
+property10: 'null'
+property11: ''"
+            };
+
+            // Nested map
             yield return new object[]
             {
                 new Dictionary<string, object>
@@ -155,8 +188,7 @@ property4: value1"
                     },
                     ["property4"] = "value4"
                 },
-                
-@"property1:
+                @"property1:
   innerProperty1: innerValue1
 property2: value2
 property3:
@@ -164,27 +196,75 @@ property3:
 property4: value4"
             };
 
+            // Nested map and list
             yield return new object[]
             {
                 new Dictionary<string, object>
                 {
-                    ["property1"] = "value1",
-                    ["property2"] = "value2",
-                    ["property3"] = new Dictionary<string, object>
+                    ["property1"] = new Dictionary<string, object>(),
+                    ["property2"] = new List<string>(),
+                    ["property3"] = new List<object>
                     {
-                        ["innerProperty1"] = "innerValue1"
+                        new Dictionary<string, object>(),
+                        "string1",
+                        new Dictionary<string, object>
+                        {
+                            ["innerProperty1"] = new List<object>(),
+                            ["innerProperty2"] = "string2",
+                            ["innerProperty3"] = new List<object>
+                            {
+                                new List<string>
+                                {
+                                    "string3"
+                                }
+                            }
+                        }
                     },
-                    ["property4"] = new List<object> {"listValue1", "listValue2"}
+                    ["property4"] = "value4"
                 },
-                
-@"property1: value1
-property2: value2
+                @"property1: { }
+property2: [ ]
 property3:
-  innerProperty1: innerValue1
-property4:
-  - listValue1
-  - listValue2"
+  - { }
+  - string1
+  - innerProperty1: [ ]
+    innerProperty2: string2
+    innerProperty3:
+      - 
+        - string3
+property4: value4"
             };
+        }
+
+        private void WriteValueRecursive(OpenApiYamlWriter writer, object value)
+        {
+            if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
+            {
+                writer.WriteValue(value);
+            }
+            else if (value.GetType().IsGenericType &&
+                (typeof(IDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
+                    typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
+            {
+                writer.WriteStartObject();
+                foreach (var elementValue in (dynamic)(value))
+                {
+                    writer.WritePropertyName(elementValue.Key);
+                    WriteValueRecursive(writer, elementValue.Value);
+                }
+
+                writer.WriteEndObject();
+            }
+            else if (typeof(IEnumerable).IsAssignableFrom(value.GetType()))
+            {
+                writer.WriteStartArray();
+                foreach (var elementValue in (IEnumerable)value)
+                {
+                    WriteValueRecursive(writer, elementValue);
+                }
+
+                writer.WriteEndArray();
+            }
         }
 
         [Theory]
@@ -192,52 +272,17 @@ property4:
         [MemberData(nameof(WriteMapAsYamlShouldMatchExpectedTestCasesComplex))]
         public void WriteMapAsYamlShouldMatchExpected(IDictionary<string, object> inputMap, string expectedYaml)
         {
+            // Arrange
             var outputString = new StringWriter();
             var writer = new OpenApiYamlWriter(outputString);
 
-            writer.WriteStartObject();
-
-            foreach (var keyValue in inputMap)
-            {
-                if (keyValue.Value.GetType().IsPrimitive || keyValue.Value.GetType() == typeof(string))
-                {
-                    writer.WritePropertyName(keyValue.Key);
-                    writer.WriteValue(keyValue.Value);
-                }
-                else if (keyValue.Value.GetType().IsGenericType &&
-                    (typeof(IDictionary<,>).IsAssignableFrom(keyValue.Value.GetType().GetGenericTypeDefinition()) ||
-                        typeof(Dictionary<,>).IsAssignableFrom(keyValue.Value.GetType().GetGenericTypeDefinition())))
-                {
-                    writer.WritePropertyName(keyValue.Key);
-                    writer.WriteStartObject();
-                    foreach (var elementValue in (dynamic)(keyValue.Value))
-                    {
-                        writer.WritePropertyName(elementValue.Key);
-                        writer.WriteValue(elementValue.Value);
-                    }
-
-                    writer.WriteEndObject();
-                }
-                else if (typeof(IEnumerable).IsAssignableFrom(keyValue.Value.GetType()))
-                {
-                    writer.WritePropertyName(keyValue.Key);
-                    writer.WriteStartArray();
-                    foreach (var elementValue in (IEnumerable)keyValue.Value)
-                    {
-                        writer.WriteValue(elementValue);
-                    }
-
-                    writer.WriteEndArray();
-                }
-            }
-
-            writer.WriteEndObject();
-
-            var actualYaml = outputString.ToString().MakeLineBreaksEnvironmentNeutral();
-
-            expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
-
+            // Act
+            WriteValueRecursive(writer, inputMap);
+            var actualYaml = outputString.ToString();
+            
             // Assert
+            actualYaml = actualYaml.MakeLineBreaksEnvironmentNeutral();
+            expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
             actualYaml.Should().Be(expectedYaml);
         }
     }

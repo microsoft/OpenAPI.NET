@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiString : OpenApiPrimitive<string>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.String;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.String;
 
         public OpenApiString(string value)
             : base(value)

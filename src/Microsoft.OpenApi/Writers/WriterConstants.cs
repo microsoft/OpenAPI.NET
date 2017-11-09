@@ -91,9 +91,14 @@ namespace Microsoft.OpenApi.Writers
         internal const char QuoteCharacter = '"';
 
         /// <summary>
-        /// The white space for empty object & array
+        /// The white space for empty object
         /// </summary>
-        internal const string WhiteSpaceForEmptyObjectArray = " ";
+        internal const string WhiteSpaceForEmptyObject = " ";
+
+        /// <summary>
+        /// The white space for empty array
+        /// </summary>
+        internal const string WhiteSpaceForEmptyArray = " ";
 
         /// <summary>
         /// The prefix of array item
@@ -104,5 +109,17 @@ namespace Microsoft.OpenApi.Writers
         /// The white space for indent
         /// </summary>
         internal const string WhiteSpaceForIndent = "  ";
+
+        /// <summary>
+        /// Empty object
+        /// </summary>
+        /// <remarks>To indicate empty object in YAML.</remarks>
+        internal const string EmptyObject = "{ }";
+
+        /// <summary>
+        /// Empty array
+        /// </summary>
+        /// <remarks>To indicate empty array in YAML.</remarks>
+        internal const string EmptyArray = "[ ]";
     }
 }
