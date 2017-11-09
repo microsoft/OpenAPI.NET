@@ -278,12 +278,11 @@ property4: value4"
 
             // Act
             WriteValueRevursive(writer, inputMap);
-
-            var actualYaml = outputString.ToString().MakeLineBreaksEnvironmentNeutral();
-
-            expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
-
+            var actualYaml = outputString.ToString();
+            
             // Assert
+            actualYaml = actualYaml.MakeLineBreaksEnvironmentNeutral();
+            expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
             actualYaml.Should().Be(expectedYaml);
         }
     }

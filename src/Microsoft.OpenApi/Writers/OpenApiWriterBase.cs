@@ -173,7 +173,7 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                throw new OpenApiException(string.Format(SRResource.OpenApiUnsupportedValueType, type.FullName));
+                throw new OpenApiWriterException(string.Format(SRResource.OpenApiUnsupportedValueType, type.FullName));
             }
         }
 

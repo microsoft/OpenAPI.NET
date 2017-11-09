@@ -193,7 +193,7 @@ namespace Microsoft.OpenApi.Writers
                     break;
 
                 default:
-                    throw new OpenApiException("Not supported primitive type.");
+                    throw new OpenApiWriterException("Not supported primitive type.");
             }
         }
     }

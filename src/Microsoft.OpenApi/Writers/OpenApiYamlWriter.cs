@@ -136,10 +136,10 @@ namespace Microsoft.OpenApi.Writers
         {
             VerifyCanWritePropertyName(name);
 
-            var current = CurrentScope();
+            var currentScope = CurrentScope();
 
             // If this is NOT the first property in the object, always start a new line and add indentation.
-            if (current.ObjectCount != 0)
+            if (currentScope.ObjectCount != 0)
             {
                 Writer.WriteLine();
                 WriteIndentation();
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Writers
             // Only add newline and indentation when this object is not in the top level scope and not in an array.
             // The top level scope should have no indentation and it is already in its own line.
             // The first property of an object inside array can go after the array prefix (-) directly.
-            else if (! IsTopLevelScope() && !current.IsInArray )
+            else if (! IsTopLevelScope() && !currentScope.IsInArray )
             {
                 Writer.WriteLine();
                 WriteIndentation();
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Writers
             Writer.Write(name);
             Writer.Write(":");
 
-            current.ObjectCount++;
+            currentScope.ObjectCount++;
         }
 
         /// <summary>

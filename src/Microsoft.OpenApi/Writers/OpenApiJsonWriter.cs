@@ -69,8 +69,8 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndObject()
         {
-            var current = EndScope(ScopeType.Object);
-            if (current.ObjectCount != 0)
+            var currentScope = EndScope(ScopeType.Object);
+            if (currentScope.ObjectCount != 0)
             {
                 Writer.WriteLine();
                 DecreaseIndentation();

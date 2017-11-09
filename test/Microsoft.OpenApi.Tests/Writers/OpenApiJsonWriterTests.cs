@@ -226,8 +226,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             var parsedJToken = JToken.Parse(outputString.GetStringBuilder().ToString());
             var expectedJToken = JToken.FromObject(inputMap);
 
-            _output.WriteLine(outputString.GetStringBuilder().ToString());
-
             // Assert
             Assert.Equal(expectedJToken, parsedJToken);
         }
