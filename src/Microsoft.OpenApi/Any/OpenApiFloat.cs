@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiFloat : OpenApiPrimitive<float>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.Float;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Float;
 
         public OpenApiFloat(float value)
             : base(value)

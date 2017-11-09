@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Exceptions
         /// Creates a new instance of the <see cref="OpenApiWriterException" /> class with default values.
         /// </summary>
         public OpenApiWriterException()
-            : this("Error occurred when writing OpenAPI document")
+            : this(SRResource.OpenApiWriterExceptionGenericError)
         {
         }
 

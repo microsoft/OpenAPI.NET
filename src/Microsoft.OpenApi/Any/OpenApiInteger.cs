@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiInteger : OpenApiPrimitive<int>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.Integer;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Integer;
 
         public OpenApiInteger(int value)
             : base(value)

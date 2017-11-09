@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiByte : OpenApiPrimitive<byte>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.Byte;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Byte;
 
         public OpenApiByte(byte value)
             : base(value)

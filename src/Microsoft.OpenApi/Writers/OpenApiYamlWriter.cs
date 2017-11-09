@@ -230,5 +230,14 @@ namespace Microsoft.OpenApi.Writers
                 Writer.Write(" ");
             }
         }
+
+        /// <summary>
+        /// Writes the content raw value.
+        /// </summary>
+        public override void WriteRaw(string value)
+        {
+            WriteValueSeparator();
+            Writer.Write(value);
+        }
     }
 }

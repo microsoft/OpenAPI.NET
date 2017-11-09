@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiBoolean : OpenApiPrimitive<bool>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.Boolean;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Boolean;
 
         public OpenApiBoolean(bool value)
             : base(value)

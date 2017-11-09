@@ -3,9 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
@@ -96,6 +94,11 @@ namespace Microsoft.OpenApi.Writers
         /// Write null value.
         /// </summary>
         public abstract void WriteNull();
+
+        /// <summary>
+        /// Write content raw value.
+        /// </summary>
+        public abstract void WriteRaw(string value);
 
         /// <summary>
         /// Flush the writer.
@@ -192,7 +195,7 @@ namespace Microsoft.OpenApi.Writers
         {
             if (_indentLevel == 0)
             {
-                throw new OpenApiWriterException("Indentation level cannot be lower than 0.");
+                throw new OpenApiWriterException(SRResource.IndentationLevelInvalid);
             }
 
             if (_indentLevel < 1)
@@ -252,12 +255,16 @@ namespace Microsoft.OpenApi.Writers
         {
             if (scopes.Count == 0)
             {
-                throw new OpenApiWriterException("No scope to end.");
+                throw new OpenApiWriterException(SRResource.ScopeMustBePresentToEnd);
             }
 
             if (scopes.Peek().Type != type)
             {
-                throw new OpenApiWriterException("Ending scope does not match.");
+                throw new OpenApiWriterException(
+                    string.Format(
+                        SRResource.ScopeToEndHasIncorrectType,
+                        type,
+                        scopes.Peek().Type));
             }
 
             return scopes.Pop();
@@ -312,12 +319,12 @@ namespace Microsoft.OpenApi.Writers
 
             if (scopes.Count == 0)
             {
-                throw new OpenApiWriterException(string.Format(SRResource.OpenApiWriterMustHaveActiveScope, name));
+                throw new OpenApiWriterException(string.Format(SRResource.ActiveScopeNeededForPropertyNameWriting, name));
             }
 
             if (scopes.Peek().Type != ScopeType.Object)
             {
-                throw new OpenApiWriterException(string.Format(SRResource.OpenApiWriterMustBeObjectScope, name));
+                throw new OpenApiWriterException(string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
             }
         }
     }

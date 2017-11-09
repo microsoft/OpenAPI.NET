@@ -236,7 +236,7 @@ property4: value4"
             };
         }
 
-        private void WriteValueRevursive(OpenApiYamlWriter writer, object value)
+        private void WriteValueRecursive(OpenApiYamlWriter writer, object value)
         {
             if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
             {
@@ -250,7 +250,7 @@ property4: value4"
                 foreach (var elementValue in (dynamic)(value))
                 {
                     writer.WritePropertyName(elementValue.Key);
-                    WriteValueRevursive(writer, elementValue.Value);
+                    WriteValueRecursive(writer, elementValue.Value);
                 }
 
                 writer.WriteEndObject();
@@ -260,7 +260,7 @@ property4: value4"
                 writer.WriteStartArray();
                 foreach (var elementValue in (IEnumerable)value)
                 {
-                    WriteValueRevursive(writer, elementValue);
+                    WriteValueRecursive(writer, elementValue);
                 }
 
                 writer.WriteEndArray();
@@ -277,7 +277,7 @@ property4: value4"
             var writer = new OpenApiYamlWriter(outputString);
 
             // Act
-            WriteValueRevursive(writer, inputMap);
+            WriteValueRecursive(writer, inputMap);
             var actualYaml = outputString.ToString();
             
             // Assert

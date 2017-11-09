@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiLong : OpenApiPrimitive<long>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.Long;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Long;
 
         public OpenApiLong(long value)
             : base(value)

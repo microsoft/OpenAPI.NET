@@ -61,6 +61,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There must be an active scope for name &apos;{0}&apos; to be written..
+        /// </summary>
+        internal static string ActiveScopeNeededForPropertyNameWriting {
+            get {
+                return ResourceManager.GetString("ActiveScopeNeededForPropertyNameWriting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The argument &apos;{0}&apos; is null, empty or consists only of white-space..
         /// </summary>
         internal static string ArgumentNullOrWhiteSpace {
@@ -79,11 +88,29 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Indentation level cannot be lower than 0..
+        /// </summary>
+        internal static string IndentationLevelInvalid {
+            get {
+                return ResourceManager.GetString("IndentationLevelInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The active scope must be an object scope for property name &apos;{0}&apos; to be written..
+        /// </summary>
+        internal static string ObjectScopeNeededForPropertyNameWriting {
+            get {
+                return ResourceManager.GetString("ObjectScopeNeededForPropertyNameWriting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred while processing the Open API document..
         /// </summary>
-        internal static string OpenApiExceptionGeneralError {
+        internal static string OpenApiExceptionGenericError {
             get {
-                return ResourceManager.GetString("OpenApiExceptionGeneralError", resourceCulture);
+                return ResourceManager.GetString("OpenApiExceptionGenericError", resourceCulture);
             }
         }
         
@@ -142,20 +169,20 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The active scope must be an object scope for name &apos;{0}&apos; to be written..
+        ///   Looks up a localized string similar to An error occurred while writing the Open API document..
         /// </summary>
-        internal static string OpenApiWriterMustBeObjectScope {
+        internal static string OpenApiWriterExceptionGenericError {
             get {
-                return ResourceManager.GetString("OpenApiWriterMustBeObjectScope", resourceCulture);
+                return ResourceManager.GetString("OpenApiWriterExceptionGenericError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There must be an active scope for name &apos;{0}&apos; to be written..
+        ///   Looks up a localized string similar to The given primitive type &apos;{0}&apos; is not supported..
         /// </summary>
-        internal static string OpenApiWriterMustHaveActiveScope {
+        internal static string PrimitiveTypeNotSupported {
             get {
-                return ResourceManager.GetString("OpenApiWriterMustHaveActiveScope", resourceCulture);
+                return ResourceManager.GetString("PrimitiveTypeNotSupported", resourceCulture);
             }
         }
         
@@ -174,6 +201,24 @@ namespace Microsoft.OpenApi.Properties {
         internal static string RuntimeExpressionMustBeginWithDollar {
             get {
                 return ResourceManager.GetString("RuntimeExpressionMustBeginWithDollar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scope must be present to end..
+        /// </summary>
+        internal static string ScopeMustBePresentToEnd {
+            get {
+                return ResourceManager.GetString("ScopeMustBePresentToEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The scope to end is expected to be of type &apos;{0}&apos; but it is of type &apos;{0}&apos;..
+        /// </summary>
+        internal static string ScopeToEndHasIncorrectType {
+            get {
+                return ResourceManager.GetString("ScopeToEndHasIncorrectType", resourceCulture);
             }
         }
         

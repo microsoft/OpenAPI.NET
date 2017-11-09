@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Exceptions
         /// Creates a new instance of the <see cref="OpenApiException" /> class with default values.
         /// </summary>
         public OpenApiException()
-            : this(SRResource.OpenApiExceptionGeneralError)
+            : this(SRResource.OpenApiExceptionGenericError)
         {
         }
 

@@ -206,5 +206,14 @@ namespace Microsoft.OpenApi.Writers
                 currentScope.ObjectCount++;
             }
         }
+
+        /// <summary>
+        /// Writes the content raw value.
+        /// </summary>
+        public override void WriteRaw(string value)
+        {
+            WriteValueSeparator();
+            Writer.Write(value);
+        }
     }
 }

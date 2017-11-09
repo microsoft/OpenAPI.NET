@@ -117,13 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActiveScopeNeededForPropertyNameWriting" xml:space="preserve">
+    <value>There must be an active scope for name '{0}' to be written.</value>
+  </data>
   <data name="ArgumentNullOrWhiteSpace" xml:space="preserve">
     <value>The argument '{0}' is null, empty or consists only of white-space.</value>
   </data>
   <data name="ExtensionFieldNameMustBeginWithXDash" xml:space="preserve">
     <value>The filed name '{0}' of extension doesn't begin with x-.</value>
   </data>
-  <data name="OpenApiExceptionGeneralError" xml:space="preserve">
+  <data name="IndentationLevelInvalid" xml:space="preserve">
+    <value>Indentation level cannot be lower than 0.</value>
+  </data>
+  <data name="ObjectScopeNeededForPropertyNameWriting" xml:space="preserve">
+    <value>The active scope must be an object scope for property name '{0}' to be written.</value>
+  </data>
+  <data name="OpenApiExceptionGenericError" xml:space="preserve">
     <value>An error occurred while processing the Open API document.</value>
   </data>
   <data name="OpenApiFormatNotSupported" xml:space="preserve">
@@ -144,17 +153,23 @@
   <data name="OpenApiUnsupportedValueType" xml:space="preserve">
     <value>The type '{0}' is not supported in Open API document.</value>
   </data>
-  <data name="OpenApiWriterMustBeObjectScope" xml:space="preserve">
-    <value>The active scope must be an object scope for name '{0}' to be written.</value>
+  <data name="OpenApiWriterExceptionGenericError" xml:space="preserve">
+    <value>An error occurred while writing the Open API document.</value>
   </data>
-  <data name="OpenApiWriterMustHaveActiveScope" xml:space="preserve">
-    <value>There must be an active scope for name '{0}' to be written.</value>
+  <data name="PrimitiveTypeNotSupported" xml:space="preserve">
+    <value>The given primitive type '{0}' is not supported.</value>
   </data>
   <data name="RuntimeExpressionHasInvalidFormat" xml:space="preserve">
     <value>The runtime expression '{0}' has invalid format.</value>
   </data>
   <data name="RuntimeExpressionMustBeginWithDollar" xml:space="preserve">
     <value>The runtime expression '{0}' should start with '$'</value>
+  </data>
+  <data name="ScopeMustBePresentToEnd" xml:space="preserve">
+    <value>Scope must be present to end.</value>
+  </data>
+  <data name="ScopeToEndHasIncorrectType" xml:space="preserve">
+    <value>The scope to end is expected to be of type '{0}' but it is of type '{0}'.</value>
   </data>
   <data name="SourceExpressionHasInvalidFormat" xml:space="preserve">
     <value>The source expression '{0}' has invalid format.</value>

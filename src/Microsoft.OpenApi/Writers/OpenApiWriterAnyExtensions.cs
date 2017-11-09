@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -135,65 +136,68 @@ namespace Microsoft.OpenApi.Writers
                 throw Error.ArgumentNull(nameof(primitive));
             }
 
-            switch (primitive.PrimitiveKind)
+            switch (primitive.PrimitiveType)
             {
-                case PrimitiveTypeKind.Integer:
-                    OpenApiInteger intValue = (OpenApiInteger)primitive;
+                case PrimitiveType.Integer:
+                    var intValue = (OpenApiInteger)primitive;
                     writer.WriteValue(intValue.Value);
                     break;
 
-                case PrimitiveTypeKind.Long:
-                    OpenApiLong longValue = (OpenApiLong)primitive;
+                case PrimitiveType.Long:
+                    var longValue = (OpenApiLong)primitive;
                     writer.WriteValue(longValue.Value);
                     break;
 
-                case PrimitiveTypeKind.Float:
-                    OpenApiFloat floatValue = (OpenApiFloat)primitive;
+                case PrimitiveType.Float:
+                    var floatValue = (OpenApiFloat)primitive;
                     writer.WriteValue(floatValue.Value);
                     break;
 
-                case PrimitiveTypeKind.Double:
-                    OpenApiDouble doubleValue = (OpenApiDouble)primitive;
+                case PrimitiveType.Double:
+                    var doubleValue = (OpenApiDouble)primitive;
                     writer.WriteValue(doubleValue.Value);
                     break;
 
-                case PrimitiveTypeKind.String:
-                    OpenApiString stringValue = (OpenApiString)primitive;
+                case PrimitiveType.String:
+                    var stringValue = (OpenApiString)primitive;
                     writer.WriteValue(stringValue.Value);
                     break;
 
-                case PrimitiveTypeKind.Byte:
-                    OpenApiByte byteValue = (OpenApiByte)primitive;
+                case PrimitiveType.Byte:
+                    var byteValue = (OpenApiByte)primitive;
                     writer.WriteValue(byteValue.Value);
                     break;
 
-                case PrimitiveTypeKind.Binary:
-                    OpenApiBinary binaryValue = (OpenApiBinary)primitive;
+                case PrimitiveType.Binary:
+                    var binaryValue = (OpenApiBinary)primitive;
                     writer.WriteValue(binaryValue.Value);
                     break;
 
-                case PrimitiveTypeKind.Boolean:
-                    OpenApiBoolean boolValue = (OpenApiBoolean)primitive;
+                case PrimitiveType.Boolean:
+                    var boolValue = (OpenApiBoolean)primitive;
                     writer.WriteValue(boolValue.Value);
                     break;
 
-                case PrimitiveTypeKind.Date:
-                    OpenApiDate dateValue = (OpenApiDate)primitive;
+                case PrimitiveType.Date:
+                    var dateValue = (OpenApiDate)primitive;
                     writer.WriteValue(dateValue.Value);
                     break;
 
-                case PrimitiveTypeKind.DateTime:
-                    OpenApiDateTime dateTimeValue = (OpenApiDateTime)primitive;
+                case PrimitiveType.DateTime:
+                    var dateTimeValue = (OpenApiDateTime)primitive;
                     writer.WriteValue(dateTimeValue.Value);
                     break;
 
-                case PrimitiveTypeKind.Password:
-                    OpenApiPassword passwordValue = (OpenApiPassword)primitive;
+                case PrimitiveType.Password:
+                    var passwordValue = (OpenApiPassword)primitive;
                     writer.WriteValue(passwordValue.Value);
                     break;
 
                 default:
-                    throw new OpenApiWriterException("Not supported primitive type.");
+                    throw new OpenApiWriterException(
+                        string.Format(
+                            SRResource.PrimitiveTypeNotSupported,
+                            primitive.PrimitiveType));
             }
         }
     }

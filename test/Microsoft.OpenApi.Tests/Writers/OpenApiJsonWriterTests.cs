@@ -180,7 +180,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             };
         }
 
-        private void WriteValueRevursive(OpenApiJsonWriter writer, object value)
+        private void WriteValueRecursive(OpenApiJsonWriter writer, object value)
         {
             if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
             {
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 foreach (var elementValue in (dynamic)(value))
                 {
                     writer.WritePropertyName(elementValue.Key);
-                    WriteValueRevursive(writer, elementValue.Value);
+                    WriteValueRecursive(writer, elementValue.Value);
                 }
 
                 writer.WriteEndObject();
@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 writer.WriteStartArray();
                 foreach (var elementValue in (IEnumerable)value)
                 {
-                    WriteValueRevursive(writer, elementValue);
+                    WriteValueRecursive(writer, elementValue);
                 }
 
                 writer.WriteEndArray();
@@ -221,7 +221,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var writer = new OpenApiJsonWriter(outputString);
 
             // Act
-            WriteValueRevursive(writer, inputMap);
+            WriteValueRecursive(writer, inputMap);
 
             var parsedJToken = JToken.Parse(outputString.GetStringBuilder().ToString());
             var expectedJToken = JToken.FromObject(inputMap);

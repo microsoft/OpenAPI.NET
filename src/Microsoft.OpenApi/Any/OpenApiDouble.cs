@@ -7,7 +7,7 @@ namespace Microsoft.OpenApi.Any
 {
     public class OpenApiDouble : OpenApiPrimitive<double>
     {
-        public override PrimitiveTypeKind PrimitiveKind { get; } = PrimitiveTypeKind.Double;
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Double;
 
         public OpenApiDouble(float value)
             : base(value)
