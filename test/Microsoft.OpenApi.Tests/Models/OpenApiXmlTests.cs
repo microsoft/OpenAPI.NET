@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -11,32 +12,34 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Models
 {
     /// <summary>
-    /// Test cases for <see cref="OpenApiTag"/>.
+    /// Test cases for <see cref="OpenApiXml"/>.
     /// </summary>
-    public class OpenApiTagTests
+    public class OpenApiXmlTests
     {
-        public static OpenApiTag BasicTag = new OpenApiTag();
-        public static OpenApiTag AdvancedTag = new OpenApiTag()
+        public static OpenApiXml BasicXml = new OpenApiXml();
+        public static OpenApiXml AdvancedXml = new OpenApiXml()
         {
-            Name = "pet",
-            Description = "Pets operations",
-            ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
+            Name = "animal",
+            Namespace = new Uri("http://swagger.io/schema/sample"),
+            Prefix = "sample",
+            Wrapped = true,
+            Attribute = true,
             Extensions = new Dictionary<string, IOpenApiAny>
             {
-                { "x-tag-extension", new OpenApiNull() }
+                { "x-xml-extension", new OpenApiInteger(7) }
             }
         };
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "{ }")]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "{ }")]
-        public void SerializeBasicTagWorks(OpenApiSpecVersion version,
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "")]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "")]
+        public void SerializeBasicXmlWorks(OpenApiSpecVersion version,
             OpenApiFormat format, string expected)
         {
             // Act
-            string actual = BasicTag.Serialize(version, format);
+            string actual = BasicXml.Serialize(version, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -47,22 +50,21 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeAdvancedTagAsJsonWorks(OpenApiSpecVersion version)
+        public void SerializeAdvancedXmlAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = 
+            string expected =
 @"{
-  ""name"": ""pet"",
-  ""description"": ""Pets operations"",
-  ""externalDocs"": {
-    ""description"": ""Find more info here"",
-    ""url"": ""https://example.com""
-  },
-  ""x-tag-extension"": null
+  ""name"": ""animal"",
+  ""namespace"": ""http://swagger.io/schema/sample"",
+  ""prefix"": ""sample"",
+  ""attribute"": true,
+  ""wrapped"": true,
+  ""x-xml-extension"": 7
 }";
 
             // Act
-            string actual = AdvancedTag.SerializeAsJson(version);
+            string actual = AdvancedXml.SerializeAsJson(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -73,19 +75,19 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
-        public void SerializeAdvancedTagAsYamlWorks(OpenApiSpecVersion version)
+        public void SerializeAdvancedXmlAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = 
-@"name: pet
-description: Pets operations
-externalDocs:
-  description: Find more info here
-  url: https://example.com
-x-tag-extension: ";
+            string expected =
+@"name: animal
+namespace: http://swagger.io/schema/sample
+prefix: sample
+attribute: true
+wrapped: true
+x-xml-extension: 7";
 
             // Act
-            string actual = AdvancedTag.SerializeAsYaml(version);
+            string actual = AdvancedXml.SerializeAsYaml(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
