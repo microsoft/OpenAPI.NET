@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV3(IOpenApiWriter writer)
         {
-            // nothing here
+            WriteInternal(writer);
         }
 
         /// <summary>
@@ -61,7 +61,37 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         internal override void WriteAsV2(IOpenApiWriter writer)
         {
-            // nothing here
+            WriteInternal(writer);
+        }
+
+        private void WriteInternal(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            writer.WriteStartObject();
+
+            // name
+            writer.WriteStringProperty(OpenApiConstants.Name, Name);
+
+            // namespace
+            writer.WriteStringProperty(OpenApiConstants.Namespace, Namespace?.OriginalString);
+
+            // prefix
+            writer.WriteStringProperty(OpenApiConstants.Prefix, Prefix);
+
+            // attribute
+            writer.WriteBoolProperty(OpenApiConstants.Attribute, Attribute, false);
+
+            // wrapped
+            writer.WriteBoolProperty(OpenApiConstants.Wrapped, Wrapped, false);
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
+            writer.WriteEndObject();
         }
     }
 }

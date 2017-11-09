@@ -53,6 +53,14 @@ namespace Microsoft.OpenApi.Models
 
         public const string Name = "name";
 
+        public const string Namespace = "namespace";
+
+        public const string Prefix = "prefix";
+
+        public const string Attribute = "attribute";
+
+        public const string Wrapped = "wrapped";
+
         public const string In = "in";
 
         public const string Summary = "summary";
