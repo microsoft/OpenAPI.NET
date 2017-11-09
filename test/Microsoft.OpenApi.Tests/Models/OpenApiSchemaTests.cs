@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -77,6 +77,108 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Add a <see cref="OpenApiHeader"/> into the response.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <param name="name">The header name.</param>
+        /// <param name="configure">The header configure action.</param>
+        public static void AddHeader(this OpenApiResponse response, string name, Action<OpenApiHeader> configure)
+        {
+            if (response == null)
+            {
+                throw Error.ArgumentNull(nameof(response));
+            }
+
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+
+            if (configure == null)
+            {
+                throw Error.ArgumentNull(nameof(configure));
+            }
+
+            OpenApiHeader header = new OpenApiHeader();
+            configure(header);
+
+            if (response.Headers == null)
+            {
+                response.Headers = new Dictionary<string, OpenApiHeader>();
+            }
+
+            response.Headers.Add(name, header);
+        }
+
+        /// <summary>
+        /// Add a <see cref="OpenApiMediaType"/> into the response.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <param name="name">The content name.</param>
+        /// <param name="configure">The content configure action.</param>
+        public static void AddContent(this OpenApiResponse response, string name, Action<OpenApiMediaType> configure)
+        {
+            if (response == null)
+            {
+                throw Error.ArgumentNull(nameof(response));
+            }
+
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+
+            if (configure == null)
+            {
+                throw Error.ArgumentNull(nameof(configure));
+            }
+
+            OpenApiMediaType mediaType = new OpenApiMediaType();
+            configure(mediaType);
+
+            if (response.Content == null)
+            {
+                response.Content = new Dictionary<string, OpenApiMediaType>();
+            }
+
+            response.Content.Add(name, mediaType);
+        }
+
+        /// <summary>
+        /// Add a <see cref="OpenApiLink"/> into the response.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <param name="name">The link name.</param>
+        /// <param name="configure">The link configure action.</param>
+        public static void AddLink(this OpenApiResponse response, string name, Action<OpenApiLink> configure)
+        {
+            if (response == null)
+            {
+                throw Error.ArgumentNull(nameof(response));
+            }
+
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+
+            if (configure == null)
+            {
+                throw Error.ArgumentNull(nameof(configure));
+            }
+
+            OpenApiLink link = new OpenApiLink();
+            configure(link);
+
+            if (response.Links == null)
+            {
+                response.Links = new Dictionary<string, OpenApiLink>();
+            }
+
+            response.Links.Add(name, link);
+        }
+
+        /// <summary>
         /// Add a <see cref="OpenApiResponse"/> into the <see cref="OpenApiOperation"/>.
         /// </summary>
         /// <param name="operation">The Open API operation.</param>
