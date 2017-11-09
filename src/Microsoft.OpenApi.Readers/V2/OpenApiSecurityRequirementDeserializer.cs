@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var property in mapNode)
             {
-                var scheme = OpenApiReferenceService.LoadSecuritySchemeByReference(
+                var scheme = LoadSecuritySchemeByReference(
                     mapNode.Context,
                     mapNode.Diagnostic,
                     property.Name);
@@ -38,6 +39,18 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             return obj;
+        }
+
+        private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
+           ParsingContext context,
+           OpenApiDiagnostic diagnostic,
+           string schemeName)
+        {
+            var securitySchemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(
+                diagnostic,
+                new OpenApiReference(ReferenceType.SecurityScheme, schemeName));
+
+            return securitySchemeObject;
         }
     }
 }

@@ -22,14 +22,14 @@ namespace Microsoft.OpenApi.Readers.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    internal class SRResource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource() {
+        internal SRResource() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OpenApi.Readers.Properties.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.OpenApi.Readers.Properties.SRResource", typeof(SRResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,42 @@ namespace Microsoft.OpenApi.Readers.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The argument &apos;{0}&apos; is null, empty or consists only of white-space..
+        /// </summary>
+        internal static string ArgumentNullOrWhiteSpace {
+            get {
+                return ResourceManager.GetString("ArgumentNullOrWhiteSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not implemented to find referenced element from external resource..
+        /// </summary>
+        internal static string LoadReferencedObjectFromExternalNotImplmented {
+            get {
+                return ResourceManager.GetString("LoadReferencedObjectFromExternalNotImplmented", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The reference string &apos;{0}&apos; has invalid format..
+        /// </summary>
+        internal static string ReferenceHasInvalidFormat {
+            get {
+                return ResourceManager.GetString("ReferenceHasInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown type of $ref &apos;{0}&apos; at &apos;{1}&apos;..
+        /// </summary>
+        internal static string ReferenceHasInvalidValue {
+            get {
+                return ResourceManager.GetString("ReferenceHasInvalidValue", resourceCulture);
             }
         }
     }

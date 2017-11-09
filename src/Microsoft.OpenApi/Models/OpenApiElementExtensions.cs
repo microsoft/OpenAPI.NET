@@ -219,14 +219,14 @@ namespace Microsoft.OpenApi.Models
         /// <typeparam name="T"><see cref="IOpenApiReference"/>.</typeparam>
         /// <param name="reference">The reference element. </param>
         /// <param name="document">The Open API document.</param>
-        public static IOpenApiElement TryFind<T>(this T reference, OpenApiDocument document)
+        public static IOpenApiElement Find<T>(this T reference, OpenApiDocument document)
             where T : IOpenApiReference
         {
             if (reference == null ||
                 document == null ||
                 document.Components == null ||
                 reference.Pointer == null ||
-                reference.Pointer.ExternalFilePath != null)
+                reference.Pointer.ExternalResource != null)
             {
                 return null;
             }
@@ -234,34 +234,34 @@ namespace Microsoft.OpenApi.Models
             switch(reference.Pointer.ReferenceType)
             {
                 case ReferenceType.Schema:
-                    return document.Components.Schemas?[reference.Pointer.TypeName];
+                    return document.Components.Schemas?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.Parameter:
-                    return document.Components.Parameters?[reference.Pointer.TypeName];
+                    return document.Components.Parameters?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.Header:
-                    return document.Components.Headers?[reference.Pointer.TypeName];
+                    return document.Components.Headers?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.Response:
-                    return document.Components.Responses?[reference.Pointer.TypeName];
+                    return document.Components.Responses?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.RequestBody:
-                    return document.Components.RequestBodies?[reference.Pointer.TypeName];
+                    return document.Components.RequestBodies?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.Example:
-                    return document.Components.Examples?[reference.Pointer.TypeName];
+                    return document.Components.Examples?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.SecurityScheme:
-                    return document.Components.SecuritySchemes?[reference.Pointer.TypeName];
+                    return document.Components.SecuritySchemes?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.Callback:
-                    return document.Components.Callbacks?[reference.Pointer.TypeName];
+                    return document.Components.Callbacks?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.Link:
-                    return document.Components.Links?[reference.Pointer.TypeName];
+                    return document.Components.Links?[reference.Pointer.LocalPointer];
 
                 case ReferenceType.Tag:
-                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.TypeName);
+                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.LocalPointer);
 
                 default:
                     return null;
@@ -269,11 +269,12 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Check the element is reference element or not.
+        /// Check whether the element is reference element.
         /// </summary>
         /// <typeparam name="T"><see cref="IOpenApiElement"/>.</typeparam>
         /// <param name="reference">The referencable element.</param>
-        /// <returns>true is reference, otherwise false.</returns>
+        /// <returns>True if the element implements <see cref="IOpenApiReference"/> and pointer is not null,
+        /// False otherwise.</returns>
         public static bool IsReference<T>(this T element) where T : IOpenApiElement
         {
             IOpenApiReference reference = element as IOpenApiReference;

@@ -16,74 +16,84 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiReference : OpenApiElement
     {
         /// <summary>
-        /// The element type referenced.
+        /// External resource in the reference.
+        /// It maybe:
+        /// 1. a absolute/relative file path, for example:  ../commons/pet.json
+        /// 2. a Url, for example: http://localhost/pet.json
+        /// </summary>
+        public string ExternalResource { get; }
+
+        /// <summary>
+        /// The local element type referenced.
         /// </summary>
         public ReferenceType ReferenceType { get; }
 
         /// <summary>
-        /// The given name of the object being referenced.
+        /// The identifier of the reusable component of one particular ReferenceType without the starting '/'.
         /// </summary>
-        public string TypeName { get; }
-
-        /// <summary>
-        /// External file path in the reference.
-        /// </summary>
-        public string ExternalFilePath { get; }
+        public string LocalPointer { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiReference"/> class.
         /// </summary>
-        /// <param name="reference">The reference string.</param>
-        public OpenApiReference(string reference)
+        /// <param name="externalResource">The external resource.</param>
+        public OpenApiReference(string externalSource)
+            : this(externalSource, null)
         {
-            if (String.IsNullOrWhiteSpace(reference))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(reference));
-            }
-
-            // the JSON Pointer maybe looks like: http://acme.org/schemas/foo/bar#/components/schemas/xyz'
-            var segments = reference.Split('#');
-
-            if (segments.Length == 1) // Pet.json or http://acme.org/schemas/foo/bar
-            {
-                ExternalFilePath = segments[0];
-                ReferenceType = ReferenceType.Schema; // it means only to reference schema types
-            }
-            else if (segments.Length == 2) // definitions.json#/Pet....or #/components/schemas/Pet
-            {
-                ExternalFilePath = String.IsNullOrEmpty(segments[0]) ? null : segments[0];
-
-                ReferenceType referenceType;
-                string typeName;
-                if (!ParseLocalPointer(segments[1], out referenceType, out typeName))
-                {
-                    throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
-                }
-
-                ReferenceType = referenceType;
-                TypeName = typeName;
-            }
-            else
-            {
-                throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
-            }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiReference"/> class.
-        /// Only for unit test to use.
         /// </summary>
-        /// <param name="referenceType">The Reference type.</param>
-        /// <param name="typeName">The type name.</param>
-        internal OpenApiReference(ReferenceType referenceType, string typeName)
+        /// <param name="externalResource">The external resource.</param>
+        /// <param name="externalPointer">The external pointer, it could be null.</param>
+        public OpenApiReference(string externalResource, string externalPointer)
         {
-            if (String.IsNullOrWhiteSpace(typeName))
+            if (String.IsNullOrWhiteSpace(externalResource))
             {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(typeName));
+                throw Error.ArgumentNullOrWhiteSpace(nameof(externalResource));
             }
 
-            ReferenceType = referenceType;
-            TypeName = typeName;
+            ExternalResource = externalResource;
+            LocalPointer = externalPointer;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenApiReference"/> class.
+        /// </summary>
+        /// <param name="localType">The local reference type.</param>
+        /// <param name="localPointer">The local pointer, it could not be null.</param>
+        public OpenApiReference(ReferenceType localType, string localPointer)
+        {
+            if (String.IsNullOrEmpty(localPointer))
+            {
+                throw Error.ArgumentNullOrWhiteSpace(nameof(localPointer));
+            }
+
+            ReferenceType = localType;
+            LocalPointer = localPointer;
+        }
+
+        /// <summary>
+        /// Gets a flag indicating whether this reference is an external reference.
+        /// </summary>
+        public bool IsExternal
+        {
+            get
+            {
+                return ExternalResource != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets a flag indicating whether this reference is a local reference.
+        /// </summary>
+        public bool IsLocal
+        {
+            get
+            {
+                return ExternalResource == null && LocalPointer != null;
+            }
         }
 
         /// <summary>
@@ -92,13 +102,18 @@ namespace Microsoft.OpenApi.Models
         /// <returns>The Json Pointer object.</returns>
         public JsonPointer GetLocalPointer()
         {
-            return new JsonPointer(GetPointerV3());
+            if (IsLocal)
+            {
+                return new JsonPointer(GetLocalReferenceAsV3());
+            }
+
+            return null;
         }
 
         /// <inheritdoc />
         public override string ToString()
         {
-            return GetPointerV3();
+            return GetLocalReferenceAsV3();
         }
 
         /// <summary>
@@ -114,7 +129,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // $ref
-            writer.WriteStringProperty(OpenApiConstants.DollarRef, ToString());
+            writer.WriteStringProperty(OpenApiConstants.DollarRef, GetLocalReferenceAsV3());
 
             writer.WriteEndObject();
         }
@@ -132,55 +147,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // $ref
-            writer.WriteStringProperty(OpenApiConstants.DollarRef, GetPointerV2());
+            writer.WriteStringProperty(OpenApiConstants.DollarRef, GetLocalReferenceAsV2());
 
             writer.WriteEndObject();
         }
 
-        private bool ParseLocalPointer(string input, out ReferenceType referenceType, out string typeName)
-        {
-            referenceType = ReferenceType.Unknown;
-            typeName = null;
-
-            if (String.IsNullOrWhiteSpace(input) || !input.StartsWith("/"))
-            {
-                return false;
-            }
-
-            var segments = input.Split('/');
-            if (segments.Length == 2) // /blabla
-            {
-                referenceType = ReferenceType.Schema;
-                typeName = segments[1];
-                return true;
-            }
-            else if (segments.Length == 3) // /tags/blabla
-            {
-                referenceType = segments[1].GetEnumFromDisplayName<ReferenceType>();
-                if (referenceType != ReferenceType.Tag)
-                {
-                    return false; // should be tags?
-                }
-
-                typeName = segments[2];
-                return true;
-            }
-            else if (segments.Length == 4) // /components/{type}/blabla
-            {
-                if (segments[1] != OpenApiConstants.Components)
-                {
-                    return false; // should be "components"
-                }
-
-                referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
-                typeName = segments[3];
-                return true;
-            }
-
-            return false;
-        }
-
-        private string GetPointerV3()
+        internal string GetLocalReferenceAsV3()
         {
             var external = GetExternalReference();
             if (external != null)
@@ -188,10 +160,17 @@ namespace Microsoft.OpenApi.Models
                 return external;
             }
 
-            return "#/components/" + ReferenceType.GetDisplayName() + "/" + TypeName;
+            if (ReferenceType == ReferenceType.Tag)
+            {
+                return "#/tags/" + LocalPointer;
+            }
+            else
+            {
+                return "#/components/" + ReferenceType.GetDisplayName() + "/" + LocalPointer;
+            }
         }
 
-        private string GetPointerV2()
+        internal string GetLocalReferenceAsV2()
         {
             var external = GetExternalReference();
             if (external != null)
@@ -199,23 +178,51 @@ namespace Microsoft.OpenApi.Models
                 return external;
             }
 
-            return "#/definitions/" + ReferenceType.GetDisplayName() + "/" + TypeName;
+            return "#/" + GetReferenceTypeNameAsV2() + "/" + LocalPointer;
         }
 
         private string GetExternalReference()
         {
-            if (!String.IsNullOrEmpty(ExternalFilePath))
+            if (!String.IsNullOrEmpty(ExternalResource))
             {
-                string pointer = ExternalFilePath;
-                if (TypeName != null)
+                if (LocalPointer != null)
                 {
-                    return pointer + "#/" + TypeName;
+                    return ExternalResource + "#/" + LocalPointer;
                 }
-
-                return pointer;
+                else
+                {
+                    return ExternalResource;
+                }
             }
 
             return null;
+        }
+
+        private string GetReferenceTypeNameAsV2()
+        {
+            switch (ReferenceType)
+            {
+                case ReferenceType.Schema:
+                    return OpenApiConstants.Definitions;
+
+                case ReferenceType.Parameter:
+                    return OpenApiConstants.Parameters;
+
+                case ReferenceType.Response:
+                    return OpenApiConstants.Responses;
+
+                case ReferenceType.Header:
+                    return OpenApiConstants.Headers;
+
+                case ReferenceType.Tag:
+                    return OpenApiConstants.Tags;
+
+                case ReferenceType.SecurityScheme:
+                    return OpenApiConstants.SecurityDefinitions;
+
+                default:
+                    throw new OpenApiException(String.Format(SRResource.ReferenceTypeNotSupportedV2, ReferenceType));
+            }
         }
     }
 }

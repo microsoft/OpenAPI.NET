@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Interface;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -16,7 +17,7 @@ namespace Microsoft.OpenApi.Readers
 
         private readonly Stack<string> previousPointers = new Stack<string>();
 
-        private IOpenApiReferenceService referenceService;
+        private IOpenApiReferenceService _referenceService;
 
         private readonly Dictionary<string, IOpenApiReference> referenceStore = new Dictionary<string, IOpenApiReference>();
 
@@ -36,30 +37,31 @@ namespace Microsoft.OpenApi.Readers
 
         public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, string pointer)
         {
-            var reference = referenceService.ParseReference(pointer);
+            var reference = _referenceService.FromString(pointer);
             return GetReferencedObject(diagnostic, reference);
         }
 
         public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, OpenApiReference reference)
         {
             IOpenApiReference returnValue = null;
-            referenceStore.TryGetValue(reference.ToString(), out returnValue);
+            string referenceString = _referenceService.ToString(reference);
+            referenceStore.TryGetValue(referenceString, out returnValue);
 
             if (returnValue == null)
             {
-                if (previousPointers.Contains(reference.ToString()))
+                if (previousPointers.Contains(referenceString))
                 {
                     return null; // Return reference object?
                 }
 
-                previousPointers.Push(reference.ToString());
-                returnValue = referenceService.LoadReference(reference);
+                previousPointers.Push(referenceString);
+                returnValue = _referenceService.LoadReference(reference);
                 previousPointers.Pop();
 
                 if (returnValue != null)
                 {
                     returnValue.Pointer = reference;
-                    referenceStore.Add(reference.ToString(), returnValue);
+                    referenceStore.Add(referenceString, returnValue);
                 }
                 else
                 {
@@ -83,7 +85,7 @@ namespace Microsoft.OpenApi.Readers
 
         public void SetReferenceService(IOpenApiReferenceService referenceService)
         {
-            this.referenceService = referenceService;
+            this._referenceService = referenceService;
         }
 
         public void SetTempStorage(string key, object value)

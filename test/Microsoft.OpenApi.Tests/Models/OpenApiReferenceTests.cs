@@ -6,10 +6,8 @@
 using System;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Xunit;
 using Microsoft.OpenApi.Properties;
-using System.Text;
-using System.Collections.Generic;
+using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -19,121 +17,118 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void CtorThrowArgumentNullOrWhiteSpaceWithNullInput(string reference)
+        public void ConstructorShouldThrowArgumentNullOrWhiteSpaceWithNullInput(string reference)
         {
             // Arrange & Act
             Action action = () => new OpenApiReference(reference);
 
             // Assert
-            action.ShouldThrow<ArgumentException>(String.Format(SRResource.ArgumentNullOrWhiteSpace, "reference"));
+            action.ShouldThrow<ArgumentException>(String.Format(SRResource.ArgumentNullOrWhiteSpace, "externalResource"));
         }
 
         [Theory]
-        [InlineData("abc#")]
-        [InlineData("#abc")]
-        [InlineData("#//")]
-        [InlineData("#/components/name")]
-        [InlineData("#/any/schema/type")]
-        public void CtorThrowInvalidReferenceFormat(string reference)
+        [InlineData("#/components/schemas/Pet", ReferenceType.Schema, "Pet")]
+        [InlineData("#/components/parameters/name", ReferenceType.Parameter, "name")]
+        [InlineData("#/components/responses/200", ReferenceType.Response, "200")]
+        public void ConstructorSetLocalPropertyValue(string input, ReferenceType type, string pointer)
         {
             // Arrange & Act
-            Action action = () => new OpenApiReference(reference);
+            var reference = new OpenApiReference(type, pointer);
 
             // Assert
-            action.ShouldThrow<OpenApiException>(String.Format(SRResource.ReferenceHasInvalidFormat, reference));
-        }
-
-        [Theory]
-        [InlineData("Pet.json", "Pet.json", ReferenceType.Schema, null)]
-        [InlineData("Pet.yaml", "Pet.yaml", ReferenceType.Schema, null)]
-        [InlineData("abc", "abc", ReferenceType.Schema, null)]
-        [InlineData("Pet.json#/Pet", "Pet.json", ReferenceType.Schema, "Pet")]
-        [InlineData("Pet.yaml#/Pet", "Pet.yaml", ReferenceType.Schema, "Pet")]
-        [InlineData("abc#/Pet", "abc", ReferenceType.Schema, "Pet")]
-        [InlineData("#/components/schemas/Pet", null, ReferenceType.Schema, "Pet")]
-        [InlineData("#/components/parameters/name", null, ReferenceType.Parameter, "name")]
-        [InlineData("#/components/responses/200", null, ReferenceType.Response, "200")]
-        public void CtorSetPropertyValue(string input, string file, ReferenceType type, string name)
-        {
-            // Arrange & Act
-            var reference = new OpenApiReference(input);
-
-            // Assert
-            reference.ExternalFilePath.Should().Be(file);
+            reference.ExternalResource.Should().BeNull();
             reference.ReferenceType.Should().Be(type);
-            reference.TypeName.Should().Be(name);
-        }
-
-        public static IEnumerable<object[]> ReferernceStrings()
-        {
-            var values = new string[]
-            {
-                "Pet.json",
-                 "Pet.yaml",
-                 "abc",
-                 "Pet.json#/Pet",
-                 "Pet.yaml#/Pet",
-                "abc#/Pet",
-                 "#/components/schemas/Pet",
-                 "#/components/parameters/name",
-                 "#/components/responses/200",
-            };
-            foreach (var value in values)
-            {
-                yield return new object[] { value };
-            }
+            reference.LocalPointer.Should().Be(pointer);
+            reference.ToString().Should().Be(input);
         }
 
         [Theory]
-        [MemberData(nameof(ReferernceStrings))]
-        public void SerializeReferenceAsJsonV3Works(string input)
+        [InlineData("Pet.json", "Pet.json", null)]
+        [InlineData("Pet.yaml", "Pet.yaml", null)]
+        [InlineData("abc", "abc", null)]
+        [InlineData("Pet.json#/Pet", "Pet.json", "Pet")]
+        [InlineData("Pet.yaml#/Pet", "Pet.yaml", "Pet")]
+        [InlineData("abc#/Pet", "abc","Pet")]
+        public void ConstructorSetExernalPropertyValues(string input, string external, string pointer)
+        {
+            // Arrange & Act
+            var reference = new OpenApiReference(external, pointer);
+
+            // Assert
+            reference.ExternalResource.Should().Be(external);
+            reference.ReferenceType.Should().Be(ReferenceType.Unknown);
+            reference.LocalPointer.Should().Be(pointer);
+            reference.ToString().Should().Be(input);
+        }
+
+        [Fact]
+        public void SerializeSchemaReferenceAsJsonV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference(input);
-            string expect = @"{
-  ""$ref"": ""ABCDE""
-}".Replace("ABCDE", input);
+            var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
+            string expected = @"{
+  ""$ref"": ""#/components/schemas/Pet""
+}";
 
             // Act
             string actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.Should().Be(expect);
+            actual.Should().Be(expected);
         }
 
-        [Theory]
-        [MemberData(nameof(ReferernceStrings))]
-        public void SerializeReferenceAsYamlV3Works(string input)
+        [Fact]
+        public void SerializeSchemaReferenceAsYamlV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference(input);
-            string expect = @"$ref: ABCDE";
-            if (input.StartsWith("#"))
-            {
-                expect = expect.Replace("ABCDE", "'" + input + "'");
-            }
-            else
-            {
-                expect = expect.Replace("ABCDE", input);
-            }
+            var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
+            string expected = @"$ref: '#/components/schemas/Pet'";
 
             // Act
             string actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.Should().Be(expect);
+            actual.Should().Be(expected);
         }
 
-
-        [Theory]
-        [MemberData(nameof(ReferernceStrings))]
-        public void SerializeReferenceAsJsonV2Works(string input)
+        [Fact]
+        public void SerializeSchemaReferenceAsJsonV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference(input);
+            var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
+            string expected = @"{
+  ""$ref"": ""#/definitions/Pet""
+}";
+
+            // Act
+            string actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeSchemaReferenceAsYamlV2Works()
+        {
+            // Arrange
+            var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
+            string expected = @"$ref: '#/definitions/Pet'";
+
+            // Act
+            string actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeExternalReferenceAsJsonV2Works()
+        {
+            // Arrange
+            var reference = new OpenApiReference("main.json", "Pets");
             string expect = @"{
-  ""$ref"": ""ABCDE""
-}".Replace("ABCDE", input).Replace("components", "definitions");
+  ""$ref"": ""main.json#/Pets""
+}";
 
             // Act
             string actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -142,25 +137,45 @@ namespace Microsoft.OpenApi.Tests.Models
             actual.Should().Be(expect);
         }
 
-        [Theory]
-        [MemberData(nameof(ReferernceStrings))]
-        public void SerializeReferenceAsYamlV2Works(string input)
+        [Fact]
+        public void SerializeExternalReferenceAsYamlV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference(input);
-            string expect = @"$ref: ABCDE";
-            if (input.StartsWith("#"))
-            {
-                expect = expect.Replace("ABCDE", "'" + input + "'");
-            }
-            else
-            {
-                expect = expect.Replace("ABCDE", input);
-            }
-            expect = expect.Replace("components", "definitions");
+            var reference = new OpenApiReference("main.json", "Pets");
+            string expect = @"$ref: main.json#/Pets";
 
             // Act
             string actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            actual.Should().Be(expect);
+        }
+
+        [Fact]
+        public void SerializeExternalReferenceAsJsonV3Works()
+        {
+            // Arrange
+            var reference = new OpenApiReference("main.json", "Pets");
+            string expect = @"{
+  ""$ref"": ""main.json#/Pets""
+}";
+
+            // Act
+            string actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual.Should().Be(expect);
+        }
+
+        [Fact]
+        public void SerializeExternalReferenceAsYamlV3Works()
+        {
+            // Arrange
+            var reference = new OpenApiReference("main.json", "Pets");
+            string expect = @"$ref: main.json#/Pets";
+
+            // Act
+            string actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual.Should().Be(expect);

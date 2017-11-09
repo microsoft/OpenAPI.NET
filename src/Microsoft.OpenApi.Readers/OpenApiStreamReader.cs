@@ -69,23 +69,11 @@ namespace Microsoft.OpenApi.Readers
             switch (inputVersion)
             {
                 case "2.0":
-                    context.SetReferenceService(
-                        new OpenApiReferenceService(rootNode)
-                        {
-                            loadReference = OpenApiV2Deserializer.LoadReference,
-                            parseReference = p => OpenApiV2Deserializer.ParseReference(p)
-                        });
-
+                    context.SetReferenceService(new OpenApiV2ReferenceService(rootNode));
                     return OpenApiV2Deserializer.LoadOpenApi(rootNode);
 
                 default:
-                    context.SetReferenceService(
-                        new OpenApiReferenceService(rootNode)
-                        {
-                            loadReference = OpenApiV3Deserializer.LoadReference,
-                            parseReference = p => new OpenApiReference(p)
-                        });
-
+                    context.SetReferenceService(new OpenApiV3ReferenceService(rootNode));
                     return OpenApiV3Deserializer.LoadOpenApi(rootNode);
             }
         }

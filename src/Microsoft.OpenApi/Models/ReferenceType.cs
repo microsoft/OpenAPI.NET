@@ -7,6 +7,9 @@ using Microsoft.OpenApi.Commons;
 
 namespace Microsoft.OpenApi.Models
 {
+    /// <summary>
+    /// The reference type.
+    /// </summary>
     public enum ReferenceType
     {
         /// <summary>

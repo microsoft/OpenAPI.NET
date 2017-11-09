@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V3
@@ -20,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
                         valueNode =>
-                            OpenApiReferenceService.LoadTagByReference(
+                            LoadTagByReference(
                                 valueNode.Context,
                                 valueNode.Diagnostic,
                                 valueNode.GetScalarValue()))
@@ -108,6 +109,23 @@ namespace Microsoft.OpenApi.Readers.V3
             ParseMap(mapNode, operation, OperationFixedFields, OperationPatternFields);
 
             return operation;
+        }
+
+        private static OpenApiTag LoadTagByReference(
+            ParsingContext context,
+            OpenApiDiagnostic diagnostic,
+            string tagName)
+        {
+            var tagObject = (OpenApiTag)context.GetReferencedObject(
+                diagnostic,
+                $"#/tags/{tagName}");
+
+            if (tagObject == null)
+            {
+                tagObject = new OpenApiTag() { Name = tagName };
+            }
+
+            return tagObject;
         }
     }
 }
