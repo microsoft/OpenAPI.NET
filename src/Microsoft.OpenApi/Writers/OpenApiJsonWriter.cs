@@ -36,17 +36,25 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteStartObject()
         {
-            Scope preScope = CurrentScope();
+            var previousScope = CurrentScope();
 
-            StartScope(ScopeType.Object);
-            
-            if (preScope != null && preScope.Type == ScopeType.Array)
+            var currentScope = StartScope(ScopeType.Object);
+
+            if (previousScope != null && previousScope.Type == ScopeType.Array)
             {
+                currentScope.IsInArray = true;
+
+                if (previousScope.ObjectCount != 1)
+                {
+                    Writer.Write(WriterConstants.ArrayElementSeparator);
+                }
+
                 Writer.WriteLine();
                 WriteIndentation();
             }
 
             Writer.Write(WriterConstants.StartObjectScope);
+
             IncreaseIndentation();
         }
 
@@ -55,7 +63,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndObject()
         {
-            Scope current = EndScope(ScopeType.Object);
+            var current = EndScope(ScopeType.Object);
             if (current.ObjectCount != 0)
             {
                 Writer.WriteLine();
@@ -76,8 +84,24 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteStartArray()
         {
-            StartScope(ScopeType.Array);
-            this.Writer.Write(WriterConstants.StartArrayScope);
+            var previousScope = CurrentScope();
+
+            var currentScope = StartScope(ScopeType.Array);
+
+            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            {
+                currentScope.IsInArray = true;
+
+                if (previousScope.ObjectCount != 1)
+                {
+                    Writer.Write(WriterConstants.ArrayElementSeparator);
+                }
+
+                Writer.WriteLine();
+                WriteIndentation();
+            }
+
+            Writer.Write(WriterConstants.StartArrayScope);
             IncreaseIndentation();
         }
 
@@ -86,7 +110,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndArray()
         {
-            Scope current = EndScope(ScopeType.Array);
+            var current = EndScope(ScopeType.Array);
             if (current.ObjectCount != 0)
             {
                 Writer.WriteLine();
@@ -111,7 +135,7 @@ namespace Microsoft.OpenApi.Writers
         {
             VerifyCanWritePropertyName(name);
 
-            Scope currentScope = CurrentScope();
+            var currentScope = CurrentScope();
             if (currentScope.ObjectCount != 0)
             {
                 Writer.Write(WriterConstants.ObjectMemberSeparator);
@@ -159,7 +183,7 @@ namespace Microsoft.OpenApi.Writers
                 return;
             }
 
-            Scope currentScope = this.scopes.Peek();
+            var currentScope = scopes.Peek();
             if (currentScope.Type == ScopeType.Array)
             {
                 if (currentScope.ObjectCount != 0)

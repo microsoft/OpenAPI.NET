@@ -3,8 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
-using System.CodeDom;
 using System.IO;
 
 namespace Microsoft.OpenApi.Writers
@@ -50,12 +48,18 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Object);
 
-            IncreaseIndentation();
-
             if (previousScope != null && previousScope.Type == ScopeType.Array)
             {
                 currentScope.IsInArray = true;
+
+                Writer.WriteLine();
+
+                WriteIndentation();
+
+                Writer.Write(WriterConstants.PrefixOfArrayItem);
             }
+
+            IncreaseIndentation();
         }
 
         /// <summary>
@@ -68,8 +72,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = CurrentScope();
 
-
-            // If there object is empty, indicate it by writing { }
+            // If the object is empty, indicate it by writing { }
             if (previousScope.ObjectCount == 0)
             {
                 // If we are in an object, write a white space preceding the braces.
@@ -87,7 +90,21 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteStartArray()
         {
-            StartScope(ScopeType.Array);
+            var previousScope = CurrentScope();
+
+            var currentScope = StartScope(ScopeType.Array);
+
+            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            {
+                currentScope.IsInArray = true;
+
+                Writer.WriteLine();
+
+                WriteIndentation();
+
+                Writer.Write(WriterConstants.PrefixOfArrayItem);
+            }
+
             IncreaseIndentation();
         }
 
@@ -96,8 +113,22 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteEndArray()
         {
-            var current = EndScope(ScopeType.Array);
+            var previousScope = EndScope(ScopeType.Array);
             DecreaseIndentation();
+
+            var currentScope = CurrentScope();
+
+            // If the array is empty, indicate it by writing [ ]
+            if (previousScope.ObjectCount == 0)
+            {
+                // If we are in an object, write a white space preceding the braces.
+                if (currentScope != null && currentScope.Type == ScopeType.Object)
+                {
+                    Writer.Write(" ");
+                }
+
+                Writer.Write(WriterConstants.EmptyArray);
+            }
         }
 
         /// <summary>
@@ -111,15 +142,7 @@ namespace Microsoft.OpenApi.Writers
 
             if (current.ObjectCount == 0)
             {
-                if (current.IsInArray)
-                {
-                    Writer.WriteLine();
-
-                    WritePrefixIndentation();
-
-                    Writer.Write(WriterConstants.PrefixOfArrayItem);
-                }
-                else
+                if (!current.IsInArray)
                 {
                     // If this object is the outermost scope, there is no need to insert a newline.
                     if (!IsTopLevelScope())
@@ -151,7 +174,13 @@ namespace Microsoft.OpenApi.Writers
             WriteValueSeparator();
 
             value = value.Replace("\n", "\\n");
-            
+
+            // If string is an empty string, wrap it in quote to ensure it is not recognized as null.
+            if (value == "")
+            {
+                value = "''";
+            }
+
             // If string is the word null, wrap it in quote to ensure it is not recognized as empty scalar null.
             if (value == "null")
             {

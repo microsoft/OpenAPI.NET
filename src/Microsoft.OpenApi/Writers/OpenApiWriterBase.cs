@@ -242,11 +242,6 @@ namespace Microsoft.OpenApi.Writers
             if (scopes.Count != 0)
             {
                 Scope currentScope = this.scopes.Peek();
-                if ((currentScope.Type == ScopeType.Array) &&
-                    (currentScope.ObjectCount != 0))
-                {
-                    Writer.Write(WriterConstants.ArrayElementSeparator);
-                }
 
                 currentScope.ObjectCount++;
             }
