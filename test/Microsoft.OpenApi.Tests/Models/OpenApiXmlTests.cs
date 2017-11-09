@@ -31,20 +31,19 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "")]
-        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "")]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
+        [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
         public void SerializeBasicXmlWorks(OpenApiSpecVersion version,
-            OpenApiFormat format, string expected)
+            OpenApiFormat format)
         {
             // Act
             string actual = BasicXml.Serialize(version, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            Assert.Equal("{ }", actual);
         }
 
         [Theory]
