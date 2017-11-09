@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Exceptions;
@@ -19,100 +18,6 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        public static OpenApiReference ParseReference(string pointer)
-        {
-            pointer = pointer.Replace("definitions", "components");
-            return new OpenApiReference(pointer);
-        }
-
-        public static JsonPointer GetPointer(OpenApiReference reference)
-        {
-            return new JsonPointer("#/" + GetReferenceTypeName(reference.ReferenceType) + "/" + reference.TypeName);
-        }
-
-        private static ReferenceType ParseReferenceTypeName(string referenceTypeName)
-        {
-            switch (referenceTypeName)
-            {
-                case "definitions": return ReferenceType.Schema;
-                case "parameters": return ReferenceType.Parameter;
-                case "responses": return ReferenceType.Response;
-                case "headers": return ReferenceType.Header;
-                case "tags": return ReferenceType.Tag;
-                case "securityDefinitions": return ReferenceType.SecurityScheme;
-                default: throw new ArgumentException();
-            }
-        }
-
-        private static string GetReferenceTypeName(ReferenceType referenceType)
-        {
-            switch (referenceType)
-            {
-                case ReferenceType.Schema:
-                    return "definitions";
-                case ReferenceType.Parameter:
-                    return "parameters";
-                case ReferenceType.Response:
-                    return "responses";
-                case ReferenceType.Header:
-                    return "headers";
-                case ReferenceType.Tag:
-                    return "tags";
-                case ReferenceType.SecurityScheme:
-                    return "securityDefinitions";
-                default: throw new ArgumentException();
-            }
-        }
-
-        public static IOpenApiReference LoadReference(OpenApiReference reference, object rootNode)
-        {
-            IOpenApiReference referencedObject = null;
-            var node = ((RootNode)rootNode).Find(GetPointer(reference));
-
-            if (node == null && reference.ReferenceType != ReferenceType.Tag)
-            {
-                return null;
-            }
-
-            switch (reference.ReferenceType)
-            {
-                case ReferenceType.Schema:
-                    referencedObject = LoadSchema(node);
-                    break;
-                case ReferenceType.Parameter:
-                    referencedObject = LoadParameter(node);
-                    break;
-                case ReferenceType.SecurityScheme:
-                    referencedObject = LoadSecurityScheme(node);
-                    break;
-                case ReferenceType.Tag:
-                    var list = (ListNode)node;
-                    if (list != null)
-                    {
-                        foreach (var item in list)
-                        {
-                            var tag = LoadTag(item);
-
-                            if (tag.Name == reference.TypeName)
-                            {
-                                return tag;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return new OpenApiTag {Name = reference.TypeName};
-                    }
-
-                    break;
-
-                default:
-                    throw new OpenApiException($"Unknown $ref {reference.ReferenceType} at {reference}");
-            }
-
-            return referencedObject;
-        }
-
         private static void ParseMap<T>(
             MapNode mapNode,
             T domainObject,
