@@ -59,10 +59,10 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // name
-                writer.WriteStringProperty(OpenApiConstants.Name, Name);
+                writer.WriteProperty(OpenApiConstants.Name, Name);
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // external docs
                 writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
@@ -93,10 +93,10 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // name
-                writer.WriteStringProperty(OpenApiConstants.Name, Name);
+                writer.WriteProperty(OpenApiConstants.Name, Name);
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // external docs
                 writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));

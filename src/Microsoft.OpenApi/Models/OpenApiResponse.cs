@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // headers
                 writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
                 if (Content != null)
                 {
                     var mediatype = Content.FirstOrDefault();

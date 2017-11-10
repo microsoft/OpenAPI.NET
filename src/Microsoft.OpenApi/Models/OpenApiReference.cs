@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // $ref
-            writer.WriteStringProperty(OpenApiConstants.DollarRef, ReferenceV3);
+            writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
 
             writer.WriteEndObject();
         }
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // $ref
-            writer.WriteStringProperty(OpenApiConstants.DollarRef, ReferenceV2);
+            writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV2);
 
             writer.WriteEndObject();
         }

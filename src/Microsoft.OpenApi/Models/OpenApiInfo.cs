@@ -64,13 +64,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // title
-            writer.WriteStringProperty(OpenApiConstants.Title, Title);
+            writer.WriteProperty(OpenApiConstants.Title, Title);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // termsOfService
-            writer.WriteStringProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
+            writer.WriteProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
             writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV3(w));
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV3(w));
 
             // version
-            writer.WriteStringProperty(OpenApiConstants.Version, Version?.ToString());
+            writer.WriteProperty(OpenApiConstants.Version, Version?.ToString());
 
             // specification extensions
             writer.WriteExtensions(Extensions);
@@ -100,13 +100,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // title
-            writer.WriteStringProperty(OpenApiConstants.Title, Title);
+            writer.WriteProperty(OpenApiConstants.Title, Title);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // termsOfService
-            writer.WriteStringProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
+            writer.WriteProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
             writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV2(w));
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV2(w));
 
             // version
-            writer.WriteStringProperty(OpenApiConstants.Version, Version?.ToString());
+            writer.WriteProperty(OpenApiConstants.Version, Version?.ToString());
 
             // specification extensions
             writer.WriteExtensions(Extensions);

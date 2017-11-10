@@ -74,19 +74,19 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // name
-            writer.WriteStringProperty(OpenApiConstants.Name, Name);
+            writer.WriteProperty(OpenApiConstants.Name, Name);
 
             // namespace
-            writer.WriteStringProperty(OpenApiConstants.Namespace, Namespace?.AbsoluteUri);
+            writer.WriteProperty(OpenApiConstants.Namespace, Namespace?.AbsoluteUri);
 
             // prefix
-            writer.WriteStringProperty(OpenApiConstants.Prefix, Prefix);
+            writer.WriteProperty(OpenApiConstants.Prefix, Prefix);
 
             // attribute
-            writer.WriteBoolProperty(OpenApiConstants.Attribute, Attribute, false);
+            writer.WriteProperty(OpenApiConstants.Attribute, Attribute, false);
 
             // wrapped
-            writer.WriteBoolProperty(OpenApiConstants.Wrapped, Wrapped, false);
+            writer.WriteProperty(OpenApiConstants.Wrapped, Wrapped, false);
 
             // extensions
             writer.WriteExtensions(Extensions);

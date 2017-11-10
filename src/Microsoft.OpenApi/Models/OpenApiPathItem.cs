@@ -80,10 +80,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // summary
-            writer.WriteStringProperty(OpenApiConstants.Summary, Summary);
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // operations
             foreach (var operation in _operations)
@@ -131,10 +131,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV2(w));
 
             // write "summary" as extensions
-            writer.WriteStringProperty(OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Summary, Summary);
+            writer.WriteProperty(OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Summary, Summary);
 
             // write "description" as extensions
-            writer.WriteStringProperty(
+            writer.WriteProperty(
                 OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Description,
                 Description);
 

@@ -56,13 +56,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // authorizationUrl
-            writer.WriteStringProperty(OpenApiConstants.AuthorizationUrl, AuthorizationUrl?.ToString());
+            writer.WriteProperty(OpenApiConstants.AuthorizationUrl, AuthorizationUrl?.ToString());
 
             // tokenUrl
-            writer.WriteStringProperty(OpenApiConstants.TokenUrl, TokenUrl?.ToString());
+            writer.WriteProperty(OpenApiConstants.TokenUrl, TokenUrl?.ToString());
 
             // refreshUrl
-            writer.WriteStringProperty(OpenApiConstants.RefreshUrl, RefreshUrl?.ToString());
+            writer.WriteProperty(OpenApiConstants.RefreshUrl, RefreshUrl?.ToString());
 
             // scopes
             writer.WriteRequiredMap(OpenApiConstants.Scopes, Scopes, (w, s) => w.WriteValue(s));
