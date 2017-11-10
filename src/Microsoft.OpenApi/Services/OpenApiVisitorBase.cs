@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(OpenApiPaths paths) { }
         public virtual void Visit(OpenApiPathItem pathItem) { }
         public virtual void Visit(OpenApiServerVariable serverVariable) { }
-        public virtual void Visit(IReadOnlyDictionary<string,OpenApiOperation> operations) { }
+        public virtual void Visit(IDictionary<OperationType,OpenApiOperation> operations) { }
         public virtual void Visit(OpenApiOperation operation) { }
         public virtual void Visit(IList<OpenApiParameter> parameters) { }
         public virtual void Visit(OpenApiParameter parameter) { }

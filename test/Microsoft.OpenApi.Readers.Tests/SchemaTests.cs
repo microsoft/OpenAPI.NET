@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
 using Xunit;
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            var operation = openApiDoc.Paths["/pets"].Operations["get"];
+            var operation = openApiDoc.Paths["/pets"].Operations[OperationType.Get];
             var schema = operation.Responses["200"].Content["application/json"].Schema;
             Assert.NotNull(schema);
         }
