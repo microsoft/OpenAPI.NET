@@ -77,16 +77,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
             // explode
-            if (Explode != null)
-            {
-                writer.WriteProperty(OpenApiConstants.Explode, Explode.Value, false);
-            }
+             writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
 
             // allowReserved
-            if (AllowReserved != null)
-            {
-                writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved.Value, false);
-            }
+            writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // extensions
             writer.WriteExtensions(Extensions);
