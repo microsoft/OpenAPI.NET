@@ -102,16 +102,17 @@ namespace Microsoft.OpenApi.Readers.Tests
         }
 
         [Theory]
-        [InlineData("matrix", new[] {"a", "b"}, ";bar=a,b")]
-        [InlineData("exploded-matrix", new[] {"a", "b"}, ";bar=a;bar=b")]
-        [InlineData("label", new[] {"a", "b"}, ".a.b")]
-        [InlineData("exploded-label", new[] {"a", "b"}, ".a.b")]
-        public void SerializeArrays(string style, string[] value, string expected)
+        [InlineData(ParameterStyle.Matrix, false, new[] {"a", "b"}, ";bar=a,b")]
+        [InlineData(ParameterStyle.Matrix, true, new[] {"a", "b"}, ";bar=a;bar=b")]
+        [InlineData(ParameterStyle.Label, false, new[] {"a", "b"}, ".a.b")]
+        [InlineData(ParameterStyle.Label, true, new[] {"a", "b"}, ".a.b")]
+        public void SerializeArrays(ParameterStyle style, bool explode, string[] value, string expected)
         {
             var parameter = new OpenApiParameter
             {
                 Name = "bar",
-                Style = style
+                Style = style,
+                Explode = explode
             };
 
             var actual = SerializeParameterValue(parameter, value);
@@ -136,17 +137,18 @@ namespace Microsoft.OpenApi.Readers.Tests
         // format="space-delimited" type="array" explode=true bar=a bar=b
 
         [Theory]
-        [InlineData("matrix", ";bar=a,1,b,2")]
-        [InlineData("exploded-matrix", ";a=1;b=2")]
-        [InlineData("label", ".a.1.b.2")]
-        [InlineData("exploded-label", ".a=1.b=2")]
-        public void SerializeMaps(string style, string expected)
+        [InlineData(ParameterStyle.Matrix, false, ";bar=a,1,b,2")]
+        [InlineData(ParameterStyle.Matrix, true, ";a=1;b=2")]
+        [InlineData(ParameterStyle.Label, false, ".a.1.b.2")]
+        [InlineData(ParameterStyle.Label, true, ".a=1.b=2")]
+        public void SerializeMaps(ParameterStyle style, bool explode, string expected)
         {
             var value = new Dictionary<string, string> {{"a", "1"}, {"b", "2"}};
             var parameter = new OpenApiParameter
             {
                 Name = "bar",
-                Style = style
+                Style = style,
+                Explode = explode
             };
 
             var actual = SerializeParameterValue(parameter, value);
@@ -161,43 +163,50 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             switch (parameter.Style)
             {
-                case "matrix": // Matrix
-                    output = SerializeValues(
-                        parameter.Name,
-                        false,
-                        parameter.AllowReserved,
-                        value,
-                        (n, v, m) => ";" + n + (string.IsNullOrEmpty(v) ? "" : "=") + v,
-                        ",");
-                    break;
-                case "exploded-matrix": // Matrix
-                    output = SerializeValues(
-                        parameter.Name,
-                        true,
-                        parameter.AllowReserved,
-                        value,
-                        (n, v, m) => ";" + n + (string.IsNullOrEmpty(v) ? "" : "=") + v,
-                        ",");
-                    break;
-
-                case "label": // Label
-                    output = SerializeValues(
-                        parameter.Name,
-                        false,
-                        parameter.AllowReserved,
-                        value,
-                        (n, v, m) => "." + (m ? n + "=" : "") + v,
-                        ".");
+                case ParameterStyle.Matrix: // Matrix
+                    if (!parameter.Explode)
+                    {
+                        output = SerializeValues(
+                            parameter.Name,
+                            false,
+                            parameter.AllowReserved,
+                            value,
+                            (n, v, m) => ";" + n + (string.IsNullOrEmpty(v) ? "" : "=") + v,
+                            ",");
+                    }
+                    else
+                    {
+                        output = SerializeValues(
+                            parameter.Name,
+                            true,
+                            parameter.AllowReserved,
+                            value,
+                            (n, v, m) => ";" + n + (string.IsNullOrEmpty(v) ? "" : "=") + v,
+                            ",");
+                    }
                     break;
 
-                case "exploded-label": // Label
-                    output = SerializeValues(
-                        parameter.Name,
-                        true,
-                        parameter.AllowReserved,
-                        value,
-                        (n, v, m) => "." + (m ? n + "=" : "") + v,
-                        ".");
+                case ParameterStyle.Label: // Label
+                    if (!parameter.Explode)
+                    {
+                        output = SerializeValues(
+                            parameter.Name,
+                            false,
+                            parameter.AllowReserved,
+                            value,
+                            (n, v, m) => "." + (m ? n + "=" : "") + v,
+                            ".");
+                    }
+                    else
+                    {
+                        output = SerializeValues(
+                            parameter.Name,
+                            true,
+                            parameter.AllowReserved,
+                            value,
+                            (n, v, m) => "." + (m ? n + "=" : "") + v,
+                            ".");
+                    }
                     break;
 
                 default: // Simple
@@ -215,10 +224,10 @@ namespace Microsoft.OpenApi.Readers.Tests
         }
 
         [Theory]
-        [InlineData("label", "yo", ".yo")]
-        [InlineData("matrix", "x", ";foo=x")]
-        [InlineData("matrix", "", ";foo")]
-        public void SerializePrefixedStrings(string style, string value, string expected)
+        [InlineData(ParameterStyle.Label, "yo", ".yo")]
+        [InlineData(ParameterStyle.Matrix, "x", ";foo=x")]
+        [InlineData(ParameterStyle.Matrix, "", ";foo")]
+        public void SerializePrefixedStrings(ParameterStyle style, string value, string expected)
         {
             var parameter = new OpenApiParameter
             {

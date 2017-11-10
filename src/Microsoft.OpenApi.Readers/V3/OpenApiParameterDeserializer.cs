@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "style", (o, n) =>
                     {
-                        o.Style = n.GetScalarValue();
+                        o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
                     }
                 },
                 {

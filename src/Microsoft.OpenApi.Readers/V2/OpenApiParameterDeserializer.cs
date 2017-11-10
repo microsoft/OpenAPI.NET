@@ -155,18 +155,18 @@ namespace Microsoft.OpenApi.Readers.V2
             switch (v)
             {
                 case "csv":
-                    p.Style = "simple";
+                    p.Style = ParameterStyle.Simple;
                     return;
                 case "ssv":
-                    p.Style = "spaceDelimited";
+                    p.Style = ParameterStyle.SpaceDelimited;
                     return;
                 case "pipes":
-                    p.Style = "pipeDelimited";
+                    p.Style = ParameterStyle.PipeDelimited;
                     return;
                 case "tsv":
                     throw new NotSupportedException();
                 case "multi":
-                    p.Style = "form";
+                    p.Style = ParameterStyle.Form;
                     p.Explode = true;
                     return;
             }

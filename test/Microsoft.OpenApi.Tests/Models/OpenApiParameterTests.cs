@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Required = true,
             Deprecated = false,
 
-            Style = "simple",
+            Style = ParameterStyle.Simple,
             Explode = true,
             Schema = new OpenApiSchema
             {

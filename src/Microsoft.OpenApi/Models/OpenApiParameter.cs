@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// Default values (based on value of in): for query - form; for path - simple; for header - simple;
         /// for cookie - form.
         /// </summary>
-        public string Style { get; set; }
+        public ParameterStyle? Style { get; set; }
 
         /// <summary>
         /// When this is true, parameter values of type array or object generate separate parameters
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteBoolProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
                 // style
-                writer.WriteStringProperty(OpenApiConstants.Style, Style);
+                writer.WriteStringProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
                 // explode
                 writer.WriteBoolProperty(OpenApiConstants.Explode, Explode, false);
