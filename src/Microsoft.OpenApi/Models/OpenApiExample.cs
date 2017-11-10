@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models
         /// exclusive. To represent examples of media types that cannot naturally represented 
         /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
         /// </summary>
-        public string Value { get; set; }
+        public IOpenApiAny Value { get; set; }
 
         /// <summary>
         /// A URL that points to the literal example. 
@@ -71,19 +71,22 @@ namespace Microsoft.OpenApi.Models
             else
             {
                 writer.WriteStartObject();
-                writer.WriteProperty("summary", Summary);
-                writer.WriteProperty("description", Description);
 
-                if (Value != null)
-                {
-                    writer.WritePropertyName("value");
-                    writer.WriteRaw(Value);
-                } else if (ExternalValue != null)
-                {
-                    writer.WriteProperty("externalValue", ExternalValue);
-                }
+                // summary
+                writer.WriteProperty(OpenApiConstants.Summary, Summary);
 
+                // description
+                writer.WriteProperty(OpenApiConstants.Description, Description);
+
+                // value
+                writer.WriteOptionalObject(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));
+
+                // externalValue
+                writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);
+
+                // extensions
                 writer.WriteExtensions(Extensions);
+
                 writer.WriteEndObject();
             }
         }

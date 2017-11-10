@@ -56,10 +56,13 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
+            // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
+            // url
             writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);
 
+            // extensions
             writer.WriteExtensions(Extensions);
 
             writer.WriteEndObject();

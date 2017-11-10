@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "value", (o, n) =>
                 {
-                    o.Value = n.GetScalarValue();
+                    o.Value = n.CreateAny();
                 }
             },
         };
