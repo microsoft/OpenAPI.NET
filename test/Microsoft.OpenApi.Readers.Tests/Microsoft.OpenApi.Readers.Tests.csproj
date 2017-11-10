@@ -11,11 +11,7 @@
     <RootNamespace>Microsoft.OpenApi.Readers.Tests</RootNamespace>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-  
-  <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.Readers.Tests.xml</DocumentationFile>
-  </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="FluentAssertions" Version="4.17.0">
