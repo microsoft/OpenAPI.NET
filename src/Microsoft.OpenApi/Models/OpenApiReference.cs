@@ -4,9 +4,10 @@
 // ------------------------------------------------------------
 
 using System;
+using Microsoft.OpenApi.Commons;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
-using Microsoft.OpenApi.Commons;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -24,21 +25,21 @@ namespace Microsoft.OpenApi.Models
         public string ExternalResource { get; }
 
         /// <summary>
-        /// The local element type referenced.
+        /// The element type referenced.
         /// </summary>
         public ReferenceType ReferenceType { get; }
 
         /// <summary>
         /// The identifier of the reusable component of one particular ReferenceType without the starting '/'.
         /// </summary>
-        public string LocalPointer { get; }
+        public string Name { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiReference"/> class.
         /// </summary>
         /// <param name="externalResource">The external resource.</param>
-        public OpenApiReference(string externalSource)
-            : this(externalSource, null)
+        public OpenApiReference(string externalResource)
+            : this(externalResource, null)
         {
         }
 
@@ -55,7 +56,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             ExternalResource = externalResource;
-            LocalPointer = externalPointer;
+            Name = externalPointer;
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             ReferenceType = localType;
-            LocalPointer = localPointer;
+            Name = localPointer;
         }
 
         /// <summary>
@@ -92,7 +93,46 @@ namespace Microsoft.OpenApi.Models
         {
             get
             {
-                return ExternalResource == null && LocalPointer != null;
+                return ExternalResource == null && Name != null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the reference string for v3.0.
+        /// </summary>
+        public string ReferenceV3
+        {
+            get
+            {
+                if (IsExternal)
+                {
+                    return GetExternalReference();
+                }
+
+                if (ReferenceType == ReferenceType.Tag)
+                {
+                    return "#/tags/" + Name;
+                }
+                else
+                {
+                    return "#/components/" + ReferenceType.GetDisplayName() + "/" + Name;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the reference string for V2.0
+        /// </summary>
+        public string ReferenceV2
+        {
+            get
+            {
+                if (IsExternal)
+                {
+                    return GetExternalReference();
+                }
+
+                return "#/" + GetReferenceTypeNameAsV2() + "/" + Name;
             }
         }
 
@@ -104,16 +144,10 @@ namespace Microsoft.OpenApi.Models
         {
             if (IsLocal)
             {
-                return new JsonPointer(GetLocalReferenceAsV3());
+                return new JsonPointer(ReferenceV3);
             }
 
             return null;
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return GetLocalReferenceAsV3();
         }
 
         /// <summary>
@@ -129,7 +163,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // $ref
-            writer.WriteStringProperty(OpenApiConstants.DollarRef, GetLocalReferenceAsV3());
+            writer.WriteStringProperty(OpenApiConstants.DollarRef, ReferenceV3);
 
             writer.WriteEndObject();
         }
@@ -147,47 +181,18 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // $ref
-            writer.WriteStringProperty(OpenApiConstants.DollarRef, GetLocalReferenceAsV2());
+            writer.WriteStringProperty(OpenApiConstants.DollarRef, ReferenceV2);
 
             writer.WriteEndObject();
-        }
-
-        internal string GetLocalReferenceAsV3()
-        {
-            var external = GetExternalReference();
-            if (external != null)
-            {
-                return external;
-            }
-
-            if (ReferenceType == ReferenceType.Tag)
-            {
-                return "#/tags/" + LocalPointer;
-            }
-            else
-            {
-                return "#/components/" + ReferenceType.GetDisplayName() + "/" + LocalPointer;
-            }
-        }
-
-        internal string GetLocalReferenceAsV2()
-        {
-            var external = GetExternalReference();
-            if (external != null)
-            {
-                return external;
-            }
-
-            return "#/" + GetReferenceTypeNameAsV2() + "/" + LocalPointer;
         }
 
         private string GetExternalReference()
         {
             if (!String.IsNullOrEmpty(ExternalResource))
             {
-                if (LocalPointer != null)
+                if (Name != null)
                 {
-                    return ExternalResource + "#/" + LocalPointer;
+                    return ExternalResource + "#/" + Name;
                 }
                 else
                 {

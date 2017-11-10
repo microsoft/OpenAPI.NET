@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
@@ -36,15 +37,15 @@ namespace Microsoft.OpenApi.Readers.V2
 
             if (reference.IsExternal)
             {
-                if (reference.LocalPointer != null)
+                if (reference.Name != null)
                 {
-                    return reference.ExternalResource + "#/" + reference.LocalPointer;
+                    return reference.ExternalResource + "#/" + reference.Name;
                 }
 
                 return reference.ExternalResource;
             }
 
-            return "#/" + GetReferenceTypeName(reference.ReferenceType) + "/" + reference.LocalPointer;
+            return "#/" + GetReferenceTypeName(reference.ReferenceType) + "/" + reference.Name;
         }
 
         /// <inheritdoc />
@@ -77,7 +78,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         foreach (var item in list)
                         {
                             var tag = OpenApiV2Deserializer.LoadTag(item);
-                            if (tag.Name == reference.LocalPointer)
+                            if (tag.Name == reference.Name)
                             {
                                 referencedObject = tag;
                                 break;
@@ -86,7 +87,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                     else
                     {
-                        referencedObject = new OpenApiTag { Name = reference.LocalPointer };
+                        referencedObject = new OpenApiTag { Name = reference.Name };
                     }
 
                     break;
@@ -107,7 +108,7 @@ namespace Microsoft.OpenApi.Readers.V2
         /// <inheritdoc />
         protected override JsonPointer GetLocalPointer(OpenApiReference reference)
         {
-            return new JsonPointer("#/" + GetReferenceTypeName(reference.ReferenceType) + "/" + reference.LocalPointer);
+            return new JsonPointer("#/" + GetReferenceTypeName(reference.ReferenceType) + "/" + reference.Name);
         }
 
         /// <inheritdoc />
