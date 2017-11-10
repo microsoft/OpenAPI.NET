@@ -145,31 +145,31 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // name
-                writer.WriteStringProperty(OpenApiConstants.Name, Name);
+                writer.WriteProperty(OpenApiConstants.Name, Name);
 
                 // in
-                writer.WriteStringProperty(OpenApiConstants.In, In.GetDisplayName());
+                writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // required
-                writer.WriteBoolProperty(OpenApiConstants.Required, Required, false);
+                writer.WriteProperty(OpenApiConstants.Required, Required, false);
 
                 // deprecated
-                writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
+                writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
                 // allowEmptyValue
-                writer.WriteBoolProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
+                writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
                 // style
-                writer.WriteStringProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+                writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
                 // explode
-                writer.WriteBoolProperty(OpenApiConstants.Explode, Explode, false);
+                writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
 
                 // allowReserved
-                writer.WriteBoolProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
+                writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
                 // schema
                 writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV3(w));
@@ -228,28 +228,28 @@ namespace Microsoft.OpenApi.Models
             // in
             if (IsFormDataParameter())
             {
-                writer.WriteStringProperty(OpenApiConstants.Name, "formData");
-                writer.WriteStringProperty(OpenApiConstants.In, "formData");
+                writer.WriteProperty(OpenApiConstants.Name, "formData");
+                writer.WriteProperty(OpenApiConstants.In, "formData");
             }
             else if (IsBodyParameter())
             {
-                writer.WriteStringProperty(OpenApiConstants.Name, "body");
-                writer.WriteStringProperty(OpenApiConstants.In, "body");
+                writer.WriteProperty(OpenApiConstants.Name, "body");
+                writer.WriteProperty(OpenApiConstants.In, "body");
             }
             else
             {
-                writer.WriteStringProperty("name", Name);
-                writer.WriteStringProperty("in", In.ToString());
+                writer.WriteProperty("name", Name);
+                writer.WriteProperty("in", In.ToString());
             }
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // required
-            writer.WriteBoolProperty(OpenApiConstants.Required, Required, false);
+            writer.WriteProperty(OpenApiConstants.Required, Required, false);
 
             // deprecated
-            writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
+            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // schema
             if (IsBodyParameter())
@@ -278,7 +278,7 @@ namespace Microsoft.OpenApi.Models
                 Schema.WriteAsItemsProperties(writer);
 
                 // allowEmptyValue
-                writer.WriteBoolProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue);
+                writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue);
             }
 
             // extensions

@@ -76,10 +76,10 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // operationRef
-                writer.WriteStringProperty(OpenApiConstants.OperationRef, OperationRef);
+                writer.WriteProperty(OpenApiConstants.OperationRef, OperationRef);
 
                 // operationId
-                writer.WriteStringProperty(OpenApiConstants.OperationId, OperationId);
+                writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
                 // parameters
                 writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteValue(w));
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, (w, r) => r.WriteValue(w));
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // server
                 writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.WriteAsV3(w));

@@ -83,10 +83,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // type
-            writer.WriteStringProperty(OpenApiConstants.Type, Type.GetDisplayName());
+            writer.WriteProperty(OpenApiConstants.Type, Type.GetDisplayName());
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             switch (Type)
             {
@@ -94,15 +94,15 @@ namespace Microsoft.OpenApi.Models
                     // These properties apply to apiKey type only.
                     // name
                     // in
-                    writer.WriteStringProperty(OpenApiConstants.Name, Name);
-                    writer.WriteStringProperty(OpenApiConstants.In, In.GetDisplayName());
+                    writer.WriteProperty(OpenApiConstants.Name, Name);
+                    writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
                     break;
                 case SecuritySchemeType.Http:
                     // These properties apply to http type only.
                     // scheme
                     // bearerFormat
-                    writer.WriteStringProperty(OpenApiConstants.Scheme, Scheme);
-                    writer.WriteStringProperty(OpenApiConstants.BearerFormat, BearerFormat);
+                    writer.WriteProperty(OpenApiConstants.Scheme, Scheme);
+                    writer.WriteProperty(OpenApiConstants.BearerFormat, BearerFormat);
                     break;
                 case SecuritySchemeType.OAuth2:
                     // This property apply to oauth2 type only.
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Models
                 case SecuritySchemeType.OpenIdConnect:
                     // This property apply to openIdConnect only.
                     // openIdConnectUrl
-                    writer.WriteStringProperty(OpenApiConstants.OpenIdConnectUrl, OpenIdConnectUrl?.ToString());
+                    writer.WriteProperty(OpenApiConstants.OpenIdConnectUrl, OpenIdConnectUrl?.ToString());
                     break;
             }
 
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Models
             switch (Type)
             {
                 case SecuritySchemeType.Http:
-                    writer.WriteStringProperty(OpenApiConstants.Type, OpenApiConstants.Basic);
+                    writer.WriteProperty(OpenApiConstants.Type, OpenApiConstants.Basic);
                     break;
 
                 case SecuritySchemeType.OAuth2:
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models
                     // authorizationUrl
                     // tokenUrl
                     // scopes
-                    writer.WriteStringProperty(OpenApiConstants.Type, Type.ToString());
+                    writer.WriteProperty(OpenApiConstants.Type, Type.ToString());
                     WriteOAuthFlowForV2(writer, Flows);
                     break;
                     
@@ -171,14 +171,14 @@ namespace Microsoft.OpenApi.Models
                     // These properties apply to apiKey type only.
                     // name
                     // in
-                    writer.WriteStringProperty(OpenApiConstants.Type, Type.ToString());
-                    writer.WriteStringProperty(OpenApiConstants.Name, Name);
-                    writer.WriteStringProperty(OpenApiConstants.In, In.ToString());
+                    writer.WriteProperty(OpenApiConstants.Type, Type.ToString());
+                    writer.WriteProperty(OpenApiConstants.Name, Name);
+                    writer.WriteProperty(OpenApiConstants.In, In.ToString());
                     break;
             }
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -216,13 +216,13 @@ namespace Microsoft.OpenApi.Models
         private static void WriteOAuthFlowForV2(IOpenApiWriter writer, string flowValue, OpenApiOAuthFlow flow)
         {
             // flow
-            writer.WriteStringProperty(OpenApiConstants.Flow, flowValue);
+            writer.WriteProperty(OpenApiConstants.Flow, flowValue);
 
             // authorizationUrl
-            writer.WriteStringProperty(OpenApiConstants.AuthorizationUrl, flow.AuthorizationUrl?.ToString());
+            writer.WriteProperty(OpenApiConstants.AuthorizationUrl, flow.AuthorizationUrl?.ToString());
 
             // tokenUrl
-            writer.WriteStringProperty(OpenApiConstants.TokenUrl, flow.TokenUrl?.ToString());
+            writer.WriteProperty(OpenApiConstants.TokenUrl, flow.TokenUrl?.ToString());
 
             // scopes
             writer.WriteOptionalMap(OpenApiConstants.Scopes, flow.Scopes, (w, s) => w.WriteValue(s));

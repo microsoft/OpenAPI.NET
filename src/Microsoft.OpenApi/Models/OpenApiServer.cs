@@ -51,10 +51,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // url
-            writer.WriteStringProperty(OpenApiConstants.Url, Url);
+            writer.WriteProperty(OpenApiConstants.Url, Url);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // variables
             writer.WriteOptionalMap(OpenApiConstants.Variables, Variables, (w, v) => v.WriteAsV3(w));

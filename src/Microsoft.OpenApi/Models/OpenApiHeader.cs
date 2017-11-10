@@ -99,25 +99,25 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // required
-                writer.WriteBoolProperty(OpenApiConstants.Required, Required, false);
+                writer.WriteProperty(OpenApiConstants.Required, Required, false);
 
                 // deprecated
-                writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
+                writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
                 // allowEmptyValue
-                writer.WriteBoolProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
+                writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
                 // style
-                writer.WriteStringProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+                writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
                 // explode
-                writer.WriteBoolProperty(OpenApiConstants.Explode, Explode, false);
+                writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
 
                 // allowReserved
-                writer.WriteBoolProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
+                writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
                 // schema
                 writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV3(w));
@@ -157,25 +157,25 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // required
-                writer.WriteBoolProperty(OpenApiConstants.Required, Required, false);
+                writer.WriteProperty(OpenApiConstants.Required, Required, false);
 
                 // deprecated
-                writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
+                writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
                 // allowEmptyValue
-                writer.WriteBoolProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
+                writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
                 // style
-                writer.WriteStringProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+                writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
                 // explode
-                writer.WriteBoolProperty(OpenApiConstants.Explode, Explode, false);
+                writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
 
                 // allowReserved
-                writer.WriteBoolProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
+                writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
                 // schema
                 writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV2(w));

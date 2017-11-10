@@ -62,13 +62,13 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteStartObject();
 
                 // description
-                writer.WriteStringProperty(OpenApiConstants.Description, Description);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // content
                 writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.WriteAsV3(w));
 
                 // required
-                writer.WriteBoolProperty(OpenApiConstants.Required, Required, false);
+                writer.WriteProperty(OpenApiConstants.Required, Required, false);
 
                 // extensions
                 writer.WriteExtensions(Extensions);

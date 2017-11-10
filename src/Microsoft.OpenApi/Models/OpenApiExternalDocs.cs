@@ -56,9 +56,9 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
-            writer.WriteStringProperty(OpenApiConstants.Url, Url?.OriginalString);
+            writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);
 
             writer.WriteExtensions(Extensions);
 

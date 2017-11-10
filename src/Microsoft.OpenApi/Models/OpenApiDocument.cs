@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteStringProperty(OpenApiConstants.OpenApi, SpecVersion.ToString());
+            writer.WriteProperty(OpenApiConstants.OpenApi, SpecVersion.ToString());
 
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.WriteAsV3(w));
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // swagger
-            writer.WriteStringProperty(OpenApiConstants.Swagger, SpecVersion.ToString());
+            writer.WriteProperty(OpenApiConstants.Swagger, SpecVersion.ToString());
 
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.WriteAsV2(w));
@@ -171,12 +171,12 @@ namespace Microsoft.OpenApi.Models
             var firstServerUrl = new Uri(firstServer.Url);
 
             // host
-            writer.WriteStringProperty(
+            writer.WriteProperty(
                 OpenApiConstants.Host,
                 firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
 
             // basePath
-            writer.WriteStringProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
 
             // Consider all schemes of the URLs in the server list that have the same
             // host, port, and base path as the first server.

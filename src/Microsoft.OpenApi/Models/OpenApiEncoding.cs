@@ -68,24 +68,24 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // contentType
-            writer.WriteStringProperty(OpenApiConstants.ContentType, ContentType);
+            writer.WriteProperty(OpenApiConstants.ContentType, ContentType);
 
             // headers
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
 
             // style
-            writer.WriteStringProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
             // explode
             if (Explode != null)
             {
-                writer.WriteBoolProperty(OpenApiConstants.Explode, Explode.Value, false);
+                writer.WriteProperty(OpenApiConstants.Explode, Explode.Value, false);
             }
 
             // allowReserved
             if (AllowReserved != null)
             {
-                writer.WriteBoolProperty(OpenApiConstants.AllowReserved, AllowReserved.Value, false);
+                writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved.Value, false);
             }
 
             // extensions

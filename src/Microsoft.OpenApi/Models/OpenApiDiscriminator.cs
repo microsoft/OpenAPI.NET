@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // propertyName
-            writer.WriteStringProperty(OpenApiConstants.PropertyName, PropertyName);
+            writer.WriteProperty(OpenApiConstants.PropertyName, PropertyName);
 
             // mapping
             writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));

@@ -57,10 +57,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // name
-            writer.WriteStringProperty(OpenApiConstants.Name, Name);
+            writer.WriteProperty(OpenApiConstants.Name, Name);
 
             // url
-            writer.WriteStringProperty(OpenApiConstants.Url, Url?.OriginalString);
+            writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);
 
             // specification extensions
             writer.WriteExtensions(Extensions);
