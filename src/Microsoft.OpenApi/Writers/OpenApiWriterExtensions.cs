@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Writers
     public static class OpenApiWriterExtensions
     {
         /// <summary>
-        /// Write a string/string property.
+        /// Write a string property.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="name">The property name.</param>
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write a string/boolean property.
+        /// Write a boolean property.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="name">The property name.</param>
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write a string/boolean property.
+        /// Write a boolean property.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="name">The property name.</param>
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write a string/number property.
+        /// Write a primitive property.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="name">The property name.</param>

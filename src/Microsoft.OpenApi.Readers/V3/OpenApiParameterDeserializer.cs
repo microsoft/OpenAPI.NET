@@ -70,6 +70,12 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
                 },
                 {
+                    "explode", (o, n) =>
+                    {
+                        o.Explode = bool.Parse(n.GetScalarValue());
+                    }
+                },
+                {
                     "schema", (o, n) =>
                     {
                         o.Schema = LoadSchema(n);
