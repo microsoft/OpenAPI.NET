@@ -134,16 +134,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV3(w));
 
             // summary
-            writer.WriteStringProperty(OpenApiConstants.Summary, Summary);
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // externalDocs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
 
             // operationId
-            writer.WriteStringProperty(OpenApiConstants.OperationId, OperationId);
+            writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
             // parameters
             writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV3(w));
@@ -158,7 +158,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.WriteAsV3(w));
 
             // deprecated
-            writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
+            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // security
             writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.WriteAsV3(w));
@@ -188,16 +188,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV2(w));
 
             // summary
-            writer.WriteStringProperty(OpenApiConstants.Summary, Summary);
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // externalDocs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
 
             // operationId
-            writer.WriteStringProperty(OpenApiConstants.OperationId, OperationId);
+            writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
             var parameters = new List<OpenApiParameter>(Parameters);
 
@@ -271,7 +271,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
 
             // deprecated
-            writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
+            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // security
             writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.WriteAsV2(w));

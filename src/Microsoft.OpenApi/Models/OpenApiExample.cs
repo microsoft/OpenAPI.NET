@@ -71,8 +71,8 @@ namespace Microsoft.OpenApi.Models
             else
             {
                 writer.WriteStartObject();
-                writer.WriteStringProperty("summary", Summary);
-                writer.WriteStringProperty("description", Description);
+                writer.WriteProperty("summary", Summary);
+                writer.WriteProperty("description", Description);
 
                 if (Value != null)
                 {
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteRaw(Value);
                 } else if (ExternalValue != null)
                 {
-                    writer.WriteStringProperty("externalValue", ExternalValue);
+                    writer.WriteProperty("externalValue", ExternalValue);
                 }
 
                 writer.WriteExtensions(Extensions);

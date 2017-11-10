@@ -49,10 +49,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // default
-            writer.WriteStringProperty(OpenApiConstants.Default, Default);
+            writer.WriteProperty(OpenApiConstants.Default, Default);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // enums
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteValue(s));

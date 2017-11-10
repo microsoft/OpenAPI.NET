@@ -16,6 +16,93 @@ namespace Microsoft.OpenApi.Writers
     public static class OpenApiWriterExtensions
     {
         /// <summary>
+        /// Write a string property.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">The property value.</param>
+        public static void WriteProperty(this IOpenApiWriter writer, string name, string value)
+        {
+            if (String.IsNullOrEmpty(value))
+            {
+                return;
+            }
+
+            CheckArguments(writer, name);
+            writer.WritePropertyName(name);
+            writer.WriteValue(value);
+        }
+
+        /// <summary>
+        /// Write a boolean property.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">The property value.</param>
+        /// <param name="defaultValue">The default boolean value.</param>
+        public static void WriteProperty(this IOpenApiWriter writer, string name, bool value, bool defaultValue = false)
+        {
+            if (value == defaultValue)
+            {
+                return;
+            }
+
+            CheckArguments(writer, name);
+            writer.WritePropertyName(name);
+            writer.WriteValue(value);
+        }
+
+        /// <summary>
+        /// Write a boolean property.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">The property value.</param>
+        /// <param name="defaultValue">The default boolean value.</param>
+        public static void WriteProperty(this IOpenApiWriter writer, string name, bool? value, bool defaultValue = false)
+        {
+            if (value == null || value.Value == defaultValue)
+            {
+                return;
+            }
+
+            CheckArguments(writer, name);
+            writer.WritePropertyName(name);
+            writer.WriteValue(value.Value);
+        }
+
+        /// <summary>
+        /// Write a primitive property.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">The property value.</param>
+        public static void WriteProperty<T>(this IOpenApiWriter writer, string name, T? value)
+            where T : struct
+        {
+            if (value == null)
+            {
+                return;
+            }
+
+            writer.WriteProperty(name, value.Value);
+        }
+
+        /// <summary>
+        /// Write a string/number property.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">The property value.</param>
+        public static void WriteProperty<T>(this IOpenApiWriter writer, string name, T value)
+            where T : struct
+        {
+            CheckArguments(writer, name);
+            writer.WritePropertyName(name);
+            writer.WriteValue(value);
+        }
+
+        /// <summary>
         /// Write the optional Open API object/element.
         /// </summary>
         /// <typeparam name="T">The Open API element type. <see cref="IOpenApiElement"/></typeparam>
@@ -214,72 +301,17 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-        public static void WriteStringProperty(this IOpenApiWriter writer, string name, string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return;
-            }
-
-            writer.WritePropertyName(name);
-            writer.WriteValue(value);
-        }
-        public static void WriteBoolProperty(this IOpenApiWriter writer, string name, bool value, bool? defaultValue = null)
-        {
-            if (defaultValue != null && value == defaultValue)
-            {
-                return;
-            }
-
-            writer.WritePropertyName(name);
-            writer.WriteValue(value);
-        }
-
-        public static void WriteBoolProperty(this IOpenApiWriter writer, string name, bool? value)
-        {
-            if (value == null)
-            {
-                return;
-            }
-
-            writer.WritePropertyName(name);
-            writer.WriteValue((bool)value);
-        }
-
-        public static void WriteNumberProperty(this IOpenApiWriter writer, string name, decimal value, decimal? defaultValue = null)
-        {
-            if (defaultValue != null && value == defaultValue)
-            {
-                return;
-            }
-
-            writer.WritePropertyName(name);
-            writer.WriteValue(value);
-        }
-
-        public static void WriteNumberProperty(this IOpenApiWriter writer, string name, int? value)
-        {
-            if (value == null)
-            {
-                return;
-            }
-
-            writer.WritePropertyName(name);
-            writer.WriteValue((int)value);
-        }
-
-        public static void WriteNumberProperty(this IOpenApiWriter writer, string name, decimal? value)
-        {
-            if (value == null)
-            {
-                return;
-            }
-
-            writer.WritePropertyName(name);
-            writer.WriteValue((decimal)value);
-        }
-
         private static void CheckArguments<T>(IOpenApiWriter writer, string name, Action<IOpenApiWriter, T> action)
+        {
+            CheckArguments(writer, name);
+
+            if (action == null)
+            {
+                throw Error.ArgumentNull(nameof(action));
+            }
+        }
+
+        private static void CheckArguments(IOpenApiWriter writer, string name)
         {
             if (writer == null)
             {
@@ -289,11 +321,6 @@ namespace Microsoft.OpenApi.Writers
             if (String.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            if (action == null)
-            {
-                throw Error.ArgumentNull(nameof(action));
             }
         }
     }

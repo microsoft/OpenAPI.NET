@@ -251,46 +251,46 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // title
-            writer.WriteStringProperty(OpenApiConstants.Title, Title);
+            writer.WriteProperty(OpenApiConstants.Title, Title);
 
             // multipleOf
-            writer.WriteNumberProperty(OpenApiConstants.MultipleOf, MultipleOf);
+            writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // maximum
-            writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
+            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
-            writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
+            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
-            writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
+            writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
 
             // minLength
-            writer.WriteNumberProperty(OpenApiConstants.MinLength, MinLength);
+            writer.WriteProperty(OpenApiConstants.MinLength, MinLength);
 
             // pattern
-            writer.WriteStringProperty(OpenApiConstants.Pattern, Pattern);
+            writer.WriteProperty(OpenApiConstants.Pattern, Pattern);
 
             // maxItems
-            writer.WriteNumberProperty(OpenApiConstants.MaxItems, MaxItems);
+            writer.WriteProperty(OpenApiConstants.MaxItems, MaxItems);
 
             // minItems
-            writer.WriteNumberProperty(OpenApiConstants.MinItems, MinItems);
+            writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
 
             // uniqueItems
-            writer.WriteBoolProperty(OpenApiConstants.UniqueItems, UniqueItems);
+            writer.WriteProperty(OpenApiConstants.UniqueItems, UniqueItems);
 
             // maxProperties
-            writer.WriteNumberProperty(OpenApiConstants.MaxProperties, MaxProperties);
+            writer.WriteProperty(OpenApiConstants.MaxProperties, MaxProperties);
 
             // minProperties
-            writer.WriteNumberProperty(OpenApiConstants.MinProperties, MinProperties);
+            writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
             writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
@@ -299,7 +299,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
-            writer.WriteStringProperty(OpenApiConstants.Type, Type);
+            writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.WriteAsV3(w));
@@ -323,25 +323,25 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV3(w));
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // format
-            writer.WriteStringProperty(OpenApiConstants.Format, Format);
+            writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // nullable
-            writer.WriteBoolProperty(OpenApiConstants.Nullable, Nullable, false);
+            writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
 
             // discriminator
             writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.WriteAsV3(w));
 
             // readOnly
-            writer.WriteBoolProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
+            writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
 
             // writeOnly
-            writer.WriteBoolProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
+            writer.WriteProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
 
             // xml
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.WriteAsV2(w));
@@ -353,7 +353,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // deprecated
-            writer.WriteBoolProperty(OpenApiConstants.Deprecated, Deprecated, false);
+            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -390,10 +390,10 @@ namespace Microsoft.OpenApi.Models
             }
 
             // type
-            writer.WriteStringProperty(OpenApiConstants.Type, Type);
+            writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // format
-            writer.WriteStringProperty(OpenApiConstants.Format, Format);
+            writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
@@ -410,37 +410,37 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // maximum
-            writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
+            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
-            writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
+            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
-            writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
+            writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
 
             // minLength
-            writer.WriteNumberProperty(OpenApiConstants.MinLength, MinLength);
+            writer.WriteProperty(OpenApiConstants.MinLength, MinLength);
 
             // pattern
-            writer.WriteStringProperty(OpenApiConstants.Pattern, Pattern);
+            writer.WriteProperty(OpenApiConstants.Pattern, Pattern);
 
             // maxItems
-            writer.WriteNumberProperty(OpenApiConstants.MaxItems, MaxItems);
+            writer.WriteProperty(OpenApiConstants.MaxItems, MaxItems);
 
             // minItems
-            writer.WriteNumberProperty(OpenApiConstants.MinItems, MinItems);
+            writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
 
             // enum
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
 
             // multipleOf
-            writer.WriteNumberProperty(OpenApiConstants.MultipleOf, MultipleOf);
+            writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -454,55 +454,55 @@ namespace Microsoft.OpenApi.Models
             }
 
             // format
-            writer.WriteStringProperty(OpenApiConstants.Format, Format);
+            writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // title
-            writer.WriteStringProperty(OpenApiConstants.Title, Title);
+            writer.WriteProperty(OpenApiConstants.Title, Title);
 
             // description
-            writer.WriteStringProperty(OpenApiConstants.Description, Description);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // default
             writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // multipleOf
-            writer.WriteNumberProperty(OpenApiConstants.MultipleOf, MultipleOf);
+            writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // maximum
-            writer.WriteNumberProperty(OpenApiConstants.Maximum, Maximum);
+            writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
 
             // exclusiveMaximum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
+            writer.WriteProperty(OpenApiConstants.ExclusiveMaximum, ExclusiveMaximum);
 
             // minimum
-            writer.WriteNumberProperty(OpenApiConstants.Minimum, Minimum);
+            writer.WriteProperty(OpenApiConstants.Minimum, Minimum);
 
             // exclusiveMinimum
-            writer.WriteBoolProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
+            writer.WriteProperty(OpenApiConstants.ExclusiveMinimum, ExclusiveMinimum);
 
             // maxLength
-            writer.WriteNumberProperty(OpenApiConstants.MaxLength, MaxLength);
+            writer.WriteProperty(OpenApiConstants.MaxLength, MaxLength);
 
             // minLength
-            writer.WriteNumberProperty(OpenApiConstants.MinLength, MinLength);
+            writer.WriteProperty(OpenApiConstants.MinLength, MinLength);
 
             // pattern
-            writer.WriteStringProperty(OpenApiConstants.Pattern, Pattern);
+            writer.WriteProperty(OpenApiConstants.Pattern, Pattern);
 
             // maxItems
-            writer.WriteNumberProperty(OpenApiConstants.MaxItems, MaxItems);
+            writer.WriteProperty(OpenApiConstants.MaxItems, MaxItems);
 
             // minItems
-            writer.WriteNumberProperty(OpenApiConstants.MinItems, MinItems);
+            writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
 
             // uniqueItems
-            writer.WriteBoolProperty(OpenApiConstants.UniqueItems, UniqueItems);
+            writer.WriteProperty(OpenApiConstants.UniqueItems, UniqueItems);
 
             // maxProperties
-            writer.WriteNumberProperty(OpenApiConstants.MaxProperties, MaxProperties);
+            writer.WriteProperty(OpenApiConstants.MaxProperties, MaxProperties);
 
             // minProperties
-            writer.WriteNumberProperty(OpenApiConstants.MinProperties, MinProperties);
+            writer.WriteProperty(OpenApiConstants.MinProperties, MinProperties);
 
             // required
             writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
@@ -511,7 +511,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
 
             // type
-            writer.WriteStringProperty(OpenApiConstants.Type, Type);
+            writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
@@ -526,10 +526,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV2(w));
 
             // discriminator
-            writer.WriteStringProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
+            writer.WriteProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
 
             // readOnly
-            writer.WriteBoolProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
+            writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
 
             // xml
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.WriteAsV2(w));
