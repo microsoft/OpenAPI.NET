@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             // Assert
             Assert.Equal("externalschema.json", reference.ExternalResource);
             Assert.Equal(ReferenceType.Unknown, reference.ReferenceType);
-            Assert.Equal("components/headers/blah", reference.LocalPointer);
+            Assert.Equal("components/headers/blah", reference.Name);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             // Assert.
             Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
             Assert.Null(reference.ExternalResource);
-            Assert.Equal("foobar", reference.LocalPointer);
+            Assert.Equal("foobar", reference.Name);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             // Assert.
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
-            Assert.Equal("foobar", reference.LocalPointer);
+            Assert.Equal("foobar", reference.Name);
             Assert.Null(reference.ExternalResource);
         }
     }

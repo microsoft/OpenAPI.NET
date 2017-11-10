@@ -5,6 +5,7 @@
 
 using System;
 using Microsoft.OpenApi.Commons;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
@@ -37,9 +38,9 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (reference.IsExternal)
             {
-                if (reference.LocalPointer != null)
+                if (reference.Name != null)
                 {
-                    return reference.ExternalResource + "#/" + reference.LocalPointer;
+                    return reference.ExternalResource + "#/" + reference.Name;
                 }
 
                 return reference.ExternalResource;
@@ -47,11 +48,11 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (reference.ReferenceType == ReferenceType.Tag)
             {
-                return "#/tags/" + reference.LocalPointer;
+                return "#/tags/" + reference.Name;
             }
             else
             {
-                return "#/components/" + reference.ReferenceType.GetDisplayName() + "/" + reference.LocalPointer;
+                return "#/components/" + reference.ReferenceType.GetDisplayName() + "/" + reference.Name;
             }
         }
 
@@ -110,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         {
                             var tag = OpenApiV3Deserializer.LoadTag(item);
 
-                            if (tag.Name == reference.LocalPointer)
+                            if (tag.Name == reference.Name)
                             {
                                 referencedObject = tag;
                             }
@@ -118,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
                     else
                     {
-                        referencedObject = new OpenApiTag {Name = reference.LocalPointer };
+                        referencedObject = new OpenApiTag {Name = reference.Name };
                     }
 
                     break;

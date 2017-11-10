@@ -234,34 +234,34 @@ namespace Microsoft.OpenApi.Models
             switch(reference.Pointer.ReferenceType)
             {
                 case ReferenceType.Schema:
-                    return document.Components.Schemas?[reference.Pointer.LocalPointer];
+                    return document.Components.Schemas?[reference.Pointer.Name];
 
                 case ReferenceType.Parameter:
-                    return document.Components.Parameters?[reference.Pointer.LocalPointer];
+                    return document.Components.Parameters?[reference.Pointer.Name];
 
                 case ReferenceType.Header:
-                    return document.Components.Headers?[reference.Pointer.LocalPointer];
+                    return document.Components.Headers?[reference.Pointer.Name];
 
                 case ReferenceType.Response:
-                    return document.Components.Responses?[reference.Pointer.LocalPointer];
+                    return document.Components.Responses?[reference.Pointer.Name];
 
                 case ReferenceType.RequestBody:
-                    return document.Components.RequestBodies?[reference.Pointer.LocalPointer];
+                    return document.Components.RequestBodies?[reference.Pointer.Name];
 
                 case ReferenceType.Example:
-                    return document.Components.Examples?[reference.Pointer.LocalPointer];
+                    return document.Components.Examples?[reference.Pointer.Name];
 
                 case ReferenceType.SecurityScheme:
-                    return document.Components.SecuritySchemes?[reference.Pointer.LocalPointer];
+                    return document.Components.SecuritySchemes?[reference.Pointer.Name];
 
                 case ReferenceType.Callback:
-                    return document.Components.Callbacks?[reference.Pointer.LocalPointer];
+                    return document.Components.Callbacks?[reference.Pointer.Name];
 
                 case ReferenceType.Link:
-                    return document.Components.Links?[reference.Pointer.LocalPointer];
+                    return document.Components.Links?[reference.Pointer.Name];
 
                 case ReferenceType.Tag:
-                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.LocalPointer);
+                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.Name);
 
                 default:
                     return null;
@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Models
         /// Check whether the element is reference element.
         /// </summary>
         /// <typeparam name="T"><see cref="IOpenApiElement"/>.</typeparam>
-        /// <param name="reference">The referencable element.</param>
+        /// <param name="element">The referencable element.</param>
         /// <returns>True if the element implements <see cref="IOpenApiReference"/> and pointer is not null,
         /// False otherwise.</returns>
         public static bool IsReference<T>(this T element) where T : IOpenApiElement

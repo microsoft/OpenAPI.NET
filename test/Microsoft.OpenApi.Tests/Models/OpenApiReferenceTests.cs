@@ -38,8 +38,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             reference.ExternalResource.Should().BeNull();
             reference.ReferenceType.Should().Be(type);
-            reference.LocalPointer.Should().Be(pointer);
-            reference.ToString().Should().Be(input);
+            reference.Name.Should().Be(pointer);
+            reference.ReferenceV3.Should().Be(input);
+            reference.ReferenceV2.Should().Be(input.Replace("schemas", "definitions").Replace("/components", ""));
         }
 
         [Theory]
@@ -57,8 +58,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             reference.ExternalResource.Should().Be(external);
             reference.ReferenceType.Should().Be(ReferenceType.Unknown);
-            reference.LocalPointer.Should().Be(pointer);
-            reference.ToString().Should().Be(input);
+            reference.Name.Should().Be(pointer);
+            reference.ReferenceV3.Should().Be(input);
+            reference.ReferenceV2.Should().Be(input);
         }
 
         [Fact]
@@ -72,6 +74,8 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             string actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
             actual.Should().Be(expected);
@@ -98,13 +102,13 @@ namespace Microsoft.OpenApi.Tests.Models
             var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
             string expected = @"{
   ""$ref"": ""#/definitions/Pet""
-}";
+}".MakeLineBreaksEnvironmentNeutral();
 
             // Act
             string actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual.Should().Be(expected);
+            actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected);
         }
 
         [Fact]
@@ -126,15 +130,17 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var reference = new OpenApiReference("main.json", "Pets");
-            string expect = @"{
+            string expected = @"{
   ""$ref"": ""main.json#/Pets""
 }";
 
             // Act
             string actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            actual.Should().Be(expect);
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -142,13 +148,13 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var reference = new OpenApiReference("main.json", "Pets");
-            string expect = @"$ref: main.json#/Pets";
+            string expected = @"$ref: main.json#/Pets";
 
             // Act
             string actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            actual.Should().Be(expect);
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -156,15 +162,17 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var reference = new OpenApiReference("main.json", "Pets");
-            string expect = @"{
+            string expected = @"{
   ""$ref"": ""main.json#/Pets""
 }";
 
             // Act
             string actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
-            actual.Should().Be(expect);
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -172,13 +180,13 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var reference = new OpenApiReference("main.json", "Pets");
-            string expect = @"$ref: main.json#/Pets";
+            string expected = @"$ref: main.json#/Pets";
 
             // Act
             string actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
-            actual.Should().Be(expect);
+            actual.Should().Be(expected);
         }
     }
 }

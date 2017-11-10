@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             // Assert
             Assert.Equal("swagger.json", reference.ExternalResource);
             Assert.Equal(ReferenceType.Unknown, reference.ReferenceType);
-            Assert.Equal("definitions/parameters/blahblah", reference.LocalPointer);
+            Assert.Equal("definitions/parameters/blahblah", reference.Name);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             // Assert
             Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
             Assert.Null(reference.ExternalResource);
-            Assert.Equal("foobar", reference.LocalPointer);
+            Assert.Equal("foobar", reference.Name);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             // Assert
             Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
-            Assert.Equal("foobar", reference.LocalPointer);
+            Assert.Equal("foobar", reference.Name);
             Assert.Null(reference.ExternalResource);
         }
     }
