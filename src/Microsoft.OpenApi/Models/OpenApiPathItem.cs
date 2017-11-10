@@ -17,9 +17,6 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiPathItem : OpenApiElement, IOpenApiExtension
     {
-        private readonly IDictionary<OperationType, OpenApiOperation> _operations
-            = new Dictionary<OperationType, OpenApiOperation>();
-
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
         /// </summary>
@@ -33,13 +30,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets the definition of operations on this path.
         /// </summary>
-        public IReadOnlyDictionary<string, OpenApiOperation> Operations
-        {
-            get
-            {
-                return _operations.ToDictionary(o => o.Key.GetDisplayName(), o => o.Value);
-            }
-        }
+        public IDictionary<OperationType, OpenApiOperation> Operations { get; }
+         = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>
         /// An alternative server array to service all operations in this path.
@@ -64,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="operation">The operation item.</param>
         public void AddOperation(OperationType operationType, OpenApiOperation operation)
         {
-            _operations[operationType] = operation;
+            Operations[operationType] = operation;
         }
 
         /// <summary>
@@ -86,7 +78,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStringProperty(OpenApiConstants.Description, Description);
 
             // operations
-            foreach (var operation in _operations)
+            foreach (var operation in Operations)
             {
                 writer.WriteOptionalObject(operation.Key.GetDisplayName(), operation.Value, (w, o) => o.WriteAsV3(w));
             }
@@ -116,7 +108,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // operations except "trace"
-            foreach (var operation in _operations)
+            foreach (var operation in Operations)
             {
                 if (operation.Key != OperationType.Trace)
                 {

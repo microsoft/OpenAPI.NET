@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             var firstPath = _PetStoreDoc.Paths.First().Value;
             var firstOperation = firstPath.Operations.First();
-            Assert.Equal("get", firstOperation.Key);
+            Assert.Equal(OperationType.Get, firstOperation.Key);
             Assert.Equal("findPets", firstOperation.Value.OperationId);
             Assert.Equal(2, firstOperation.Value.Parameters.Count);
         }
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void GetPostOperation()
         {
-            var postOperation = _PetStoreDoc.Paths["/pets"].Operations["post"];
+            var postOperation = _PetStoreDoc.Paths["/pets"].Operations[OperationType.Post];
 
             Assert.Equal("addPet", postOperation.OperationId);
 
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void GetResponses()
         {
-            var getOperation = _PetStoreDoc.Paths["/pets"].Operations["get"];
+            var getOperation = _PetStoreDoc.Paths["/pets"].Operations[OperationType.Get];
 
             var responses = getOperation.Responses;
 

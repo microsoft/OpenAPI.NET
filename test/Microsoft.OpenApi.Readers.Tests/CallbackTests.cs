@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.Linq;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -18,11 +19,11 @@ namespace Microsoft.OpenApi.Readers.Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             var path = openApiDoc.Paths.First().Value;
-            var subscribeOperation = path.Operations["post"];
+            var subscribeOperation = path.Operations[OperationType.Post];
 
             var callback = subscribeOperation.Callbacks["mainHook"];
             var pathItem = callback.PathItems.First().Value;
-            var operation = pathItem.Operations["post"];
+            var operation = pathItem.Operations[OperationType.Post];
 
             Assert.NotNull(operation);
         }
@@ -49,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var operationPair = pathItem.Operations.First();
             var cboperation = operationPair.Value;
-            Assert.Equal("post", operationPair.Key);
+            Assert.Equal(OperationType.Post, operationPair.Key);
 
             Assert.NotNull(callback);
         }
