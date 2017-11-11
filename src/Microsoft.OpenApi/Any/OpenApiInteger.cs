@@ -5,12 +5,22 @@
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API Integer
+    /// </summary>
     public class OpenApiInteger : OpenApiPrimitive<int>
     {
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Integer;
-
+        /// <summary>
+        /// Initializes the <see cref="OpenApiInteger"/> class.
+        /// </summary>
         public OpenApiInteger(int value)
             : base(value)
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Primitive type this object represents.
+        /// </summary>
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Integer;
     }
 }

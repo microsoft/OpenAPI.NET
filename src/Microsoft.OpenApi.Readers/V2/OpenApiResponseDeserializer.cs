@@ -67,13 +67,13 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
         {
-            var produces = context.GetTempStorage<List<string>>("operationproduces") ??
-                context.GetTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
+            var produces = context.GetFromTempStorage<List<string>>("operationproduces") ??
+                context.GetFromTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
 
             response.Content = new Dictionary<string, OpenApiMediaType>();
             foreach (var mt in produces)
             {
-                var schema = context.GetTempStorage<OpenApiSchema>("operationschema");
+                var schema = context.GetFromTempStorage<OpenApiSchema>("operationschema");
                 OpenApiMediaType mediaType = null;
                 if (schema != null)
                 {

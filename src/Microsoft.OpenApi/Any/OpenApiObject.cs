@@ -7,8 +7,14 @@ using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API object.
+    /// </summary>
     public class OpenApiObject : Dictionary<string, IOpenApiAny>, IOpenApiAny
     {
-        public AnyTypeKind AnyKind { get; } = AnyTypeKind.Object;
+        /// <summary>
+        /// Type of <see cref="IOpenApiAny"/>.
+        /// </summary>
+        public AnyType AnyType { get; } = AnyType.Object;
     }
 }

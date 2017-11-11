@@ -5,12 +5,22 @@
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API Byte
+    /// </summary>
     public class OpenApiByte : OpenApiPrimitive<byte>
     {
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Byte;
-
+        /// <summary>
+        /// Initializes the <see cref="OpenApiByte"/> class.
+        /// </summary>
         public OpenApiByte(byte value)
             : base(value)
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Primitive type this object represents.
+        /// </summary>
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Byte;
     }
 }

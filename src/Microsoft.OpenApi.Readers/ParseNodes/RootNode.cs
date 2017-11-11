@@ -37,21 +37,31 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         }
     }
 
+    /// <summary>
+    /// Extensions for JSON pointers.
+    /// </summary>
     public static class JsonPointerExtensions
     {
-        public static YamlNode Find(this JsonPointer currentpointer, YamlNode sample)
+        /// <summary>
+        /// Finds the YAML node that corresponds to this JSON pointer based on the base YAML node.
+        /// </summary>
+        /// <param name="currentpointer"></param>
+        /// <param name="baseYamlNode"></param>
+        /// <returns></returns>
+        public static YamlNode Find(this JsonPointer currentpointer, YamlNode baseYamlNode)
         {
             if (currentpointer.Tokens.Length == 0)
             {
-                return sample;
+                return baseYamlNode;
             }
 
             try
             {
-                var pointer = sample;
+                var pointer = baseYamlNode;
                 foreach (var token in currentpointer.Tokens)
                 {
                     var sequence = pointer as YamlSequenceNode;
+
                     if (sequence != null)
                     {
                         pointer = sequence.Children[Convert.ToInt32(token)];

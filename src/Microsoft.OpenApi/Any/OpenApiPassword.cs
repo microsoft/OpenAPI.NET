@@ -5,10 +5,19 @@
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API password.
+    /// </summary>
     public class OpenApiPassword : OpenApiPrimitive<string>
     {
+        /// <summary>
+        /// The primitive type this object represents.
+        /// </summary>
         public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Password;
 
+        /// <summary>
+        /// Initializes the <see cref="OpenApiPassword"/> class.
+        /// </summary>
         public OpenApiPassword(string value)
             : base(value)
         { }

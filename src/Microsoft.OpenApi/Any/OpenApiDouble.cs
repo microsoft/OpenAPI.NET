@@ -5,12 +5,22 @@
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API Double
+    /// </summary>
     public class OpenApiDouble : OpenApiPrimitive<double>
     {
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Double;
-
+        /// <summary>
+        /// Initializes the <see cref="OpenApiDouble"/> class.
+        /// </summary>
         public OpenApiDouble(float value)
             : base(value)
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Primitive type this object represents.
+        /// </summary>
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Double;
     }
 }

@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 property.ParseField(header, HeaderFixedFields, HeaderPatternFields);
             }
 
-            var schema = node.Context.GetTempStorage<OpenApiSchema>("schema");
+            var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
             if (schema != null)
             {
                 header.Schema = schema;

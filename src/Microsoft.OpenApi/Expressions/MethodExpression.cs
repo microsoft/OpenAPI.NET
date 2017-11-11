@@ -10,6 +10,9 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public sealed class MethodExpression : RuntimeExpression
     {
+        /// <summary>
+        /// $method. string
+        /// </summary>
         public const string Method = "$method";
 
         /// <summary>

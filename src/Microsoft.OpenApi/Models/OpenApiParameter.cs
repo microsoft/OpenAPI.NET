@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Determines whether the parameter value SHOULD allow reserved characters,
-        /// as defined by RFC3986 :/?#[]@!$&'()*+,;= to be included without percent-encoding.
+        /// as defined by RFC3986 :/?#[]@!$&amp;'()*+,;= to be included without percent-encoding.
         /// This property only applies to parameters with an in value of query.
         /// The default value is false.
         /// </summary>

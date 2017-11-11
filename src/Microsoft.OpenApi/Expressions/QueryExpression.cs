@@ -10,6 +10,9 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public sealed class QueryExpression : SourceExpression
     {
+        /// <summary>
+        /// query. string
+        /// </summary>
         public const string Query = "query.";
 
         /// <summary>

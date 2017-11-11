@@ -5,12 +5,23 @@
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API binary.
+    /// </summary>
     public class OpenApiBinary : OpenApiPrimitive<byte[]>
     {
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Binary;
-
+        /// <summary>
+        /// Initializes the <see cref="OpenApiBinary"/> class.
+        /// </summary>
+        /// <param name="value"></param>
         public OpenApiBinary(byte[] value)
             : base(value)
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Primitive type this object represents.
+        /// </summary>
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Binary;
     }
 }

@@ -10,6 +10,9 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public sealed class StatusCodeExpression : RuntimeExpression
     {
+        /// <summary>
+        /// $statusCode string.
+        /// </summary>
         public const string StatusCode = "$statusCode";
 
         /// <summary>

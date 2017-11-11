@@ -56,21 +56,21 @@ namespace Microsoft.OpenApi.Writers
                 return;
             }
 
-            switch (any.AnyKind)
+            switch (any.AnyType)
             {
-                case AnyTypeKind.Array: // Array
+                case AnyType.Array: // Array
                     writer.WriteArray(any as OpenApiArray);
                     break;
 
-                case AnyTypeKind.Object: // Object
+                case AnyType.Object: // Object
                     writer.WriteObject(any as OpenApiObject);
                     break;
 
-                case AnyTypeKind.Primitive: // Primitive
+                case AnyType.Primitive: // Primitive
                     writer.WritePrimitive(any as IOpenApiPrimitive);
                     break;
 
-                case AnyTypeKind.Null: // null
+                case AnyType.Null: // null
                     writer.WriteNull();
                     break;
 

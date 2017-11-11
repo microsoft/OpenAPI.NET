@@ -9,20 +9,25 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
+    /// <summary>
+    /// Class containing logic to validate an Open API document object.
+    /// </summary>
     public class OpenApiValidator : OpenApiVisitorBase
     {
-        private List<OpenApiException> openApiException;
+        /// <summary>
+        /// Exceptions related to this validation.
+        /// </summary>
+        public List<OpenApiException> Exceptions { get; } = new List<OpenApiException>();
 
-        public List<OpenApiException> Exceptions { get { return this.openApiException; } }
-        public OpenApiValidator()
-        {
-            this.openApiException = new List<OpenApiException>();
-        }
+        /// <summary>
+        /// Visit Open API Response element.
+        /// </summary>
+        /// <param name="response">Response element.</param>
         public override void Visit(OpenApiResponse response)
         {
             if (string.IsNullOrEmpty(response.Description))
             {
-                this.openApiException.Add(new OpenApiException("Response must have a description"));
+                Exceptions.Add(new OpenApiException("Response must have a description"));
             }
         }
     }

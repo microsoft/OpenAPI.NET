@@ -10,6 +10,9 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public sealed class PathExpression : SourceExpression
     {
+        /// <summary>
+        /// path. string
+        /// </summary>
         public const string Path = "path.";
 
         /// <summary>

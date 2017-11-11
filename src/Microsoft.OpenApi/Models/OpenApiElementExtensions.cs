@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Models
         /// Add a <see cref="OpenApiPathItem"/> into the <see cref="OpenApiDocument"/>.
         /// </summary>
         /// <param name="document">The Open API document.</param>
-        /// <param name="key">The path item name.</param>
+        /// <param name="name">The path item name.</param>
         /// <param name="configure">The path item configuration action.</param>
         public static void AddPathItem(this OpenApiDocument document, string name, Action<OpenApiPathItem> configure)
         {

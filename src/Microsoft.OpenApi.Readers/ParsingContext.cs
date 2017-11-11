@@ -11,6 +11,9 @@ using Microsoft.OpenApi.Readers.Interface;
 
 namespace Microsoft.OpenApi.Readers
 {
+    /// <summary>
+    /// Parsing context.
+    /// </summary>
     public class ParsingContext
     {
         private readonly Stack<string> currentLocation = new Stack<string>();
@@ -23,24 +26,40 @@ namespace Microsoft.OpenApi.Readers
 
         private readonly Dictionary<string, object> tempStorage = new Dictionary<string, object>();
         
-        public string Version { get; set; }
-
+        /// <summary>
+        /// End the current object.
+        /// </summary>
         public void EndObject()
         {
             currentLocation.Pop();
         }
 
+        /// <summary>
+        /// Get the current location as string representing JSON pointer.
+        /// </summary>
         public string GetLocation()
         {
             return "#/" + string.Join("/", currentLocation.Reverse().ToArray());
         }
 
+        /// <summary>
+        /// Get the referenced object.
+        /// </summary>
+        /// <param name="diagnostic"></param>
+        /// <param name="pointer"></param>
+        /// <returns></returns>
         public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, string pointer)
         {
             var reference = _referenceService.FromString(pointer);
             return GetReferencedObject(diagnostic, reference);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="diagnostic"></param>
+        /// <param name="reference"></param>
+        /// <returns></returns>
         public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, OpenApiReference reference)
         {
             IOpenApiReference returnValue = null;
@@ -72,10 +91,12 @@ namespace Microsoft.OpenApi.Readers
             return returnValue;
         }
 
-        public T GetTempStorage<T>(string key) where T : class
+        /// <summary>
+        /// Gets the value from the temporary storage matching the given key.
+        /// </summary>
+        public T GetFromTempStorage<T>(string key) where T : class
         {
-            object value;
-            if (tempStorage.TryGetValue(key, out value))
+            if (tempStorage.TryGetValue(key, out var value))
             {
                 return (T)value;
             }
@@ -83,16 +104,26 @@ namespace Microsoft.OpenApi.Readers
             return null;
         }
 
+        /// <summary>
+        /// Sets the reference service.
+        /// </summary>
+        /// <param name="referenceService"></param>
         public void SetReferenceService(IOpenApiReferenceService referenceService)
         {
             this._referenceService = referenceService;
         }
 
+        /// <summary>
+        /// Sets the temporary storge for this key and value.
+        /// </summary>
         public void SetTempStorage(string key, object value)
         {
             tempStorage[key] = value;
         }
 
+        /// <summary>
+        /// Starts an object with the given object name.
+        /// </summary>
         public void StartObject(string objectName)
         {
             currentLocation.Push(objectName);

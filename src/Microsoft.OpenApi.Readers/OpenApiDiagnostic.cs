@@ -8,8 +8,14 @@ using Microsoft.OpenApi.Readers.Interface;
 
 namespace Microsoft.OpenApi.Readers
 {
+    /// <summary>
+    /// Object containing all diagnostic information related to Open API parsing.
+    /// </summary>
     public class OpenApiDiagnostic : IDiagnostic
     {
+        /// <summary>
+        /// List of all errors.
+        /// </summary>
         public IList<OpenApiError> Errors { get; set; } = new List<OpenApiError>();
     }
 }

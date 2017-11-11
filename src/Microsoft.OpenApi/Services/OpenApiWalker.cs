@@ -8,48 +8,59 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
+    /// <summary>
+    /// The walker to visit multiple Open API elements.
+    /// </summary>
     public class OpenApiWalker
     {
-        OpenApiVisitorBase visitor;
+        readonly OpenApiVisitorBase _visitor;
 
+        /// <summary>
+        /// Initializes the <see cref="OpenApiWalker"/> class.
+        /// </summary>
         public OpenApiWalker(OpenApiVisitorBase visitor)
         {
-            this.visitor = visitor;
+            this._visitor = visitor;
         }
+
+        /// <summary>
+        /// Walks through the <see cref="OpenApiDocument"/> and validates each element.
+        /// </summary>
+        /// <param name="doc"></param>
         public void Walk(OpenApiDocument doc)
         {
-            this.visitor.Visit(doc);
-            this.visitor.Visit(doc.Info);
-            this.visitor.Visit(doc.Servers);
+            this._visitor.Visit(doc);
+            this._visitor.Visit(doc.Info);
+            this._visitor.Visit(doc.Servers);
             foreach (var server in doc.Servers)
             {
-                this.visitor.Visit(server);
+                this._visitor.Visit(server);
                 foreach (var variable in server.Variables.Values)
                 {
-                    this.visitor.Visit(variable);
+                    this._visitor.Visit(variable);
                 }
             }
 
-            this.visitor.Visit(doc.Paths);
+            this._visitor.Visit(doc.Paths);
             foreach (var pathItem in doc.Paths.Values)
             {
-                this.visitor.Visit(pathItem);
-                this.visitor.Visit(pathItem.Operations);
+                this._visitor.Visit(pathItem);
+                this._visitor.Visit(pathItem.Operations);
                 foreach (var operation in pathItem.Operations.Values)
                 {
-                    this.visitor.Visit(operation);
+                    this._visitor.Visit(operation);
                     if (operation.Parameters != null)
                     {
-                        this.visitor.Visit(operation.Parameters);
+                        this._visitor.Visit(operation.Parameters);
                         foreach (var parameter in operation.Parameters)
                         {
-                            this.visitor.Visit(parameter);
+                            this._visitor.Visit(parameter);
                         }
                     }
 
                     if (operation.RequestBody != null)
                     {
-                        this.visitor.Visit(operation.RequestBody);
+                        this._visitor.Visit(operation.RequestBody);
 
                         if (operation.RequestBody.Content != null)
                         {
@@ -59,19 +70,19 @@ namespace Microsoft.OpenApi.Services
 
                     if (operation.Responses != null)
                     {
-                        this.visitor.Visit(operation.Responses);
+                        this._visitor.Visit(operation.Responses);
 
                         foreach (var response in operation.Responses.Values)
                         {
-                            this.visitor.Visit(response);
+                            this._visitor.Visit(response);
                             WalkContent(response.Content);
 
                             if (response.Links != null)
                             {
-                                this.visitor.Visit(response.Links);
+                                this._visitor.Visit(response.Links);
                                 foreach (var link in response.Links.Values)
                                 {
-                                    this.visitor.Visit(link);
+                                    this._visitor.Visit(link);
                                 }
                             }
                         }
@@ -80,16 +91,19 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+        /// <summary>
+        /// Walks through each media type in content and validates.
+        /// </summary>
         private void WalkContent(IDictionary<string, OpenApiMediaType> content)
         {
             if (content == null) return;
 
-            this.visitor.Visit(content);
+            this._visitor.Visit(content);
             foreach (var mediaType in content.Values)
             {
-                this.visitor.Visit(mediaType);
-                this.visitor.Visit(mediaType.Examples);
-                this.visitor.Visit(mediaType.Schema);
+                this._visitor.Visit(mediaType);
+                this._visitor.Visit(mediaType.Examples);
+                this._visitor.Visit(mediaType.Schema);
             }
         }
     }
