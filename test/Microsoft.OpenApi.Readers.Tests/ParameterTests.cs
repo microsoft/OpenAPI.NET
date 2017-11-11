@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -116,7 +117,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             };
 
             var actual = SerializeParameterValue(parameter, value);
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Theory]
@@ -130,7 +131,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             };
 
             var actual = SerializeParameterValue(parameter, value);
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         // format="space-delimited" type="array" explode=false bar=a b
@@ -152,7 +153,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             };
 
             var actual = SerializeParameterValue(parameter, value);
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         // Is it possible to write code based on the information in Parameter
@@ -236,7 +237,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             };
 
             var actual = SerializeParameterValue(parameter, value);
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Theory]
@@ -246,7 +247,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var parameter = new OpenApiParameter();
 
             var actual = SerializeParameterValue(parameter, value);
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         private string SerializeValues(
