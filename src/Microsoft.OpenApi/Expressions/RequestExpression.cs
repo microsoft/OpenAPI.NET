@@ -10,18 +10,15 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public sealed class RequestExpression : RuntimeExpression
     {
+        /// <summary>
+        /// $request. string
+        /// </summary>
         public const string Request = "$request.";
 
         /// <summary>
         /// Gets the expression string.
         /// </summary>
-        public override string Expression
-        {
-            get
-            {
-                return Request + Source.Expression;
-            }
-        }
+        public override string Expression => Request + Source.Expression;
 
         /// <summary>
         /// The <see cref="SourceExpression"/> expression.
@@ -35,11 +32,6 @@ namespace Microsoft.OpenApi.Expressions
         public RequestExpression(SourceExpression source)
         {
             Source = source ?? throw Error.ArgumentNull(nameof(source));
-        }
-
-        public RequestExpression(string expression)
-        {
-
         }
     }
 }

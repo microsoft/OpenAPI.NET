@@ -5,10 +5,20 @@
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API string type.
+    /// </summary>
     public class OpenApiString : OpenApiPrimitive<string>
     {
+        /// <summary>
+        /// The primitive class this object represents.
+        /// </summary>
         public override PrimitiveType PrimitiveType { get; } = PrimitiveType.String;
 
+        /// <summary>
+        /// Initializes the <see cref="OpenApiString"/> class.
+        /// </summary>
+        /// <param name="value"></param>
         public OpenApiString(string value)
             : base(value)
         { }

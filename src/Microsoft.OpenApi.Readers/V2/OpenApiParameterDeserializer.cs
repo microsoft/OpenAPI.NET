@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     n.Context.SetTempStorage("bodyParameter", o);
                     break;
                 case "form":
-                    var formParameters = n.Context.GetTempStorage<List<OpenApiParameter>>("formParameters");
+                    var formParameters = n.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                     if (formParameters == null)
                     {
                         formParameters = new List<OpenApiParameter>();
@@ -227,7 +227,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             ParseMap(mapNode, parameter, ParameterFixedFields, ParameterPatternFields);
 
-            var schema = node.Context.GetTempStorage<OpenApiSchema>("schema");
+            var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
             if (schema != null)
             {
                 parameter.Schema = schema;

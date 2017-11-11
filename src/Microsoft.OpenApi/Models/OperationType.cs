@@ -7,6 +7,9 @@ using Microsoft.OpenApi.Commons;
 
 namespace Microsoft.OpenApi.Models
 {
+    /// <summary>
+    /// Operation type.
+    /// </summary>
     public enum OperationType
     {
         /// <summary>

@@ -10,6 +10,9 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public sealed class UrlExpression : RuntimeExpression
     {
+        /// <summary>
+        /// $url string.
+        /// </summary>
         public const string Url = "$url";
 
         /// <summary>

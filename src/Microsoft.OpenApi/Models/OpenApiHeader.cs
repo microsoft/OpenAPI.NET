@@ -17,6 +17,9 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiHeader : OpenApiElement, IOpenApiReference, IOpenApiExtension
     {
+        /// <summary>
+        /// Reference pointer.
+        /// </summary>
         public OpenApiReference Pointer { get; set; }
 
         /// <summary>

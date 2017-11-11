@@ -14,12 +14,12 @@ namespace Microsoft.OpenApi.Commons
     internal class DisplayAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EnumMetadataAttribute"/> class.
+        /// Initializes a new instance of the <see cref="DisplayAttribute"/> class.
         /// </summary>
         /// <param name="name">The display name.</param>
         public DisplayAttribute(string name)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }

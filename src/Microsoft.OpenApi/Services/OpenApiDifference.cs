@@ -3,16 +3,14 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-namespace Microsoft.OpenApi.Any
+using Microsoft.OpenApi.Models;
+
+namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Open API null.
+    /// Difference point between two <see cref="OpenApiDocument"/>
     /// </summary>
-    public class OpenApiNull : IOpenApiAny
+    public class OpenApiDifference
     {
-        /// <summary>
-        /// The type of <see cref="IOpenApiAny"/>
-        /// </summary>
-        public AnyType AnyType { get; } = AnyType.Null;
     }
 }

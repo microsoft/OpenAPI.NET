@@ -103,14 +103,14 @@ namespace Microsoft.OpenApi.Readers.V2
             ParseMap(mapNode, operation, OperationFixedFields, OperationPatternFields);
 
             // Build request body based on information determined while parsing OpenApiOperation
-            var bodyParameter = node.Context.GetTempStorage<OpenApiParameter>("bodyParameter");
+            var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>("bodyParameter");
             if (bodyParameter != null)
             {
                 operation.RequestBody = CreateRequestBody(node.Context, bodyParameter);
             }
             else
             {
-                var formParameters = node.Context.GetTempStorage<List<OpenApiParameter>>("formParameters");
+                var formParameters = node.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                 if (formParameters != null)
                 {
                     operation.RequestBody = CreateFormBody(formParameters);
@@ -162,8 +162,8 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static OpenApiRequestBody CreateRequestBody(ParsingContext context, OpenApiParameter bodyParameter)
         {
-            var consumes = context.GetTempStorage<List<string>>("operationproduces") ??
-                context.GetTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
+            var consumes = context.GetFromTempStorage<List<string>>("operationproduces") ??
+                context.GetFromTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
 
             var requestBody = new OpenApiRequestBody
             {

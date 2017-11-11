@@ -32,9 +32,9 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         /// <summary>
-        /// Add a <see cref="pathItem"/> into the <see cref="OpenApiCallback"/>.
+        /// Add a <see cref="OpenApiPathItem"/> into the <see cref="PathItems"/>.
         /// </summary>
-        /// <param name="name">The runtime expression.</param>
+        /// <param name="expression">The runtime expression.</param>
         /// <param name="pathItem">The path item.</param>
         public void AddPathItem(RuntimeExpression expression, OpenApiPathItem pathItem)
         {

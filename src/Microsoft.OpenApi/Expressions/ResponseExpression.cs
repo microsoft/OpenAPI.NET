@@ -10,18 +10,15 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public sealed class ResponseExpression : RuntimeExpression
     {
+        /// <summary>
+        /// $response. string
+        /// </summary>
         public const string Response = "$response.";
 
         /// <summary>
         /// Gets the expression string.
         /// </summary>
-        public override string Expression
-        {
-            get
-            {
-                return Response + Source.Expression;
-            }
-        }
+        public override string Expression => Response + Source.Expression;
 
         /// <summary>
         /// The <see cref="SourceExpression"/> expression.

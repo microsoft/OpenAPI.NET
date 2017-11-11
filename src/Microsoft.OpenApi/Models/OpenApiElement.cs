@@ -8,6 +8,9 @@ using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
+    /// <summary>
+    /// Open API element.
+    /// </summary>
     public abstract class OpenApiElement : IOpenApiElement
     {
         /// <summary>

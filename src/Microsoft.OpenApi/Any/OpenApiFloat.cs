@@ -5,12 +5,22 @@
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API Float
+    /// </summary>
     public class OpenApiFloat : OpenApiPrimitive<float>
     {
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Float;
-
+        /// <summary>
+        /// Initializes the <see cref="OpenApiFloat"/> class.
+        /// </summary>
         public OpenApiFloat(float value)
             : base(value)
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Primitive type this object represents.
+        /// </summary>
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Float;
     }
 }

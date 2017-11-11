@@ -3,16 +3,34 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Any;
+
 namespace Microsoft.OpenApi.Any
 {
+
     /// <summary>
-    /// Open API null.
+    /// Type of an <see cref="IOpenApiAny"/>
     /// </summary>
-    public class OpenApiNull : IOpenApiAny
+    public enum AnyType
     {
         /// <summary>
-        /// The type of <see cref="IOpenApiAny"/>
+        /// Primitive.
         /// </summary>
-        public AnyType AnyType { get; } = AnyType.Null;
+        Primitive,
+
+        /// <summary>
+        /// Null.
+        /// </summary>
+        Null,
+
+        /// <summary>
+        /// Array.
+        /// </summary>
+        Array,
+
+        /// <summary>
+        /// Object.
+        /// </summary>
+        Object
     }
 }

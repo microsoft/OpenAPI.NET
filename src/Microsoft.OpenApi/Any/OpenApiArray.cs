@@ -7,8 +7,14 @@ using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API array.
+    /// </summary>
     public class OpenApiArray : List<IOpenApiAny>, IOpenApiAny
     {
-        public AnyTypeKind AnyKind { get; } = AnyTypeKind.Array;
+        /// <summary>
+        /// The type of <see cref="IOpenApiAny"/>
+        /// </summary>
+        public AnyType AnyType { get; } = AnyType.Array;
     }
 }

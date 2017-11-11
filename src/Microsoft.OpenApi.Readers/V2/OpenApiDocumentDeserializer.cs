@@ -65,9 +65,9 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context)
         {
-            var host = context.GetTempStorage<string>("host");
-            var basePath = context.GetTempStorage<string>("basePath");
-            var schemes = context.GetTempStorage<List<string>>("schemes");
+            var host = context.GetFromTempStorage<string>("host");
+            var basePath = context.GetFromTempStorage<string>("basePath");
+            var schemes = context.GetFromTempStorage<List<string>>("schemes");
 
             if (schemes != null)
             {

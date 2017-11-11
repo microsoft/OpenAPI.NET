@@ -14,6 +14,9 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public abstract class RuntimeExpression
     {
+        /// <summary>
+        /// The dollar sign prefix for a runtime expression.
+        /// </summary>
         public const string Prefix = "$";
 
         /// <summary>

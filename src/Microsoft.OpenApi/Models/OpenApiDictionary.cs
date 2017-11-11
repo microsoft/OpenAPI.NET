@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
@@ -16,6 +17,9 @@ namespace Microsoft.OpenApi.Models
     public abstract class OpenApiDictionary<T> : OpenApiElement, IDictionary<string, T>
         where T : IOpenApiElement
     {
+        /// <summary>
+        /// Items in this class stored as Dictionary.
+        /// </summary>
         protected IDictionary<string, T> Items { get; set; } = new Dictionary<string, T>();
 
         /// <summary>
@@ -89,7 +93,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Determines whether the dictionary contains a specific key.
         /// </summary>
-        /// <param name="item">The specified key.</param>
+        /// <param name="key">The specified key.</param>
         /// <returns></returns>
         public bool ContainsKey(string key)
         {
@@ -97,7 +101,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Copies the elementsto an <see cref="Array" /> starting at a particular index.
+        /// Copies the elements to an <see cref="Array" /> starting at a particular index.
         /// </summary>
         /// <param name="array">The one-dimensional array that is the destination of the elements copied to.</param>
         /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
@@ -119,7 +123,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Removes the first occurrence of a specific object from the collection.
         /// </summary>
-        /// <param name="key">The specified key/value.</param>
+        /// <param name="item">The specified key/value pair.</param>
         public bool Remove(KeyValuePair<string, T> item)
         {
             return this.Items.Remove(item);

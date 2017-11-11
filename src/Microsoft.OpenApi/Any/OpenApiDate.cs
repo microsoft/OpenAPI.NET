@@ -7,12 +7,22 @@ using System;
 
 namespace Microsoft.OpenApi.Any
 {
+    /// <summary>
+    /// Open API Date
+    /// </summary>
     public class OpenApiDate : OpenApiPrimitive<DateTime>
     {
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Date;
-
+        /// <summary>
+        /// Initializes the <see cref="OpenApiDate"/> class.
+        /// </summary>
         public OpenApiDate(DateTime value)
             : base(value)
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Primitive type this object represents.
+        /// </summary>
+        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Date;
     }
 }

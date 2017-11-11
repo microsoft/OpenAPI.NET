@@ -10,6 +10,9 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public class HeaderExpression : SourceExpression
     {
+        /// <summary>
+        /// header. string
+        /// </summary>
         public const string Header = "header.";
 
         /// <summary>

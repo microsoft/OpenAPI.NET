@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiLicense : OpenApiElement, IOpenApiExtension
     {
-        // <summary>
+        /// <summary>
         /// REQUIRED.The license name used for the API.
         /// </summary>
         public string Name { get; set; } = OpenApiConstants.DefaultName;
