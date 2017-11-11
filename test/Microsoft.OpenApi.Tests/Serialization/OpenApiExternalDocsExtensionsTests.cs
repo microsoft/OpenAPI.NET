@@ -5,6 +5,7 @@
 
 using System;
 using System.IO;
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Serialization
             // Assert
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -50,7 +51,7 @@ namespace Microsoft.OpenApi.Tests.Serialization
             // Assert
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -67,7 +68,7 @@ url: https://example.com";
             // Assert
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         #endregion

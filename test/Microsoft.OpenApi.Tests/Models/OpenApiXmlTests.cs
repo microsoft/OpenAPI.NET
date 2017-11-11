@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -68,7 +69,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Theory]
@@ -91,7 +92,7 @@ x-xml-extension: 7";
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
     }
 }
