@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The version of the OpenAPI document.
         /// </summary>
-        public Version Version { get; set; } = new Version(1, 0);
+        public string Version { get; set; } = "1.0";
 
         /// <summary>
         /// A URL to the Terms of Service for the API. MUST be in the format of a URL.

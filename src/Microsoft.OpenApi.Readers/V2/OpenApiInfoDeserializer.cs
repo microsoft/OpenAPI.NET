@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "version", (o, n) =>
                 {
-                    o.Version = new Version(n.GetScalarValue());
+                    o.Version = n.GetScalarValue();
                 }
             }
         };
