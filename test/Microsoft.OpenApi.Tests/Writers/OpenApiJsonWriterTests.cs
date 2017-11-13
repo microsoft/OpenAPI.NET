@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                         new Dictionary<string, object>(),
                     },
                     ["property4"] = "value4"
-                },
+                }
             };
 
             // Number, boolean, and null handling

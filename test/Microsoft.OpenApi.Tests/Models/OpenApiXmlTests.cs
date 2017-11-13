@@ -17,8 +17,7 @@ namespace Microsoft.OpenApi.Tests.Models
     /// </summary>
     public class OpenApiXmlTests
     {
-        public static OpenApiXml BasicXml = new OpenApiXml();
-        public static OpenApiXml AdvancedXml = new OpenApiXml()
+        public static OpenApiXml AdvancedXml = new OpenApiXml
         {
             Name = "animal",
             Namespace = new Uri("http://swagger.io/schema/sample"),
@@ -27,24 +26,27 @@ namespace Microsoft.OpenApi.Tests.Models
             Attribute = true,
             Extensions = new Dictionary<string, IOpenApiAny>
             {
-                { "x-xml-extension", new OpenApiInteger(7) }
+                {"x-xml-extension", new OpenApiInteger(7)}
             }
         };
+
+        public static OpenApiXml BasicXml = new OpenApiXml();
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
-        public void SerializeBasicXmlWorks(OpenApiSpecVersion version,
+        public void SerializeBasicXmlWorks(
+            OpenApiSpecVersion version,
             OpenApiFormat format)
         {
             // Act
-            string actual = BasicXml.Serialize(version, format);
+            var actual = BasicXml.Serialize(version, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-             actual.Should().Be("{ }");
+            actual.Should().Be("{ }");
         }
 
         [Theory]
@@ -53,8 +55,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedXmlAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected =
-@"{
+            var expected =
+                @"{
   ""name"": ""animal"",
   ""namespace"": ""http://swagger.io/schema/sample"",
   ""prefix"": ""sample"",
@@ -64,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvancedXml.SerializeAsJson(version);
+            var actual = AdvancedXml.SerializeAsJson(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -78,8 +80,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedXmlAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected =
-@"name: animal
+            var expected =
+                @"name: animal
 namespace: http://swagger.io/schema/sample
 prefix: sample
 attribute: true
@@ -87,7 +89,7 @@ wrapped: true
 x-xml-extension: 7";
 
             // Act
-            string actual = AdvancedXml.SerializeAsYaml(version);
+            var actual = AdvancedXml.SerializeAsYaml(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
