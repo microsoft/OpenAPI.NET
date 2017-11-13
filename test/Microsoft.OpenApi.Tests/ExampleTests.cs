@@ -9,13 +9,15 @@ using System.IO;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Xunit;
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Microsoft.OpenApi.Tests
 {
     public class ExampleTests
     {
-        [Fact( Skip = "RootNode and GetScalarValue below are from Readers project. " +
-            "Either move them to the Models and remove their reference from the test here.")] 
+        [Fact] 
         public void WriteResponseExample()
         {
             var doc = new OpenApiDocument
@@ -42,19 +44,11 @@ namespace Microsoft.OpenApi.Tests
             doc.SerializeAsJson(stream);
             stream.Position = 0;
 
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            
-            // I am commenting this out since RootNode and GetScalarValue should not be called here
-            // It breaks the encapsulation layer. Readers should depend on the model,
-            // but not the other way around.
-            //var yamlDocument = yamlStream.Documents.First();
-            //var rootNode = new RootNode(new ParsingContext(), yamlDocument);
+            var root = JObject.Load(new JsonTextReader(new StreamReader(stream)));
 
-            //var node = rootNode.Find(new JsonPointer("/paths/~1test/get/responses/200/content/application~1json/example"));
-            //string example = node.GetScalarValue();
+            var example = root["paths"]["/test"]["get"]["responses"]["200"]["content"]["application/json"]["example"].Value<string>(); 
 
-            // Assert.Equal("xyz", example);
+            Assert.Equal("xyz", example);
         }
     }
 
