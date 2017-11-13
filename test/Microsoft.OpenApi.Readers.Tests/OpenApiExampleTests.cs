@@ -6,6 +6,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -27,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = await client.GetStreamAsync("api-with-examples.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Empty(context.Errors);
+            context.Errors.Should().BeEmpty();
         }
 
         [Fact]
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = await client.GetStreamAsync("petstore-expanded.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Empty(context.Errors);
+            context.Errors.Should().BeEmpty();
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = await client.GetStreamAsync("petstore.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Empty(context.Errors);
+            context.Errors.Should().BeEmpty();
         }
 
         [Fact]
@@ -54,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = await client.GetStreamAsync("uber.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Empty(context.Errors);
+            context.Errors.Should().BeEmpty();
         }
     }
 }

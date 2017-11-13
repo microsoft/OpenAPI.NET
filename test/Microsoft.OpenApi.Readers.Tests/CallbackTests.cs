@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.Linq;
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var pathItem = callback.PathItems.First().Value;
             var operation = pathItem.Operations[OperationType.Post];
 
-            Assert.NotNull(operation);
+            operation.Should().NotBeNull();
         }
 
         [Fact]
@@ -40,19 +41,18 @@ namespace Microsoft.OpenApi.Readers.Tests
             var operation = path.Operations.First().Value;
 
             var callbackPair = operation.Callbacks.First();
-            Assert.Equal("simplehook", callbackPair.Key);
+            callbackPair.Key.Should().Be("simplehook");
 
             var callback = callbackPair.Value;
             var pathItemPair = callback.PathItems.First();
-            Assert.Equal("$request.body#/url", pathItemPair.Key.Expression);
+            pathItemPair.Key.Expression.Should().Be("$request.body#/url");
 
             var pathItem = pathItemPair.Value;
 
             var operationPair = pathItem.Operations.First();
-            var cboperation = operationPair.Value;
-            Assert.Equal(OperationType.Post, operationPair.Key);
+            operationPair.Key.Should().Be(OperationType.Post);
 
-            Assert.NotNull(callback);
+            callback.Should().NotBeNull();
         }
     }
 }

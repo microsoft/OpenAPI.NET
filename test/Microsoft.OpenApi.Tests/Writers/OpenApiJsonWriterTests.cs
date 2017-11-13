@@ -6,8 +6,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using FluentAssertions;
 using Microsoft.OpenApi.Writers;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -63,11 +64,12 @@ namespace Microsoft.OpenApi.Tests.Writers
             writer.WriteEndArray();
             writer.Flush();
 
-            var parsedJToken = JToken.Parse(outputString.GetStringBuilder().ToString());
-            var expectedJToken = JToken.FromObject(stringValues);
+            var parsedObject = JsonConvert.DeserializeObject(outputString.GetStringBuilder().ToString());
+            var expectedObject =
+                JsonConvert.DeserializeObject(JsonConvert.SerializeObject(new List<string>(stringValues)));
 
             // Assert
-            Assert.Equal(expectedJToken, parsedJToken);
+            parsedObject.ShouldBeEquivalentTo(expectedObject);
         }
 
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesSimple()
@@ -111,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                         new Dictionary<string, object>(),
                     },
                     ["property4"] = "value4"
-                }
+                },
             };
 
             // Number, boolean, and null handling
@@ -223,11 +225,11 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Act
             WriteValueRecursive(writer, inputMap);
 
-            var parsedJToken = JToken.Parse(outputString.GetStringBuilder().ToString());
-            var expectedJToken = JToken.FromObject(inputMap);
+            var parsedObject = JsonConvert.DeserializeObject(outputString.GetStringBuilder().ToString());
+            var expectedObject = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(inputMap));
 
             // Assert
-            Assert.Equal(expectedJToken, parsedJToken);
+            parsedObject.ShouldBeEquivalentTo(expectedObject);
         }
     }
 }

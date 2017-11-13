@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var operation = openApiDoc.Paths["/pets"].Operations[OperationType.Get];
             var schema = operation.Responses["200"].Content["application/json"].Schema;
-            Assert.NotNull(schema);
+            schema.Should().NotBeNull();
         }
 
         [Fact]
@@ -36,8 +37,8 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var schema = OpenApiV3Deserializer.LoadSchema(mapNode);
 
-            Assert.NotNull(schema);
-            Assert.Equal("int", schema.Type);
+            schema.Should().NotBeNull();
+            schema.Type.Should().Be("int");
         }
     }
 }

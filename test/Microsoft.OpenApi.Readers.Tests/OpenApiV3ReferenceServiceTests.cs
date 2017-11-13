@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -13,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 {
     public class OpenApiV3ReferenceServiceTests
     {
-        private OpenApiV3ReferenceService _referenceService;
+        private readonly OpenApiV3ReferenceService _referenceService;
 
         public OpenApiV3ReferenceServiceTests()
         {
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var diagnostic = new OpenApiDiagnostic();
 
             var yamlDocument = new YamlDocument("{}");
-            RootNode rootNode = new RootNode(context, diagnostic, yamlDocument);
+            var rootNode = new RootNode(context, diagnostic, yamlDocument);
             _referenceService = new OpenApiV3ReferenceService(rootNode);
         }
 
@@ -29,39 +30,39 @@ namespace Microsoft.OpenApi.Readers.Tests
         public void ParseExternalHeaderReference()
         {
             // Arrange
-            string input = "externalschema.json#/components/headers/blah";
+            var input = "externalschema.json#/components/headers/headerIdentifier";
 
             // Act
             var reference = _referenceService.FromString(input);
 
             // Assert
-            Assert.Equal("externalschema.json", reference.ExternalResource);
-            Assert.Equal(ReferenceType.Unknown, reference.ReferenceType);
-            Assert.Equal("components/headers/blah", reference.Name);
+            reference.ExternalResource.Should().Be("externalschema.json");
+            reference.ReferenceType.Should().Be(ReferenceType.Unknown);
+            reference.Name.Should().Be("components/headers/headerIdentifier");
         }
 
         [Fact]
         public void ParseLocalParameterReference()
         {
             // Arrange & Act
-            var reference = _referenceService.FromString("#/components/parameters/foobar");
+            var reference = _referenceService.FromString("#/components/parameters/parameterIdentifier");
 
-            // Assert.
-            Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
-            Assert.Null(reference.ExternalResource);
-            Assert.Equal("foobar", reference.Name);
+            // Assert
+            reference.ReferenceType.Should().Be(ReferenceType.Parameter);
+            reference.ExternalResource.Should().BeNull();
+            reference.Name.Should().Be("parameterIdentifier");
         }
 
         [Fact]
         public void ParseLocalSchemaReference()
         {
             // Arrange & Act
-            var reference = _referenceService.FromString("#/components/schemas/foobar");
+            var reference = _referenceService.FromString("#/components/schemas/schemaIdentifier");
 
-            // Assert.
-            Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
-            Assert.Equal("foobar", reference.Name);
-            Assert.Null(reference.ExternalResource);
+            // Assert
+            reference.ReferenceType.Should().Be(ReferenceType.Schema);
+            reference.Name.Should().Be("schemaIdentifier");
+            reference.ExternalResource.Should().BeNull();
         }
     }
 }

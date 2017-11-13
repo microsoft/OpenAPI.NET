@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.Linq;
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -28,9 +29,9 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             var firstPath = _PetStoreDoc.Paths.First().Value;
             var firstOperation = firstPath.Operations.First();
-            Assert.Equal(OperationType.Get, firstOperation.Key);
-            Assert.Equal("findPets", firstOperation.Value.OperationId);
-            Assert.Equal(2, firstOperation.Value.Parameters.Count);
+            firstOperation.Key.Should().Be(OperationType.Get);
+            firstOperation.Value.OperationId.Should().Be("findPets");
+            firstOperation.Value.Parameters.Count.Should().Be(2);
         }
 
         [Fact]
@@ -40,9 +41,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var firstOperation = firstPath.Operations.First().Value;
             var firstParameter = firstOperation.Parameters.First();
 
-            Assert.Equal("tags", firstParameter.Name);
-            Assert.Equal(ParameterLocation.Query, firstParameter.In);
-            Assert.Equal("tags to filter by", firstParameter.Description);
+            firstParameter.Name.Should().Be("tags");
+            firstParameter.In.Should().Be(ParameterLocation.Query);
+            firstParameter.Description.Should().Be("tags to filter by");
         }
 
         [Fact]
@@ -52,14 +53,14 @@ namespace Microsoft.OpenApi.Readers.Tests
             var firstOperation = firstPath.Operations.First().Value;
             var requestBody = firstOperation.RequestBody;
 
-            Assert.Null(firstOperation.RequestBody);
+            firstOperation.RequestBody.Should().BeNull();
         }
 
         [Fact]
         public void DoesAPathExist()
         {
-            Assert.Equal(2, _PetStoreDoc.Paths.Count());
-            Assert.NotNull(_PetStoreDoc.Paths["/pets"]);
+            _PetStoreDoc.Paths.Count().Should().Be(2);
+            _PetStoreDoc.Paths["/pets"].Should().NotBeNull();
         }
 
         [Fact]
@@ -67,9 +68,9 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             var postOperation = _PetStoreDoc.Paths["/pets"].Operations[OperationType.Post];
 
-            Assert.Equal("addPet", postOperation.OperationId);
+            postOperation.OperationId.Should().Be("addPet");
 
-            Assert.NotNull(postOperation);
+            postOperation.Should().NotBeNull();
         }
 
         [Fact]
@@ -79,11 +80,11 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var responses = getOperation.Responses;
 
-            Assert.Equal(2, responses["200"].Content.Values.Count());
+            responses["200"].Content.Values.Count().Should().Be(2);
             var response = getOperation.Responses["200"];
             var content = response.Content["application/json"];
 
-            Assert.NotNull(content.Schema);
+            content.Schema.Should().NotBeNull();
         }
     }
 }

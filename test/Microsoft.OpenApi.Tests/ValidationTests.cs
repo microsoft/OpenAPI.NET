@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -26,7 +27,7 @@ namespace Microsoft.OpenApi.Tests
             var walker = new OpenApiWalker(validator);
             walker.Walk(doc);
 
-            Assert.Single(validator.Exceptions);
+            validator.Exceptions.Should().HaveCount(1);
         }
     }
 }

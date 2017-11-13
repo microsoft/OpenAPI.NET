@@ -4,8 +4,8 @@
 // ------------------------------------------------------------
 
 using System.IO;
-using System.Linq;
 using System.Text;
+using FluentAssertions;
 using SharpYaml.Serialization;
 using Xunit;
 
@@ -14,20 +14,20 @@ namespace Microsoft.OpenApi.Readers.Tests
     public class BasicTests
     {
         [Fact]
-        public void CheckOpenAPIVersion()
+        public void CheckOpenApiVersion()
         {
             var stream = GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.petstore30.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal("3.0.0", openApiDoc.SpecVersion.ToString());
+            openApiDoc.SpecVersion.ToString().Should().Be("3.0.0");
         }
 
         [Fact]
         public void InlineExample()
         {
             var openApiDoc = new OpenApiStringReader().Read(
-                
-@"                    openapi: 3.0.0
+                @"
+                    openapi: 3.0.0
                     info:
                         title: A simple inline example
                         version: 1.0.0
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                     ",
                 out var parsingContext);
 
-            Assert.Equal("3.0.0", openApiDoc.SpecVersion.ToString());
+            openApiDoc.SpecVersion.ToString().Should().Be("3.0.0");
         }
 
         [Fact]
@@ -51,9 +51,8 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(1, context.Errors.Count);
-              Assert.NotNull(
-                context.Errors.Where(s => s.ToString() == "title is a required property of #/info").FirstOrDefault());
+            context.Errors.Count.Should().Be(1);
+            context.Errors[0].ToString().Should().Be("title is a required property of #/info");
         }
 
         [Fact]
@@ -63,11 +62,11 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal("1.0.0", openApiDoc.SpecVersion.ToString());
-            Assert.Empty(openApiDoc.Paths);
-            Assert.Equal("The Api", openApiDoc.Info.Title);
-            Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());
-            Assert.Empty(context.Errors);
+            openApiDoc.SpecVersion.ToString().Should().Be("1.0.0");
+            openApiDoc.Paths.Should().BeEmpty();
+            openApiDoc.Info.Title.Should().Be("The Api");
+            openApiDoc.Info.Version.ToString().Should().Be("0.9.1");
+            context.Errors.Should().BeEmpty();
         }
 
         [Fact]

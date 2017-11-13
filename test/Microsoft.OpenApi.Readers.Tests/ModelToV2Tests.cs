@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -24,8 +25,8 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
-            Assert.Equal("2.0", jObject["swagger"].ToString());
-            Assert.NotNull(jObject["info"]);
+            jObject["swagger"].ToString().Should().Be("2.0");
+            jObject["info"].Should().NotBeNull();
         }
 
         private static JObject ExportV2ToJObject(OpenApiDocument openApiDoc)
@@ -47,9 +48,9 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
-            Assert.Equal("example.org", (string)jObject["host"]);
-            Assert.Equal("/api", (string)jObject["basePath"]);
-            Assert.Equal(new List<string> {"http", "https"}, jObject["schemes"].ToObject<List<string>>());
+            ((string)jObject["host"]).Should().Be("example.org");
+            ((string)jObject["basePath"]).Should().Be("/api");
+            jObject["schemes"].ToObject<List<string>>().Should().Equal(new List<string> {"http", "https"});
         }
 
         [Fact]
@@ -94,9 +95,8 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
-            Assert.Equal(
-                "application/vnd.collection+json",
-                (string)jObject["paths"]["/resource"]["get"]["consumes"][0]);
+            ((string)jObject["paths"]["/resource"]["get"]["consumes"][0]).Should()
+                .Be("application/vnd.collection+json");
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
-            Assert.Equal("string", (string)jObject["paths"]["/resource"]["get"]["parameters"][0]["type"]);
+            ((string)jObject["paths"]["/resource"]["get"]["parameters"][0]["type"]).Should().Be("string");
         }
 
         [Fact]
@@ -165,10 +165,10 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var jObject = ExportV2ToJObject(openApiDoc);
 
-            Assert.Equal(
-                "application/vnd.collection+json",
-                (string)jObject["paths"]["/resource"]["get"]["produces"][0]);
-            Assert.Equal("text/plain", (string)jObject["paths"]["/resource"]["get"]["produces"][1]);
+            ((string)jObject["paths"]["/resource"]["get"]["produces"][0])
+                .Should()
+                .Be("application/vnd.collection+json");
+            ((string)jObject["paths"]["/resource"]["get"]["produces"][1]).Should().Be("text/plain");
         }
 
         [Fact]
@@ -212,9 +212,9 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var bodyparam = jObject["paths"]["/resource"]["post"]["parameters"][0];
 
-            Assert.Equal("body", (string)bodyparam["in"]);
-            Assert.Equal("string", (string)bodyparam["schema"]["type"]);
-            Assert.Equal("100", (string)bodyparam["schema"]["maxLength"]);
+            ((string)bodyparam["in"]).Should().Be("body");
+            ((string)bodyparam["schema"]["type"]).Should().Be("string");
+            ((string)bodyparam["schema"]["maxLength"]).Should().Be("100");
         }
     }
 }

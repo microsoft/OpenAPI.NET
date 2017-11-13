@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal("{ }", actual);
+             actual.Should().Be("{ }");
         }
 
         [Theory]

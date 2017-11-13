@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Tests
             //var node = rootNode.Find(new JsonPointer("/paths/~1test/get/responses/200/content/application~1json/example"));
             //string example = node.GetScalarValue();
 
-            // Assert.Equal("xyz", example);
+            // example.Should().Be("xyz");
         }
     }
 

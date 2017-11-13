@@ -26,13 +26,15 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiFormat.Yaml, "{ }")]
-        public void SerializeBasicMediaTypeAsV3Works(OpenApiFormat format, string expect)
+        public void SerializeBasicMediaTypeAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
             string actual = BasicMediaType.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
-            Assert.Equal(expect, actual);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
 
         [Fact]
