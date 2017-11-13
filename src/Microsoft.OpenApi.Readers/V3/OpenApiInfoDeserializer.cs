@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "version", (o, n) =>
                 {
-                    o.Version = new Version(n.GetScalarValue());
+                    o.Version = n.GetScalarValue();
                 }
             },
             {

@@ -8,6 +8,7 @@ using System.Text;
 using FluentAssertions;
 using SharpYaml.Serialization;
 using Xunit;
+using FluentAssertions;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -51,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            context.Errors.Count.Should().Be(1);
+            context.Errors.Should().HaveCount(1);
             context.Errors[0].ToString().Should().Be("title is a required property of #/info");
         }
 
