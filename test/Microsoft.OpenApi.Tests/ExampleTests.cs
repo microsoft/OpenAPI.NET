@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Tests
                 Info = new OpenApiInfo()
                 {
                     Title = "test",
-                    Version = new Version(1, 0)
+                    Version = "1.0"
                 }
             };
 

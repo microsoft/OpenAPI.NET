@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
             TermsOfService = new Uri("http://example.com/terms/"),
             Contact = OpenApiContactTests.AdvanceContact,
             License = OpenApiLicenseTests.AdvanceLicense,
-            Version = new Version(1, 1, 1),
+            Version = "1.1.1",
             Extensions = new Dictionary<string, IOpenApiAny>
             {
                 { "x-updated", new OpenApiString("metadata") }
@@ -165,6 +165,24 @@ x-updated: metadata"
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void InfoVersionShouldAcceptDateStyledAsVersions()
+        {
+            var info = new OpenApiInfo() {
+                Version = "2017-03-01"
+            };
+
+            var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml).MakeLineBreaksEnvironmentNeutral();
+
+            var expected = 
+@"title: Default Title
+version: 2017-03-01"
+.MakeLineBreaksEnvironmentNeutral();
+
+            actual.Should().Be(expected);
+
         }
     }
 }
