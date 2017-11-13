@@ -279,7 +279,7 @@ property4: value4"
             // Act
             WriteValueRecursive(writer, inputMap);
             var actualYaml = outputString.ToString();
-            
+
             // Assert
             actualYaml = actualYaml.MakeLineBreaksEnvironmentNeutral();
             expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();

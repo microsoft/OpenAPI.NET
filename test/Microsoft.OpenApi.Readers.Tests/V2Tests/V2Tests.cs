@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var openApiDocV3 = new OpenApiStreamReader().Read(v3stream, out var contextV3);
 
             // TODO: Add fluent assertion to make this assert possible without implementing equality ourselves.
-            // Assert.Equal(openApiDocV2, openApiDocV3);
+            //  openApiDocV3.Should().Be(openApiDocV2);
         }
     }
 }

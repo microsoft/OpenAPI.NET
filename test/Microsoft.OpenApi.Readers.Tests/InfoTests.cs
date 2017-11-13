@@ -3,8 +3,9 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using Microsoft.OpenApi.Any;
 using System.Linq;
+using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -19,11 +20,11 @@ namespace Microsoft.OpenApi.Readers.Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             var info = openApiDoc.Info;
-            Assert.Equal("Swagger Petstore (Simple)", openApiDoc.Info.Title);
-            Assert.Equal(
-                "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
-                info.Description);
-            Assert.Equal("1.0.0", info.Version.ToString());
+            openApiDoc.Info.Title.Should().Be("Swagger Petstore (Simple)");
+            info.Description.Should()
+                .Be(
+                    "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification");
+            info.Version.ToString().Should().Be("1.0.0");
         }
 
         [Fact]
@@ -36,33 +37,36 @@ namespace Microsoft.OpenApi.Readers.Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             // Assert
-            Assert.Equal("1.0.0", openApiDoc.SpecVersion.ToString());
+            openApiDoc.SpecVersion.ToString().Should().Be("1.0.0");
 
-            Assert.Empty(openApiDoc.Paths);
+            openApiDoc.Paths.Should().BeEmpty();
 
             // verify info
             var info = openApiDoc.Info;
-            Assert.NotNull(info);
-            Assert.Equal("The Api", info.Title);
-            Assert.Equal("0.9.1", info.Version.ToString());
-            Assert.Equal("This is an api", info.Description);
-            Assert.Equal("http://example.org/Dowhatyouwant", info.TermsOfService.OriginalString);
-            Assert.Equal("Darrel Miller", info.Contact.Name);
+            info.Should().NotBeNull();
+            info.Title.Should().Be("The Api");
+            info.Version.ToString().Should().Be("0.9.1");
+            info.Description.Should().Be("This is an api");
+            info.TermsOfService.OriginalString.Should().Be("http://example.org/Dowhatyouwant");
+            info.Contact.Name.Should().Be("Darrel Miller");
 
             // verify info's extensions
-            Assert.NotNull(info.Extensions);
-            Assert.Equal(3, info.Extensions.Count);
+            info.Extensions.Should().NotBeNull();
+            info.Extensions.Count.Should().Be(3);
 
-            OpenApiString stringValue = Assert.IsType<OpenApiString>(info.Extensions["x-something"]);
-            Assert.Equal("Why does it start with x-, sigh", stringValue.Value);
+            info.Extensions["x-something"].Should().BeOfType<OpenApiString>();
+            var stringValue = (OpenApiString)(info.Extensions["x-something"]);
+            stringValue.Value.Should().Be("Why does it start with x-, sigh");
 
-            OpenApiObject objValue = Assert.IsType<OpenApiObject>(info.Extensions["x-contact"]);
-            Assert.Equal(3, objValue.Count);
-            Assert.Equal(new[] { "name", "url", "email" }, objValue.Keys);
+            info.Extensions["x-contact"].Should().BeOfType<OpenApiObject>();
+            var objValue = (OpenApiObject)(info.Extensions["x-contact"]);
+            objValue.Count.Should().Be(3);
+            objValue.Keys.Should().Equal(new[] {"name", "url", "email"});
 
-            OpenApiArray arrayValue = Assert.IsType<OpenApiArray>(info.Extensions["x-list"]);
-            Assert.Equal(2, arrayValue.Count);
-            Assert.Equal(new[] { "1", "2" }, arrayValue.Select(e => ((OpenApiString)e).Value));
+            info.Extensions["x-list"].Should().BeOfType<OpenApiArray>();
+            var arrayValue = (OpenApiArray)(info.Extensions["x-list"]);
+            arrayValue.Count.Should().Be(2);
+            arrayValue.Select(e => ((OpenApiString)e).Value).Should().Equal(new[] {"1", "2"});
         }
     }
 }

@@ -4,18 +4,17 @@
 // ------------------------------------------------------------
 
 using System.IO;
-using System.Linq;
 using System.Text;
+using FluentAssertions;
 using SharpYaml.Serialization;
 using Xunit;
-using FluentAssertions;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
     public class BasicTests
     {
         [Fact]
-        public void CheckOpenAPIVersion()
+        public void CheckOpenApiVersion()
         {
             var stream = GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.petstore30.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
@@ -27,8 +26,8 @@ namespace Microsoft.OpenApi.Readers.Tests
         public void InlineExample()
         {
             var openApiDoc = new OpenApiStringReader().Read(
-                
-@"                    openapi: 3.0.0
+                @"
+                    openapi: 3.0.0
                     info:
                         title: A simple inline example
                         version: 1.0.0
@@ -53,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             context.Errors.Should().HaveCount(1);
-            context.Errors.Select(s => s.ToString()).Should().Contain("title is a required property of #/info");
+            context.Errors[0].ToString().Should().Be("title is a required property of #/info");
         }
 
         [Fact]

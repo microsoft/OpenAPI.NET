@@ -5,6 +5,7 @@
 
 using System.IO;
 using System.Linq;
+using FluentAssertions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
@@ -49,11 +50,11 @@ namespace Microsoft.OpenApi.Readers.Tests
             var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
             var info = OpenApiV3Deserializer.LoadInfo(node);
 
-            Assert.NotNull(info);
-            Assert.Equal("Swagger Sample App", info.Title);
-            Assert.Equal("1.0.1", info.Version.ToString());
-            Assert.Equal("support@swagger.io", info.Contact.Email);
-            Assert.Empty(diagnostic.Errors);
+            info.Should().NotBeNull();
+            info.Title.Should().Be("Swagger Sample App");
+            info.Version.ToString().Should().Be("1.0.1");
+            info.Contact.Email.Should().Be("support@swagger.io");
+            diagnostic.Errors.Should().BeEmpty();
         }
 
         [Fact]
@@ -67,10 +68,10 @@ namespace Microsoft.OpenApi.Readers.Tests
             var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
             var info = OpenApiV3Deserializer.LoadInfo(node);
 
-            Assert.NotNull(info);
-            Assert.Equal("Swagger Sample App", info.Title);
-            Assert.Equal("1.0.1", info.Version.ToString());
-            Assert.Empty(diagnostic.Errors);
+            info.Should().NotBeNull();
+            info.Title.Should().Be("Swagger Sample App");
+            info.Version.ToString().Should().Be("1.0.1");
+            diagnostic.Errors.Should().BeEmpty();
         }
 
         [Fact]
@@ -84,8 +85,8 @@ namespace Microsoft.OpenApi.Readers.Tests
             var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
             var info = OpenApiV3Deserializer.LoadInfo(node);
 
-            Assert.NotNull(info);
-            Assert.Equal(2, diagnostic.Errors.Count);
+            info.Should().NotBeNull();
+            diagnostic.Errors.Count.Should().Be(2);
         }
     }
 }

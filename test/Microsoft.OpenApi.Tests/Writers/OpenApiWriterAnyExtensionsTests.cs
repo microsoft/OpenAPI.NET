@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.IO;
+using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = WriteAsJson(nullValue);
 
             // Assert
-            Assert.Equal("null", json);
+            json.Should().Be("null");
         }
 
         [Theory]
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = WriteAsJson(intValue);
 
             // Assert
-            Assert.Equal(input.ToString(), json);
+            json.Should().Be(input.ToString());
         }
 
         [Theory]
@@ -50,7 +51,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = WriteAsJson(boolValue);
 
             // Assert
-            Assert.Equal(input.ToString().ToLower(), json);
+            json.Should().Be(input.ToString().ToLower());
         }
 
         [Fact]
@@ -83,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 }";
             expectedJson = expectedJson.MakeLineBreaksEnvironmentNeutral();
 
-            Assert.Equal(expectedJson, actualJson);
+            actualJson.Should().Be(expectedJson);
         }
 
         [Fact]
@@ -128,7 +129,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             expectedJson = expectedJson.MakeLineBreaksEnvironmentNeutral();
 
-            Assert.Equal(expectedJson, actualJson);
+            actualJson.Should().Be(expectedJson);
         }
 
         private static string WriteAsJson(IOpenApiAny any)

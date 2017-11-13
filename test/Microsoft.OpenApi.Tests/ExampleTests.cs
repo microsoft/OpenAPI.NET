@@ -50,8 +50,6 @@ namespace Microsoft.OpenApi.Tests
             var example = root["paths"]["/test"]["get"]["responses"]["200"]["content"]["application/json"]["example"].Value<string>();
 
             example.Should().Be("xyz");
-
         }
-    }
-    
+    }  
 }

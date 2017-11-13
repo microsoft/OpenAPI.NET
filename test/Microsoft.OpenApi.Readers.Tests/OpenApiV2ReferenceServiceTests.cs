@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using FluentAssertions;
 using SharpYaml.Serialization;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -34,9 +35,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = _referenceService.FromString(input);
 
             // Assert
-            Assert.Equal("swagger.json", reference.ExternalResource);
-            Assert.Equal(ReferenceType.Unknown, reference.ReferenceType);
-            Assert.Equal("definitions/parameters/blahblah", reference.Name);
+             reference.ExternalResource.Should().Be("swagger.json");
+             reference.ReferenceType.Should().Be(ReferenceType.Unknown);
+             reference.Name.Should().Be("definitions/parameters/blahblah");
         }
 
         [Fact]
@@ -46,9 +47,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = _referenceService.FromString("#/parameters/foobar");
 
             // Assert
-            Assert.Equal(ReferenceType.Parameter, reference.ReferenceType);
-            Assert.Null(reference.ExternalResource);
-            Assert.Equal("foobar", reference.Name);
+             reference.ReferenceType.Should().Be(ReferenceType.Parameter);
+            reference.ExternalResource.Should().BeNull();
+             reference.Name.Should().Be("foobar");
         }
 
         [Fact]
@@ -58,9 +59,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var reference = _referenceService.FromString("#/definitions/foobar");
 
             // Assert
-            Assert.Equal(ReferenceType.Schema, reference.ReferenceType);
-            Assert.Equal("foobar", reference.Name);
-            Assert.Null(reference.ExternalResource);
+             reference.ReferenceType.Should().Be(ReferenceType.Schema);
+             reference.Name.Should().Be("foobar");
+            reference.ExternalResource.Should().BeNull();
         }
     }
 }
