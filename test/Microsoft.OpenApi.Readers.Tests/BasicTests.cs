@@ -8,7 +8,6 @@ using System.Text;
 using FluentAssertions;
 using SharpYaml.Serialization;
 using Xunit;
-using FluentAssertions;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {

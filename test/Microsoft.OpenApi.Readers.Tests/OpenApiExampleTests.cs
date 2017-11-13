@@ -3,9 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using SharpYaml.Serialization;
-using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -13,17 +10,16 @@ namespace Microsoft.OpenApi.Readers.Tests
 {
     public class OpenApiExampleTests
     {
-
         [Fact()]
         public void ApiWithExamples()
         {
-            using (var stream = GetType().Assembly.GetManifestResourceStream(GetType(), "Samples.api-with-examples.yaml"))
+            using (var stream =
+                GetType().Assembly.GetManifestResourceStream(GetType(), "Samples.api-with-examples.yaml"))
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
                 context.Errors.Should().BeEmpty();
             }
-
         }
 
         [Fact]
@@ -34,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-                context.Errors.Should().BeEmpty();\
+                context.Errors.Should().BeEmpty();
             }
         }
 
