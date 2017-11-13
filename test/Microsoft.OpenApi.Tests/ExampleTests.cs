@@ -12,6 +12,7 @@ using Xunit;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using FluentAssertions;
 
 namespace Microsoft.OpenApi.Tests
 {
@@ -46,17 +47,11 @@ namespace Microsoft.OpenApi.Tests
 
             var root = JObject.Load(new JsonTextReader(new StreamReader(stream)));
 
-            var example = root["paths"]["/test"]["get"]["responses"]["200"]["content"]["application/json"]["example"].Value<string>(); 
+            var example = root["paths"]["/test"]["get"]["responses"]["200"]["content"]["application/json"]["example"].Value<string>();
 
-            Assert.Equal("xyz", example);
+            example.Should().Be("xyz");
+
         }
     }
-
-    public static class YamlExtensions
-    {
-        public static YamlMappingNode AsMap(this YamlNode node)
-        {
-            return node as YamlMappingNode;
-        }
-    }
+    
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using SharpYaml.Serialization;
 using Xunit;
+using FluentAssertions;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var stream = GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.petstore30.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal("3.0.0", openApiDoc.SpecVersion.ToString());
+            openApiDoc.SpecVersion.ToString().Should().Be("3.0.0");
         }
 
         [Fact]
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                     ",
                 out var parsingContext);
 
-            Assert.Equal("3.0.0", openApiDoc.SpecVersion.ToString());
+            openApiDoc.SpecVersion.ToString().Should().Be("3.0.0");
         }
 
         [Fact]
@@ -51,9 +52,8 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal(1, context.Errors.Count);
-              Assert.NotNull(
-                context.Errors.Where(s => s.ToString() == "title is a required property of #/info").FirstOrDefault());
+            context.Errors.Should().HaveCount(1);
+            context.Errors.Select(s => s.ToString()).Should().Contain("title is a required property of #/info");
         }
 
         [Fact]
@@ -63,11 +63,11 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-            Assert.Equal("1.0.0", openApiDoc.SpecVersion.ToString());
-            Assert.Empty(openApiDoc.Paths);
-            Assert.Equal("The Api", openApiDoc.Info.Title);
-            Assert.Equal("0.9.1", openApiDoc.Info.Version.ToString());
-            Assert.Empty(context.Errors);
+            openApiDoc.SpecVersion.ToString().Should().Be("1.0.0");
+            openApiDoc.Paths.Should().BeEmpty();
+            openApiDoc.Info.Title.Should().Be("The Api");
+            openApiDoc.Info.Version.ToString().Should().Be("0.9.1");
+            context.Errors.Should().BeEmpty();
         }
 
         [Fact]
