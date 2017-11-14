@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// ExternalDocs object.
     /// </summary>
-    public class OpenApiEncoding : OpenApiElement, IOpenApiExtension
+    public class OpenApiEncoding : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// The Content-Type for encoding a specific property.

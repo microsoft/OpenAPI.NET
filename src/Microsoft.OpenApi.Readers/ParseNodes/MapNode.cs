@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public T CreateOrReferenceDomainObject<T>(Func<T> factory) where T : IOpenApiReference
+        public T CreateOrReferenceDomainObject<T>(Func<T> factory) where T : IOpenApiReferenceable
         {
             T domainObject;
             var refPointer = GetReferencePointer(); // What should the DOM of a reference look like?
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return x.Serialize(node);
         }
 
-        public T GetReferencedObject<T>(string refPointer) where T : IOpenApiReference
+        public T GetReferencedObject<T>(string refPointer) where T : IOpenApiReferenceable
         {
             return (T)Context.GetReferencedObject(Diagnostic, refPointer);
         }

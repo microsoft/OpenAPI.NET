@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// </summary>
         /// <param name="reference">The <see cref="OpenApiReference"/> object.</param>
         /// <returns>The referenced object or null.</returns>
-        IOpenApiReference LoadReference(OpenApiReference reference);
+        IOpenApiReferenceable LoadReference(OpenApiReference reference);
 
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.

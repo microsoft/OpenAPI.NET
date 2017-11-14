@@ -49,14 +49,14 @@ namespace Microsoft.OpenApi.Readers.V2
         }
 
         /// <inheritdoc />
-        protected override IOpenApiReference LoadReference(OpenApiReference reference, ParseNode node)
+        protected override IOpenApiReferenceable LoadReference(OpenApiReference reference, ParseNode node)
         {
             if (reference == null || node == null)
             {
                 return null;
             }
 
-            IOpenApiReference referencedObject = null;
+            IOpenApiReferenceable referencedObject = null;
             switch (reference.ReferenceType)
             {
                 case ReferenceType.Schema:

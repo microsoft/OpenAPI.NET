@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         }
 
         public virtual Dictionary<string, T> CreateMapWithReference<T>(string refpointer, Func<MapNode, T> map)
-            where T : class, IOpenApiReference
+            where T : class, IOpenApiReferenceable
         {
             throw new OpenApiException("Cannot create map from reference");
         }

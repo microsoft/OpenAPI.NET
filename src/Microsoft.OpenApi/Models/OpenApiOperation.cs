@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Operation Object.
     /// </summary>
-    public class OpenApiOperation : OpenApiElement, IOpenApiExtension
+    public class OpenApiOperation : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// Default value for <see cref="Deprecated"/>.

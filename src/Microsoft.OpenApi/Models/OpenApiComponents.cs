@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Components Object.
     /// </summary>
-    public class OpenApiComponents : OpenApiElement, IOpenApiExtension
+    public class OpenApiComponents : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.

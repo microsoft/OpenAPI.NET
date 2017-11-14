@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an Open API Document. See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : OpenApiElement, IOpenApiExtension
+    public class OpenApiDocument : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED.This string MUST be the semantic version number of the OpenAPI Specification version that the OpenAPI document uses.

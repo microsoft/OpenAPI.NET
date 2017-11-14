@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Open API Info Object, it provides the metadata about the Open API.
     /// </summary>
-    public class OpenApiInfo : OpenApiElement, IOpenApiExtension
+    public class OpenApiInfo : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The title of the application.

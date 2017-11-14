@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Contact Object.
     /// </summary>
-    public class OpenApiContact : OpenApiElement, IOpenApiExtension
+    public class OpenApiContact : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// The identifying name of the contact person/organization.

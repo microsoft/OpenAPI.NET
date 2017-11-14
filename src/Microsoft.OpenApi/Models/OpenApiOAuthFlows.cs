@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// OAuth Flows Object.
     /// </summary>
-    public class OpenApiOAuthFlows : OpenApiElement, IOpenApiExtension
+    public class OpenApiOAuthFlows : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// Configuration for the OAuth Implicit flow

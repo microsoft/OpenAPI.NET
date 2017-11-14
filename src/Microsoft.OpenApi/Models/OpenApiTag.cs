@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiTag : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// The name of the tag.

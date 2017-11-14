@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Interfaces
     /// <summary>
     /// Represents an Extensible Open API element.
     /// </summary>
-    public interface IOpenApiExtension : IOpenApiElement
+    public interface IOpenApiExtensible : IOpenApiElement
     {
         /// <summary>
         /// Specification extensions.

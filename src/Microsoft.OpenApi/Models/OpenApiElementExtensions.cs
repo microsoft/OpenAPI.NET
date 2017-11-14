@@ -216,11 +216,11 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Try find the referenced element.
         /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiReference"/>.</typeparam>
+        /// <typeparam name="T"><see cref="IOpenApiReferenceable"/>.</typeparam>
         /// <param name="reference">The reference element. </param>
         /// <param name="document">The Open API document.</param>
         public static IOpenApiElement Find<T>(this T reference, OpenApiDocument document)
-            where T : IOpenApiReference
+            where T : IOpenApiReferenceable
         {
             if (reference == null ||
                 document == null ||
@@ -273,23 +273,23 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <typeparam name="T"><see cref="IOpenApiElement"/>.</typeparam>
         /// <param name="element">The referencable element.</param>
-        /// <returns>True if the element implements <see cref="IOpenApiReference"/> and pointer is not null,
+        /// <returns>True if the element implements <see cref="IOpenApiReferenceable"/> and pointer is not null,
         /// False otherwise.</returns>
         public static bool IsReference<T>(this T element) where T : IOpenApiElement
         {
-            IOpenApiReference reference = element as IOpenApiReference;
+            IOpenApiReferenceable reference = element as IOpenApiReferenceable;
             return reference?.Pointer != null;
         }
 
         /// <summary>
         /// Add extension into the Extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiExtension"/>.</typeparam>
+        /// <typeparam name="T"><see cref="IOpenApiExtensible"/>.</typeparam>
         /// <param name="element">The extensible Open API element. </param>
         /// <param name="name">The extension name.</param>
         /// <param name="any">The extension value.</param>
         public static void AddExtension<T>(this T element, string name, IOpenApiAny any)
-            where T : IOpenApiExtension
+            where T : IOpenApiExtensible
         {
             if (element == null)
             {

@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.Interface
         public abstract string ToString(OpenApiReference reference);
 
         /// <inheritdoc />
-        public virtual IOpenApiReference LoadReference(OpenApiReference reference)
+        public virtual IOpenApiReferenceable LoadReference(OpenApiReference reference)
         {
             if (reference == null)
             {
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// <param name="reference">The reference object.</param>
         /// <param name="node">The element node.</param>
         /// <returns>The referenced object or null.</returns>
-        protected abstract IOpenApiReference LoadReference(OpenApiReference reference, ParseNode node);
+        protected abstract IOpenApiReferenceable LoadReference(OpenApiReference reference, ParseNode node);
 
         /// <summary>
         /// Parse the local pointer to return a <see cref="OpenApiReference"/>.

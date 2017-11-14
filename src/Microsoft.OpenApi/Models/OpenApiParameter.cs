@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiParameter : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Reference object.

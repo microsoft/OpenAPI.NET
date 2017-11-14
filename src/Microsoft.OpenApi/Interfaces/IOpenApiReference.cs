@@ -8,9 +8,9 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Interfaces
 {
     /// <summary>
-    /// Represents an Open API element is referencable.
+    /// Represents an Open API element is referenceable.
     /// </summary>
-    public interface IOpenApiReference : IOpenApiElement
+    public interface IOpenApiReferenceable : IOpenApiElement
     {
         /// <summary>
         /// Reference object.

@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiLink : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// A relative or absolute reference to an OAS operation.

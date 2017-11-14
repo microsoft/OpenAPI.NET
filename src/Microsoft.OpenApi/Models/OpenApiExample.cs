@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiExample : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Short description for the example.

@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// ExternalDocs object.
     /// </summary>
-    public class OpenApiExternalDocs : OpenApiElement, IOpenApiExtension
+    public class OpenApiExternalDocs : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// A short description of the target documentation.

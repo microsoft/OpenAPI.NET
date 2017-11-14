@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// License Object.
     /// </summary>
-    public class OpenApiLicense : OpenApiElement, IOpenApiExtension
+    public class OpenApiLicense : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED.The license name used for the API.

@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Server Variable Object.
     /// </summary>
-    public class OpenApiServerVariable : OpenApiElement, IOpenApiExtension
+    public class OpenApiServerVariable : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// An optional description for the server variable. CommonMark syntax MAY be used for rich text representation.

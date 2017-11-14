@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiResponse : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. A short description of the response.

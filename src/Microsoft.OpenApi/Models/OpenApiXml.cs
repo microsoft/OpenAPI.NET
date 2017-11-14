@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// XML Object.
     /// </summary>
-    public class OpenApiXml : OpenApiElement, IOpenApiExtension
+    public class OpenApiXml : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// Replaces the name of the element/attribute used for the described schema property.

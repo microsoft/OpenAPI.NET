@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Server Object: an object representing a Server.
     /// </summary>
-    public class OpenApiServer : OpenApiElement, IOpenApiExtension
+    public class OpenApiServer : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// An optional string describing the host designated by the URL. CommonMark syntax MAY be used for rich text representation.

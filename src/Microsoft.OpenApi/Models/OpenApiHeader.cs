@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiHeader : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Reference pointer.

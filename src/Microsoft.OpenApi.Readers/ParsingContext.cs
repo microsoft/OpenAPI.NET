@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers
 
         private IOpenApiReferenceService _referenceService;
 
-        private readonly Dictionary<string, IOpenApiReference> referenceStore = new Dictionary<string, IOpenApiReference>();
+        private readonly Dictionary<string, IOpenApiReferenceable> referenceStore = new Dictionary<string, IOpenApiReferenceable>();
 
         private readonly Dictionary<string, object> tempStorage = new Dictionary<string, object>();
         
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="diagnostic"></param>
         /// <param name="pointer"></param>
         /// <returns></returns>
-        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, string pointer)
+        public IOpenApiReferenceable GetReferencedObject(OpenApiDiagnostic diagnostic, string pointer)
         {
             var reference = _referenceService.FromString(pointer);
             return GetReferencedObject(diagnostic, reference);
@@ -60,9 +60,9 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="diagnostic"></param>
         /// <param name="reference"></param>
         /// <returns></returns>
-        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, OpenApiReference reference)
+        public IOpenApiReferenceable GetReferencedObject(OpenApiDiagnostic diagnostic, OpenApiReference reference)
         {
-            IOpenApiReference returnValue = null;
+            IOpenApiReferenceable returnValue = null;
             string referenceString = _referenceService.ToString(reference);
             referenceStore.TryGetValue(referenceString, out returnValue);
 
