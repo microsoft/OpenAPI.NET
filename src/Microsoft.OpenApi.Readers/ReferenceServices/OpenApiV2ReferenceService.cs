@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -19,7 +20,9 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
     /// </summary>
     internal class OpenApiV2ReferenceService : IOpenApiReferenceService
     {
-        private RootNode _rootNode;
+        private readonly RootNode _rootNode;
+
+        private readonly List<OpenApiTag> _tags = new List<OpenApiTag>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiV2ReferenceService"/> class.
@@ -28,9 +31,22 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         public OpenApiV2ReferenceService(RootNode rootNode)
         {
             _rootNode = rootNode ?? throw new ArgumentNullException(nameof(rootNode));
+
+            // Precompute the tags array so that each tag reference does not require a new deserialization.
+            var tagListPointer = new JsonPointer("#/tags");
+
+            var tagListNode = _rootNode.Find(tagListPointer);
+
+            if (tagListNode != null && tagListNode is ListNode)
+            {
+                var tagListNodeAsListNode = (ListNode)tagListNode;
+                _tags.AddRange(tagListNodeAsListNode.CreateList(OpenApiV3Deserializer.LoadTag));
+            }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
         public bool TryLoadReference(OpenApiReference reference, out IOpenApiReferenceable referencedObject)
         {
             referencedObject = null;
@@ -54,18 +70,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             // Special case for Tag
             if (reference.Type == ReferenceType.Tag)
             {
-                var tagListPointer = new JsonPointer("#/tags/");
-                var tagListNode = (ListNode)_rootNode.Find(tagListPointer);
-
-                if (tagListNode == null)
-                {
-                    referencedObject = new OpenApiTag { Name = reference.Id };
-                    return false;
-                }
-
-                var tags = tagListNode.CreateList(OpenApiV2Deserializer.LoadTag);
-
-                foreach (var tag in tags)
+                foreach (var tag in _tags)
                 {
                     if (tag.Name == reference.Id)
                     {
@@ -132,24 +137,23 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             return true;
         }
 
-        /// <inheritdoc/>
-        protected OpenApiReference ParseLocalPointer(string localPointer)
+        private OpenApiReference ParseLocalReference(string localReference)
         {
-            if (string.IsNullOrWhiteSpace(localPointer))
+            if (string.IsNullOrWhiteSpace(localReference))
             {
                 throw new ArgumentException(
                     string.Format(
                         SRResource.ArgumentNullOrWhiteSpace,
-                        nameof(localPointer)));
+                        nameof(localReference)));
             }
 
-            var segments = localPointer.Split('/');
+            var segments = localReference.Split('/');
 
             // /definitions/Pet/...
             if (segments.Length >= 3)
             {
                 var referenceType = ParseReferenceType(segments[1]);
-                var id = localPointer.Substring(
+                var id = localReference.Substring(
                     segments[0].Length + "/".Length + segments[1].Length + "/".Length);
 
                 return new OpenApiReference {Type = referenceType, Id = id};
@@ -158,7 +162,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             throw new OpenApiException(
                 string.Format(
                     SRResource.ReferenceHasInvalidFormat,
-                    localPointer));
+                    localReference));
         }
 
         private static ReferenceType ParseReferenceType(string referenceTypeName)
@@ -215,11 +219,14 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             }
         }
 
-        public OpenApiReference ConvertToOpenApiReference(string referenceString, ReferenceType? type)
+        /// <summary>
+        /// Parse the string to a <see cref="OpenApiReference"/> object.
+        /// </summary>
+        public OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type)
         {
-            if (!string.IsNullOrWhiteSpace(referenceString))
+            if (!string.IsNullOrWhiteSpace(reference))
             {
-                var segments = referenceString.Split('#');
+                var segments = reference.Split('#');
                 if (segments.Length == 1)
                 {
                     // Either this is an external reference as an entire file
@@ -238,16 +245,16 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                         return new OpenApiReference
                         {
                             Type = type,
-                            Id = referenceString
+                            Id = reference
                         };
                     }
                 }
                 else if (segments.Length == 2)
                 {
-                    if (referenceString.StartsWith("#"))
+                    if (reference.StartsWith("#"))
                     {
                         // "$ref": "#/components/schemas/Pet"
-                        return ParseLocalPointer(segments[1]);
+                        return ParseLocalReference(segments[1]);
                     }
 
                     // $ref: externalSource.yaml#/Pet
@@ -259,7 +266,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 }
             }
 
-            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, referenceString));
+            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
     }
 }

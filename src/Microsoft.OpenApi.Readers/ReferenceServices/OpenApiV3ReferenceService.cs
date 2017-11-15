@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -21,6 +22,8 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
     {
         private readonly RootNode _rootNode;
 
+        private readonly List<OpenApiTag> _tags = new List<OpenApiTag>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiV3ReferenceService"/> class.
         /// </summary>
@@ -28,16 +31,29 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         public OpenApiV3ReferenceService(RootNode rootNode)
         {
             _rootNode = rootNode ?? throw new ArgumentNullException(nameof(rootNode));
+
+            // Precompute the tags array so that each tag reference does not require a new deserialization.
+            var tagListPointer = new JsonPointer("#/tags");
+            
+            var tagListNode = _rootNode.Find(tagListPointer);
+            
+            if (tagListNode != null && tagListNode is ListNode)
+            {
+                var tagListNodeAsListNode = (ListNode)tagListNode;
+                _tags.AddRange(tagListNodeAsListNode.CreateList(OpenApiV3Deserializer.LoadTag));
+            }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Parse the string to a <see cref="OpenApiReference"/> object.
+        /// </summary>
         public OpenApiReference ConvertToOpenApiReference(
-            string referenceString,
+            string reference,
             ReferenceType? type)
         {
-            if (!string.IsNullOrWhiteSpace(referenceString))
+            if (!string.IsNullOrWhiteSpace(reference))
             {
-                var segments = referenceString.Split('#');
+                var segments = reference.Split('#');
                 if (segments.Length == 1)
                 {
                     // Either this is an external reference as an entire file
@@ -56,16 +72,16 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                         return new OpenApiReference
                         {
                             Type = type,
-                            Id = referenceString
+                            Id = reference
                         };
                     }
                 }
                 else if (segments.Length == 2)
                 {
-                    if (referenceString.StartsWith("#"))
+                    if (reference.StartsWith("#"))
                     {
                         // "$ref": "#/components/schemas/Pet"
-                        return ParseLocalPointer(segments[1]);
+                        return ParseLocalReference(segments[1]);
                     }
 
                     // $ref: externalSource.yaml#/Pet
@@ -77,10 +93,12 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 }
             }
 
-            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, referenceString));
+            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
         public bool TryLoadReference(OpenApiReference reference, out IOpenApiReferenceable referencedObject)
         {
             referencedObject = null;
@@ -104,18 +122,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             // Special case for Tag
             if (reference.Type == ReferenceType.Tag)
             {
-                var tagListPointer = new JsonPointer("#/tags");
-                var tagListNode = (ListNode)_rootNode.Find(tagListPointer);
-
-                if (tagListNode == null)
-                {
-                    referencedObject = new OpenApiTag {Name = reference.Id};
-                    return false;
-                }
-
-                var tags = tagListNode.CreateList(OpenApiV3Deserializer.LoadTag);
-
-                foreach (var tag in tags)
+                foreach (var tag in _tags)
                 {
                     if (tag.Name == reference.Id)
                     {
@@ -181,16 +188,15 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
 
             return true;
         }
-
-        /// <inheritdoc/>
-        protected OpenApiReference ParseLocalPointer(string localPointer)
+        
+        private OpenApiReference ParseLocalReference(string localReference)
         {
-            if (string.IsNullOrWhiteSpace(localPointer))
+            if (string.IsNullOrWhiteSpace(localReference))
             {
-                throw new ArgumentException(string.Format(SRResource.ArgumentNullOrWhiteSpace, nameof(localPointer)));
+                throw new ArgumentException(string.Format(SRResource.ArgumentNullOrWhiteSpace, nameof(localReference)));
             }
 
-            var segments = localPointer.Split('/');
+            var segments = localReference.Split('/');
 
             if (segments.Length == 4) // /components/{type}/pet
             {
@@ -201,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 }
             }
 
-            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, localPointer));
+            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, localReference));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
     public interface IOpenApiReferenceService
     {
         /// <summary>
-        /// Load the <see cref="IOpenApiReferenceable"/> from a <see cref="OpenApiReference"/> object
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
         /// <param name="reference">The <see cref="OpenApiReference"/> object.</param>
         /// <param name="referencedObject">The object that is being referenced.</param>
@@ -29,9 +29,9 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
-        /// <param name="pointer">The reference string.</param>
+        /// <param name="reference">The reference string.</param>
         /// <param name="type">The type of the reference.</param>
         /// <returns>The <see cref="OpenApiReference"/> object or null.</returns>
-        OpenApiReference ConvertToOpenApiReference(string pointer, ReferenceType? type);
+        OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type);
     }
 }

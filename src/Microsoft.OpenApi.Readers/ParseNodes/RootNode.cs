@@ -23,9 +23,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             this.yamlDocument = yamlDocument;
         }
 
-        public ParseNode Find(JsonPointer refPointer)
+        public ParseNode Find(JsonPointer referencePointer)
         {
-            var yamlNode = refPointer.Find(yamlDocument.RootNode);
+            var yamlNode = referencePointer.Find(yamlDocument.RootNode);
             if (yamlNode == null)
             {
                 return null;
