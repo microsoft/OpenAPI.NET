@@ -101,6 +101,11 @@ namespace Microsoft.OpenApi.Readers.V2
             ReportMissing(openApiNode, required);
 
             // Post Process OpenApi Object
+            if (openApidoc.Servers == null)
+            {
+                openApidoc.Servers = new List<OpenApiServer>();
+            }
+
             MakeServers(openApidoc.Servers, openApiNode.Context);
 
             return openApidoc;

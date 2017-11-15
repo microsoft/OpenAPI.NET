@@ -32,12 +32,16 @@ namespace Microsoft.OpenApi.Services
             this._visitor.Visit(doc);
             this._visitor.Visit(doc.Info);
             this._visitor.Visit(doc.Servers);
-            foreach (var server in doc.Servers)
+
+            if (doc.Servers != null)
             {
-                this._visitor.Visit(server);
-                foreach (var variable in server.Variables.Values)
+                foreach (var server in doc.Servers)
                 {
-                    this._visitor.Visit(variable);
+                    this._visitor.Visit(server);
+                    foreach (var variable in server.Variables.Values)
+                    {
+                        this._visitor.Visit(variable);
+                    }
                 }
             }
 
