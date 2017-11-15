@@ -74,8 +74,7 @@ namespace Microsoft.OpenApi.Readers
                     return OpenApiV2Deserializer.LoadOpenApi(rootNode);
 
                 default:
-                    var referenceService = new OpenApiV3ReferenceService(rootNode);
-                    context.SetReferenceService(referenceService);
+                    context.SetReferenceService(new OpenApiV3ReferenceService(rootNode));
                     return OpenApiV3Deserializer.LoadOpenApi(rootNode);
             }
         }

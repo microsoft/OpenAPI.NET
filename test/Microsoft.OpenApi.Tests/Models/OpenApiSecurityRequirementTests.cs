@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference() { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
+                        Reference = new OpenApiReference() { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
                     }
                 ] = new List<string>
                 {
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference() { Type = ReferenceType.SecurityScheme, Id = "scheme2" }
+                        Reference = new OpenApiReference() { Type = ReferenceType.SecurityScheme, Id = "scheme2" }
                     }
                 ] = new List<string>
                 {
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference(){Type = ReferenceType.SecurityScheme, Id = "scheme3"}
+                        Reference = new OpenApiReference(){Type = ReferenceType.SecurityScheme, Id = "scheme3"}
                     }
                 ] = new List<string>()
             }

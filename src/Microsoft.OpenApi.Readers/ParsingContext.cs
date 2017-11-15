@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers
 
             if (returnValue != null)
             {
-                returnValue.Pointer = reference;
+                returnValue.Reference = reference;
                 referenceStore.Add(referenceString, returnValue);
             }
             else

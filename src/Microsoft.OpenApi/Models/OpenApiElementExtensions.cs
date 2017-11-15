@@ -225,43 +225,43 @@ namespace Microsoft.OpenApi.Models
             if (reference == null ||
                 document == null ||
                 document.Components == null ||
-                reference.Pointer == null ||
-                reference.Pointer.ExternalResource != null)
+                reference.Reference == null ||
+                reference.Reference.ExternalResource != null)
             {
                 return null;
             }
 
-            switch(reference.Pointer.Type)
+            switch(reference.Reference.Type)
             {
                 case ReferenceType.Schema:
-                    return document.Components.Schemas?[reference.Pointer.Id];
+                    return document.Components.Schemas?[reference.Reference.Id];
 
                 case ReferenceType.Parameter:
-                    return document.Components.Parameters?[reference.Pointer.Id];
+                    return document.Components.Parameters?[reference.Reference.Id];
 
                 case ReferenceType.Header:
-                    return document.Components.Headers?[reference.Pointer.Id];
+                    return document.Components.Headers?[reference.Reference.Id];
 
                 case ReferenceType.Response:
-                    return document.Components.Responses?[reference.Pointer.Id];
+                    return document.Components.Responses?[reference.Reference.Id];
 
                 case ReferenceType.RequestBody:
-                    return document.Components.RequestBodies?[reference.Pointer.Id];
+                    return document.Components.RequestBodies?[reference.Reference.Id];
 
                 case ReferenceType.Example:
-                    return document.Components.Examples?[reference.Pointer.Id];
+                    return document.Components.Examples?[reference.Reference.Id];
 
                 case ReferenceType.SecurityScheme:
-                    return document.Components.SecuritySchemes?[reference.Pointer.Id];
+                    return document.Components.SecuritySchemes?[reference.Reference.Id];
 
                 case ReferenceType.Callback:
-                    return document.Components.Callbacks?[reference.Pointer.Id];
+                    return document.Components.Callbacks?[reference.Reference.Id];
 
                 case ReferenceType.Link:
-                    return document.Components.Links?[reference.Pointer.Id];
+                    return document.Components.Links?[reference.Reference.Id];
 
                 case ReferenceType.Tag:
-                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.Id);
+                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Reference.Id);
 
                 default:
                     return null;
@@ -278,7 +278,7 @@ namespace Microsoft.OpenApi.Models
         public static bool IsReference<T>(this T element) where T : IOpenApiElement
         {
             IOpenApiReferenceable reference = element as IOpenApiReferenceable;
-            return reference?.Pointer != null;
+            return reference?.Reference != null;
         }
 
         /// <summary>

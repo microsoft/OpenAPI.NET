@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
@@ -49,12 +49,11 @@ namespace Microsoft.OpenApi.Models
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
-
-            if (Pointer != null)
-            {
-                Pointer.WriteAsV3(writer);
-                return;
-            }
+            
+            // Writing tag as reference should be handled in the caller given that
+            // tag should always be written as string (except at the time of definition).
+            // regardless of whether Pointer exists. In the context of this model,
+            // we have no information on whether this is the time of definition.
 
             writer.WriteStartObject();
 
@@ -82,12 +81,11 @@ namespace Microsoft.OpenApi.Models
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
-
-            if (Pointer != null)
-            {
-                Pointer.WriteAsV2(writer);
-                return;
-            }
+            
+            // Writing tag as reference should be handled in the caller given that
+            // tag should always be written as string (except at the time of definition).
+            // regardless of whether Pointer exists. In the context of this model,
+            // we have no information on whether this is the time of definition.
 
             writer.WriteStartObject();
 

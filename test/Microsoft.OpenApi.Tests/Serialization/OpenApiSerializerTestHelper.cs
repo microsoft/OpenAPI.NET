@@ -8,8 +8,14 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Tests.Serialization
 {
+    /// <summary>
+    /// Serialiation Helpers
+    /// </summary>
     public static class OpenApiSerializerTestHelper
     {
+        /// <summary>
+        /// Serializes as JSON.
+        /// </summary>
         public static string SerializeAsJson<T>(this T element,
                OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
                where T : OpenApiElement
@@ -17,6 +23,9 @@ namespace Microsoft.OpenApi.Tests.Serialization
             return element.Serialize(version, OpenApiFormat.Json);
         }
 
+        /// <summary>
+        /// Serializes as YAML.
+        /// </summary>
         public static string SerializeAsYaml<T>(this T element,
                OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
                where T : OpenApiElement
@@ -24,6 +33,9 @@ namespace Microsoft.OpenApi.Tests.Serialization
             return element.Serialize(version, OpenApiFormat.Yaml);
         }
 
+        /// <summary>
+        /// Serializes as the specified format.
+        /// </summary>
         public static string Serialize<T>(this T element,
             OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0,
             OpenApiFormat format = OpenApiFormat.Json)
@@ -37,16 +49,7 @@ namespace Microsoft.OpenApi.Tests.Serialization
             MemoryStream stream = new MemoryStream();
             element.Serialize(stream, version, format);
             stream.Position = 0;
-            string value = new StreamReader(stream).ReadToEnd();
-
-            if (value.IndexOf("\n") == -1)
-            {
-                return value;
-            }
-            else
-            {
-                return "\r\n" + value.Replace("\n", "\r\n");
-            }
+            return new StreamReader(stream).ReadToEnd();
         }
     }
 }

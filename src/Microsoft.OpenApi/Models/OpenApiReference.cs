@@ -4,8 +4,8 @@
 // ------------------------------------------------------------
 
 using System;
-using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Models
         public bool IsLocal => ExternalResource == null;
 
         /// <summary>
-        /// Gets the reference string for v3.0.
+        /// Gets the full reference string for v3.0.
         /// </summary>
         public string ReferenceV3
         {
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Models
 
                 if (!Type.HasValue)
                 {
-                    throw Error.ArgumentNull(nameof(OpenApiReference.Type));
+                    throw Error.ArgumentNull(nameof(Type));
                 }
 
                 if (Type == ReferenceType.Tag)
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Gets the reference string for V2.0
+        /// Gets the full reference string for V2.0
         /// </summary>
         public string ReferenceV2
         {
@@ -130,8 +130,8 @@ namespace Microsoft.OpenApi.Models
 
             if (Type == ReferenceType.SecurityScheme)
             {
-                // Write the string value only
-                writer.WriteValue(ReferenceV3);
+                // Write the string as property name
+                writer.WritePropertyName(ReferenceV3);
                 return;
             }
 
@@ -162,8 +162,8 @@ namespace Microsoft.OpenApi.Models
 
             if (Type == ReferenceType.SecurityScheme)
             {
-                // Write the string value only
-                writer.WriteValue(ReferenceV2);
+                // Write the string as property name
+                writer.WritePropertyName(ReferenceV2);
                 return;
             }
 

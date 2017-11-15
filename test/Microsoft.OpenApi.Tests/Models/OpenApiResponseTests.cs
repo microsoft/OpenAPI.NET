@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Type = "array",
                         Items = new OpenApiSchema
                         {
-                            Pointer = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
+                            Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
                         }
                     };
                 });

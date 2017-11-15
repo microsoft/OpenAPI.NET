@@ -4,8 +4,8 @@
 // ------------------------------------------------------------
 
 using System;
-using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;

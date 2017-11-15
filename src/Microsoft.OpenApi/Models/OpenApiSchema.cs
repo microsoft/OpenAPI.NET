@@ -230,7 +230,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v3.0
@@ -242,9 +242,9 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV3(writer);
+                Reference.WriteAsV3(writer);
                 return;
             }
 
@@ -371,9 +371,9 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV2(writer);
+                Reference.WriteAsV2(writer);
                 return;
             }
 

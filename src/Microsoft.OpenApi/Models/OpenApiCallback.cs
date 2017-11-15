@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -66,9 +66,9 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV3(writer);
+                Reference.WriteAsV3(writer);
             }
             else
             {

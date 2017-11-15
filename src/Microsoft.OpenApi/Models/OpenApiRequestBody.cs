@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// A brief description of the request body. This could contain examples of use.
@@ -53,9 +53,9 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV3(writer);
+                Reference.WriteAsV3(writer);
             }
             else
             {
