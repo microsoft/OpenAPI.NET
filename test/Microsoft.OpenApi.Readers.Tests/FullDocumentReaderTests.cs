@@ -437,9 +437,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             actual.ShouldBeEquivalentTo(expected);
         }
 
-        [Fact(Skip = "Need to make SecurityScheme equatable since it is used as a dictionary key." +
-            "I have manually verified by comparising the serialized version of it that" +
-            "security scheme reference is working as expected.")]
+        [Fact]
         public void ReadingModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
             var stream = GetType()
@@ -943,7 +941,13 @@ namespace Microsoft.OpenApi.Readers.Tests
                 
             };
 
-            actual.ShouldBeEquivalentTo(expected);
+            // TODO: Change this to actual.ShouldBeEquivalentTo(expected)
+            // once we implement equality for OpenApiSecurityScheme
+            // Using JsonConvert.SerializeObject allows us to compare two objects
+            // but FluentAssertions can give us richer message if we truly
+            // compare the objects, not the string representations.
+            JsonConvert.SerializeObject(actual).ShouldBeEquivalentTo(
+                JsonConvert.SerializeObject(expected));
         }
     }
 }
