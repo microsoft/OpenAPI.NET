@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using System;
-using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;

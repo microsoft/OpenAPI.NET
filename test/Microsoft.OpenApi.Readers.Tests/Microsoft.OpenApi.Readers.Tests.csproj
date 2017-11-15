@@ -43,7 +43,8 @@
     <EmbeddedResource Include="Samples\petstore-expanded.yaml" />
     <EmbeddedResource Include="Samples\Simplest.yaml" />
     <EmbeddedResource Include="Samples\CompleteHeader.yaml" />
-    <EmbeddedResource Include="Samples\petstore30.yaml" />
+    <EmbeddedResource Include="Samples\PetStore30.yaml" />
+    <EmbeddedResource Include="Samples\PetStoreWithTagAndSecurity30.yaml" />
     <EmbeddedResource Include="Samples\BrokenSimplest.yaml" />
     <EmbeddedResource Include="Samples\uber.yaml" />
 

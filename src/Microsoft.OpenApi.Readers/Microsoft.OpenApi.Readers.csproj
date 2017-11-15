@@ -18,6 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ReferenceServices\OpenApiReferenceServiceBase.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SharpYaml" Version="1.6.1" />
   </ItemGroup>
 

@@ -59,12 +59,16 @@ namespace Microsoft.OpenApi.Readers
 
             var reference = _referenceService.ConvertToOpenApiReference(referenceString, referenceType);
 
-            returnValue = _referenceService.LoadReference(reference);
+            var referenceFound = _referenceService.TryLoadReference(reference, out returnValue);
 
-            if (returnValue != null)
+            if (referenceFound)
             {
                 returnValue.Reference = reference;
                 referenceStore.Add(referenceString, returnValue);
+            }
+            else if (returnValue != null)
+            {
+                return returnValue;
             }
             else
             {

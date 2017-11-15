@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         public OperationTests()
         {
             var stream = GetType()
-                .Assembly.GetManifestResourceStream(typeof(OperationTests), "Samples.petstore30.yaml");
+                .Assembly.GetManifestResourceStream(typeof(OperationTests), "Samples.PetStore30.yaml");
             _PetStoreDoc = new OpenApiStreamReader().Read(stream, out var context);
             //_PostOperation = _PetStoreDoc.Paths.PathMap.Where(pm=>pm.Key == "/pets").Value
             //    .Operations.Where()

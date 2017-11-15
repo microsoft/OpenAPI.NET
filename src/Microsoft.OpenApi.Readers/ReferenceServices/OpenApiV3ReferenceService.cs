@@ -17,19 +17,21 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
     /// <summary>
     /// The reference service for the Open API V3.0.
     /// </summary>
-    internal class OpenApiV3ReferenceService : OpenApiReferenceServiceBase
+    internal class OpenApiV3ReferenceService : IOpenApiReferenceService
     {
+        private readonly RootNode _rootNode;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiV3ReferenceService"/> class.
         /// </summary>
         /// <param name="rootNode">The document root node.</param>
         public OpenApiV3ReferenceService(RootNode rootNode)
-            : base(rootNode)
         {
+            _rootNode = rootNode ?? throw new ArgumentNullException(nameof(rootNode));
         }
 
         /// <inheritdoc/>
-        public override OpenApiReference ConvertToOpenApiReference(
+        public OpenApiReference ConvertToOpenApiReference(
             string referenceString,
             ReferenceType? type)
         {
@@ -79,11 +81,13 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         }
 
         /// <inheritdoc/>
-        public override IOpenApiReferenceable LoadReference(OpenApiReference reference)
+        public bool TryLoadReference(OpenApiReference reference, out IOpenApiReferenceable referencedObject)
         {
+            referencedObject = null;
+
             if (reference == null)
             {
-                return null;
+                return false;
             }
 
             if (reference.IsExternal)
@@ -100,12 +104,13 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             // Special case for Tag
             if (reference.Type == ReferenceType.Tag)
             {
-                var tagListPointer = new JsonPointer("#/tags/");
-                var tagListNode = (ListNode)RootNode.Find(tagListPointer);
+                var tagListPointer = new JsonPointer("#/tags");
+                var tagListNode = (ListNode)_rootNode.Find(tagListPointer);
 
                 if (tagListNode == null)
                 {
-                    return new OpenApiTag {Name = reference.Id};
+                    referencedObject = new OpenApiTag {Name = reference.Id};
+                    return false;
                 }
 
                 var tags = tagListNode.CreateList(OpenApiV3Deserializer.LoadTag);
@@ -114,19 +119,20 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 {
                     if (tag.Name == reference.Id)
                     {
-                        return tag;
+                        referencedObject = tag;
+                        return true;
                     }
                 }
 
-                return new OpenApiTag {Name = reference.Id};
+                referencedObject = new OpenApiTag {Name = reference.Id};
+                return false;
             }
 
             var componentJsonPointer =
                 new JsonPointer("#/components/" + reference.Type.GetDisplayName() + "/" + reference.Id);
 
-            var node = RootNode.Find(componentJsonPointer);
+            var node = _rootNode.Find(componentJsonPointer);
 
-            IOpenApiReferenceable referencedObject = null;
             switch (reference.Type)
             {
                 case ReferenceType.Schema:
@@ -173,11 +179,11 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                             componentJsonPointer));
             }
 
-            return referencedObject;
+            return true;
         }
 
         /// <inheritdoc/>
-        protected override OpenApiReference ParseLocalPointer(string localPointer)
+        protected OpenApiReference ParseLocalPointer(string localPointer)
         {
             if (string.IsNullOrWhiteSpace(localPointer))
             {

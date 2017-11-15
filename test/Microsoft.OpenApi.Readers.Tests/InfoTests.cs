@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void CheckPetStoreApiInfo()
         {
-            var stream = GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.petstore30.yaml");
+            var stream = GetType().Assembly.GetManifestResourceStream(typeof(InfoTests), "Samples.PetStore30.yaml");
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             info.Description.Should()
                 .Be(
                     "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification");
-            info.Version.ToString().Should().Be("1.0.0");
+            info.Version.Should().Be("1.0.0");
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             var info = openApiDoc.Info;
             info.Should().NotBeNull();
             info.Title.Should().Be("The Api");
-            info.Version.ToString().Should().Be("0.9.1");
+            info.Version.Should().Be("0.9.1");
             info.Description.Should().Be("This is an api");
             info.TermsOfService.OriginalString.Should().Be("http://example.org/Dowhatyouwant");
             info.Contact.Name.Should().Be("Darrel Miller");
@@ -61,12 +61,12 @@ namespace Microsoft.OpenApi.Readers.Tests
             info.Extensions["x-contact"].Should().BeOfType<OpenApiObject>();
             var objValue = (OpenApiObject)(info.Extensions["x-contact"]);
             objValue.Count.Should().Be(3);
-            objValue.Keys.Should().Equal(new[] {"name", "url", "email"});
+            objValue.Keys.Should().Equal("name", "url", "email");
 
             info.Extensions["x-list"].Should().BeOfType<OpenApiArray>();
             var arrayValue = (OpenApiArray)(info.Extensions["x-list"]);
             arrayValue.Count.Should().Be(2);
-            arrayValue.Select(e => ((OpenApiString)e).Value).Should().Equal(new[] {"1", "2"});
+            arrayValue.Select(e => ((OpenApiString)e).Value).Should().Equal("1", "2");
         }
     }
 }

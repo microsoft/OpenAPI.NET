@@ -14,11 +14,17 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
     public interface IOpenApiReferenceService
     {
         /// <summary>
-        /// Load the <see cref="IOpenApiElement"/> from a <see cref="OpenApiReference"/> object.
+        /// Load the <see cref="IOpenApiReferenceable"/> from a <see cref="OpenApiReference"/> object
         /// </summary>
         /// <param name="reference">The <see cref="OpenApiReference"/> object.</param>
-        /// <returns>The referenced object or null.</returns>
-        IOpenApiReferenceable LoadReference(OpenApiReference reference);
+        /// <param name="referencedObject">The object that is being referenced.</param>
+        /// <returns>
+        /// If the reference is found, return true and the referenced object in the out parameter.
+        /// In the case of tag, it is psosible that the referenced object does not exist. In this case,
+        /// a new tag will be returned in the outer parameter and the return value will be false.
+        /// If reference is null, no object will be returned and the return value will be false.
+        /// </returns>
+        bool TryLoadReference(OpenApiReference reference, out IOpenApiReferenceable referencedObject);
 
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
