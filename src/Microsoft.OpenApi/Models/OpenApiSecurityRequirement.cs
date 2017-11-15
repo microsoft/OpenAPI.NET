@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var scheme in Schemes)
             {
-                writer.WritePropertyName(scheme.Key.Pointer.Name);
+                writer.WritePropertyName(scheme.Key.Pointer.Id);
 
                 writer.WriteStartArray();
 
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var scheme in Schemes)
             {
-                writer.WritePropertyName(scheme.Key.Pointer.Name);
+                writer.WritePropertyName(scheme.Key.Pointer.Id);
 
                 writer.WriteStartArray();
 

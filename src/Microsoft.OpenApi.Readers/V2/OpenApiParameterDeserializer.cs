@@ -217,10 +217,10 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mapNode = node.CheckMapNode("parameter");
 
-            var refpointer = mapNode.GetReferencePointer();
-            if (refpointer != null)
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiParameter>(refpointer);
+                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
             }
 
             var parameter = new OpenApiParameter();

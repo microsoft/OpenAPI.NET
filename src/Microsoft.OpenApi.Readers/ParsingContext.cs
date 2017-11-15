@@ -43,49 +43,35 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <summary>
-        /// Get the referenced object.
+        /// Gets the referenced object
         /// </summary>
-        /// <param name="diagnostic"></param>
-        /// <param name="pointer"></param>
-        /// <returns></returns>
-        public IOpenApiReferenceable GetReferencedObject(OpenApiDiagnostic diagnostic, string pointer)
+        public IOpenApiReferenceable GetReferencedObject(
+            OpenApiDiagnostic diagnostic, 
+            ReferenceType referenceType,
+            string referenceString)
         {
-            var reference = _referenceService.FromString(pointer);
-            return GetReferencedObject(diagnostic, reference);
-        }
+            referenceStore.TryGetValue(referenceString, out var returnValue);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="diagnostic"></param>
-        /// <param name="reference"></param>
-        /// <returns></returns>
-        public IOpenApiReferenceable GetReferencedObject(OpenApiDiagnostic diagnostic, OpenApiReference reference)
-        {
-            IOpenApiReferenceable returnValue = null;
-            string referenceString = _referenceService.ToString(reference);
-            referenceStore.TryGetValue(referenceString, out returnValue);
-
-            if (returnValue == null)
+            // If reference has already been accessed once, simply return the same reference object.
+            if (returnValue != null)
             {
-                if (previousPointers.Contains(referenceString))
-                {
-                    return null; // Return reference object?
-                }
+                return returnValue;
+            }
 
-                previousPointers.Push(referenceString);
-                returnValue = _referenceService.LoadReference(reference);
-                previousPointers.Pop();
+            var reference = _referenceService.ConvertToOpenApiReference(referenceString, referenceType);
 
-                if (returnValue != null)
-                {
-                    returnValue.Pointer = reference;
-                    referenceStore.Add(referenceString, returnValue);
-                }
-                else
-                {
-                    diagnostic.Errors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
-                }
+            returnValue = _referenceService.LoadReference(reference);
+
+            if (returnValue != null)
+            {
+                returnValue.Pointer = reference;
+                referenceStore.Add(referenceString, returnValue);
+            }
+            else
+            {
+                diagnostic.Errors.Add(new
+                    OpenApiError(GetLocation(), 
+                        $"Cannot resolve the reference {referenceString}"));
             }
 
             return returnValue;

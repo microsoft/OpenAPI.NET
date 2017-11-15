@@ -26,80 +26,48 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// Initializes a new instance of the <see cref="OpenApiReferenceServiceBase"/> class.
         /// </summary>
         /// <param name="rootNode">The document root node.</param>
-        public OpenApiReferenceServiceBase(RootNode rootNode)
+        protected OpenApiReferenceServiceBase(RootNode rootNode)
         {
             RootNode = rootNode ?? throw new ArgumentNullException(nameof(rootNode));
         }
 
-        /// <inheritdoc />
-        public abstract string ToString(OpenApiReference reference);
+        /// <summary>
+        /// Loads the referenced object matching the given OpenApiReference object.
+        /// </summary>
+        public abstract IOpenApiReferenceable LoadReference(OpenApiReference reference);
 
-        /// <inheritdoc />
-        public virtual IOpenApiReferenceable LoadReference(OpenApiReference reference)
+        /// <summary>
+        /// Loads <see cref="OpenApiTag"/> from parse node.
+        /// </summary>
+        protected static OpenApiTag LoadTag(ParseNode parseNode)
         {
-            if (reference == null)
-            {
-                return null;
-            }
+            var mapNode = parseNode.CheckMapNode("tag");
 
-            if (reference.IsExternal)
-            {
-                // TODO: need to read the external document and load the referenced object.
-                throw new NotImplementedException(SRResource.LoadReferencedObjectFromExternalNotImplmented);
-            }
+            var obj = new OpenApiTag();
 
-            var node = RootNode.Find(GetLocalPointer(reference));
-            if (node == null && reference.ReferenceType != ReferenceType.Tag)
+            foreach (var node in mapNode)
             {
-                return null;
-            }
-
-            return LoadReference(reference, node);
-        }
-
-        /// <inheritdoc />
-        public virtual OpenApiReference FromString(string pointer)
-        {
-            if (!String.IsNullOrWhiteSpace(pointer))
-            {
-                var segments = pointer.Split('#');
-                if (segments.Length == 1)
+                var key = node.Name;
+                switch (key)
                 {
-                    // "$ref": "Pet.json"
-                    return new OpenApiReference(segments[0]);
-                }
-                else if (segments.Length == 2)
-                {
-                    if (pointer.StartsWith("#"))
-                    {
-                        // "$ref": "#/components/schemas/Pet"
-                        return ParseLocalPointer(segments[1]);
-                    }
-                    else
-                    {
-                        // $ref: definitions.yaml#/Pet
-                        return new OpenApiReference(segments[0], segments[1].Substring(1)); // remove '/'
-                    }
+                    case "description":
+                        obj.Description = node.Value.GetScalarValue();
+                        break;
+                    case "name":
+                        obj.Name = node.Value.GetScalarValue();
+                        break;
                 }
             }
 
-            throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, pointer));
+            return obj;
         }
-
+        
         /// <summary>
-        /// Get the local pointer from a <see cref="OpenApiReference"/>.
+        /// Gets the OpenApiReference object from string and reference type.
         /// </summary>
-        /// <param name="reference">The reference object.</param>
-        /// <returns>The <see cref="JsonPointer"/> object or null.</returns>
-        protected abstract JsonPointer GetLocalPointer(OpenApiReference reference);
-
-        /// <summary>
-        /// Load the local element from the Node.
-        /// </summary>
-        /// <param name="reference">The reference object.</param>
-        /// <param name="node">The element node.</param>
-        /// <returns>The referenced object or null.</returns>
-        protected abstract IOpenApiReferenceable LoadReference(OpenApiReference reference, ParseNode node);
+        public abstract OpenApiReference ConvertToOpenApiReference(
+            string referenceString,
+            ReferenceType? type);
 
         /// <summary>
         /// Parse the local pointer to return a <see cref="OpenApiReference"/>.

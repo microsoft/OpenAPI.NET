@@ -12,6 +12,10 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="ReferenceService\ConvertOpenApiReferenceV2ToReferenceStringTests.cs" />
+    <Compile Remove="ReferenceService\ConvertReferenceStringToOpenApiReferenceV2Tests.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Samples\api-with-examples.yaml" />
     <None Remove="Samples\petstore-expanded.yaml" />
     <None Remove="Samples\uber.yaml" />

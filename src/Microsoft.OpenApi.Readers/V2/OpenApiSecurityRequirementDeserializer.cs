@@ -27,6 +27,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     mapNode.Context,
                     mapNode.Diagnostic,
                     property.Name);
+
                 if (scheme != null)
                 {
                     obj.Schemes.Add(scheme, property.Value.CreateSimpleList(n2 => n2.GetScalarValue()));
@@ -48,7 +49,8 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var securitySchemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(
                 diagnostic,
-                new OpenApiReference(ReferenceType.SecurityScheme, schemeName));
+                ReferenceType.SecurityScheme,
+                schemeName);
 
             return securitySchemeObject;
         }

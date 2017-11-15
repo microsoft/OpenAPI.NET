@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static string SerializeAsJson<T>(
             this T element,
-            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+            OpenApiSpecVersion version)
             where T : OpenApiElement
         {
             return element.Serialize(version, OpenApiFormat.Json);
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static string SerializeAsYaml<T>(
             this T element,
-            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+            OpenApiSpecVersion version)
             where T : OpenApiElement
         {
             return element.Serialize(version, OpenApiFormat.Yaml);
@@ -29,8 +29,8 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static string Serialize<T>(
             this T element,
-            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0,
-            OpenApiFormat format = OpenApiFormat.Json)
+            OpenApiSpecVersion version,
+            OpenApiFormat format)
             where T : OpenApiElement
         {
             if (element == null)

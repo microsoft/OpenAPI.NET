@@ -13,11 +13,6 @@ namespace Microsoft.OpenApi.Models
     public enum ReferenceType
     {
         /// <summary>
-        /// Unknown.
-        /// </summary>
-        Unknown = 0,
-
-        /// <summary>
         /// Schema item.
         /// </summary>
         [Display("schemas")]

@@ -14,19 +14,26 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiSecuritySchemeTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiSecuritySchemeTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         public static OpenApiSecurityScheme ApiKeySecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
+            Name = "parameterName",
             Type = SecuritySchemeType.ApiKey,
             In = ParameterLocation.Query,
-            Name = "parameterName"
         };
 
         public static OpenApiSecurityScheme HttpBasicSecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = "basic"
+            Scheme = "basic",
         };
 
         public static OpenApiSecurityScheme HttpBearerSecurityScheme = new OpenApiSecurityScheme
@@ -34,7 +41,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Type = SecuritySchemeType.Http,
             Scheme = "bearer",
-            BearerFormat = "JWT"
+            BearerFormat = "JWT",
         };
 
         public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new OpenApiSecurityScheme
@@ -101,13 +108,6 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiSecuritySchemeTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void SerializeApiKeySecuritySchemeAsV3JsonWorks()
         {
@@ -121,8 +121,8 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = ApiKeySecurityScheme.SerializeAsJson();
-
+            var actual = ApiKeySecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -140,7 +140,7 @@ name: parameterName
 in: query";
 
             // Act
-            var actual = ApiKeySecurityScheme.SerializeAsYaml();
+            var actual = ApiKeySecurityScheme.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -160,7 +160,7 @@ in: query";
 }";
 
             // Act
-            var actual = HttpBasicSecurityScheme.SerializeAsJson();
+            var actual = HttpBasicSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -181,7 +181,7 @@ in: query";
 }";
 
             // Act
-            var actual = HttpBearerSecurityScheme.SerializeAsJson();
+            var actual = HttpBearerSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -209,7 +209,7 @@ in: query";
 }";
 
             // Act
-            var actual = OAuth2SingleFlowSecurityScheme.SerializeAsJson();
+            var actual = OAuth2SingleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -253,7 +253,7 @@ in: query";
 }";
 
             // Act
-            var actual = OAuth2MultipleFlowSecurityScheme.SerializeAsJson();
+            var actual = OAuth2MultipleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -273,7 +273,7 @@ in: query";
 }";
 
             // Act
-            var actual = OpenIdConnectSecurityScheme.SerializeAsJson();
+            var actual = OpenIdConnectSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

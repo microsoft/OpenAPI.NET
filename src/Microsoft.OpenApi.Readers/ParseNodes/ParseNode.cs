@@ -6,10 +6,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using SharpYaml.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -78,7 +79,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             throw new OpenApiException("Cannot create map");
         }
 
-        public virtual Dictionary<string, T> CreateMapWithReference<T>(string refpointer, Func<MapNode, T> map)
+        public virtual Dictionary<string, T> CreateMapWithReference<T>(
+            ReferenceType referenceType,
+            string refpointer,
+            Func<MapNode, T> map)
             where T : class, IOpenApiReferenceable
         {
             throw new OpenApiException("Cannot create map from reference");

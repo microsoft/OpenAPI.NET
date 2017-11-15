@@ -6,7 +6,6 @@
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -15,8 +14,8 @@ namespace Microsoft.OpenApi.Tests.Models
     /// </summary>
     public class OpenApiResponseTests
     {
-        public static OpenApiResponse BasicResponse;
         public static OpenApiResponse AdvancedResponse;
+        public static OpenApiResponse BasicResponse;
 
         static OpenApiResponseTests()
         {
@@ -26,35 +25,41 @@ namespace Microsoft.OpenApi.Tests.Models
                 Description = "A complex object array response"
             };
 
-            AdvancedResponse.AddMediaType("text/plain", (m) =>
-            {
-                m.Schema = new OpenApiSchema
+            AdvancedResponse.AddMediaType(
+                "text/plain",
+                m =>
                 {
-                    Type = "array",
-                    Items = new OpenApiSchema
+                    m.Schema = new OpenApiSchema
                     {
-                        Pointer = new OpenApiReference("#/components/schemas/VeryComplexType")
-                    }
-                };
-            });
+                        Type = "array",
+                        Items = new OpenApiSchema
+                        {
+                            Pointer = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
+                        }
+                    };
+                });
 
-            AdvancedResponse.AddHeader("X-Rate-Limit-Limit", (h) =>
-            {
-                h.Description = "The number of allowed requests in the current period";
-                h.Schema = new OpenApiSchema
+            AdvancedResponse.AddHeader(
+                "X-Rate-Limit-Limit",
+                h =>
                 {
-                    Type = "integer"
-                };
-            });
+                    h.Description = "The number of allowed requests in the current period";
+                    h.Schema = new OpenApiSchema
+                    {
+                        Type = "integer"
+                    };
+                });
 
-            AdvancedResponse.AddHeader("X-Rate-Limit-Reset", (h) =>
-            {
-                h.Description = "The number of seconds left in the current period";
-                h.Schema = new OpenApiSchema
+            AdvancedResponse.AddHeader(
+                "X-Rate-Limit-Reset",
+                h =>
                 {
-                    Type = "integer"
-                };
-            });
+                    h.Description = "The number of seconds left in the current period";
+                    h.Schema = new OpenApiSchema
+                    {
+                        Type = "integer"
+                    };
+                });
         }
 
         [Theory]
@@ -62,7 +67,8 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json)]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml)]
-        public void SerializeBasicResponseWorks(OpenApiSpecVersion version,
+        public void SerializeBasicResponseWorks(
+            OpenApiSpecVersion version,
             OpenApiFormat format)
         {
             // Arrange & Act
@@ -97,7 +103,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""schema"": {
         ""type"": ""array"",
         ""items"": {
-          ""$ref"": ""#/components/schemas/VeryComplexType""
+          ""$ref"": ""#/components/schemas/customType""
         }
       }
     }
@@ -105,7 +111,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedResponse.SerializeAsJson();
+            var actual = AdvancedResponse.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -118,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-@"description: A complex object array response
+                @"description: A complex object array response
 headers:
   X-Rate-Limit-Limit:
     description: The number of allowed requests in the current period
@@ -133,10 +139,10 @@ content:
     schema:
       type: array
       items:
-        $ref: '#/components/schemas/VeryComplexType'";
+        $ref: '#/components/schemas/customType'";
 
             // Act
-            var actual = AdvancedResponse.SerializeAsYaml();
+            var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -153,7 +159,7 @@ content:
   ""schema"": {
     ""type"": ""array"",
     ""items"": {
-      ""$ref"": ""#/components/schemas/VeryComplexType""
+      ""$ref"": ""#/definitions/customType""
     }
   },
   ""headers"": {
@@ -186,11 +192,11 @@ content:
         {
             // Arrange
             var expected =
-@"description: A complex object array response
+                @"description: A complex object array response
 schema:
   type: array
   items:
-    $ref: '#/components/schemas/VeryComplexType'
+    $ref: '#/definitions/customType'
 headers:
   X-Rate-Limit-Limit:
     description: The number of allowed requests in the current period

@@ -231,37 +231,37 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            switch(reference.Pointer.ReferenceType)
+            switch(reference.Pointer.Type)
             {
                 case ReferenceType.Schema:
-                    return document.Components.Schemas?[reference.Pointer.Name];
+                    return document.Components.Schemas?[reference.Pointer.Id];
 
                 case ReferenceType.Parameter:
-                    return document.Components.Parameters?[reference.Pointer.Name];
+                    return document.Components.Parameters?[reference.Pointer.Id];
 
                 case ReferenceType.Header:
-                    return document.Components.Headers?[reference.Pointer.Name];
+                    return document.Components.Headers?[reference.Pointer.Id];
 
                 case ReferenceType.Response:
-                    return document.Components.Responses?[reference.Pointer.Name];
+                    return document.Components.Responses?[reference.Pointer.Id];
 
                 case ReferenceType.RequestBody:
-                    return document.Components.RequestBodies?[reference.Pointer.Name];
+                    return document.Components.RequestBodies?[reference.Pointer.Id];
 
                 case ReferenceType.Example:
-                    return document.Components.Examples?[reference.Pointer.Name];
+                    return document.Components.Examples?[reference.Pointer.Id];
 
                 case ReferenceType.SecurityScheme:
-                    return document.Components.SecuritySchemes?[reference.Pointer.Name];
+                    return document.Components.SecuritySchemes?[reference.Pointer.Id];
 
                 case ReferenceType.Callback:
-                    return document.Components.Callbacks?[reference.Pointer.Name];
+                    return document.Components.Callbacks?[reference.Pointer.Id];
 
                 case ReferenceType.Link:
-                    return document.Components.Links?[reference.Pointer.Name];
+                    return document.Components.Links?[reference.Pointer.Id];
 
                 case ReferenceType.Tag:
-                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.Name);
+                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.Id);
 
                 default:
                     return null;

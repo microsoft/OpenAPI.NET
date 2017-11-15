@@ -24,14 +24,8 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
         /// <param name="pointer">The reference string.</param>
+        /// <param name="type">The type of the reference.</param>
         /// <returns>The <see cref="OpenApiReference"/> object or null.</returns>
-        OpenApiReference FromString(string pointer);
-
-        /// <summary>
-        /// Convert the <see cref="OpenApiReference"/> to raw string.
-        /// </summary>
-        /// <param name="reference">The reference object.</param>
-        /// <returns>The reference string.</returns>
-        string ToString(OpenApiReference reference);
+        OpenApiReference ConvertToOpenApiReference(string pointer, ReferenceType? type);
     }
 }

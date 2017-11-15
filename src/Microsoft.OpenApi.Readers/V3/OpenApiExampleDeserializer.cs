@@ -47,10 +47,10 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode("Example");
 
-            var refpointer = mapNode.GetReferencePointer();
-            if (refpointer != null)
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiExample>(refpointer);
+                return mapNode.GetReferencedObject<OpenApiExample>(ReferenceType.Example, pointer);
             }
 
             var example = new OpenApiExample();

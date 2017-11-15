@@ -53,25 +53,24 @@ namespace Microsoft.OpenApi.Models
             if (Pointer != null)
             {
                 Pointer.WriteAsV3(writer);
+                return;
             }
-            else
-            {
-                writer.WriteStartObject();
 
-                // name
-                writer.WriteProperty(OpenApiConstants.Name, Name);
+            writer.WriteStartObject();
 
-                // description
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+            // name
+            writer.WriteProperty(OpenApiConstants.Name, Name);
 
-                // external docs
-                writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
-                // extensions.
-                writer.WriteExtensions(Extensions);
+            // external docs
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
 
-                writer.WriteEndObject();
-            }
+            // extensions.
+            writer.WriteExtensions(Extensions);
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -87,25 +86,24 @@ namespace Microsoft.OpenApi.Models
             if (Pointer != null)
             {
                 Pointer.WriteAsV2(writer);
+                return;
             }
-            else
-            {
-                writer.WriteStartObject();
 
-                // name
-                writer.WriteProperty(OpenApiConstants.Name, Name);
+            writer.WriteStartObject();
 
-                // description
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+            // name
+            writer.WriteProperty(OpenApiConstants.Name, Name);
 
-                // external docs
-                writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
-                // extensions
-                writer.WriteExtensions(Extensions);
+            // external docs
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
 
-                writer.WriteEndObject();
-            }
+            // extensions
+            writer.WriteExtensions(Extensions);
+
+            writer.WriteEndObject();
         }
     }
 }

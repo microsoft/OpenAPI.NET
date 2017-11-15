@@ -9,8 +9,8 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
-using Microsoft.OpenApi.Readers.Properties;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Readers.Properties;
 
 namespace Microsoft.OpenApi.Readers.V3
 {
@@ -27,9 +27,61 @@ namespace Microsoft.OpenApi.Readers.V3
             : base(rootNode)
         {
         }
+        
+        /// <inheritdoc/>
+        public override OpenApiReference ConvertToOpenApiReference(
+            string referenceString, 
+            ReferenceType? type)
+        {
+            if (!String.IsNullOrWhiteSpace(referenceString))
+            {
+                var segments = referenceString.Split('#');
+                if (segments.Length == 1)
+                {
+                    // Either this is an external reference as an entire file
+                    // or a simple string-style reference for tag and security scheme.
+                    if (type == null)
+                    {
+                        // "$ref": "Pet.json"
+                        return new OpenApiReference()
+                        {
+                            ExternalResource = segments[0]
+                        };
+                    }
 
-        /// <inheritdoc />
-        public override string ToString(OpenApiReference reference)
+                    if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
+                    {
+                        return new OpenApiReference()
+                        {
+                            Type = type,
+                            Id = referenceString
+                        };
+                    }
+                }
+                else if (segments.Length == 2)
+                {
+                    if (referenceString.StartsWith("#"))
+                    {
+                        // "$ref": "#/components/schemas/Pet"
+                        return ParseLocalPointer(segments[1]);
+                    }
+
+                    // $ref: externalSource.yaml#/Pet
+                    return new OpenApiReference()
+                    {
+                        ExternalResource = segments[0],
+                        Id = segments[1].Substring(1)
+                    };
+
+                }
+            }
+
+            throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, referenceString));
+
+        }
+
+        /// <inheritdoc/>
+        public override IOpenApiReferenceable LoadReference(OpenApiReference reference)
         {
             if (reference == null)
             {
@@ -38,34 +90,46 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (reference.IsExternal)
             {
-                if (reference.Name != null)
+                // TODO: need to read the external document and load the referenced object.
+                throw new NotImplementedException(SRResource.LoadReferencedObjectFromExternalNotImplmented);
+            }
+
+            if (!reference.Type.HasValue)
+            {
+                throw new ArgumentException("Local reference must have type specified.");
+            }
+
+            // Special case for Tag
+            if (reference.Type == ReferenceType.Tag)
+            {
+                var tagListPointer = new JsonPointer("#/tags/");
+                var tagListNode = (ListNode)RootNode.Find(tagListPointer);
+
+                if (tagListNode == null)
                 {
-                    return reference.ExternalResource + "#/" + reference.Name;
+                    return new OpenApiTag {Name = reference.Id};
                 }
 
-                return reference.ExternalResource;
+                var tags = tagListNode.CreateList(LoadTag);
+
+                foreach (var tag in tags)
+                {
+                    if (tag.Name == reference.Id)
+                    {
+                        return tag;
+                    }
+                }
+
+                return new OpenApiTag {Name = reference.Id};
             }
 
-            if (reference.ReferenceType == ReferenceType.Tag)
-            {
-                return "#/tags/" + reference.Name;
-            }
-            else
-            {
-                return "#/components/" + reference.ReferenceType.GetDisplayName() + "/" + reference.Name;
-            }
-        }
-
-        /// <inheritdoc />
-        protected override IOpenApiReferenceable LoadReference(OpenApiReference reference, ParseNode node)
-        {
-            if (reference == null || (node == null && reference.ReferenceType != ReferenceType.Tag))
-            {
-                return null;
-            }
+            var componentJsonPointer =
+                new JsonPointer("#/components/" + reference.Type.GetDisplayName() + "/" + reference.Id);
+            
+            var node = RootNode.Find(componentJsonPointer);
 
             IOpenApiReferenceable referencedObject = null;
-            switch (reference.ReferenceType)
+            switch (reference.Type)
             {
                 case ReferenceType.Schema:
                     referencedObject = OpenApiV3Deserializer.LoadSchema(node);
@@ -103,67 +167,37 @@ namespace Microsoft.OpenApi.Readers.V3
                     referencedObject = OpenApiV3Deserializer.LoadCallback(node);
                     break;
 
-                case ReferenceType.Tag:
-                    var list = (ListNode)node;
-                    if (list != null)
-                    {
-                        foreach (var item in list)
-                        {
-                            var tag = OpenApiV3Deserializer.LoadTag(item);
-
-                            if (tag.Name == reference.Name)
-                            {
-                                referencedObject = tag;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        referencedObject = new OpenApiTag {Name = reference.Name };
-                    }
-
-                    break;
-
                 default:
-                    throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidValue, reference.ReferenceType, GetLocalPointer(reference).ToString()));
+                    throw new OpenApiException(
+                        string.Format(
+                            SRResource.ReferenceHasInvalidValue,
+                            reference.Type,
+                            componentJsonPointer));
             }
 
             return referencedObject;
         }
 
-        /// <inheritdoc />
-        protected override JsonPointer GetLocalPointer(OpenApiReference reference)
-        {
-            return new JsonPointer(ToString(reference));
-        }
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected override OpenApiReference ParseLocalPointer(string localPointer)
         {
-            if (String.IsNullOrWhiteSpace(localPointer))
+            if (string.IsNullOrWhiteSpace(localPointer))
             {
-                throw new ArgumentException(String.Format(SRResource.ArgumentNullOrWhiteSpace, nameof(localPointer)));
+                throw new ArgumentException(string.Format(SRResource.ArgumentNullOrWhiteSpace, nameof(localPointer)));
             }
 
             var segments = localPointer.Split('/');
-            if (segments.Length == 3) // /tags/Pet
-            {
-                ReferenceType referenceType = segments[1].GetEnumFromDisplayName<ReferenceType>();
-                if (referenceType == ReferenceType.Tag)
-                {
-                    return new OpenApiReference(referenceType, segments[2]);
-                }
-            }
-            else if (segments.Length == 4) // /components/{type}/pet
+
+            if (segments.Length == 4) // /components/{type}/pet
             {
                 if (segments[1] == "components")
                 {
-                    ReferenceType referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
-                    return new OpenApiReference(referenceType, segments[3]);
+                    var referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
+                    return new OpenApiReference {Type = referenceType, Id = segments[3]};
                 }
             }
 
-            throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, localPointer));
+            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, localPointer));
         }
     }
 }

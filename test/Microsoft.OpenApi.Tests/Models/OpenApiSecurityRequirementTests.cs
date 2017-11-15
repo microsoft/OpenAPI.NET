@@ -13,15 +13,15 @@ namespace Microsoft.OpenApi.Tests.Models
     public class OpenApiSecurityRequirementTests
     {
         public static OpenApiSecurityRequirement BasicSecurityRequirement = new OpenApiSecurityRequirement();
-
-        public static OpenApiSecurityRequirement AdvancedSecurityRequirement = new OpenApiSecurityRequirement
+        
+        public static OpenApiSecurityRequirement SecurityRequirementWithReferencedSecurityScheme = new OpenApiSecurityRequirement
         {
             Schemes = new Dictionary<OpenApiSecurityScheme, List<string>>
             {
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme1")
+                        Pointer = new OpenApiReference() { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
                     }
                 ] = new List<string>
                 {
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme2")
+                        Pointer = new OpenApiReference() { Type = ReferenceType.SecurityScheme, Id = "scheme2" }
                     }
                 ] = new List<string>
                 {
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme3")
+                        Pointer = new OpenApiReference(){Type = ReferenceType.SecurityScheme, Id = "scheme3"}
                     }
                 ] = new List<string>()
             }
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"{ }";
 
             // Act
-            var actual = BasicSecurityRequirement.SerializeAsJson();
+            var actual = BasicSecurityRequirement.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedSecurityRequirementAsV3JsonWorks()
+        public void SerializeSecurityRequirementWithReferencedSecuritySchemeAsV3JsonWorks()
         {
             // Arrange
             var expected = 
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedSecurityRequirement.SerializeAsJson();
+            var actual = SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

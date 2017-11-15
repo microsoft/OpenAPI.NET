@@ -117,8 +117,7 @@ namespace Microsoft.OpenApi.Readers.V3
             string tagName)
         {
             var tagObject = (OpenApiTag)context.GetReferencedObject(
-                diagnostic,
-                $"#/tags/{tagName}");
+                diagnostic,ReferenceType.Tag, tagName);
 
             if (tagObject == null)
             {

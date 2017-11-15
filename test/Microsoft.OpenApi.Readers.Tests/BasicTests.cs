@@ -6,13 +6,23 @@
 using System.IO;
 using System.Text;
 using FluentAssertions;
+using Microsoft.OpenApi.Writers;
+using Newtonsoft.Json;
 using SharpYaml.Serialization;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
     public class BasicTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public BasicTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void CheckOpenApiVersion()
         {
@@ -20,6 +30,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             openApiDoc.SpecVersion.ToString().Should().Be("3.0.0");
+            
+            _output.WriteLine(openApiDoc.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0));
+            _output.WriteLine(JsonConvert.SerializeObject(openApiDoc));
         }
 
         [Fact]
