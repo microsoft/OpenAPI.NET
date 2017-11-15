@@ -33,32 +33,6 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         /// Loads the referenced object matching the given OpenApiReference object.
         /// </summary>
         public abstract IOpenApiReferenceable LoadReference(OpenApiReference reference);
-
-        /// <summary>
-        /// Loads <see cref="OpenApiTag"/> from parse node.
-        /// </summary>
-        protected static OpenApiTag LoadTag(ParseNode parseNode)
-        {
-            var mapNode = parseNode.CheckMapNode("tag");
-
-            var obj = new OpenApiTag();
-
-            foreach (var node in mapNode)
-            {
-                var key = node.Name;
-                switch (key)
-                {
-                    case "description":
-                        obj.Description = node.Value.GetScalarValue();
-                        break;
-                    case "name":
-                        obj.Name = node.Value.GetScalarValue();
-                        break;
-                }
-            }
-
-            return obj;
-        }
         
         /// <summary>
         /// Gets the OpenApiReference object from string and reference type.

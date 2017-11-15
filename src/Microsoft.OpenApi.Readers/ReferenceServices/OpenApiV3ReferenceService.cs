@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                     return new OpenApiTag {Name = reference.Id};
                 }
 
-                var tags = tagListNode.CreateList(LoadTag);
+                var tags = tagListNode.CreateList(OpenApiV3Deserializer.LoadTag);
 
                 foreach (var tag in tags)
                 {

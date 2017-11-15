@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
+using Microsoft.OpenApi.Readers.V2;
 using Microsoft.OpenApi.Readers.V3;
 
 namespace Microsoft.OpenApi.Readers.ReferenceServices
@@ -52,7 +53,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 var tagListPointer = new JsonPointer("#/tags/");
                 var tagListNode = (ListNode)RootNode.Find(tagListPointer);
 
-                var tags = tagListNode.CreateList(LoadTag);
+                var tags = tagListNode.CreateList(OpenApiV2Deserializer.LoadTag);
 
                 foreach (var tag in tags)
                 {
@@ -62,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                     }
                 }
 
-                return new OpenApiTag { Name = reference.Id };
+                return new OpenApiTag {Name = reference.Id};
             }
 
             var jsonPointer =
@@ -120,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             return referencedObject;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         protected override OpenApiReference ParseLocalPointer(string localPointer)
         {
             if (string.IsNullOrWhiteSpace(localPointer))
@@ -134,18 +135,18 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             var segments = localPointer.Split('/');
 
             // /definitions/Pet/...
-            if (segments.Length >= 3) 
+            if (segments.Length >= 3)
             {
-                ReferenceType referenceType = ParseReferenceType(segments[1]);
-                string id = localPointer.Substring(
+                var referenceType = ParseReferenceType(segments[1]);
+                var id = localPointer.Substring(
                     segments[0].Length + "/".Length + segments[1].Length + "/".Length);
 
-                return new OpenApiReference() {Type = referenceType, Id = id};
+                return new OpenApiReference {Type = referenceType, Id = id};
             }
 
             throw new OpenApiException(
                 string.Format(
-                    SRResource.ReferenceHasInvalidFormat, 
+                    SRResource.ReferenceHasInvalidFormat,
                     localPointer));
         }
 
@@ -203,9 +204,9 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             }
         }
 
-        public override OpenApiReference ConvertToOpenApiReference( string referenceString, ReferenceType? type)
+        public override OpenApiReference ConvertToOpenApiReference(string referenceString, ReferenceType? type)
         {
-            if (!String.IsNullOrWhiteSpace(referenceString))
+            if (!string.IsNullOrWhiteSpace(referenceString))
             {
                 var segments = referenceString.Split('#');
                 if (segments.Length == 1)
@@ -215,15 +216,15 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                     if (type == null)
                     {
                         // "$ref": "Pet.json"
-                        return new OpenApiReference()
+                        return new OpenApiReference
                         {
                             ExternalResource = segments[0]
                         };
                     }
 
-                    if ( type == ReferenceType.Tag || type == ReferenceType.SecurityScheme )
+                    if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
                     {
-                        return new OpenApiReference()
+                        return new OpenApiReference
                         {
                             Type = type,
                             Id = referenceString
@@ -237,22 +238,17 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                         // "$ref": "#/components/schemas/Pet"
                         return ParseLocalPointer(segments[1]);
                     }
-                        
+
                     // $ref: externalSource.yaml#/Pet
-                        return new OpenApiReference()
-                        {
-                            ExternalResource = segments[0],
-                            Id = segments[1].Substring(1)
-                        };
-                    
+                    return new OpenApiReference
+                    {
+                        ExternalResource = segments[0],
+                        Id = segments[1].Substring(1)
+                    };
                 }
             }
 
-            throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, referenceString));
-
+            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, referenceString));
         }
     }
 }
-
-
-

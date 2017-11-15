@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ReferenceServices;
 
 namespace Microsoft.OpenApi.Readers
@@ -19,14 +18,13 @@ namespace Microsoft.OpenApi.Readers
     {
         private readonly Stack<string> currentLocation = new Stack<string>();
 
-        private readonly Stack<string> previousPointers = new Stack<string>();
+        private readonly Dictionary<string, IOpenApiReferenceable> referenceStore =
+            new Dictionary<string, IOpenApiReferenceable>();
+
+        private readonly Dictionary<string, object> tempStorage = new Dictionary<string, object>();
 
         private IOpenApiReferenceService _referenceService;
 
-        private readonly Dictionary<string, IOpenApiReferenceable> referenceStore = new Dictionary<string, IOpenApiReferenceable>();
-
-        private readonly Dictionary<string, object> tempStorage = new Dictionary<string, object>();
-        
         /// <summary>
         /// End the current object.
         /// </summary>
@@ -47,7 +45,7 @@ namespace Microsoft.OpenApi.Readers
         /// Gets the referenced object
         /// </summary>
         public IOpenApiReferenceable GetReferencedObject(
-            OpenApiDiagnostic diagnostic, 
+            OpenApiDiagnostic diagnostic,
             ReferenceType referenceType,
             string referenceString)
         {
@@ -70,9 +68,11 @@ namespace Microsoft.OpenApi.Readers
             }
             else
             {
-                diagnostic.Errors.Add(new
-                    OpenApiError(GetLocation(), 
-                        $"Cannot resolve the reference {referenceString}"));
+                diagnostic.Errors.Add(
+                    new
+                        OpenApiError(
+                            GetLocation(),
+                            $"Cannot resolve the reference {referenceString}"));
             }
 
             return returnValue;
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="referenceService"></param>
         public void SetReferenceService(IOpenApiReferenceService referenceService)
         {
-            this._referenceService = referenceService;
+            _referenceService = referenceService;
         }
 
         /// <summary>
