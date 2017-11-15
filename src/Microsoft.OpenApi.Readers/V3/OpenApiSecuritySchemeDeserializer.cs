@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
         {
             var mapNode = node.CheckMapNode("securityScheme");
-
+            
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
             {

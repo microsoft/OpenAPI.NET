@@ -54,9 +54,15 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode("response");
 
-            var required = new List<string> {"description"};
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                return mapNode.GetReferencedObject<OpenApiResponse>(ReferenceType.Response, pointer);
+            }
+
+            var requiredFields = new List<string> {"description"};
             var response = new OpenApiResponse();
-            ParseMap(mapNode, response, ResponseFixedFields, ResponsePatternFields, required);
+            ParseMap(mapNode, response, ResponseFixedFields, ResponsePatternFields, requiredFields);
 
             return response;
         }

@@ -27,13 +27,13 @@ namespace Microsoft.OpenApi.Readers.V3
             : base(rootNode)
         {
         }
-        
+
         /// <inheritdoc/>
         public override OpenApiReference ConvertToOpenApiReference(
-            string referenceString, 
+            string referenceString,
             ReferenceType? type)
         {
-            if (!String.IsNullOrWhiteSpace(referenceString))
+            if (!string.IsNullOrWhiteSpace(referenceString))
             {
                 var segments = referenceString.Split('#');
                 if (segments.Length == 1)
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     if (type == null)
                     {
                         // "$ref": "Pet.json"
-                        return new OpenApiReference()
+                        return new OpenApiReference
                         {
                             ExternalResource = segments[0]
                         };
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
                     {
-                        return new OpenApiReference()
+                        return new OpenApiReference
                         {
                             Type = type,
                             Id = referenceString
@@ -67,17 +67,15 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
 
                     // $ref: externalSource.yaml#/Pet
-                    return new OpenApiReference()
+                    return new OpenApiReference
                     {
                         ExternalResource = segments[0],
                         Id = segments[1].Substring(1)
                     };
-
                 }
             }
 
-            throw new OpenApiException(String.Format(SRResource.ReferenceHasInvalidFormat, referenceString));
-
+            throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, referenceString));
         }
 
         /// <inheritdoc/>
@@ -125,7 +123,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var componentJsonPointer =
                 new JsonPointer("#/components/" + reference.Type.GetDisplayName() + "/" + reference.Id);
-            
+
             var node = RootNode.Find(componentJsonPointer);
 
             IOpenApiReferenceable referencedObject = null;

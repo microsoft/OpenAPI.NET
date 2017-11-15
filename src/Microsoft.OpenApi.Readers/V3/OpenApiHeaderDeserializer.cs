@@ -64,6 +64,13 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiHeader LoadHeader(ParseNode node)
         {
             var mapNode = node.CheckMapNode("header");
+
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                return mapNode.GetReferencedObject<OpenApiHeader>(ReferenceType.Header, pointer);
+            }
+
             var header = new OpenApiHeader();
             foreach (var property in mapNode)
             {
