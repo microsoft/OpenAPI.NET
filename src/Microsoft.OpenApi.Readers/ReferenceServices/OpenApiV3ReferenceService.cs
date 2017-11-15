@@ -8,11 +8,11 @@ using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
+using Microsoft.OpenApi.Readers.V3;
 
-namespace Microsoft.OpenApi.Readers.V3
+namespace Microsoft.OpenApi.Readers.ReferenceServices
 {
     /// <summary>
     /// The reference service for the Open API V3.0.

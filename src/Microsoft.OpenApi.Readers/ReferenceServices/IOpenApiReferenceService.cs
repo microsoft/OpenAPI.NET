@@ -6,7 +6,7 @@
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Readers.Interface
+namespace Microsoft.OpenApi.Readers.ReferenceServices
 {
     /// <summary>
     /// Interface for Open API Reference parse.

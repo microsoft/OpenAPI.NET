@@ -6,6 +6,7 @@
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Readers.ReferenceServices;
 using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
 using Xunit;

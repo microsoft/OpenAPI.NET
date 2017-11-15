@@ -4,13 +4,11 @@
 // ------------------------------------------------------------
 
 using System;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.Properties;
 
-namespace Microsoft.OpenApi.Readers.Interface
+namespace Microsoft.OpenApi.Readers.ReferenceServices
 {
     /// <summary>
     /// The base class for Open API Reference service.

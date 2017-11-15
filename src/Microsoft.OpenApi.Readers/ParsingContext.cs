@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Readers.ReferenceServices;
 
 namespace Microsoft.OpenApi.Readers
 {
