@@ -30,9 +30,6 @@ namespace Microsoft.OpenApi.Readers.Tests
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             openApiDoc.SpecVersion.ToString().Should().Be("3.0.0");
-            
-            _output.WriteLine(openApiDoc.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0));
-            _output.WriteLine(JsonConvert.SerializeObject(openApiDoc));
         }
 
         [Fact]

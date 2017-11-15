@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets the definition of operations on this path.
         /// </summary>
-        public IDictionary<OperationType, OpenApiOperation> Operations { get; }
+        public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
          = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>
