@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiServer> Servers { get; set; }
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
@@ -50,12 +50,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTag> Tags { get; set; }
 
         /// <summary>
         /// Additional external documentation.
         /// </summary>
-        public OpenApiExternalDocs ExternalDocs { get; set; } = new OpenApiExternalDocs();
+        public OpenApiExternalDocs ExternalDocs { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.

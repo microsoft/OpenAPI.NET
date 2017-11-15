@@ -133,7 +133,10 @@ namespace Microsoft.OpenApi.Writers
             CheckArguments(writer, name, action);
 
             writer.WritePropertyName(name);
-            action(writer, value);
+            if (value != null)
+            {
+                action(writer, value);
+            }
         }
 
         /// <summary>
