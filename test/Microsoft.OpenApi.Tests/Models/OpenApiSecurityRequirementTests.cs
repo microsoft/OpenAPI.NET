@@ -145,6 +145,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             };
 
+            // Act
             securityRequirement.AddSecurityScheme(securityScheme1, new List<string>());
             securityRequirement.AddSecurityScheme(securityScheme2, new List<string> {"scope1", "scope2"});
 
@@ -153,10 +154,12 @@ namespace Microsoft.OpenApi.Tests.Models
             Action addSecurityScheme1WithDifferentProperties = () =>
                 securityRequirement.AddSecurityScheme(securityScheme1WithDifferentProperties, new List<string>());
 
+            // Assert
             // Only the first two should be added successfully since the latter two are duplicates of securityScheme1.
             // Duplicate determination only considers Reference.Id.
             addSecurityScheme1Duplicate.ShouldThrow<ArgumentException>();
             addSecurityScheme1WithDifferentProperties.ShouldThrow<ArgumentException>();
+
             securityRequirement.Schemes.Should().NotBeNull();
             securityRequirement.Schemes.Should().HaveCount(2);
 
