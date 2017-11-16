@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V3
@@ -118,11 +117,12 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var tagObject = (OpenApiTag)context.GetReferencedObject(
                 diagnostic,
-                $"#/tags/{tagName}");
+                ReferenceType.Tag,
+                tagName);
 
             if (tagObject == null)
             {
-                tagObject = new OpenApiTag() { Name = tagName };
+                tagObject = new OpenApiTag {Name = tagName};
             }
 
             return tagObject;

@@ -3,7 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using Microsoft.OpenApi.Commons;
+using Microsoft.OpenApi.Attributes;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -12,11 +12,6 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public enum ReferenceType
     {
-        /// <summary>
-        /// Unknown.
-        /// </summary>
-        Unknown = 0,
-
         /// <summary>
         /// Schema item.
         /// </summary>

@@ -48,6 +48,12 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode("requestBody");
 
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                return mapNode.GetReferencedObject<OpenApiRequestBody>(ReferenceType.RequestBody, pointer);
+            }
+
             var requestBody = new OpenApiRequestBody();
             foreach (var property in mapNode)
             {

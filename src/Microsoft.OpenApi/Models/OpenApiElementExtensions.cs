@@ -216,52 +216,52 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Try find the referenced element.
         /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiReference"/>.</typeparam>
+        /// <typeparam name="T"><see cref="IOpenApiReferenceable"/>.</typeparam>
         /// <param name="reference">The reference element. </param>
         /// <param name="document">The Open API document.</param>
         public static IOpenApiElement Find<T>(this T reference, OpenApiDocument document)
-            where T : IOpenApiReference
+            where T : IOpenApiReferenceable
         {
             if (reference == null ||
                 document == null ||
                 document.Components == null ||
-                reference.Pointer == null ||
-                reference.Pointer.ExternalResource != null)
+                reference.Reference == null ||
+                reference.Reference.ExternalResource != null)
             {
                 return null;
             }
 
-            switch(reference.Pointer.ReferenceType)
+            switch(reference.Reference.Type)
             {
                 case ReferenceType.Schema:
-                    return document.Components.Schemas?[reference.Pointer.Name];
+                    return document.Components.Schemas?[reference.Reference.Id];
 
                 case ReferenceType.Parameter:
-                    return document.Components.Parameters?[reference.Pointer.Name];
+                    return document.Components.Parameters?[reference.Reference.Id];
 
                 case ReferenceType.Header:
-                    return document.Components.Headers?[reference.Pointer.Name];
+                    return document.Components.Headers?[reference.Reference.Id];
 
                 case ReferenceType.Response:
-                    return document.Components.Responses?[reference.Pointer.Name];
+                    return document.Components.Responses?[reference.Reference.Id];
 
                 case ReferenceType.RequestBody:
-                    return document.Components.RequestBodies?[reference.Pointer.Name];
+                    return document.Components.RequestBodies?[reference.Reference.Id];
 
                 case ReferenceType.Example:
-                    return document.Components.Examples?[reference.Pointer.Name];
+                    return document.Components.Examples?[reference.Reference.Id];
 
                 case ReferenceType.SecurityScheme:
-                    return document.Components.SecuritySchemes?[reference.Pointer.Name];
+                    return document.Components.SecuritySchemes?[reference.Reference.Id];
 
                 case ReferenceType.Callback:
-                    return document.Components.Callbacks?[reference.Pointer.Name];
+                    return document.Components.Callbacks?[reference.Reference.Id];
 
                 case ReferenceType.Link:
-                    return document.Components.Links?[reference.Pointer.Name];
+                    return document.Components.Links?[reference.Reference.Id];
 
                 case ReferenceType.Tag:
-                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.Name);
+                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Reference.Id);
 
                 default:
                     return null;
@@ -273,23 +273,23 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <typeparam name="T"><see cref="IOpenApiElement"/>.</typeparam>
         /// <param name="element">The referencable element.</param>
-        /// <returns>True if the element implements <see cref="IOpenApiReference"/> and pointer is not null,
+        /// <returns>True if the element implements <see cref="IOpenApiReferenceable"/> and pointer is not null,
         /// False otherwise.</returns>
         public static bool IsReference<T>(this T element) where T : IOpenApiElement
         {
-            IOpenApiReference reference = element as IOpenApiReference;
-            return reference?.Pointer != null;
+            IOpenApiReferenceable reference = element as IOpenApiReferenceable;
+            return reference?.Reference != null;
         }
 
         /// <summary>
         /// Add extension into the Extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiExtension"/>.</typeparam>
+        /// <typeparam name="T"><see cref="IOpenApiExtensible"/>.</typeparam>
         /// <param name="element">The extensible Open API element. </param>
         /// <param name="name">The extension name.</param>
         /// <param name="any">The extension value.</param>
         public static void AddExtension<T>(this T element, string name, IOpenApiAny any)
-            where T : IOpenApiExtension
+            where T : IOpenApiExtensible
         {
             if (element == null)
             {

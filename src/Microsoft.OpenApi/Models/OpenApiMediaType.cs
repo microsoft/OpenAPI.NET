@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Media Type Object.
     /// </summary>
-    public class OpenApiMediaType : OpenApiElement, IOpenApiExtension
+    public class OpenApiMediaType : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// The schema defining the type used for the request body.

@@ -3,19 +3,18 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Interfaces
 {
     /// <summary>
-    /// Represents an Extensible Open API element.
+    /// Represents an Open API element is referenceable.
     /// </summary>
-    public interface IOpenApiExtension : IOpenApiElement
+    public interface IOpenApiReferenceable : IOpenApiElement
     {
         /// <summary>
-        /// Specification extensions.
+        /// Reference object.
         /// </summary>
-        IDictionary<string, IOpenApiAny> Extensions { get; set; }
+        OpenApiReference Reference { get; set; }
     }
 }

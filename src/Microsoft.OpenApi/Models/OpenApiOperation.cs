@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Operation Object.
     /// </summary>
-    public class OpenApiOperation : OpenApiElement, IOpenApiExtension
+    public class OpenApiOperation : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// Default value for <see cref="Deprecated"/>.
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime, 
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, OpenApiCallback> Callbacks { get; set; }
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -109,16 +109,6 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiAny> Extensions { get; set; }
 
         /// <summary>
-        /// Creates a <see cref="OpenApiResponse"/> object and add it to <see cref="Responses"/>.
-        /// </summary>
-        public void CreateResponse(string key, Action<OpenApiResponse> configure)
-        {
-            var response = new OpenApiResponse();
-            configure(response);
-            Responses.Add(key, response);
-        }
-
-        /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
         /// </summary>
         internal override void WriteAsV3(IOpenApiWriter writer)
@@ -131,7 +121,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) =>
+            {
+                // Handle tag writing here instead of in OpenApiTag since we also need to ensure
+                // that tag is written as string regardless of whether reference exists.
+                w.WriteValue(t.Reference != null ? t.Reference.Id : t.Name);
+            });
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -185,8 +180,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.WriteAsV2(w));
-
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) =>
+            {
+                // Handle tag writing here instead of in OpenApiTag since we also need to ensure
+                // that tag is written as string regardless of whether reference exists.
+                w.WriteValue(t.Reference != null ? t.Reference.Id : t.Name);
+            });
+            
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
 

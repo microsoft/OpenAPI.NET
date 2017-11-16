@@ -41,7 +41,8 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var securitySchemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(
                 diagnostic,
-                new OpenApiReference(ReferenceType.SecurityScheme, schemeName));
+                ReferenceType.SecurityScheme, 
+                schemeName);
 
             return securitySchemeObject;
         }

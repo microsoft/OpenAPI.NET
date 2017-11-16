@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Readers.ReferenceServices;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -16,22 +16,24 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class ParsingContext
     {
-        private readonly Stack<string> currentLocation = new Stack<string>();
+        private readonly Stack<string> _currentLocation = new Stack<string>();
 
-        private readonly Stack<string> previousPointers = new Stack<string>();
+        private readonly Dictionary<string, IOpenApiReferenceable> _referenceStore =
+            new Dictionary<string, IOpenApiReferenceable>();
 
-        private IOpenApiReferenceService _referenceService;
+        private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
 
-        private readonly Dictionary<string, IOpenApiReference> referenceStore = new Dictionary<string, IOpenApiReference>();
+        /// <summary>
+        /// Reference service.
+        /// </summary>
+        internal IOpenApiReferenceService ReferenceService { get; set; }
 
-        private readonly Dictionary<string, object> tempStorage = new Dictionary<string, object>();
-        
         /// <summary>
         /// End the current object.
         /// </summary>
         public void EndObject()
         {
-            currentLocation.Pop();
+            _currentLocation.Pop();
         }
 
         /// <summary>
@@ -39,56 +41,49 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public string GetLocation()
         {
-            return "#/" + string.Join("/", currentLocation.Reverse().ToArray());
+            return "#/" + string.Join("/", _currentLocation.Reverse().ToArray());
         }
 
         /// <summary>
-        /// Get the referenced object.
+        /// Gets the referenced object.
         /// </summary>
-        /// <param name="diagnostic"></param>
-        /// <param name="pointer"></param>
-        /// <returns></returns>
-        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, string pointer)
+        public IOpenApiReferenceable GetReferencedObject(
+            OpenApiDiagnostic diagnostic,
+            ReferenceType referenceType,
+            string referenceString)
         {
-            var reference = _referenceService.FromString(pointer);
-            return GetReferencedObject(diagnostic, reference);
-        }
+            _referenceStore.TryGetValue(referenceString, out var referencedObject);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="diagnostic"></param>
-        /// <param name="reference"></param>
-        /// <returns></returns>
-        public IOpenApiReference GetReferencedObject(OpenApiDiagnostic diagnostic, OpenApiReference reference)
-        {
-            IOpenApiReference returnValue = null;
-            string referenceString = _referenceService.ToString(reference);
-            referenceStore.TryGetValue(referenceString, out returnValue);
-
-            if (returnValue == null)
+            // If reference has already been accessed once, simply return the same reference object.
+            if (referencedObject != null)
             {
-                if (previousPointers.Contains(referenceString))
-                {
-                    return null; // Return reference object?
-                }
-
-                previousPointers.Push(referenceString);
-                returnValue = _referenceService.LoadReference(reference);
-                previousPointers.Pop();
-
-                if (returnValue != null)
-                {
-                    returnValue.Pointer = reference;
-                    referenceStore.Add(referenceString, returnValue);
-                }
-                else
-                {
-                    diagnostic.Errors.Add(new OpenApiError(GetLocation(), $"Cannot resolve $ref {reference}"));
-                }
+                return referencedObject;
             }
 
-            return returnValue;
+            var reference = ReferenceService.ConvertToOpenApiReference(referenceString, referenceType);
+
+            var isReferencedObjectFound = ReferenceService.TryLoadReference(reference, out referencedObject);
+
+            if (isReferencedObjectFound)
+            {
+                // Populate the Reference section of the object, so that the writers
+                // can recognize that this is referencing another object.
+                referencedObject.Reference = reference;
+                _referenceStore.Add(referenceString, referencedObject);
+            }
+            else if (referencedObject != null)
+            {
+                return referencedObject;
+            }
+            else
+            {
+                diagnostic.Errors.Add(
+                    new OpenApiError(
+                        GetLocation(),
+                        $"Cannot resolve the reference {referenceString}"));
+            }
+
+            return referencedObject;
         }
 
         /// <summary>
@@ -96,7 +91,7 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public T GetFromTempStorage<T>(string key) where T : class
         {
-            if (tempStorage.TryGetValue(key, out var value))
+            if (_tempStorage.TryGetValue(key, out var value))
             {
                 return (T)value;
             }
@@ -105,20 +100,11 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <summary>
-        /// Sets the reference service.
-        /// </summary>
-        /// <param name="referenceService"></param>
-        public void SetReferenceService(IOpenApiReferenceService referenceService)
-        {
-            this._referenceService = referenceService;
-        }
-
-        /// <summary>
         /// Sets the temporary storge for this key and value.
         /// </summary>
         public void SetTempStorage(string key, object value)
         {
-            tempStorage[key] = value;
+            _tempStorage[key] = value;
         }
 
         /// <summary>
@@ -126,7 +112,7 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public void StartObject(string objectName)
         {
-            currentLocation.Push(objectName);
+            _currentLocation.Push(objectName);
         }
     }
 }

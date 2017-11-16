@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void CheckPetStoreApiInfo()
         {
-            var stream = GetType().Assembly.GetManifestResourceStream(typeof(SchemaTests), "Samples.petstore30.yaml");
+            var stream = GetType().Assembly.GetManifestResourceStream(typeof(SchemaTests), "Samples.PetStore30.yaml");
 
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 

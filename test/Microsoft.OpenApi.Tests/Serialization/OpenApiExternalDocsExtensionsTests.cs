@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using System;
-using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -39,8 +38,8 @@ namespace Microsoft.OpenApi.Tests.Serialization
         public void SerializeAdvanceExDocssAsV3JsonWorks()
         {
             // Arrange
-            string expected = @"
-{
+            string expected = 
+@"{
   ""description"": ""Find more info here"",
   ""url"": ""https://example.com""
 }";
@@ -58,8 +57,8 @@ namespace Microsoft.OpenApi.Tests.Serialization
         public void SerializeAdvanceExDocssAsV3YamlWorks()
         {
             // Arrange
-            string expected = @"
-description: Find more info here
+            string expected = 
+@"description: Find more info here
 url: https://example.com";
 
             // Act

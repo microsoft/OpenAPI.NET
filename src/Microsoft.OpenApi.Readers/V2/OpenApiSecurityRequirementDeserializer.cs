@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mapNode = node.CheckMapNode("security");
 
-            var obj = new OpenApiSecurityRequirement();
+            var securityRequirement = new OpenApiSecurityRequirement();
 
             foreach (var property in mapNode)
             {
@@ -27,9 +27,10 @@ namespace Microsoft.OpenApi.Readers.V2
                     mapNode.Context,
                     mapNode.Diagnostic,
                     property.Name);
+
                 if (scheme != null)
                 {
-                    obj.Schemes.Add(scheme, property.Value.CreateSimpleList(n2 => n2.GetScalarValue()));
+                    securityRequirement.Schemes.Add(scheme, property.Value.CreateSimpleList(n2 => n2.GetScalarValue()));
                 }
                 else
                 {
@@ -38,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             }
 
-            return obj;
+            return securityRequirement;
         }
 
         private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
@@ -48,7 +49,8 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var securitySchemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(
                 diagnostic,
-                new OpenApiReference(ReferenceType.SecurityScheme, schemeName));
+                ReferenceType.SecurityScheme,
+                schemeName);
 
             return securitySchemeObject;
         }

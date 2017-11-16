@@ -13,32 +13,28 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiReferenceTests
     {
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("   ")]
-        public void ConstructorShouldThrowArgumentNullOrWhiteSpaceWithNullInput(string reference)
-        {
-            // Arrange & Act
-            Action action = () => new OpenApiReference(reference);
-
-            // Assert
-            action.ShouldThrow<ArgumentException>(String.Format(SRResource.ArgumentNullOrWhiteSpace, "externalResource"));
-        }
 
         [Theory]
         [InlineData("#/components/schemas/Pet", ReferenceType.Schema, "Pet")]
         [InlineData("#/components/parameters/name", ReferenceType.Parameter, "name")]
         [InlineData("#/components/responses/200", ReferenceType.Response, "200")]
-        public void ConstructorSetLocalPropertyValue(string input, ReferenceType type, string pointer)
+        public void SettingInternalReferenceForComponentsStyleReferenceShouldSucceed(
+            string input,
+            ReferenceType type,
+            string id)
         {
             // Arrange & Act
-            var reference = new OpenApiReference(type, pointer);
+            var reference = new OpenApiReference()
+            {
+                Type = type,
+                Id = id
+            };
 
             // Assert
             reference.ExternalResource.Should().BeNull();
-            reference.ReferenceType.Should().Be(type);
-            reference.Name.Should().Be(pointer);
+            reference.Type.Should().Be(type);
+            reference.Id.Should().Be(id);
+
             reference.ReferenceV3.Should().Be(input);
             reference.ReferenceV2.Should().Be(input.Replace("schemas", "definitions").Replace("/components", ""));
         }
@@ -48,26 +44,31 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData("Pet.yaml", "Pet.yaml", null)]
         [InlineData("abc", "abc", null)]
         [InlineData("Pet.json#/Pet", "Pet.json", "Pet")]
-        [InlineData("Pet.yaml#/Pet", "Pet.yaml", "Pet")]
+        [InlineData("Pet.yaml#/Pet","Pet.yaml", "Pet")]
         [InlineData("abc#/Pet", "abc","Pet")]
-        public void ConstructorSetExernalPropertyValues(string input, string external, string pointer)
+        public void SettingExternalReferenceShouldSucceed(string expected, string externalResource, string id)
         {
             // Arrange & Act
-            var reference = new OpenApiReference(external, pointer);
+            var reference = new OpenApiReference()
+            {
+                ExternalResource = externalResource,
+                Id = id
+            };
 
             // Assert
-            reference.ExternalResource.Should().Be(external);
-            reference.ReferenceType.Should().Be(ReferenceType.Unknown);
-            reference.Name.Should().Be(pointer);
-            reference.ReferenceV3.Should().Be(input);
-            reference.ReferenceV2.Should().Be(input);
+            reference.ExternalResource.Should().Be(externalResource);
+            reference.Type.Should().BeNull();
+            reference.Id.Should().Be(id);
+
+            reference.ReferenceV3.Should().Be(expected);
+            reference.ReferenceV2.Should().Be(expected);
         }
 
         [Fact]
         public void SerializeSchemaReferenceAsJsonV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
+            var reference = new OpenApiReference(){Type = ReferenceType.Schema, Id ="Pet"};
             string expected = @"{
   ""$ref"": ""#/components/schemas/Pet""
 }";
@@ -85,7 +86,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeSchemaReferenceAsYamlV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
+            var reference = new OpenApiReference()
+            {
+                Type = ReferenceType.Schema,
+                Id = "Pet"
+            };
+
             string expected = @"$ref: '#/components/schemas/Pet'";
 
             // Act
@@ -99,7 +105,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeSchemaReferenceAsJsonV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
+            var reference = new OpenApiReference()
+            {
+                Type = ReferenceType.Schema,
+                Id = "Pet"
+            };
+
             string expected = @"{
   ""$ref"": ""#/definitions/Pet""
 }".MakeLineBreaksEnvironmentNeutral();
@@ -115,7 +126,11 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeSchemaReferenceAsYamlV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference(ReferenceType.Schema, "Pet");
+            var reference = new OpenApiReference()
+            {
+                Type = ReferenceType.Schema,
+                Id = "Pet"
+            };
             string expected = @"$ref: '#/definitions/Pet'";
 
             // Act
@@ -129,7 +144,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeExternalReferenceAsJsonV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference("main.json", "Pets");
+            var reference = new OpenApiReference()
+            {
+                ExternalResource = "main.json",
+                Id = "Pets"
+            };
+
             string expected = @"{
   ""$ref"": ""main.json#/Pets""
 }";
@@ -147,7 +167,11 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeExternalReferenceAsYamlV2Works()
         {
             // Arrange
-            var reference = new OpenApiReference("main.json", "Pets");
+            var reference = new OpenApiReference()
+            {
+                ExternalResource = "main.json",
+                Id = "Pets"
+            };
             string expected = @"$ref: main.json#/Pets";
 
             // Act
@@ -161,7 +185,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeExternalReferenceAsJsonV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference("main.json", "Pets");
+            var reference = new OpenApiReference() {ExternalResource = "main.json", Id = "Pets"};
+            
             string expected = @"{
   ""$ref"": ""main.json#/Pets""
 }";
@@ -179,7 +204,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeExternalReferenceAsYamlV3Works()
         {
             // Arrange
-            var reference = new OpenApiReference("main.json", "Pets");
+            var reference = new OpenApiReference() {ExternalResource = "main.json", Id = "Pets"};
             string expected = @"$ref: main.json#/Pets";
 
             // Act

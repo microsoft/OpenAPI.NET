@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// OAuth Flow Object.
     /// </summary>
-    public class OpenApiOAuthFlow : OpenApiElement, IOpenApiExtension
+    public class OpenApiOAuthFlow : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The authorization URL to be used for this flow.

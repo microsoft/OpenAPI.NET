@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Commons;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : OpenApiElement, IOpenApiExtension
+    public class OpenApiPathItem : OpenApiElement, IOpenApiExtensible
     {
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets the definition of operations on this path.
         /// </summary>
-        public IDictionary<OperationType, OpenApiOperation> Operations { get; }
+        public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
          = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>

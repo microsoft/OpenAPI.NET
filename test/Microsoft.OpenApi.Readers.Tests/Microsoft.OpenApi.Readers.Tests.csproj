@@ -11,11 +11,6 @@
     <RootNamespace>Microsoft.OpenApi.Readers.Tests</RootNamespace>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Samples\api-with-examples.yaml" />
-    <None Remove="Samples\petstore-expanded.yaml" />
-    <None Remove="Samples\uber.yaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
@@ -48,7 +43,8 @@
     <EmbeddedResource Include="Samples\petstore-expanded.yaml" />
     <EmbeddedResource Include="Samples\Simplest.yaml" />
     <EmbeddedResource Include="Samples\CompleteHeader.yaml" />
-    <EmbeddedResource Include="Samples\petstore30.yaml" />
+    <EmbeddedResource Include="Samples\PetStore30.yaml" />
+    <EmbeddedResource Include="Samples\PetStoreWithTagAndSecurity30.yaml" />
     <EmbeddedResource Include="Samples\BrokenSimplest.yaml" />
     <EmbeddedResource Include="Samples\uber.yaml" />
 

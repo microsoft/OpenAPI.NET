@@ -5,13 +5,14 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using SharpYaml;
-using SharpYaml.Serialization;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.ReferenceServices;
 using Microsoft.OpenApi.Readers.V2;
 using Microsoft.OpenApi.Readers.V3;
+using SharpYaml;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -69,11 +70,11 @@ namespace Microsoft.OpenApi.Readers
             switch (inputVersion)
             {
                 case "2.0":
-                    context.SetReferenceService(new OpenApiV2ReferenceService(rootNode));
+                    context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
                     return OpenApiV2Deserializer.LoadOpenApi(rootNode);
 
                 default:
-                    context.SetReferenceService(new OpenApiV3ReferenceService(rootNode));
+                    context.ReferenceService = new OpenApiV3ReferenceService(rootNode);
                     return OpenApiV3Deserializer.LoadOpenApi(rootNode);
             }
         }
