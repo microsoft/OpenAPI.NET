@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <summary>
-        /// Gets the referenced object
+        /// Gets the referenced object.
         /// </summary>
         public IOpenApiReferenceable GetReferencedObject(
             OpenApiDiagnostic diagnostic,

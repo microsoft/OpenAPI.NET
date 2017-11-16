@@ -86,7 +86,6 @@ namespace Microsoft.OpenApi.Models
             // tag should always be written as string (except at the time of definition).
             // regardless of whether Pointer exists. In the context of this model,
             // we have no information on whether this is the time of definition.
-
             writer.WriteStartObject();
 
             // name
