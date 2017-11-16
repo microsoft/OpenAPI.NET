@@ -4,8 +4,8 @@
 // ------------------------------------------------------------
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(document));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -58,7 +58,10 @@ namespace Microsoft.OpenApi.Models
         /// <param name="pathItem">The Open API path item.</param>
         /// <param name="operationType">The operation type kind.</param>
         /// <param name="configure">The operation configuration action.</param>
-        public static void AddOperation(this OpenApiPathItem pathItem, OperationType operationType, Action<OpenApiOperation> configure)
+        public static void AddOperation(
+            this OpenApiPathItem pathItem,
+            OperationType operationType,
+            Action<OpenApiOperation> configure)
         {
             if (pathItem == null)
             {
@@ -90,7 +93,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(response));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -100,7 +103,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(configure));
             }
 
-            OpenApiHeader header = new OpenApiHeader();
+            var header = new OpenApiHeader();
             configure(header);
 
             if (response.Headers == null)
@@ -124,7 +127,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(response));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -134,7 +137,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(configure));
             }
 
-            OpenApiMediaType mediaType = new OpenApiMediaType();
+            var mediaType = new OpenApiMediaType();
             configure(mediaType);
 
             if (response.Content == null)
@@ -158,7 +161,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(response));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -168,7 +171,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(configure));
             }
 
-            OpenApiLink link = new OpenApiLink();
+            var link = new OpenApiLink();
             configure(link);
 
             if (response.Links == null)
@@ -192,7 +195,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(operation));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -214,6 +217,40 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Add a <see cref="OpenApiSecurityScheme"/> into the <see cref="OpenApiSecurityRequirement"/>.
+        /// </summary>
+        /// <param name="securityRequirement">The security requirement to add the security scheme to.</param>
+        /// <param name="securityScheme">The security scheme to add as key.</param>
+        /// <param name="scopes">The scopes array to be used as the value.</param>
+        public static void AddSecurityScheme(
+            this OpenApiSecurityRequirement securityRequirement,
+            OpenApiSecurityScheme securityScheme,
+            List<string> scopes)
+        {
+            if (securityRequirement == null)
+            {
+                throw Error.ArgumentNull(nameof(securityRequirement));
+            }
+
+            if (securityScheme == null)
+            {
+                throw Error.ArgumentNull(nameof(securityScheme));
+            }
+
+            if (scopes == null)
+            {
+                throw Error.ArgumentNull(nameof(scopes));
+            }
+
+            if (securityRequirement.Schemes == null)
+            {
+                securityRequirement.Schemes = new OpenApiSecuritySchemeDictionary();
+            }
+
+            securityRequirement.Schemes.Add(securityScheme, scopes);
+        }
+
+        /// <summary>
         /// Try find the referenced element.
         /// </summary>
         /// <typeparam name="T"><see cref="IOpenApiReferenceable"/>.</typeparam>
@@ -231,7 +268,7 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            switch(reference.Reference.Type)
+            switch (reference.Reference.Type)
             {
                 case ReferenceType.Schema:
                     return document.Components.Schemas?[reference.Reference.Id];
@@ -273,11 +310,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <typeparam name="T"><see cref="IOpenApiElement"/>.</typeparam>
         /// <param name="element">The referencable element.</param>
-        /// <returns>True if the element implements <see cref="IOpenApiReferenceable"/> and pointer is not null,
-        /// False otherwise.</returns>
+        /// <returns>
+        /// True if the element implements <see cref="IOpenApiReferenceable"/> and pointer is not null,
+        /// False otherwise.
+        /// </returns>
         public static bool IsReference<T>(this T element) where T : IOpenApiElement
         {
-            IOpenApiReferenceable reference = element as IOpenApiReferenceable;
+            var reference = element as IOpenApiReferenceable;
             return reference?.Reference != null;
         }
 
@@ -308,14 +347,14 @@ namespace Microsoft.OpenApi.Models
 
         private static void VerifyExtensionName(string name)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
             if (!name.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix))
             {
-                throw new OpenApiException(String.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
+                throw new OpenApiException(string.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
             }
         }
     }

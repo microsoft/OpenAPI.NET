@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -28,9 +27,13 @@ namespace Microsoft.OpenApi.Readers.V2
                     mapNode.Diagnostic,
                     property.Name);
 
+                var scopes = property.Value.CreateSimpleList(n2 => n2.GetScalarValue());
+
                 if (scheme != null)
                 {
-                    securityRequirement.Schemes.Add(scheme, property.Value.CreateSimpleList(n2 => n2.GetScalarValue()));
+                    securityRequirement.AddSecurityScheme(
+                        scheme,
+                        scopes);
                 }
                 else
                 {
@@ -43,9 +46,9 @@ namespace Microsoft.OpenApi.Readers.V2
         }
 
         private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
-           ParsingContext context,
-           OpenApiDiagnostic diagnostic,
-           string schemeName)
+            ParsingContext context,
+            OpenApiDiagnostic diagnostic,
+            string schemeName)
         {
             var securitySchemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(
                 diagnostic,
