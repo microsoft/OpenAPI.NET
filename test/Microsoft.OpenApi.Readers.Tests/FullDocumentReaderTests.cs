@@ -782,7 +782,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                                 {
                                     new OpenApiSecurityRequirement()
                                     {
-                                        Schemes = new Dictionary<OpenApiSecurityScheme, List<string>>
+                                        Schemes = new OpenApiSecuritySchemeDictionary
                                         {
                                             [securityScheme1] = new List<string>(),
                                             [securityScheme2] = new List<string>()
@@ -926,7 +926,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                 {
                     new OpenApiSecurityRequirement()
                     {
-                        Schemes = new Dictionary<OpenApiSecurityScheme, List<string>>()
+                        Schemes = new OpenApiSecuritySchemeDictionary
                         {
                             [securityScheme1] = new List<string>(),
                             [securityScheme2] = new List<string>()
@@ -940,14 +940,8 @@ namespace Microsoft.OpenApi.Readers.Tests
                 }
                 
             };
-
-            // TODO: Change this to actual.ShouldBeEquivalentTo(expected)
-            // once we implement equality for OpenApiSecurityScheme
-            // Using JsonConvert.SerializeObject allows us to compare two objects
-            // but FluentAssertions can give us richer message if we truly
-            // compare the objects, not the string representations.
-            JsonConvert.SerializeObject(actual).ShouldBeEquivalentTo(
-                JsonConvert.SerializeObject(expected));
+            
+            actual.ShouldBeEquivalentTo(expected);
         }
     }
 }

@@ -188,7 +188,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 new OpenApiSecurityRequirement()
                 {
-                    Schemes = new Dictionary<OpenApiSecurityScheme, List<string>>()
+                    Schemes = new OpenApiSecuritySchemeDictionary
                     {
                         [new OpenApiSecurityScheme()
                         {

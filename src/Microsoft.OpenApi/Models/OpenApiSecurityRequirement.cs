@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System.Collections.Generic;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -14,12 +13,11 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiSecurityRequirement : OpenApiElement
     {
         /// <summary>
-        /// Lists the required security schemes along with a list of strings populated with scopes
+        /// Gets or sets the required security schemes along with a list of strings populated with scopes
         /// only when the security scheme is OAuth2 or OpenIdConnect.
         /// For other security scheme types, the array MUST be empty.
         /// </summary>
-        public Dictionary<OpenApiSecurityScheme, List<string>> Schemes { get; set; } =
-            new Dictionary<OpenApiSecurityScheme, List<string>>();
+        public OpenApiSecuritySchemeDictionary Schemes { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v3.0
@@ -33,18 +31,21 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            foreach (var scheme in Schemes)
+            if (Schemes != null)
             {
-                scheme.Key.WriteAsV3(writer);
-
-                writer.WriteStartArray();
-
-                foreach (var scope in scheme.Value)
+                foreach (var scheme in Schemes)
                 {
-                    writer.WriteValue(scope);
-                }
+                    scheme.Key.WriteAsV3(writer);
 
-                writer.WriteEndArray();
+                    writer.WriteStartArray();
+
+                    foreach (var scope in scheme.Value)
+                    {
+                        writer.WriteValue(scope);
+                    }
+
+                    writer.WriteEndArray();
+                }
             }
 
             writer.WriteEndObject();
@@ -62,18 +63,21 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            foreach (var scheme in Schemes)
+            if (Schemes != null)
             {
-                scheme.Key.WriteAsV2(writer);
-
-                writer.WriteStartArray();
-
-                foreach (var scope in scheme.Value)
+                foreach (var scheme in Schemes)
                 {
-                    writer.WriteValue(scope);
-                }
+                    scheme.Key.WriteAsV2(writer);
 
-                writer.WriteEndArray();
+                    writer.WriteStartArray();
+
+                    foreach (var scope in scheme.Value)
+                    {
+                        writer.WriteValue(scope);
+                    }
+
+                    writer.WriteEndArray();
+                }
             }
 
             writer.WriteEndObject();
