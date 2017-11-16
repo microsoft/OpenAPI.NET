@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -13,19 +12,19 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     /// </summary>
     internal class RootNode : ParseNode
     {
-        private readonly YamlDocument yamlDocument;
+        private readonly YamlDocument _yamlDocument;
 
         public RootNode(
             ParsingContext context,
-            OpenApiDiagnostic diagnostic, 
+            OpenApiDiagnostic diagnostic,
             YamlDocument yamlDocument) : base(context, diagnostic)
         {
-            this.yamlDocument = yamlDocument;
+            _yamlDocument = yamlDocument;
         }
 
         public ParseNode Find(JsonPointer referencePointer)
         {
-            var yamlNode = referencePointer.Find(yamlDocument.RootNode);
+            var yamlNode = referencePointer.Find(_yamlDocument.RootNode);
             if (yamlNode == null)
             {
                 return null;
@@ -36,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public MapNode GetMap()
         {
-            return new MapNode(Context, Diagnostic, (YamlMappingNode)yamlDocument.RootNode);
+            return new MapNode(Context, Diagnostic, (YamlMappingNode)_yamlDocument.RootNode);
         }
     }
 }
