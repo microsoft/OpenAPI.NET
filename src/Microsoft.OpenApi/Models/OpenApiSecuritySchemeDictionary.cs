@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// Dictionary with OpenApiSecurityScheme as key and list of scopes as value.
     /// </summary>
     public class OpenApiSecuritySchemeDictionary :
-        Dictionary<OpenApiSecurityScheme, List<string>>
+        Dictionary<OpenApiSecurityScheme, IList<string>>
     {
         /// <summary>
         /// Initializes the <see cref="OpenApiSecuritySchemeDictionary"/> class.

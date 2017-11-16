@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Models
         public static void AddSecurityScheme(
             this OpenApiSecurityRequirement securityRequirement,
             OpenApiSecurityScheme securityScheme,
-            List<string> scopes)
+            IList<string> scopes)
         {
             if (securityRequirement == null)
             {
