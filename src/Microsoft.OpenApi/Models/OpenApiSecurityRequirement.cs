@@ -56,8 +56,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteValue(scope);
                 }
 
-                    writer.WriteEndArray();
-                }
+                writer.WriteEndArray();
             }
 
             writer.WriteEndObject();
@@ -89,8 +88,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteValue(scope);
                 }
 
-                    writer.WriteEndArray();
-                }
+                writer.WriteEndArray();
             }
 
             writer.WriteEndObject();

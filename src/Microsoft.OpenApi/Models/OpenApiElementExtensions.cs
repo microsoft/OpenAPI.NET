@@ -215,40 +215,6 @@ namespace Microsoft.OpenApi.Models
 
             operation.Responses.Add(name, response);
         }
-        
-        /// <summary>
-        /// Add a <see cref="OpenApiSecurityScheme"/> into the <see cref="OpenApiSecurityRequirement"/>.
-        /// </summary>
-        /// <param name="securityRequirement">The security requirement to add the security scheme to.</param>
-        /// <param name="securityScheme">The security scheme to add as key.</param>
-        /// <param name="scopes">The scopes array to be used as the value.</param>
-        public static void AddSecurityScheme(
-            this OpenApiSecurityRequirement securityRequirement,
-            OpenApiSecurityScheme securityScheme,
-            List<string> scopes)
-        {
-            if (securityRequirement == null)
-            {
-                throw Error.ArgumentNull(nameof(securityRequirement));
-            }
-
-            if (securityScheme == null)
-            {
-                throw Error.ArgumentNull(nameof(securityScheme));
-            }
-
-            if (scopes == null)
-            {
-                throw Error.ArgumentNull(nameof(scopes));
-            }
-
-            if (securityRequirement.Schemes == null)
-            {
-                securityRequirement.Schemes = new OpenApiSecuritySchemeDictionary();
-            }
-
-            securityRequirement.Schemes.Add(securityScheme, scopes);
-        }
 
         /// <summary>
         /// Try find the referenced element.
