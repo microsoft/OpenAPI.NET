@@ -14,8 +14,8 @@ namespace Microsoft.OpenApi.Models
     /// Generic dictionary type for Open API dictionary element.
     /// </summary>
     /// <typeparam name="T">The Open API element, <see cref="IOpenApiElement"/></typeparam>
-    public abstract class OpenApiExtensibleDictionary<T> : OpenApiDictionary<T>, IOpenApiExtensible
-        where T : OpenApiElement
+    public abstract class OpenApiExtensibleDictionary<T> : Dictionary<string, T>, IOpenApiSerializable, IOpenApiExtensible
+        where T : IOpenApiSerializable
     {
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

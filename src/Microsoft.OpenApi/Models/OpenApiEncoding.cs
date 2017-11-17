@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// ExternalDocs object.
     /// </summary>
-    public class OpenApiEncoding : OpenApiElement, IOpenApiExtensible
+    public class OpenApiEncoding : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// The Content-Type for encoding a specific property.
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             // nothing here
         }

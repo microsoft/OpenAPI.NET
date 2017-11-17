@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiExample : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Short description for the example.
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             // Example object of this form does not exist in V2.
             // V2 Example object requires knowledge of media type and exists only

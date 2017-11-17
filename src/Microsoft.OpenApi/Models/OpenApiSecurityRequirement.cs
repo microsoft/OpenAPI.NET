@@ -3,26 +3,37 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System.Collections.Generic;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// Security Requirement Object
+    /// Security Requirement Object.
+    /// Each name MUST correspond to a security scheme which is declared in 
+    /// the Security Schemes under the Components Object. 
+    /// If the security scheme is of type "oauth2" or "openIdConnect", 
+    /// then the value is a list of scope names required for the execution. 
+    /// For other security scheme types, the array MUST be empty.
     /// </summary>
-    public class OpenApiSecurityRequirement : OpenApiElement
+    public class OpenApiSecurityRequirement : Dictionary<OpenApiSecurityScheme, IList<string>>, 
+        IOpenApiSerializable
     {
         /// <summary>
-        /// Gets or sets the required security schemes along with a list of strings populated with scopes
-        /// only when the security scheme is OAuth2 or OpenIdConnect.
-        /// For other security scheme types, the array MUST be empty.
+        /// Initializes the <see cref="OpenApiSecurityRequirement"/> class.
+        /// This constructor ensures that only Reference.Id is considered when two dictionary keys
+        /// of type <see cref="OpenApiSecurityScheme"/> are compared.
         /// </summary>
-        public OpenApiSecuritySchemeDictionary Schemes { get; set; }
+        public OpenApiSecurityRequirement()
+            : base(new OpenApiSecuritySchemeReferenceEqualityComparer())
+        {
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -31,21 +42,21 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            if (Schemes != null)
+            foreach (var securitySchemeAndScopesValuePair in this)
             {
-                foreach (var scheme in Schemes)
+                var securityScheme = securitySchemeAndScopesValuePair.Key;
+                var scopes = securitySchemeAndScopesValuePair.Value;
+
+                securityScheme.WriteAsV3(writer);
+
+                writer.WriteStartArray();
+
+                foreach (var scope in scopes)
                 {
-                    scheme.Key.WriteAsV3(writer);
-
-                    writer.WriteStartArray();
-
-                    foreach (var scope in scheme.Value)
-                    {
-                        writer.WriteValue(scope);
-                    }
-
-                    writer.WriteEndArray();
+                    writer.WriteValue(scope);
                 }
+
+                writer.WriteEndArray();
             }
 
             writer.WriteEndObject();
@@ -54,7 +65,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -63,24 +74,62 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            if (Schemes != null)
+            foreach (var securitySchemeAndScopesValuePair in this)
             {
-                foreach (var scheme in Schemes)
+                var securityScheme = securitySchemeAndScopesValuePair.Key;
+                var scopes = securitySchemeAndScopesValuePair.Value;
+
+                securityScheme.WriteAsV2(writer);
+
+                writer.WriteStartArray();
+
+                foreach (var scope in scopes)
                 {
-                    scheme.Key.WriteAsV2(writer);
-
-                    writer.WriteStartArray();
-
-                    foreach (var scope in scheme.Value)
-                    {
-                        writer.WriteValue(scope);
-                    }
-
-                    writer.WriteEndArray();
+                    writer.WriteValue(scope);
                 }
+
+                writer.WriteEndArray();
             }
 
             writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Comparer for OpenApiSecurityScheme that only considers the Id in the Reference
+        /// (i.e. the string that will actually be displayed in the written document)
+        /// </summary>
+        private class OpenApiSecuritySchemeReferenceEqualityComparer : IEqualityComparer<OpenApiSecurityScheme>
+        {
+            /// <summary>
+            /// Determines whether the specified objects are equal.
+            /// </summary>
+            public bool Equals(OpenApiSecurityScheme x, OpenApiSecurityScheme y)
+            {
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
+                if (x.Reference == null || y.Reference == null)
+                {
+                    return false;
+                }
+
+                return x.Reference.Id == y.Reference.Id;
+            }
+
+            /// <summary>
+            /// Returns a hash code for the specified object.
+            /// </summary>
+            public int GetHashCode(OpenApiSecurityScheme obj)
+            {
+                return obj?.Reference?.Id == null ? 0 : obj.Reference.Id.GetHashCode();
+            }
         }
     }
 }

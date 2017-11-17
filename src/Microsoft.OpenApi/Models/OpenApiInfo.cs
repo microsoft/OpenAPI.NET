@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Open API Info Object, it provides the metadata about the Open API.
     /// </summary>
-    public class OpenApiInfo : OpenApiElement, IOpenApiExtensible
+    public class OpenApiInfo : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The title of the application.
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

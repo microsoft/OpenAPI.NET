@@ -188,28 +188,25 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 new OpenApiSecurityRequirement()
                 {
-                    Schemes = new OpenApiSecuritySchemeDictionary
+                    [new OpenApiSecurityScheme()
                     {
-                        [new OpenApiSecurityScheme()
+                        Reference = new OpenApiReference()
                         {
-                            Reference = new OpenApiReference()
-                            {
-                                Id = "securitySchemeId1",
-                                Type = ReferenceType.SecurityScheme
-                            }
-                        }] = new List<string>(),
-                        [new OpenApiSecurityScheme()
-                        {
-                            Reference = new OpenApiReference()
-                            {
-                                Id = "securitySchemeId2",
-                                Type = ReferenceType.SecurityScheme
-                            }
-                        }] = new List<string>()
-                        {
-                            "scopeName1",
-                            "scopeName2"
+                            Id = "securitySchemeId1",
+                            Type = ReferenceType.SecurityScheme
                         }
+                    }] = new List<string>(),
+                    [new OpenApiSecurityScheme()
+                    {
+                        Reference = new OpenApiReference()
+                        {
+                            Id = "securitySchemeId2",
+                            Type = ReferenceType.SecurityScheme
+                        }
+                    }] = new List<string>()
+                    {
+                        "scopeName1",
+                        "scopeName2"
                     }
                 }
             },

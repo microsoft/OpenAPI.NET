@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
                 if (scheme != null)
                 {
-                    securityRequirement.AddSecurityScheme(scheme, scopes);
+                    securityRequirement.Add(scheme, scopes);
                 }
                 else
                 {

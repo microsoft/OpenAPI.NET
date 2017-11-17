@@ -4,7 +4,7 @@
 // ------------------------------------------------------------
 
 using System.IO;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
@@ -16,9 +16,10 @@ namespace Microsoft.OpenApi.Readers.Tests
         /// <summary>
         /// Serializes as JSON.
         /// </summary>
-        public static string SerializeAsJson<T>(this T element,
-               OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
-               where T : OpenApiElement
+        public static string SerializeAsJson<T>(
+            this T element,
+            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+            where T : IOpenApiSerializable
         {
             return element.Serialize(version, OpenApiFormat.Json);
         }
@@ -26,9 +27,10 @@ namespace Microsoft.OpenApi.Readers.Tests
         /// <summary>
         /// Serializes as YAML.
         /// </summary>
-        public static string SerializeAsYaml<T>(this T element,
-               OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
-               where T : OpenApiElement
+        public static string SerializeAsYaml<T>(
+            this T element,
+            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+            where T : IOpenApiSerializable
         {
             return element.Serialize(version, OpenApiFormat.Yaml);
         }
@@ -36,20 +38,27 @@ namespace Microsoft.OpenApi.Readers.Tests
         /// <summary>
         /// Serializes as the specified format.
         /// </summary>
-        public static string Serialize<T>(this T element,
+        public static string Serialize<T>(
+            this T element,
             OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0,
             OpenApiFormat format = OpenApiFormat.Json)
-            where T : OpenApiElement
+            where T : IOpenApiSerializable
         {
             if (element == null)
             {
                 throw Error.ArgumentNull(nameof(element));
             }
 
-            MemoryStream stream = new MemoryStream();
-            element.Serialize(stream, version, format);
-            stream.Position = 0;
-            return new StreamReader(stream).ReadToEnd();
+            using (var stream = new MemoryStream())
+            {
+                element.Serialize(stream, version, format);
+                stream.Position = 0;
+
+                using (var streamReader = new StreamReader(stream))
+                {
+                    return streamReader.ReadToEnd();
+                }
+            }
         }
     }
 }

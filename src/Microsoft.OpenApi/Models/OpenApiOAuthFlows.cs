@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// OAuth Flows Object.
     /// </summary>
-    public class OpenApiOAuthFlows : OpenApiElement, IOpenApiExtensible
+    public class OpenApiOAuthFlows : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// Configuration for the OAuth Implicit flow
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             // OAuthFlows object does not exist in V2.
         }

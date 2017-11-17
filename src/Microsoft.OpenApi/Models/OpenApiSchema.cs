@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Schema Object.
     /// </summary>
-    public class OpenApiSchema : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiSchema : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -364,7 +364,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

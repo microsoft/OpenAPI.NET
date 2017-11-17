@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Media Type Object.
     /// </summary>
-    public class OpenApiMediaType : OpenApiElement, IOpenApiExtensible
+    public class OpenApiMediaType : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// The schema defining the type used for the request body.
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v2.0.
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             // Media type does not exist in V2.
         }

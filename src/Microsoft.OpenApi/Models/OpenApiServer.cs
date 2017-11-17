@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -14,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Server Object: an object representing a Server.
     /// </summary>
-    public class OpenApiServer : OpenApiElement, IOpenApiExtensible
+    public class OpenApiServer : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// An optional string describing the host designated by the URL. CommonMark syntax MAY be used for rich text representation.
@@ -41,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiServer"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -68,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiServer"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             // Server object does not exist in V2.
         }

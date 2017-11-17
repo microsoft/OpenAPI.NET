@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -15,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : OpenApiElement, IOpenApiExtensible
+    public class OpenApiPathItem : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
@@ -31,7 +30,7 @@ namespace Microsoft.OpenApi.Models
         /// Gets the definition of operations on this path.
         /// </summary>
         public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
-         = new Dictionary<OperationType, OpenApiOperation>();
+            = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>
         /// An alternative server array to service all operations in this path.
@@ -62,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -98,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

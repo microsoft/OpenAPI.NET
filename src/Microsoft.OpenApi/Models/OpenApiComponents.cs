@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Components Object.
     /// </summary>
-    public class OpenApiComponents : OpenApiElement, IOpenApiExtensible
+    public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             // Components object does not exist in V2.
         }
