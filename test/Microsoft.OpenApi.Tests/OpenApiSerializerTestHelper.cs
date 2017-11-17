@@ -6,7 +6,7 @@
 using System.IO;
 using Microsoft.OpenApi.Interfaces;
 
-namespace Microsoft.OpenApi.Tests.Models
+namespace Microsoft.OpenApi.Tests
 {
     /// <summary>
     /// Serialiation Helpers
@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Models
         /// </summary>
         public static string SerializeAsJson<T>(
             this T element,
-            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+            OpenApiSpecVersion version)
             where T : IOpenApiSerializable
         {
             return element.Serialize(version, OpenApiFormat.Json);
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Models
         /// </summary>
         public static string SerializeAsYaml<T>(
             this T element,
-            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+            OpenApiSpecVersion version)
             where T : IOpenApiSerializable
         {
             return element.Serialize(version, OpenApiFormat.Yaml);
@@ -40,8 +40,8 @@ namespace Microsoft.OpenApi.Tests.Models
         /// </summary>
         public static string Serialize<T>(
             this T element,
-            OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0,
-            OpenApiFormat format = OpenApiFormat.Json)
+            OpenApiSpecVersion version,
+            OpenApiFormat format)
             where T : IOpenApiSerializable
         {
             if (element == null)
