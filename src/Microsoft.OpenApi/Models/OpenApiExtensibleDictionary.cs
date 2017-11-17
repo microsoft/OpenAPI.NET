@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to Open Api v3.0
         /// </summary>
-        public void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var item in this)
             {
-                writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.WriteAsV3(w));
+                writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.SerializeAsV3(w));
             }
 
             writer.WriteExtensions(Extensions);
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to Open Api v2.0
         /// </summary>
-        public void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var item in this)
             {
-                writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.WriteAsV2(w));
+                writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.SerializeAsV2(w));
             }
 
             writer.WriteExtensions(Extensions);

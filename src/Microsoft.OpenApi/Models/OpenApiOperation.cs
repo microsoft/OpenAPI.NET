@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
         /// </summary>
-        public void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -135,31 +135,31 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
 
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
             // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV3(w));
 
             // requestBody
             writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, (w, r) => r.WriteAsV3(w));
 
             // responses
-            writer.WriteOptionalObject(OpenApiConstants.Responses, Responses, (w, r) => r.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV3(w));
 
             // callbacks
-            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.SerializeAsV3(w));
 
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // security
-            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.SerializeAsV3(w));
 
             // servers
-            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
 
             // specification extensions
             writer.WriteExtensions(Extensions);
@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v2.0.
         /// </summary>
-        public void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
 
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
@@ -249,10 +249,10 @@ namespace Microsoft.OpenApi.Models
 
             // parameters
             // Use the parameters created locally to include request body if exists.
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, parameters, (w, p) => p.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, parameters, (w, p) => p.SerializeAsV2(w));
 
             // responses
-            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.WriteAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV2(w));
 
             // schemes
             // All schemes in the Servers are extracted, regardless of whether the host matches
@@ -274,7 +274,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // security
-            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.SerializeAsV2(w));
 
             // specification extensions
             writer.WriteExtensions(Extensions);

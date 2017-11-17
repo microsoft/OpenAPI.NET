@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.ContentType, ContentType);
 
             // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
 
             // style
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
         /// </summary>
-        public void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // nothing here
         }

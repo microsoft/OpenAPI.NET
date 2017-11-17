@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
         /// </summary>
-        public void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                Reference.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v2.0
         /// </summary>
-        public void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Example object of this form does not exist in V2.
             // V2 Example object requires knowledge of media type and exists only

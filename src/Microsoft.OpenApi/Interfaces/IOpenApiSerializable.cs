@@ -13,15 +13,15 @@ namespace Microsoft.OpenApi.Interfaces
     public interface IOpenApiSerializable : IOpenApiElement
     {
         /// <summary>
-        /// Write Open API element to v3.0.
+        /// Serialize Open API element to v3.0.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        void WriteAsV3(IOpenApiWriter writer);
+        void SerializeAsV3(IOpenApiWriter writer);
 
         /// <summary>
-        /// Write Open API element to v2.0.
+        /// Serialize Open API element to v2.0.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        void WriteAsV2(IOpenApiWriter writer);
+        void SerializeAsV2(IOpenApiWriter writer);
     }
 }

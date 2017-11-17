@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                Reference.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // content
-                writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.WriteAsV3(w));
+                writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
 
                 // required
                 writer.WriteProperty(OpenApiConstants.Required, Required, false);

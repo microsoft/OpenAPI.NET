@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.0
         /// </summary>
-        public void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                Reference.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -123,16 +123,16 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
                 // schema
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV3(w));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV3(w));
 
                 // example
                 writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
 
                 // examples
-                writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => e.WriteAsV3(w));
+                writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
 
                 // content
-                writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.WriteAsV3(w));
+                writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
 
                 // extensions
                 writer.WriteExtensions(Extensions);
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v2.0
         /// </summary>
-        public void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                Reference.WriteAsV2(writer);
+                Reference.SerializeAsV2(writer);
             }
             else
             {
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
                 // schema
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV2(w));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
 
                 // example
                 writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));

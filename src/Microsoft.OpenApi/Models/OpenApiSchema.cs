@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v3.0
         /// </summary>
-        public void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -244,7 +244,7 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                Reference.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
                 return;
             }
 
@@ -302,25 +302,25 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV3(w));
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => s.SerializeAsV3(w));
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => s.SerializeAsV3(w));
 
             // not
-            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.SerializeAsV3(w));
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV3(w));
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
 
             // additionalProperties
-            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.SerializeAsV3(w));
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -335,7 +335,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
 
             // discriminator
-            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.SerializeAsV3(w));
 
             // readOnly
             writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
@@ -344,10 +344,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
 
             // xml
-            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV3(w));
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
@@ -364,7 +364,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0
         /// </summary>
-        public void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -373,7 +373,7 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                Reference.WriteAsV2(writer);
+                Reference.SerializeAsV2(writer);
                 return;
             }
 
@@ -396,7 +396,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
 
             // collectionFormat
             // We need information from style in parameter to populate this.
@@ -514,16 +514,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV2(w));
 
             // additionalProperties
-            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.SerializeAsV2(w));
 
             // discriminator
             writer.WriteProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
@@ -532,10 +532,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
 
             // xml
-            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV2(w));
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
