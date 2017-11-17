@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     mapNode.Diagnostic,
                     property.Name);
 
-                var scopes = property.Value.CreateSimpleList(n2 => n2.GetScalarValue());
+                var scopes = property.Value.CreateSimpleList(value => value.GetScalarValue());
 
                 if (scheme != null)
                 {
