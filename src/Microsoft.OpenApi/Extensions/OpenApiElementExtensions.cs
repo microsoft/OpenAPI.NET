@@ -5,13 +5,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi.Extensions
 {
     /// <summary>
     /// Extension methods to construct or modify Open API elements.

@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi
+namespace Microsoft.OpenApi.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="IOpenApiSerializable"/> serialization.
