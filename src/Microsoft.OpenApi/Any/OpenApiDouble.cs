@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Any
         /// <summary>
         /// Initializes the <see cref="OpenApiDouble"/> class.
         /// </summary>
-        public OpenApiDouble(float value)
+        public OpenApiDouble(double value)
             : base(value)
         {
         }
