@@ -5,16 +5,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi.Extensions
 {
     /// <summary>
-    /// Extension methods for Open API elements.
+    /// Extension methods to construct or modify Open API elements.
     /// </summary>
     public static class OpenApiElementExtensions
     {
@@ -215,111 +215,7 @@ namespace Microsoft.OpenApi.Models
 
             operation.Responses.Add(name, response);
         }
-
-        /// <summary>
-        /// Add a <see cref="OpenApiSecurityScheme"/> into the <see cref="OpenApiSecurityRequirement"/>.
-        /// </summary>
-        /// <param name="securityRequirement">The security requirement to add the security scheme to.</param>
-        /// <param name="securityScheme">The security scheme to add as key.</param>
-        /// <param name="scopes">The scopes array to be used as the value.</param>
-        public static void AddSecurityScheme(
-            this OpenApiSecurityRequirement securityRequirement,
-            OpenApiSecurityScheme securityScheme,
-            List<string> scopes)
-        {
-            if (securityRequirement == null)
-            {
-                throw Error.ArgumentNull(nameof(securityRequirement));
-            }
-
-            if (securityScheme == null)
-            {
-                throw Error.ArgumentNull(nameof(securityScheme));
-            }
-
-            if (scopes == null)
-            {
-                throw Error.ArgumentNull(nameof(scopes));
-            }
-
-            if (securityRequirement.Schemes == null)
-            {
-                securityRequirement.Schemes = new OpenApiSecuritySchemeDictionary();
-            }
-
-            securityRequirement.Schemes.Add(securityScheme, scopes);
-        }
-
-        /// <summary>
-        /// Try find the referenced element.
-        /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiReferenceable"/>.</typeparam>
-        /// <param name="reference">The reference element. </param>
-        /// <param name="document">The Open API document.</param>
-        public static IOpenApiElement Find<T>(this T reference, OpenApiDocument document)
-            where T : IOpenApiReferenceable
-        {
-            if (reference == null ||
-                document == null ||
-                document.Components == null ||
-                reference.Reference == null ||
-                reference.Reference.ExternalResource != null)
-            {
-                return null;
-            }
-
-            switch (reference.Reference.Type)
-            {
-                case ReferenceType.Schema:
-                    return document.Components.Schemas?[reference.Reference.Id];
-
-                case ReferenceType.Parameter:
-                    return document.Components.Parameters?[reference.Reference.Id];
-
-                case ReferenceType.Header:
-                    return document.Components.Headers?[reference.Reference.Id];
-
-                case ReferenceType.Response:
-                    return document.Components.Responses?[reference.Reference.Id];
-
-                case ReferenceType.RequestBody:
-                    return document.Components.RequestBodies?[reference.Reference.Id];
-
-                case ReferenceType.Example:
-                    return document.Components.Examples?[reference.Reference.Id];
-
-                case ReferenceType.SecurityScheme:
-                    return document.Components.SecuritySchemes?[reference.Reference.Id];
-
-                case ReferenceType.Callback:
-                    return document.Components.Callbacks?[reference.Reference.Id];
-
-                case ReferenceType.Link:
-                    return document.Components.Links?[reference.Reference.Id];
-
-                case ReferenceType.Tag:
-                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Reference.Id);
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Check whether the element is reference element.
-        /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiElement"/>.</typeparam>
-        /// <param name="element">The referencable element.</param>
-        /// <returns>
-        /// True if the element implements <see cref="IOpenApiReferenceable"/> and pointer is not null,
-        /// False otherwise.
-        /// </returns>
-        public static bool IsReference<T>(this T element) where T : IOpenApiElement
-        {
-            var reference = element as IOpenApiReferenceable;
-            return reference?.Reference != null;
-        }
-
+        
         /// <summary>
         /// Add extension into the Extensions
         /// </summary>
@@ -335,18 +231,6 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(element));
             }
 
-            VerifyExtensionName(name);
-
-            if (element.Extensions == null)
-            {
-                element.Extensions = new Dictionary<string, IOpenApiAny>();
-            }
-
-            element.Extensions[name] = any ?? throw Error.ArgumentNull(nameof(any));
-        }
-
-        private static void VerifyExtensionName(string name)
-        {
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
@@ -356,6 +240,13 @@ namespace Microsoft.OpenApi.Models
             {
                 throw new OpenApiException(string.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
             }
+
+            if (element.Extensions == null)
+            {
+                element.Extensions = new Dictionary<string, IOpenApiAny>();
+            }
+
+            element.Extensions[name] = any ?? throw Error.ArgumentNull(nameof(any));
         }
     }
 }

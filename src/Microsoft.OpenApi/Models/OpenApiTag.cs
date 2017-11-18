@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : OpenApiElement, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiTag : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// The name of the tag.
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // external docs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
 
             // extensions.
             writer.WriteExtensions(Extensions);
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // external docs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
 
             // extensions
             writer.WriteExtensions(Extensions);

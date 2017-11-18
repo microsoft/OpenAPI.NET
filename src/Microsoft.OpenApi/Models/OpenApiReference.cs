@@ -6,6 +6,7 @@
 using System;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// A simple object to allow referencing other components in the specification, internally and externally.
     /// </summary>
-    public class OpenApiReference : OpenApiElement
+    public class OpenApiReference : IOpenApiSerializable
     {
         /// <summary>
         /// External resource in the reference.
@@ -114,7 +115,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -146,7 +147,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {

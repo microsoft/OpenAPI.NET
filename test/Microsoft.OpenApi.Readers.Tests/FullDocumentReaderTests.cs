@@ -5,14 +5,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Security.Policy;
-using System.Text;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 using Newtonsoft.Json;
-using SharpYaml.Serialization;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -782,14 +777,11 @@ namespace Microsoft.OpenApi.Readers.Tests
                                 {
                                     new OpenApiSecurityRequirement()
                                     {
-                                        Schemes = new OpenApiSecuritySchemeDictionary
+                                        [securityScheme1] = new List<string>(),
+                                        [securityScheme2] = new List<string>()
                                         {
-                                            [securityScheme1] = new List<string>(),
-                                            [securityScheme2] = new List<string>()
-                                            {
-                                                "scope1",
-                                                "scope2"
-                                            }
+                                            "scope1",
+                                            "scope2"
                                         }
                                     }
                                 }
@@ -926,19 +918,15 @@ namespace Microsoft.OpenApi.Readers.Tests
                 {
                     new OpenApiSecurityRequirement()
                     {
-                        Schemes = new OpenApiSecuritySchemeDictionary
+                        [securityScheme1] = new List<string>(),
+                        [securityScheme2] = new List<string>()
                         {
-                            [securityScheme1] = new List<string>(),
-                            [securityScheme2] = new List<string>()
-                            {
-                                "scope1",
-                                "scope2",
-                                "scope3"
-                            }
+                            "scope1",
+                            "scope2",
+                            "scope3"
                         }
                     }
                 }
-                
             };
             
             actual.ShouldBeEquivalentTo(expected);

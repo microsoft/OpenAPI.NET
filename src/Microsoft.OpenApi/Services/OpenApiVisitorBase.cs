@@ -4,12 +4,13 @@
 // ------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Open API visitor base providing base validation logic for each <see cref="OpenApiElement"/>
+    /// Open API visitor base providing base validation logic for each <see cref="IOpenApiElement"/>
     /// </summary>
     public abstract class OpenApiVisitorBase
     {

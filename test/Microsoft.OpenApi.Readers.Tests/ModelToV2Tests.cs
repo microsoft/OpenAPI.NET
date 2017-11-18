@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Linq;
 using Xunit;

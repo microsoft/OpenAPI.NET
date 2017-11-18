@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -18,36 +19,33 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSecurityRequirement SecurityRequirementWithReferencedSecurityScheme =
             new OpenApiSecurityRequirement
             {
-                Schemes = new OpenApiSecuritySchemeDictionary
+                [
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme1"}
+                    }
+                ] = new List<string>
                 {
-                    [
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme1"}
-                        }
-                    ] = new List<string>
+                    "scope1",
+                    "scope2",
+                    "scope3",
+                },
+                [
+                    new OpenApiSecurityScheme
                     {
-                        "scope1",
-                        "scope2",
-                        "scope3",
-                    },
-                    [
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme2"}
-                        }
-                    ] = new List<string>
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme2"}
+                    }
+                ] = new List<string>
+                {
+                    "scope4",
+                    "scope5",
+                },
+                [
+                    new OpenApiSecurityScheme
                     {
-                        "scope4",
-                        "scope5",
-                    },
-                    [
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme3"}
-                        }
-                    ] = new List<string>()
-                }
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme3"}
+                    }
+                ] = new List<string>()
             };
 
         [Fact]
@@ -146,33 +144,29 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act
-            securityRequirement.AddSecurityScheme(securityScheme1, new List<string>());
-            securityRequirement.AddSecurityScheme(securityScheme2, new List<string> {"scope1", "scope2"});
+            securityRequirement.Add(securityScheme1, new List<string>());
+            securityRequirement.Add(securityScheme2, new List<string> {"scope1", "scope2"});
 
             Action addSecurityScheme1Duplicate = () =>
-                securityRequirement.AddSecurityScheme(securityScheme1Duplicate, new List<string>());
+                securityRequirement.Add(securityScheme1Duplicate, new List<string>());
             Action addSecurityScheme1WithDifferentProperties = () =>
-                securityRequirement.AddSecurityScheme(securityScheme1WithDifferentProperties, new List<string>());
+                securityRequirement.Add(securityScheme1WithDifferentProperties, new List<string>());
 
             // Assert
             // Only the first two should be added successfully since the latter two are duplicates of securityScheme1.
             // Duplicate determination only considers Reference.Id.
             addSecurityScheme1Duplicate.ShouldThrow<ArgumentException>();
             addSecurityScheme1WithDifferentProperties.ShouldThrow<ArgumentException>();
-
-            securityRequirement.Schemes.Should().NotBeNull();
-            securityRequirement.Schemes.Should().HaveCount(2);
+            
+            securityRequirement.Should().HaveCount(2);
 
             securityRequirement.ShouldBeEquivalentTo(
                 new OpenApiSecurityRequirement
                 {
-                    Schemes = new OpenApiSecuritySchemeDictionary
-                    {
-                        // This should work with any security scheme object
-                        // as long as Reference.Id os securityScheme1
-                        [securityScheme1WithDifferentProperties] = new List<string>(),
-                        [securityScheme2] = new List<string> {"scope1", "scope2"},
-                    }
+                    // This should work with any security scheme object
+                    // as long as Reference.Id os securityScheme1
+                    [securityScheme1WithDifferentProperties] = new List<string>(),
+                    [securityScheme2] = new List<string> {"scope1", "scope2"},
                 });
         }
     }

@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using FluentAssertions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
