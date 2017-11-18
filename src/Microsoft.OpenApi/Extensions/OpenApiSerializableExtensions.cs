@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Extension methods for <see cref="IOpenApiSerializable"/> serialization.
     /// </summary>
-    public static class OpenApiElementSerializeExtensions
+    public static class OpenApiSerializableExtensions
     {
         /// <summary>
         /// Serialize the <see cref="IOpenApiSerializable"/> to the Open API document (JSON) using the given stream and specification version.
