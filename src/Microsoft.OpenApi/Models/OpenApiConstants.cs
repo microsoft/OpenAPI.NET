@@ -227,7 +227,7 @@ namespace Microsoft.OpenApi.Models
 
         public const string DefaultTitle = "Default Title";
 
-        public static readonly Version DefaultVersion = new Version(3, 0, 0);
+        public static readonly Version Version3_0_0 = new Version(3, 0, 0);
 
         public static readonly Uri DefaultUrl = new Uri("http://localhost/");
 

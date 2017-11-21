@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Models
         /// Examples of the media type.
         /// Each example object SHOULD match the media type and specified schema if present.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; }
+        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// A map between a property name and its encoding information.
@@ -38,12 +38,12 @@ namespace Microsoft.OpenApi.Models
         /// The encoding object SHALL only apply to requestBody objects
         /// when the media type is multipart or application/x-www-form-urlencoded.
         /// </summary>
-        public IDictionary<string, OpenApiEncoding> Encoding { get; set; }
+        public IDictionary<string, OpenApiEncoding> Encoding { get; set; } = new Dictionary<string, OpenApiEncoding>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.

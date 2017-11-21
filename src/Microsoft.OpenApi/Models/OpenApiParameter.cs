@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Models
         /// Furthermore, if referencing a schema which contains an example,
         /// the examples value SHALL override the example provided by the schema.
         /// </summary>
-        public IList<OpenApiExample> Examples { get; set; }
+        public IList<OpenApiExample> Examples { get; set; } = new List<OpenApiExample>();
 
         /// <summary>
         /// Example of the media type. The example SHOULD match the specified schema and encoding properties
@@ -119,12 +119,12 @@ namespace Microsoft.OpenApi.Models
         /// When example or examples are provided in conjunction with the schema object,
         /// the example MUST follow the prescribed serialization strategy for the parameter.
         /// </summary>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; }
+        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0

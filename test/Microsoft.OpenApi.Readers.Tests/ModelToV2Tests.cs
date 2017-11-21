@@ -45,6 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             var openApiDoc = new OpenApiDocument
             {
+                SpecVersion = OpenApiConstants.Version3_0_0,
                 Servers = new List<OpenApiServer>()
             };
 
@@ -72,7 +73,11 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TestConsumes()
         {
-            var openApiDoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument()
+            {
+                SpecVersion = OpenApiConstants.Version3_0_0
+            };
+
             var pathItem = new OpenApiPathItem();
             var operation = new OpenApiOperation
             {
@@ -107,7 +112,11 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TestParameter()
         {
-            var openApiDoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument()
+            {
+                SpecVersion = OpenApiConstants.Version3_0_0
+            };
+
             var pathItem = new OpenApiPathItem();
             var operation = new OpenApiOperation
             {
@@ -144,7 +153,11 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TestProduces()
         {
-            var openApiDoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument()
+            {
+                SpecVersion = OpenApiConstants.Version3_0_0
+            };
+
             var pathItem = new OpenApiPathItem();
             var operation = new OpenApiOperation
             {
@@ -179,7 +192,11 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void TestRequestBody()
         {
-            var openApiDoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument()
+            {
+                SpecVersion = OpenApiConstants.Version3_0_0
+            };
+
             var pathItem = new OpenApiPathItem();
             var operation = new OpenApiOperation
             {

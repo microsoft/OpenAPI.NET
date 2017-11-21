@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Workbench
         {
             var outputstream = new MemoryStream();
             doc.Serialize(outputstream,
-                IsV3 ? OpenApiSpecVersion.OpenApi3_0 : OpenApiSpecVersion.OpenApi2_0,
+                IsV3 ? OpenApiSpecVersion.OpenApi3_0_0 : OpenApiSpecVersion.OpenApi2_0,
                 this.format == "Yaml" ? OpenApiFormat.Yaml : OpenApiFormat.Json);
 
             outputstream.Position = 0;

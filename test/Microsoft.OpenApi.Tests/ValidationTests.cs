@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -17,18 +16,23 @@ namespace Microsoft.OpenApi.Tests
         public void ResponseMustHaveADescription()
         {
             var openApiDocument = new OpenApiDocument();
-            openApiDocument.AddPathItem(
+
+            openApiDocument.Paths.Add(
                 "/test",
-                p => p.AddOperation(
-                    OperationType.Get,
-                    o => o.AddResponse(
-                        "200",
-                        r =>
+                new OpenApiPathItem
+                {
+                    Operations =
+                    {
+                        [OperationType.Get] = new OpenApiOperation
                         {
+                            Responses =
+                            {
+                                ["200"] = new OpenApiResponse()
+                            }
                         }
-                    )
-                )
-            );
+                    }
+                });
+
             var validator = new OpenApiValidator();
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);

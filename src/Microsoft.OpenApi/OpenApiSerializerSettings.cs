@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi
         /// <summary>
         /// Open Api specification version
         /// </summary>
-        public OpenApiSpecVersion SpecVersion { get; set; } = OpenApiSpecVersion.OpenApi3_0;
+        public OpenApiSpecVersion SpecVersion { get; set; } = OpenApiSpecVersion.OpenApi3_0_0;
 
         /// <summary>
         /// Open Api document format.
