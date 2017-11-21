@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
         /// </summary>
-        public OpenApiResponses Responses { get; set; }
+        public OpenApiResponses Responses { get; set; } = new OpenApiResponses();
 
         /// <summary>
         /// A map of possible out-of band callbacks related to the parent operation. 
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         /// <summary>
         /// Creates a <see cref="OpenApiResponse"/> object and add it to <see cref="Responses"/>.

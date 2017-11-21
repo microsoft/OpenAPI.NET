@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map allowing additional information to be provided as headers.
         /// </summary>
-        public IDictionary<string, OpenApiHeader> Headers { get; set; }
+        public IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
 
         /// <summary>
         /// Describes how a specific property value will be serialized depending on its type. 
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.

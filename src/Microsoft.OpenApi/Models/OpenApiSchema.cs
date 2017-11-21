@@ -112,19 +112,19 @@ namespace Microsoft.OpenApi.Models
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
         /// </summary>
-        public IList<OpenApiSchema> AllOf { get; set; }
+        public IList<OpenApiSchema> AllOf { get; set; } = new List<OpenApiSchema>();
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
         /// </summary>
-        public IList<OpenApiSchema> OneOf { get; set; }
+        public IList<OpenApiSchema> OneOf { get; set; } = new List<OpenApiSchema>();
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
         /// </summary>
-        public IList<OpenApiSchema> AnyOf { get; set; }
+        public IList<OpenApiSchema> AnyOf { get; set; } = new List<OpenApiSchema>();
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public IList<string> Required { get; set; }
+        public IList<string> Required { get; set; } = new List<string>();
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Property definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced).
         /// </summary>
-        public IDictionary<string, OpenApiSchema> Properties { get; set; }
+        public IDictionary<string, OpenApiSchema> Properties { get; set; } = new Dictionary<string, OpenApiSchema>();
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         /// <summary>
         /// Reference object.

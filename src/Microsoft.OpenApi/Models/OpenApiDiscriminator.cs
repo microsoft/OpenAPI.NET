@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
-        public IDictionary<string, string> Mapping { get; set; }
+        public IDictionary<string, string> Mapping { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
