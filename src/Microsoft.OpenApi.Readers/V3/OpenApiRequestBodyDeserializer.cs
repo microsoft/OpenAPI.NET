@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -47,6 +48,12 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiRequestBody LoadRequestBody(ParseNode node)
         {
             var mapNode = node.CheckMapNode("requestBody");
+
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                return mapNode.GetReferencedObject<OpenApiRequestBody>(ReferenceType.RequestBody, pointer);
+            }
 
             var requestBody = new OpenApiRequestBody();
             foreach (var property in mapNode)

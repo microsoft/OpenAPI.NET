@@ -6,7 +6,7 @@
     <Company>Microsoft</Company>
     <Product>Microsoft.OpenApi</Product>
     <PackageId>Microsoft.OpenApi</PackageId>
-    <Version>1.0.0-beta001</Version>
+    <Version>1.0.0-beta003</Version>
     <Description>.NET models and JSON/YAML writers for OpenAPI specification</Description>
     <AssemblyName>Microsoft.OpenApi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi</RootNamespace>

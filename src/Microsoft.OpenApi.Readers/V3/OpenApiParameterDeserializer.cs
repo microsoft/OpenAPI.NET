@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Commons;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -111,10 +111,10 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode("parameter");
 
-            var refpointer = mapNode.GetReferencePointer();
-            if (refpointer != null)
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiParameter>(refpointer);
+                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
             }
 
             var parameter = new OpenApiParameter();

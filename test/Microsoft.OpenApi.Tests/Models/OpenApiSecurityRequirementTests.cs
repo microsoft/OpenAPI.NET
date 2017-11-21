@@ -3,8 +3,10 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -14,14 +16,13 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiSecurityRequirement BasicSecurityRequirement = new OpenApiSecurityRequirement();
 
-        public static OpenApiSecurityRequirement AdvancedSecurityRequirement = new OpenApiSecurityRequirement
-        {
-            Schemes = new Dictionary<OpenApiSecurityScheme, List<string>>
+        public static OpenApiSecurityRequirement SecurityRequirementWithReferencedSecurityScheme =
+            new OpenApiSecurityRequirement
             {
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme1")
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme1"}
                     }
                 ] = new List<string>
                 {
@@ -32,7 +33,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme2")
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme2"}
                     }
                 ] = new List<string>
                 {
@@ -42,11 +43,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Pointer = new OpenApiReference(ReferenceType.SecurityScheme, "scheme3")
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme3"}
                     }
                 ] = new List<string>()
-            }
-        };
+            };
 
         [Fact]
         public void SerializeBasicSecurityRequirementAsV3JsonWorks()
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"{ }";
 
             // Act
-            var actual = BasicSecurityRequirement.SerializeAsJson();
+            var actual = BasicSecurityRequirement.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -64,11 +64,11 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeAdvancedSecurityRequirementAsV3JsonWorks()
+        public void SerializeSecurityRequirementWithReferencedSecuritySchemeAsV3JsonWorks()
         {
             // Arrange
-            var expected = 
-@"{
+            var expected =
+                @"{
   ""scheme1"": [
     ""scope1"",
     ""scope2"",
@@ -82,12 +82,92 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedSecurityRequirement.SerializeAsJson();
+            var actual = SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SchemesShouldConsiderOnlyReferenceIdForEquality()
+        {
+            // Arrange
+            var securityRequirement = new OpenApiSecurityRequirement();
+
+            var securityScheme1 = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.ApiKey,
+                Name = "apiKeyName1",
+                In = ParameterLocation.Header,
+                Reference = new OpenApiReference
+                {
+                    Id = "securityScheme1",
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
+
+            var securityScheme2 = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OpenIdConnect,
+                OpenIdConnectUrl = new Uri("http://example.com"),
+                Reference = new OpenApiReference
+                {
+                    Id = "securityScheme2",
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
+
+            var securityScheme1Duplicate = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.ApiKey,
+                Name = "apiKeyName1",
+                In = ParameterLocation.Header,
+                Reference = new OpenApiReference
+                {
+                    Id = "securityScheme1",
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
+
+            var securityScheme1WithDifferentProperties = new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.ApiKey,
+                Name = "apiKeyName2",
+                In = ParameterLocation.Query,
+                Reference = new OpenApiReference
+                {
+                    Id = "securityScheme1",
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
+
+            // Act
+            securityRequirement.Add(securityScheme1, new List<string>());
+            securityRequirement.Add(securityScheme2, new List<string> {"scope1", "scope2"});
+
+            Action addSecurityScheme1Duplicate = () =>
+                securityRequirement.Add(securityScheme1Duplicate, new List<string>());
+            Action addSecurityScheme1WithDifferentProperties = () =>
+                securityRequirement.Add(securityScheme1WithDifferentProperties, new List<string>());
+
+            // Assert
+            // Only the first two should be added successfully since the latter two are duplicates of securityScheme1.
+            // Duplicate determination only considers Reference.Id.
+            addSecurityScheme1Duplicate.ShouldThrow<ArgumentException>();
+            addSecurityScheme1WithDifferentProperties.ShouldThrow<ArgumentException>();
+            
+            securityRequirement.Should().HaveCount(2);
+
+            securityRequirement.ShouldBeEquivalentTo(
+                new OpenApiSecurityRequirement
+                {
+                    // This should work with any security scheme object
+                    // as long as Reference.Id os securityScheme1
+                    [securityScheme1WithDifferentProperties] = new List<string>(),
+                    [securityScheme2] = new List<string> {"scope1", "scope2"},
+                });
         }
     }
 }

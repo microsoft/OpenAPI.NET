@@ -5,6 +5,7 @@
 
 using System;
 using FluentAssertions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -45,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvanceExDocs.SerializeAsJson();
+            string actual = AdvanceExDocs.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -62,7 +63,7 @@ namespace Microsoft.OpenApi.Tests.Models
 url: https://example.com";
 
             // Act
-            string actual = AdvanceExDocs.SerializeAsYaml();
+            string actual = AdvanceExDocs.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

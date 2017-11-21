@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Components Object.
     /// </summary>
-    public class OpenApiComponents : OpenApiElement, IOpenApiExtension
+    public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -78,31 +78,31 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // schemas
-            writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, (w, s) => s.SerializeAsV3(w));
 
             // responses
-            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV3(w));
 
             // parameters
-            writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV3(w));
 
             // examples
-            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
 
             // requestBodies
             writer.WriteOptionalMap(OpenApiConstants.RequestBodies, RequestBodies, (w, r) => r.WriteAsV3(w));
 
             // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
 
             // securitySchemes
-            writer.WriteOptionalMap(OpenApiConstants.SecuritySchemes, SecuritySchemes, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.SecuritySchemes, SecuritySchemes, (w, s) => s.SerializeAsV3(w));
 
             // links
-            writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, link) => link.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, link) => link.SerializeAsV3(w));
 
             // callbacks
-            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.WriteAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.SerializeAsV3(w));
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Components object does not exist in V2.
         }

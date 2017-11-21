@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Open API Info Object, it provides the metadata about the Open API.
     /// </summary>
-    public class OpenApiInfo : OpenApiElement, IOpenApiExtension
+    public class OpenApiInfo : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The title of the application.
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -73,10 +73,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.SerializeAsV3(w));
 
             // license object
-            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.SerializeAsV3(w));
 
             // version
             writer.WriteProperty(OpenApiConstants.Version, Version?.ToString());
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -109,10 +109,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.SerializeAsV2(w));
 
             // license object
-            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.WriteAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.SerializeAsV2(w));
 
             // version
             writer.WriteProperty(OpenApiConstants.Version, Version?.ToString());

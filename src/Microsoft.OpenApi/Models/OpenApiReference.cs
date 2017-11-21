@@ -4,8 +4,9 @@
 // ------------------------------------------------------------
 
 using System;
-using Microsoft.OpenApi.Commons;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// A simple object to allow referencing other components in the specification, internally and externally.
     /// </summary>
-    public class OpenApiReference : OpenApiElement
+    public class OpenApiReference : IOpenApiSerializable
     {
         /// <summary>
         /// External resource in the reference.
@@ -22,83 +23,35 @@ namespace Microsoft.OpenApi.Models
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
         /// 2. a Url, for example: http://localhost/pet.json
         /// </summary>
-        public string ExternalResource { get; }
+        public string ExternalResource { get; set; }
 
         /// <summary>
         /// The element type referenced.
         /// </summary>
-        public ReferenceType ReferenceType { get; }
+        /// <remarks>This must be present if <see cref="ExternalResource"/> is not present.</remarks>
+        public ReferenceType? Type { get; set; }
 
         /// <summary>
-        /// The identifier of the reusable component of one particular ReferenceType without the starting '/'.
+        /// The identifier of the reusable component of one particular ReferenceType.
+        /// If ExternalResource is present, this is the path to the component after the '#/'.
+        /// For example, if the reference is 'example.json#/path/to/component', the Id is 'path/to/component'.
+        /// If ExternalResource is not present, this is the name of the component without the reference type name.
+        /// For example, if the reference is '#/components/schemas/componentName', the Id is 'componentName'.
         /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiReference"/> class.
-        /// </summary>
-        /// <param name="externalResource">The external resource.</param>
-        public OpenApiReference(string externalResource)
-            : this(externalResource, null)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiReference"/> class.
-        /// </summary>
-        /// <param name="externalResource">The external resource.</param>
-        /// <param name="externalPointer">The external pointer, it could be null.</param>
-        public OpenApiReference(string externalResource, string externalPointer)
-        {
-            if (String.IsNullOrWhiteSpace(externalResource))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(externalResource));
-            }
-
-            ExternalResource = externalResource;
-            Name = externalPointer;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiReference"/> class.
-        /// </summary>
-        /// <param name="localType">The local reference type.</param>
-        /// <param name="localPointer">The local pointer, it could not be null.</param>
-        public OpenApiReference(ReferenceType localType, string localPointer)
-        {
-            if (String.IsNullOrEmpty(localPointer))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(localPointer));
-            }
-
-            ReferenceType = localType;
-            Name = localPointer;
-        }
+        public string Id { get; set; }
 
         /// <summary>
         /// Gets a flag indicating whether this reference is an external reference.
         /// </summary>
-        public bool IsExternal
-        {
-            get
-            {
-                return ExternalResource != null;
-            }
-        }
+        public bool IsExternal => ExternalResource != null;
 
         /// <summary>
         /// Gets a flag indicating whether this reference is a local reference.
         /// </summary>
-        public bool IsLocal
-        {
-            get
-            {
-                return ExternalResource == null && Name != null;
-            }
-        }
+        public bool IsLocal => ExternalResource == null;
 
         /// <summary>
-        /// Gets the reference string for v3.0.
+        /// Gets the full reference string for v3.0.
         /// </summary>
         public string ReferenceV3
         {
@@ -109,19 +62,27 @@ namespace Microsoft.OpenApi.Models
                     return GetExternalReference();
                 }
 
-                if (ReferenceType == ReferenceType.Tag)
+                if (!Type.HasValue)
                 {
-                    return "#/tags/" + Name;
+                    throw Error.ArgumentNull(nameof(Type));
                 }
-                else
+
+                if (Type == ReferenceType.Tag)
                 {
-                    return "#/components/" + ReferenceType.GetDisplayName() + "/" + Name;
+                    return Id;
                 }
+
+                if (Type == ReferenceType.SecurityScheme)
+                {
+                    return Id;
+                }
+
+                return "#/components/" + Type.GetDisplayName() + "/" + this.Id;
             }
         }
 
         /// <summary>
-        /// Gets the reference string for V2.0
+        /// Gets the full reference string for V2.0
         /// </summary>
         public string ReferenceV2
         {
@@ -132,32 +93,47 @@ namespace Microsoft.OpenApi.Models
                     return GetExternalReference();
                 }
 
-                return "#/" + GetReferenceTypeNameAsV2() + "/" + Name;
-            }
-        }
+                if (!Type.HasValue)
+                {
+                    throw Error.ArgumentNull(nameof(Type));
+                }
 
-        /// <summary>
-        /// Get a <see cref="JsonPointer"/>
-        /// </summary>
-        /// <returns>The Json Pointer object.</returns>
-        public JsonPointer GetLocalPointer()
-        {
-            if (IsLocal)
-            {
-                return new JsonPointer(ReferenceV3);
-            }
+                if (Type == ReferenceType.Tag)
+                {
+                    return Id;
+                }
 
-            return null;
+                if (Type == ReferenceType.SecurityScheme)
+                {
+                    return Id;
+                }
+
+                return "#/" + GetReferenceTypeNameAsV2(Type.Value) + "/" + this.Id;
+            }
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Type == ReferenceType.Tag)
+            {
+                // Write the string value only
+                writer.WriteValue(ReferenceV3);
+                return;
+            }
+
+            if (Type == ReferenceType.SecurityScheme)
+            {
+                // Write the string as property name
+                writer.WritePropertyName(ReferenceV3);
+                return;
             }
 
             writer.WriteStartObject();
@@ -171,11 +147,25 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Type == ReferenceType.Tag)
+            {
+                // Write the string value only
+                writer.WriteValue(ReferenceV2);
+                return;
+            }
+
+            if (Type == ReferenceType.SecurityScheme)
+            {
+                // Write the string as property name
+                writer.WritePropertyName(ReferenceV2);
+                return;
             }
 
             writer.WriteStartObject();
@@ -188,24 +178,17 @@ namespace Microsoft.OpenApi.Models
 
         private string GetExternalReference()
         {
-            if (!String.IsNullOrEmpty(ExternalResource))
+            if (Id != null)
             {
-                if (Name != null)
-                {
-                    return ExternalResource + "#/" + Name;
-                }
-                else
-                {
-                    return ExternalResource;
-                }
+                return ExternalResource + "#/" + Id;
             }
 
-            return null;
+            return ExternalResource;
         }
 
-        private string GetReferenceTypeNameAsV2()
+        private string GetReferenceTypeNameAsV2(ReferenceType type)
         {
-            switch (ReferenceType)
+            switch (type)
             {
                 case ReferenceType.Schema:
                     return OpenApiConstants.Definitions;
@@ -226,7 +209,7 @@ namespace Microsoft.OpenApi.Models
                     return OpenApiConstants.SecurityDefinitions;
 
                 default:
-                    throw new OpenApiException(String.Format(SRResource.ReferenceTypeNotSupportedV2, ReferenceType));
+                    throw new OpenApiException(string.Format(SRResource.ReferenceTypeNotSupportedV2, type));
             }
         }
     }

@@ -7,11 +7,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using SharpYaml.Schemas;
-using SharpYaml.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
+using SharpYaml.Schemas;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -28,7 +29,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
         }
 
-        public MapNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlMappingNode node) : base(context, diagnostic)
+        public MapNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlMappingNode node) : base(
+            context,
+            diagnostic)
         {
             if (node == null)
             {
@@ -74,7 +77,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, T> CreateMapWithReference<T>(string refpointerbase, Func<MapNode, T> map)
+        public override Dictionary<string, T> CreateMapWithReference<T>(
+            ReferenceType referenceType,
+            string refpointerbase,
+            Func<MapNode, T> map)
         {
             var yamlMap = node;
             if (yamlMap == null)
@@ -86,30 +92,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 n => new
                 {
                     key = n.Key.GetScalarValue(),
-                    value = GetReferencedObject<T>(refpointerbase + n.Key.GetScalarValue()) ??
+                    value = GetReferencedObject<T>(referenceType, refpointerbase + n.Key.GetScalarValue()) ??
                     map(new MapNode(Context, Diagnostic, (YamlMappingNode)n.Value))
                 });
             return nodes.ToDictionary(k => k.key, v => v.value);
-        }
-
-        public T CreateOrReferenceDomainObject<T>(Func<T> factory) where T : IOpenApiReference
-        {
-            T domainObject;
-            var refPointer = GetReferencePointer(); // What should the DOM of a reference look like?
-            // Duplicated object - poor perf/more memory/unsynchronized changes
-            // Intermediate object - require common base class/client code has to explicitly code for it.
-            // Delegating object - lot of setup work/maintenance/ require full interfaces
-            // **current favourite***Shared object - marker to indicate its a reference/serialization code must serialize as reference everywhere except components.
-            if (refPointer != null)
-            {
-                domainObject = (T)Context.GetReferencedObject(Diagnostic, refPointer);
-            }
-            else
-            {
-                domainObject = factory();
-            }
-
-            return domainObject;
         }
 
         public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
@@ -145,9 +131,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return x.Serialize(node);
         }
 
-        public T GetReferencedObject<T>(string refPointer) where T : IOpenApiReference
+        public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId)
+            where T : IOpenApiReferenceable
         {
-            return (T)Context.GetReferencedObject(Diagnostic, refPointer);
+            return (T)Context.GetReferencedObject(
+                Diagnostic,
+                referenceType,
+                referenceId);
         }
 
         public string GetReferencePointer()

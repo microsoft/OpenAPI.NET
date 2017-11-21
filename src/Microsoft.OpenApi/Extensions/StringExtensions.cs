@@ -5,8 +5,9 @@
 
 using System;
 using System.Reflection;
+using Microsoft.OpenApi.Attributes;
 
-namespace Microsoft.OpenApi.Commons
+namespace Microsoft.OpenApi.Extensions
 {
     /// <summary>
     /// String extension methods.

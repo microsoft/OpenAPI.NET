@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -42,7 +43,11 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void HostTest()
         {
-            var openApiDoc = new OpenApiDocument();
+            var openApiDoc = new OpenApiDocument
+            {
+                Servers = new List<OpenApiServer>()
+            };
+
             openApiDoc.Servers.Add(new OpenApiServer {Url = "http://example.org/api"});
             openApiDoc.Servers.Add(new OpenApiServer {Url = "https://example.org/api"});
 

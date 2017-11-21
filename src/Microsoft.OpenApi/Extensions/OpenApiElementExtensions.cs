@@ -4,17 +4,17 @@
 // ------------------------------------------------------------
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi.Extensions
 {
     /// <summary>
-    /// Extension methods for Open API elements.
+    /// Extension methods to construct or modify Open API elements.
     /// </summary>
     public static class OpenApiElementExtensions
     {
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(document));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -58,7 +58,10 @@ namespace Microsoft.OpenApi.Models
         /// <param name="pathItem">The Open API path item.</param>
         /// <param name="operationType">The operation type kind.</param>
         /// <param name="configure">The operation configuration action.</param>
-        public static void AddOperation(this OpenApiPathItem pathItem, OperationType operationType, Action<OpenApiOperation> configure)
+        public static void AddOperation(
+            this OpenApiPathItem pathItem,
+            OperationType operationType,
+            Action<OpenApiOperation> configure)
         {
             if (pathItem == null)
             {
@@ -90,7 +93,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(response));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -100,7 +103,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(configure));
             }
 
-            OpenApiHeader header = new OpenApiHeader();
+            var header = new OpenApiHeader();
             configure(header);
 
             if (response.Headers == null)
@@ -124,7 +127,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(response));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -134,7 +137,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(configure));
             }
 
-            OpenApiMediaType mediaType = new OpenApiMediaType();
+            var mediaType = new OpenApiMediaType();
             configure(mediaType);
 
             if (response.Content == null)
@@ -158,7 +161,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(response));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -168,7 +171,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(configure));
             }
 
-            OpenApiLink link = new OpenApiLink();
+            var link = new OpenApiLink();
             configure(link);
 
             if (response.Links == null)
@@ -192,7 +195,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(operation));
             }
 
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
@@ -212,91 +215,31 @@ namespace Microsoft.OpenApi.Models
 
             operation.Responses.Add(name, response);
         }
-
-        /// <summary>
-        /// Try find the referenced element.
-        /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiReference"/>.</typeparam>
-        /// <param name="reference">The reference element. </param>
-        /// <param name="document">The Open API document.</param>
-        public static IOpenApiElement Find<T>(this T reference, OpenApiDocument document)
-            where T : IOpenApiReference
-        {
-            if (reference == null ||
-                document == null ||
-                document.Components == null ||
-                reference.Pointer == null ||
-                reference.Pointer.ExternalResource != null)
-            {
-                return null;
-            }
-
-            switch(reference.Pointer.ReferenceType)
-            {
-                case ReferenceType.Schema:
-                    return document.Components.Schemas?[reference.Pointer.Name];
-
-                case ReferenceType.Parameter:
-                    return document.Components.Parameters?[reference.Pointer.Name];
-
-                case ReferenceType.Header:
-                    return document.Components.Headers?[reference.Pointer.Name];
-
-                case ReferenceType.Response:
-                    return document.Components.Responses?[reference.Pointer.Name];
-
-                case ReferenceType.RequestBody:
-                    return document.Components.RequestBodies?[reference.Pointer.Name];
-
-                case ReferenceType.Example:
-                    return document.Components.Examples?[reference.Pointer.Name];
-
-                case ReferenceType.SecurityScheme:
-                    return document.Components.SecuritySchemes?[reference.Pointer.Name];
-
-                case ReferenceType.Callback:
-                    return document.Components.Callbacks?[reference.Pointer.Name];
-
-                case ReferenceType.Link:
-                    return document.Components.Links?[reference.Pointer.Name];
-
-                case ReferenceType.Tag:
-                    return document?.Tags.FirstOrDefault(e => e.Name == reference.Pointer.Name);
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Check whether the element is reference element.
-        /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiElement"/>.</typeparam>
-        /// <param name="element">The referencable element.</param>
-        /// <returns>True if the element implements <see cref="IOpenApiReference"/> and pointer is not null,
-        /// False otherwise.</returns>
-        public static bool IsReference<T>(this T element) where T : IOpenApiElement
-        {
-            IOpenApiReference reference = element as IOpenApiReference;
-            return reference?.Pointer != null;
-        }
-
+        
         /// <summary>
         /// Add extension into the Extensions
         /// </summary>
-        /// <typeparam name="T"><see cref="IOpenApiExtension"/>.</typeparam>
+        /// <typeparam name="T"><see cref="IOpenApiExtensible"/>.</typeparam>
         /// <param name="element">The extensible Open API element. </param>
         /// <param name="name">The extension name.</param>
         /// <param name="any">The extension value.</param>
         public static void AddExtension<T>(this T element, string name, IOpenApiAny any)
-            where T : IOpenApiExtension
+            where T : IOpenApiExtensible
         {
             if (element == null)
             {
                 throw Error.ArgumentNull(nameof(element));
             }
 
-            VerifyExtensionName(name);
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+
+            if (!name.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix))
+            {
+                throw new OpenApiException(string.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
+            }
 
             if (element.Extensions == null)
             {
@@ -304,19 +247,6 @@ namespace Microsoft.OpenApi.Models
             }
 
             element.Extensions[name] = any ?? throw Error.ArgumentNull(nameof(any));
-        }
-
-        private static void VerifyExtensionName(string name)
-        {
-            if (String.IsNullOrWhiteSpace(name))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
-
-            if (!name.StartsWith(OpenApiConstants.ExtensionFieldNamePrefix))
-            {
-                throw new OpenApiException(String.Format(SRResource.ExtensionFieldNameMustBeginWithXDash, name));
-            }
         }
     }
 }

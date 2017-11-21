@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// XML Object.
     /// </summary>
-    public class OpenApiXml : OpenApiElement, IOpenApiExtension
+    public class OpenApiXml : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// Replaces the name of the element/attribute used for the described schema property.
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiXml"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             Write(writer);
         }
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiXml"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             Write(writer);
         }

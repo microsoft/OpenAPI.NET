@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallback : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiCallback : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// A Path Item Object used to define a callback request and expected responses. 
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -60,16 +60,16 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiCallback"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
                 // path items
                 foreach (var item in PathItems)
                 {
-                    writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => p.WriteAsV3(w));
+                    writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => p.SerializeAsV3(w));
                 }
 
                 // extensions
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiCallback"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Callback object does not exist in V2.
         }

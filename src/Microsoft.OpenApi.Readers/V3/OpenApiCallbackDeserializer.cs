@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Expressions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -29,10 +30,10 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode("callback");
 
-            var refpointer = mapNode.GetReferencePointer();
-            if (refpointer != null)
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiCallback>(refpointer);
+                return mapNode.GetReferencedObject<OpenApiCallback>(ReferenceType.Callback, pointer);
             }
 
             var domainObject = new OpenApiCallback();

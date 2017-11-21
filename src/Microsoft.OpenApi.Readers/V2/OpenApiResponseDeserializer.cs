@@ -4,7 +4,7 @@
 // ------------------------------------------------------------
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -50,21 +50,6 @@ namespace Microsoft.OpenApi.Readers.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
-        public static OpenApiResponse LoadResponse(ParseNode node)
-        {
-            var mapNode = node.CheckMapNode("response");
-
-            var response = new OpenApiResponse();
-            foreach (var property in mapNode)
-            {
-                property.ParseField(response, ResponseFixedFields, ResponsePatternFields);
-            }
-
-            ProcessProduces(response, node.Context);
-
-            return response;
-        }
-
         private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
         {
             var produces = context.GetFromTempStorage<List<string>>("operationproduces") ??
@@ -84,6 +69,27 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
                 response.Content.Add(mt, mediaType);
             }
+        }
+
+        public static OpenApiResponse LoadResponse(ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("response");
+
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                return mapNode.GetReferencedObject<OpenApiResponse>(ReferenceType.Response, pointer);
+            }
+
+            var response = new OpenApiResponse();
+            foreach (var property in mapNode)
+            {
+                property.ParseField(response, ResponseFixedFields, ResponsePatternFields);
+            }
+
+            ProcessProduces(response, node.Context);
+
+            return response;
         }
     }
 }

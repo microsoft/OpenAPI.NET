@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiTag : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// The name of the tag.
@@ -38,74 +38,69 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
+            
+            // Writing tag as reference should be handled in the caller given that
+            // tag should always be written as string (except at the time of definition).
+            // regardless of whether Pointer exists. In the context of this model,
+            // we have no information on whether this is the time of definition.
 
-            if (Pointer != null)
-            {
-                Pointer.WriteAsV3(writer);
-            }
-            else
-            {
-                writer.WriteStartObject();
+            writer.WriteStartObject();
 
-                // name
-                writer.WriteProperty(OpenApiConstants.Name, Name);
+            // name
+            writer.WriteProperty(OpenApiConstants.Name, Name);
 
-                // description
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
-                // external docs
-                writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV3(w));
+            // external docs
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
 
-                // extensions.
-                writer.WriteExtensions(Extensions);
+            // extensions.
+            writer.WriteExtensions(Extensions);
 
-                writer.WriteEndObject();
-            }
+            writer.WriteEndObject();
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
+            
+            // Writing tag as reference should be handled in the caller given that
+            // tag should always be written as string (except at the time of definition).
+            // regardless of whether Pointer exists. In the context of this model,
+            // we have no information on whether this is the time of definition.
+            writer.WriteStartObject();
 
-            if (Pointer != null)
-            {
-                Pointer.WriteAsV2(writer);
-            }
-            else
-            {
-                writer.WriteStartObject();
+            // name
+            writer.WriteProperty(OpenApiConstants.Name, Name);
 
-                // name
-                writer.WriteProperty(OpenApiConstants.Name, Name);
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
-                // description
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+            // external docs
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
 
-                // external docs
-                writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.WriteAsV2(w));
+            // extensions
+            writer.WriteExtensions(Extensions);
 
-                // extensions
-                writer.WriteExtensions(Extensions);
-
-                writer.WriteEndObject();
-            }
+            writer.WriteEndObject();
         }
     }
 }

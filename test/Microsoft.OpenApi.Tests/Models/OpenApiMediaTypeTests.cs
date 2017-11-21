@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -55,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvanceMediaType.SerializeAsJson();
+            string actual = AdvanceMediaType.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -77,7 +78,7 @@ encoding:
     allowReserved: true";
 
             // Act
-            string actual = AdvanceMediaType.SerializeAsYaml();
+            string actual = AdvanceMediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

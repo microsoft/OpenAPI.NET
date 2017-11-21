@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -59,10 +60,10 @@ namespace Microsoft.OpenApi.Readers.V3
             var mapNode = node.CheckMapNode("link");
             var link = new OpenApiLink();
 
-            var refpointer = mapNode.GetReferencePointer();
-            if (refpointer != null)
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiLink>(refpointer);
+                return mapNode.GetReferencedObject<OpenApiLink>(ReferenceType.Link, pointer);
             }
 
             ParseMap(mapNode, link, LinkFixedFields, LinkPatternFields);

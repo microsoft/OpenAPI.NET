@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -229,10 +230,11 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode("schema");
 
-            var refpointer = mapNode.GetReferencePointer();
-            if (refpointer != null)
+            var pointer = mapNode.GetReferencePointer();
+            
+            if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiSchema>(refpointer);
+                return mapNode.GetReferencedObject<OpenApiSchema>(ReferenceType.Schema, pointer);
             }
 
             var domainObject = new OpenApiSchema();

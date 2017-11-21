@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// OAuth Flow Object.
     /// </summary>
-    public class OpenApiOAuthFlow : OpenApiElement, IOpenApiExtension
+    public class OpenApiOAuthFlow : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The authorization URL to be used for this flow.
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // OAuthFlow object does not exist in V2.
         }

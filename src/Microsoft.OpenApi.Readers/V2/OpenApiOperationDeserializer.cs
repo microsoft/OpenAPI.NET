@@ -5,9 +5,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.Interface;
 
 namespace Microsoft.OpenApi.Readers.V2
 {
@@ -94,6 +94,14 @@ namespace Microsoft.OpenApi.Readers.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
+        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>();
+
+        public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
+        {
+            {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+        };
+
         internal static OpenApiOperation LoadOperation(ParseNode node)
         {
             var mapNode = node.CheckMapNode("OpenApiOperation");
@@ -119,14 +127,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
             return operation;
         }
-       
-        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>();
-
-        public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
-        {
-            {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
-        };
 
         public static OpenApiResponses LoadResponses(ParseNode node)
         {
@@ -160,7 +160,9 @@ namespace Microsoft.OpenApi.Readers.V2
             return formBody;
         }
 
-        private static OpenApiRequestBody CreateRequestBody(ParsingContext context, OpenApiParameter bodyParameter)
+        private static OpenApiRequestBody CreateRequestBody(
+            ParsingContext context,
+            OpenApiParameter bodyParameter)
         {
             var consumes = context.GetFromTempStorage<List<string>>("operationproduces") ??
                 context.GetFromTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
@@ -187,11 +189,12 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var tagObject = (OpenApiTag)context.GetReferencedObject(
                 diagnostic,
-                $"#/tags/{tagName}");
+                ReferenceType.Tag,
+                tagName);
 
             if (tagObject == null)
             {
-                tagObject = new OpenApiTag() { Name = tagName };
+                tagObject = new OpenApiTag {Name = tagName};
             }
 
             return tagObject;

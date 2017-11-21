@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// OAuth Flows Object.
     /// </summary>
-    public class OpenApiOAuthFlows : OpenApiElement, IOpenApiExtension
+    public class OpenApiOAuthFlows : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// Configuration for the OAuth Implicit flow
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -53,16 +53,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // implicit
-            writer.WriteOptionalObject(OpenApiConstants.Implicit, Implicit, (w, o) => o.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Implicit, Implicit, (w, o) => o.SerializeAsV3(w));
 
             // password
-            writer.WriteOptionalObject(OpenApiConstants.Password, Password, (w, o) => o.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Password, Password, (w, o) => o.SerializeAsV3(w));
 
             // clientCredentials
-            writer.WriteOptionalObject(OpenApiConstants.ClientCredentials, ClientCredentials, (w, o) => o.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ClientCredentials, ClientCredentials, (w, o) => o.SerializeAsV3(w));
 
             // authorizationCode
-            writer.WriteOptionalObject(OpenApiConstants.AuthorizationCode, AuthorizationCode, (w, o) => o.WriteAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.AuthorizationCode, AuthorizationCode, (w, o) => o.SerializeAsV3(w));
 
             // extensions
             writer.WriteExtensions(Extensions);
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // OAuthFlows object does not exist in V2.
         }

@@ -6,7 +6,7 @@
     <Company>Microsoft</Company>
     <Product>Microsoft.OpenApi.Readers</Product>
     <PackageId>Microsoft.OpenApi.Readers</PackageId>
-    <Version>1.0.0-beta001</Version>
+    <Version>1.0.0-beta003</Version>
     <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
     <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
@@ -16,6 +16,10 @@
   <PropertyGroup>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ReferenceServices\OpenApiReferenceServiceBase.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="SharpYaml" Version="1.6.1" />

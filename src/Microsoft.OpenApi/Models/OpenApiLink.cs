@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiLink : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// A relative or absolute reference to an OAS operation.
@@ -55,21 +55,21 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiLink"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // server
-                writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.WriteAsV3(w));
+                writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.SerializeAsV3(w));
 
                 writer.WriteEndObject();
             }
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLink"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // link object does not exist in V2.
         }

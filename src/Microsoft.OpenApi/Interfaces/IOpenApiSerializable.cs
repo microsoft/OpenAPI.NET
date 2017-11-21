@@ -3,26 +3,25 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Models
+namespace Microsoft.OpenApi.Interfaces
 {
     /// <summary>
-    /// Open API element.
+    /// Represents an Open API element that comes with serialzation functionality.
     /// </summary>
-    public abstract class OpenApiElement : IOpenApiElement
+    public interface IOpenApiSerializable : IOpenApiElement
     {
         /// <summary>
-        /// Write Open API element to v3.0.
+        /// Serialize Open API element to v3.0.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        internal abstract void WriteAsV3(IOpenApiWriter writer);
+        void SerializeAsV3(IOpenApiWriter writer);
 
         /// <summary>
-        /// Write Open API element to v2.0.
+        /// Serialize Open API element to v2.0.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        internal abstract void WriteAsV2(IOpenApiWriter writer);
+        void SerializeAsV2(IOpenApiWriter writer);
     }
 }

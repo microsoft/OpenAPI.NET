@@ -14,12 +14,12 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// A brief description of the request body. This could contain examples of use.
@@ -46,16 +46,16 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void WriteAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // content
-                writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.WriteAsV3(w));
+                writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
 
                 // required
                 writer.WriteProperty(OpenApiConstants.Required, Required, false);
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void WriteAsV2(IOpenApiWriter writer)
         {
             // RequestBody object does not exist in V2.
         }

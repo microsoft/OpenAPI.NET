@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Commons;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -14,12 +14,12 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Pointer { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// REQUIRED. The name of the parameter. Parameter names are case sensitive.
@@ -129,96 +129,79 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
+                return;
             }
-            else
-            {
-                writer.WriteStartObject();
 
-                // name
-                writer.WriteProperty(OpenApiConstants.Name, Name);
+            writer.WriteStartObject();
 
-                // in
-                writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
+            // name
+            writer.WriteProperty(OpenApiConstants.Name, Name);
 
-                // description
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+            // in
+            writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
 
-                // required
-                writer.WriteProperty(OpenApiConstants.Required, Required, false);
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
-                // deprecated
-                writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
+            // required
+            writer.WriteProperty(OpenApiConstants.Required, Required, false);
 
-                // allowEmptyValue
-                writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
+            // deprecated
+            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
-                // style
-                writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+            // allowEmptyValue
+            writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                // explode
-                writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
+            // style
+            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
-                // allowReserved
-                writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
+            // explode
+            writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
 
-                // schema
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV3(w));
+            // allowReserved
+            writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
-                // example
-                writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
+            // schema
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV3(w));
 
-                // examples
-                writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => e.WriteAsV3(w));
+            // example
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
 
-                // content
-                writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.WriteAsV3(w));
+            // examples
+            writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
 
-                // extensions
-                writer.WriteExtensions(Extensions);
+            // content
+            writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
 
-                writer.WriteEndObject();
-            }
-        }
+            // extensions
+            writer.WriteExtensions(Extensions);
 
-        private bool IsBodyParameter()
-        {
-            return this is BodyParameter parameter &&
-                !(
-                    parameter.Format.Contains("application/x-www-form-urlencoded") ||
-                    parameter.Format.Contains("multipart/form-data"));
-        }
-
-        private bool IsFormDataParameter()
-        {
-            return this is BodyParameter parameter &&
-            (
-                parameter.Format.Contains("application/x-www-form-urlencoded") ||
-                parameter.Format.Contains("multipart/form-data"));
+            writer.WriteEndObject();
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV2(writer);
+                Reference.SerializeAsV2(writer);
                 return;
             }
 
@@ -238,8 +221,8 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                writer.WriteProperty("name", Name);
-                writer.WriteProperty("in", In.ToString());
+                writer.WriteProperty(OpenApiConstants.Name, Name);
+                writer.WriteProperty(OpenApiConstants.In, In.ToString());
             }
 
             // description
@@ -254,7 +237,7 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (IsBodyParameter())
             {
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.WriteAsV2(w));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
             }
             else
             {
@@ -275,10 +258,10 @@ namespace Microsoft.OpenApi.Models
                 // uniqueItems
                 // enum
                 // multipleOf
-                Schema.WriteAsItemsProperties(writer);
+                Schema?.WriteAsItemsProperties(writer);
 
                 // allowEmptyValue
-                writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue);
+                writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
             }
 
             // extensions
@@ -286,10 +269,38 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
+        
+        private bool IsBodyParameter()
+        {
+            if (this is BodyParameter)
+            {
+                var parameter = (BodyParameter)this;
+
+                return !(
+                    parameter.Format.Contains("application/x-www-form-urlencoded") ||
+                    parameter.Format.Contains("multipart/form-data"));
+            }
+
+            return false;
+        }
+
+        private bool IsFormDataParameter()
+        {
+            if (this is BodyParameter)
+            {
+                var parameter = (BodyParameter)this;
+
+                return 
+                    parameter.Format.Contains("application/x-www-form-urlencoded") ||
+                    parameter.Format.Contains("multipart/form-data");
+            }
+
+            return false;
+        }
     }
 
     /// <summary>
-    /// Body parameter class to propagate information needed for <see cref="OpenApiParameter.WriteAsV2"/>
+    /// Body parameter class to propagate information needed for <see cref="OpenApiParameter.SerializeAsV2"/>
     /// </summary>
     internal class BodyParameter : OpenApiParameter
     {

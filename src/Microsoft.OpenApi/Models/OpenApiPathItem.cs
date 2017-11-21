@@ -4,9 +4,8 @@
 // ------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Commons;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -15,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : OpenApiElement, IOpenApiExtension
+    public class OpenApiPathItem : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
@@ -30,8 +29,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets the definition of operations on this path.
         /// </summary>
-        public IDictionary<OperationType, OpenApiOperation> Operations { get; }
-         = new Dictionary<OperationType, OpenApiOperation>();
+        public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
+            = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>
         /// An alternative server array to service all operations in this path.
@@ -62,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -80,14 +79,14 @@ namespace Microsoft.OpenApi.Models
             // operations
             foreach (var operation in Operations)
             {
-                writer.WriteOptionalObject(operation.Key.GetDisplayName(), operation.Value, (w, o) => o.WriteAsV3(w));
+                writer.WriteOptionalObject(operation.Key.GetDisplayName(), operation.Value, (w, o) => o.SerializeAsV3(w));
             }
 
             // servers
-            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
 
             // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV3(w));
 
             // specification extensions
             writer.WriteExtensions(Extensions);
@@ -98,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -115,12 +114,12 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalObject(
                         operation.Key.GetDisplayName(),
                         operation.Value,
-                        (w, o) => o.WriteAsV2(w));
+                        (w, o) => o.SerializeAsV2(w));
                 }
             }
 
             // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV2(w));
 
             // write "summary" as extensions
             writer.WriteProperty(OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Summary, Summary);

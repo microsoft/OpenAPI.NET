@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Server Variable Object.
     /// </summary>
-    public class OpenApiServerVariable : OpenApiElement, IOpenApiExtension
+    public class OpenApiServerVariable : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// An optional description for the server variable. CommonMark syntax MAY be used for rich text representation.
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiServerVariable"/> to Open Api v3.0
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiServerVariable"/> to Open Api v2.0
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // ServerVariable does not exist in V2.
         }

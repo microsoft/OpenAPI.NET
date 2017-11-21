@@ -8,15 +8,23 @@ using System.Text;
 using FluentAssertions;
 using SharpYaml.Serialization;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Readers.Tests
 {
     public class BasicTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public BasicTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void CheckOpenApiVersion()
         {
-            var stream = GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.petstore30.yaml");
+            var stream = GetType().Assembly.GetManifestResourceStream(typeof(BasicTests), "Samples.PetStore30.yaml");
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
             openApiDoc.SpecVersion.ToString().Should().Be("3.0.0");
@@ -65,7 +73,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             openApiDoc.SpecVersion.ToString().Should().Be("1.0.0");
             openApiDoc.Paths.Should().BeEmpty();
             openApiDoc.Info.Title.Should().Be("The Api");
-            openApiDoc.Info.Version.ToString().Should().Be("0.9.1");
+            openApiDoc.Info.Version.Should().Be("0.9.1");
             context.Errors.Should().BeEmpty();
         }
 

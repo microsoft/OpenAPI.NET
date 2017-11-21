@@ -4,7 +4,7 @@
 // ------------------------------------------------------------
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -45,10 +45,19 @@ namespace Microsoft.OpenApi.Readers.V2
                 (o, n) => n.Context.SetTempStorage("globalproduces", n.CreateSimpleList(s => s.GetScalarValue()))
             },
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
-            {"definitions", (o, n) => o.Components.Schemas = n.CreateMapWithReference("#/definitions/", LoadSchema)},
+            {
+                "definitions",
+                (o, n) => o.Components.Schemas = n.CreateMapWithReference(
+                    ReferenceType.Schema,
+                    "#/definitions/",
+                    LoadSchema)
+            },
             {
                 "parameters",
-                (o, n) => o.Components.Parameters = n.CreateMapWithReference("#/parameters/", LoadParameter)
+                (o, n) => o.Components.Parameters = n.CreateMapWithReference(
+                    ReferenceType.Parameter,
+                    "#/parameters/",
+                    LoadParameter)
             },
             {"responses", (o, n) => o.Components.Responses = n.CreateMap(LoadResponse)},
             {"securityDefinitions", (o, n) => o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme)},
@@ -93,6 +102,11 @@ namespace Microsoft.OpenApi.Readers.V2
             ReportMissing(openApiNode, required);
 
             // Post Process OpenApi Object
+            if (openApidoc.Servers == null)
+            {
+                openApidoc.Servers = new List<OpenApiServer>();
+            }
+
             MakeServers(openApidoc.Servers, openApiNode.Context);
 
             return openApidoc;

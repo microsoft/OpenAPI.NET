@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Response object.
     /// </summary>
-    public class OpenApiResponse : OpenApiElement, IOpenApiReference, IOpenApiExtension
+    public class OpenApiResponse : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. A short description of the response.
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public OpenApiReference Pointer
+        public OpenApiReference Reference
         {
             get; set;
         }
@@ -55,16 +55,16 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.0.
         /// </summary>
-        internal override void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV3(writer);
+                Reference.SerializeAsV3(writer);
             }
             else
             {
@@ -74,13 +74,13 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(OpenApiConstants.Description, Description);
 
                 // headers
-                writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV3(w));
+                writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
 
                 // content
-                writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.WriteAsV3(w));
+                writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
 
                 // links
-                writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, l) => l.WriteAsV3(w));
+                writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, l) => l.SerializeAsV3(w));
 
                 // extension
                 writer.WriteExtensions(Extensions);
@@ -92,16 +92,16 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v2.0.
         /// </summary>
-        internal override void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Pointer != null)
+            if (Reference != null)
             {
-                Pointer.WriteAsV2(writer);
+                Reference.SerializeAsV2(writer);
             }
             else
             {
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Models
                     if (mediatype.Value != null)
                     {
                         // schema
-                        writer.WriteOptionalObject(OpenApiConstants.Schema, mediatype.Value.Schema, (w, s) => s.WriteAsV2(w));
+                        writer.WriteOptionalObject(OpenApiConstants.Schema, mediatype.Value.Schema, (w, s) => s.SerializeAsV2(w));
 
                         // examples
                         if (mediatype.Value.Example != null)
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Models
                 }
 
                 // headers
-                writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.WriteAsV2(w));
+                writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV2(w));
 
                 // extension
                 writer.WriteExtensions(Extensions);
