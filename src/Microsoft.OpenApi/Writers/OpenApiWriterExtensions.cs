@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The property value.</param>
         public static void WriteProperty(this IOpenApiWriter writer, string name, string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (value == null)
             {
                 return;
             }
