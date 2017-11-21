@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Extensions
 
             switch (specVersion)
             {
-                case OpenApiSpecVersion.OpenApi3_0:
+                case OpenApiSpecVersion.OpenApi3_0_0:
                     element.SerializeAsV3(writer);
                     break;
 

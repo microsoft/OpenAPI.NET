@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The title of the application.
         /// </summary>
-        public string Title { get; set; } = OpenApiConstants.DefaultTitle;
+        public string Title { get; set; }
 
         /// <summary>
         /// A short description of the application.
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The version of the OpenAPI document.
         /// </summary>
-        public string Version { get; set; } = "1.0";
+        public string Version { get; set; }
 
         /// <summary>
         /// A URL to the Terms of Service for the API. MUST be in the format of a URL.
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; }
+        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0

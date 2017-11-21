@@ -15,7 +15,10 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiLicenseTests
     {
-        public static OpenApiLicense BasicLicense = new OpenApiLicense();
+        public static OpenApiLicense BasicLicense = new OpenApiLicense()
+        {
+            Name = "Apache 2.0"
+        };
         public static OpenApiLicense AdvanceLicense = new OpenApiLicense()
         {
             Name = "Apache 2.0",
@@ -27,14 +30,14 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeBasicLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = 
+            string expected =
 @"{
-  ""name"": ""Default Name""
+  ""name"": ""Apache 2.0""
 }";
 
             // Act
@@ -47,12 +50,12 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeBasicLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = "name: Default Name";
+            string expected = "name: Apache 2.0";
 
             // Act
             string actual = BasicLicense.SerializeAsYaml(version);
@@ -64,7 +67,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeAdvanceLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
@@ -86,7 +89,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeAdvanceLicenseAsYamlWorks(OpenApiSpecVersion version)
         {

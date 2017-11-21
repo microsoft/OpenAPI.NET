@@ -24,7 +24,6 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiOperation BasicOperation = new OpenApiOperation()
         {
-            Responses = new OpenApiResponses()
         };
 
         public static OpenApiOperation AdvancedOperation= new OpenApiOperation
@@ -230,7 +229,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-                var actual = BasicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+                var actual = BasicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             _output.WriteLine(actual);
 
@@ -300,7 +299,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = AdvancedOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             _output.WriteLine(actual);
 
@@ -383,7 +382,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = AdvancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             _output.WriteLine(actual);
 

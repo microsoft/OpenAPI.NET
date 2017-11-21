@@ -16,8 +16,8 @@ namespace Microsoft.OpenApi
         OpenApi2_0,
 
         /// <summary>
-        /// Open Api v3.0
+        /// Open Api v3.0.0
         /// </summary>
-        OpenApi3_0
+        OpenApi3_0_0
     }
 }

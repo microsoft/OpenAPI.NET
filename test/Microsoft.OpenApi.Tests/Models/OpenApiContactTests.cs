@@ -28,9 +28,9 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json, "{ }")]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0_0, OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json, "{ }")]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml, "{ }")]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0_0, OpenApiFormat.Yaml, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "{ }")]
         public void SerializeBasicContactWorks(OpenApiSpecVersion version,
             OpenApiFormat format, string expected)
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeAdvanceContactAsJsonWorks(OpenApiSpecVersion version)
         {
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeAdvanceContactAsYamlWorks(OpenApiSpecVersion version)
         {

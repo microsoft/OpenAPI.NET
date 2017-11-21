@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
-        /// REQUIRED.The license name used for the API.
+        /// REQUIRED. The license name used for the API.
         /// </summary>
         public string Name { get; set; }
 

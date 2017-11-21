@@ -149,6 +149,11 @@ namespace Microsoft.OpenApi.Writers
             {
                 action(writer, value);
             }
+            else
+            {
+                writer.WriteStartObject();
+                writer.WriteEndObject();
+            }
         }
 
         /// <summary>
@@ -161,7 +166,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalCollection(
             this IOpenApiWriter writer,
             string name,
-            IEnumerable<string> elements,
+            IList<string> elements,
             Action<IOpenApiWriter, string> action)
         {
             if (elements != null && elements.Any())
@@ -181,7 +186,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalCollection<T>(
             this IOpenApiWriter writer,
             string name,
-            IEnumerable<T> elements,
+            IList<T> elements,
             Action<IOpenApiWriter, T> action)
             where T : IOpenApiElement
         {
@@ -222,7 +227,7 @@ namespace Microsoft.OpenApi.Writers
             IDictionary<string, string> elements,
             Action<IOpenApiWriter, string> action)
         {
-            if (elements != null)
+            if (elements != null && elements.Any())
             {
                 writer.WriteMapInternal(name, elements, action);
             }
@@ -259,7 +264,7 @@ namespace Microsoft.OpenApi.Writers
             Action<IOpenApiWriter, T> action)
             where T : IOpenApiElement
         {
-            if (elements != null)
+            if (elements != null && elements.Any())
             {
                 writer.WriteMapInternal(name, elements, action);
             }

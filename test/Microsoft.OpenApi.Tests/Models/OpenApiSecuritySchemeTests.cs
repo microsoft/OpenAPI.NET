@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = ApiKeySecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = ApiKeySecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
             
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -141,7 +141,7 @@ name: parameterName
 in: query";
 
             // Act
-            var actual = ApiKeySecurityScheme.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = ApiKeySecurityScheme.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -161,7 +161,7 @@ in: query";
 }";
 
             // Act
-            var actual = HttpBasicSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = HttpBasicSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -182,7 +182,7 @@ in: query";
 }";
 
             // Act
-            var actual = HttpBearerSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = HttpBearerSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -210,7 +210,7 @@ in: query";
 }";
 
             // Act
-            var actual = OAuth2SingleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = OAuth2SingleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -254,7 +254,7 @@ in: query";
 }";
 
             // Act
-            var actual = OAuth2MultipleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = OAuth2MultipleFlowSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -274,7 +274,7 @@ in: query";
 }";
 
             // Act
-            var actual = OpenIdConnectSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = OpenIdConnectSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

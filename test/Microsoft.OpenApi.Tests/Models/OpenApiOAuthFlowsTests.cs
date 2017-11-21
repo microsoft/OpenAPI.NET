@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 @"{ }";
 
             // Act
-            var actual = BasicOAuthFlows.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = BasicOAuthFlows.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 @"{ }";
 
             // Act
-            var actual = BasicOAuthFlows.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = BasicOAuthFlows.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = OAuthFlowsWithSingleFlow.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = OAuthFlowsWithSingleFlow.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = OAuthFlowsWithMultipleFlows.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = OAuthFlowsWithMultipleFlows.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

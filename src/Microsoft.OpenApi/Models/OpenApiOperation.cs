@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime, 
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, OpenApiCallback> Callbacks { get; set; }
+        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, (w, r) => r.WriteAsV3(w));
 
             // responses
-            writer.WriteOptionalObject(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV3(w));
+            writer.WriteRequiredObject(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV3(w));
 
             // callbacks
             writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.SerializeAsV3(w));
@@ -252,7 +252,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Parameters, parameters, (w, p) => p.SerializeAsV2(w));
 
             // responses
-            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV2(w));
+            writer.WriteRequiredObject(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV2(w));
 
             // schemes
             // All schemes in the Servers are extracted, regardless of whether the host matches

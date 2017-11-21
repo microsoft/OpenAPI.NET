@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = BasicServer.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = BasicServer.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedServer.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = AdvancedServer.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

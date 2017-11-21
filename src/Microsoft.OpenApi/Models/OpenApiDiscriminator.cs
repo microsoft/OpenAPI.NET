@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Discriminator object.
     /// </summary>
-    public class OpenApiDiscriminator : IOpenApiSerializable, IOpenApiElement
+    public class OpenApiDiscriminator : IOpenApiSerializable
     {
         /// <summary>
         /// REQUIRED. The name of the property in the payload that will hold the discriminator value.

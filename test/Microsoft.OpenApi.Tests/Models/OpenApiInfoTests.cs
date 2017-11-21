@@ -15,8 +15,7 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiInfoTests
     {
-        public static OpenApiInfo BasicInfo = new OpenApiInfo();
-        public static OpenApiInfo AdvanceInfo = new OpenApiInfo()
+        public static OpenApiInfo AdvanceInfo = new OpenApiInfo
         {
             Title = "Sample Pet Store App",
             Description = "This is a sample server for a pet store.",
@@ -26,20 +25,26 @@ namespace Microsoft.OpenApi.Tests.Models
             Version = "1.1.1",
             Extensions = new Dictionary<string, IOpenApiAny>
             {
-                { "x-updated", new OpenApiString("metadata") }
+                {"x-updated", new OpenApiString("metadata")}
             }
         };
 
-        public static IEnumerable<object[]> BasicInfoJsonExpect()
+        public static OpenApiInfo BasicInfo = new OpenApiInfo
         {
-            var specVersions = new[] { OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi2_0 };
+            Title = "Sample Pet Store App",
+            Version = "1.0"
+        };
+
+        public static IEnumerable<object[]> BasicInfoJsonExpected()
+        {
+            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0_0, OpenApiSpecVersion.OpenApi2_0};
             foreach (var specVersion in specVersions)
             {
                 yield return new object[]
                 {
-                    specVersion, 
-@"{
-  ""title"": ""Default Title"",
+                    specVersion,
+                    @"{
+  ""title"": ""Sample Pet Store App"",
   ""version"": ""1.0""
 }"
                 };
@@ -47,11 +52,11 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [MemberData(nameof(BasicInfoJsonExpect))]
+        [MemberData(nameof(BasicInfoJsonExpected))]
         public void SerializeBasicInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            string actual = BasicInfo.SerializeAsJson(version);
+            var actual = BasicInfo.SerializeAsJson(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -59,26 +64,26 @@ namespace Microsoft.OpenApi.Tests.Models
             actual.Should().Be(expected);
         }
 
-        public static IEnumerable<object[]> BasicInfoYamlExpect()
+        public static IEnumerable<object[]> BasicInfoYamlExpected()
         {
-            var specVersions = new[] { OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi2_0 };
+            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0_0, OpenApiSpecVersion.OpenApi2_0};
             foreach (var specVersion in specVersions)
             {
                 yield return new object[]
                 {
-                    specVersion, 
-@"title: Default Title
+                    specVersion,
+                    @"title: Sample Pet Store App
 version: '1.0'"
                 };
             }
         }
 
         [Theory]
-        [MemberData(nameof(BasicInfoYamlExpect))]
+        [MemberData(nameof(BasicInfoYamlExpected))]
         public void SerializeBasicInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            string actual = BasicInfo.SerializeAsYaml(version);
+            var actual = BasicInfo.SerializeAsYaml(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -88,13 +93,13 @@ version: '1.0'"
 
         public static IEnumerable<object[]> AdvanceInfoJsonExpect()
         {
-            var specVersions = new[] { OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi2_0 };
+            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0_0, OpenApiSpecVersion.OpenApi2_0};
             foreach (var specVersion in specVersions)
             {
                 yield return new object[]
                 {
-                    specVersion, 
-@"{
+                    specVersion,
+                    @"{
   ""title"": ""Sample Pet Store App"",
   ""description"": ""This is a sample server for a pet store."",
   ""termsOfService"": ""http://example.com/terms/"",
@@ -121,7 +126,7 @@ version: '1.0'"
         public void SerializeAdvanceInfoAsJsonWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            string actual = AdvanceInfo.SerializeAsJson(version);
+            var actual = AdvanceInfo.SerializeAsJson(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -131,13 +136,13 @@ version: '1.0'"
 
         public static IEnumerable<object[]> AdvanceInfoYamlExpect()
         {
-            var specVersions = new[] { OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi2_0 };
+            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0_0, OpenApiSpecVersion.OpenApi2_0};
             foreach (var specVersion in specVersions)
             {
                 yield return new object[]
                 {
-                    specVersion, 
-@"title: Sample Pet Store App
+                    specVersion,
+                    @"title: Sample Pet Store App
 description: This is a sample server for a pet store.
 termsOfService: http://example.com/terms/
 contact:
@@ -160,7 +165,7 @@ x-updated: metadata"
         public void SerializeAdvanceInfoAsYamlWorks(OpenApiSpecVersion version, string expected)
         {
             // Arrange & Act
-            string actual = AdvanceInfo.SerializeAsYaml(version);
+            var actual = AdvanceInfo.SerializeAsYaml(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -171,19 +176,24 @@ x-updated: metadata"
         [Fact]
         public void InfoVersionShouldAcceptDateStyledAsVersions()
         {
-            var info = new OpenApiInfo() {
+            // Arrange
+            var info = new OpenApiInfo
+            {
+                Title = "Sample Pet Store App",
                 Version = "2017-03-01"
             };
 
-            var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml).MakeLineBreaksEnvironmentNeutral();
+            var expected =
+                @"title: Sample Pet Store App
+version: 2017-03-01";
 
-            var expected = 
-@"title: Default Title
-version: 2017-03-01"
-.MakeLineBreaksEnvironmentNeutral();
+            // Act
+            var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0_0, OpenApiFormat.Yaml);
 
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
-
         }
     }
 }

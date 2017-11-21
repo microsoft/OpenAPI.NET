@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicServerVariableAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            string actual = BasicServerVariable.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
+            string actual = BasicServerVariable.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvancedServerVariable.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            string actual = AdvancedServerVariable.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -74,7 +74,7 @@ enum:
   - '443'";
 
             // Act
-            string actual = AdvancedServerVariable.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            string actual = AdvancedServerVariable.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
