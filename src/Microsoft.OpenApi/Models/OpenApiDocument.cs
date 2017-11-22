@@ -18,7 +18,8 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
-        /// REQUIRED.This string MUST be the semantic version number of the OpenAPI Specification version that the OpenAPI document uses.
+        /// REQUIRED. This string MUST be the semantic version number of the OpenAPI Specification version 
+        /// that the OpenAPI document uses.
         /// </summary>
         public Version SpecVersion { get; set; }
 
@@ -75,7 +76,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteProperty(OpenApiConstants.OpenApi, SpecVersion.ToString());
+            writer.WriteProperty(OpenApiConstants.OpenApi, SpecVersion?.ToString());
 
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV3(w));
@@ -117,7 +118,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // swagger
-            writer.WriteProperty(OpenApiConstants.Swagger, SpecVersion.ToString());
+            writer.WriteProperty(OpenApiConstants.Swagger, SpecVersion?.ToString());
 
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV2(w));
@@ -165,7 +166,7 @@ namespace Microsoft.OpenApi.Models
             // Arbitrarily choose the first server given that V2 only allows 
             // one host, port, and base path.
             var firstServer = servers.First();
-            
+
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
             // The Url property cannotcontain path templating to be valid for V2 serialization.
             var firstServerUrl = new Uri(firstServer.Url);
