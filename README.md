@@ -1,7 +1,3 @@
-<!---
-category: OpenAPI REST Swagger
--->
-
 ![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
 
 # OpenAPI.NET
@@ -23,6 +19,12 @@ The base JSON and YAML Readers are built into this project as documented "here".
 
 - EDM/OData Reader Repo: <a href="https://github.com/Microsoft/OpenAPI.NET.OData">Link</a>
 - .NET Comment Reader Repo: <a href="https://github.com/Microsoft/OpenAPI.NET.CSharpComment">Link</a>
+
+# Build Status
+
+|**master**|
+|--|
+|[![Build status](https://ci.appveyor.com/api/projects/status/97973kjj8u7t9i5u/branch/master?svg=true)](https://ci.appveyor.com/project/MicrosoftOpenAPINETAdmin/openapi-net/branch/master)|
 
 # Contributing
 
