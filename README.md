@@ -6,7 +6,7 @@ The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in 
 
 **See more information on the Open API spec and its history here: <a href="https://www.openapis.org">Open API Initiative</a>**
 
-Project Objectives
+Project Objectives 
 
 - Provide a single shared object model in .NET for Open API documents.
 - Include the most primitive Reader for ingesting OAI JSON and YAML documents.
