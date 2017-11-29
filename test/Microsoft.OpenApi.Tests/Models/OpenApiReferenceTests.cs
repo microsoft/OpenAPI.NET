@@ -173,7 +173,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ExternalResource = "main.json",
                 Id = "Pets"
             };
-            string expected = @"$ref: main.json#/Pets";
+            string expected = @"$ref: 'main.json#/Pets'";
 
             // Act
             string actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var reference = new OpenApiReference() {ExternalResource = "main.json", Id = "Pets"};
-            string expected = @"$ref: main.json#/Pets";
+            string expected = @"$ref: 'main.json#/Pets'";
 
             // Act
             string actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);

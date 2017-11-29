@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Tests.Models
 description: Pets operations
 externalDocs:
   description: Find more info here
-  url: https://example.com
+  url: 'https://example.com'
 x-tag-extension: ";
 
             // Act
