@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             string expected = 
 @"description: Find more info here
-url: https://example.com";
+url: 'https://example.com'";
 
             // Act
             string actual = AdvanceExDocs.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);

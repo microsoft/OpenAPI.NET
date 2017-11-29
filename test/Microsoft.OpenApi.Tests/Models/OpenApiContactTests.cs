@@ -75,8 +75,8 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             string expected = 
 @"name: API Support
-url: http://www.example.com/support
-email: support@example.com
+url: 'http://www.example.com/support'
+email: 'support@example.com'
 x-internal-id: 42";
 
             // Act

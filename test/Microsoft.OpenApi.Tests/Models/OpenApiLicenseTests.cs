@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             string expected = 
 @"name: Apache 2.0
-url: http://www.apache.org/licenses/LICENSE-2.0.html
+url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 x-copyright: Abc";
 
             // Act

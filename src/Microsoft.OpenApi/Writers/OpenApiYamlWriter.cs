@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.IO;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -30,9 +31,9 @@ namespace Microsoft.OpenApi.Writers
             : base(textWriter, settings)
         {
         }
-        
+
         /// <summary>
-        /// Base Indentation Level. 
+        /// Base Indentation Level.
         /// This denotes how many indentations are needed for the property in the base object.
         /// </summary>
         protected override int BaseIndentation => 0;
@@ -147,7 +148,7 @@ namespace Microsoft.OpenApi.Writers
             // Only add newline and indentation when this object is not in the top level scope and not in an array.
             // The top level scope should have no indentation and it is already in its own line.
             // The first property of an object inside array can go after the array prefix (-) directly.
-            else if (! IsTopLevelScope() && !currentScope.IsInArray )
+            else if (!IsTopLevelScope() && !currentScope.IsInArray)
             {
                 Writer.WriteLine();
                 WriteIndentation();
@@ -167,31 +168,149 @@ namespace Microsoft.OpenApi.Writers
         {
             WriteValueSeparator();
 
-            value = value.Replace("\n", "\\n");
-
             // If string is an empty string, wrap it in quote to ensure it is not recognized as null.
             if (value == "")
             {
-                value = "''";
+                Writer.Write("''");
+                return;
             }
 
             // If string is the word null, wrap it in quote to ensure it is not recognized as empty scalar null.
             if (value == "null")
             {
-                value = "'null'";
+                Writer.Write("'null'");
+                return;
             }
 
-            // If string includes special character, wrap it in quote to avoid conflicts.
-            if (value.StartsWith("#"))
+            // If string is the letter ~, wrap it in quote to ensure it is not recognized as empty scalar null.
+            if (value == "~")
             {
-                value = $"'{value}'";
+                Writer.Write("'~'");
+                return;
+            }
+
+            var specialCharacters = new[]
+            {
+                ':',
+                '{',
+                '}',
+                '[',
+                ']',
+                ',',
+                '&',
+                '*',
+                '#',
+                '?',
+                '|',
+                '-',
+                '<',
+                '>',
+                '=',
+                '!',
+                '%',
+                '@',
+                '`',
+                '\'',
+                '"'
+            };
+
+            var controlCharacters = new[]
+            {
+                '\0',
+                '\x01',
+                '\x02',
+                '\x03',
+                '\x04',
+                '\x05',
+                '\x06',
+                '\a',
+                '\b',
+                '\t',
+                '\n',
+                '\v',
+                '\f',
+                '\r',
+                '\x0e',
+                '\x0f',
+                '\x10',
+                '\x11',
+                '\x12',
+                '\x13',
+                '\x14',
+                '\x15',
+                '\x16',
+                '\x17',
+                '\x18',
+                '\x19',
+                '\x1a',
+                '\x1b',
+                '\x1c',
+                '\x1d',
+                '\x1e',
+                '\x1f'
+            };
+
+            // If string includes a control character, wrapping in double quote is required.
+            if (value.Any(c => controlCharacters.Contains(c)))
+            {
+                // Escape double quotes and backslash.
+                value = value.Replace("\"", "\\\"");
+                value = value.Replace("\\", "\\\\");
+
+                // Escape all the control characters.
+                value = value.Replace("\0", "\\0");
+                value = value.Replace("\x01", "\\x01");
+                value = value.Replace("\x02", "\\x02");
+                value = value.Replace("\x03", "\\x03");
+                value = value.Replace("\x04", "\\x04");
+                value = value.Replace("\x05", "\\x05");
+                value = value.Replace("\x06", "\\x06");
+                value = value.Replace("\a", "\\a");
+                value = value.Replace("\b", "\\b");
+                value = value.Replace("\t", "\\t");
+                value = value.Replace("\n", "\\n");
+                value = value.Replace("\v", "\\v");
+                value = value.Replace("\f", "\\f");
+                value = value.Replace("\r", "\\r");
+                value = value.Replace("\x0e", "\\x0e");
+                value = value.Replace("\x0f", "\\x0f");
+                value = value.Replace("\x10", "\\x10");
+                value = value.Replace("\x11", "\\x11");
+                value = value.Replace("\x12", "\\x12");
+                value = value.Replace("\x13", "\\x13");
+                value = value.Replace("\x14", "\\x14");
+                value = value.Replace("\x15", "\\x15");
+                value = value.Replace("\x16", "\\x16");
+                value = value.Replace("\x17", "\\x17");
+                value = value.Replace("\x18", "\\x18");
+                value = value.Replace("\x19", "\\x19");
+                value = value.Replace("\x1a", "\\x1a");
+                value = value.Replace("\x1b", "\\x1b");
+                value = value.Replace("\x1c", "\\x1c");
+                value = value.Replace("\x1d", "\\x1d");
+                value = value.Replace("\x1e", "\\x1e");
+                value = value.Replace("\x1f", "\\x1f");
+
+                Writer.Write($"\"{value}\"");
+                return;
+            }
+
+            // If string includes a special character, wrap it in single quote.
+            if (value.Any(c => specialCharacters.Contains(c)))
+            {
+                // Escape single quotes with two single quotes.
+                value = value.Replace("'", "''");
+
+                Writer.Write($"'{value}'");
+                return;
             }
 
             // If string can be mistaken as a number or a boolean, wrap it in quote to indicate that this is
             // indeed a string, not a number of a boolean.
             if (decimal.TryParse(value, out var _) || bool.TryParse(value, out var _))
             {
-                value = $"'{value}'";
+                Writer.Write($"'{value}'");
+                return;
             }
 
             Writer.Write(value);
