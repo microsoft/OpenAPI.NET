@@ -254,7 +254,7 @@ namespace Microsoft.OpenApi.Writers
             // If string includes a control character, wrapping in double quote is required.
             if (value.Any(c => controlCharacters.Contains(c)))
             {
-                // Escape backslash.
+                // Replace the backslash first, so that the new backslashes created by other Replaces are not duplicated.
                 value = value.Replace("\\", "\\\\");
 
                 // Escape the double quotes.
