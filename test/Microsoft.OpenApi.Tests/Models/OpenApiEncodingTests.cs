@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             string expected = 
-@"contentType: image/png, image/jpeg
+@"contentType: 'image/png, image/jpeg'
 style: simple
 explode: true
 allowReserved: true";

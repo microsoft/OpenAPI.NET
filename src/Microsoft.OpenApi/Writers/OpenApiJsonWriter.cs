@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Base Indentation Level. 
+        /// Base Indentation Level.
         /// This denotes how many indentations are needed for the property in the base object.
         /// </summary>
         protected override int BaseIndentation => 1;
@@ -150,12 +150,13 @@ namespace Microsoft.OpenApi.Writers
             Writer.WriteLine();
 
             currentScope.ObjectCount++;
-            
+
             WriteIndentation();
 
-            Writer.Write(WriterConstants.QuoteCharacter);
+            name = name.GetJsonCompatibleString();
+
             Writer.Write(name);
-            Writer.Write(WriterConstants.QuoteCharacter);
+
             Writer.Write(WriterConstants.NameValueSeparator);
         }
 
@@ -167,11 +168,9 @@ namespace Microsoft.OpenApi.Writers
         {
             WriteValueSeparator();
 
-            value = value.Replace("\n", "\\n");
-
-            Writer.Write(WriterConstants.QuoteCharacter);
+            value = value.GetJsonCompatibleString();
+                
             Writer.Write(value);
-            Writer.Write(WriterConstants.QuoteCharacter);
         }
 
         /// <summary>

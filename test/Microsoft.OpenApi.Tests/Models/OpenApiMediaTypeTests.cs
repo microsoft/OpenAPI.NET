@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Tests.Models
 @"example: 42
 encoding:
   testEncoding:
-    contentType: image/png, image/jpeg
+    contentType: 'image/png, image/jpeg'
     style: simple
     explode: true
     allowReserved: true";
