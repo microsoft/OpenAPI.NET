@@ -4,6 +4,7 @@
 // ------------------------------------------------------------
 
 using System.IO;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -30,9 +31,9 @@ namespace Microsoft.OpenApi.Writers
             : base(textWriter, settings)
         {
         }
-        
+
         /// <summary>
-        /// Base Indentation Level. 
+        /// Base Indentation Level.
         /// This denotes how many indentations are needed for the property in the base object.
         /// </summary>
         protected override int BaseIndentation => 0;
@@ -147,11 +148,13 @@ namespace Microsoft.OpenApi.Writers
             // Only add newline and indentation when this object is not in the top level scope and not in an array.
             // The top level scope should have no indentation and it is already in its own line.
             // The first property of an object inside array can go after the array prefix (-) directly.
-            else if (! IsTopLevelScope() && !currentScope.IsInArray )
+            else if (!IsTopLevelScope() && !currentScope.IsInArray)
             {
                 Writer.WriteLine();
                 WriteIndentation();
             }
+
+            name = name.GetYamlCompatibleString();
 
             Writer.Write(name);
             Writer.Write(":");
@@ -167,32 +170,7 @@ namespace Microsoft.OpenApi.Writers
         {
             WriteValueSeparator();
 
-            value = value.Replace("\n", "\\n");
-
-            // If string is an empty string, wrap it in quote to ensure it is not recognized as null.
-            if (value == "")
-            {
-                value = "''";
-            }
-
-            // If string is the word null, wrap it in quote to ensure it is not recognized as empty scalar null.
-            if (value == "null")
-            {
-                value = "'null'";
-            }
-
-            // If string includes special character, wrap it in quote to avoid conflicts.
-            if (value.StartsWith("#"))
-            {
-                value = $"'{value}'";
-            }
-
-            // If string can be mistaken as a number or a boolean, wrap it in quote to indicate that this is
-            // indeed a string, not a number of a boolean.
-            if (decimal.TryParse(value, out var _) || bool.TryParse(value, out var _))
-            {
-                value = $"'{value}'";
-            }
+            value = value.GetYamlCompatibleString();
 
             Writer.Write(value);
         }

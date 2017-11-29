@@ -154,7 +154,7 @@ license:
   name: Apache 2.0
   url: http://www.apache.org/licenses/LICENSE-2.0.html
   x-copyright: Abc
-version: 1.1.1
+version: '1.1.1'
 x-updated: metadata"
                 };
             }
@@ -185,7 +185,7 @@ x-updated: metadata"
 
             var expected =
                 @"title: Sample Pet Store App
-version: 2017-03-01";
+version: '2017-03-01'";
 
             // Act
             var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0_0, OpenApiFormat.Yaml);

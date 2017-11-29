@@ -4,7 +4,6 @@
 // ------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -14,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiRequestBody : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Reference object.
@@ -46,7 +45,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0
         /// </summary>
-        public void WriteAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
             if (writer == null)
             {
@@ -80,7 +79,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v2.0
         /// </summary>
-        public void WriteAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer)
         {
             // RequestBody object does not exist in V2.
         }
