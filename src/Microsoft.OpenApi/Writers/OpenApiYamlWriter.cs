@@ -211,7 +211,8 @@ namespace Microsoft.OpenApi.Writers
                 '@',
                 '`',
                 '\'',
-                '"'
+                '"',
+                '\\'
             };
 
             var controlCharacters = new[]
@@ -253,9 +254,11 @@ namespace Microsoft.OpenApi.Writers
             // If string includes a control character, wrapping in double quote is required.
             if (value.Any(c => controlCharacters.Contains(c)))
             {
-                // Escape double quotes and backslash.
-                value = value.Replace("\"", "\\\"");
+                // Escape backslash.
                 value = value.Replace("\\", "\\\\");
+
+                // Escape the double quotes.
+                value = value.Replace("\"", "\\\"");
 
                 // Escape all the control characters.
                 value = value.Replace("\0", "\\0");
