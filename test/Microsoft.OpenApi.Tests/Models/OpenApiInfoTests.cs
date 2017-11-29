@@ -154,7 +154,7 @@ license:
   name: Apache 2.0
   url: http://www.apache.org/licenses/LICENSE-2.0.html
   x-copyright: Abc
-version: 1.1.1
+version: '1.1.1'
 x-updated: metadata"
                 };
             }
