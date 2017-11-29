@@ -86,11 +86,6 @@ namespace Microsoft.OpenApi.Writers
         internal const string NameValueSeparator = ": ";
 
         /// <summary>
-        /// The quote character.
-        /// </summary>
-        internal const char QuoteCharacter = '"';
-
-        /// <summary>
         /// The white space for empty object
         /// </summary>
         internal const string WhiteSpaceForEmptyObject = " ";

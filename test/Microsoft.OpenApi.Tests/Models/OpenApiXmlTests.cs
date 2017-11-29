@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var expected =
                 @"name: animal
-namespace: 'http://swagger.io/schema/sample'
+namespace: http://swagger.io/schema/sample
 prefix: sample
 attribute: true
 wrapped: true

@@ -153,9 +153,10 @@ namespace Microsoft.OpenApi.Writers
 
             WriteIndentation();
 
-            Writer.Write(WriterConstants.QuoteCharacter);
+            name = name.GetJsonCompatibleString();
+
             Writer.Write(name);
-            Writer.Write(WriterConstants.QuoteCharacter);
+
             Writer.Write(WriterConstants.NameValueSeparator);
         }
 
@@ -167,22 +168,9 @@ namespace Microsoft.OpenApi.Writers
         {
             WriteValueSeparator();
 
-            // Show the control characters as strings
-            // http://json.org/
-
-            // Replace the backslash first, so that the new backslashes created by other Replaces are not duplicated.
-            value = value.Replace("\\", "\\\\");
-
-            value = value.Replace("\b", "\\b");
-            value = value.Replace("\f", "\\f");
-            value = value.Replace("\n", "\\n");
-            value = value.Replace("\r", "\\r");
-            value = value.Replace("\t", "\\t");
-            value = value.Replace("\"", "\\\"");
-
-            Writer.Write(WriterConstants.QuoteCharacter);
+            value = value.GetJsonCompatibleString();
+                
             Writer.Write(value);
-            Writer.Write(WriterConstants.QuoteCharacter);
         }
 
         /// <summary>
