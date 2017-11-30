@@ -302,7 +302,14 @@ namespace Microsoft.OpenApi.Writers
             {
                 foreach (var item in elements)
                 {
-                    action(writer, item);
+                    if (item != null)
+                    {
+                        action(writer, item);
+                    }
+                    else
+                    {
+                        writer.WriteNull();
+                    }
                 }
             }
 
@@ -325,7 +332,14 @@ namespace Microsoft.OpenApi.Writers
                 foreach (var item in elements)
                 {
                     writer.WritePropertyName(item.Key);
-                    action(writer, item.Value);
+                    if (item.Value != null)
+                    {
+                        action(writer, item.Value);
+                    }
+                    else
+                    {
+                        writer.WriteNull();
+                    }
                 }
             }
 
