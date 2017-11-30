@@ -178,6 +178,8 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public override void WriteNull()
         {
+            WriteValueSeparator();
+
             Writer.Write("null");
         }
 
