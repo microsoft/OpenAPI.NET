@@ -74,7 +74,23 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Type = "string"
                 },
-                ["schema2"] = null
+                ["schema2"] = null,
+                ["schema3"] = null,
+                ["schema4"] = new OpenApiSchema
+                {
+                    Type = "string",
+                    AllOf = new List<OpenApiSchema>()
+                    {
+                        null,
+                        null,
+                        new OpenApiSchema()
+                        {
+                            Type = "string"
+                        },
+                        null,
+                        null
+                    }
+                }
             }
         };
 
@@ -209,7 +225,20 @@ securitySchemes:
     ""schema1"": {
       ""type"": ""string""
     },
-    ""schema2"": null
+    ""schema2"": null,
+    ""schema3"": null,
+    ""schema4"": {
+      ""type"": ""string"",
+      ""allOf"": [
+        null,
+        null,
+        {
+          ""type"": ""string""
+        },
+        null,
+        null
+      ]
+    }
   }
 }";
 
@@ -229,7 +258,16 @@ securitySchemes:
             var expected = @"schemas:
   schema1:
     type: string
-  schema2: ";
+  schema2: 
+  schema3: 
+  schema4:
+    type: string
+    allOf:
+      - 
+      - 
+      - type: string
+      - 
+      - ";
 
             // Act
             var actual = BrokenComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
