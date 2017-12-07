@@ -199,7 +199,15 @@ namespace Microsoft.OpenApi.Models
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
-            var parameters = new List<OpenApiParameter>(Parameters);
+            IList<OpenApiParameter> parameters;
+            if (Parameters == null)
+            {
+                parameters = new List<OpenApiParameter>();
+            }
+            else
+            {
+                parameters = new List<OpenApiParameter>(Parameters);
+            }
 
             if (RequestBody != null)
             {
@@ -258,7 +266,9 @@ namespace Microsoft.OpenApi.Models
             // All schemes in the Servers are extracted, regardless of whether the host matches
             // the host defined in the outermost Swagger object. This is due to the 
             // inaccessibility of information for that host in the context of an inner object like this Operation.
-            var schemes = Servers.Select(
+            if (Servers != null)
+            {
+                var schemes = Servers.Select(
                     s =>
                     {
                         Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
@@ -268,7 +278,8 @@ namespace Microsoft.OpenApi.Models
                 .Distinct()
                 .ToList();
 
-            writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+                writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+            }
 
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);

@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
         };
 
-        public static OpenApiOperation AdvancedOperation= new OpenApiOperation
+        public static OpenApiOperation AdvancedOperation = new OpenApiOperation
         {
             Summary = "summary1",
             Description = "operationDescription",
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Type = "number",
                             Minimum = 5,
-                            Maximum =  10
+                            Maximum = 10
                         }
                     }
                 }
@@ -229,7 +229,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-                var actual = BasicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = BasicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             _output.WriteLine(actual);
 
@@ -308,7 +308,7 @@ namespace Microsoft.OpenApi.Tests.Models
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
-        
+
         [Fact]
         public void SerializeAdvancedOperationWithTagAndSecurityAsV3JsonWorks()
         {
@@ -549,6 +549,28 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = AdvancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
             _output.WriteLine(actual);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeOperationWithNullCollectionAsV2JsonWorks()
+        {
+            // Arrange
+            var expected = @"{
+  ""responses"": { }
+}";
+            OpenApiOperation operation = new OpenApiOperation
+            {
+                Parameters = null,
+                Servers = null,
+            };
+
+            // Act
+            var actual = operation.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
