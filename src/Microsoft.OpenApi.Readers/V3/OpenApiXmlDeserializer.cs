@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -16,51 +17,57 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiExample> ExampleFixedFields = new FixedFieldMap<OpenApiExample>
+        private static readonly FixedFieldMap<OpenApiXml> XmlFixedFields = new FixedFieldMap<OpenApiXml>
         {
             {
-                "summary", (o, n) =>
+                "name", (o, n) =>
                 {
-                    o.Summary = n.GetScalarValue();
+                    o.Name = n.GetScalarValue();
                 }
             },
             {
-                "description", (o, n) =>
+                "namespace", (o, n) =>
                 {
-                    o.Description = n.GetScalarValue();
+                    o.Namespace = new Uri(n.GetScalarValue());
                 }
             },
             {
-                "value", (o, n) =>
+                "prefix", (o, n) =>
                 {
-                    o.Value = n.CreateAny();
+                    o.Prefix = n.GetScalarValue();
+                }
+            },
+            {
+                "attribute", (o, n) =>
+                {
+                    o.Attribute = bool.Parse(n.GetScalarValue());
+                }
+            },
+            {
+                "wrapped", (o, n) =>
+                {
+                    o.Wrapped = bool.Parse(n.GetScalarValue());
                 }
             },
         };
 
-        private static readonly PatternFieldMap<OpenApiExample> ExamplePatternFields =
-            new PatternFieldMap<OpenApiExample>
+        private static readonly PatternFieldMap<OpenApiXml> XmlPatternFields =
+            new PatternFieldMap<OpenApiXml>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
-        public static OpenApiExample LoadExample(ParseNode node)
+        public static OpenApiXml LoadXml(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("example");
-
-            var pointer = mapNode.GetReferencePointer();
-            if (pointer != null)
-            {
-                return mapNode.GetReferencedObject<OpenApiExample>(ReferenceType.Example, pointer);
-            }
-
-            var example = new OpenApiExample();
+            var mapNode = node.CheckMapNode("xml");
+            
+            var xml = new OpenApiXml();
             foreach (var property in mapNode)
             {
-                property.ParseField(example, ExampleFixedFields, ExamplePatternFields);
+                property.ParseField(xml, XmlFixedFields, XmlPatternFields);
             }
 
-            return example;
+            return xml;
         }
     }
 }

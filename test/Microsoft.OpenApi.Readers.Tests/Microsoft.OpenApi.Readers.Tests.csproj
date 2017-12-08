@@ -59,4 +59,8 @@
     <EmbeddedResource Include="..\..\fixtures\v3.0\json\general\negative\negativeInfoObject.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="V3\" />
+  </ItemGroup>
+
 </Project>

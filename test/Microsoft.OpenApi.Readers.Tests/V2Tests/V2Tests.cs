@@ -3,6 +3,8 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using FluentAssertions;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -22,8 +24,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var openApiDocV2 = new OpenApiStreamReader().Read(v2stream, out var contextV2);
             var openApiDocV3 = new OpenApiStreamReader().Read(v3stream, out var contextV3);
 
-            // TODO: Add fluent assertion to make this assert possible without implementing equality ourselves.
-            //  openApiDocV3.Should().Be(openApiDocV2);
+            // Everything in the DOM read from V2 and V3 documents should be equal
+            // except the SpecVersion property (2.0 and 3.0.0)
+            openApiDocV3.ShouldBeEquivalentTo(
+                openApiDocV2,
+                options => options.Excluding(
+                    s => s.SelectedMemberPath == nameof(OpenApiDocument.SpecVersion)));
         }
     }
 }
