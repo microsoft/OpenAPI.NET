@@ -1,0 +1,8 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#encodingObject
+# only accept png/jpeg
+contentType: image/png, image/jpeg
+headers:
+    X-Rate-Limit-Limit:
+        description: The number of allowed requests in the current period
+        schema:
+            type: integer

@@ -70,6 +70,12 @@
       <None Update="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="V3Tests\Samples\OpenApiEncoding\advancedEncoding.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="V3Tests\Samples\OpenApiEncoding\basicEncoding.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     <None Update="V3Tests\Samples\OpenApiExample\advancedExample.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -120,7 +126,6 @@
   <ItemGroup>
     <Folder Include="V3Tests\Samples\OpenApiSecurityScheme\" />
     <Folder Include="V3Tests\Samples\OpenApiSchema\" />
-    <Folder Include="V3Tests\Samples\OpenApiEncoding\" />
   </ItemGroup>
 
 </Project>
