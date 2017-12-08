@@ -11,19 +11,6 @@
     <RootNamespace>Microsoft.OpenApi.Readers.Tests</RootNamespace>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="V3Tests\FixtureTests.cs" />
-    <Compile Remove="V3Tests\ParameterSerializationTests.cs" />
-  </ItemGroup>
-    
-  <ItemGroup>
-    <None Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="V3Tests\Samples\OpenApiInfo\basicInfo.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
@@ -48,7 +35,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-
+    
   <ItemGroup>
     <None Update="V2Tests\Samples\basic.v2.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -77,6 +64,12 @@
     <None Update="V2Tests\Samples\simplest.v3.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+      <None Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Include="V3Tests\Samples\OpenApiInfo\basicInfo.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     <None Update="V3Tests\Samples\OpenApiExample\advancedExample.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
