@@ -12,10 +12,13 @@ using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
-namespace Microsoft.OpenApi.Readers.Tests
+namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
-    public class ParameterTests
-    {
+    [Collection("DefaultSettings")]
+    public class OpenApiParameterTests
+    { 
+        // TODO: This test is not in the correct place. Move and adjustment needed.
+        //
         private const string _UriReservedSymbols = ":/?#[]@!$&'()*+,;=";
         private const string _UriUnreservedSymbols = "-._~";
 

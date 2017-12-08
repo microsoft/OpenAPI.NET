@@ -70,7 +70,9 @@ namespace Microsoft.OpenApi.Readers.V3
             }
 
             foreach (var error in required.Select(
-                    r => new OpenApiError("", $"{r} is a required property of {node.Context.GetLocation()}"))
+                    r => new OpenApiError(
+                        node.Context.GetLocation(),
+                        $"{r} is a required property"))
                 .ToList())
             {
                 node.Diagnostic.Errors.Add(error);

@@ -1,6 +1,6 @@
 ﻿openapi : 3.0.0
 info:
-    title: The Api
+    title: The API
     version: 0.9.1
 servers:
   - url: http://www.example.org/api

@@ -209,7 +209,9 @@ namespace Microsoft.OpenApi.Models
                     return OpenApiConstants.SecurityDefinitions;
 
                 default:
-                    throw new OpenApiException(string.Format(SRResource.ReferenceTypeNotSupportedV2, type));
+                    // If the reference type is not supported in V2, simply return null
+                    // to indicate that the reference is not pointing to any object.
+                    return null;
             }
         }
     }

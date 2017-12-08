@@ -162,9 +162,6 @@
   <data name="ReferenceHasInvalidFormat" xml:space="preserve">
     <value>The reference string '{0}' has invalid format.</value>
   </data>
-  <data name="ReferenceTypeNotSupportedV2" xml:space="preserve">
-    <value>The reference type '{0}' does not suppoted in Open API v2.0.</value>
-  </data>
   <data name="RuntimeExpressionHasInvalidFormat" xml:space="preserve">
     <value>The runtime expression '{0}' has invalid format.</value>
   </data>

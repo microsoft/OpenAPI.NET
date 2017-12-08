@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Expressions
     /// <summary>
     /// Base class for the Open API runtime expression.
     /// </summary>
-    public abstract class RuntimeExpression
+    public abstract class RuntimeExpression : IEquatable<RuntimeExpression>
     {
         /// <summary>
         /// The dollar sign prefix for a runtime expression.
@@ -76,6 +76,30 @@ namespace Microsoft.OpenApi.Expressions
             }
 
             throw new OpenApiException(String.Format(SRResource.RuntimeExpressionHasInvalidFormat, expression));
+        }
+
+        /// <summary>
+        /// GetHashCode implementation for IEquatable.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return Expression.GetHashCode();
+        }
+
+        /// <summary>
+        /// Equals implementation for IEquatable.
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as RuntimeExpression);
+        }
+
+        /// <summary>
+        /// Equals implementation for object of the same type.
+        /// </summary>
+        public bool Equals(RuntimeExpression obj)
+        {
+            return obj != null && obj.Expression == Expression;
         }
     }
 }

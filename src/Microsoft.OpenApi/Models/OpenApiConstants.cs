@@ -7,6 +7,9 @@ using System;
 
 namespace Microsoft.OpenApi.Models
 {
+    /// <summary>
+    /// Constants used in the Open API document.
+    /// </summary>
     public static class OpenApiConstants
     {
         public const string OpenApi = "openapi";
