@@ -144,7 +144,7 @@ paths: {}",
         public void ParseStandardPetStoreDocumentShouldSucceed()
         {
             OpenApiDiagnostic context;
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "petStore30.yaml")))
+            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "petStore.yaml")))
             {
                 var actual = new OpenApiStreamReader().Read(stream, out context);
 
@@ -554,7 +554,7 @@ paths: {}",
         public void ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
             OpenApiDiagnostic context;
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity30.yaml")))
+            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml")))
             {
                 var actual = new OpenApiStreamReader().Read(stream, out context);
 
@@ -1056,7 +1056,7 @@ paths: {}",
         {
             OpenApiDiagnostic context;
 
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "petStoreExpanded30.yaml")))
+            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml")))
             {
                 var actual = new OpenApiStreamReader().Read(stream, out context);
 

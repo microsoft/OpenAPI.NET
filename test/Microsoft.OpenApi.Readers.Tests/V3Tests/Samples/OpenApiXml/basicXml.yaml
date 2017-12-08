@@ -1,0 +1,4 @@
+﻿name: name1
+namespace: http://example.com/schema/namespaceSample
+prefix: samplePrefix
+wrapped: true

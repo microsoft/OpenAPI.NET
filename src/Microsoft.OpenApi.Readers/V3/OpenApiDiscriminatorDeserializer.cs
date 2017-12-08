@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "mapping", (o, n) =>
                 {
-                    o.Mapping = n.CreateMap(LoadString);
+                    o.Mapping = n.CreateSimpleMap(LoadString);
                 }
             }
         };

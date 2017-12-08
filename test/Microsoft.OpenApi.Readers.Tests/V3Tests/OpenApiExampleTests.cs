@@ -18,12 +18,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     [Collection("DefaultSettings")]
     public class OpenApiExampleTests
     {
-        private const string sampleFolderPath = "V3Tests/Samples/OpenApiExample/";
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiExample/";
 
         [Fact]
         public void ParseAdvancedExampleShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(sampleFolderPath, "advancedExample.yaml")))
+            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "advancedExample.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));

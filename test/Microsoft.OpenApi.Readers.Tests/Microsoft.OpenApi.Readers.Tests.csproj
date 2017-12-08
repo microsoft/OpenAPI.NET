@@ -67,8 +67,8 @@
       <None Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Include="V3Tests\Samples\OpenApiInfo\basicInfo.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <None Update="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     <None Update="V3Tests\Samples\OpenApiExample\advancedExample.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -88,31 +88,38 @@
     <None Update="V3Tests\Samples\OpenApiDocument\basicDocumentWithMultipleServers.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="V3Tests\Samples\OpenApiInfo\minimalInfo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="V3Tests\Samples\OpenApiInfo\minimalInfoObject.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="V3Tests\Samples\OpenApiDocument\petStoreExpanded30.yaml">
+    <None Update="V3Tests\Samples\OpenApiDocument\petStoreExpanded.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="V3Tests\Samples\OpenApiDocument\petstore30.yaml">
+    <None Update="V3Tests\Samples\OpenApiDocument\petStore.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity30.yaml">
+    <None Update="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiXml\basicXml.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="V3Tests\Samples\OpenApiSecurityScheme\" />
-    <Folder Include="V3Tests\Samples\OpenApiXml\" />
     <Folder Include="V3Tests\Samples\OpenApiSchema\" />
-    <Folder Include="V3Tests\Samples\OpenApiDiscriminator\" />
     <Folder Include="V3Tests\Samples\OpenApiEncoding\" />
   </ItemGroup>
 
