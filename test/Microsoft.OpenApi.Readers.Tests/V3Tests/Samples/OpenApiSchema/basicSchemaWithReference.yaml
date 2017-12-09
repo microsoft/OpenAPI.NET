@@ -1,0 +1,29 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
+openapi: 3.0.0
+info:
+  title: Simple Document
+  version: 0.9.1
+paths: { }
+components:
+  schemas:
+    ErrorModel:
+      type: object
+      required:
+      - message
+      - code
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          minimum: 100
+          maximum: 600
+    ExtendedErrorModel:
+      allOf:
+      - $ref: '#/components/schemas/ErrorModel'
+      - type: object
+        required:
+        - rootCause
+        properties:
+          rootCause:
+            type: string

@@ -91,6 +91,9 @@
       <None Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithReference.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
@@ -139,6 +142,21 @@
     <None Update="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="V3Tests\Samples\OpenApiSchema\advancedSchemaWithReference.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiSchema\basicSchemaWithExample.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiSchema\dictionarySchema.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiSchema\simpleSchema.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiSchema\primitiveSchema.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -157,10 +175,6 @@
     <None Update="V3Tests\Samples\OpenApiXml\basicXml.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="V3Tests\Samples\OpenApiSchema\" />
   </ItemGroup>
 
 </Project>
