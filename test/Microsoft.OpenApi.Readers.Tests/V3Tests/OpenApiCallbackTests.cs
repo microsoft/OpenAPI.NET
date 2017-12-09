@@ -8,6 +8,9 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Readers.V3;
+using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -22,14 +25,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicCallback.yaml")))
             {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+                var yamlStream = new YamlStream();
+                yamlStream.Load(new StreamReader(stream));
+                var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var path = openApiDoc.Paths.First().Value;
-                var subscribeOperation = path.Operations[OperationType.Post];
+                var context = new ParsingContext();
+                var diagnostic = new OpenApiDiagnostic();
 
-                var callback = subscribeOperation.Callbacks["mainHook"];
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
 
-                context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                // Act
+                var callback = OpenApiV3Deserializer.LoadCallback(node);
+
+                // Assert
+                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
 
                 callback.ShouldBeEquivalentTo(
                     new OpenApiCallback
@@ -67,12 +76,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseBasicCallbackWithReferenceShouldSucceed()
+        public void ParseAdvancedCallbackWithReferenceShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicCallbackWithReference.yaml")))
+            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "advancedCallbackWithReference.yaml")))
             {
+                // Act
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
+                // Assert
                 var path = openApiDoc.Paths.First().Value;
                 var subscribeOperation = path.Operations[OperationType.Post];
 

@@ -11,6 +11,9 @@
     <RootNamespace>Microsoft.OpenApi.Readers.Tests</RootNamespace>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="V2Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
@@ -52,6 +55,18 @@
     <None Update="V2Tests\Samples\minimal.v3.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V2Tests\Samples\OpenApiSecurityScheme\oauth2AccessCodeSecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V2Tests\Samples\OpenApiSecurityScheme\oauth2ApplicationSecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="V2Tests\Samples\parameterRef.v2.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -62,6 +77,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="V2Tests\Samples\simplest.v3.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="V2Tests\Samples\OpenApiSecurityScheme\basicSecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2ImplicitSecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="V3Tests\Samples\OpenApiCallback\advancedCallbackWithReference.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
       <None Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">
@@ -83,9 +107,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="V3Tests\Samples\OpenApiCallback\basicCallback.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="V3Tests\Samples\OpenApiCallback\basicCallbackWithReference.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="V3Tests\Samples\CompleteHeader.yaml">
@@ -118,13 +139,27 @@
     <None Update="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiSecurityScheme\oauth2SecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiSecurityScheme\bearerSecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="V3Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="V3Tests\Samples\OpenApiXml\basicXml.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="V3Tests\Samples\OpenApiSecurityScheme\" />
     <Folder Include="V3Tests\Samples\OpenApiSchema\" />
   </ItemGroup>
 

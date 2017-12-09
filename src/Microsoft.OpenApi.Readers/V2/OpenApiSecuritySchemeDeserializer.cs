@@ -18,14 +18,32 @@ namespace Microsoft.OpenApi.Readers.V2
     {
         private static string flowValue;
 
-        private static readonly OpenApiOAuthFlow flow = new OpenApiOAuthFlow();
+        private static OpenApiOAuthFlow flow;
 
         private static readonly FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields =
             new FixedFieldMap<OpenApiSecurityScheme>
             {
                 {
                     "type",
-                    (o, n) => o.Type = (SecuritySchemeType)Enum.Parse(typeof(SecuritySchemeType), n.GetScalarValue())
+                    (o, n) =>
+                    {
+                        var type = n.GetScalarValue();
+                        switch (type)
+                        {
+                            case "basic":
+                                o.Type = SecuritySchemeType.Http;
+                                o.Scheme = "basic";
+                                break;
+
+                            case "apiKey":
+                                o.Type = SecuritySchemeType.ApiKey;
+                                break;
+
+                            case "oauth2":
+                                o.Type = SecuritySchemeType.OAuth2;
+                                break;
+                        }
+                    }
                 },
                 {"description", (o, n) => o.Description = n.GetScalarValue()},
                 {"name", (o, n) => o.Name = n.GetScalarValue()},
@@ -53,7 +71,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "scopes", (o, n) =>
                     {
-                        flow.Scopes = n.CreateMap(LoadString);
+                        flow.Scopes = n.CreateSimpleMap(LoadString);
                     }
                 }
             };
@@ -66,6 +84,10 @@ namespace Microsoft.OpenApi.Readers.V2
 
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
         {
+            // Reset the local variables every time this method is called.
+            flowValue = null;
+            flow = new OpenApiOAuthFlow();
+
             var mapNode = node.CheckMapNode("securityScheme");
 
             var securityScheme = new OpenApiSecurityScheme();
@@ -74,25 +96,34 @@ namespace Microsoft.OpenApi.Readers.V2
                 property.ParseField(securityScheme, SecuritySchemeFixedFields, SecuritySchemePatternFields);
             }
 
-            securityScheme.Flows = new OpenApiOAuthFlows();
-            ;
-
             // Put the Flow object in the right Flows property based on the string in "flow"
             if (flowValue == OpenApiConstants.Implicit)
             {
-                securityScheme.Flows.Implicit = flow;
+                securityScheme.Flows = new OpenApiOAuthFlows
+                {
+                    Implicit = flow
+                };
             }
             else if (flowValue == OpenApiConstants.Password)
             {
-                securityScheme.Flows.Password = flow;
+                securityScheme.Flows = new OpenApiOAuthFlows
+                {
+                    Password = flow
+                };
             }
             else if (flowValue == OpenApiConstants.Application)
             {
-                securityScheme.Flows.ClientCredentials = flow;
+                securityScheme.Flows = new OpenApiOAuthFlows
+                {
+                    ClientCredentials = flow
+                };
             }
             else if (flowValue == OpenApiConstants.AccessCode)
             {
-                securityScheme.Flows.AuthorizationCode = flow;
+                securityScheme.Flows = new OpenApiOAuthFlows
+                {
+                    AuthorizationCode = flow
+                };
             }
 
             return securityScheme;
