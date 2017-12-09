@@ -1,6 +1,6 @@
 ﻿// ------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
 using Xunit;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers.Tests
     /// Collection dummy class for <see cref="DefaultSettingsFixture"/>.
     /// </summary>
     /// <remarks>
-    /// This class is needed in xUnit framework to define collection name 
+    /// This class is needed in xUnit framework to define collection name
     /// to be used in unit test classes.
     /// </remarks>
     [CollectionDefinition("DefaultSettings")]
