@@ -10,6 +10,7 @@
     <RootNamespace>Microsoft.OpenApi.Tests</RootNamespace>
     <SignAssembly>true</SignAssembly>
     <OutputType>Library</OutputType>
+    <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
