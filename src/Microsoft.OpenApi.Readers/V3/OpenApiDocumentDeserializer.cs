@@ -19,12 +19,7 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
-            {
-                "openapi", (o, n) =>
-                {
-                    o.SpecVersion = new Version(n.GetScalarValue());
-                }
-            },
+            {"openapi", (o, n) => { } /* Version is valid field but we already parsed it */  },
             {"info", (o, n) => o.Info = LoadInfo(n)},
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
