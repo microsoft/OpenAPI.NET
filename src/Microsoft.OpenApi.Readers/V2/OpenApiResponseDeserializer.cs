@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "examples", (o, n) =>
                 {
-                    /*o.Examples = ((ListNode)n).Select(s=> new AnyNode(s)).ToList();*/
+                    OpenApiV2Deserializer.LoadExamples(o,n);
                 }
             },
             {

@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Tests
             info.Extensions["x-list"].Should().BeOfType<OpenApiArray>();
             var arrayValue = (OpenApiArray)(info.Extensions["x-list"]);
             arrayValue.Count.Should().Be(2);
-            arrayValue.Select(e => ((OpenApiString)e).Value).Should().Equal("1", "2");
+            arrayValue.Select(e => ((OpenApiInteger)e).Value).Should().Equal(1, 2);
         }
     }
 }

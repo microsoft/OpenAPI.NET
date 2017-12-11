@@ -3,9 +3,10 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using Microsoft.OpenApi.Extensions;
+
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Readers.V2
 {
@@ -15,24 +16,35 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiExample> ExampleFixedFields = new FixedFieldMap<OpenApiExample>();
-
-        private static readonly PatternFieldMap<OpenApiExample> ExamplePatternFields =
-            new PatternFieldMap<OpenApiExample>
-            {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
-            };
-
-        public static OpenApiExample LoadExample(ParseNode node)
+        public static void LoadExamples(OpenApiResponse response, ParseNode node)
         {
-            var mapNode = node.CheckMapNode("Example");
-            var example = new OpenApiExample();
-            foreach (var property in mapNode)
+            var mapNode = node.CheckMapNode("examples");
+            foreach (var mediaTypeNode in mapNode)
             {
-                property.ParseField(example, ExampleFixedFields, ExamplePatternFields);
+                LoadExample(response, mediaTypeNode.Name, mediaTypeNode.Value);
             }
+        }
 
-            return example;
+            public static void LoadExample(OpenApiResponse response, string mediaType, ParseNode node)
+        {
+            var exampleNode = node.CreateAny();
+
+            if (response.Content == null)
+            {
+                response.Content = new Dictionary<string, OpenApiMediaType>();
+            }
+            OpenApiMediaType mediaTypeObject;
+            if (response.Content.ContainsKey(mediaType))
+            {
+                mediaTypeObject = response.Content[mediaType];
+            }
+            else
+            {
+                mediaTypeObject = new OpenApiMediaType();
+                response.Content.Add(mediaType, mediaTypeObject);
+            }
+            mediaTypeObject.Example = exampleNode;
+
         }
     }
 }

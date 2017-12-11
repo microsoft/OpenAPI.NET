@@ -54,6 +54,20 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return new OpenApiBoolean(false);
             }
 
+            if (int.TryParse(value, out var intValue))
+            {
+                return new OpenApiInteger(intValue);
+            }
+
+            if (Double.TryParse(value, out var dblValue))
+            {
+                return new OpenApiDouble(dblValue);
+            }
+
+            if (DateTime.TryParse(value, out var datetimeValue))
+            {
+                return new OpenApiDateTime(datetimeValue);
+            }
             // TODO: add more codes to identify each primitive types
 
 

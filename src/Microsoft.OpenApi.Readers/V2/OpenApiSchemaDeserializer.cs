@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "example", (o, n) =>
                 {
-                    o.Example = new OpenApiString(n.GetScalarValue());
+                    o.Example = n.CreateAny();
                 }
             },
         };
