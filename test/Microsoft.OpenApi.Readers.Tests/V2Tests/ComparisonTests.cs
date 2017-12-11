@@ -30,9 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 // Everything in the DOM read from V2 and V3 documents should be equal
                 // except the SpecVersion property (2.0 and 3.0.0)
                 openApiDocV3.ShouldBeEquivalentTo(
-                    openApiDocV2,
-                    options => options.Excluding(
-                        s => s.SelectedMemberPath == nameof(OpenApiDocument.SpecVersion)));
+                    openApiDocV2);
 
                 contextV2.ShouldBeEquivalentTo(contextV3);
             }

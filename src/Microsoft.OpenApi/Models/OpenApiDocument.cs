@@ -17,11 +17,6 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
-        /// <summary>
-        /// REQUIRED. This string MUST be the semantic version number of the OpenAPI Specification version 
-        /// that the OpenAPI document uses.
-        /// </summary>
-        public Version SpecVersion { get; set; }
 
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
@@ -64,7 +59,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         /// <summary>
-        /// Serialize <see cref="OpenApiDocument"/> to Open Api v3.0.
+        /// Serialize <see cref="OpenApiDocument"/> to Open Api v3.0.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
@@ -76,7 +71,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteProperty(OpenApiConstants.OpenApi, SpecVersion?.ToString());
+            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.0");
 
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV3(w));
@@ -118,7 +113,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // swagger
-            writer.WriteProperty(OpenApiConstants.Swagger, SpecVersion?.ToString());
+            writer.WriteProperty(OpenApiConstants.Swagger, "2.0");
 
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV2(w));
