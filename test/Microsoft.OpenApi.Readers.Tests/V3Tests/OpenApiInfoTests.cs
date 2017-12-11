@@ -73,8 +73,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             },
                             ["x-list"] = new OpenApiArray
                             {
-                                new OpenApiString("1"),
-                                new OpenApiString("2")
+                                new OpenApiInteger(1),
+                                new OpenApiInteger(2)
                             }
                         }
                     });
