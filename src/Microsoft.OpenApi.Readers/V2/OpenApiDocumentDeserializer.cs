@@ -55,13 +55,26 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "parameters",
-                (o, n) => o.Components.Parameters = n.CreateMapWithReference(
+                (o, n) => {
+                    o.Components = new OpenApiComponents();
+                    o.Components.Parameters = n.CreateMapWithReference(
                     ReferenceType.Parameter,
                     "#/parameters/",
-                    LoadParameter)
+                    LoadParameter);
+                    }
             },
-            {"responses", (o, n) => o.Components.Responses = n.CreateMap(LoadResponse)},
-            {"securityDefinitions", (o, n) => o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme)},
+            {
+                "responses", (o, n) => {
+                o.Components = new OpenApiComponents();
+                o.Components.Responses = n.CreateMap(LoadResponse);
+                }
+            },
+            {
+                "securityDefinitions", (o, n) => {
+                o.Components = new OpenApiComponents();
+                o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme);
+                }
+            },
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)},
             {"tags", (o, n) => o.Tags = n.CreateList(LoadTag)},
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)}
