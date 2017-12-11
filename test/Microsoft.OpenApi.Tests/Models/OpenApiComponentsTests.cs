@@ -13,6 +13,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiComponentsTests
     {
         public static OpenApiComponents AdvancedComponents = new OpenApiComponents

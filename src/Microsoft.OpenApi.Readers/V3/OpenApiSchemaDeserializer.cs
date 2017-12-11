@@ -187,7 +187,12 @@ namespace Microsoft.OpenApi.Readers.V3
                     o.Nullable = bool.Parse(n.GetScalarValue());
                 }
             },
-            // discriminator
+            {
+                "discriminator", (o, n) =>
+                {
+                    o.Discriminator = LoadDiscriminator(n);
+                }
+            },
             {
                 "readOnly", (o, n) =>
                 {
@@ -200,7 +205,12 @@ namespace Microsoft.OpenApi.Readers.V3
                     o.WriteOnly = bool.Parse(n.GetScalarValue());
                 }
             },
-            // xml
+            {
+                "xml", (o, n) =>
+                {
+                    o.Xml = LoadXml(n);
+                }
+            },
             {
                 "externalDocs", (o, n) =>
                 {

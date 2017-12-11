@@ -4,9 +4,11 @@
 // ------------------------------------------------------------
 
 using Microsoft.OpenApi.Models;
+using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiCallbackTests
     {
         public static OpenApiCallback basicCallback = new OpenApiCallback();

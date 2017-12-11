@@ -49,18 +49,18 @@ namespace Microsoft.OpenApi.Readers.V3
 
         public static OpenApiMediaType LoadMediaType(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("contentType");
+            var mapNode = node.CheckMapNode("content");
 
             if (!mapNode.Any())
             {
                 return null;
             }
 
-            var contentType = new OpenApiMediaType();
+            var mediaType = new OpenApiMediaType();
 
-            ParseMap(mapNode, contentType, MediaTypeFixedFields, MediaTypePatternFields);
+            ParseMap(mapNode, mediaType, MediaTypeFixedFields, MediaTypePatternFields);
 
-            return contentType;
+            return mediaType;
         }
     }
 }

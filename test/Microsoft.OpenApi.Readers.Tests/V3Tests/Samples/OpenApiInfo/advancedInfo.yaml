@@ -1,0 +1,21 @@
+﻿title: Advanced Info
+version: 1.0.0
+description: Sample Description
+termsOfService: http://example.org/termsOfService
+contact: 
+    name: John Doe
+    url: http://www.example.com/url1
+    email: example@example.com
+    x-twitter: "@exampleTwitterHandler"
+license: 
+    name: licenseName
+    url: http://www.example.com/url2
+    x-disclaimer: Sample Extension String Disclaimer
+x-something:  Sample Extension String Something
+x-contact:
+    name: John Doe
+    url: http://www.example.com/url3
+    email: example@example.com
+x-list:
+    - "1"
+    - "2"

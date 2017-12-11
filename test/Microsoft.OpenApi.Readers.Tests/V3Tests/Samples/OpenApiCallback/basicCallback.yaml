@@ -1,0 +1,8 @@
+﻿"$request.body#/url":
+    post:
+        requestBody:
+            content:
+                application/json: null
+        responses: 
+            200: 
+                description: Success
