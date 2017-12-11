@@ -1,0 +1,31 @@
+﻿openapi : 3.0.0
+info:
+  title: The API
+  version: 0.9.1
+paths: 
+  "/subscribe":
+    post:
+      requestBody:
+        content:
+          application/json: 
+            schema:
+              type: object
+      responses:
+        200:
+          description: Register
+      callbacks:
+        simpleHook:
+          $ref: "#/components/callbacks/simpleHook" 
+components:
+  callbacks:
+    simpleHook:
+     '$request.body#/url':
+        post:
+          requestBody:
+            content:
+              application/json: 
+                schema:
+                  type: object
+          responses:
+            200:
+              description: Success

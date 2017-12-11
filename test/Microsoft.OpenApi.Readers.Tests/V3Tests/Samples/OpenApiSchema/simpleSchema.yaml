@@ -1,0 +1,14 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
+type: object
+required:
+- name
+properties:
+  name:
+    type: string
+  address:
+    # Modified from the original one in the spec to just string for simple testing
+    type: string
+  age:
+    type: integer
+    format: int32
+    minimum: 0

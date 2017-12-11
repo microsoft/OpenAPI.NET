@@ -163,15 +163,27 @@ namespace Microsoft.OpenApi.Readers.V2
                     o.Default = new OpenApiString(n.GetScalarValue());
                 }
             },
-
-            // discriminator
+            {
+                "discriminator", (o, n) =>
+                {
+                    o.Discriminator = new OpenApiDiscriminator()
+                    {
+                        PropertyName = n.GetScalarValue()
+                    };
+                }
+            },
             {
                 "readOnly", (o, n) =>
                 {
                     o.ReadOnly = bool.Parse(n.GetScalarValue());
                 }
             },
-            // xml
+            {
+                "xml", (o, n) =>
+                {
+                    o.Xml = LoadXml(n);
+                }
+            },
             {
                 "externalDocs", (o, n) =>
                 {
@@ -181,7 +193,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "example", (o, n) =>
                 {
-                    o.Example = new OpenApiString(n.GetScalarValue());
+                    o.Example = n.CreateAny();
                 }
             },
         };

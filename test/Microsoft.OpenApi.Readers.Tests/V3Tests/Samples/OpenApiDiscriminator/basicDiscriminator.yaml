@@ -1,0 +1,4 @@
+﻿propertyName: pet_type
+mapping:
+    puppy: '#/components/schemas/Dog'
+    kitten: Cat

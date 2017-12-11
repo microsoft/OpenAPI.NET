@@ -12,7 +12,7 @@
     <OutputType>Library</OutputType>
     <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
+    
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="FluentAssertions" Version="4.19.4">

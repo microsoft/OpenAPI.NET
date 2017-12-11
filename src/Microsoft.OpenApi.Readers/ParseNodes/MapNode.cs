@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (node == null)
             {
-                throw new OpenApiException($"Expected map");
+                throw new OpenApiException("Expected map");
             }
 
             this.node = node;
@@ -72,8 +72,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 n => new
                 {
                     key = n.Key.GetScalarValue(),
-                    value = map(new MapNode(Context, Diagnostic, n.Value as YamlMappingNode))
+                    value = n.Value as YamlMappingNode == null ?
+                        default(T) :
+                        map(new MapNode(Context, Diagnostic, n.Value as YamlMappingNode))
+
                 });
+
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 

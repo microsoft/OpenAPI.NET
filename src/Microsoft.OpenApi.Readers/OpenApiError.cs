@@ -12,16 +12,23 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiError
     {
-        private readonly string _message;
-        private readonly string _pointer;
+        /// <summary>
+        /// Message explaining the error.
+        /// </summary>
+        public string Message { get; set; }
+
+        /// <summary>
+        /// Pointer to the location of the error.
+        /// </summary>
+        public string Pointer { get; set; }
 
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class using the message and pointer from the given exception.
         /// </summary>
         public OpenApiError(OpenApiException exception)
         {
-            _message = exception.Message;
-            _pointer = exception.Pointer;
+            Message = exception.Message;
+            Pointer = exception.Pointer;
         }
 
         /// <summary>
@@ -29,17 +36,16 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public OpenApiError(string pointer, string message)
         {
-            this._pointer = pointer;
-            this._message = message;
+            this.Pointer = pointer;
+            this.Message = message;
         }
 
         /// <summary>
         /// Gets the string representation of <see cref="OpenApiError"/>.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
-            return _message + (!string.IsNullOrEmpty(_pointer) ? " at " + _pointer : "");
+            return Message + (!string.IsNullOrEmpty(Pointer) ? " at " + Pointer : "");
         }
     }
 }

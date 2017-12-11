@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
         public static OpenApiExample LoadExample(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("Example");
+            var mapNode = node.CheckMapNode("example");
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)

@@ -10,6 +10,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiEncodingTests
     {
         public static OpenApiEncoding BasicEncoding = new OpenApiEncoding();
