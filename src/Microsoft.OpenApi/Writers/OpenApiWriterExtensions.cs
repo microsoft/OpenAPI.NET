@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
+using System.Collections;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -123,6 +124,11 @@ namespace Microsoft.OpenApi.Writers
         {
             if (value != null)
             {
+                IEnumerable values = value as IEnumerable;
+                if (values != null && !values.GetEnumerator().MoveNext() )
+                {
+                    return;  // Don't render optional empty collections
+                }
                 writer.WriteRequiredObject(name, value, action);
             }
         }
