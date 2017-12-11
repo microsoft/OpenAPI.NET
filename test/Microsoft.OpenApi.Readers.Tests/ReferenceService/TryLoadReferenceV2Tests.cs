@@ -3,7 +3,6 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -36,10 +35,10 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
                 rootNode = new RootNode(context, diagnostic, yamlDocument);
             }
-        
+
             context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
-                
-            var reference = new OpenApiReference()
+
+            var reference = new OpenApiReference
             {
                 Type = ReferenceType.Schema,
                 Id = "SampleObject"
@@ -50,30 +49,30 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
-               new OpenApiSchema()
-               {
-                   Required =
-                   {
-                       "id",
-                       "name"
-                   },
-                   Properties =
-                   {
-                       ["id"] = new OpenApiSchema()
-                       {
-                           Type = "integer",
-                           Format = "int64"
-                       },
-                       ["name"] = new OpenApiSchema()
-                       {
-                           Type = "string"
-                       },
-                       ["tag"] = new OpenApiSchema()
-                       {
-                           Type = "string"
-                       }
-                   }
-               } 
+                new OpenApiSchema
+                {
+                    Required =
+                    {
+                        "id",
+                        "name"
+                    },
+                    Properties =
+                    {
+                        ["id"] = new OpenApiSchema
+                        {
+                            Type = "integer",
+                            Format = "int64"
+                        },
+                        ["name"] = new OpenApiSchema
+                        {
+                            Type = "string"
+                        },
+                        ["tag"] = new OpenApiSchema
+                        {
+                            Type = "string"
+                        }
+                    }
+                }
             );
         }
 
@@ -96,7 +95,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
             context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
 
-            var reference = new OpenApiReference()
+            var reference = new OpenApiReference
             {
                 Type = ReferenceType.Parameter,
                 Id = "skipParam"
@@ -104,12 +103,11 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
             // Act
             context.ReferenceService.TryLoadReference(reference, out var referencedObject);
-            
+
             // Assert
             referencedObject.ShouldBeEquivalentTo(
-                new OpenApiParameter()
+                new OpenApiParameter
                 {
-
                     Name = "skip",
                     In = ParameterLocation.Query,
                     Description = "number of items to skip",
@@ -141,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             }
 
             context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
-            var reference = new OpenApiReference()
+            var reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
                 Id = "api_key_sample"
@@ -152,7 +150,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
-                new OpenApiSecurityScheme()
+                new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.ApiKey,
                     Name = "api_key",
@@ -180,7 +178,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
             context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
 
-            var reference = new OpenApiReference()
+            var reference = new OpenApiReference
             {
                 Type = ReferenceType.Response,
                 Id = "NotFound"
@@ -191,7 +189,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
-                new OpenApiResponse()
+                new OpenApiResponse
                 {
                     Description = "Entity not found."
                 }
@@ -217,7 +215,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
             context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
 
-            var reference = new OpenApiReference()
+            var reference = new OpenApiReference
             {
                 Type = ReferenceType.Response,
                 Id = "GeneralError"
@@ -228,16 +226,16 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
-                new OpenApiResponse()
+                new OpenApiResponse
                 {
                     Description = "General Error",
                     Content =
                     {
-                        ["application/json"] = new OpenApiMediaType()
+                        ["application/json"] = new OpenApiMediaType
                         {
                             Schema = new OpenApiSchema
                             {
-                                Reference = new OpenApiReference()
+                                Reference = new OpenApiReference
                                 {
                                     Type = ReferenceType.Schema,
                                     Id = "SampleObject2"
@@ -249,11 +247,11 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                                 },
                                 Properties =
                                 {
-                                    ["name"] = new OpenApiSchema()
+                                    ["name"] = new OpenApiSchema
                                     {
                                         Type = "string"
                                     },
-                                    ["tag"] = new OpenApiSchema()
+                                    ["tag"] = new OpenApiSchema
                                     {
                                         Type = "string"
                                     }
