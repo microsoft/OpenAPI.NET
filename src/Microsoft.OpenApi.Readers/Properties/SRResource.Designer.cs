@@ -88,11 +88,20 @@ namespace Microsoft.OpenApi.Readers.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unknown type of $ref &apos;{0}&apos; at &apos;{1}&apos;..
+        ///   Looks up a localized string similar to Unknown type of $ref &apos;{0}&apos; at &apos;{1}&apos; for V2 document..
         /// </summary>
-        internal static string ReferenceHasInvalidValue {
+        internal static string ReferenceV2HasInvalidValue {
             get {
-                return ResourceManager.GetString("ReferenceHasInvalidValue", resourceCulture);
+                return ResourceManager.GetString("ReferenceV2HasInvalidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown type of $ref &apos;{0}&apos; at &apos;{1}&apos; for V3 document..
+        /// </summary>
+        internal static string ReferenceV3HasInvalidValue {
+            get {
+                return ResourceManager.GetString("ReferenceV3HasInvalidValue", resourceCulture);
             }
         }
     }

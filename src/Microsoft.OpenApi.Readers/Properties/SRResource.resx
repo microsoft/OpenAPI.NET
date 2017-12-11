@@ -126,7 +126,10 @@
   <data name="ReferenceHasInvalidFormat" xml:space="preserve">
     <value>The reference string '{0}' has invalid format.</value>
   </data>
-  <data name="ReferenceHasInvalidValue" xml:space="preserve">
-    <value>Unknown type of $ref '{0}' at '{1}'.</value>
+  <data name="ReferenceV2HasInvalidValue" xml:space="preserve">
+    <value>Unknown type of $ref '{0}' at '{1}' for V2 document.</value>
+  </data>
+  <data name="ReferenceV3HasInvalidValue" xml:space="preserve">
+    <value>Unknown type of $ref '{0}' at '{1}' for V3 document.</value>
   </data>
 </root>
