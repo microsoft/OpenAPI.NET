@@ -28,6 +28,7 @@ namespace Microsoft.OpenApi.Readers
             var reader = new StringReader(yamlString);
             var yamlStream = new YamlStream();
             yamlStream.Load(reader);
+
             var yamlDocument = yamlStream.Documents.First();
             return yamlDocument.RootNode;
         }

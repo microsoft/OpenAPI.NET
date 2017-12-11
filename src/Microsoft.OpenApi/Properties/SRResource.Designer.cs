@@ -196,15 +196,6 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The reference type &apos;{0}&apos; does not suppoted in Open API v2.0..
-        /// </summary>
-        internal static string ReferenceTypeNotSupportedV2 {
-            get {
-                return ResourceManager.GetString("ReferenceTypeNotSupportedV2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The runtime expression &apos;{0}&apos; has invalid format..
         /// </summary>
         internal static string RuntimeExpressionHasInvalidFormat {

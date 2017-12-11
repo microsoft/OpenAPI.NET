@@ -1,0 +1,4 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securitySchemeObject
+type: apiKey
+name: api_key
+in: header

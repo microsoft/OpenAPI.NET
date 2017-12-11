@@ -3,6 +3,7 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "swagger", (o, n) =>
                 {
-                    /* Ignore it */
+                    o.SpecVersion = new Version(2, 0);
                 }
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
@@ -31,10 +32,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 "schemes", (o, n) => n.Context.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
-                        s =>
-                        {
-                            return s.GetScalarValue();
-                        }))
+                        s => s.GetScalarValue()))
             },
             {
                 "consumes",

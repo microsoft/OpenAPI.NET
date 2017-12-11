@@ -6,5 +6,4 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Microsoft.OpenApi.Tests")]
-
 [assembly: InternalsVisibleTo("Microsoft.OpenApi.Readers.Tests")]

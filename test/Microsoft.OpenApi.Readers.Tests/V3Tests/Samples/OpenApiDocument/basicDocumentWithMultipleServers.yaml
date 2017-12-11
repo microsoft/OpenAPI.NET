@@ -1,0 +1,11 @@
+﻿openapi : 3.0.0
+info:
+    title: The API
+    version: 0.9.1
+servers:
+  - url: http://www.example.org/api
+    description: The http endpoint
+  - url: https://www.example.org/api
+    description: The https endpoint
+paths: {}
+

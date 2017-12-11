@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {"authorizationUrl", (o, n) => o.AuthorizationUrl = new Uri(n.GetScalarValue())},
                 {"tokenUrl", (o, n) => o.TokenUrl = new Uri(n.GetScalarValue())},
                 {"refreshUrl", (o, n) => o.RefreshUrl = new Uri(n.GetScalarValue())},
-                {"scopes", (o, n) => o.Scopes = n.CreateMap(LoadString)}
+                {"scopes", (o, n) => o.Scopes = n.CreateSimpleMap(LoadString)}
             };
 
         private static readonly PatternFieldMap<OpenApiOAuthFlow> OAuthFlowPatternFields =

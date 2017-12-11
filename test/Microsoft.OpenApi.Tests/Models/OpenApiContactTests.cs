@@ -13,6 +13,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiContactTests
     {
         public static OpenApiContact BasicContact = new OpenApiContact();

@@ -1,0 +1,51 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
+# Add required properties in the Open API document object to avoid errors
+openapi: 3.0.0
+info:
+  title: Simple Document
+  version: 0.9.1
+paths: { }
+components:
+  schemas:
+    Pet:
+      type: object
+      discriminator:
+        propertyName: petType
+      properties:
+        name:
+          type: string
+        petType:
+          type: string
+      required:
+      - name
+      - petType
+    Cat:  ## "Cat" will be used as the discriminator value
+      description: A representation of a cat
+      allOf:
+      - $ref: '#/components/schemas/Pet'
+      - type: object
+        properties:
+          huntingSkill:
+            type: string
+            description: The measured skill for hunting
+            enum:
+            - clueless
+            - lazy
+            - adventurous
+            - aggressive
+        required:
+        - huntingSkill
+    Dog:  ## "Dog" will be used as the discriminator value
+      description: A representation of a dog
+      allOf:
+      - $ref: '#/components/schemas/Pet'
+      - type: object
+        properties:
+          packSize:
+            type: integer
+            format: int32
+            description: the size of the pack the dog is from
+            default: 0
+            minimum: 0
+        required:
+        - packSize
