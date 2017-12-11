@@ -61,14 +61,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (Double.TryParse(value, out var dblValue))
             {
-                return new OpenApiDouble(dblValue);
+                return new OpenApiDouble(dblValue); // Note(darrmi): This may be better as decimal.  Further investigation required.
             }
 
             if (DateTime.TryParse(value, out var datetimeValue))
             {
                 return new OpenApiDateTime(datetimeValue);
             }
-            // TODO: add more codes to identify each primitive types
 
 
             // if we can't identify the type of value, return it as string.
