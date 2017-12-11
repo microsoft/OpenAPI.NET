@@ -40,7 +40,6 @@ paths: {}",
 
             openApiDoc.ShouldBeEquivalentTo(new OpenApiDocument()
             {
-                SpecVersion = new Version(3, 0, 0),
                 Info = new OpenApiInfo
                 {
 
@@ -66,7 +65,6 @@ paths: {}",
 
                 openApiDoc.ShouldBeEquivalentTo(new OpenApiDocument()
                 {
-                    SpecVersion = new Version(3,0,0),
                     Info = new OpenApiInfo()
                     {
                         Title = "The API",
@@ -98,7 +96,6 @@ paths: {}",
 
                 openApiDoc.ShouldBeEquivalentTo(new OpenApiDocument()
                 {
-                    SpecVersion = new Version(3, 0, 0),
                     Info = new OpenApiInfo
                     {
                         Version = "0.9"
@@ -124,7 +121,6 @@ paths: {}",
 
                 openApiDoc.ShouldBeEquivalentTo(new OpenApiDocument()
                 {
-                    SpecVersion = new Version(3, 0, 0),
                     Info = new OpenApiInfo
                     {
 
@@ -253,7 +249,6 @@ paths: {}",
 
                 var expected = new OpenApiDocument()
                 {
-                    SpecVersion = new Version(3, 0, 0),
                     Info = new OpenApiInfo()
                     {
                         Version = "1.0.0",
@@ -711,7 +706,6 @@ paths: {}",
 
                 var expected = new OpenApiDocument()
                 {
-                    SpecVersion = new Version(3, 0, 0),
                     Info = new OpenApiInfo()
                     {
                         Version = "1.0.0",
