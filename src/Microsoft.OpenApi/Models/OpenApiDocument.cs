@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An element to hold various schemas for the specification.
         /// </summary>
-        public OpenApiComponents Components { get; set; }
+        public OpenApiComponents Components { get; set; } = new OpenApiComponents();
 
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.

@@ -18,6 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Theory]
         [InlineData("minimal")]
         [InlineData("basic")]
+      //  [InlineData("definitions")]  Currently broken due to V3 references not behaving the same as V2
         public void EquivalentV2AndV3DocumentsShouldProductEquivalentObjects(string fileName)
         {
             using (var streamV2 = File.OpenRead(Path.Combine(SampleFolderPath, $"{fileName}.v2.yaml")))
