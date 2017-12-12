@@ -142,6 +142,14 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
+            SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
             writer.WriteStartObject();
 
             // name
@@ -205,6 +213,14 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
+            SerializeAsV2WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        {
             writer.WriteStartObject();
 
             // name
@@ -269,7 +285,7 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
-        
+
         private bool IsBodyParameter()
         {
             if (this is BodyParameter)
@@ -290,7 +306,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var parameter = (BodyParameter)this;
 
-                return 
+                return
                     parameter.Format.Contains("application/x-www-form-urlencoded") ||
                     parameter.Format.Contains("multipart/form-data");
             }

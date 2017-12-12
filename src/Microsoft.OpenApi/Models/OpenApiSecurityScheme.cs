@@ -86,6 +86,14 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
+            SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
             writer.WriteStartObject();
 
             // type
@@ -144,6 +152,14 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
+            SerializeAsV2WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        {
             if (Type == SecuritySchemeType.Http && Scheme != OpenApiConstants.Basic)
             {
                 // Bail because V2 does not support non-basic HTTP scheme
