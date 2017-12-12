@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "examples", (o, n) =>
                 {
-                    OpenApiV2Deserializer.LoadExamples(o,n);
+                    LoadExamples(o,n);
                 }
             },
             {
@@ -70,6 +70,37 @@ namespace Microsoft.OpenApi.Readers.V2
                     response.Content.Add(mt, mediaType);
                 }
             }
+        }
+
+        private static void LoadExamples(OpenApiResponse response, ParseNode node)
+        {
+            var mapNode = node.CheckMapNode("examples");
+            foreach (var mediaTypeNode in mapNode)
+            {
+                LoadExample(response, mediaTypeNode.Name, mediaTypeNode.Value);
+            }
+        }
+
+        private static void LoadExample(OpenApiResponse response, string mediaType, ParseNode node)
+        {
+            var exampleNode = node.CreateAny();
+
+            if (response.Content == null)
+            {
+                response.Content = new Dictionary<string, OpenApiMediaType>();
+            }
+            OpenApiMediaType mediaTypeObject;
+            if (response.Content.ContainsKey(mediaType))
+            {
+                mediaTypeObject = response.Content[mediaType];
+            }
+            else
+            {
+                mediaTypeObject = new OpenApiMediaType();
+                response.Content.Add(mediaType, mediaTypeObject);
+            }
+            mediaTypeObject.Example = exampleNode;
+
         }
 
         public static OpenApiResponse LoadResponse(ParseNode node)
