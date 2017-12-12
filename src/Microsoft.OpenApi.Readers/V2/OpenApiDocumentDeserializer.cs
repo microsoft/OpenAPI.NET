@@ -43,7 +43,11 @@ namespace Microsoft.OpenApi.Readers.V2
                 "definitions",
                 (o, n) =>
                 {
-                    o.Components = new OpenApiComponents();
+                    if (o.Components == null)
+                    {
+                        o.Components = new OpenApiComponents();
+                    }
+
                     o.Components.Schemas = n.CreateMapWithReference(
                         ReferenceType.Schema,
                         "#/definitions/",
@@ -54,7 +58,11 @@ namespace Microsoft.OpenApi.Readers.V2
                 "parameters",
                 (o, n) =>
                 {
-                    o.Components = new OpenApiComponents();
+                    if (o.Components == null)
+                    {
+                        o.Components = new OpenApiComponents();
+                    }
+
                     o.Components.Parameters = n.CreateMapWithReference(
                         ReferenceType.Parameter,
                         "#/parameters/",
@@ -64,14 +72,22 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "responses", (o, n) =>
                 {
-                    o.Components = new OpenApiComponents();
+                    if (o.Components == null)
+                    {
+                        o.Components = new OpenApiComponents();
+                    }
+
                     o.Components.Responses = n.CreateMap(LoadResponse);
                 }
             },
             {
                 "securityDefinitions", (o, n) =>
                 {
-                    o.Components = new OpenApiComponents();
+                    if (o.Components == null)
+                    {
+                        o.Components = new OpenApiComponents();
+                    }
+
                     o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme);
                 }
             },

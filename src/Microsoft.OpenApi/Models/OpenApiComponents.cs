@@ -79,31 +79,31 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // schemas
-            writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, (w, s) => s.SerializeAsV3WithoutReference(w));
 
             // responses
-            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV3WithoutReference(w));
 
             // parameters
-            writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV3WithoutReference(w));
 
             // examples
-            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3WithoutReference(w));
 
             // requestBodies
-            writer.WriteOptionalMap(OpenApiConstants.RequestBodies, RequestBodies, (w, r) => r.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.RequestBodies, RequestBodies, (w, r) => r.SerializeAsV3WithoutReference(w));
 
             // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3WithoutReference(w));
 
             // securitySchemes
-            writer.WriteOptionalMap(OpenApiConstants.SecuritySchemes, SecuritySchemes, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.SecuritySchemes, SecuritySchemes, (w, s) => s.SerializeAsV3WithoutReference(w));
 
             // links
-            writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, link) => link.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, link) => link.SerializeAsV3WithoutReference(w));
 
             // callbacks
-            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.SerializeAsV3WithoutReference(w));
 
             // extensions
             writer.WriteExtensions(Extensions);

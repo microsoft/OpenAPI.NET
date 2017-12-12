@@ -5,9 +5,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -107,6 +109,19 @@ namespace Microsoft.OpenApi.Tests.Models
             Type = SecuritySchemeType.OpenIdConnect,
             Scheme = "openIdConnectUrl",
             OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
+        };
+
+        public static OpenApiSecurityScheme ReferencedSecurityScheme = new OpenApiSecurityScheme
+        {
+            Description = "description1",
+            Type = SecuritySchemeType.OpenIdConnect,
+            Scheme = "openIdConnectUrl",
+            OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
+            Reference = new OpenApiReference()
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "sampleSecurityScheme"
+            }
         };
 
         [Fact]
@@ -275,6 +290,57 @@ in: query";
 
             // Act
             var actual = OpenIdConnectSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedSecuritySchemeAsV3JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""sampleSecurityScheme"": null
+}";
+
+            // Act
+            // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme 
+            // as property name.
+            writer.WriteStartObject();
+            ReferencedSecurityScheme.SerializeAsV3(writer);
+            writer.WriteNull();
+            writer.WriteEndObject();
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedSecuritySchemeAsV3JsonWithoutReferenceWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""type"": ""openIdConnect"",
+  ""description"": ""description1"",
+  ""openIdConnectUrl"": ""https://example.com/openIdConnect""
+}";
+
+            // Act
+            ReferencedSecurityScheme.SerializeAsV3WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

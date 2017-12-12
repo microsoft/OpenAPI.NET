@@ -231,7 +231,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             var actual = BasicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
-            _output.WriteLine(actual);
+            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -301,7 +301,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             var actual = AdvancedOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
-            _output.WriteLine(actual);
+            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -384,7 +384,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             var actual = AdvancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
-            _output.WriteLine(actual);
+            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -403,7 +403,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             var actual = BasicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
-            _output.WriteLine(actual);
+            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -469,7 +469,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             var actual = AdvancedOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
-            _output.WriteLine(actual);
+            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -548,7 +548,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             var actual = AdvancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
-            _output.WriteLine(actual);
+            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

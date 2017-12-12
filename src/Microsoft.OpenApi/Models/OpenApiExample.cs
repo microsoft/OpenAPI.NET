@@ -62,34 +62,51 @@ namespace Microsoft.OpenApi.Models
             if (Reference != null)
             {
                 Reference.SerializeAsV3(writer);
+                return;
             }
-            else
-            {
-                writer.WriteStartObject();
 
-                // summary
-                writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            SerializeAsV3WithoutReference(writer);
+        }
 
-                // description
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
+            writer.WriteStartObject();
 
-                // value
-                writer.WriteOptionalObject(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));
+            // summary
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
 
-                // externalValue
-                writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
-                // extensions
-                writer.WriteExtensions(Extensions);
+            // value
+            writer.WriteOptionalObject(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));
 
-                writer.WriteEndObject();
-            }
+            // externalValue
+            writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
+        {
+            // Example object of this form does not exist in V2.
+            // V2 Example object requires knowledge of media type and exists only
+            // in Response object, so it will be serialized as a part of the Response object.
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             // Example object of this form does not exist in V2.
             // V2 Example object requires knowledge of media type and exists only

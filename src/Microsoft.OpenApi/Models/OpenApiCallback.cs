@@ -68,28 +68,45 @@ namespace Microsoft.OpenApi.Models
             if (Reference != null)
             {
                 Reference.SerializeAsV3(writer);
+                return;
             }
-            else
+            
+            SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
+            writer.WriteStartObject();
+
+            // path items
+            foreach (var item in PathItems)
             {
-                writer.WriteStartObject();
-
-                // path items
-                foreach (var item in PathItems)
-                {
-                    writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => p.SerializeAsV3(w));
-                }
-
-                // extensions
-                writer.WriteExtensions(Extensions);
-
-                writer.WriteEndObject();
+                writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => p.SerializeAsV3(w));
             }
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiCallback"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
+        {
+            // Callback object does not exist in V2.
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             // Callback object does not exist in V2.
         }

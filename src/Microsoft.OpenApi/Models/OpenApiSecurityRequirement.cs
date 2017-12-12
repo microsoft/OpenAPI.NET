@@ -45,6 +45,14 @@ namespace Microsoft.OpenApi.Models
                 var securityScheme = securitySchemeAndScopesValuePair.Key;
                 var scopes = securitySchemeAndScopesValuePair.Value;
 
+                if (securityScheme.Reference == null)
+                {
+                    // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
+                    // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
+                    // string to output.
+                    continue;
+                }
+
                 securityScheme.SerializeAsV3(writer);
 
                 writer.WriteStartArray();
@@ -76,6 +84,14 @@ namespace Microsoft.OpenApi.Models
             {
                 var securityScheme = securitySchemeAndScopesValuePair.Key;
                 var scopes = securitySchemeAndScopesValuePair.Value;
+
+                if (securityScheme.Reference == null)
+                {
+                    // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
+                    // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
+                    // string to output.
+                    continue;
+                }
 
                 securityScheme.SerializeAsV2(writer);
 

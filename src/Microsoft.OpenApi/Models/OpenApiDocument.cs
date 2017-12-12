@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Models
                 (w, s) => s.SerializeAsV3(w));
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV3WithoutReference(w));
 
             // external docs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
@@ -126,19 +126,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV2(w));
 
             // definitions
-            writer.WriteOptionalMap(OpenApiConstants.Definitions, Components?.Schemas, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Definitions, Components?.Schemas, (w, s) => s.SerializeAsV2WithoutReference(w));
 
             // parameters
-            writer.WriteOptionalMap(OpenApiConstants.Parameters, Components?.Parameters, (w, p) => p.SerializeAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Parameters, Components?.Parameters, (w, p) => p.SerializeAsV2WithoutReference(w));
 
             // responses
-            writer.WriteOptionalMap(OpenApiConstants.Responses, Components?.Responses, (w, r) => r.SerializeAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Responses, Components?.Responses, (w, r) => r.SerializeAsV2WithoutReference(w));
 
             // securityDefinitions
-            writer.WriteOptionalMap(
-                OpenApiConstants.SecurityDefinitions,
-                Components?.SecuritySchemes,
-                (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.SecurityDefinitions, Components?.SecuritySchemes, (w, s) => s.SerializeAsV2WithoutReference(w));
 
             // security
             writer.WriteOptionalCollection(
@@ -147,7 +144,7 @@ namespace Microsoft.OpenApi.Models
                 (w, s) => s.SerializeAsV2(w));
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2WithoutReference(w));
 
             // externalDocs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));

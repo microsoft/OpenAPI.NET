@@ -48,11 +48,20 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            // Writing tag as reference should be handled in the caller given that
-            // tag should always be written as string (except at the time of definition).
-            // regardless of whether Pointer exists. In the context of this model,
-            // we have no information on whether this is the time of definition.
+            if (Reference != null)
+            {
+                Reference.SerializeAsV3(writer);
+                return;
+            }
 
+            writer.WriteValue(Name);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
             writer.WriteStartObject();
 
             // name
@@ -80,10 +89,20 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            // Writing tag as reference should be handled in the caller given that
-            // tag should always be written as string (except at the time of definition).
-            // regardless of whether Pointer exists. In the context of this model,
-            // we have no information on whether this is the time of definition.
+            if (Reference != null)
+            {
+                Reference.SerializeAsV3(writer);
+                return;
+            }
+
+            writer.WriteValue(Name);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        {
             writer.WriteStartObject();
 
             // name

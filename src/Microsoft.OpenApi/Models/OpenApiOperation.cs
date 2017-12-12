@@ -124,9 +124,7 @@ namespace Microsoft.OpenApi.Models
                 Tags,
                 (w, t) =>
                 {
-                    // Handle tag writing here instead of in OpenApiTag since we also need to ensure
-                    // that tag is written as string regardless of whether reference exists.
-                    w.WriteValue(t.Reference != null ? t.Reference.Id : t.Name);
+                    t.SerializeAsV2(w);
                 });
 
             // summary
@@ -186,9 +184,7 @@ namespace Microsoft.OpenApi.Models
                 Tags,
                 (w, t) =>
                 {
-                    // Handle tag writing here instead of in OpenApiTag since we also need to ensure
-                    // that tag is written as string regardless of whether reference exists.
-                    w.WriteValue(t.Reference != null ? t.Reference.Id : t.Name);
+                    t.SerializeAsV3(w);
                 });
 
             // summary

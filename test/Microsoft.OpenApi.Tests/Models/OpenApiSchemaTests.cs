@@ -5,10 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -140,6 +142,29 @@ namespace Microsoft.OpenApi.Tests.Models
             ExternalDocs = new OpenApiExternalDocs()
             {
                 Url = new Uri("http://example.com/externalDocs")
+            }
+        };
+
+        public static OpenApiSchema ReferencedSchema = new OpenApiSchema
+        {
+            Title = "title1",
+            MultipleOf = 3,
+            Maximum = 42,
+            ExclusiveMinimum = true,
+            Minimum = 10,
+            Default = new OpenApiInteger(15),
+            Type = "integer",
+
+            Nullable = true,
+            ExternalDocs = new OpenApiExternalDocs()
+            {
+                Url = new Uri("http://example.com/externalDocs")
+            },
+
+            Reference = new OpenApiReference()
+            {
+                Type = ReferenceType.Schema,
+                Id = "schemaObject1"
             }
         };
         
@@ -279,6 +304,60 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = AdvancedSchemaWithAllOf.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedSchemaAsV3WithoutReferenceJsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var expected = @"{
+  ""title"": ""title1"",
+  ""multipleOf"": 3,
+  ""maximum"": 42,
+  ""minimum"": 10,
+  ""exclusiveMinimum"": true,
+  ""type"": ""integer"",
+  ""default"": 15,
+  ""nullable"": true,
+  ""externalDocs"": {
+    ""url"": ""http://example.com/externalDocs""
+  }
+}";
+
+            // Act
+            ReferencedSchema.SerializeAsV3WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedSchemaAsV3JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var expected = @"{
+  ""$ref"": ""#/components/schemas/schemaObject1""
+}";
+
+            // Act
+            ReferencedSchema.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
