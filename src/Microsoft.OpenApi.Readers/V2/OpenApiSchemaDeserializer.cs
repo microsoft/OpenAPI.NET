@@ -148,13 +148,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "description", (o, n) =>
                 {
-                    o.Type = n.GetScalarValue();
+                    o.Description = n.GetScalarValue();
                 }
             },
             {
                 "format", (o, n) =>
                 {
-                    o.Description = n.GetScalarValue();
+                    o.Format = n.GetScalarValue();
                 }
             },
             {

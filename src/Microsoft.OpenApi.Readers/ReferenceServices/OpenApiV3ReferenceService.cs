@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 default:
                     throw new OpenApiException(
                         string.Format(
-                            SRResource.ReferenceHasInvalidValue,
+                            SRResource.ReferenceV3HasInvalidValue,
                             reference.Type,
                             componentJsonPointer));
             }

@@ -18,6 +18,8 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
+        private static ParameterLocation? _in;
+
         private static readonly FixedFieldMap<OpenApiParameter> ParameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
             {
@@ -178,6 +180,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 p.Schema = new OpenApiSchema();
             }
+
             return p.Schema;
         }
 
@@ -187,6 +190,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 p.Schema = new OpenApiSchema();
             }
+
             return p.Schema;
         }
 
@@ -195,6 +199,8 @@ namespace Microsoft.OpenApi.Readers.V2
             var value = n.GetScalarValue();
             switch (value)
             {
+                // TODO: There could be multiple body/form parameters, so setting it to a global storage
+                // will overwrite the old parameter. Need to handle this on a per-parameter basis.
                 case "body":
                     n.Context.SetTempStorage("bodyParameter", o);
                     break;
@@ -208,13 +214,17 @@ namespace Microsoft.OpenApi.Readers.V2
                     formParameters.Add(o);
                     break;
                 default:
-                    o.In = value.GetEnumFromDisplayName<ParameterLocation>();
+                    _in = value.GetEnumFromDisplayName<ParameterLocation>();
+                    o.In = _in;
                     break;
             }
         }
 
         public static OpenApiParameter LoadParameter(ParseNode node)
         {
+            // Reset the local variables every time this method is called.
+            _in = null;
+
             var mapNode = node.CheckMapNode("parameter");
 
             var pointer = mapNode.GetReferencePointer();
@@ -234,7 +244,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 node.Context.SetTempStorage("schema", null);
             }
 
-            if (parameter.In == 0)
+            if (_in == null)
             {
                 return null; // Don't include Form or Body parameters in OpenApiOperation.Parameters list
             }

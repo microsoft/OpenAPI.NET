@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         /// REQUIRED. The location of the parameter.
         /// Possible values are "query", "header", "path" or "cookie".
         /// </summary>
-        public ParameterLocation In { get; set; }
+        public ParameterLocation? In { get; set; }
 
         /// <summary>
         /// A brief description of the parameter. This could contain examples of use.

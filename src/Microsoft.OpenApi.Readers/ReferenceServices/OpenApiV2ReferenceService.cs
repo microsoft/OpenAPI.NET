@@ -91,45 +91,25 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             switch (reference.Type)
             {
                 case ReferenceType.Schema:
-                    referencedObject = OpenApiV3Deserializer.LoadSchema(node);
+                    referencedObject = OpenApiV2Deserializer.LoadSchema(node);
                     break;
 
                 case ReferenceType.Response:
-                    referencedObject = OpenApiV3Deserializer.LoadResponse(node);
+                    referencedObject = OpenApiV2Deserializer.LoadResponse(node);
                     break;
 
                 case ReferenceType.Parameter:
-                    referencedObject = OpenApiV3Deserializer.LoadParameter(node);
-                    break;
-
-                case ReferenceType.Example:
-                    referencedObject = OpenApiV3Deserializer.LoadExample(node);
-                    break;
-
-                case ReferenceType.RequestBody:
-                    referencedObject = OpenApiV3Deserializer.LoadRequestBody(node);
-                    break;
-
-                case ReferenceType.Header:
-                    referencedObject = OpenApiV3Deserializer.LoadHeader(node);
+                    referencedObject = OpenApiV2Deserializer.LoadParameter(node);
                     break;
 
                 case ReferenceType.SecurityScheme:
-                    referencedObject = OpenApiV3Deserializer.LoadSecurityScheme(node);
-                    break;
-
-                case ReferenceType.Link:
-                    referencedObject = OpenApiV3Deserializer.LoadLink(node);
-                    break;
-
-                case ReferenceType.Callback:
-                    referencedObject = OpenApiV3Deserializer.LoadCallback(node);
+                    referencedObject = OpenApiV2Deserializer.LoadSecurityScheme(node);
                     break;
 
                 default:
                     throw new OpenApiException(
                         string.Format(
-                            SRResource.ReferenceHasInvalidValue,
+                            SRResource.ReferenceV2HasInvalidValue,
                             reference.Type,
                             jsonPointer));
             }
@@ -205,9 +185,6 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 case ReferenceType.Response:
                     return "responses";
 
-                case ReferenceType.Header:
-                    return "headers";
-
                 case ReferenceType.Tag:
                     return "tags";
 
@@ -253,7 +230,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 {
                     if (reference.StartsWith("#"))
                     {
-                        // "$ref": "#/components/schemas/Pet"
+                        // "$ref": "#/definitions/Pet"
                         return ParseLocalReference(segments[1]);
                     }
 

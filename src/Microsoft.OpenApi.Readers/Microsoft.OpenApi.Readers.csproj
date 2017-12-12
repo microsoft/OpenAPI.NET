@@ -6,7 +6,7 @@
     <Company>Microsoft</Company>
     <Product>Microsoft.OpenApi.Readers</Product>
     <PackageId>Microsoft.OpenApi.Readers</PackageId>
-    <Version>1.0.0-beta007</Version>
+    <Version>1.0.0-beta008</Version>
     <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
     <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
@@ -36,12 +36,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\SRResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRResource.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\Resource.resx">
+    <EmbeddedResource Update="Properties\SRResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <LastGenOutput>SRResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

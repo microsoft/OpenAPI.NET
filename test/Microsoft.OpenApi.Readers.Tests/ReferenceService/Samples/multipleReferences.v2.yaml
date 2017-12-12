@@ -1,0 +1,77 @@
+# Certain parts of the documents taken from https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: API with multiple references
+  license:
+    name: MIT
+host: sample.host.com
+basePath: /v1
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /sample:
+    get:
+      summary: Sample operation
+definitions:
+  SampleObject:
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      tag:
+        type: string
+  SampleObject2:
+    description: Sample description
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      tag:
+        type: string
+responses:
+  NotFound:
+    description: Entity not found.
+  IllegalInput:
+    description: Illegal input for operation.
+  GeneralError:
+    description: General Error
+    schema:
+      $ref: '#/definitions/SampleObject2'
+parameters:
+  skipParam:
+    name: skip
+    in: query
+    description: number of items to skip
+    required: true
+    type: integer
+    format: int32
+  limitParam:
+    name: limit
+    in: query
+    description: max records to return
+    required: true
+    type: integer
+    format: int32
+securityDefinitions:
+  api_key_sample:
+    type: apiKey
+    name: api_key
+    in: header
+  oauth_sample:
+    type: oauth2
+    authorizationUrl: http://oauth.sample.org/
+    flow: implicit
+    scopes:
+      write:samples: modify samples
+      read:samples: read samples

@@ -66,8 +66,9 @@ namespace Microsoft.OpenApi.Readers.V2
                     {
                         Schema = schema
                     };
+                    
+                    response.Content.Add(mt, mediaType);
                 }
-                response.Content.Add(mt, mediaType);
             }
         }
 
