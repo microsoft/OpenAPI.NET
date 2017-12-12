@@ -1,0 +1,128 @@
+﻿// ------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
+// ------------------------------------------------------------
+
+using System.IO;
+using FluentAssertions;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Writers;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace Microsoft.OpenApi.Tests.Models
+{
+    [Collection("DefaultSettings")]
+    public class OpenApiHeaderTests
+    {
+        public static OpenApiHeader AdvancedHeader = new OpenApiHeader
+        {
+            Description = "sampleHeader",
+            Schema = new OpenApiSchema
+            {
+                Type = "integer",
+                Format = "int32"
+            }
+        };
+
+        public static OpenApiHeader ReferencedHeader = new OpenApiHeader
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.Header,
+                Id = "example1",
+            },
+            Description = "sampleHeader",
+            Schema = new OpenApiSchema
+            {
+                Type = "integer",
+                Format = "int32"
+            }
+        };
+
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiHeaderTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        [Fact]
+        public void SerializeAdvancedHeaderAsV3JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""description"": ""sampleHeader"",
+  ""schema"": {
+    ""type"": ""integer"",
+    ""format"": ""int32""
+  }
+}";
+
+            // Act
+            AdvancedHeader.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            _output.WriteLine(actual);
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedHeaderAsV3JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""$ref"": ""#/components/headers/example1""
+}";
+
+            // Act
+            ReferencedHeader.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            _output.WriteLine(actual);
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedHeaderAsV3JsonWithoutReferenceWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""description"": ""sampleHeader"",
+  ""schema"": {
+    ""type"": ""integer"",
+    ""format"": ""int32""
+  }
+}";
+
+            // Act
+            ReferencedHeader.SerializeAsV3WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            _output.WriteLine(actual);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+    }
+}
