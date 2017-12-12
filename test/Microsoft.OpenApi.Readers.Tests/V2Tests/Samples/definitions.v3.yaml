@@ -1,0 +1,18 @@
+﻿openapi: 3.0
+info: 
+  title: This is a simple example
+  version: 1.0.0
+paths:
+  '/':
+    get:
+      200: 
+        description: Ok
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simple'
+components:
+  schemas:
+    simple:
+      type: string
+        

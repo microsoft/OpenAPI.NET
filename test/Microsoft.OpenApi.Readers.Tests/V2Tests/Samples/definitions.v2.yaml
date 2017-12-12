@@ -1,0 +1,17 @@
+﻿swagger: 2.0
+info: 
+  title: This is a simple example
+  version: 1.0.0
+paths:
+  '/':
+    get:
+      produces:
+        - application/json
+      200: 
+        description: Ok
+        schema:
+          $ref: '#/definitions/simple'
+definitions:
+  simple:
+    type: string
+        
