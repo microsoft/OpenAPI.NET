@@ -177,4 +177,10 @@
   <data name="SourceExpressionHasInvalidFormat" xml:space="preserve">
     <value>The source expression '{0}' has invalid format.</value>
   </data>
+  <data name="Validation_PathItemMustBeginWithSlash" xml:space="preserve">
+    <value>The path item name '{0}' MUST begin with a slash.</value>
+  </data>
+  <data name="Validation_StringMustBeEmailAddress" xml:space="preserve">
+    <value>The string '{0}' MUST be in the format of an email address.</value>
+  </data>
 </root>
