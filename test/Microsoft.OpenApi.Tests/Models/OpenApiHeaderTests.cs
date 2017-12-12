@@ -124,5 +124,83 @@ namespace Microsoft.OpenApi.Tests.Models
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
+
+        [Fact]
+        public void SerializeAdvancedHeaderAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""description"": ""sampleHeader"",
+  ""schema"": {
+    ""format"": ""int32"",
+    ""type"": ""integer""
+  }
+}";
+
+            // Act
+            AdvancedHeader.SerializeAsV2(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            _output.WriteLine(actual);
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedHeaderAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""$ref"": ""#/headers/example1""
+}";
+
+            // Act
+            ReferencedHeader.SerializeAsV2(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            _output.WriteLine(actual);
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedHeaderAsV2JsonWithoutReferenceWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""description"": ""sampleHeader"",
+  ""schema"": {
+    ""format"": ""int32"",
+    ""type"": ""integer""
+  }
+}";
+
+            // Act
+            ReferencedHeader.SerializeAsV2WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            _output.WriteLine(actual);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
     }
 }
