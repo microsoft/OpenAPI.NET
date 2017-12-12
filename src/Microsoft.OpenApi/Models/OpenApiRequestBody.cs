@@ -55,31 +55,46 @@ namespace Microsoft.OpenApi.Models
             if (Reference != null)
             {
                 Reference.SerializeAsV3(writer);
+                return;
             }
-            else
-            {
-                writer.WriteStartObject();
 
-                // description
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+            SerializeAsV3WithoutReference(writer);
+        }
 
-                // content
-                writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
+            writer.WriteStartObject();
 
-                // required
-                writer.WriteProperty(OpenApiConstants.Required, Required, false);
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
-                // extensions
-                writer.WriteExtensions(Extensions);
+            // content
+            writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
 
-                writer.WriteEndObject();
-            }
+            // required
+            writer.WriteProperty(OpenApiConstants.Required, Required, false);
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
+        {
+            // RequestBody object does not exist in V2.
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             // RequestBody object does not exist in V2.
         }

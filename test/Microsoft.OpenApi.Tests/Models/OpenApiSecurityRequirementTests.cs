@@ -48,6 +48,39 @@ namespace Microsoft.OpenApi.Tests.Models
                 ] = new List<string>()
             };
 
+        public static OpenApiSecurityRequirement SecurityRequirementWithUnreferencedSecurityScheme =
+            new OpenApiSecurityRequirement
+            {
+                [
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
+                    }
+                ] = new List<string>
+                {
+                    "scope1",
+                    "scope2",
+                    "scope3",
+                },
+                [
+                    new OpenApiSecurityScheme
+                    {
+                        // This security scheme is unreferenced, so this key value pair cannot be serialized.
+                        Name = "brokenUnreferencedScheme"
+                    }
+                ] = new List<string>
+                {
+                    "scope4",
+                    "scope5",
+                },
+                [
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme3" }
+                    }
+                ] = new List<string>()
+            };
+
         [Fact]
         public void SerializeBasicSecurityRequirementAsV3JsonWorks()
         {
@@ -83,6 +116,79 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeSecurityRequirementWithReferencedSecuritySchemeAsV2JsonWorks()
+        {
+            // Arrange
+            var expected =
+                @"{
+  ""scheme1"": [
+    ""scope1"",
+    ""scope2"",
+    ""scope3""
+  ],
+  ""scheme2"": [
+    ""scope4"",
+    ""scope5""
+  ],
+  ""scheme3"": [ ]
+}";
+
+            // Act
+            var actual = SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV3JsonShouldSkipUnserializableKeyValuePair()
+        {
+            // Arrange
+            var expected =
+                @"{
+  ""scheme1"": [
+    ""scope1"",
+    ""scope2"",
+    ""scope3""
+  ],
+  ""scheme3"": [ ]
+}";
+
+            // Act
+            var actual = SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV2JsonShouldSkipUnserializableKeyValuePair()
+        {
+            // Arrange
+            var expected =
+                @"{
+  ""scheme1"": [
+    ""scope1"",
+    ""scope2"",
+    ""scope3""
+  ],
+  ""scheme3"": [ ]
+}";
+
+            // Act
+            var actual = SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

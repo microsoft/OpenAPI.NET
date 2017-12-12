@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// While relying on JSON Schema's defined formats, 
+        /// While relying on JSON Schema's defined formats,
         /// the OAS offers a few additional predefined formats.
         /// </summary>
         public string Format { get; set; }
@@ -100,10 +100,10 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Relevant only for Schema "properties" definitions. Declares the property as "write only".
-        /// Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response. 
-        /// If the property is marked as writeOnly being true and is in the required list, 
+        /// Therefore, it MAY be sent as part of a request but SHOULD NOT be sent as part of the response.
+        /// If the property is marked as writeOnly being true and is in the required list,
         /// the required will take effect on the request only.
-        /// A property MUST NOT be marked as both readOnly and writeOnly being true. 
+        /// A property MUST NOT be marked as both readOnly and writeOnly being true.
         /// Default value is false.
         /// </summary>
         public bool WriteOnly { get; set; }
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Value MUST be an object and not an array. Inline or referenced schema MUST be of a Schema Object 
+        /// Value MUST be an object and not an array. Inline or referenced schema MUST be of a Schema Object
         /// and not a standard JSON Schema. items MUST be present if the type is array.
         /// </summary>
         public OpenApiSchema Items { get; set; }
@@ -177,20 +177,20 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
-        /// Value can be boolean or object. Inline or referenced schema 
+        /// Value can be boolean or object. Inline or referenced schema
         /// MUST be of a Schema Object and not a standard JSON Schema.
         /// </summary>
         public OpenApiSchema AdditionalProperties { get; set; }
 
         /// <summary>
-        /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate 
-        /// between other schemas which may satisfy the payload description. 
+        /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate
+        /// between other schemas which may satisfy the payload description.
         /// </summary>
         public OpenApiDiscriminator Discriminator { get; set; }
 
         /// <summary>
-        /// A free-form property to include an example of an instance for this schema. 
-        /// To represent examples that cannot be naturally represented in JSON or YAML, 
+        /// A free-form property to include an example of an instance for this schema.
+        /// To represent examples that cannot be naturally represented in JSON or YAML,
         /// a string value can be used to contain the example with escaping where necessary.
         /// </summary>
         public IOpenApiAny Example { get; set; }
@@ -211,13 +211,13 @@ namespace Microsoft.OpenApi.Models
         public OpenApiExternalDocs ExternalDocs { get; set; }
 
         /// <summary>
-        /// Specifies that a schema is deprecated and SHOULD be transitioned out of usage. 
+        /// Specifies that a schema is deprecated and SHOULD be transitioned out of usage.
         /// Default value is false.
         /// </summary>
         public bool Deprecated { get; set; }
 
         /// <summary>
-        /// This MAY be used only on properties schemas. It has no effect on root schemas. 
+        /// This MAY be used only on properties schemas. It has no effect on root schemas.
         /// Adds additional metadata to describe the XML representation of this property.
         /// </summary>
         public OpenApiXml Xml { get; set; }
@@ -248,6 +248,14 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
+            SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
             writer.WriteStartObject();
 
             // title
@@ -320,7 +328,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
 
             // additionalProperties
-            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(
+                OpenApiConstants.AdditionalProperties,
+                AdditionalProperties,
+                (w, s) => s.SerializeAsV3(w));
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -377,6 +388,14 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
+            SerializeAsV2WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        {
             writer.WriteStartObject();
             WriteAsSchemaProperties(writer);
             writer.WriteEndObject();
@@ -523,7 +542,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV2(w));
 
             // additionalProperties
-            writer.WriteOptionalObject(OpenApiConstants.AdditionalProperties, AdditionalProperties, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalObject(
+                OpenApiConstants.AdditionalProperties,
+                AdditionalProperties,
+                (w, s) => s.SerializeAsV2(w));
 
             // discriminator
             writer.WriteProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
