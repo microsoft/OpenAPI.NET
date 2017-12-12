@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -17,14 +15,15 @@ namespace Microsoft.OpenApi.Tests.Models
     public class OpenApiContactTests
     {
         public static OpenApiContact BasicContact = new OpenApiContact();
-        public static OpenApiContact AdvanceContact = new OpenApiContact()
+
+        public static OpenApiContact AdvanceContact = new OpenApiContact
         {
             Name = "API Support",
             Url = new Uri("http://www.example.com/support"),
             Email = "support@example.com",
             Extensions = new Dictionary<string, IOpenApiAny>
             {
-                { "x-internal-id", new OpenApiInteger(42) }
+                {"x-internal-id", new OpenApiInteger(42)}
             }
         };
 
@@ -33,11 +32,13 @@ namespace Microsoft.OpenApi.Tests.Models
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi3_0_0, OpenApiFormat.Yaml, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Yaml, "{ }")]
-        public void SerializeBasicContactWorks(OpenApiSpecVersion version,
-            OpenApiFormat format, string expected)
+        public void SerializeBasicContactWorks(
+            OpenApiSpecVersion version,
+            OpenApiFormat format,
+            string expected)
         {
             // Arrange & Act
-            string actual = BasicContact.Serialize(version, format);
+            var actual = BasicContact.Serialize(version, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -51,8 +52,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceContactAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = 
-@"{
+            var expected =
+                @"{
   ""name"": ""API Support"",
   ""url"": ""http://www.example.com/support"",
   ""email"": ""support@example.com"",
@@ -60,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvanceContact.SerializeAsJson(version);
+            var actual = AdvanceContact.SerializeAsJson(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -74,14 +75,14 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceContactAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = 
-@"name: API Support
+            var expected =
+                @"name: API Support
 url: http://www.example.com/support
 email: support@example.com
 x-internal-id: 42";
 
             // Act
-            string actual = AdvanceContact.SerializeAsYaml(version);
+            var actual = AdvanceContact.SerializeAsYaml(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -17,13 +15,6 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiSecuritySchemeTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiSecuritySchemeTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         public static OpenApiSecurityScheme ApiKeySecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
@@ -117,12 +108,19 @@ namespace Microsoft.OpenApi.Tests.Models
             Type = SecuritySchemeType.OpenIdConnect,
             Scheme = "openIdConnectUrl",
             OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
-            Reference = new OpenApiReference()
+            Reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
                 Id = "sampleSecurityScheme"
             }
         };
+
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiSecuritySchemeTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
 
         [Fact]
         public void SerializeApiKeySecuritySchemeAsV3JsonWorks()
@@ -138,7 +136,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = ApiKeySecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
-            
+
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -15,17 +13,18 @@ namespace Microsoft.OpenApi.Tests.Models
 {
     public class OpenApiLicenseTests
     {
-        public static OpenApiLicense BasicLicense = new OpenApiLicense()
+        public static OpenApiLicense BasicLicense = new OpenApiLicense
         {
             Name = "Apache 2.0"
         };
-        public static OpenApiLicense AdvanceLicense = new OpenApiLicense()
+
+        public static OpenApiLicense AdvanceLicense = new OpenApiLicense
         {
             Name = "Apache 2.0",
             Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html"),
             Extensions = new Dictionary<string, IOpenApiAny>
             {
-                { "x-copyright", new OpenApiString("Abc") }
+                {"x-copyright", new OpenApiString("Abc")}
             }
         };
 
@@ -35,13 +34,13 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected =
-@"{
+            var expected =
+                @"{
   ""name"": ""Apache 2.0""
 }";
 
             // Act
-            string actual = BasicLicense.SerializeAsJson(version);
+            var actual = BasicLicense.SerializeAsJson(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -55,10 +54,10 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = "name: Apache 2.0";
+            var expected = "name: Apache 2.0";
 
             // Act
-            string actual = BasicLicense.SerializeAsYaml(version);
+            var actual = BasicLicense.SerializeAsYaml(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -72,15 +71,15 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = 
-@"{
+            var expected =
+                @"{
   ""name"": ""Apache 2.0"",
   ""url"": ""http://www.apache.org/licenses/LICENSE-2.0.html"",
   ""x-copyright"": ""Abc""
 }";
 
             // Act
-            string actual = AdvanceLicense.SerializeAsJson(version);
+            var actual = AdvanceLicense.SerializeAsJson(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -94,13 +93,13 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
             // Arrange
-            string expected = 
-@"name: Apache 2.0
+            var expected =
+                @"name: Apache 2.0
 url: http://www.apache.org/licenses/LICENSE-2.0.html
 x-copyright: Abc";
 
             // Act
-            string actual = AdvanceLicense.SerializeAsYaml(version);
+            var actual = AdvanceLicense.SerializeAsYaml(version);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

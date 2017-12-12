@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using FluentAssertions;
@@ -15,12 +13,13 @@ namespace Microsoft.OpenApi.Tests.Models
     public class OpenApiMediaTypeTests
     {
         public static OpenApiMediaType BasicMediaType = new OpenApiMediaType();
-        public static OpenApiMediaType AdvanceMediaType = new OpenApiMediaType()
+
+        public static OpenApiMediaType AdvanceMediaType = new OpenApiMediaType
         {
             Example = new OpenApiInteger(42),
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
-                { "testEncoding", OpenApiEncodingTests.AdvanceEncoding }
+                {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
             }
         };
 
@@ -30,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicMediaTypeAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            string actual = BasicMediaType.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
+            var actual = BasicMediaType.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -42,8 +41,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceMediaTypeAsV3JsonWorks()
         {
             // Arrange
-            string expected = 
-@"{
+            var expected =
+                @"{
   ""example"": 42,
   ""encoding"": {
     ""testEncoding"": {
@@ -56,7 +55,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvanceMediaType.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvanceMediaType.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -68,8 +67,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceMediaTypeAsV3YamlWorks()
         {
             // Arrange
-            string expected = 
-@"example: 42
+            var expected =
+                @"example: 42
 encoding:
   testEncoding:
     contentType: 'image/png, image/jpeg'
@@ -78,7 +77,7 @@ encoding:
     allowReserved: true";
 
             // Act
-            string actual = AdvanceMediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvanceMediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.IO;
 using FluentAssertions;
@@ -25,9 +23,9 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "A complex object array response",
             Content =
             {
-                ["text/plain"] = new OpenApiMediaType()
+                ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new OpenApiSchema()
+                    Schema = new OpenApiSchema
                     {
                         Type = "array",
                         Items = new OpenApiSchema
@@ -39,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Headers =
             {
-                ["X-Rate-Limit-Limit"] = new OpenApiHeader()
+                ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
                     Schema = new OpenApiSchema
@@ -47,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Type = "integer"
                     }
                 },
-                ["X-Rate-Limit-Reset"] = new OpenApiHeader()
+                ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
                     Schema = new OpenApiSchema
@@ -60,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiResponse ReferencedResponse = new OpenApiResponse
         {
-            Reference = new OpenApiReference()
+            Reference = new OpenApiReference
             {
                 Type = ReferenceType.Response,
                 Id = "example1"
@@ -68,9 +66,9 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "A complex object array response",
             Content =
             {
-                ["text/plain"] = new OpenApiMediaType()
+                ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema = new OpenApiSchema()
+                    Schema = new OpenApiSchema
                     {
                         Type = "array",
                         Items = new OpenApiSchema
@@ -80,9 +78,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Headers = 
+            Headers =
             {
-                ["X-Rate-Limit-Limit"] = new OpenApiHeader()
+                ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
                     Schema = new OpenApiSchema
@@ -90,7 +88,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         Type = "integer"
                     }
                 },
-                ["X-Rate-Limit-Reset"] = new OpenApiHeader()
+                ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
                     Schema = new OpenApiSchema
@@ -278,7 +276,6 @@ headers:
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -325,8 +322,6 @@ headers:
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            
-
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -349,7 +344,6 @@ headers:
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -391,8 +385,6 @@ headers:
             ReferencedResponse.SerializeAsV2WithoutReference(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
-
-            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

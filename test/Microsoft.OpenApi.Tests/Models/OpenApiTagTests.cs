@@ -1,13 +1,10 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -20,27 +17,28 @@ namespace Microsoft.OpenApi.Tests.Models
     public class OpenApiTagTests
     {
         public static OpenApiTag BasicTag = new OpenApiTag();
-        public static OpenApiTag AdvancedTag = new OpenApiTag()
+
+        public static OpenApiTag AdvancedTag = new OpenApiTag
         {
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
             Extensions = new Dictionary<string, IOpenApiAny>
             {
-                { "x-tag-extension", new OpenApiNull() }
+                {"x-tag-extension", new OpenApiNull()}
             }
         };
 
-        public static OpenApiTag ReferencedTag = new OpenApiTag()
+        public static OpenApiTag ReferencedTag = new OpenApiTag
         {
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
             Extensions = new Dictionary<string, IOpenApiAny>
             {
-                { "x-tag-extension", new OpenApiNull() }
+                {"x-tag-extension", new OpenApiNull()}
             },
-            Reference = new OpenApiReference()
+            Reference = new OpenApiReference
             {
                 Type = ReferenceType.Tag,
                 Id = "pet"
@@ -66,7 +64,6 @@ namespace Microsoft.OpenApi.Tests.Models
             actual.Should().Be(expected);
         }
 
-
         [Fact]
         public void SerializeBasicTagAsV2JsonWithoutReferenceWorks()
         {
@@ -86,7 +83,6 @@ namespace Microsoft.OpenApi.Tests.Models
             actual.Should().Be(expected);
         }
 
-
         [Fact]
         public void SerializeBasicTagAsV3YamlWithoutReferenceWorks()
         {
@@ -104,7 +100,6 @@ namespace Microsoft.OpenApi.Tests.Models
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
-
 
         [Fact]
         public void SerializeBasicTagAsV2YamlWithoutReferenceWorks()
@@ -131,8 +126,8 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(outputStringWriter);
-            string expected = 
-@"{
+            var expected =
+                @"{
   ""name"": ""pet"",
   ""description"": ""Pets operations"",
   ""externalDocs"": {
@@ -147,7 +142,6 @@ namespace Microsoft.OpenApi.Tests.Models
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -160,7 +154,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(outputStringWriter);
-            string expected =
+            var expected =
                 @"{
   ""name"": ""pet"",
   ""description"": ""Pets operations"",
@@ -176,7 +170,6 @@ namespace Microsoft.OpenApi.Tests.Models
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -189,7 +182,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(outputStringWriter);
-            string expected =
+            var expected =
                 @"name: pet
 description: Pets operations
 externalDocs:
@@ -201,7 +194,6 @@ x-tag-extension: ";
             AdvancedTag.SerializeAsV3WithoutReference(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
-
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -215,7 +207,7 @@ x-tag-extension: ";
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiYamlWriter(outputStringWriter);
-            string expected =
+            var expected =
                 @"name: pet
 description: Pets operations
 externalDocs:
@@ -227,7 +219,6 @@ x-tag-extension: ";
             AdvancedTag.SerializeAsV2WithoutReference(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
-
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

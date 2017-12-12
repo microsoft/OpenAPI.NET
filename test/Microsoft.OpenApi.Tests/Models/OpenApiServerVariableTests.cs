@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using FluentAssertions;
@@ -14,7 +12,8 @@ namespace Microsoft.OpenApi.Tests.Models
     public class OpenApiServerVariableTests
     {
         public static OpenApiServerVariable BasicServerVariable = new OpenApiServerVariable();
-        public static OpenApiServerVariable AdvancedServerVariable = new OpenApiServerVariable()
+
+        public static OpenApiServerVariable AdvancedServerVariable = new OpenApiServerVariable
         {
             Default = "8443",
             Enum = new List<string>
@@ -31,7 +30,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicServerVariableAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            string actual = BasicServerVariable.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
+            var actual = BasicServerVariable.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -43,8 +42,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedServerVariableAsV3JsonWorks()
         {
             // Arrange
-            string expected = 
-@"{
+            var expected =
+                @"{
   ""default"": ""8443"",
   ""description"": ""test description"",
   ""enum"": [
@@ -54,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvancedServerVariable.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvancedServerVariable.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -66,15 +65,15 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedServerVariableAsV3YamlWorks()
         {
             // Arrange
-            string expected = 
-@"default: '8443'
+            var expected =
+                @"default: '8443'
 description: test description
 enum:
   - '8443'
   - '443'";
 
             // Act
-            string actual = AdvancedServerVariable.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvancedServerVariable.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

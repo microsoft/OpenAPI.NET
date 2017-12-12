@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.IO;
@@ -70,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         Type = SecuritySchemeType.ApiKey,
                         Name = "api_key",
-                        In=ParameterLocation.Header
+                        In = ParameterLocation.Header
                     });
             }
         }
@@ -125,9 +123,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows()
+                        Flows = new OpenApiOAuthFlows
                         {
-                            Implicit = new OpenApiOAuthFlow()
+                            Implicit = new OpenApiOAuthFlow
                             {
                                 AuthorizationUrl = new Uri("https://example.com/api/oauth/dialog"),
                                 Scopes =
