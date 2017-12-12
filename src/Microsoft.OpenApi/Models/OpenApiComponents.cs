@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -28,7 +26,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiParameter"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiParameter> Parameters { get; set; } = new Dictionary<string, OpenApiParameter>();
+        public IDictionary<string, OpenApiParameter> Parameters { get; set; } =
+            new Dictionary<string, OpenApiParameter>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
@@ -38,7 +37,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiRequestBody"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; } = new Dictionary<string, OpenApiRequestBody>();
+        public IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; } =
+            new Dictionary<string, OpenApiRequestBody>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiHeader"/> Objects.
@@ -48,7 +48,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } = new Dictionary<string, OpenApiSecurityScheme>();
+        public IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } =
+            new Dictionary<string, OpenApiSecurityScheme>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiLink"/> Objects.

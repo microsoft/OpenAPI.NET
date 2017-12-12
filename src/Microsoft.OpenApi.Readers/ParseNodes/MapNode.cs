@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections;
@@ -72,10 +70,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 n => new
                 {
                     key = n.Key.GetScalarValue(),
-                    value = n.Value as YamlMappingNode == null ?
-                        default(T) :
-                        map(new MapNode(Context, Diagnostic, n.Value as YamlMappingNode))
-
+                    value = n.Value as YamlMappingNode == null
+                        ? default(T)
+                        : map(new MapNode(Context, Diagnostic, n.Value as YamlMappingNode))
                 });
 
             return nodes.ToDictionary(k => k.key, v => v.value);

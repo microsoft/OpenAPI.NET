@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -30,7 +28,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
         /// </summary>
-        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } = new Dictionary<string, RuntimeExpressionAnyWrapper>();
+        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
+            new Dictionary<string, RuntimeExpressionAnyWrapper>();
 
         /// <summary>
         /// A literal value or {expression} to use as a request body when calling the target operation.

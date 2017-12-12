@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -79,7 +77,10 @@ namespace Microsoft.OpenApi.Models
             // operations
             foreach (var operation in Operations)
             {
-                writer.WriteOptionalObject(operation.Key.GetDisplayName(), operation.Value, (w, o) => o.SerializeAsV3(w));
+                writer.WriteOptionalObject(
+                    operation.Key.GetDisplayName(),
+                    operation.Value,
+                    (w, o) => o.SerializeAsV3(w));
             }
 
             // servers

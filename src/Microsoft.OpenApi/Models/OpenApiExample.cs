@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -27,16 +25,16 @@ namespace Microsoft.OpenApi.Models
         public string Description { get; set; }
 
         /// <summary>
-        /// Embedded literal example. The value field and externalValue field are mutually 
-        /// exclusive. To represent examples of media types that cannot naturally represented 
+        /// Embedded literal example. The value field and externalValue field are mutually
+        /// exclusive. To represent examples of media types that cannot naturally represented
         /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
         /// </summary>
         public IOpenApiAny Value { get; set; }
 
         /// <summary>
-        /// A URL that points to the literal example. 
-        /// This provides the capability to reference examples that cannot easily be 
-        /// included in JSON or YAML documents. 
+        /// A URL that points to the literal example.
+        /// This provides the capability to reference examples that cannot easily be
+        /// included in JSON or YAML documents.
         /// The value field and externalValue field are mutually exclusive.
         /// </summary>
         public string ExternalValue { get; set; }
@@ -49,10 +47,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Reference
-        {
-            get; set;
-        }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0

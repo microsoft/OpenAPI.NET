@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -49,7 +47,7 @@ namespace Microsoft.OpenApi.Models
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
-            
+
             // Writing tag as reference should be handled in the caller given that
             // tag should always be written as string (except at the time of definition).
             // regardless of whether Pointer exists. In the context of this model,
@@ -81,7 +79,7 @@ namespace Microsoft.OpenApi.Models
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
-            
+
             // Writing tag as reference should be handled in the caller given that
             // tag should always be written as string (except at the time of definition).
             // regardless of whether Pointer exists. In the context of this model,

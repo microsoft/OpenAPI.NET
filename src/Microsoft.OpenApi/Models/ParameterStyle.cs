@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Attributes;
 
@@ -15,43 +13,36 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Path-style parameters.
         /// </summary>
-        [Display("matrix")]
-        Matrix,
+        [Display("matrix")] Matrix,
 
         /// <summary>
         /// Label style parameters.
         /// </summary>
-        [Display("label")]
-        Label,
+        [Display("label")] Label,
 
         /// <summary>
         /// Form style parameters.
         /// </summary>
-        [Display("form")]
-        Form,
+        [Display("form")] Form,
 
         /// <summary>
         /// Simple style parameters.
         /// </summary>
-        [Display("simple")]
-        Simple,
+        [Display("simple")] Simple,
 
         /// <summary>
         /// Space separated array values.
         /// </summary>
-        [Display("spaceDelimited")]
-        SpaceDelimited,
+        [Display("spaceDelimited")] SpaceDelimited,
 
         /// <summary>
         /// Pipe separated array values.
         /// </summary>
-        [Display("pipeDelimited")]
-        PipeDelimited,
+        [Display("pipeDelimited")] PipeDelimited,
 
         /// <summary>
         /// Provides a simple way of rendering nested objects using form parameters.
         /// </summary>
-        [Display("deepObject")]
-        DeepObject
+        [Display("deepObject")] DeepObject
     }
 }

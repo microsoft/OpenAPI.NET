@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -61,7 +59,7 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// The request body applicable for this operation.
-        /// The requestBody is only supported in HTTP methods where the HTTP 1.1 specification RFC7231 
+        /// The requestBody is only supported in HTTP methods where the HTTP 1.1 specification RFC7231
         /// has explicitly defined semantics for request bodies.
         /// In other cases where the HTTP spec is vague, requestBody SHALL be ignored by consumers.
         /// </summary>
@@ -73,11 +71,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponses Responses { get; set; } = new OpenApiResponses();
 
         /// <summary>
-        /// A map of possible out-of band callbacks related to the parent operation. 
-        /// The key is a unique identifier for the Callback Object. 
-        /// Each value in the map is a Callback Object that describes a request 
+        /// A map of possible out-of band callbacks related to the parent operation.
+        /// The key is a unique identifier for the Callback Object.
+        /// Each value in the map is a Callback Object that describes a request
         /// that may be initiated by the API provider and the expected responses.
-        /// The key value used to identify the callback object is an expression, evaluated at runtime, 
+        /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
         public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
@@ -88,17 +86,17 @@ namespace Microsoft.OpenApi.Models
         public bool Deprecated { get; set; } = DeprecatedDefault;
 
         /// <summary>
-        /// A declaration of which security mechanisms can be used for this operation. 
-        /// The list of values includes alternative security requirement objects that can be used. 
-        /// Only one of the security requirement objects need to be satisfied to authorize a request. 
-        /// This definition overrides any declared top-level security. 
+        /// A declaration of which security mechanisms can be used for this operation.
+        /// The list of values includes alternative security requirement objects that can be used.
+        /// Only one of the security requirement objects need to be satisfied to authorize a request.
+        /// This definition overrides any declared top-level security.
         /// To remove a top-level security declaration, an empty array can be used.
         /// </summary>
         public IList<OpenApiSecurityRequirement> Security { get; set; } = new List<OpenApiSecurityRequirement>();
 
         /// <summary>
-        /// An alternative server array to service this operation. 
-        /// If an alternative server object is specified at the Path Item Object or Root level, 
+        /// An alternative server array to service this operation.
+        /// If an alternative server object is specified at the Path Item Object or Root level,
         /// it will be overridden by this value.
         /// </summary>
         public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
@@ -121,12 +119,15 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) =>
-            {
-                // Handle tag writing here instead of in OpenApiTag since we also need to ensure
-                // that tag is written as string regardless of whether reference exists.
-                w.WriteValue(t.Reference != null ? t.Reference.Id : t.Name);
-            });
+            writer.WriteOptionalCollection(
+                OpenApiConstants.Tags,
+                Tags,
+                (w, t) =>
+                {
+                    // Handle tag writing here instead of in OpenApiTag since we also need to ensure
+                    // that tag is written as string regardless of whether reference exists.
+                    w.WriteValue(t.Reference != null ? t.Reference.Id : t.Name);
+                });
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -180,13 +181,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) =>
-            {
-                // Handle tag writing here instead of in OpenApiTag since we also need to ensure
-                // that tag is written as string regardless of whether reference exists.
-                w.WriteValue(t.Reference != null ? t.Reference.Id : t.Name);
-            });
-            
+            writer.WriteOptionalCollection(
+                OpenApiConstants.Tags,
+                Tags,
+                (w, t) =>
+                {
+                    // Handle tag writing here instead of in OpenApiTag since we also need to ensure
+                    // that tag is written as string regardless of whether reference exists.
+                    w.WriteValue(t.Reference != null ? t.Reference.Id : t.Name);
+                });
+
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
 
@@ -237,9 +241,9 @@ namespace Microsoft.OpenApi.Models
             if (Responses != null)
             {
                 var produces = Responses.Where(r => r.Value.Content != null)
-                  .SelectMany(r => r.Value.Content?.Keys)
-                  .Distinct()
-                  .ToList();
+                    .SelectMany(r => r.Value.Content?.Keys)
+                    .Distinct()
+                    .ToList();
 
                 if (produces.Any())
                 {
@@ -269,14 +273,14 @@ namespace Microsoft.OpenApi.Models
             if (Servers != null)
             {
                 var schemes = Servers.Select(
-                    s =>
-                    {
-                        Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
-                        return url?.Scheme;
-                    })
-                .Where(s => s != null)
-                .Distinct()
-                .ToList();
+                        s =>
+                        {
+                            Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
+                            return url?.Scheme;
+                        })
+                    .Where(s => s != null)
+                    .Distinct()
+                    .ToList();
 
                 writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
             }

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -17,9 +15,9 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiCallback : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
-        /// A Path Item Object used to define a callback request and expected responses. 
+        /// A Path Item Object used to define a callback request and expected responses.
         /// </summary>
-        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; } 
+        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
             = new Dictionary<RuntimeExpression, OpenApiPathItem>();
 
         /// <summary>

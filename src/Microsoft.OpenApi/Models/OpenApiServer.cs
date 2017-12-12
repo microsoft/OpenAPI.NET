@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -30,7 +28,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map between a variable name and its value. The value is used for substitution in the server's URL template.
         /// </summary>
-        public IDictionary<string, OpenApiServerVariable> Variables { get; set; } = new Dictionary<string, OpenApiServerVariable>();
+        public IDictionary<string, OpenApiServerVariable> Variables { get; set; } =
+            new Dictionary<string, OpenApiServerVariable>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.

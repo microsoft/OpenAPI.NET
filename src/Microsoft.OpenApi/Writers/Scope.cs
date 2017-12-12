@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -43,11 +41,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Get/Set the object count for this scope.
         /// </summary>
-        public int ObjectCount
-        {
-            get;
-            set;
-        }
+        public int ObjectCount { get; set; }
 
         /// <summary>
         /// Gets the scope type for this scope.
@@ -56,7 +50,7 @@ namespace Microsoft.OpenApi.Writers
         {
             get
             {
-                return this.type;
+                return type;
             }
         }
 

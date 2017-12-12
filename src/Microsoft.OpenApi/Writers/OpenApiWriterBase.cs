@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using System.IO;
@@ -319,12 +317,14 @@ namespace Microsoft.OpenApi.Writers
 
             if (scopes.Count == 0)
             {
-                throw new OpenApiWriterException(string.Format(SRResource.ActiveScopeNeededForPropertyNameWriting, name));
+                throw new OpenApiWriterException(
+                    string.Format(SRResource.ActiveScopeNeededForPropertyNameWriting, name));
             }
 
             if (scopes.Peek().Type != ScopeType.Object)
             {
-                throw new OpenApiWriterException(string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
+                throw new OpenApiWriterException(
+                    string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
             }
         }
     }

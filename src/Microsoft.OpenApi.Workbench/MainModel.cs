@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,28 +15,90 @@ namespace Microsoft.OpenApi.Workbench
     public class MainModel : INotifyPropertyChanged
     {
         public string input;
-        public string Input { get { return input; } set { input = value; OnPropertyChanged("Input"); } }
 
         public string output;
-        public string Output { get { return errors; } set { errors = value; OnPropertyChanged("Output"); } }
 
         private string errors;
-        public string Errors { get { return errors; } set { errors = value; OnPropertyChanged("Errors"); } }
 
         public string parseTime;
-        public string ParseTime { get { return parseTime; } set { parseTime = value; OnPropertyChanged("ParseTime"); } }
 
         public string renderTime;
-        public string RenderTime { get { return renderTime; } set { renderTime = value; OnPropertyChanged("RenderTime"); } }
 
         private string format = "Yaml";
         private string version = "V3";
 
-        public string Format {
-         get {
+        public string Input
+        {
+            get
+            {
+                return input;
+            }
+            set
+            {
+                input = value;
+                OnPropertyChanged("Input");
+            }
+        }
+
+        public string Output
+        {
+            get
+            {
+                return errors;
+            }
+            set
+            {
+                errors = value;
+                OnPropertyChanged("Output");
+            }
+        }
+
+        public string Errors
+        {
+            get
+            {
+                return errors;
+            }
+            set
+            {
+                errors = value;
+                OnPropertyChanged("Errors");
+            }
+        }
+
+        public string ParseTime
+        {
+            get
+            {
+                return parseTime;
+            }
+            set
+            {
+                parseTime = value;
+                OnPropertyChanged("ParseTime");
+            }
+        }
+
+        public string RenderTime
+        {
+            get
+            {
+                return renderTime;
+            }
+            set
+            {
+                renderTime = value;
+                OnPropertyChanged("RenderTime");
+            }
+        }
+
+        public string Format
+        {
+            get
+            {
                 return format;
             }
-        set
+            set
             {
                 format = value;
                 OnPropertyChanged("IsYaml");
@@ -55,16 +120,57 @@ namespace Microsoft.OpenApi.Workbench
             }
         }
 
-        public bool IsYaml { get { return Format == "Yaml"; } set { Format = "Yaml"; }  }
-        public bool IsJson { get { return Format == "JSON"; } set { Format ="JSON"; } }
+        public bool IsYaml
+        {
+            get
+            {
+                return Format == "Yaml";
+            }
+            set
+            {
+                Format = "Yaml";
+            }
+        }
 
-        public bool IsV2{ get { return Version == "V2"; } set { Version = "V2"; } }
-        public bool IsV3 { get { return Version == "V3"; } set { Version = "V3"; } }
+        public bool IsJson
+        {
+            get
+            {
+                return Format == "JSON";
+            }
+            set
+            {
+                Format = "JSON";
+            }
+        }
 
+        public bool IsV2
+        {
+            get
+            {
+                return Version == "V2";
+            }
+            set
+            {
+                Version = "V2";
+            }
+        }
+
+        public bool IsV3
+        {
+            get
+            {
+                return Version == "V3";
+            }
+            set
+            {
+                Version = "V3";
+            }
+        }
 
         protected void OnPropertyChanged(string name)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            var handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
@@ -74,9 +180,8 @@ namespace Microsoft.OpenApi.Workbench
         internal void Validate()
         {
             try
-            { 
-
-                MemoryStream stream = CreateStream(input);
+            {
+                var stream = CreateStream(input);
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
@@ -88,7 +193,6 @@ namespace Microsoft.OpenApi.Workbench
                 if (context.Errors.Count == 0)
                 {
                     Errors = "OK";
-
                 }
                 else
                 {
@@ -97,6 +201,7 @@ namespace Microsoft.OpenApi.Workbench
                     {
                         errorReport.AppendLine(error.ToString());
                     }
+
                     Errors = errorReport.ToString();
                 }
 
@@ -115,13 +220,14 @@ namespace Microsoft.OpenApi.Workbench
             // Verify output is valid JSON or YAML
             //var dummy = YamlHelper.ParseYaml(Output);
         }
-        
+
         private string WriteContents(OpenApiDocument doc)
         {
             var outputstream = new MemoryStream();
-            doc.Serialize(outputstream,
+            doc.Serialize(
+                outputstream,
                 IsV3 ? OpenApiSpecVersion.OpenApi3_0_0 : OpenApiSpecVersion.OpenApi2_0,
-                this.format == "Yaml" ? OpenApiFormat.Yaml : OpenApiFormat.Json);
+                format == "Yaml" ? OpenApiFormat.Yaml : OpenApiFormat.Json);
 
             outputstream.Position = 0;
 
@@ -138,7 +244,6 @@ namespace Microsoft.OpenApi.Workbench
             return stream;
         }
 
-
-    public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

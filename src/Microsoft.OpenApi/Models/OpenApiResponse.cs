@@ -1,10 +1,8 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -47,10 +45,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public OpenApiReference Reference
-        {
-            get; set;
-        }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.0.
@@ -115,7 +110,10 @@ namespace Microsoft.OpenApi.Models
                     if (mediatype.Value != null)
                     {
                         // schema
-                        writer.WriteOptionalObject(OpenApiConstants.Schema, mediatype.Value.Schema, (w, s) => s.SerializeAsV2(w));
+                        writer.WriteOptionalObject(
+                            OpenApiConstants.Schema,
+                            mediatype.Value.Schema,
+                            (w, s) => s.SerializeAsV2(w));
 
                         // examples
                         if (mediatype.Value.Example != null)

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -269,7 +267,7 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
-        
+
         private bool IsBodyParameter()
         {
             if (this is BodyParameter)
@@ -290,7 +288,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var parameter = (BodyParameter)this;
 
-                return 
+                return
                     parameter.Format.Contains("application/x-www-form-urlencoded") ||
                     parameter.Format.Contains("multipart/form-data");
             }

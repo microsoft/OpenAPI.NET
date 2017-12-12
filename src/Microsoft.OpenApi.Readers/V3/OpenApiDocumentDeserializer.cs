@@ -1,9 +1,6 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -19,7 +16,11 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
-            {"openapi", (o, n) => { } /* Version is valid field but we already parsed it */  },
+            {
+                "openapi", (o, n) =>
+                {
+                } /* Version is valid field but we already parsed it */
+            },
             {"info", (o, n) => o.Info = LoadInfo(n)},
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},

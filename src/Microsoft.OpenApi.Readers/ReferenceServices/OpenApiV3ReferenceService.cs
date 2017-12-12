@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -34,9 +32,9 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
 
             // Precompute the tags array so that each tag reference does not require a new deserialization.
             var tagListPointer = new JsonPointer("#/tags");
-            
+
             var tagListNode = _rootNode.Find(tagListPointer);
-            
+
             if (tagListNode != null && tagListNode is ListNode)
             {
                 var tagListNodeAsListNode = (ListNode)tagListNode;
@@ -188,7 +186,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
 
             return true;
         }
-        
+
         private OpenApiReference ParseLocalReference(string localReference)
         {
             if (string.IsNullOrWhiteSpace(localReference))

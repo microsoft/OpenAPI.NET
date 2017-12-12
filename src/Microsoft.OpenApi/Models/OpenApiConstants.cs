@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 
@@ -230,13 +228,14 @@ namespace Microsoft.OpenApi.Models
 
         public const string DefaultTitle = "Default Title";
 
+        public const string DefaultDescription = "Default Description";
+
         public static readonly Version Version3_0_0 = new Version(3, 0, 0);
 
         public static readonly Uri DefaultUrl = new Uri("http://localhost/");
 
-        public const string DefaultDescription = "Default Description";
-
         #region V2
+
         public const string Host = "host";
 
         public const string Swagger = "swagger";

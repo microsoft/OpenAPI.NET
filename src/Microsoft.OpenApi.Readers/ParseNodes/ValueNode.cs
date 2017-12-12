@@ -1,12 +1,10 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
-using SharpYaml.Serialization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -14,7 +12,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     {
         private readonly YamlScalarNode node;
 
-        public ValueNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlScalarNode scalarNode) : base(context, diagnostic)
+        public ValueNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlScalarNode scalarNode) : base(
+            context,
+            diagnostic)
         {
             node = scalarNode;
         }
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// <returns>The created Any object.</returns>
         public override IOpenApiAny CreateAny()
         {
-            string value = GetScalarValue();
+            var value = GetScalarValue();
 
             if (value == null || value == "null")
             {
@@ -59,16 +59,17 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return new OpenApiInteger(intValue);
             }
 
-            if (Double.TryParse(value, out var dblValue))
+            if (double.TryParse(value, out var dblValue))
             {
-                return new OpenApiDouble(dblValue); // Note(darrmi): This may be better as decimal.  Further investigation required.
+                return
+                    new OpenApiDouble(
+                        dblValue); // Note(darrmi): This may be better as decimal.  Further investigation required.
             }
 
             if (DateTime.TryParse(value, out var datetimeValue))
             {
                 return new OpenApiDateTime(datetimeValue);
             }
-
 
             // if we can't identify the type of value, return it as string.
             return new OpenApiString(value);

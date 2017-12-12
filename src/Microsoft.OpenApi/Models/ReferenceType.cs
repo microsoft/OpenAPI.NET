@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Attributes;
 
@@ -15,61 +13,51 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Schema item.
         /// </summary>
-        [Display("schemas")]
-        Schema,
+        [Display("schemas")] Schema,
 
         /// <summary>
         /// Responses item.
         /// </summary>
-        [Display("responses")]
-        Response,
+        [Display("responses")] Response,
 
         /// <summary>
         /// Parameters item.
         /// </summary>
-        [Display("parameters")]
-        Parameter,
+        [Display("parameters")] Parameter,
 
         /// <summary>
         /// Examples item.
         /// </summary>
-        [Display("examples")]
-        Example,
+        [Display("examples")] Example,
 
         /// <summary>
         /// RequestBodies item.
         /// </summary>
-        [Display("requestBodies")]
-        RequestBody,
+        [Display("requestBodies")] RequestBody,
 
         /// <summary>
         /// Headers item.
         /// </summary>
-        [Display("headers")]
-        Header,
+        [Display("headers")] Header,
 
         /// <summary>
         /// SecuritySchemes item.
         /// </summary>
-        [Display("securitySchemes")]
-        SecurityScheme,
+        [Display("securitySchemes")] SecurityScheme,
 
         /// <summary>
         /// Links item.
         /// </summary>
-        [Display("links")]
-        Link,
+        [Display("links")] Link,
 
         /// <summary>
         /// Callbacks item.
         /// </summary>
-        [Display("callbacks")]
-        Callback,
+        [Display("callbacks")] Callback,
 
         /// <summary>
         /// Tags item.
         /// </summary>
-        [Display("tags")]
-        Tag
+        [Display("tags")] Tag
     }
 }

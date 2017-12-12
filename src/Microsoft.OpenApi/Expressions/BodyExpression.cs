@@ -1,9 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
-
-using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 namespace Microsoft.OpenApi.Expressions
 {
@@ -23,22 +19,6 @@ namespace Microsoft.OpenApi.Expressions
         public const string PointerPrefix = "#";
 
         /// <summary>
-        /// Gets the expression string.
-        /// </summary>
-        public override string Expression
-        {
-            get
-            {
-                if (String.IsNullOrEmpty(Value))
-                {
-                    return Body;
-                }
-
-                return Body + PointerPrefix + Value;
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BodyExpression"/> class.
         /// </summary>
         public BodyExpression()
@@ -56,6 +36,22 @@ namespace Microsoft.OpenApi.Expressions
             if (pointer == null)
             {
                 throw Error.ArgumentNull(nameof(pointer));
+            }
+        }
+
+        /// <summary>
+        /// Gets the expression string.
+        /// </summary>
+        public override string Expression
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Value))
+                {
+                    return Body;
+                }
+
+                return Body + PointerPrefix + Value;
             }
         }
     }

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
@@ -33,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "examples", (o, n) =>
                 {
-                    LoadExamples(o,n);
+                    LoadExamples(o, n);
                 }
             },
             {
@@ -66,7 +64,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     {
                         Schema = schema
                     };
-                    
+
                     response.Content.Add(mt, mediaType);
                 }
             }
@@ -100,7 +98,6 @@ namespace Microsoft.OpenApi.Readers.V2
                 response.Content.Add(mediaType, mediaTypeObject);
             }
             mediaTypeObject.Example = exampleNode;
-
         }
 
         public static OpenApiResponse LoadResponse(ParseNode node)

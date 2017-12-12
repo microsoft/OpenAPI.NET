@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +15,6 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
-
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
         /// </summary>
@@ -41,7 +38,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; } = new List<OpenApiSecurityRequirement>();
+        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; } =
+            new List<OpenApiSecurityRequirement>();
 
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
@@ -86,7 +84,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => c.SerializeAsV3(w));
 
             // security
-            writer.WriteOptionalCollection(OpenApiConstants.Security, SecurityRequirements, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(
+                OpenApiConstants.Security,
+                SecurityRequirements,
+                (w, s) => s.SerializeAsV3(w));
 
             // tags
             writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV3(w));
@@ -134,10 +135,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Responses, Components?.Responses, (w, r) => r.SerializeAsV2(w));
 
             // securityDefinitions
-            writer.WriteOptionalMap(OpenApiConstants.SecurityDefinitions, Components?.SecuritySchemes, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.SecurityDefinitions,
+                Components?.SecuritySchemes,
+                (w, s) => s.SerializeAsV2(w));
 
             // security
-            writer.WriteOptionalCollection(OpenApiConstants.Security, SecurityRequirements, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalCollection(
+                OpenApiConstants.Security,
+                SecurityRequirements,
+                (w, s) => s.SerializeAsV2(w));
 
             // tags
             writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2(w));
