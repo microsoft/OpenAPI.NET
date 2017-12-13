@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Validators;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -11,6 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Server Object: an object representing a Server.
     /// </summary>
+    [OpenApiValidator(typeof(ServerValidator))]
     public class OpenApiServer : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>

@@ -239,5 +239,50 @@ namespace Microsoft.OpenApi.Properties {
                 return ResourceManager.GetString("SourceExpressionHasInvalidFormat", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The key &apos;{0}&apos; in &apos;{1}&apos; of components MUST match the regular expression &apos;{2}&apos;..
+        /// </summary>
+        internal static string Validataion_ComponentsKeyMustMatchRegularExpr {
+            get {
+                return ResourceManager.GetString("Validataion_ComponentsKeyMustMatchRegularExpr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The extension name &apos;{0}&apos; in &apos;{1}&apos; object MUST begin with &apos;x-&apos;..
+        /// </summary>
+        internal static string Validation_ExtensionNameMustBeginWithXDash {
+            get {
+                return ResourceManager.GetString("Validation_ExtensionNameMustBeginWithXDash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field &apos;{0}&apos; in &apos;{1}&apos; object is REQUIRED..
+        /// </summary>
+        internal static string Validation_FieldIsRequired {
+            get {
+                return ResourceManager.GetString("Validation_FieldIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path item name &apos;{0}&apos; MUST begin with a slash..
+        /// </summary>
+        internal static string Validation_PathItemMustBeginWithSlash {
+            get {
+                return ResourceManager.GetString("Validation_PathItemMustBeginWithSlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The string &apos;{0}&apos; MUST be in the format of an email address..
+        /// </summary>
+        internal static string Validation_StringMustBeEmailAddress {
+            get {
+                return ResourceManager.GetString("Validation_StringMustBeEmailAddress", resourceCulture);
+            }
+        }
     }
 }

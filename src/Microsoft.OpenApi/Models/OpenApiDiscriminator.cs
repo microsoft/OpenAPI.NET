@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Validators;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -10,6 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Discriminator object.
     /// </summary>
+    [OpenApiValidator(typeof(DiscriminatorValidator))]
     public class OpenApiDiscriminator : IOpenApiSerializable
     {
         /// <summary>
