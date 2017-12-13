@@ -1,7 +1,7 @@
 ![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
 
 # OpenAPI.NET [Preview]
-<span style="color:blue">[ Disclaimer: This repository is in a Preview state. Expect to see some iterating as we working towards the final release candidate slated for early 2018.]</span>
+[ Disclaimer: This repository is in a preview state. Expect to see some iterating as we working towards the final release candidate slated for early 2018.]
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OAI JSON and YAML documents from the model.
 
@@ -14,12 +14,11 @@ Project Objectives
 - Enable developers to create Readers that translate different data formats into Open API documents. 
 
 # Readers
-The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by individual "Readers".
+The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by reading raw JSON/YAML or from individual "Readers", a number of which are in the works.
 
 The base JSON and YAML Readers are built into this project. Below are a few other custom Readers developed externally.
 
-- EDM/OData Reader Repo: <a href="https://github.com/Microsoft/OpenAPI.NET.OData">Link</a>
-- .NET Comment Reader Repo: <a href="https://github.com/Microsoft/OpenAPI.NET.CSharpComment">Link</a>
+- .NET Comment Reader Repo: [Coming Soon]
 
 # Build Status
 
