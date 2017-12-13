@@ -10,7 +10,7 @@ The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in 
 Project Objectives 
 
 - Provide a single shared object model in .NET for OpenAPI descriptions.
-- Include the most primitive Reader for ingesting OAI JSON and YAML documents in both V2 and V3 formats.
+- Include the most primitive Reader for ingesting OpenAPI JSON and YAML documents in both V2 and V3 formats.
 - Provide OpenAPI description writers for both V2 and V3 specification formats.
 - Enable developers to create Readers that translate different data formats into OpenAPI descriptions. 
 
