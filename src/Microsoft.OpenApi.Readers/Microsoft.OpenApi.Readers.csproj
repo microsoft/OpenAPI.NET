@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Authors></Authors>
+        <Authors>Microsoft</Authors>
         <Company>Microsoft</Company>
         <Product>Microsoft.OpenApi.Readers</Product>
         <PackageId>Microsoft.OpenApi.Readers</PackageId>

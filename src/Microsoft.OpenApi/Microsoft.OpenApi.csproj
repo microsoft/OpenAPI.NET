@@ -2,12 +2,12 @@
     <PropertyGroup>
         <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Authors></Authors>
+        <Authors>Microsoft</Authors>
         <Company>Microsoft</Company>
         <Product>Microsoft.OpenApi</Product>
         <PackageId>Microsoft.OpenApi</PackageId>
         <Version>1.0.0-beta008</Version>
-        <Description>.NET models and JSON/YAML writers for OpenAPI specification</Description>
+        <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <AssemblyName>Microsoft.OpenApi</AssemblyName>
         <RootNamespace>Microsoft.OpenApi</RootNamespace>
         <SignAssembly>true</SignAssembly>
