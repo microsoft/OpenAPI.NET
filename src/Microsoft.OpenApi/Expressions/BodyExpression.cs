@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Expressions
         {
             get
             {
-                if (string.IsNullOrEmpty(Value))
+                if (string.IsNullOrWhiteSpace(Value))
                 {
                     return Body;
                 }
