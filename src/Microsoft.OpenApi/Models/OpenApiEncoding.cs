@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -29,7 +27,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
 
         /// <summary>
-        /// Describes how a specific property value will be serialized depending on its type. 
+        /// Describes how a specific property value will be serialized depending on its type.
         /// </summary>
         public ParameterStyle? Style { get; set; }
 
@@ -77,7 +75,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
             // explode
-             writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
+            writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);

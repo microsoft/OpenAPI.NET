@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -15,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiPathItem> PathItemFixedFields = new FixedFieldMap<OpenApiPathItem>
+        private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new FixedFieldMap<OpenApiPathItem>
         {
             // $ref
             {
@@ -42,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"parameters", (o, n) => o.Parameters = n.CreateList(LoadParameter)}
         };
 
-        private static readonly PatternFieldMap<OpenApiPathItem> PathItemPatternFields =
+        private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
             new PatternFieldMap<OpenApiPathItem>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -54,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var pathItem = new OpenApiPathItem();
 
-            ParseMap(mapNode, pathItem, PathItemFixedFields, PathItemPatternFields);
+            ParseMap(mapNode, pathItem, _pathItemFixedFields, _pathItemPatternFields);
 
             return pathItem;
         }

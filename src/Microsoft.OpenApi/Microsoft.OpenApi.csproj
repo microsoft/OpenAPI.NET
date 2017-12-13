@@ -1,35 +1,35 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors></Authors>
-    <Company>Microsoft</Company>
-    <Product>Microsoft.OpenApi</Product>
-    <PackageId>Microsoft.OpenApi</PackageId>
-    <Version>1.0.0-beta008</Version>
-    <Description>.NET models and JSON/YAML writers for OpenAPI specification</Description>
-    <AssemblyName>Microsoft.OpenApi</AssemblyName>
-    <RootNamespace>Microsoft.OpenApi</RootNamespace>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors></Authors>
+        <Company>Microsoft</Company>
+        <Product>Microsoft.OpenApi</Product>
+        <PackageId>Microsoft.OpenApi</PackageId>
+        <Version>1.0.0-beta008</Version>
+        <Description>.NET models and JSON/YAML writers for OpenAPI specification</Description>
+        <AssemblyName>Microsoft.OpenApi</AssemblyName>
+        <RootNamespace>Microsoft.OpenApi</RootNamespace>
+        <SignAssembly>true</SignAssembly>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
-    <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
+        <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\SRResource.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SRResource.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\SRResource.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>SRResource.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\SRResource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SRResource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Properties\SRResource.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>SRResource.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 </Project>

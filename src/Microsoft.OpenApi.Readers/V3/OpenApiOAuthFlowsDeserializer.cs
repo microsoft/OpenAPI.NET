@@ -1,9 +1,6 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -16,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiOAuthFlows> OAuthFlowsFixedFileds =
+        private static readonly FixedFieldMap<OpenApiOAuthFlows> _oAuthFlowsFixedFileds =
             new FixedFieldMap<OpenApiOAuthFlows>
             {
                 {"implicit", (o, n) => o.Implicit = LoadOAuthFlow(n)},
@@ -25,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {"authorizationCode", (o, n) => o.AuthorizationCode = LoadOAuthFlow(n)}
             };
 
-        private static readonly PatternFieldMap<OpenApiOAuthFlows> OAuthFlowsPatternFields =
+        private static readonly PatternFieldMap<OpenApiOAuthFlows> _oAuthFlowsPatternFields =
             new PatternFieldMap<OpenApiOAuthFlows>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -38,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var oAuthFlows = new OpenApiOAuthFlows();
             foreach (var property in mapNode)
             {
-                property.ParseField(oAuthFlows, OAuthFlowsFixedFileds, OAuthFlowsPatternFields);
+                property.ParseField(oAuthFlows, _oAuthFlowsFixedFileds, _oAuthFlowsPatternFields);
             }
 
             return oAuthFlows;

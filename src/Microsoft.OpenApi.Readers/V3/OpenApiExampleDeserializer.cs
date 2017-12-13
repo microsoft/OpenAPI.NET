@@ -1,9 +1,6 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -16,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiExample> ExampleFixedFields = new FixedFieldMap<OpenApiExample>
+        private static readonly FixedFieldMap<OpenApiExample> _exampleFixedFields = new FixedFieldMap<OpenApiExample>
         {
             {
                 "summary", (o, n) =>
@@ -38,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.V3
             },
         };
 
-        private static readonly PatternFieldMap<OpenApiExample> ExamplePatternFields =
+        private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =
             new PatternFieldMap<OpenApiExample>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -57,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var example = new OpenApiExample();
             foreach (var property in mapNode)
             {
-                property.ParseField(example, ExampleFixedFields, ExamplePatternFields);
+                property.ParseField(example, _exampleFixedFields, _examplePatternFields);
             }
 
             return example;

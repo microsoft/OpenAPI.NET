@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Exceptions;
 
@@ -12,16 +10,6 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiError
     {
-        /// <summary>
-        /// Message explaining the error.
-        /// </summary>
-        public string Message { get; set; }
-
-        /// <summary>
-        /// Pointer to the location of the error.
-        /// </summary>
-        public string Pointer { get; set; }
-
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class using the message and pointer from the given exception.
         /// </summary>
@@ -36,9 +24,19 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public OpenApiError(string pointer, string message)
         {
-            this.Pointer = pointer;
-            this.Message = message;
+            Pointer = pointer;
+            Message = message;
         }
+
+        /// <summary>
+        /// Message explaining the error.
+        /// </summary>
+        public string Message { get; set; }
+
+        /// <summary>
+        /// Pointer to the location of the error.
+        /// </summary>
+        public string Pointer { get; set; }
 
         /// <summary>
         /// Gets the string representation of <see cref="OpenApiError"/>.

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using FluentAssertions;
@@ -12,6 +10,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
+    [Collection("DefaultSettings")]
     public class OpenApiValidatorTests
     {
         [Fact]

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using Microsoft.OpenApi.Properties;
@@ -14,7 +12,7 @@ namespace Microsoft.OpenApi.Exceptions
     public class OpenApiWriterException : OpenApiException
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="OpenApiWriterException" /> class with default values.
+        /// Creates a new instance of the <see cref="OpenApiWriterException"/> class with default values.
         /// </summary>
         public OpenApiWriterException()
             : this(SRResource.OpenApiWriterExceptionGenericError)
@@ -22,7 +20,7 @@ namespace Microsoft.OpenApi.Exceptions
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="OpenApiWriterException" /> class with an error message.
+        /// Creates a new instance of the <see cref="OpenApiWriterException"/> class with an error message.
         /// </summary>
         /// <param name="message">The plain text error message for this exception.</param>
         public OpenApiWriterException(string message)
@@ -31,7 +29,7 @@ namespace Microsoft.OpenApi.Exceptions
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="OpenApiWriterException" /> class with an error message and an inner exception.
+        /// Creates a new instance of the <see cref="OpenApiWriterException"/> class with an error message and an inner exception.
         /// </summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <param name="innerException">The inner exception that is the cause of this exception to be thrown.</param>

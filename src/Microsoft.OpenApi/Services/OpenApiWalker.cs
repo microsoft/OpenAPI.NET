@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
@@ -13,14 +11,14 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWalker
     {
-        readonly OpenApiVisitorBase _visitor;
+        private readonly OpenApiVisitorBase _visitor;
 
         /// <summary>
         /// Initializes the <see cref="OpenApiWalker"/> class.
         /// </summary>
         public OpenApiWalker(OpenApiVisitorBase visitor)
         {
-            this._visitor = visitor;
+            _visitor = visitor;
         }
 
         /// <summary>
@@ -29,42 +27,42 @@ namespace Microsoft.OpenApi.Services
         /// <param name="doc"></param>
         public void Walk(OpenApiDocument doc)
         {
-            this._visitor.Visit(doc);
-            this._visitor.Visit(doc.Info);
-            this._visitor.Visit(doc.Servers);
+            _visitor.Visit(doc);
+            _visitor.Visit(doc.Info);
+            _visitor.Visit(doc.Servers);
 
             if (doc.Servers != null)
             {
                 foreach (var server in doc.Servers)
                 {
-                    this._visitor.Visit(server);
+                    _visitor.Visit(server);
                     foreach (var variable in server.Variables.Values)
                     {
-                        this._visitor.Visit(variable);
+                        _visitor.Visit(variable);
                     }
                 }
             }
 
-            this._visitor.Visit(doc.Paths);
+            _visitor.Visit(doc.Paths);
             foreach (var pathItem in doc.Paths.Values)
             {
-                this._visitor.Visit(pathItem);
-                this._visitor.Visit(pathItem.Operations);
+                _visitor.Visit(pathItem);
+                _visitor.Visit(pathItem.Operations);
                 foreach (var operation in pathItem.Operations.Values)
                 {
-                    this._visitor.Visit(operation);
+                    _visitor.Visit(operation);
                     if (operation.Parameters != null)
                     {
-                        this._visitor.Visit(operation.Parameters);
+                        _visitor.Visit(operation.Parameters);
                         foreach (var parameter in operation.Parameters)
                         {
-                            this._visitor.Visit(parameter);
+                            _visitor.Visit(parameter);
                         }
                     }
 
                     if (operation.RequestBody != null)
                     {
-                        this._visitor.Visit(operation.RequestBody);
+                        _visitor.Visit(operation.RequestBody);
 
                         if (operation.RequestBody.Content != null)
                         {
@@ -74,19 +72,19 @@ namespace Microsoft.OpenApi.Services
 
                     if (operation.Responses != null)
                     {
-                        this._visitor.Visit(operation.Responses);
+                        _visitor.Visit(operation.Responses);
 
                         foreach (var response in operation.Responses.Values)
                         {
-                            this._visitor.Visit(response);
+                            _visitor.Visit(response);
                             WalkContent(response.Content);
 
                             if (response.Links != null)
                             {
-                                this._visitor.Visit(response.Links);
+                                _visitor.Visit(response.Links);
                                 foreach (var link in response.Links.Values)
                                 {
-                                    this._visitor.Visit(link);
+                                    _visitor.Visit(link);
                                 }
                             }
                         }
@@ -100,14 +98,17 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private void WalkContent(IDictionary<string, OpenApiMediaType> content)
         {
-            if (content == null) return;
+            if (content == null)
+            {
+                return;
+            }
 
-            this._visitor.Visit(content);
+            _visitor.Visit(content);
             foreach (var mediaType in content.Values)
             {
-                this._visitor.Visit(mediaType);
-                this._visitor.Visit(mediaType.Examples);
-                this._visitor.Visit(mediaType.Schema);
+                _visitor.Visit(mediaType);
+                _visitor.Visit(mediaType.Examples);
+                _visitor.Visit(mediaType.Schema);
             }
         }
     }

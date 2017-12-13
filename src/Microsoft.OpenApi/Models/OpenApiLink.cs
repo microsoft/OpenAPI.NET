@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -30,7 +28,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
         /// </summary>
-        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } = new Dictionary<string, RuntimeExpressionAnyWrapper>();
+        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
+            new Dictionary<string, RuntimeExpressionAnyWrapper>();
 
         /// <summary>
         /// A literal value or {expression} to use as a request body when calling the target operation.
@@ -70,31 +69,38 @@ namespace Microsoft.OpenApi.Models
             if (Reference != null)
             {
                 Reference.SerializeAsV3(writer);
+                return;
             }
-            else
-            {
-                writer.WriteStartObject();
 
-                // operationRef
-                writer.WriteProperty(OpenApiConstants.OperationRef, OperationRef);
+            SerializeAsV3WithoutReference(writer);
+        }
 
-                // operationId
-                writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
+            writer.WriteStartObject();
 
-                // parameters
-                writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteValue(w));
+            // operationRef
+            writer.WriteProperty(OpenApiConstants.OperationRef, OperationRef);
 
-                // requestBody
-                writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, (w, r) => r.WriteValue(w));
+            // operationId
+            writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
-                // description
-                writer.WriteProperty(OpenApiConstants.Description, Description);
+            // parameters
+            writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteValue(w));
 
-                // server
-                writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.SerializeAsV3(w));
+            // requestBody
+            writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, (w, r) => r.WriteValue(w));
 
-                writer.WriteEndObject();
-            }
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
+
+            // server
+            writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.SerializeAsV3(w));
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -102,7 +108,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            // link object does not exist in V2.
+            // Link object does not exist in V2.
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        {
+            // Link object does not exist in V2.
         }
     }
 }
