@@ -173,8 +173,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Example = new OpenApiObject
                         {
                             ["name"] = new OpenApiString("Puma"),
-                            // TODO: Issue #26. This should be properly parsed as a number.
-                            ["id"] = new OpenApiString("1")
+                            ["id"] = new OpenApiInteger(1)
                         }
                     });
             }
