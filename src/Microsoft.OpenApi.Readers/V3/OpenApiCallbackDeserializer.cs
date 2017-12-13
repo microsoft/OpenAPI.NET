@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Extensions;
@@ -16,10 +14,10 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiCallback> CallbackFixedFields =
+        private static readonly FixedFieldMap<OpenApiCallback> _callbackFixedFields =
             new FixedFieldMap<OpenApiCallback>();
 
-        private static readonly PatternFieldMap<OpenApiCallback> CallbackPatternFields =
+        private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
             new PatternFieldMap<OpenApiCallback>
             {
                 {s => s.StartsWith("$"), (o, p, n) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n))},
@@ -38,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var domainObject = new OpenApiCallback();
 
-            ParseMap(mapNode, domainObject, CallbackFixedFields, CallbackPatternFields);
+            ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields);
 
             return domainObject;
         }

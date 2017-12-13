@@ -1,10 +1,7 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -17,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiResponse> ResponseFixedFields = new FixedFieldMap<OpenApiResponse>
+        private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new FixedFieldMap<OpenApiResponse>
         {
             {
                 "description", (o, n) =>
@@ -45,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.V3
             }
         };
 
-        private static readonly PatternFieldMap<OpenApiResponse> ResponsePatternFields =
+        private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new PatternFieldMap<OpenApiResponse>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -63,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var requiredFields = new List<string> {"description"};
             var response = new OpenApiResponse();
-            ParseMap(mapNode, response, ResponseFixedFields, ResponsePatternFields, requiredFields);
+            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields, requiredFields);
 
             return response;
         }

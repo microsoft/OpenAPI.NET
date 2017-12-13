@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -14,7 +12,8 @@ namespace Microsoft.OpenApi.Tests.Models
     public class OpenApiEncodingTests
     {
         public static OpenApiEncoding BasicEncoding = new OpenApiEncoding();
-        public static OpenApiEncoding AdvanceEncoding = new OpenApiEncoding()
+
+        public static OpenApiEncoding AdvanceEncoding = new OpenApiEncoding
         {
             ContentType = "image/png, image/jpeg",
             Style = ParameterStyle.Simple,
@@ -28,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicEncodingAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            string actual = BasicEncoding.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
+            var actual = BasicEncoding.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -40,8 +39,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceEncodingAsV3JsonWorks()
         {
             // Arrange
-            string expected = 
-@"{
+            var expected =
+                @"{
   ""contentType"": ""image/png, image/jpeg"",
   ""style"": ""simple"",
   ""explode"": true,
@@ -49,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            string actual = AdvanceEncoding.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvanceEncoding.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -61,14 +60,14 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvanceEncodingAsV3YamlWorks()
         {
             // Arrange
-            string expected = 
-@"contentType: 'image/png, image/jpeg'
+            var expected =
+                @"contentType: 'image/png, image/jpeg'
 style: simple
 explode: true
 allowReserved: true";
 
             // Act
-            string actual = AdvanceEncoding.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvanceEncoding.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

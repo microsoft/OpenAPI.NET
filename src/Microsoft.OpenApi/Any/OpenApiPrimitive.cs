@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 namespace Microsoft.OpenApi.Any
 {
@@ -11,6 +9,15 @@ namespace Microsoft.OpenApi.Any
     /// <typeparam name="T"></typeparam>
     public abstract class OpenApiPrimitive<T> : IOpenApiPrimitive
     {
+        /// <summary>
+        /// Initializes the <see cref="IOpenApiPrimitive"/> class with the given value.
+        /// </summary>
+        /// <param name="value"></param>
+        public OpenApiPrimitive(T value)
+        {
+            Value = value;
+        }
+
         /// <summary>
         /// The kind of <see cref="IOpenApiAny"/>.
         /// </summary>
@@ -25,14 +32,5 @@ namespace Microsoft.OpenApi.Any
         /// Value of this <see cref="IOpenApiPrimitive"/>
         /// </summary>
         public T Value { get; }
-
-        /// <summary>
-        /// Initializes the <see cref="IOpenApiPrimitive"/> class with the given value.
-        /// </summary>
-        /// <param name="value"></param>
-        public OpenApiPrimitive(T value)
-        {
-            Value = value;
-        }
     }
 }

@@ -1,13 +1,8 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
-using System;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -77,7 +72,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/components/" + Type.GetDisplayName() + "/" + this.Id;
+                return "#/components/" + Type.GetDisplayName() + "/" + Id;
             }
         }
 
@@ -108,7 +103,7 @@ namespace Microsoft.OpenApi.Models
                     return Id;
                 }
 
-                return "#/" + GetReferenceTypeNameAsV2(Type.Value) + "/" + this.Id;
+                return "#/" + GetReferenceTypeNameAsV2(Type.Value) + "/" + Id;
             }
         }
 

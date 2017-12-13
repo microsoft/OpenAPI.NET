@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -17,9 +15,9 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiCallback : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
-        /// A Path Item Object used to define a callback request and expected responses. 
+        /// A Path Item Object used to define a callback request and expected responses.
         /// </summary>
-        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; } 
+        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
             = new Dictionary<RuntimeExpression, OpenApiPathItem>();
 
         /// <summary>
@@ -70,28 +68,45 @@ namespace Microsoft.OpenApi.Models
             if (Reference != null)
             {
                 Reference.SerializeAsV3(writer);
+                return;
             }
-            else
+            
+            SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
+            writer.WriteStartObject();
+
+            // path items
+            foreach (var item in PathItems)
             {
-                writer.WriteStartObject();
-
-                // path items
-                foreach (var item in PathItems)
-                {
-                    writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => p.SerializeAsV3(w));
-                }
-
-                // extensions
-                writer.WriteExtensions(Extensions);
-
-                writer.WriteEndObject();
+                writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => p.SerializeAsV3(w));
             }
+
+            // extensions
+            writer.WriteExtensions(Extensions);
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiCallback"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
+        {
+            // Callback object does not exist in V2.
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             // Callback object does not exist in V2.
         }

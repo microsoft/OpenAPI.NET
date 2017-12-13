@@ -1,11 +1,8 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -18,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        public static FixedFieldMap<OpenApiInfo> InfoFixedFields = new FixedFieldMap<OpenApiInfo>
+        private static FixedFieldMap<OpenApiInfo> _infoFixedFields = new FixedFieldMap<OpenApiInfo>
         {
             {
                 "title", (o, n) =>
@@ -58,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         };
 
-        public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new PatternFieldMap<OpenApiInfo>
+        private static PatternFieldMap<OpenApiInfo> _infoPatternFields = new PatternFieldMap<OpenApiInfo>
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
@@ -70,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var info = new OpenApiInfo();
             var required = new List<string> {"title", "version"};
 
-            ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields, required);
+            ParseMap(mapNode, info, _infoFixedFields, _infoPatternFields, required);
 
             ReportMissing(node, required);
 

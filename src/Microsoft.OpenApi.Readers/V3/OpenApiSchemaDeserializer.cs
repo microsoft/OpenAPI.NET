@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -16,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiSchema> SchemaFixedFields = new FixedFieldMap<OpenApiSchema>
+        private static readonly FixedFieldMap<OpenApiSchema> _schemaFixedFields = new FixedFieldMap<OpenApiSchema>
         {
             {
                 "title", (o, n) =>
@@ -231,7 +229,7 @@ namespace Microsoft.OpenApi.Readers.V3
             },
         };
 
-        private static readonly PatternFieldMap<OpenApiSchema> SchemaPatternFields = new PatternFieldMap<OpenApiSchema>
+        private static readonly PatternFieldMap<OpenApiSchema> _schemaPatternFields = new PatternFieldMap<OpenApiSchema>
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
@@ -241,7 +239,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var mapNode = node.CheckMapNode("schema");
 
             var pointer = mapNode.GetReferencePointer();
-            
+
             if (pointer != null)
             {
                 return mapNode.GetReferencedObject<OpenApiSchema>(ReferenceType.Schema, pointer);
@@ -251,7 +249,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(domainObject, SchemaFixedFields, SchemaPatternFields);
+                propertyNode.ParseField(domainObject, _schemaFixedFields, _schemaPatternFields);
             }
 
             return domainObject;

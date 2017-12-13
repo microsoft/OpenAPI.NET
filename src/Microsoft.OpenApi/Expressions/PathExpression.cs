@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 namespace Microsoft.OpenApi.Expressions
 {
@@ -16,17 +14,6 @@ namespace Microsoft.OpenApi.Expressions
         public const string Path = "path.";
 
         /// <summary>
-        /// Gets the expression string.
-        /// </summary>
-        public override string Expression
-        {
-            get
-            {
-                return Path + Value;
-            }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="PathExpression"/> class.
         /// </summary>
         /// <param name="name">The name string, it's case-insensitive.</param>
@@ -36,6 +23,17 @@ namespace Microsoft.OpenApi.Expressions
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
+            }
+        }
+
+        /// <summary>
+        /// Gets the expression string.
+        /// </summary>
+        public override string Expression
+        {
+            get
+            {
+                return Path + Value;
             }
         }
     }

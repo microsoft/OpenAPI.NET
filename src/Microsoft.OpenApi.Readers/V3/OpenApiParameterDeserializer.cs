@@ -1,11 +1,8 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -18,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiParameter> ParameterFixedFields =
+        private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
             {
                 {
@@ -101,7 +98,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 },
             };
 
-        private static readonly PatternFieldMap<OpenApiParameter> ParameterPatternFields =
+        private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new PatternFieldMap<OpenApiParameter>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -120,7 +117,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var parameter = new OpenApiParameter();
             var required = new List<string> {"name", "in"};
 
-            ParseMap(mapNode, parameter, ParameterFixedFields, ParameterPatternFields, required);
+            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, required);
 
             return parameter;
         }

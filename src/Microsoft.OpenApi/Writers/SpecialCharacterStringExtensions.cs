@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Linq;
@@ -170,9 +168,9 @@ namespace Microsoft.OpenApi.Writers
             // 3) has trailing/leading white spaces,
             // wrap the string in single quote.
             // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
-            if (_yamlPlainStringForbiddenCombinations.Any( fc => input.Contains(fc) )
-                || _yamlIndicators.Any( i => input.StartsWith(i.ToString()) ) 
-                || input.Trim() != input)
+            if (_yamlPlainStringForbiddenCombinations.Any(fc => input.Contains(fc)) ||
+                _yamlIndicators.Any(i => input.StartsWith(i.ToString())) ||
+                input.Trim() != input)
             {
                 // Escape single quotes with two single quotes.
                 input = input.Replace("'", "''");
@@ -182,8 +180,9 @@ namespace Microsoft.OpenApi.Writers
 
             // If string can be mistaken as a number, a boolean, or a timestamp,
             // wrap it in quote to indicate that this is indeed a string, not a number, a boolean, or a timestamp
-            if (decimal.TryParse(input, out var _) || bool.TryParse(input, out var _)
-                || DateTime.TryParse(input, out var _))
+            if (decimal.TryParse(input, out var _) ||
+                bool.TryParse(input, out var _) ||
+                DateTime.TryParse(input, out var _))
             {
                 return $"'{input}'";
             }

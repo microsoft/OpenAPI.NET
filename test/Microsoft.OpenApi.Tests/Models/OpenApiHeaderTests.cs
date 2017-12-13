@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -13,120 +11,57 @@ using Xunit.Abstractions;
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
-    public class OpenApiParameterTests
+    public class OpenApiHeaderTests
     {
-        public static OpenApiParameter BasicParameter = new OpenApiParameter
+        public static OpenApiHeader AdvancedHeader = new OpenApiHeader
         {
-            Name = "name1",
-            In = ParameterLocation.Path
-        };
-
-        public static OpenApiParameter ReferencedParameter = new OpenApiParameter
-        {
-            Name = "name1",
-            In = ParameterLocation.Path,
-            Reference = new OpenApiReference
+            Description = "sampleHeader",
+            Schema = new OpenApiSchema
             {
-                Type = ReferenceType.Parameter,
-                Id = "example1"
+                Type = "integer",
+                Format = "int32"
             }
         };
 
-        public static OpenApiParameter AdvancedPathParameterWithSchema = new OpenApiParameter
+        public static OpenApiHeader ReferencedHeader = new OpenApiHeader
         {
-            Name = "name1",
-            In = ParameterLocation.Path,
-            Description = "description1",
-            Required = true,
-            Deprecated = false,
-
-            Style = ParameterStyle.Simple,
-            Explode = true,
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.Header,
+                Id = "example1",
+            },
+            Description = "sampleHeader",
             Schema = new OpenApiSchema
             {
-                Title = "title2",
-                Description = "description2"
-            },
-            Examples = new List<OpenApiExample>
-            {
-                new OpenApiExample
-                {
-                    Summary = "summary3",
-                    Description = "description3"
-                }
+                Type = "integer",
+                Format = "int32"
             }
         };
 
         private readonly ITestOutputHelper _output;
 
-        public OpenApiParameterTests(ITestOutputHelper output)
+        public OpenApiHeaderTests(ITestOutputHelper output)
         {
             _output = output;
         }
 
         [Fact]
-        public void SerializeBasicParameterAsV3JsonWorks()
+        public void SerializeAdvancedHeaderAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""name"": ""name1"",
-  ""in"": ""path""
-}";
-
-            // Act
-            var actual = BasicParameter.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
-
-            // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
-        }
-
-        [Fact]
-        public void SerializeAdvancedParameterAsV3JsonWorks()
-        {
-            // Arrange
-            var expected = @"{
-  ""name"": ""name1"",
-  ""in"": ""path"",
-  ""description"": ""description1"",
-  ""required"": true,
-  ""style"": ""simple"",
-  ""explode"": true,
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""description"": ""sampleHeader"",
   ""schema"": {
-    ""title"": ""title2"",
-    ""description"": ""description2""
-  },
-  ""examples"": [
-    {
-      ""summary"": ""summary3"",
-      ""description"": ""description3""
-    }
-  ]
+    ""type"": ""integer"",
+    ""format"": ""int32""
+  }
 }";
 
             // Act
-            var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
-
-            // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
-        }
-
-        [Fact]
-        public void SerializeReferencedParameterAsV3JsonWorks()
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter();
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""$ref"": ""#/components/parameters/example1""
-}";
-
-            // Act
-            ReferencedParameter.SerializeAsV3(writer);
+            AdvancedHeader.SerializeAsV3(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -137,19 +72,18 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeReferencedParameterAsV3JsonWithoutReferenceWorks()
+        public void SerializeReferencedHeaderAsV3JsonWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
-  ""name"": ""name1"",
-  ""in"": ""path""
+  ""$ref"": ""#/components/headers/example1""
 }";
 
             // Act
-            ReferencedParameter.SerializeAsV3WithoutReference(writer);
+            ReferencedHeader.SerializeAsV3(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -160,18 +94,22 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeReferencedParameterAsV2JsonWorks()
+        public void SerializeReferencedHeaderAsV3JsonWithoutReferenceWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
-  ""$ref"": ""#/parameters/example1""
+  ""description"": ""sampleHeader"",
+  ""schema"": {
+    ""type"": ""integer"",
+    ""format"": ""int32""
+  }
 }";
 
             // Act
-            ReferencedParameter.SerializeAsV2(writer);
+            ReferencedHeader.SerializeAsV3WithoutReference(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -182,19 +120,70 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeReferencedParameterAsV2JsonWithoutReferenceWorks()
+        public void SerializeAdvancedHeaderAsV2JsonWorks()
         {
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
-  ""name"": ""name1"",
-  ""in"": ""Path""
+  ""description"": ""sampleHeader"",
+  ""schema"": {
+    ""format"": ""int32"",
+    ""type"": ""integer""
+  }
 }";
 
             // Act
-            ReferencedParameter.SerializeAsV2WithoutReference(writer);
+            AdvancedHeader.SerializeAsV2(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedHeaderAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""$ref"": ""#/headers/example1""
+}";
+
+            // Act
+            ReferencedHeader.SerializeAsV2(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedHeaderAsV2JsonWithoutReferenceWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""description"": ""sampleHeader"",
+  ""schema"": {
+    ""format"": ""int32"",
+    ""type"": ""integer""
+  }
+}";
+
+            // Act
+            ReferencedHeader.SerializeAsV2WithoutReference(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 

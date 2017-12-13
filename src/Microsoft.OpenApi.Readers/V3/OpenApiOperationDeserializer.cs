@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -15,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiOperation> OperationFixedFields =
+        private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
             new FixedFieldMap<OpenApiOperation>
             {
                 {
@@ -94,7 +92,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 },
             };
 
-        private static readonly PatternFieldMap<OpenApiOperation> OperationPatternFields =
+        private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new PatternFieldMap<OpenApiOperation>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())},
@@ -106,7 +104,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var operation = new OpenApiOperation();
 
-            ParseMap(mapNode, operation, OperationFixedFields, OperationPatternFields);
+            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields);
 
             return operation;
         }
