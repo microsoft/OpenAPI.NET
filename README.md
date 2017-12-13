@@ -3,22 +3,24 @@
 # OpenAPI.NET [Preview]
 [ Disclaimer: This repository is in a preview state. Expect to see some iterating as we work towards the final release candidate slated for early 2018. Feedback is welcome! ]
 
-The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OAI JSON and YAML documents from the model.
+The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
 **See more information on the Open API spec and its history here: <a href="https://www.openapis.org">Open API Initiative</a>**
 
 Project Objectives 
 
-- Provide a single shared object model in .NET for Open API documents.
-- Include the most primitive Reader for ingesting OAI JSON and YAML documents.
-- Enable developers to create Readers that translate different data formats into Open API documents. 
+- Provide a single shared object model in .NET for OpenAPI descriptions.
+- Include the most primitive Reader for ingesting OAI JSON and YAML documents in both V2 and V3 formats.
+- Provide OpenAPI description writers for both V2 and V3 specification formats.
+- Enable developers to create Readers that translate different data formats into OpenAPI descriptions. 
 
 # Readers
-The OpenAPI.NET project holds the base object model for representing OAI documents as .NET objects. Translation for different data types into this object model is handled by reading raw JSON/YAML or from individual "Readers", a number of which are in the works.
+The OpenAPI.NET project holds the base object model for representing OpenAPI descriptions as .NET objects. Translation for different data types into this object model is handled by reading raw JSON/YAML or from individual "Readers", a number of which are in the works.
 
 The base JSON and YAML Readers are built into this project. Below is the list of supported "reader" projects.
 
 - .NET Comment Reader: [Coming Soon]
+- OData (CSDL) Reader: [Comming Soon]
 
 # Build Status
 
@@ -39,3 +41,5 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+To provide feedback and ask questions you can use StackOverflow in the [OpenApi.net](https://stackoverflow.com/questions/tagged/openapi.net) tag or use the Slack OpenApi.net Slack channel which you can register for at http://slack.httpapis.com 
