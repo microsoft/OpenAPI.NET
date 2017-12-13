@@ -1,15 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using FluentAssertions;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests
+namespace Microsoft.OpenApi.Tests.Services
 {
     [Collection("DefaultSettings")]
-    public class ValidationTests
+    public class OpenApiValidatorTests
     {
         [Fact]
         public void ResponseMustHaveADescription()
@@ -36,7 +38,11 @@ namespace Microsoft.OpenApi.Tests
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Exceptions.Should().HaveCount(1);
+            validator.Exceptions.ShouldBeEquivalentTo(
+                    new List<OpenApiException>
+                    { 
+                        new OpenApiException("Response must have a description")
+                    });
         }
     }
 }
