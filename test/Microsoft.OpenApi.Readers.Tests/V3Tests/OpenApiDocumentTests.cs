@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Microsoft.OpenApi.Readers.Tests
+namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
     [Collection("DefaultSettings")]
     public class OpenApiDocumentTests
