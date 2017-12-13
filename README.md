@@ -5,7 +5,7 @@
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
-**See more information on the OpenAPI spec and its history here: <a href="https://www.openapis.org">OpenAPI Initiative</a>**
+**See more information on the OpenAPI spec and its history here: <a href="https://www.openapis.org">Open API Initiative</a>**
 
 Project Objectives 
 
@@ -20,13 +20,13 @@ The OpenAPI.NET project holds the base object model for representing OpenAPI des
 The base JSON and YAML Readers are built into this project. Below is the list of supported "reader" projects.
 
 - .NET Comment Reader: [Coming Soon]
-- OData (CSDL) Reader: [Comming Soon]
+- OData (CSDL) Reader: [Coming Soon]
 
 # Example Usage
 
-Creating a OpenAPI Document
+Creating an OpenAPI Document
 
-```Csharp
+```C#
 var document = new OpenApiDocument
 {
     Info = new OpenApiInfo
@@ -63,7 +63,7 @@ var document = new OpenApiDocument
 
 Reading and writing a OpenAPI description
 
-``` CSharp
+```C#
 var httpClient = new HttpClient
 {
     BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/")
@@ -72,7 +72,7 @@ var httpClient = new HttpClient
 var stream = await httpClient.GetStreamAsync("master/examples/v3.0/petstore.yaml");
 
 // Read V3 as YAML
-var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostics);
+var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
 var outputStringWriter = new StringWriter();
 var writer = new OpenApiJsonWriter(outputStringWriter);
@@ -82,10 +82,6 @@ openApiDocument.SerializeAsV2(writer);
 
 outputStringWriter.Flush();
 var output = outputStringWriter.GetStringBuilder().ToString();
-
-Assert.Empty(diagnostics.Errors);
-Assert.NotNull(openApiDocument);
-Assert.NotEmpty(output);
 
 ```
 
@@ -109,4 +105,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-To provide feedback and ask questions you can use StackOverflow in the [OpenApi.net](https://stackoverflow.com/questions/tagged/openapi.net) tag or use the Slack OpenApi.net Slack channel which you can register for at http://slack.httpapis.com 
+To provide feedback and ask questions you can use StackOverflow with the [OpenApi.net](https://stackoverflow.com/questions/tagged/openapi.net) tag or use the OpenApi.net Slack channel which you can register for at http://slack.httpapis.com 
