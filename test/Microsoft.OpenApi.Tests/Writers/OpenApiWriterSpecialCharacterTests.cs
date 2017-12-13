@@ -9,6 +9,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
+    [Collection("DefaultSettings")]
     public class OpenApiWriterSpecialCharacterTests
     {
         private readonly ITestOutputHelper _output;

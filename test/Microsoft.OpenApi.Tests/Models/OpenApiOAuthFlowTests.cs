@@ -11,6 +11,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiOAuthFlowTests
     {
         public static OpenApiOAuthFlow BasicOAuthFlow = new OpenApiOAuthFlow();

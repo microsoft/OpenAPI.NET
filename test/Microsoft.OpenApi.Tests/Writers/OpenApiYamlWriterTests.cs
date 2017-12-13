@@ -11,6 +11,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
+    [Collection("DefaultSettings")]
     public class OpenApiYamlWriterTests
     {
         private readonly ITestOutputHelper _output;

@@ -14,6 +14,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiSchemaTests
     {
         public static OpenApiSchema BasicSchema = new OpenApiSchema();

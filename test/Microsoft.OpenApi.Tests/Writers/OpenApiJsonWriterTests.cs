@@ -12,6 +12,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
+    [Collection("DefaultSettings")]
     public class OpenApiJsonWriterTests
     {
         private readonly ITestOutputHelper _output;

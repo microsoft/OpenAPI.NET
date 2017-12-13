@@ -11,9 +11,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
-    /// <summary>
-    /// Test cases for <see cref="OpenApiXml"/>.
-    /// </summary>
+    [Collection("DefaultSettings")]
     public class OpenApiXmlTests
     {
         public static OpenApiXml AdvancedXml = new OpenApiXml

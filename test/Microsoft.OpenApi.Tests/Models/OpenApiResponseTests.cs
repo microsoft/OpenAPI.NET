@@ -11,9 +11,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
-    /// <summary>
-    /// Test cases for <see cref="OpenApiResponse"/>.
-    /// </summary>
+    [Collection("DefaultSettings")]
     public class OpenApiResponseTests
     {
         public static OpenApiResponse BasicResponse = new OpenApiResponse();

@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiExternalDocsTests
     {
         public static OpenApiExternalDocs BasicExDocs = new OpenApiExternalDocs();

@@ -230,17 +230,17 @@ namespace Microsoft.OpenApi.Models
 
         public const string DefaultDescription = "Default Description";
 
-        public static readonly Version version300 = new Version(3, 0, 0);
+        public static readonly Version version3_0_0 = new Version(3, 0, 0);
 
         public static readonly Uri defaultUrl = new Uri("http://localhost/");
 
-        #region V2
+        #region V2.0
 
         public const string Host = "host";
 
         public const string Swagger = "swagger";
 
-        public static readonly Version swaggerVersion = new Version(2, 0);
+        public static readonly Version version2_0 = new Version(2, 0);
 
         public const string BasePath = "basePath";
 

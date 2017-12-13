@@ -13,6 +13,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiSecuritySchemeTests
     {
         public static OpenApiSecurityScheme ApiKeySecurityScheme = new OpenApiSecurityScheme

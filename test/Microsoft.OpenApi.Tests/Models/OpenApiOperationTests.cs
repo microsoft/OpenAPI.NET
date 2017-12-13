@@ -11,6 +11,7 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiOperationTests
     {
         public static OpenApiOperation BasicOperation = new OpenApiOperation();

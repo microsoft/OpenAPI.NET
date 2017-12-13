@@ -11,9 +11,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
-    /// <summary>
-    /// Test cases for <see cref="OpenApiTag"/>.
-    /// </summary>
+    [Collection("DefaultSettings")]
     public class OpenApiTagTests
     {
         public static OpenApiTag BasicTag = new OpenApiTag();

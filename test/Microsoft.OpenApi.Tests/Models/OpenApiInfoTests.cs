@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiInfoTests
     {
         public static OpenApiInfo AdvanceInfo = new OpenApiInfo

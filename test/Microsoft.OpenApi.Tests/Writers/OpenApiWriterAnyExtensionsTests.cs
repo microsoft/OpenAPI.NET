@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
+    [Collection("DefaultSettings")]
     public class OpenApiWriterAnyExtensionsTests
     {
         [Fact]

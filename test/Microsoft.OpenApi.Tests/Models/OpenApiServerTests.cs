@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiServerTests
     {
         public static OpenApiServer BasicServer = new OpenApiServer

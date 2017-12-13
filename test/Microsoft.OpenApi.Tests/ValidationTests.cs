@@ -8,6 +8,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests
 {
+    [Collection("DefaultSettings")]
     public class ValidationTests
     {
         [Fact]
