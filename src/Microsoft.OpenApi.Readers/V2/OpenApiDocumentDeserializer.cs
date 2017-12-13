@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
@@ -16,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
             {
                 "swagger", (o, n) =>
@@ -98,7 +96,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)}
         };
 
-        public static PatternFieldMap<OpenApiDocument> OpenApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -129,7 +127,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var required = new List<string> {"info", "swagger", "paths"};
 
-            ParseMap(openApiNode, openApidoc, OpenApiFixedFields, OpenApiPatternFields, required);
+            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields, required);
 
             ReportMissing(openApiNode, required);
 

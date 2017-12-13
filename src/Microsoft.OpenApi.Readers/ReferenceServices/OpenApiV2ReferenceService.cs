@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -87,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                 new JsonPointer("#/" + GetReferenceTypeV2Name(reference.Type.Value) + "/" + reference.Id);
 
             var node = _rootNode.Find(jsonPointer);
-            
+
             switch (reference.Type)
             {
                 case ReferenceType.Schema:

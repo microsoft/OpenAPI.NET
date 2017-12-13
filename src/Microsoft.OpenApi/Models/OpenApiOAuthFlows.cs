@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -59,10 +57,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Password, Password, (w, o) => o.SerializeAsV3(w));
 
             // clientCredentials
-            writer.WriteOptionalObject(OpenApiConstants.ClientCredentials, ClientCredentials, (w, o) => o.SerializeAsV3(w));
+            writer.WriteOptionalObject(
+                OpenApiConstants.ClientCredentials,
+                ClientCredentials,
+                (w, o) => o.SerializeAsV3(w));
 
             // authorizationCode
-            writer.WriteOptionalObject(OpenApiConstants.AuthorizationCode, AuthorizationCode, (w, o) => o.SerializeAsV3(w));
+            writer.WriteOptionalObject(
+                OpenApiConstants.AuthorizationCode,
+                AuthorizationCode,
+                (w, o) => o.SerializeAsV3(w));
 
             // extensions
             writer.WriteExtensions(Extensions);

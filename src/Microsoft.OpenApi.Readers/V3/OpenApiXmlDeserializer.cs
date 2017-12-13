@@ -1,10 +1,7 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -17,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiXml> XmlFixedFields = new FixedFieldMap<OpenApiXml>
+        private static readonly FixedFieldMap<OpenApiXml> _xmlFixedFields = new FixedFieldMap<OpenApiXml>
         {
             {
                 "name", (o, n) =>
@@ -51,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.V3
             },
         };
 
-        private static readonly PatternFieldMap<OpenApiXml> XmlPatternFields =
+        private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =
             new PatternFieldMap<OpenApiXml>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -60,11 +57,11 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiXml LoadXml(ParseNode node)
         {
             var mapNode = node.CheckMapNode("xml");
-            
+
             var xml = new OpenApiXml();
             foreach (var property in mapNode)
             {
-                property.ParseField(xml, XmlFixedFields, XmlPatternFields);
+                property.ParseField(xml, _xmlFixedFields, _xmlPatternFields);
             }
 
             return xml;

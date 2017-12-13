@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.IO;
 
@@ -169,7 +167,7 @@ namespace Microsoft.OpenApi.Writers
             WriteValueSeparator();
 
             value = value.GetJsonCompatibleString();
-                
+
             Writer.Write(value);
         }
 
@@ -188,12 +186,12 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         protected override void WriteValueSeparator()
         {
-            if (scopes.Count == 0)
+            if (Scopes.Count == 0)
             {
                 return;
             }
 
-            var currentScope = scopes.Peek();
+            var currentScope = Scopes.Peek();
 
             if (currentScope.Type == ScopeType.Array)
             {

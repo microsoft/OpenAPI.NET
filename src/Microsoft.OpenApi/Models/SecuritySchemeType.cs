@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Attributes;
 
@@ -15,25 +13,21 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Use API key
         /// </summary>
-        [Display("apiKey")]
-        ApiKey,
+        [Display("apiKey")] ApiKey,
 
         /// <summary>
         /// Use basic or bearer token authorization header.
         /// </summary>
-        [Display("http")]
-        Http,
+        [Display("http")] Http,
 
         /// <summary>
         /// Use OAuth2
         /// </summary>
-        [Display("oauth2")]
-        OAuth2,
-        
+        [Display("oauth2")] OAuth2,
+
         /// <summary>
-        ///  Use OAuth2 with OpenId Connect URL to discover OAuth2 configuration value.
+        /// Use OAuth2 with OpenId Connect URL to discover OAuth2 configuration value.
         /// </summary>
-        [Display("openIdConnect")]
-        OpenIdConnect
+        [Display("openIdConnect")] OpenIdConnect
     }
 }

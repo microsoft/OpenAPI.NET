@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using System.IO;
@@ -14,15 +12,9 @@ using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiParameterTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiParameterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         public static OpenApiParameter BasicParameter = new OpenApiParameter
         {
             Name = "name1",
@@ -33,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Name = "name1",
             In = ParameterLocation.Path,
-            Reference = new OpenApiReference()
+            Reference = new OpenApiReference
             {
                 Type = ReferenceType.Parameter,
                 Id = "example1"
@@ -64,6 +56,13 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             }
         };
+
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiParameterTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
 
         [Fact]
         public void SerializeBasicParameterAsV3JsonWorks()
@@ -131,7 +130,6 @@ namespace Microsoft.OpenApi.Tests.Models
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -155,8 +153,6 @@ namespace Microsoft.OpenApi.Tests.Models
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            
-
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -179,7 +175,6 @@ namespace Microsoft.OpenApi.Tests.Models
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -202,8 +197,6 @@ namespace Microsoft.OpenApi.Tests.Models
             ReferencedParameter.SerializeAsV2WithoutReference(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
-
-            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

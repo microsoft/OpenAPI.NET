@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +21,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Scope of the Open API element - object, array, property.
         /// </summary>
-        protected readonly Stack<Scope> scopes;
+        protected readonly Stack<Scope> Scopes;
 
         /// <summary>
         /// Number which specifies the level of indentation.
@@ -33,7 +31,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Settings controlling the format and the version of the serialization.
         /// </summary>
-        private OpenApiSerializerSettings settings;
+        private OpenApiSerializerSettings _settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
@@ -45,8 +43,8 @@ namespace Microsoft.OpenApi.Writers
             Writer = textWriter;
             Writer.NewLine = "\n";
 
-            scopes = new Stack<Scope>();
-            this.settings = settings;
+            Scopes = new Stack<Scope>();
+            this._settings = settings;
         }
 
         /// <summary>
@@ -225,7 +223,7 @@ namespace Microsoft.OpenApi.Writers
         /// <returns></returns>
         protected Scope CurrentScope()
         {
-            return scopes.Count == 0 ? null : scopes.Peek();
+            return Scopes.Count == 0 ? null : Scopes.Peek();
         }
 
         /// <summary>
@@ -234,15 +232,15 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="type">The scope type to start.</param>
         protected Scope StartScope(ScopeType type)
         {
-            if (scopes.Count != 0)
+            if (Scopes.Count != 0)
             {
-                var currentScope = scopes.Peek();
+                var currentScope = Scopes.Peek();
 
                 currentScope.ObjectCount++;
             }
 
             var scope = new Scope(type);
-            scopes.Push(scope);
+            Scopes.Push(scope);
             return scope;
         }
 
@@ -253,21 +251,21 @@ namespace Microsoft.OpenApi.Writers
         /// <returns></returns>
         protected Scope EndScope(ScopeType type)
         {
-            if (scopes.Count == 0)
+            if (Scopes.Count == 0)
             {
                 throw new OpenApiWriterException(SRResource.ScopeMustBePresentToEnd);
             }
 
-            if (scopes.Peek().Type != type)
+            if (Scopes.Peek().Type != type)
             {
                 throw new OpenApiWriterException(
                     string.Format(
                         SRResource.ScopeToEndHasIncorrectType,
                         type,
-                        scopes.Peek().Type));
+                        Scopes.Peek().Type));
             }
 
-            return scopes.Pop();
+            return Scopes.Pop();
         }
 
         /// <summary>
@@ -275,7 +273,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         protected bool IsTopLevelScope()
         {
-            return scopes.Count == 1;
+            return Scopes.Count == 1;
         }
 
         /// <summary>
@@ -297,12 +295,12 @@ namespace Microsoft.OpenApi.Writers
 
         private bool IsScopeType(ScopeType type)
         {
-            if (scopes.Count == 0)
+            if (Scopes.Count == 0)
             {
                 return false;
             }
 
-            return scopes.Peek().Type == type;
+            return Scopes.Peek().Type == type;
         }
 
         /// <summary>
@@ -317,14 +315,16 @@ namespace Microsoft.OpenApi.Writers
                 throw Error.ArgumentNullOrWhiteSpace(nameof(name));
             }
 
-            if (scopes.Count == 0)
+            if (Scopes.Count == 0)
             {
-                throw new OpenApiWriterException(string.Format(SRResource.ActiveScopeNeededForPropertyNameWriting, name));
+                throw new OpenApiWriterException(
+                    string.Format(SRResource.ActiveScopeNeededForPropertyNameWriting, name));
             }
 
-            if (scopes.Peek().Type != ScopeType.Object)
+            if (Scopes.Peek().Type != ScopeType.Object)
             {
-                throw new OpenApiWriterException(string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
+                throw new OpenApiWriterException(
+                    string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
             }
         }
     }

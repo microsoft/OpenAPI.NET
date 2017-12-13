@@ -1,9 +1,6 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -17,9 +14,13 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
-            {"openapi", (o, n) => { } /* Version is valid field but we already parsed it */  },
+            {
+                "openapi", (o, n) =>
+                {
+                } /* Version is valid field but we already parsed it */
+            },
             {"info", (o, n) => o.Info = LoadInfo(n)},
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
@@ -29,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}
         };
 
-        public static PatternFieldMap<OpenApiDocument> OpenApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -43,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var required = new List<string> {"info", "openapi", "paths"};
 
-            ParseMap(openApiNode, openApidoc, OpenApiFixedFields, OpenApiPatternFields, required);
+            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields, required);
 
             ReportMissing(openApiNode, required);
 

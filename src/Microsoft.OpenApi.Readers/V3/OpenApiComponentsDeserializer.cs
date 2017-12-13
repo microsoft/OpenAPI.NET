@@ -1,9 +1,6 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -16,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static FixedFieldMap<OpenApiComponents> ComponentsFixedFields = new FixedFieldMap<OpenApiComponents>
+        private static FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
         {
             {
                 "schemas", (o, n) =>
@@ -34,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"callbacks", (o, n) => o.Callbacks = n.CreateMap(LoadCallback)},
         };
 
-        public static PatternFieldMap<OpenApiComponents> ComponentsPatternFields =
+        private static PatternFieldMap<OpenApiComponents> _componentsPatternFields =
             new PatternFieldMap<OpenApiComponents>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -45,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var mapNode = node.CheckMapNode("components");
             var components = new OpenApiComponents();
 
-            ParseMap(mapNode, components, ComponentsFixedFields, ComponentsPatternFields);
+            ParseMap(mapNode, components, _componentsFixedFields, _componentsPatternFields);
 
             return components;
         }

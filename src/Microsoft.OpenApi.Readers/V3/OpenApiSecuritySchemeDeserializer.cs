@@ -1,10 +1,7 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -17,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields =
+        private static readonly FixedFieldMap<OpenApiSecurityScheme> _securitySchemeFixedFields =
             new FixedFieldMap<OpenApiSecurityScheme>
             {
                 {
@@ -70,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             };
 
-        private static readonly PatternFieldMap<OpenApiSecurityScheme> SecuritySchemePatternFields =
+        private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new PatternFieldMap<OpenApiSecurityScheme>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -79,11 +76,11 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
         {
             var mapNode = node.CheckMapNode("securityScheme");
-            
+
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
             {
-                property.ParseField(securityScheme, SecuritySchemeFixedFields, SecuritySchemePatternFields);
+                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields);
             }
 
             return securityScheme;

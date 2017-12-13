@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiOperation> OperationFixedFields =
+        private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
             new FixedFieldMap<OpenApiOperation>
             {
                 {
@@ -88,15 +86,15 @@ namespace Microsoft.OpenApi.Readers.V2
                 },
             };
 
-        private static readonly PatternFieldMap<OpenApiOperation> OperationPatternFields =
+        private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new PatternFieldMap<OpenApiOperation>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
-        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>();
+        private static FixedFieldMap<OpenApiResponses> _responsesFixedFields = new FixedFieldMap<OpenApiResponses>();
 
-        public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
+        private static PatternFieldMap<OpenApiResponses> _responsesPatternFields = new PatternFieldMap<OpenApiResponses>
         {
             {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -108,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var operation = new OpenApiOperation();
 
-            ParseMap(mapNode, operation, OperationFixedFields, OperationPatternFields);
+            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields);
 
             // Build request body based on information determined while parsing OpenApiOperation
             var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>("bodyParameter");
@@ -134,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var domainObject = new OpenApiResponses();
 
-            ParseMap(mapNode, domainObject, ResponsesFixedFields, ResponsesPatternFields);
+            ParseMap(mapNode, domainObject, _responsesFixedFields, _responsesPatternFields);
 
             return domainObject;
         }

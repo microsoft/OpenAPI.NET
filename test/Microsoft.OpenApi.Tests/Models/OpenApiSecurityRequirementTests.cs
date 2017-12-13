@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -12,6 +10,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
+    [Collection("DefaultSettings")]
     public class OpenApiSecurityRequirementTests
     {
         public static OpenApiSecurityRequirement BasicSecurityRequirement = new OpenApiSecurityRequirement();
@@ -54,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme1"}
                     }
                 ] = new List<string>
                 {
@@ -76,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme3" }
+                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme3"}
                     }
                 ] = new List<string>()
             };
@@ -115,7 +114,8 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual =
+                SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -151,7 +151,8 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV3JsonShouldSkipUnserializableKeyValuePair()
+        public void
+            SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV3JsonShouldSkipUnserializableKeyValuePair()
         {
             // Arrange
             var expected =
@@ -165,7 +166,8 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual =
+                SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -174,7 +176,8 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV2JsonShouldSkipUnserializableKeyValuePair()
+        public void
+            SerializeSecurityRequirementWithUnreferencedSecuritySchemeAsV2JsonShouldSkipUnserializableKeyValuePair()
         {
             // Arrange
             var expected =
@@ -188,7 +191,8 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
+            var actual =
+                SecurityRequirementWithUnreferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -263,7 +267,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Duplicate determination only considers Reference.Id.
             addSecurityScheme1Duplicate.ShouldThrow<ArgumentException>();
             addSecurityScheme1WithDifferentProperties.ShouldThrow<ArgumentException>();
-            
+
             securityRequirement.Should().HaveCount(2);
 
             securityRequirement.ShouldBeEquivalentTo(

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.IO;
 using FluentAssertions;
@@ -103,7 +101,6 @@ namespace Microsoft.OpenApi.Tests.Models
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -126,7 +123,6 @@ namespace Microsoft.OpenApi.Tests.Models
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -158,8 +154,6 @@ namespace Microsoft.OpenApi.Tests.Models
             ReferencedLink.SerializeAsV3WithoutReference(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
-
-            
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

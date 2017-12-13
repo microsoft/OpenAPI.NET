@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
@@ -83,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             MaxLength = 15
                         }
                     },
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema1"
@@ -108,7 +106,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             AuthorizationUrl = new Uri("https://example.com/api/oauth")
                         }
                     },
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "securityScheme1"
@@ -120,7 +118,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = SecuritySchemeType.OpenIdConnect,
                     Scheme = "openIdConnectUrl",
                     OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "securityScheme2"
@@ -144,11 +142,11 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema4"] = new OpenApiSchema
                 {
                     Type = "string",
-                    AllOf = new List<OpenApiSchema>()
+                    AllOf = new List<OpenApiSchema>
                     {
                         null,
                         null,
-                        new OpenApiSchema()
+                        new OpenApiSchema
                         {
                             Type = "string"
                         },

@@ -1,10 +1,7 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -17,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiMediaType> MediaTypeFixedFields =
+        private static readonly FixedFieldMap<OpenApiMediaType> _mediaTypeFixedFields =
             new FixedFieldMap<OpenApiMediaType>
             {
                 {
@@ -41,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 //Encoding
             };
 
-        private static readonly PatternFieldMap<OpenApiMediaType> MediaTypePatternFields =
+        private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
             new PatternFieldMap<OpenApiMediaType>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -58,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var mediaType = new OpenApiMediaType();
 
-            ParseMap(mapNode, mediaType, MediaTypeFixedFields, MediaTypePatternFields);
+            ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields);
 
             return mediaType;
         }

@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 namespace Microsoft.OpenApi.Expressions
 {
@@ -16,6 +14,15 @@ namespace Microsoft.OpenApi.Expressions
         public const string Response = "$response.";
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ResponseExpression"/> class.
+        /// </summary>
+        /// <param name="source">The source of the response.</param>
+        public ResponseExpression(SourceExpression source)
+        {
+            Source = source ?? throw Error.ArgumentNull(nameof(source));
+        }
+
+        /// <summary>
         /// Gets the expression string.
         /// </summary>
         public override string Expression => Response + Source.Expression;
@@ -24,14 +31,5 @@ namespace Microsoft.OpenApi.Expressions
         /// The <see cref="SourceExpression"/> expression.
         /// </summary>
         public SourceExpression Source { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResponseExpression"/> class.
-        /// </summary>
-        /// <param name="source">The source of the response.</param>
-        public ResponseExpression(SourceExpression source)
-        {
-            Source = source ?? throw Error.ArgumentNull(nameof(source));
-        }
     }
 }
