@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        internal static OpenApiTag LoadTag(ParseNode n)
+        public static OpenApiTag LoadTag(ParseNode n)
         {
             var mapNode = n.CheckMapNode("tag");
 

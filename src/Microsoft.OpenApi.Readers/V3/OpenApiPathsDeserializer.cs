@@ -13,9 +13,9 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static FixedFieldMap<OpenApiPaths> PathsFixedFields = new FixedFieldMap<OpenApiPaths>();
+        private static FixedFieldMap<OpenApiPaths> _pathsFixedFields = new FixedFieldMap<OpenApiPaths>();
 
-        public static PatternFieldMap<OpenApiPaths> PathsPatternFields = new PatternFieldMap<OpenApiPaths>
+        private static PatternFieldMap<OpenApiPaths> _pathsPatternFields = new PatternFieldMap<OpenApiPaths>
         {
             {s => s.StartsWith("/"), (o, k, n) => o.Add(k, LoadPathItem(n))},
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var domainObject = new OpenApiPaths();
 
-            ParseMap(mapNode, domainObject, PathsFixedFields, PathsPatternFields);
+            ParseMap(mapNode, domainObject, _pathsFixedFields, _pathsPatternFields);
 
             return domainObject;
         }

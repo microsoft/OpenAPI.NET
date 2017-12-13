@@ -92,9 +92,9 @@ namespace Microsoft.OpenApi.Readers.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
-        public static FixedFieldMap<OpenApiResponses> ResponsesFixedFields = new FixedFieldMap<OpenApiResponses>();
+        private static FixedFieldMap<OpenApiResponses> _responsesFixedFields = new FixedFieldMap<OpenApiResponses>();
 
-        public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
+        private static PatternFieldMap<OpenApiResponses> _responsesPatternFields = new PatternFieldMap<OpenApiResponses>
         {
             {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var domainObject = new OpenApiResponses();
 
-            ParseMap(mapNode, domainObject, ResponsesFixedFields, ResponsesPatternFields);
+            ParseMap(mapNode, domainObject, _responsesFixedFields, _responsesPatternFields);
 
             return domainObject;
         }

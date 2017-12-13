@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        public static FixedFieldMap<OpenApiInfo> InfoFixedFields = new FixedFieldMap<OpenApiInfo>
+        private static FixedFieldMap<OpenApiInfo> _infoFixedFields = new FixedFieldMap<OpenApiInfo>
         {
             {
                 "title", (o, n) =>
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         };
 
-        public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new PatternFieldMap<OpenApiInfo>
+        private static PatternFieldMap<OpenApiInfo> _infoPatternFields = new PatternFieldMap<OpenApiInfo>
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var info = new OpenApiInfo();
             var required = new List<string> {"title", "version"};
 
-            ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields, required);
+            ParseMap(mapNode, info, _infoFixedFields, _infoPatternFields, required);
 
             ReportMissing(node, required);
 

@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static FixedFieldMap<OpenApiDocument> OpenApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
             {
                 "openapi", (o, n) =>
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}
         };
 
-        public static PatternFieldMap<OpenApiDocument> OpenApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var required = new List<string> {"info", "openapi", "paths"};
 
-            ParseMap(openApiNode, openApidoc, OpenApiFixedFields, OpenApiPatternFields, required);
+            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields, required);
 
             ReportMissing(openApiNode, required);
 
