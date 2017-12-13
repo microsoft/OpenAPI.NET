@@ -105,4 +105,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-To provide feedback and ask questions you can use StackOverflow with the [OpenApi.net](https://stackoverflow.com/questions/tagged/openapi.net) tag or use the OpenApi.net Slack channel which you can register for at http://slack.httpapis.com 
+To provide feedback and ask questions you can use StackOverflow with the [OpenApi.net](https://stackoverflow.com/questions/tagged/openapi.net) tag or use the OpenApi.net Slack channel which you can register for the httpapis team at http://slack.httpapis.com 
