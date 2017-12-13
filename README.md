@@ -20,7 +20,6 @@ The OpenAPI.NET project holds the base object model for representing OpenAPI des
 The base JSON and YAML Readers are built into this project. Below is the list of supported "reader" projects.
 
 - .NET Comment Reader: [Coming Soon]
-- OData (CSDL) Reader: [Coming Soon]
 
 # Example Usage
 
