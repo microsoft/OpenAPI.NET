@@ -5,7 +5,7 @@
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
-**See more information on the Open API spec and its history here: <a href="https://www.openapis.org">Open API Initiative</a>**
+**See more information on the OpenAPI spec and its history here: <a href="https://www.openapis.org">OpenAPI Initiative</a>**
 
 Project Objectives 
 
@@ -21,6 +21,73 @@ The base JSON and YAML Readers are built into this project. Below is the list of
 
 - .NET Comment Reader: [Coming Soon]
 - OData (CSDL) Reader: [Comming Soon]
+
+# Example Usage
+
+Creating a OpenAPI Document
+
+```Csharp
+var document = new OpenApiDocument
+{
+    Info = new OpenApiInfo
+    {
+        Version = "1.0.0",
+        Title = "Swagger Petstore (Simple)",
+    },
+    Servers = new List<OpenApiServer>
+    {
+        new OpenApiServer { Url = "http://petstore.swagger.io/api" }
+    },
+    Paths = new OpenApiPaths
+    {
+        ["/pets"] = new OpenApiPathItem
+        {
+            Operations = new Dictionary<OperationType, OpenApiOperation>
+            {
+                [OperationType.Get] = new OpenApiOperation
+                {
+                    Description = "Returns all pets from the system that the user has access to",
+                    Responses = new OpenApiResponses
+                    {
+                        ["200"] = new OpenApiResponse
+                        {
+                            Description = "OK"
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+```
+
+Reading and writing a OpenAPI description
+
+``` CSharp
+var httpClient = new HttpClient
+{
+    BaseAddress = new Uri("https://raw.githubusercontent.com/OAI/OpenAPI-Specification/")
+};
+
+var stream = await httpClient.GetStreamAsync("master/examples/v3.0/petstore.yaml");
+
+// Read V3 as YAML
+var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostics);
+
+var outputStringWriter = new StringWriter();
+var writer = new OpenApiJsonWriter(outputStringWriter);
+
+// Write V2 as JSON
+openApiDocument.SerializeAsV2(writer);
+
+outputStringWriter.Flush();
+var output = outputStringWriter.GetStringBuilder().ToString();
+
+Assert.Empty(diagnostics.Errors);
+Assert.NotNull(openApiDocument);
+Assert.NotEmpty(output);
+
+```
 
 # Build Status
 
