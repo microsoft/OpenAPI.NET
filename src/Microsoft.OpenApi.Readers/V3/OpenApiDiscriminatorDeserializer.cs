@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiDiscriminator> DiscriminatorFixedFields =
+        private static readonly FixedFieldMap<OpenApiDiscriminator> _discriminatorFixedFields =
             new FixedFieldMap<OpenApiDiscriminator>
             {
                 {
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             };
 
-        private static readonly PatternFieldMap<OpenApiDiscriminator> DiscriminatorPatternFields =
+        private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields =
             new PatternFieldMap<OpenApiDiscriminator>();
 
         public static OpenApiDiscriminator LoadDiscriminator(ParseNode node)
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var discriminator = new OpenApiDiscriminator();
             foreach (var property in mapNode)
             {
-                property.ParseField(discriminator, DiscriminatorFixedFields, DiscriminatorPatternFields);
+                property.ParseField(discriminator, _discriminatorFixedFields, _discriminatorPatternFields);
             }
 
             return discriminator;

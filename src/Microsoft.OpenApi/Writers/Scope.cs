@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// The type of the scope.
         /// </summary>
-        private readonly ScopeType type;
+        private readonly ScopeType _type;
 
         /// <summary>
         /// Constructor.
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="type">The type of the scope.</param>
         public Scope(ScopeType type)
         {
-            this.type = type;
+            this._type = type;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Writers
         {
             get
             {
-                return type;
+                return _type;
             }
         }
 

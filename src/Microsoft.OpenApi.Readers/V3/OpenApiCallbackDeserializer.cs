@@ -14,10 +14,10 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiCallback> CallbackFixedFields =
+        private static readonly FixedFieldMap<OpenApiCallback> _callbackFixedFields =
             new FixedFieldMap<OpenApiCallback>();
 
-        private static readonly PatternFieldMap<OpenApiCallback> CallbackPatternFields =
+        private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
             new PatternFieldMap<OpenApiCallback>
             {
                 {s => s.StartsWith("$"), (o, p, n) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n))},
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var domainObject = new OpenApiCallback();
 
-            ParseMap(mapNode, domainObject, CallbackFixedFields, CallbackPatternFields);
+            ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields);
 
             return domainObject;
         }

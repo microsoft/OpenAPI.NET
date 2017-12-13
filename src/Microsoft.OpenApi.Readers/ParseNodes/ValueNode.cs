@@ -10,22 +10,22 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal class ValueNode : ParseNode
     {
-        private readonly YamlScalarNode node;
+        private readonly YamlScalarNode _node;
 
         public ValueNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlScalarNode scalarNode) : base(
             context,
             diagnostic)
         {
-            node = scalarNode;
+            _node = scalarNode;
         }
 
         public override string GetScalarValue()
         {
-            var scalarNode = node;
+            var scalarNode = _node;
 
             if (scalarNode == null)
             {
-                throw new OpenApiException($"Expected scalar at line {node.Start.Line}");
+                throw new OpenApiException($"Expected scalar at line {_node.Start.Line}");
             }
 
             return scalarNode.Value;

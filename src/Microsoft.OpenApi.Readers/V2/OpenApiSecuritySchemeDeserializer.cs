@@ -14,11 +14,11 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static string flowValue;
+        private static string _flowValue;
 
-        private static OpenApiOAuthFlow flow;
+        private static OpenApiOAuthFlow _flow;
 
-        private static readonly FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields =
+        private static readonly FixedFieldMap<OpenApiSecurityScheme> _securitySchemeFixedFields =
             new FixedFieldMap<OpenApiSecurityScheme>
             {
                 {
@@ -49,32 +49,32 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "flow", (o, n) =>
                     {
-                        flowValue = n.GetScalarValue();
+                        _flowValue = n.GetScalarValue();
                     }
                 },
                 {
                     "authorizationUrl",
                     (o, n) =>
                     {
-                        flow.AuthorizationUrl = new Uri(n.GetScalarValue());
+                        _flow.AuthorizationUrl = new Uri(n.GetScalarValue());
                     }
                 },
                 {
                     "tokenUrl",
                     (o, n) =>
                     {
-                        flow.TokenUrl = new Uri(n.GetScalarValue());
+                        _flow.TokenUrl = new Uri(n.GetScalarValue());
                     }
                 },
                 {
                     "scopes", (o, n) =>
                     {
-                        flow.Scopes = n.CreateSimpleMap(LoadString);
+                        _flow.Scopes = n.CreateSimpleMap(LoadString);
                     }
                 }
             };
 
-        private static readonly PatternFieldMap<OpenApiSecurityScheme> SecuritySchemePatternFields =
+        private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new PatternFieldMap<OpenApiSecurityScheme>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -83,44 +83,44 @@ namespace Microsoft.OpenApi.Readers.V2
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
         {
             // Reset the local variables every time this method is called.
-            flowValue = null;
-            flow = new OpenApiOAuthFlow();
+            _flowValue = null;
+            _flow = new OpenApiOAuthFlow();
 
             var mapNode = node.CheckMapNode("securityScheme");
 
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
             {
-                property.ParseField(securityScheme, SecuritySchemeFixedFields, SecuritySchemePatternFields);
+                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields);
             }
 
             // Put the Flow object in the right Flows property based on the string in "flow"
-            if (flowValue == OpenApiConstants.Implicit)
+            if (_flowValue == OpenApiConstants.Implicit)
             {
                 securityScheme.Flows = new OpenApiOAuthFlows
                 {
-                    Implicit = flow
+                    Implicit = _flow
                 };
             }
-            else if (flowValue == OpenApiConstants.Password)
+            else if (_flowValue == OpenApiConstants.Password)
             {
                 securityScheme.Flows = new OpenApiOAuthFlows
                 {
-                    Password = flow
+                    Password = _flow
                 };
             }
-            else if (flowValue == OpenApiConstants.Application)
+            else if (_flowValue == OpenApiConstants.Application)
             {
                 securityScheme.Flows = new OpenApiOAuthFlows
                 {
-                    ClientCredentials = flow
+                    ClientCredentials = _flow
                 };
             }
-            else if (flowValue == OpenApiConstants.AccessCode)
+            else if (_flowValue == OpenApiConstants.AccessCode)
             {
                 securityScheme.Flows = new OpenApiOAuthFlows
                 {
-                    AuthorizationCode = flow
+                    AuthorizationCode = _flow
                 };
             }
 

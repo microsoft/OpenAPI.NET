@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.V2
     {
         private static ParameterLocation? _in;
 
-        private static readonly FixedFieldMap<OpenApiParameter> ParameterFixedFields =
+        private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
             {
                 {
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 },
             };
 
-        private static readonly PatternFieldMap<OpenApiParameter> ParameterPatternFields =
+        private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new PatternFieldMap<OpenApiParameter>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -233,7 +233,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var parameter = new OpenApiParameter();
 
-            ParseMap(mapNode, parameter, ParameterFixedFields, ParameterPatternFields);
+            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
 
             var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
             if (schema != null)

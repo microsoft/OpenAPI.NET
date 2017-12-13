@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiSecurityScheme> SecuritySchemeFixedFields =
+        private static readonly FixedFieldMap<OpenApiSecurityScheme> _securitySchemeFixedFields =
             new FixedFieldMap<OpenApiSecurityScheme>
             {
                 {
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             };
 
-        private static readonly PatternFieldMap<OpenApiSecurityScheme> SecuritySchemePatternFields =
+        private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new PatternFieldMap<OpenApiSecurityScheme>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
             {
-                property.ParseField(securityScheme, SecuritySchemeFixedFields, SecuritySchemePatternFields);
+                property.ParseField(securityScheme, _securitySchemeFixedFields, _securitySchemePatternFields);
             }
 
             return securityScheme;

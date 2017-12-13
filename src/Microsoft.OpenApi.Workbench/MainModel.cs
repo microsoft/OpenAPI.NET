@@ -12,95 +12,87 @@ using Microsoft.OpenApi.Readers;
 
 namespace Microsoft.OpenApi.Workbench
 {
+    /// <summary>
+    /// Main model of the Workbench tool.
+    /// </summary>
     public class MainModel : INotifyPropertyChanged
     {
-        public string input;
+        private string _input;
 
-        public string output;
+        private string _output;
 
-        private string errors;
+        private string _errors;
 
-        public string parseTime;
+        private string _parseTime;
 
-        public string renderTime;
+        private string _renderTime;
 
-        private string format = "Yaml";
-        private string version = "V3";
+        /// <summary>
+        /// Default format.
+        /// </summary>
+        private string _format = "Yaml";
+
+        /// <summary>
+        /// Default version.
+        /// </summary>
+        private string _version = "V3";
 
         public string Input
         {
-            get
-            {
-                return input;
-            }
+            get => _input;
             set
             {
-                input = value;
+                _input = value;
                 OnPropertyChanged("Input");
             }
         }
 
         public string Output
         {
-            get
-            {
-                return errors;
-            }
+            get => _output;
             set
             {
-                errors = value;
+                _output = value;
                 OnPropertyChanged("Output");
             }
         }
 
         public string Errors
         {
-            get
-            {
-                return errors;
-            }
+            get => _errors;
             set
             {
-                errors = value;
+                _errors = value;
                 OnPropertyChanged("Errors");
             }
         }
 
         public string ParseTime
         {
-            get
-            {
-                return parseTime;
-            }
+            get => _parseTime;
             set
             {
-                parseTime = value;
+                _parseTime = value;
                 OnPropertyChanged("ParseTime");
             }
         }
 
         public string RenderTime
         {
-            get
-            {
-                return renderTime;
-            }
+            get => _renderTime;
             set
             {
-                renderTime = value;
+                _renderTime = value;
                 OnPropertyChanged("RenderTime");
             }
         }
 
         public string Format
         {
-            get
-            {
-                return format;
-            }
+            get => _format;
             set
             {
-                format = value;
+                _format = value;
                 OnPropertyChanged("IsYaml");
                 OnPropertyChanged("IsJson");
             }
@@ -108,13 +100,10 @@ namespace Microsoft.OpenApi.Workbench
 
         public string Version
         {
-            get
-            {
-                return version;
-            }
+            get => _version;
             set
             {
-                version = value;
+                _version = value;
                 OnPropertyChanged("IsV2");
                 OnPropertyChanged("IsV3");
             }
@@ -122,66 +111,49 @@ namespace Microsoft.OpenApi.Workbench
 
         public bool IsYaml
         {
-            get
-            {
-                return Format == "Yaml";
-            }
-            set
-            {
-                Format = "Yaml";
-            }
+            get => Format == "Yaml";
+            set => Format = "Yaml";
         }
 
         public bool IsJson
         {
-            get
-            {
-                return Format == "JSON";
-            }
-            set
-            {
-                Format = "JSON";
-            }
+            get => Format == "JSON";
+            set => Format = "JSON";
         }
 
         public bool IsV2
         {
-            get
-            {
-                return Version == "V2";
-            }
-            set
-            {
-                Version = "V2";
-            }
+            get => Version == "V2";
+            set => Version = "V2";
         }
 
         public bool IsV3
         {
-            get
-            {
-                return Version == "V3";
-            }
-            set
-            {
-                Version = "V3";
-            }
+            get => Version == "V3";
+            set => Version = "V3";
         }
 
-        protected void OnPropertyChanged(string name)
+        /// <summary>
+        /// Handling method when the property with given name has changed.
+        /// </summary>
+        protected void OnPropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;
             if (handler != null)
             {
-                handler(this, new PropertyChangedEventArgs(name));
+                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
+        /// <summary>
+        /// The core method of the class.
+        /// Runs the parsing and serializing.
+        /// </summary>
         internal void Validate()
         {
             try
             {
-                var stream = CreateStream(input);
+                var stream = CreateStream(_input);
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
@@ -197,6 +169,7 @@ namespace Microsoft.OpenApi.Workbench
                 else
                 {
                     var errorReport = new StringBuilder();
+
                     foreach (var error in context.Errors)
                     {
                         errorReport.AppendLine(error.ToString());
@@ -214,36 +187,42 @@ namespace Microsoft.OpenApi.Workbench
             }
             catch (Exception ex)
             {
+                Output = string.Empty;
                 Errors = "Failed to parse input: " + ex.Message;
             }
-
-            // Verify output is valid JSON or YAML
-            //var dummy = YamlHelper.ParseYaml(Output);
         }
 
-        private string WriteContents(OpenApiDocument doc)
+        /// <summary>
+        /// Write content from the given document based on the format and version set in this class.
+        /// </summary>
+        private string WriteContents(OpenApiDocument document)
         {
-            var outputstream = new MemoryStream();
-            doc.Serialize(
-                outputstream,
+            var outputStream = new MemoryStream();
+            document.Serialize(
+                outputStream,
                 IsV3 ? OpenApiSpecVersion.OpenApi3_0_0 : OpenApiSpecVersion.OpenApi2_0,
-                format == "Yaml" ? OpenApiFormat.Yaml : OpenApiFormat.Json);
+                _format == "Yaml" ? OpenApiFormat.Yaml : OpenApiFormat.Json);
+            
+            outputStream.Position = 0;
 
-            outputstream.Position = 0;
-
-            return new StreamReader(outputstream).ReadToEnd();
+            return new StreamReader(outputStream).ReadToEnd();
         }
 
         private MemoryStream CreateStream(string text)
         {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
+
             writer.Write(text);
             writer.Flush();
             stream.Position = 0;
+
             return stream;
         }
 
+        /// <summary>
+        /// Property changed event handler.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

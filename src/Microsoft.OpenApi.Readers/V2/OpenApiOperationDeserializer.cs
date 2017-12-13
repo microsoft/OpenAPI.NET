@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiOperation> OperationFixedFields =
+        private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
             new FixedFieldMap<OpenApiOperation>
             {
                 {
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 },
             };
 
-        private static readonly PatternFieldMap<OpenApiOperation> OperationPatternFields =
+        private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new PatternFieldMap<OpenApiOperation>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var operation = new OpenApiOperation();
 
-            ParseMap(mapNode, operation, OperationFixedFields, OperationPatternFields);
+            ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields);
 
             // Build request body based on information determined while parsing OpenApiOperation
             var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>("bodyParameter");

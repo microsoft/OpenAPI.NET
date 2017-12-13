@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiMediaType> MediaTypeFixedFields =
+        private static readonly FixedFieldMap<OpenApiMediaType> _mediaTypeFixedFields =
             new FixedFieldMap<OpenApiMediaType>
             {
                 {
@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 //Encoding
             };
 
-        private static readonly PatternFieldMap<OpenApiMediaType> MediaTypePatternFields =
+        private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
             new PatternFieldMap<OpenApiMediaType>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var mediaType = new OpenApiMediaType();
 
-            ParseMap(mapNode, mediaType, MediaTypeFixedFields, MediaTypePatternFields);
+            ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields);
 
             return mediaType;
         }

@@ -10,17 +10,17 @@ namespace Microsoft.OpenApi.Workbench
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly MainModel mainModel = new MainModel();
+        private readonly MainModel _mainModel = new MainModel();
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = mainModel;
+            DataContext = _mainModel;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            mainModel.Validate();
+            _mainModel.Validate();
         }
     }
 }

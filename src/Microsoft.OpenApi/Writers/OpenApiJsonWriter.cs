@@ -186,12 +186,12 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         protected override void WriteValueSeparator()
         {
-            if (scopes.Count == 0)
+            if (Scopes.Count == 0)
             {
                 return;
             }
 
-            var currentScope = scopes.Peek();
+            var currentScope = Scopes.Peek();
 
             if (currentScope.Type == ScopeType.Array)
             {

@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiExternalDocs> ExternalDocsFixedFields =
+        private static readonly FixedFieldMap<OpenApiExternalDocs> _externalDocsFixedFields =
             new FixedFieldMap<OpenApiExternalDocs>
             {
                 // $ref
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 },
             };
 
-        private static readonly PatternFieldMap<OpenApiExternalDocs> ExternalDocsPatternFields =
+        private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
             new PatternFieldMap<OpenApiExternalDocs>();
 
         public static OpenApiExternalDocs LoadExternalDocs(ParseNode node)
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var externalDocs = new OpenApiExternalDocs();
 
-            ParseMap(mapNode, externalDocs, ExternalDocsFixedFields, ExternalDocsPatternFields);
+            ParseMap(mapNode, externalDocs, _externalDocsFixedFields, _externalDocsPatternFields);
 
             return externalDocs;
         }
