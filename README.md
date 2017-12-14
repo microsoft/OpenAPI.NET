@@ -88,7 +88,7 @@ var output = outputStringWriter.GetStringBuilder().ToString();
 
 |**master**|
 |--|
-|[![Build status](https://ci.appveyor.com/api/projects/status/97973kjj8u7t9i5u/branch/master?svg=true)](https://ci.appveyor.com/project/MicrosoftOpenAPINETAdmin/openapi-net/branch/master)|
+|[![Build status](https://ci.appveyor.com/api/projects/status/9l6hly3vjeu0tmtx/branch/master?svg=true)](https://ci.appveyor.com/project/MicrosoftOpenAPINETAdmin/openapi-net-54e7i/branch/master)|
 
 # Contributing
 
