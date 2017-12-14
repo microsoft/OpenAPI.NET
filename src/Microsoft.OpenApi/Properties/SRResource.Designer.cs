@@ -239,5 +239,23 @@ namespace Microsoft.OpenApi.Properties {
                 return ResourceManager.GetString("SourceExpressionHasInvalidFormat", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path item name &apos;{0}&apos; MUST begin with a slash..
+        /// </summary>
+        internal static string Validation_PathItemMustBeginWithSlash {
+            get {
+                return ResourceManager.GetString("Validation_PathItemMustBeginWithSlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The string &apos;{0}&apos; MUST be in the format of an email address..
+        /// </summary>
+        internal static string Validation_StringMustBeEmailAddress {
+            get {
+                return ResourceManager.GetString("Validation_StringMustBeEmailAddress", resourceCulture);
+            }
+        }
     }
 }
