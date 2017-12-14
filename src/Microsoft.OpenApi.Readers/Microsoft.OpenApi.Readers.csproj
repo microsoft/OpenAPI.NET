@@ -2,12 +2,19 @@
     <PropertyGroup>
         <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        
+        <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
+        <PackageLicenseUrl>https://raw.githubusercontent.com/Microsoft/OpenAPI.NET/master/LICENSE</PackageLicenseUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Authors>Microsoft</Authors>
         <Company>Microsoft</Company>
-        <Product>Microsoft.OpenApi.Readers</Product>
+        <Title>Microsoft.OpenApi.Readers</Title>
         <PackageId>Microsoft.OpenApi.Readers</PackageId>
         <Version>1.0.0-beta008</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
+        <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+        <PackageTags>OpenAPI .NET</PackageTags>
+        
         <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
         <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
         <SignAssembly>true</SignAssembly>

@@ -2,12 +2,19 @@
     <PropertyGroup>
         <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        
+        <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
+        <PackageLicenseUrl>https://raw.githubusercontent.com/Microsoft/OpenAPI.NET/master/LICENSE</PackageLicenseUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Authors>Microsoft</Authors>
         <Company>Microsoft</Company>
-        <Product>Microsoft.OpenApi</Product>
+        <Title>Microsoft.OpenApi</Title>
         <PackageId>Microsoft.OpenApi</PackageId>
         <Version>1.0.0-beta008</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
+        <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+        <PackageTags>OpenAPI .NET</PackageTags>
+        
         <AssemblyName>Microsoft.OpenApi</AssemblyName>
         <RootNamespace>Microsoft.OpenApi</RootNamespace>
         <SignAssembly>true</SignAssembly>
