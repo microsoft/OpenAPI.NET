@@ -38,6 +38,17 @@ namespace Microsoft.OpenApi.Validations.Visitors
         /// </summary>
         /// <param name="context">The validation context.</param>
         /// <param name="element">The element.</param>
-        protected abstract void Next(ValidationContext context, T element);
+        protected virtual void Next(ValidationContext context, T element)
+        {
+            IOpenApiExtensible extensbile = element as IOpenApiExtensible;
+            if (extensbile != null)
+            {
+                var rules = context.RuleSet.Where(r => r.ValidatedType == typeof(IOpenApiExtensible));
+                foreach (var rule in rules)
+                {
+                    rule.Evaluate(context, extensbile);
+                }
+            }
+        }
     }
 }

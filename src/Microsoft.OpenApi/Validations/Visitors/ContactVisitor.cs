@@ -12,13 +12,5 @@ namespace Microsoft.OpenApi.Validations.Visitors
     /// </summary>
     internal class ContactVisitor : VisitorBase<OpenApiContact>
     {
-        /// <summary>
-        /// Visit the children in <see cref="OpenApiContact"/>.
-        /// </summary>
-        /// <param name="context">The validation context.</param>
-        /// <param name="contact">The <see cref="OpenApiContact"/>.</param>
-        protected override void Next(ValidationContext context, OpenApiContact contact)
-        {
-        }
     }
 }

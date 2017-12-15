@@ -8,9 +8,9 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Validations.Visitors
 {
     /// <summary>
-    /// Visit <see cref="OpenApiLicense"/>.
+    /// Visit <see cref="OpenApiDiscriminator"/>.
     /// </summary>
-    internal class LicenseVisitor : VisitorBase<OpenApiLicense>
+    internal class DiscriminatorVisitor : VisitorBase<OpenApiDiscriminator>
     {
     }
 }

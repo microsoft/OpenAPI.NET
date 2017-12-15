@@ -177,6 +177,9 @@
   <data name="SourceExpressionHasInvalidFormat" xml:space="preserve">
     <value>The source expression '{0}' has invalid format.</value>
   </data>
+  <data name="UnknownVisitorType" xml:space="preserve">
+    <value>Can not find visitor type registered for type '{0}'.</value>
+  </data>
   <data name="Validation_PathItemMustBeginWithSlash" xml:space="preserve">
     <value>The path item name '{0}' MUST begin with a slash.</value>
   </data>

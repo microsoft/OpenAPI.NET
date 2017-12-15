@@ -3,27 +3,50 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
-using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Visitors
 {
     /// <summary>
-    /// 
+    /// Class to cache the <see cref="IVisitor"/>.
     /// </summary>
     internal static class OpenApiVisitorSet
     {
-        private static IDictionary<Type, IVisitor> _elementVisitor = new Dictionary<Type, IVisitor>
+        private static IDictionary<Type, IVisitor> _visitorCache = new Dictionary<Type, IVisitor>
         {
-            { typeof(OpenApiDocument), new DocumentVisitor() },
-            { typeof(OpenApiInfo), new InfoVisitor() },
-            { typeof(OpenApiTag), new TagVisitor() },
-            { typeof(OpenApiLicense), new LicenseVisitor() },
+            { typeof(OpenApiCallback), new CallbackVisitor() },
+            { typeof(OpenApiComponents), new ComponentsVisitor() },
             { typeof(OpenApiContact), new ContactVisitor() },
-
-            // add more
+            { typeof(OpenApiDiscriminator), new DiscriminatorVisitor() },
+            { typeof(OpenApiDocument), new DocumentVisitor() },
+            { typeof(OpenApiEncoding), new EncodingVisitor() },
+            { typeof(OpenApiExample), new ExampleVisitor() },
+            { typeof(OpenApiExternalDocs), new ExternalDocsVisitor() },
+            { typeof(OpenApiHeader), new HeaderVisitor() },
+            { typeof(OpenApiInfo), new InfoVisitor() },
+            { typeof(OpenApiLicense), new LicenseVisitor() },
+            { typeof(OpenApiLink), new LinkVisitor() },
+            { typeof(OpenApiMediaType), new MediaTypeVisitor() },
+            { typeof(OpenApiOAuthFlows), new OAuthFlowsVisitor() },
+            { typeof(OpenApiOAuthFlow), new OAuthFlowVisitor() },
+            { typeof(OpenApiOperation), new OperationVisitor() },
+            { typeof(OpenApiParameter), new ParameterVisitor() },
+            { typeof(OpenApiPathItem), new PathItemVisitor() },
+            { typeof(OpenApiPaths), new PathsVisitor() },
+            { typeof(OpenApiRequestBody), new RequestBodyVisitor() },
+            { typeof(OpenApiResponses), new ResponsesVisitor() },
+            { typeof(OpenApiResponse), new ResponseVisitor() },
+            { typeof(OpenApiSchema), new SchemaVisitor() },
+            { typeof(OpenApiSecurityRequirement), new SecurityRequirementVisitor() },
+            { typeof(OpenApiSecurityScheme), new SecuritySchemeVisitor() },
+            { typeof(OpenApiServerVariable), new ServerVariableVisitor() },
+            { typeof(OpenApiServer), new ServerVisitor() },
+            { typeof(OpenApiTag), new TagVisitor() },
+            { typeof(OpenApiXml), new XmlVisitor() }
         };
 
         /// <summary>
@@ -33,13 +56,13 @@ namespace Microsoft.OpenApi.Validations.Visitors
         /// <returns>The element visitor or null.</returns>
         public static IVisitor GetVisitor(Type elementType)
         {
-            var visitor = _elementVisitor.FirstOrDefault(c => c.Key == elementType).Value;
-            if (visitor != null)
+            IVisitor visitor;
+            if (_visitorCache.TryGetValue(elementType, out visitor))
             {
                 return visitor;
             }
 
-            return null;
+            throw new OpenApiException(String.Format(SRResource.UnknownVisitorType, elementType.FullName));
         }
     }
 }

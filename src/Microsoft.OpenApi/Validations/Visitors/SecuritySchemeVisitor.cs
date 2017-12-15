@@ -9,25 +9,24 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Validations.Visitors
 {
     /// <summary>
-    /// Visit <see cref="OpenApiInfo"/>.
+    /// Visit <see cref="OpenApiSecurityScheme"/>.
     /// </summary>
-    internal class InfoVisitor : VisitorBase<OpenApiInfo>
+    internal class SecuritySchemeVisitor : VisitorBase<OpenApiSecurityScheme>
     {
         /// <summary>
-        /// Visit the children in <see cref="OpenApiInfo"/>.
+        /// Visit the children of the <see cref="OpenApiSecurityScheme"/>.
         /// </summary>
         /// <param name="context">The validation context.</param>
-        /// <param name="info">The <see cref="OpenApiInfo"/>.</param>
-        protected override void Next(ValidationContext context, OpenApiInfo info)
+        /// <param name="securityScheme">The <see cref="OpenApiSecurityScheme"/>.</param>
+        protected override void Next(ValidationContext context, OpenApiSecurityScheme securityScheme)
         {
             Debug.Assert(context != null);
-            Debug.Assert(info != null);
+            Debug.Assert(securityScheme != null);
 
-            context.Validate(info.Contact);
+            context.Validate(securityScheme.Flows);
 
-            context.Validate(info.License);
-
-            base.Next(context, info);
+            // add more.
+            base.Next(context, securityScheme);
         }
     }
 }

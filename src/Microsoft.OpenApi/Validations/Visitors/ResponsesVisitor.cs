@@ -3,28 +3,29 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System.Diagnostics;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Visitors
 {
     /// <summary>
-    /// Visit <see cref="OpenApiTag"/>.
+    /// Visit <see cref="OpenApiResponses"/>.
     /// </summary>
-    internal class TagVisitor : VisitorBase<OpenApiTag>
+    internal class ResponsesVisitor : VisitorBase<OpenApiResponses>
     {
         /// <summary>
-        /// Visit the children in <see cref="OpenApiTag"/>.
+        /// Visit the children of the <see cref="OpenApiResponses"/>.
         /// </summary>
         /// <param name="context">The validation context.</param>
-        /// <param name="tag">The <see cref="OpenApiTag"/>.</param>
-        protected override void Next(ValidationContext context, OpenApiTag tag)
+        /// <param name="responses">The <see cref="OpenApiResponses"/>.</param>
+        protected override void Next(ValidationContext context, OpenApiResponses responses)
         {
-            if (tag == null)
-            {
-                return;
-            }
+            Debug.Assert(context != null);
+            Debug.Assert(responses != null);
 
-            context.Validate(tag.ExternalDocs);
+            context.ValidateMap(responses);
+
+            base.Next(context, responses);
         }
     }
 }

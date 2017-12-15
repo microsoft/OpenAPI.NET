@@ -241,6 +241,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can not find visitor type registered for type &apos;{0}&apos;..
+        /// </summary>
+        internal static string UnknownVisitorType {
+            get {
+                return ResourceManager.GetString("UnknownVisitorType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The path item name &apos;{0}&apos; MUST begin with a slash..
         /// </summary>
         internal static string Validation_PathItemMustBeginWithSlash {

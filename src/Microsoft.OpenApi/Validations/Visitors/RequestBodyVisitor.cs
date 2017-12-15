@@ -9,25 +9,23 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Validations.Visitors
 {
     /// <summary>
-    /// Visit <see cref="OpenApiInfo"/>.
+    /// Visit <see cref="OpenApiRequestBody"/>.
     /// </summary>
-    internal class InfoVisitor : VisitorBase<OpenApiInfo>
+    internal class RequestBodyVisitor : VisitorBase<OpenApiRequestBody>
     {
         /// <summary>
-        /// Visit the children in <see cref="OpenApiInfo"/>.
+        /// Visit the children of the <see cref="OpenApiRequestBody"/>.
         /// </summary>
         /// <param name="context">The validation context.</param>
-        /// <param name="info">The <see cref="OpenApiInfo"/>.</param>
-        protected override void Next(ValidationContext context, OpenApiInfo info)
+        /// <param name="requestBody">The <see cref="OpenApiRequestBody"/>.</param>
+        protected override void Next(ValidationContext context, OpenApiRequestBody requestBody)
         {
             Debug.Assert(context != null);
-            Debug.Assert(info != null);
+            Debug.Assert(requestBody != null);
 
-            context.Validate(info.Contact);
+            context.ValidateMap(requestBody.Content);
 
-            context.Validate(info.License);
-
-            base.Next(context, info);
+            base.Next(context, requestBody);
         }
     }
 }

@@ -9,25 +9,25 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Validations.Visitors
 {
     /// <summary>
-    /// Visit <see cref="OpenApiInfo"/>.
+    /// Visit <see cref="OpenApiMediaType"/>.
     /// </summary>
-    internal class InfoVisitor : VisitorBase<OpenApiInfo>
+    internal class MediaTypeVisitor : VisitorBase<OpenApiMediaType>
     {
         /// <summary>
-        /// Visit the children in <see cref="OpenApiInfo"/>.
+        /// Visit the children of the <see cref="OpenApiMediaType"/>.
         /// </summary>
         /// <param name="context">The validation context.</param>
-        /// <param name="info">The <see cref="OpenApiInfo"/>.</param>
-        protected override void Next(ValidationContext context, OpenApiInfo info)
+        /// <param name="mediaType">The <see cref="OpenApiMediaType"/>.</param>
+        protected override void Next(ValidationContext context, OpenApiMediaType mediaType)
         {
             Debug.Assert(context != null);
-            Debug.Assert(info != null);
+            Debug.Assert(mediaType != null);
 
-            context.Validate(info.Contact);
+            context.Validate(mediaType.Schema);
+            context.ValidateMap(mediaType.Examples);
+            context.ValidateMap(mediaType.Encoding);
 
-            context.Validate(info.License);
-
-            base.Next(context, info);
+            base.Next(context, mediaType);
         }
     }
 }

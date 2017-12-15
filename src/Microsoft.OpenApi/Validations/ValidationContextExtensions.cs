@@ -3,9 +3,9 @@
 //  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
 // ------------------------------------------------------------
 
+using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Validations.Visitors;
-using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Validations
 {
@@ -53,6 +53,29 @@ namespace Microsoft.OpenApi.Validations
                 foreach (var element in collection)
                 {
                     context.Validate(element);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validate the map of Open API element.
+        /// </summary>
+        /// <typeparam name="T">The Open API element.</typeparam>
+        /// <param name="context">The validation cotext.</param>
+        /// <param name="elements">The map of Open API element.</param>
+        public static void ValidateMap<T>(this ValidationContext context, IDictionary<string, T> elements)
+            where T : IOpenApiElement
+        {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (elements != null)
+            {
+                foreach (var element in elements)
+                {
+                    context.Validate(element.Value);
                 }
             }
         }
