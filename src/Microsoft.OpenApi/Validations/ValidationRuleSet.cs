@@ -40,6 +40,8 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             OpenApiResponseRules.FieldIsRequired,
 
+            OpenApiOAuthFlowRules.FieldIsRequired,
+
             OpenApiExtensibleRules.ExtensionNameMustStartWithXDash,
             // add more default rules.
         };
