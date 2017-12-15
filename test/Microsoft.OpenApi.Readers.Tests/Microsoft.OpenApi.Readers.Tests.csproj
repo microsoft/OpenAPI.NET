@@ -65,6 +65,21 @@
         <None Update="V2Tests\Samples\minimal.v3.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="V2Tests\Samples\OpenApiParameter\formDataParameter.yaml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="V2Tests\Samples\OpenApiParameter\queryParameter.yaml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="V2Tests\Samples\OpenApiParameter\pathParameter.yaml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="V2Tests\Samples\OpenApiParameter\headerParameter.yaml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
