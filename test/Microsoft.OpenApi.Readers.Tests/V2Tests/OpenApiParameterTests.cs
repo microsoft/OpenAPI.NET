@@ -18,8 +18,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseBodyParameterShouldSucceed()
         {
-            MapNode node;
             // Arrange
+            MapNode node;
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "bodyParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
@@ -37,8 +37,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParsePathParameterShouldSucceed()
         {
-            MapNode node;
             // Arrange
+            MapNode node;
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "pathParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
@@ -65,12 +65,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseQueryParameterShouldSucceed()
         {
-            MapNode node;
             // Arrange
+            MapNode node;
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "queryParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
+
             // Act
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
@@ -98,8 +99,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseFormDataParameterShouldSucceed()
         {
-            MapNode node;
             // Arrange
+            MapNode node;
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "formDataParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
@@ -117,8 +118,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseHeaderParameterShouldSucceed()
         {
-            MapNode node;
             // Arrange
+            MapNode node;
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "headerParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
