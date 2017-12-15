@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Validators;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -12,6 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
+    [OpenApiValidator(typeof(CallbackValidator))]
     public class OpenApiCallback : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>

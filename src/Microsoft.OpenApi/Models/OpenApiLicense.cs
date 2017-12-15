@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Validators;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -12,6 +14,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// License Object.
     /// </summary>
+    [OpenApiValidator(typeof(LicenseValidator))]
     public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>

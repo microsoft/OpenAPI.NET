@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Validators;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -13,6 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
+    [OpenApiValidator(typeof(SecuritySchemeValidator))]
     public class OpenApiSecurityScheme : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>

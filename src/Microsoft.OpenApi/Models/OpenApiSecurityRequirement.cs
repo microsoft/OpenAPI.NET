@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Validators;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -15,6 +17,7 @@ namespace Microsoft.OpenApi.Models
     /// then the value is a list of scope names required for the execution.
     /// For other security scheme types, the array MUST be empty.
     /// </summary>
+    [OpenApiValidator(typeof(SecurityRequirementValidator))]
     public class OpenApiSecurityRequirement : Dictionary<OpenApiSecurityScheme, IList<string>>,
         IOpenApiSerializable
     {
