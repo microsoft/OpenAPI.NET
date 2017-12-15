@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using Microsoft.OpenApi.Models;
@@ -26,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         if (!item.Email.IsEmailAddress())
                         {
-                            ValidationError error = new ValidationError(ErrorReason.EmailFormat, context.PathString,
+                            ValidationError error = new ValidationError(ErrorReason.Format, context.PathString,
                                 String.Format(SRResource.Validation_StringMustBeEmailAddress, item.Email));
                             context.AddError(error);
                         }

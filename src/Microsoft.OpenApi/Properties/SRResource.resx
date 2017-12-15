@@ -180,8 +180,20 @@
   <data name="UnknownVisitorType" xml:space="preserve">
     <value>Can not find visitor type registered for type '{0}'.</value>
   </data>
+  <data name="Validation_ComponentsKeyMustMatchRegularExpr" xml:space="preserve">
+    <value>The key '{0}' in '{1}' of components MUST match the regular expression '{2}'.</value>
+  </data>
+  <data name="Validation_ExtensionNameMustBeginWithXDash" xml:space="preserve">
+    <value>The extension name '{0}' in '{1}' object MUST begin with 'x-'.</value>
+  </data>
+  <data name="Validation_FieldIsRequired" xml:space="preserve">
+    <value>The field '{0}' in '{1}' object is REQUIRED.</value>
+  </data>
   <data name="Validation_PathItemMustBeginWithSlash" xml:space="preserve">
     <value>The path item name '{0}' MUST begin with a slash.</value>
+  </data>
+  <data name="Validation_RuleAddTwice" xml:space="preserve">
+    <value>The same rule cannot be in the same rule set twice.</value>
   </data>
   <data name="Validation_StringMustBeEmailAddress" xml:space="preserve">
     <value>The string '{0}' MUST be in the format of an email address.</value>

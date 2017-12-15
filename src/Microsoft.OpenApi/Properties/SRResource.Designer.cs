@@ -250,11 +250,47 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The key &apos;{0}&apos; in &apos;{1}&apos; of components MUST match the regular expression &apos;{2}&apos;..
+        /// </summary>
+        internal static string Validation_ComponentsKeyMustMatchRegularExpr {
+            get {
+                return ResourceManager.GetString("Validation_ComponentsKeyMustMatchRegularExpr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The extension name &apos;{0}&apos; in &apos;{1}&apos; object MUST begin with &apos;x-&apos;..
+        /// </summary>
+        internal static string Validation_ExtensionNameMustBeginWithXDash {
+            get {
+                return ResourceManager.GetString("Validation_ExtensionNameMustBeginWithXDash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field &apos;{0}&apos; in &apos;{1}&apos; object is REQUIRED..
+        /// </summary>
+        internal static string Validation_FieldIsRequired {
+            get {
+                return ResourceManager.GetString("Validation_FieldIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The path item name &apos;{0}&apos; MUST begin with a slash..
         /// </summary>
         internal static string Validation_PathItemMustBeginWithSlash {
             get {
                 return ResourceManager.GetString("Validation_PathItemMustBeginWithSlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The same rule cannot be in the same rule set twice..
+        /// </summary>
+        internal static string Validation_RuleAddTwice {
+            get {
+                return ResourceManager.GetString("Validation_RuleAddTwice", resourceCulture);
             }
         }
         

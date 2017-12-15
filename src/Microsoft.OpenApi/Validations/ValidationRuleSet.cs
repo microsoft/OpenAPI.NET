@@ -1,18 +1,17 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
     /// <summary>
-    /// 
+    /// The rule set of the validation.
     /// </summary>
     public sealed class ValidationRuleSet : IEnumerable<ValidationRule>
     {
@@ -23,13 +22,25 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// </summary>
         public static ValidationRuleSet DefaultRuleSet = new ValidationRuleSet
         {
-            OpenApiDocumentRules.InfoIsRequired,
-            OpenApiDocumentRules.PathsIsRequired,
+            OpenApiComponentsRules.KeyMustBeRegularExpression,
 
-            OpenApiInfoRules.TitleIsRequired,
+            OpenApiDocumentRules.FieldIsRequired,
+
+            OpenApiInfoRules.FieldIsRequired,
+
+            OpenApiLicenseRules.FieldIsRequired,
 
             OpenApiContactRules.EmailMustBeEmailFormat,
 
+            OpenApiExternalDocsRules.FieldIsRequired,
+
+            OpenApiServerRules.FieldIsRequired,
+
+            OpenApiTagRules.FieldIsRequired,
+
+            OpenApiResponseRules.FieldIsRequired,
+
+            OpenApiExtensibleRules.ExtensionNameMustStartWithXDash,
             // add more default rules.
         };
 
@@ -73,15 +84,15 @@ namespace Microsoft.OpenApi.Validations.Rules
         public void Add(ValidationRule rule)
         {
             IList<ValidationRule> typeRules;
-            if (!_rules.TryGetValue(rule.ValidatedType, out typeRules))
+            if (!_rules.TryGetValue(rule.ElementType, out typeRules))
             {
                 typeRules = new List<ValidationRule>();
-                _rules[rule.ValidatedType] = typeRules;
+                _rules[rule.ElementType] = typeRules;
             }
 
             if (typeRules.Contains(rule))
             {
-                throw new OpenApiException("The same rule cannot be in the same rule set twice.");
+                throw new OpenApiException(SRResource.Validation_RuleAddTwice);
             }
 
             typeRules.Add(rule);

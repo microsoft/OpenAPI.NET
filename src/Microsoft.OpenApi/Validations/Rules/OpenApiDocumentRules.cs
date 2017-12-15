@@ -1,9 +1,9 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
+using System;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -15,27 +15,29 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// The Info field is required.
         /// </summary>
-        public static readonly ValidationRule<OpenApiDocument> InfoIsRequired =
+        public static readonly ValidationRule<OpenApiDocument> FieldIsRequired =
             new ValidationRule<OpenApiDocument>(
                 (context, item) =>
                 {
+                    // info
+                    context.Push("info");
                     if (item.Info == null)
                     {
-                        //context.AddError();
+                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                            String.Format(SRResource.Validation_FieldIsRequired, "info", "document"));
+                        context.AddError(error);
                     }
-                });
+                    context.Pop();
 
-        /// <summary>
-        /// The Paths field is required.
-        /// </summary>
-        public static readonly ValidationRule<OpenApiDocument> PathsIsRequired =
-            new ValidationRule<OpenApiDocument>(
-                (context, item) =>
-                {
+                    // paths
+                    context.Push("paths");
                     if (item.Paths == null)
                     {
-                        //context.AddError();
+                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                            String.Format(SRResource.Validation_FieldIsRequired, "paths", "document"));
+                        context.AddError(error);
                     }
+                    context.Pop();
                 });
     }
 }

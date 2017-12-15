@@ -1,7 +1,5 @@
-﻿// ------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-// ------------------------------------------------------------
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
 
 using System.Diagnostics;
 using System.Linq;
@@ -23,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Visitors
         {
             Debug.Assert(item is T, "item should be " + typeof(T));
 
-            var rules = context.RuleSet.Where(r => r.ValidatedType == typeof(T));
+            var rules = context.RuleSet.Where(r => r.ElementType == typeof(T));
             foreach (var rule in rules)
             {
                 rule.Evaluate(context, item);
@@ -43,7 +41,7 @@ namespace Microsoft.OpenApi.Validations.Visitors
             IOpenApiExtensible extensbile = element as IOpenApiExtensible;
             if (extensbile != null)
             {
-                var rules = context.RuleSet.Where(r => r.ValidatedType == typeof(IOpenApiExtensible));
+                var rules = context.RuleSet.Where(r => r.ElementType == typeof(IOpenApiExtensible));
                 foreach (var rule in rules)
                 {
                     rule.Evaluate(context, extensbile);
