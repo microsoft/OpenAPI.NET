@@ -378,8 +378,8 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-                var actual = AdvancedComponentsWithReference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
-            _output.WriteLine(actual);
+            var actual = AdvancedComponentsWithReference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -454,9 +454,7 @@ securitySchemes:
 
             // Act
             var actual = AdvancedComponentsWithReference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
-
-            _output.WriteLine(actual);
-
+            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -538,11 +536,18 @@ securitySchemes:
       property1:
         type: string";
 
+            // Current output
+            // schemas:
+            //   schema1: { }
+            //   schema2:
+            //     type: object
+            //     properties:
+            //       property1:
+            //         type: string";
+
             // Act
             var actual = TopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
-
-            _output.WriteLine(actual);
-
+            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -556,6 +561,10 @@ securitySchemes:
             var expected = @"schemas:
   schema1:
     $ref: '#/components/schemas/schema1'";
+
+            // Current output
+            // schemas:
+            //   schema1: { }
 
             // Act
             var actual = TopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
@@ -584,9 +593,7 @@ securitySchemes:
 
             // Act
             var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
-
-            _output.WriteLine(actual);
-
+            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
