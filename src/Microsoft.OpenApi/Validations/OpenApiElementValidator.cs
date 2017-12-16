@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        /// Validate the Open API element.
+        /// Validate the Open API element and output the whole validation errors.
         /// </summary>
         /// <typeparam name="T">The Open API element type.</typeparam>
         /// <param name="element">The Open API element.</param>
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        ///  Validate the Open API element.
+        ///  Validate the Open API element with the given rule set and output the whole validation errors.
         /// </summary>
         /// <typeparam name="T">The Open API element type.</typeparam>
         /// <param name="element">The Open API element.</param>
