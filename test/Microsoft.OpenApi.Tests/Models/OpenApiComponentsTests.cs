@@ -77,14 +77,27 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         ["property3"] = new OpenApiSchema
                         {
-                            Type = "string",
-                            MaxLength = 15
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "schema2"
+                            }
                         }
                     },
                     Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema1"
+                    }
+                },
+                ["schema2"] = new OpenApiSchema
+                {
+                    Properties = new Dictionary<string, OpenApiSchema>
+                    {
+                        ["property2"] = new OpenApiSchema
+                        {
+                            Type = "integer"
+                        }
                     }
                 },
             },
@@ -152,6 +165,81 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         null,
                         null
+                    }
+                }
+            }
+        };
+
+        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
+        {
+            Schemas =
+            {
+                ["schema1"] = new OpenApiSchema
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "schema2"
+                    }
+                },
+                ["schema2"] = new OpenApiSchema
+                {
+                    Type = "object",
+                    Properties =
+                    {
+                        ["property1"] = new OpenApiSchema()
+                        {
+                            Type = "string"
+                        }
+                    }
+                },
+            }
+        };
+
+        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
+        {
+            Schemas =
+            {
+                ["schema1"] = new OpenApiSchema
+                {
+                    Type = "object",
+                    Properties =
+                    {
+                        ["property1"] = new OpenApiSchema()
+                        {
+                            Type = "string"
+                        }
+                    },
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "schema1"
+                    }
+                },
+                ["schema2"] = new OpenApiSchema
+                {
+                    Type = "object",
+                    Properties =
+                    {
+                        ["property1"] = new OpenApiSchema()
+                        {
+                            Type = "string"
+                        }
+                    }
+                },
+            }
+        };
+
+        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
+        {
+            Schemas =
+            {
+                ["schema1"] = new OpenApiSchema
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "schema1"
                     }
                 }
             }
@@ -255,8 +343,14 @@ namespace Microsoft.OpenApi.Tests.Models
           ""type"": ""integer""
         },
         ""property3"": {
-          ""maxLength"": 15,
-          ""type"": ""string""
+          ""$ref"": ""#/components/schemas/schema2""
+        }
+      }
+    },
+    ""schema2"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
         }
       }
     }
@@ -284,8 +378,8 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedComponentsWithReference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
-
+                var actual = AdvancedComponentsWithReference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            _output.WriteLine(actual);
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -338,8 +432,11 @@ securitySchemes:
       property2:
         type: integer
       property3:
-        maxLength: 15
-        type: string
+        $ref: '#/components/schemas/schema2'
+  schema2:
+    properties:
+      property2:
+        type: integer
 securitySchemes:
   securityScheme1:
     type: oauth2
@@ -357,6 +454,8 @@ securitySchemes:
 
             // Act
             var actual = AdvancedComponentsWithReference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+
+            _output.WriteLine(actual);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -419,6 +518,74 @@ securitySchemes:
 
             // Act
             var actual = BrokenComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact(Skip = "Issue #157 We are not serializing top-level reference in components correctly")]
+        public void SerializeTopLevelReferencingComponentsAsYamlWorks()
+        {
+            // Arrange
+            var expected = @"schemas:
+  schema1:
+    $ref: '#/components/schemas/schema2'
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
+
+            // Act
+            var actual = TopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+
+            _output.WriteLine(actual);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact(Skip = "Issue #157 We are not serializing top-level reference in components correctly")]
+        public void SerializeTopLevelSelfReferencingComponentsAsYamlWorks()
+        {
+            // Arrange
+            var expected = @"schemas:
+  schema1:
+    $ref: '#/components/schemas/schema1'";
+
+            // Act
+            var actual = TopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlWorks()
+        {
+            // Arrange
+            var expected = @"schemas:
+  schema1:
+    type: object
+    properties:
+      property1:
+        type: string
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
+
+            // Act
+            var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+
+            _output.WriteLine(actual);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
