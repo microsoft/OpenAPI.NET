@@ -554,17 +554,12 @@ securitySchemes:
             actual.Should().Be(expected);
         }
 
-        [Fact(Skip = "Issue #157 We are not serializing top-level reference in components correctly")]
+        [Fact]
         public void SerializeTopLevelSelfReferencingComponentsAsYamlWorks()
         {
             // Arrange
             var expected = @"schemas:
-  schema1:
-    $ref: '#/components/schemas/schema1'";
-
-            // Current output
-            // schemas:
-            //   schema1: { }
+  schema1: { }";
 
             // Act
             var actual = TopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
