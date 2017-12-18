@@ -8,8 +8,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Validations.Rules;
 
-namespace Microsoft.OpenApi.Validations.Rules
+namespace Microsoft.OpenApi.Validations
 {
     /// <summary>
     /// The rule set of the validation.

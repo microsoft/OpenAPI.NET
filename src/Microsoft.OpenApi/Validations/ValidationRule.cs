@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.OpenApi.Interfaces;
 
-namespace Microsoft.OpenApi.Validations.Rules
+namespace Microsoft.OpenApi.Validations
 {
     /// <summary>
     /// Class containing validation rule logic.
