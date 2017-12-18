@@ -796,7 +796,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
-  ""openapi"": ""3.0.0"",
+  ""openapi"": ""3.0.1"",
   ""info"": {
     ""title"": ""Swagger Petstore (Simple)"",
     ""description"": ""A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification"",
@@ -1310,7 +1310,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
-  ""openapi"": ""3.0.0"",
+  ""openapi"": ""3.0.1"",
   ""info"": {
     ""title"": ""Swagger Petstore (Simple)"",
     ""description"": ""A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification"",

@@ -65,15 +65,22 @@ namespace Microsoft.OpenApi.Readers
 
             var inputVersion = GetVersion(rootNode);
 
-            switch (inputVersion)
+            if ( inputVersion == "2.0")
             {
-                case "2.0":
-                    context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
-                    return OpenApiV2Deserializer.LoadOpenApi(rootNode);
-
-                default:
-                    context.ReferenceService = new OpenApiV3ReferenceService(rootNode);
-                    return OpenApiV3Deserializer.LoadOpenApi(rootNode);
+                context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
+                return OpenApiV2Deserializer.LoadOpenApi(rootNode);
+            }
+            else if (inputVersion.StartsWith("3.0."))
+            {
+                context.ReferenceService = new OpenApiV3ReferenceService(rootNode);
+                return OpenApiV3Deserializer.LoadOpenApi(rootNode);
+            }
+            else
+            {
+                // If version number is not recognizable,
+                // our best effort will try to deserialize the document to V3.
+                context.ReferenceService = new OpenApiV3ReferenceService(rootNode);
+                return OpenApiV3Deserializer.LoadOpenApi(rootNode);
             }
         }
     }
