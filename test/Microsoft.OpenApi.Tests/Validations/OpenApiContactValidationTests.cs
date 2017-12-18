@@ -2,11 +2,10 @@
 // Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Validations;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests.Models
+namespace Microsoft.OpenApi.Validations.Tests
 {
     public class OpenApiContactValidationTests
     {

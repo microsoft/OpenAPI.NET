@@ -4,10 +4,9 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Validations;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests.Models
+namespace Microsoft.OpenApi.Validations.Tests
 {
     public class OpenApiTagValidationTests
     {
