@@ -10,12 +10,13 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// <summary>
     /// The validation rules for <see cref="OpenApiExternalDocs"/>.
     /// </summary>
+    [OpenApiRule]
     internal static class OpenApiExternalDocsRules
     {
         /// <summary>
         /// Validate the field is required.
         /// </summary>
-        public static readonly ValidationRule<OpenApiExternalDocs> FieldIsRequired =
+        public static ValidationRule<OpenApiExternalDocs> FieldIsRequired =>
             new ValidationRule<OpenApiExternalDocs>(
                 (context, item) =>
                 {

@@ -10,12 +10,13 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// <summary>
     /// The validation rules for <see cref="IOpenApiExtensible"/>.
     /// </summary>
+    [OpenApiRule]
     public static class OpenApiExtensibleRules
     {
         /// <summary>
         /// Extension name MUST start with "x-".
         /// </summary>
-        public static readonly ValidationRule<IOpenApiExtensible> ExtensionNameMustStartWithXDash =
+        public static ValidationRule<IOpenApiExtensible> ExtensionNameMustStartWithXDash =>
             new ValidationRule<IOpenApiExtensible>(
                 (context, item) =>
                 {

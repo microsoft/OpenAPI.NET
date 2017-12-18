@@ -10,12 +10,13 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// <summary>
     /// The validation rules for <see cref="OpenApiLicense"/>.
     /// </summary>
+    [OpenApiRule]
     public static class OpenApiLicenseRules
     {
         /// <summary>
         /// REQUIRED.
         /// </summary>
-        public static readonly ValidationRule<OpenApiLicense> FieldIsRequired =
+        public static ValidationRule<OpenApiLicense> FieldIsRequired =>
             new ValidationRule<OpenApiLicense>(
                 (context, license) =>
                 {

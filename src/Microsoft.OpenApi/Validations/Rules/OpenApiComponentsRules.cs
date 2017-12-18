@@ -11,6 +11,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// <summary>
     /// The validation rules for <see cref="OpenApiComponents"/>.
     /// </summary>
+    [OpenApiRule]
     public static class OpenApiComponentsRules
     {
         /// <summary>
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// All the fixed fields declared above are objects
         /// that MUST use keys that match the regular expression: ^[a-zA-Z0-9\.\-_]+$.
         /// </summary>
-        public static readonly ValidationRule<OpenApiComponents> KeyMustBeRegularExpression =
+        public static ValidationRule<OpenApiComponents> KeyMustBeRegularExpression =>
             new ValidationRule<OpenApiComponents>(
                 (context, components) =>
                 {

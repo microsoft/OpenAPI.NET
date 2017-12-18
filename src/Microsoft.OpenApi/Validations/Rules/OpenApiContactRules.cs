@@ -10,12 +10,13 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// <summary>
     /// The validation rules for <see cref="OpenApiContact"/>.
     /// </summary>
+    [OpenApiRule]
     internal static class OpenApiContactRules
     {
         /// <summary>
         /// Email field MUST be email address.
         /// </summary>
-        public static readonly ValidationRule<OpenApiContact> EmailMustBeEmailFormat =
+        public static ValidationRule<OpenApiContact> EmailMustBeEmailFormat =>
             new ValidationRule<OpenApiContact>(
                 (context, item) =>
                 {
@@ -35,7 +36,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Url field MUST be url format.
         /// </summary>
-        public static readonly ValidationRule<OpenApiContact> UrlMustBeUrlFormat =
+        public static ValidationRule<OpenApiContact> UrlMustBeUrlFormat =>
             new ValidationRule<OpenApiContact>(
                 (context, item) =>
                 {

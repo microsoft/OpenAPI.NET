@@ -10,12 +10,13 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// <summary>
     /// The validation rules for <see cref="OpenApiInfo"/>.
     /// </summary>
+    [OpenApiRule]
     internal static class OpenApiInfoRules
     {
         /// <summary>
         /// Validate the field is required.
         /// </summary>
-        public static readonly ValidationRule<OpenApiInfo> FieldIsRequired =
+        public static ValidationRule<OpenApiInfo> FieldIsRequired =>
             new ValidationRule<OpenApiInfo>(
                 (context, item) =>
                 {

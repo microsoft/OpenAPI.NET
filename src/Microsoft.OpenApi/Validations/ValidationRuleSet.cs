@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Exceptions;
@@ -17,34 +18,23 @@ namespace Microsoft.OpenApi.Validations.Rules
     {
         private IDictionary<Type, IList<ValidationRule>> _rules = new Dictionary<Type, IList<ValidationRule>>();
 
+        private static ValidationRuleSet _defaultRuleSet;
+
         /// <summary>
-        /// The default rule set.
+        /// Gets the default validation rule sets.
         /// </summary>
-        public static ValidationRuleSet DefaultRuleSet = new ValidationRuleSet
+        public static ValidationRuleSet DefaultRuleSet
         {
-            OpenApiComponentsRules.KeyMustBeRegularExpression,
+            get
+            {
+                if (_defaultRuleSet == null)
+                {
+                    _defaultRuleSet = new Lazy<ValidationRuleSet>(() => BuildDefaultRuleSet(), isThreadSafe: false).Value;
+                }
 
-            OpenApiDocumentRules.FieldIsRequired,
-
-            OpenApiInfoRules.FieldIsRequired,
-
-            OpenApiLicenseRules.FieldIsRequired,
-
-            OpenApiContactRules.EmailMustBeEmailFormat,
-
-            OpenApiExternalDocsRules.FieldIsRequired,
-
-            OpenApiServerRules.FieldIsRequired,
-
-            OpenApiTagRules.FieldIsRequired,
-
-            OpenApiResponseRules.FieldIsRequired,
-
-            OpenApiOAuthFlowRules.FieldIsRequired,
-
-            OpenApiExtensibleRules.ExtensionNameMustStartWithXDash,
-            // add more default rules.
-        };
+                return _defaultRuleSet;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRuleSet"/> class.
@@ -122,6 +112,37 @@ namespace Microsoft.OpenApi.Validations.Rules
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        private static ValidationRuleSet BuildDefaultRuleSet()
+        {
+            ValidationRuleSet ruleSet = new ValidationRuleSet();
+
+            IEnumerable<Type> allTypes = typeof(ValidationRuleSet).Assembly.GetTypes().Where(t => t.IsClass && t != typeof(object));
+            Type validationRuleType = typeof(ValidationRule);
+            foreach (Type type in allTypes)
+            {
+                if (!type.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
+                {
+                    continue;
+                }
+
+                var properties = type.GetProperties(BindingFlags.Static | BindingFlags.Public);
+                foreach (var property in properties)
+                {
+                    if (validationRuleType.IsAssignableFrom(property.PropertyType))
+                    {
+                        var propertyValue = property.GetValue(null); // static property
+                        ValidationRule rule = propertyValue as ValidationRule;
+                        if (rule != null)
+                        {
+                            ruleSet.Add(rule);
+                        }
+                    }
+                }
+            }
+
+            return ruleSet;
         }
     }
 }
