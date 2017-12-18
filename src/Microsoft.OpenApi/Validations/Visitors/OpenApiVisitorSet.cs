@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Validations.Visitors
 {
@@ -14,39 +16,23 @@ namespace Microsoft.OpenApi.Validations.Visitors
     /// </summary>
     internal static class OpenApiVisitorSet
     {
-        private static IDictionary<Type, IVisitor> _visitorCache = new Dictionary<Type, IVisitor>
-        {
-            { typeof(OpenApiCallback), new CallbackVisitor() },
-            { typeof(OpenApiComponents), new ComponentsVisitor() },
-            { typeof(OpenApiContact), new ContactVisitor() },
-            { typeof(OpenApiDiscriminator), new DiscriminatorVisitor() },
-            { typeof(OpenApiDocument), new DocumentVisitor() },
-            { typeof(OpenApiEncoding), new EncodingVisitor() },
-            { typeof(OpenApiExample), new ExampleVisitor() },
-            { typeof(OpenApiExternalDocs), new ExternalDocsVisitor() },
-            { typeof(OpenApiHeader), new HeaderVisitor() },
-            { typeof(OpenApiInfo), new InfoVisitor() },
-            { typeof(OpenApiLicense), new LicenseVisitor() },
-            { typeof(OpenApiLink), new LinkVisitor() },
-            { typeof(OpenApiMediaType), new MediaTypeVisitor() },
-            { typeof(OpenApiOAuthFlows), new OAuthFlowsVisitor() },
-            { typeof(OpenApiOAuthFlow), new OAuthFlowVisitor() },
-            { typeof(OpenApiOperation), new OperationVisitor() },
-            { typeof(OpenApiParameter), new ParameterVisitor() },
-            { typeof(OpenApiPathItem), new PathItemVisitor() },
-            { typeof(OpenApiPaths), new PathsVisitor() },
-            { typeof(OpenApiRequestBody), new RequestBodyVisitor() },
-            { typeof(OpenApiResponses), new ResponsesVisitor() },
-            { typeof(OpenApiResponse), new ResponseVisitor() },
-            { typeof(OpenApiSchema), new SchemaVisitor() },
-            { typeof(OpenApiSecurityRequirement), new SecurityRequirementVisitor() },
-            { typeof(OpenApiSecurityScheme), new SecuritySchemeVisitor() },
-            { typeof(OpenApiServerVariable), new ServerVariableVisitor() },
-            { typeof(OpenApiServer), new ServerVisitor() },
-            { typeof(OpenApiTag), new TagVisitor() },
-            { typeof(OpenApiXml), new XmlVisitor() }
-        };
+        private static IDictionary<Type, IVisitor> _visitors;
 
+        /// <summary>
+        /// Gets the visitors
+        /// </summary>
+        public static IDictionary<Type, IVisitor> Visitors
+        {
+            get
+            {
+                if (_visitors == null)
+                {
+                    _visitors = new Lazy<IDictionary<Type, IVisitor>>(() => BuildVisitorSet(), isThreadSafe: false).Value;
+                }
+
+                return _visitors;
+            }
+        }
         /// <summary>
         /// Get the element visitor.
         /// </summary>
@@ -55,12 +41,51 @@ namespace Microsoft.OpenApi.Validations.Visitors
         public static IVisitor GetVisitor(Type elementType)
         {
             IVisitor visitor;
-            if (_visitorCache.TryGetValue(elementType, out visitor))
+            if (Visitors.TryGetValue(elementType, out visitor))
             {
                 return visitor;
             }
 
             throw new OpenApiException(String.Format(SRResource.UnknownVisitorType, elementType.FullName));
+        }
+
+        private static IDictionary<Type, IVisitor> BuildVisitorSet()
+        {
+            IDictionary<Type, IVisitor> visitors = new Dictionary<Type, IVisitor>();
+
+            IEnumerable<Type> allTypes = typeof(OpenApiVisitorSet).Assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && t != typeof(object));
+
+            Type visitorInterfaceType = typeof(IVisitor);
+            Type elementType = typeof(IOpenApiElement);
+            foreach (Type type in allTypes)
+            {
+                if (!visitorInterfaceType.IsAssignableFrom(type))
+                {
+                    continue;
+                }
+
+                Type baseType = type.BaseType;
+                if (baseType == null || !baseType.IsGenericType ||
+                    baseType.GetGenericTypeDefinition() != typeof(VisitorBase<>))
+                {
+                    continue;
+                }
+
+                Type validationType = baseType.GetGenericArguments()[0];
+                if (!elementType.IsAssignableFrom(validationType))
+                {
+                    continue;
+                }
+
+                object instance = Activator.CreateInstance(type);
+                IVisitor visitor = instance as IVisitor;
+                if (visitor != null)
+                {
+                    visitors[validationType] = visitor;
+                }
+            }
+
+            return visitors;
         }
     }
 }
