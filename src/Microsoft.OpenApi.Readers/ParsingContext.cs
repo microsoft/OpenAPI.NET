@@ -20,9 +20,9 @@ namespace Microsoft.OpenApi.Readers
         private readonly Stack<string> _currentLocation = new Stack<string>();
         private readonly Dictionary<string, IOpenApiReferenceable> _referenceStore = new Dictionary<string, IOpenApiReferenceable>();
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
-        private readonly List<OpenApiTag> _tags = new List<OpenApiTag>();
         private IOpenApiVersionService _versionService;
-        private RootNode _rootNode;
+        internal RootNode RootNode { get; set; }
+        internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
 
 
         /// <summary>
@@ -33,46 +33,25 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal OpenApiDocument Parse(YamlDocument yamlDocument, OpenApiDiagnostic diagnostic)
         {
-            _rootNode = new RootNode(this, diagnostic, yamlDocument);
+            RootNode = new RootNode(this, diagnostic, yamlDocument);
 
-            var inputVersion = GetVersion(_rootNode);
+            var inputVersion = GetVersion(RootNode);
 
             OpenApiDocument doc;
             switch (inputVersion)
             {
                 case "2.0":
                     this.ReferenceService = new OpenApiV2VersionService();
-                    doc = this.ReferenceService.LoadOpenApi(_rootNode);
+                    doc = this.ReferenceService.LoadOpenApi(RootNode);
                     break;
 
                 default:
                     this.ReferenceService = new OpenApiV3VersionService();
-                    doc = this.ReferenceService.LoadOpenApi(_rootNode);
+                    doc = this.ReferenceService.LoadOpenApi(RootNode);
                     break;
             }
 
             return doc;
-        }
-
-        internal RootNode RootNode { get
-            {
-                return _rootNode;
-            }
-            set
-            {
-                {
-                    _rootNode = value;
-                    
-                }
-            }
-        }
-
-        internal List<OpenApiTag> Tags
-        {
-            get
-            {
-                return _tags;
-            }
         }
 
         /// <summary>
@@ -97,7 +76,7 @@ namespace Microsoft.OpenApi.Readers
             // Precompute the tags array so that each tag reference does not require a new deserialization.
             var tagListPointer = new JsonPointer("#/tags");
 
-            var tagListNode = _rootNode.Find(tagListPointer);
+            var tagListNode = RootNode.Find(tagListPointer);
 
             if (tagListNode != null && tagListNode is ListNode)
             {
@@ -112,19 +91,23 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Reference service.
         /// </summary>
-        internal IOpenApiVersionService ReferenceService { get {
+        internal IOpenApiVersionService ReferenceService
+        {
+            get
+            {
                 return _versionService;
             }
-            set {
+            set
+            {
                 _versionService = value;
-                ComputeTags(_tags, ReferenceService.TagLoader);
+                ComputeTags(Tags, ReferenceService.TagLoader);
             }
         }
 
-                /// <summary>
-                /// End the current object.
-                /// </summary>
-                public void EndObject()
+        /// <summary>
+        /// End the current object.
+        /// </summary>
+        public void EndObject()
         {
             _currentLocation.Pop();
         }
