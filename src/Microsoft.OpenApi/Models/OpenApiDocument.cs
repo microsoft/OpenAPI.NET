@@ -11,7 +11,7 @@ using Microsoft.OpenApi.Writers;
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// Describes an Open API Document. See: https://swagger.io/specification
+    /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
 
         /// <summary>
-        /// Serialize <see cref="OpenApiDocument"/> to Open Api v3.0.0
+        /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.0");
+            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
 
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV3(w));
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiDocument"/> to Open Api v2.0.
+        /// Serialize <see cref="OpenApiDocument"/> to OpenAPI object V2.0.
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {

@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeBasicLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeBasicLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeAdvanceLicenseAsJsonWorks(OpenApiSpecVersion version)
         {
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(OpenApiSpecVersion.OpenApi3_0_0)]
+        [InlineData(OpenApiSpecVersion.OpenApi3_0)]
         [InlineData(OpenApiSpecVersion.OpenApi2_0)]
         public void SerializeAdvanceLicenseAsYamlWorks(OpenApiSpecVersion version)
         {
