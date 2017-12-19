@@ -16,31 +16,9 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
     /// <summary>
     /// The reference service for the Open API V3.0.
     /// </summary>
-    internal class OpenApiV3ReferenceService : IOpenApiReferenceService
+    internal class OpenApiV3VersionService : IOpenApiVersionService
     {
-        private readonly RootNode _rootNode;
-
-        private readonly List<OpenApiTag> _tags = new List<OpenApiTag>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiV3ReferenceService"/> class.
-        /// </summary>
-        /// <param name="rootNode">The document root node.</param>
-        public OpenApiV3ReferenceService(RootNode rootNode)
-        {
-            _rootNode = rootNode ?? throw new ArgumentNullException(nameof(rootNode));
-
-            // Precompute the tags array so that each tag reference does not require a new deserialization.
-            var tagListPointer = new JsonPointer("#/tags");
-
-            var tagListNode = _rootNode.Find(tagListPointer);
-
-            if (tagListNode != null && tagListNode is ListNode)
-            {
-                var tagListNodeAsListNode = (ListNode)tagListNode;
-                _tags.AddRange(tagListNodeAsListNode.CreateList(OpenApiV3Deserializer.LoadTag));
-            }
-        }
+        public Func<MapNode, OpenApiTag> TagLoader => OpenApiV3Deserializer.LoadTag;
 
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
@@ -94,10 +72,15 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
 
+        public OpenApiDocument LoadOpenApi(RootNode rootNode)
+        {
+            return OpenApiV3Deserializer.LoadOpenApi(rootNode);
+        }
+
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        public bool TryLoadReference(OpenApiReference reference, out IOpenApiReferenceable referencedObject)
+        public bool TryLoadReference(ParsingContext context, OpenApiReference reference, out IOpenApiReferenceable referencedObject)
         {
             referencedObject = null;
 
@@ -120,7 +103,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             // Special case for Tag
             if (reference.Type == ReferenceType.Tag)
             {
-                foreach (var tag in _tags)
+                foreach (var tag in context.Tags)
                 {
                     if (tag.Name == reference.Id)
                     {
@@ -136,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             var componentJsonPointer =
                 new JsonPointer("#/components/" + reference.Type.GetDisplayName() + "/" + reference.Id);
 
-            var node = _rootNode.Find(componentJsonPointer);
+            var node = context.RootNode.Find(componentJsonPointer);
 
             switch (reference.Type)
             {

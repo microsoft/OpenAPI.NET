@@ -19,42 +19,22 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiStreamReader : IOpenApiReader<Stream, OpenApiDiagnostic>
     {
-        /// <summary>
-        /// Gets the version of the Open API document.
-        /// </summary>
-        private static string GetVersion(RootNode rootNode)
-        {
-            var versionNode = rootNode.Find(new JsonPointer("/openapi"));
-
-            if (versionNode != null)
-            {
-                return versionNode.GetScalarValue();
-            }
-
-            versionNode = rootNode.Find(new JsonPointer("/swagger"));
-
-            return versionNode?.GetScalarValue();
-        }
+       
 
         /// <summary>
         /// Reads the stream input and parses it into an Open API document.
         /// </summary>
         public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
-            RootNode rootNode;
-            var context = new ParsingContext();
+            ParsingContext context;
             diagnostic = new OpenApiDiagnostic();
 
             try
             {
-                using (var streamReader = new StreamReader(input))
-                {
-                    var yamlStream = new YamlStream();
-                    yamlStream.Load(streamReader);
+                YamlDocument yamlDocument = LoadYamlDocument(input);
+                context = new ParsingContext();
+                return context.Parse(yamlDocument, diagnostic);
 
-                    var yamlDocument = yamlStream.Documents.First();
-                    rootNode = new RootNode(context, diagnostic, yamlDocument);
-                }
             }
             catch (SyntaxErrorException ex)
             {
@@ -62,19 +42,19 @@ namespace Microsoft.OpenApi.Readers
 
                 return new OpenApiDocument();
             }
+           
+        }
 
-            var inputVersion = GetVersion(rootNode);
-
-            switch (inputVersion)
+        internal static YamlDocument LoadYamlDocument(Stream input)
+        {
+            YamlDocument yamlDocument;
+            using (var streamReader = new StreamReader(input))
             {
-                case "2.0":
-                    context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
-                    return OpenApiV2Deserializer.LoadOpenApi(rootNode);
-
-                default:
-                    context.ReferenceService = new OpenApiV3ReferenceService(rootNode);
-                    return OpenApiV3Deserializer.LoadOpenApi(rootNode);
+                var yamlStream = new YamlStream();
+                yamlStream.Load(streamReader);
+                yamlDocument = yamlStream.Documents.First();
             }
+            return yamlDocument;
         }
     }
 }

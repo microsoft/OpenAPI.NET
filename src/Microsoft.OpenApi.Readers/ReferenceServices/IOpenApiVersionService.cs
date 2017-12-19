@@ -3,17 +3,20 @@
 
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.ParseNodes;
+using System;
 
 namespace Microsoft.OpenApi.Readers.ReferenceServices
 {
     /// <summary>
-    /// Interface for Open API Reference parse.
+    /// Interface to a version specific parsing implementations.
     /// </summary>
-    public interface IOpenApiReferenceService
+    internal interface IOpenApiVersionService
     {
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="reference">The <see cref="OpenApiReference"/> object.</param>
         /// <param name="referencedObject">The object that is being referenced.</param>
         /// <returns>
@@ -22,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         /// a new tag will be returned in the outer parameter and the return value will be false.
         /// If reference is null, no object will be returned and the return value will be false.
         /// </returns>
-        bool TryLoadReference(OpenApiReference reference, out IOpenApiReferenceable referencedObject);
+        bool TryLoadReference(ParsingContext context, OpenApiReference reference, out IOpenApiReferenceable referencedObject);
 
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
@@ -31,5 +34,13 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         /// <param name="type">The type of the reference.</param>
         /// <returns>The <see cref="OpenApiReference"/> object or null.</returns>
         OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type);
+
+
+        /// <summary>
+        /// Function that converts MapNodes into Tag objects in a version specific way
+        /// </summary>
+        Func<MapNode, OpenApiTag> TagLoader { get; }
+
+        OpenApiDocument LoadOpenApi(RootNode rootNode);
     }
 }

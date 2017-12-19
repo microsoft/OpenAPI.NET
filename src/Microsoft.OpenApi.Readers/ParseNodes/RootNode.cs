@@ -18,6 +18,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             YamlDocument yamlDocument) : base(context, diagnostic)
         {
             _yamlDocument = yamlDocument;
+            context.RootNode = this;
         }
 
         public ParseNode Find(JsonPointer referencePointer)

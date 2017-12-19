@@ -1,35 +1,130 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.ReferenceServices;
+using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
 {
     /// <summary>
-    /// Parsing context.
+    /// The Parsing Context holds temporary state needed whilst parsing an OpenAPI Document
     /// </summary>
     public class ParsingContext
     {
         private readonly Stack<string> _currentLocation = new Stack<string>();
-
-        private readonly Dictionary<string, IOpenApiReferenceable> _referenceStore =
-            new Dictionary<string, IOpenApiReferenceable>();
-
+        private readonly Dictionary<string, IOpenApiReferenceable> _referenceStore = new Dictionary<string, IOpenApiReferenceable>();
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
+        private readonly List<OpenApiTag> _tags = new List<OpenApiTag>();
+        private IOpenApiVersionService _versionService;
+        private RootNode _rootNode;
+
+
+        /// <summary>
+        /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
+        /// </summary>
+        /// <param name="yamlDocument"></param>
+        /// <param name="diagnostic"></param>
+        /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
+        internal OpenApiDocument Parse(YamlDocument yamlDocument, OpenApiDiagnostic diagnostic)
+        {
+            _rootNode = new RootNode(this, diagnostic, yamlDocument);
+
+            var inputVersion = GetVersion(_rootNode);
+
+            OpenApiDocument doc;
+            switch (inputVersion)
+            {
+                case "2.0":
+                    this.ReferenceService = new OpenApiV2VersionService();
+                    doc = this.ReferenceService.LoadOpenApi(_rootNode);
+                    break;
+
+                default:
+                    this.ReferenceService = new OpenApiV3VersionService();
+                    doc = this.ReferenceService.LoadOpenApi(_rootNode);
+                    break;
+            }
+
+            return doc;
+        }
+
+        internal RootNode RootNode { get
+            {
+                return _rootNode;
+            }
+            set
+            {
+                {
+                    _rootNode = value;
+                    
+                }
+            }
+        }
+
+        internal List<OpenApiTag> Tags
+        {
+            get
+            {
+                return _tags;
+            }
+        }
+
+        /// <summary>
+        /// Gets the version of the Open API document.
+        /// </summary>
+        private static string GetVersion(RootNode rootNode)
+        {
+            var versionNode = rootNode.Find(new JsonPointer("/openapi"));
+
+            if (versionNode != null)
+            {
+                return versionNode.GetScalarValue();
+            }
+
+            versionNode = rootNode.Find(new JsonPointer("/swagger"));
+
+            return versionNode?.GetScalarValue();
+        }
+
+        private void ComputeTags(List<OpenApiTag> tags, Func<MapNode,OpenApiTag> loadTag )
+        {
+            // Precompute the tags array so that each tag reference does not require a new deserialization.
+            var tagListPointer = new JsonPointer("#/tags");
+
+            var tagListNode = _rootNode.Find(tagListPointer);
+
+            if (tagListNode != null && tagListNode is ListNode)
+            {
+                var tagListNodeAsListNode = (ListNode)tagListNode;
+                tags.AddRange(tagListNodeAsListNode.CreateList(loadTag));
+            }
+        }
+
+
+
 
         /// <summary>
         /// Reference service.
         /// </summary>
-        internal IOpenApiReferenceService ReferenceService { get; set; }
+        internal IOpenApiVersionService ReferenceService { get {
+                return _versionService;
+            }
+            set {
+                _versionService = value;
+                ComputeTags(_tags, ReferenceService.TagLoader);
+            }
+        }
 
-        /// <summary>
-        /// End the current object.
-        /// </summary>
-        public void EndObject()
+                /// <summary>
+                /// End the current object.
+                /// </summary>
+                public void EndObject()
         {
             _currentLocation.Pop();
         }
@@ -60,7 +155,7 @@ namespace Microsoft.OpenApi.Readers
 
             var reference = ReferenceService.ConvertToOpenApiReference(referenceString, referenceType);
 
-            var isReferencedObjectFound = ReferenceService.TryLoadReference(reference, out referencedObject);
+            var isReferencedObjectFound = ReferenceService.TryLoadReference(this, reference, out referencedObject);
 
             if (isReferencedObjectFound)
             {
