@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 rootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
+            context.ReferenceService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(reference, out var referencedObject);
+            context.ReferenceService.TryLoadReference(context, reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 rootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
+            context.ReferenceService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(reference, out var referencedObject);
+            context.ReferenceService.TryLoadReference(context, reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 rootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
+            context.ReferenceService = new OpenApiV2VersionService();
             var reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(reference, out var referencedObject);
+            context.ReferenceService.TryLoadReference(context, reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -174,7 +174,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 rootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
+            context.ReferenceService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(reference, out var referencedObject);
+            context.ReferenceService.TryLoadReference(context,reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -211,7 +211,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 rootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2ReferenceService(rootNode);
+            context.ReferenceService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(reference, out var referencedObject);
+            context.ReferenceService.TryLoadReference(context, reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
