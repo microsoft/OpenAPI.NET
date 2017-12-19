@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static IEnumerable<object[]> BasicInfoJsonExpected()
         {
-            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0_0, OpenApiSpecVersion.OpenApi2_0};
+            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi2_0};
             foreach (var specVersion in specVersions)
             {
                 yield return new object[]
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static IEnumerable<object[]> BasicInfoYamlExpected()
         {
-            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0_0, OpenApiSpecVersion.OpenApi2_0};
+            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi2_0};
             foreach (var specVersion in specVersions)
             {
                 yield return new object[]
@@ -92,7 +92,7 @@ version: '1.0'"
 
         public static IEnumerable<object[]> AdvanceInfoJsonExpect()
         {
-            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0_0, OpenApiSpecVersion.OpenApi2_0};
+            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi2_0};
             foreach (var specVersion in specVersions)
             {
                 yield return new object[]
@@ -135,7 +135,7 @@ version: '1.0'"
 
         public static IEnumerable<object[]> AdvanceInfoYamlExpect()
         {
-            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0_0, OpenApiSpecVersion.OpenApi2_0};
+            var specVersions = new[] {OpenApiSpecVersion.OpenApi3_0, OpenApiSpecVersion.OpenApi2_0};
             foreach (var specVersion in specVersions)
             {
                 yield return new object[]
@@ -187,7 +187,7 @@ x-updated: metadata"
 version: '2017-03-01'";
 
             // Act
-            var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0_0, OpenApiFormat.Yaml);
+            var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

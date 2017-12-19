@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicEncodingAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            var actual = BasicEncoding.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
+            var actual = BasicEncoding.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvanceEncoding.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvanceEncoding.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -67,7 +67,7 @@ explode: true
 allowReserved: true";
 
             // Act
-            var actual = AdvanceEncoding.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvanceEncoding.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
