@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiResponse>(
                 (context, response) =>
                 {
-                    // title
+                    // description
                     context.Push("description");
                     if (String.IsNullOrEmpty(response.Description))
                     {

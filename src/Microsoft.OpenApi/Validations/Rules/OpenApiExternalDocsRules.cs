@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiExternalDocs>(
                 (context, item) =>
                 {
-                    // title
+                    // url
                     context.Push("url");
                     if (item.Url == null)
                     {

@@ -24,6 +24,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.NotNull(errors);
             ValidationError error = Assert.Single(errors);
             Assert.Equal("The field 'description' in 'response' object is REQUIRED.", error.ErrorMessage);
+            Assert.Equal(ErrorReason.Required, error.ErrorCode);
+            Assert.Equal("#/description", error.ErrorPath);
         }
     }
 }

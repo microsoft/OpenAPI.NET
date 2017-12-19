@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     public static class OpenApiTagRules
     {
         /// <summary>
-        /// REQUIRED.
+        /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiTag> FieldIsRequired =>
             new ValidationRule<OpenApiTag>(

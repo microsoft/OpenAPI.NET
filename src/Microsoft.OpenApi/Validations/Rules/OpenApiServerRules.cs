@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     public static class OpenApiServerRules
     {
         /// <summary>
-        /// REQUIRED.
+        /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiServer> FieldIsRequired =>
             new ValidationRule<OpenApiServer>(
