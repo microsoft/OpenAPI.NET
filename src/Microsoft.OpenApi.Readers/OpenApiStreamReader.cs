@@ -45,6 +45,11 @@ namespace Microsoft.OpenApi.Readers
            
         }
 
+        /// <summary>
+        /// Helper method to turn streams into YamlDocument
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         internal static YamlDocument LoadYamlDocument(Stream input)
         {
             YamlDocument yamlDocument;

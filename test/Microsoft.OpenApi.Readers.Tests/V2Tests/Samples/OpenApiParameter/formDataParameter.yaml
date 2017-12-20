@@ -1,0 +1,6 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject
+name: avatar
+in: formData
+description: The avatar of the user
+required: true
+type: file

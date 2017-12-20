@@ -1,0 +1,9 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject
+name: id
+in: query
+description: ID of the object to fetch
+required: false
+type: array
+items:
+  type: string
+collectionFormat: multi

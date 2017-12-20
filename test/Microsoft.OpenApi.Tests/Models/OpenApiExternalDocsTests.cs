@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicExternalDocsAsV3Works(OpenApiFormat format, string expected)
         {
             // Arrange & Act
-            var actual = BasicExDocs.Serialize(OpenApiSpecVersion.OpenApi3_0_0, format);
+            var actual = BasicExDocs.Serialize(OpenApiSpecVersion.OpenApi3_0, format);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvanceExDocs.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvanceExDocs.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Models
 url: https://example.com";
 
             // Act
-            var actual = AdvanceExDocs.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvanceExDocs.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

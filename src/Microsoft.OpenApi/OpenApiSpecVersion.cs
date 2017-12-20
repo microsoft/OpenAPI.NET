@@ -4,18 +4,18 @@
 namespace Microsoft.OpenApi
 {
     /// <summary>
-    /// Represents the Open Api specification version.
+    /// Represents versions of OpenAPI specification.
     /// </summary>
     public enum OpenApiSpecVersion
     {
         /// <summary>
-        /// Open Api v2.0
+        /// Represents OpenAPI V2.0 spec
         /// </summary>
         OpenApi2_0,
 
         /// <summary>
-        /// Open Api v3.0.0
-        /// </summary>
-        OpenApi3_0_0
+        /// Represents all patches of OpenAPI V3.0 spec (e.g. 3.0.0, 3.0.1)
+        /// </summary> 
+        OpenApi3_0
     }
 }
