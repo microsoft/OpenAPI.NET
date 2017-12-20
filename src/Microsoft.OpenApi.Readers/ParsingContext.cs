@@ -92,9 +92,6 @@ namespace Microsoft.OpenApi.Readers
             }
         }
 
-
-
-
         /// <summary>
         /// Service providing all Version specific conversion functions
         /// </summary>

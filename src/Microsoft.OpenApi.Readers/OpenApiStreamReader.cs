@@ -15,37 +15,38 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiStreamReader : IOpenApiReader<Stream, OpenApiDiagnostic>
     {
-       
 
         /// <summary>
         /// Reads the stream input and parses it into an Open API document.
         /// </summary>
+        /// <param name="input">Stream containing OpenAPI description to parse.</param>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
+        /// <returns>Instance of newly created OpenApiDocument</returns>
         public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
             ParsingContext context;
+            YamlDocument yamlDocument;
             diagnostic = new OpenApiDiagnostic();
 
             try
             {
-                YamlDocument yamlDocument = LoadYamlDocument(input);
-                context = new ParsingContext();
-                return context.Parse(yamlDocument, diagnostic);
-
+                yamlDocument = LoadYamlDocument(input);
             }
             catch (SyntaxErrorException ex)
             {
                 diagnostic.Errors.Add(new OpenApiError(string.Empty, ex.Message));
-
                 return new OpenApiDocument();
             }
-           
+
+            context = new ParsingContext();
+            return context.Parse(yamlDocument, diagnostic);
         }
 
         /// <summary>
         /// Helper method to turn streams into YamlDocument
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="input">Stream containing YAML formatted text</param>
+        /// <returns>Instance of a YamlDocument</returns>
         internal static YamlDocument LoadYamlDocument(Stream input)
         {
             YamlDocument yamlDocument;

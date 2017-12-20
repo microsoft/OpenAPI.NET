@@ -18,6 +18,9 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal class OpenApiV3VersionService : IOpenApiVersionService
     {
+        /// <summary>
+        /// Return a function that converts a MapNode into a V3 OpenApiTag
+        /// </summary>
         public Func<MapNode, OpenApiTag> TagLoader => OpenApiV3Deserializer.LoadTag;
 
         /// <summary>

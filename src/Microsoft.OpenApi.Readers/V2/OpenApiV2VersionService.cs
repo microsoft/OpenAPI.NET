@@ -17,8 +17,10 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal class OpenApiV2VersionService : IOpenApiVersionService
     {
-        public Func<MapNode, OpenApiTag> TagLoader { get  { return OpenApiV2Deserializer.LoadTag; } }
-
+        /// <summary>
+        /// Return a function that converts a MapNode into a V2 OpenApiTag
+        /// </summary>
+        public Func<MapNode, OpenApiTag> TagLoader => OpenApiV2Deserializer.LoadTag;
 
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
