@@ -23,7 +23,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             // Arrange
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
-            RootNode rootNode;
 
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
@@ -31,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 yamlStream.Load(new StreamReader(stream));
                 var yamlDocument = yamlStream.Documents.First();
 
-                rootNode = new RootNode(context, diagnostic, yamlDocument);
+                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
             context.ReferenceService = new OpenApiV2VersionService();
@@ -80,7 +79,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             // Arrange
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
-            RootNode rootNode;
 
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
@@ -88,7 +86,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 yamlStream.Load(new StreamReader(stream));
                 var yamlDocument = yamlStream.Documents.First();
 
-                rootNode = new RootNode(context, diagnostic, yamlDocument);
+                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
             context.ReferenceService = new OpenApiV2VersionService();
@@ -125,7 +123,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             // Arrange
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
-            RootNode rootNode;
+            
 
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
@@ -133,7 +131,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 yamlStream.Load(new StreamReader(stream));
                 var yamlDocument = yamlStream.Documents.First();
 
-                rootNode = new RootNode(context, diagnostic, yamlDocument);
+                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
             context.ReferenceService = new OpenApiV2VersionService();
@@ -171,7 +169,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 yamlStream.Load(new StreamReader(stream));
                 var yamlDocument = yamlStream.Documents.First();
 
-                rootNode = new RootNode(context, diagnostic, yamlDocument);
+                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
             context.ReferenceService = new OpenApiV2VersionService();
@@ -200,7 +198,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             // Arrange
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
-            RootNode rootNode;
 
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
@@ -208,7 +205,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 yamlStream.Load(new StreamReader(stream));
                 var yamlDocument = yamlStream.Documents.First();
 
-                rootNode = new RootNode(context, diagnostic, yamlDocument);
+                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
             context.ReferenceService = new OpenApiV2VersionService();
