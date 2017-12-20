@@ -38,19 +38,24 @@ namespace Microsoft.OpenApi.Readers
             var inputVersion = GetVersion(RootNode);
 
             OpenApiDocument doc;
-            switch (inputVersion)
+
+            if ( inputVersion == "2.0")
             {
-                case "2.0":
-                    this.ReferenceService = new OpenApiV2VersionService();
-                    doc = this.ReferenceService.LoadOpenApi(RootNode);
-                    break;
-
-                default:
-                    this.ReferenceService = new OpenApiV3VersionService();
-                    doc = this.ReferenceService.LoadOpenApi(RootNode);
-                    break;
+                ReferenceService = new OpenApiV2VersionService();
+                doc = this.ReferenceService.LoadOpenApi(this.RootNode);
             }
-
+            else if (inputVersion.StartsWith("3.0."))
+            {
+                this.ReferenceService = new OpenApiV3VersionService();
+                doc = this.ReferenceService.LoadOpenApi(this.RootNode);
+            }
+            else
+            {
+                // If version number is not recognizable,
+                // our best effort will try to deserialize the document to V3.
+                this.ReferenceService = new OpenApiV3VersionService();
+                doc = this.ReferenceService.LoadOpenApi(this.RootNode);
+            }
             return doc;
         }
 

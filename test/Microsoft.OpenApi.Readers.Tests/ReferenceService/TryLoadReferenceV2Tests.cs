@@ -161,7 +161,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             // Arrange
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
-            RootNode rootNode;
 
             using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
