@@ -3,9 +3,7 @@
 
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.ReferenceServices;
-using SharpYaml.Serialization;
+using Microsoft.OpenApi.Readers.V3;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.ReferenceService

@@ -2,16 +2,15 @@
 // Licensed under the MIT license. 
 
 using System;
-using System.Collections.Generic;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
-using Microsoft.OpenApi.Readers.V2;
 
 
-namespace Microsoft.OpenApi.Readers.ReferenceServices
+namespace Microsoft.OpenApi.Readers.V2
 {
     /// <summary>
     /// The version specific implementations for OpenAPI V2.0.
@@ -224,7 +223,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
 
-        public OpenApiDocument LoadOpenApi(RootNode rootNode)
+        public OpenApiDocument LoadDocument(RootNode rootNode)
         {
             return OpenApiV2Deserializer.LoadOpenApi(rootNode);
         }

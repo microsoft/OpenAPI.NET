@@ -7,14 +7,14 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
-using Microsoft.OpenApi.Readers.V3;
 
-namespace Microsoft.OpenApi.Readers.ReferenceServices
+namespace Microsoft.OpenApi.Readers.V3
 {
     /// <summary>
-    /// The reference service for the Open API V3.0.
+    /// The version service for the Open API V3.0.
     /// </summary>
     internal class OpenApiV3VersionService : IOpenApiVersionService
     {
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
         }
 
-        public OpenApiDocument LoadOpenApi(RootNode rootNode)
+        public OpenApiDocument LoadDocument(RootNode rootNode)
         {
             return OpenApiV3Deserializer.LoadOpenApi(rootNode);
         }

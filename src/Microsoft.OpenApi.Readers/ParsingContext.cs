@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.ReferenceServices;
+using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
@@ -41,20 +43,20 @@ namespace Microsoft.OpenApi.Readers
 
             if ( inputVersion == "2.0")
             {
-                ReferenceService = new OpenApiV2VersionService();
-                doc = this.ReferenceService.LoadOpenApi(this.RootNode);
+                VersionService = new OpenApiV2VersionService();
+                doc = this.VersionService.LoadDocument(this.RootNode);
             }
             else if (inputVersion.StartsWith("3.0."))
             {
-                this.ReferenceService = new OpenApiV3VersionService();
-                doc = this.ReferenceService.LoadOpenApi(this.RootNode);
+                this.VersionService = new OpenApiV3VersionService();
+                doc = this.VersionService.LoadDocument(this.RootNode);
             }
             else
             {
                 // If version number is not recognizable,
                 // our best effort will try to deserialize the document to V3.
-                this.ReferenceService = new OpenApiV3VersionService();
-                doc = this.ReferenceService.LoadOpenApi(this.RootNode);
+                this.VersionService = new OpenApiV3VersionService();
+                doc = this.VersionService.LoadDocument(this.RootNode);
             }
             return doc;
         }
@@ -94,9 +96,9 @@ namespace Microsoft.OpenApi.Readers
 
 
         /// <summary>
-        /// Reference service.
+        /// Service providing all Version specific conversion functions
         /// </summary>
-        internal IOpenApiVersionService ReferenceService
+        internal IOpenApiVersionService VersionService
         {
             get
             {
@@ -105,7 +107,7 @@ namespace Microsoft.OpenApi.Readers
             set
             {
                 _versionService = value;
-                ComputeTags(Tags, ReferenceService.TagLoader);
+                ComputeTags(Tags, VersionService.TagLoader);
             }
         }
 
@@ -141,9 +143,9 @@ namespace Microsoft.OpenApi.Readers
                 return referencedObject;
             }
 
-            var reference = ReferenceService.ConvertToOpenApiReference(referenceString, referenceType);
+            var reference = VersionService.ConvertToOpenApiReference(referenceString, referenceType);
 
-            var isReferencedObjectFound = ReferenceService.TryLoadReference(this, reference, out referencedObject);
+            var isReferencedObjectFound = VersionService.TryLoadReference(this, reference, out referencedObject);
 
             if (isReferencedObjectFound)
             {

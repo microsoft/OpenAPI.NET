@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using System;
 
-namespace Microsoft.OpenApi.Readers.ReferenceServices
+namespace Microsoft.OpenApi.Readers.Interface
 {
     /// <summary>
     /// Interface to a version specific parsing implementations.
@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">Instance of ParsingContext to use for retrieving references.</param>
         /// <param name="reference">The <see cref="OpenApiReference"/> object.</param>
         /// <param name="referencedObject">The object that is being referenced.</param>
         /// <returns>
@@ -35,12 +35,16 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
         /// <returns>The <see cref="OpenApiReference"/> object or null.</returns>
         OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type);
 
-
         /// <summary>
-        /// Function that converts MapNodes into Tag objects in a version specific way
+        /// Function that converts a MapNode into a Tag object in a version specific way
         /// </summary>
         Func<MapNode, OpenApiTag> TagLoader { get; }
 
-        OpenApiDocument LoadOpenApi(RootNode rootNode);
+        /// <summary>
+        /// Converts a generic RootNode instance into a strongly typed OpenApiDocument
+        /// </summary>
+        /// <param name="rootNode"></param>
+        /// <returns>Instance of OpenApiDocument populated with data from rootNode</returns>
+        OpenApiDocument LoadDocument(RootNode rootNode);
     }
 }

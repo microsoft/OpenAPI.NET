@@ -6,7 +6,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.ReferenceServices;
+using Microsoft.OpenApi.Readers.V2;
 using SharpYaml.Serialization;
 using Xunit;
 
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2VersionService();
+            context.VersionService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(context, reference, out var referencedObject);
+            context.VersionService.TryLoadReference(context, reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2VersionService();
+            context.VersionService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(context, reference, out var referencedObject);
+            context.VersionService.TryLoadReference(context, reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2VersionService();
+            context.VersionService = new OpenApiV2VersionService();
             var reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(context, reference, out var referencedObject);
+            context.VersionService.TryLoadReference(context, reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2VersionService();
+            context.VersionService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -180,7 +180,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(context,reference, out var referencedObject);
+            context.VersionService.TryLoadReference(context,reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 context.RootNode = new RootNode(context, diagnostic, yamlDocument);
             }
 
-            context.ReferenceService = new OpenApiV2VersionService();
+            context.VersionService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -216,7 +216,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.ReferenceService.TryLoadReference(context, reference, out var referencedObject);
+            context.VersionService.TryLoadReference(context, reference, out var referencedObject);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(

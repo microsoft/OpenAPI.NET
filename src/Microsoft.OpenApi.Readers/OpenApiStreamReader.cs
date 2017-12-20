@@ -5,10 +5,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.ReferenceServices;
-using Microsoft.OpenApi.Readers.V2;
-using Microsoft.OpenApi.Readers.V3;
 using SharpYaml;
 using SharpYaml.Serialization;
 
