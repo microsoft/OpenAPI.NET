@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -20,7 +22,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiTag tag = new OpenApiTag();
 
             // Act
-            bool result = tag.Validate(out errors);
+            var validator = new OpenApiValidator();
+            validator.Visit(tag);
+            errors = validator.Errors;
+            bool result = !errors.Any();
 
             // Assert
             Assert.False(result);
@@ -41,7 +46,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             tag.Extensions.Add("tagExt", new OpenApiString("value"));
 
             // Act
-            bool result = tag.Validate(out errors);
+            var validator = new OpenApiValidator();
+            validator.Visit(tag);
+            errors = validator.Errors;
+            bool result = errors.Any(); 
 
             // Assert
             Assert.False(result);

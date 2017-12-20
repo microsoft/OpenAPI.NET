@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -19,7 +21,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiResponse response = new OpenApiResponse();
 
             // Act
-            bool result = response.Validate(out errors);
+            var validator = new OpenApiValidator();
+            validator.Visit(response);
+            errors = validator.Errors;
+            bool result = !errors.Any();
 
             // Assert
             Assert.False(result);

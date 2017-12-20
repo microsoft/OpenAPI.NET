@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
 
@@ -26,8 +28,12 @@ namespace Microsoft.OpenApi.Validations.Tests
                 }
             };
 
+            var validator = new OpenApiValidator();
+            validator.Visit(components);
             // Act
-            bool result = components.Validate(out errors);
+            errors = validator.Errors;
+            bool result = !errors.Any();
+            
 
             // Assert
             Assert.False(result);

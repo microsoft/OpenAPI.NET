@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -22,7 +23,12 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiInfo info = new OpenApiInfo();
 
             // Act
-            bool result = info.Validate(out errors);
+            var validator = new OpenApiValidator();
+            validator.Visit(info);
+
+            // Assert
+            errors = validator.Errors;
+            bool result = !errors.Any();
 
             // Assert
             Assert.False(result);

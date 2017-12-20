@@ -30,7 +30,16 @@ namespace Microsoft.OpenApi.Services
         public override void Visit(OpenApiDocument item) => Validate(item);
         public override void Visit(OpenApiInfo item) => Validate(item);
         public override void Visit(OpenApiContact item) => Validate(item);
+        public override void Visit(OpenApiComponents item) => Validate(item);
+
         public override void Visit(OpenApiResponse item) => Validate(item);
+
+        public override void Visit(OpenApiExternalDocs item) => Validate(item);
+
+        public override void Visit(OpenApiLicense item) => Validate(item);
+        public override void Visit(OpenApiOAuthFlow item) => Validate(item);
+        public override void Visit(OpenApiTag item) => Validate(item);
+        public override void Visit(OpenApiServer item) => Validate(item);
 
 
         public IEnumerable<ValidationError> Errors => _context.Errors;

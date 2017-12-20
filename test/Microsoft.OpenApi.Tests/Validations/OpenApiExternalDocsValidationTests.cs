@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -19,9 +21,13 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiExternalDocs externalDocs = new OpenApiExternalDocs();
 
             // Act
-            bool result = externalDocs.Validate(out errors);
+            var validator = new OpenApiValidator();
+            validator.Visit(externalDocs);
 
             // Assert
+            errors = validator.Errors;
+            bool result = !errors.Any();
+
             Assert.False(result);
             Assert.NotNull(errors);
             ValidationError error = Assert.Single(errors);

@@ -33,6 +33,14 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
+
+        /// <summary>
+        /// Visits <see cref="OpenApiLicense"/>
+        /// </summary>
+        public virtual void Visit(OpenApiLicense license)
+        {
+        }
+
         /// <summary>
         /// Visits list of <see cref="OpenApiServer"/>
         /// </summary>
@@ -139,6 +147,21 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiComponents"/>
+        /// </summary>
+        public virtual void Visit(OpenApiComponents components)
+        {
+        }
+
+
+        /// <summary>
+        /// Visits <see cref="OpenApiComponents"/>
+        /// </summary>
+        public virtual void Visit(OpenApiExternalDocs externalDocs)
+        {
+        }
+
+        /// <summary>
         /// Visits <see cref="OpenApiSchema"/>
         /// </summary>
         public virtual void Visit(OpenApiSchema schema)
@@ -156,6 +179,19 @@ namespace Microsoft.OpenApi.Services
         /// Visits <see cref="OpenApiLink"/>
         /// </summary>
         public virtual void Visit(OpenApiLink link)
+        {
+        }
+
+        /// <summary>
+        /// Visits <see cref="OpenApiTag"/>
+        /// </summary>
+        public virtual void Visit(OpenApiTag tag)
+        {
+        }
+        /// <summary>
+        /// Visits <see cref="OpenApiOAuthFlow"/>
+        /// </summary>
+        public virtual void Visit(OpenApiOAuthFlow openApiOAuthFlow)
         {
         }
     }
