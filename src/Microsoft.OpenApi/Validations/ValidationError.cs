@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>The error string.</returns>
         public override string ToString()
         {
-            return "ErroCode: " + ErrorCode + ", " + ErrorPath + " | " + ErrorMessage;
+            return "ErrorCode: " + ErrorCode + ", " + ErrorPath + " | " + ErrorMessage;
         }
     }
 }

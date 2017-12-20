@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Input string must be in the format of an email address
         /// </summary>
         /// <param name="input">The input string.</param>
-        /// <returns></returns>
+        /// <returns>True if it's an email address. Otherwise False.</returns>
         public static bool IsEmailAddress(this string input)
         {
             if (String.IsNullOrEmpty(input))

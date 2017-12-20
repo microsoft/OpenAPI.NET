@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Models;
+using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -13,10 +15,11 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateEmailFieldIsEmailAddressInContact()
         {
             // Arrange
+            const string testEmail = "support/example.com";
             IEnumerable<ValidationError> errors;
             OpenApiContact Contact = new OpenApiContact()
             {
-                Email = "support/example.com",
+                Email = testEmail
             };
 
             // Act
@@ -26,7 +29,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             ValidationError error = Assert.Single(errors);
-            Assert.Equal("The string 'support/example.com' MUST be in the format of an email address.", error.ErrorMessage);
+            Assert.Equal(String.Format(SRResource.Validation_StringMustBeEmailAddress, testEmail), error.ErrorMessage);
         }
     }
 }

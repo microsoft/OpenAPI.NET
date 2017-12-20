@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Diagnostics;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Visitors
@@ -18,8 +17,15 @@ namespace Microsoft.OpenApi.Validations.Visitors
         /// <param name="responses">The <see cref="OpenApiResponses"/>.</param>
         protected override void Next(ValidationContext context, OpenApiResponses responses)
         {
-            Debug.Assert(context != null);
-            Debug.Assert(responses != null);
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (responses == null)
+            {
+                throw Error.ArgumentNull(nameof(responses));
+            }
 
             context.ValidateMap(responses);
 
