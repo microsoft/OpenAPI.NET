@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Diagnostics;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Visitors
@@ -18,8 +17,15 @@ namespace Microsoft.OpenApi.Validations.Visitors
         /// <param name="paths">The <see cref="OpenApiPaths"/>.</param>
         protected override void Next(ValidationContext context, OpenApiPaths paths)
         {
-            Debug.Assert(context != null);
-            Debug.Assert(paths != null);
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (paths == null)
+            {
+                throw Error.ArgumentNull(nameof(paths));
+            }
 
             context.ValidateMap(paths);
             base.Next(context, paths);

@@ -97,6 +97,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The input item should be in type of &apos;{0}&apos;..
+        /// </summary>
+        internal static string InputItemShouldBeType {
+            get {
+                return ResourceManager.GetString("InputItemShouldBeType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The active scope must be an object scope for property name &apos;{0}&apos; to be written..
         /// </summary>
         internal static string ObjectScopeNeededForPropertyNameWriting {

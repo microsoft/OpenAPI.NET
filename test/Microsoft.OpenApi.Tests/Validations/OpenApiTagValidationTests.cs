@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -24,7 +26,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             ValidationError error = Assert.Single(errors);
-            Assert.Equal("The field 'name' in 'Tag' object is REQUIRED.", error.ErrorMessage);
+            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"), error.ErrorMessage);
         }
 
         [Fact]
@@ -45,7 +47,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             ValidationError error = Assert.Single(errors);
-            Assert.Equal("The extension name 'tagExt' in '#/extensions' object MUST begin with 'x-'.", error.ErrorMessage);
+            Assert.Equal(String.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, "tagExt", "#/extensions"), error.ErrorMessage);
         }
     }
 }

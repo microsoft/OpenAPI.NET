@@ -2,8 +2,8 @@
 // Licensed under the MIT license. 
 
 using System;
-using System.Diagnostics;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations
 {
@@ -49,7 +49,21 @@ namespace Microsoft.OpenApi.Validations
 
         internal override void Evaluate(ValidationContext context, object item)
         {
-            Debug.Assert(item is T, "item should be " + typeof(T));
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (item == null)
+            {
+                return;
+            }
+
+            if (!(item is T))
+            {
+                throw Error.Argument(string.Format(SRResource.InputItemShouldBeType, typeof(T).FullName));
+            }
+
             T typedItem = (T)item;
             this._validate(context, typedItem);
         }

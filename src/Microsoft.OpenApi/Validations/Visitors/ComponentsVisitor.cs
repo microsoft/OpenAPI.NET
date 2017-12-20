@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Diagnostics;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Visitors
@@ -18,18 +17,34 @@ namespace Microsoft.OpenApi.Validations.Visitors
         /// <param name="components">The <see cref="OpenApiComponents"/>.</param>
         protected override void Next(ValidationContext context, OpenApiComponents components)
         {
-            Debug.Assert(context != null);
-            Debug.Assert(components != null);
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
+            if (components == null)
+            {
+                throw Error.ArgumentNull(nameof(components));
+            }
 
             context.ValidateMap(components.Schemas);
+
             context.ValidateMap(components.Responses);
+
             context.ValidateMap(components.Parameters);
+
             context.ValidateMap(components.Examples);
+
             context.ValidateMap(components.RequestBodies);
+
             context.ValidateMap(components.Headers);
+
             context.ValidateMap(components.SecuritySchemes);
+
             context.ValidateMap(components.Links);
+
             context.ValidateMap(components.Callbacks);
+
             base.Next(context, components);
         }
     }

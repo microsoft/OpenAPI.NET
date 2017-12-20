@@ -17,16 +17,31 @@ namespace Microsoft.OpenApi.Validations.Visitors
         /// <param name="document">The <see cref="OpenApiDocument"/>.</param>
         protected override void Next(ValidationContext context, OpenApiDocument document)
         {
+            if (context == null)
+            {
+                throw Error.ArgumentNull(nameof(context));
+            }
+
             if (document == null)
             {
-                return;
+                throw Error.ArgumentNull(nameof(document));
             }
 
             context.Validate(document.Info);
 
+            context.ValidateCollection(document.Servers);
+
+            context.Validate(document.Paths);
+
+            context.Validate(document.Components);
+
+            context.ValidateCollection(document.SecurityRequirements);
+
             context.ValidateCollection(document.Tags);
 
-            // add more.
+            context.Validate(document.ExternalDocs);
+
+            base.Next(context, document);
         }
     }
 }

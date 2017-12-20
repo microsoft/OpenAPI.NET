@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     if (String.IsNullOrEmpty(tag.Name))
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
-                            String.Format(SRResource.Validation_FieldIsRequired, "name", "Tag"));
+                            String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"));
                         context.AddError(error);
                     }
                     context.Pop();
