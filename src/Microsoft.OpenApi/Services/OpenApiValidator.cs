@@ -2,8 +2,10 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -12,20 +14,34 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiValidator : OpenApiVisitorBase
     {
-        /// <summary>
-        /// Exceptions related to this validation.
-        /// </summary>
-        public List<OpenApiException> Exceptions { get; } = new List<OpenApiException>();
+        readonly ValidationRuleSet _ruleSet;
+        readonly ValidationContext _context;
 
         /// <summary>
-        /// Visit Open API Response element.
+        /// Create a vistor that will validate an OpenAPIDocument
         /// </summary>
-        /// <param name="response">Response element.</param>
-        public override void Visit(OpenApiResponse response)
+        /// <param name="ruleSet"></param>
+        public OpenApiValidator(ValidationRuleSet ruleSet = null)
         {
-            if (string.IsNullOrEmpty(response.Description))
+            _ruleSet = ruleSet ?? ValidationRuleSet.DefaultRuleSet;
+            _context = new ValidationContext(_ruleSet);
+        }
+
+        public override void Visit(OpenApiDocument item) => Validate(item);
+        public override void Visit(OpenApiInfo item) => Validate(item);
+        public override void Visit(OpenApiContact item) => Validate(item);
+        public override void Visit(OpenApiResponse item) => Validate(item);
+
+
+        public IEnumerable<ValidationError> Errors => _context.Errors;
+
+        private void Validate<T>(T item)
+        {
+            if (item == null) return;  // Required fields should be checked by higher level objects
+            var rules = _ruleSet.Where(r => r.ElementType == typeof(T));
+            foreach (var rule in rules)
             {
-                Exceptions.Add(new OpenApiException("Response must have a description"));
+                rule.Evaluate(_context, item);
             }
         }
     }
