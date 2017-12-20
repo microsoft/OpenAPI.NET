@@ -126,6 +126,13 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiResponses"/>
+        /// </summary>
+        public virtual void Visit(OpenApiResponses response)
+        {
+        }
+
+        /// <summary>
         /// Visits media type content.
         /// </summary>
         public virtual void Visit(IDictionary<string, OpenApiMediaType> content)
@@ -192,6 +199,20 @@ namespace Microsoft.OpenApi.Services
         /// Visits <see cref="OpenApiOAuthFlow"/>
         /// </summary>
         public virtual void Visit(OpenApiOAuthFlow openApiOAuthFlow)
+        {
+        }
+
+        /// <summary>
+        /// Visits <see cref="OpenApiOAuthFlow"/>
+        /// </summary>
+        public virtual void Visit(IList<OpenApiTag> openApiTags)
+        {
+        }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiExtensible"/>
+        /// </summary>
+        public virtual void Visit(IOpenApiExtensible openApiExtensible)
         {
         }
     }

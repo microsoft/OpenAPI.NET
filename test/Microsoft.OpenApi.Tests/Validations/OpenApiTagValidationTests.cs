@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
@@ -47,9 +48,9 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator();
-            validator.Visit(tag);
+            validator.Visit(tag as IOpenApiExtensible);
             errors = validator.Errors;
-            bool result = errors.Any(); 
+            bool result = !errors.Any(); 
 
             // Assert
             Assert.False(result);
