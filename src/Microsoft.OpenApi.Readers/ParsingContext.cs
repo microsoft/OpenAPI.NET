@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers
 
             OpenApiDocument doc;
 
-            if ( inputVersion == "2.0")
+            if (inputVersion == "2.0")
             {
                 VersionService = new OpenApiV2VersionService();
                 doc = this.VersionService.LoadDocument(this.RootNode);
