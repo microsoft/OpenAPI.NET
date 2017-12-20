@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// <summary>
         /// Converts a generic RootNode instance into a strongly typed OpenApiDocument
         /// </summary>
-        /// <param name="rootNode"></param>
+        /// <param name="rootNode">RootNode containing the information to be converted into an OpenAPI Document</param>
         /// <returns>Instance of OpenApiDocument populated with data from rootNode</returns>
         OpenApiDocument LoadDocument(RootNode rootNode);
     }
