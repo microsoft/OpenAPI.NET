@@ -16,12 +16,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     [Collection("DefaultSettings")]
     public class OpenApiXmlTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiXml";
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiXml/";
 
         [Fact]
         public void ParseBasicXmlShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicXml.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "basicXml.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));

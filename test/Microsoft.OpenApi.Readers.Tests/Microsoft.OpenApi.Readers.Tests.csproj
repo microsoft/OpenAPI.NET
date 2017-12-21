@@ -13,7 +13,161 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
+        <None Remove="ReferenceService\Samples\multipleReferences.v2.yaml" />
+        <None Remove="V2Tests\Samples\basic.v2.yaml" />
+        <None Remove="V2Tests\Samples\basic.v3.yaml" />
+        <None Remove="V2Tests\Samples\minimal.v2.yaml" />
+        <None Remove="V2Tests\Samples\minimal.v3.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiParameter\formDataParameter.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiParameter\headerParameter.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiParameter\pathParameter.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiParameter\queryParameter.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml" />
         <None Remove="V2Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\oauth2AccessCodeSecurityScheme.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\oauth2ApplicationSecurityScheme.yaml" />
+        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiCallback\basicCallback.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiDocument\basicDocumentWithMultipleServers.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiDocument\brokenMinimalDocument.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiDocument\petStore.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiDocument\petStoreExpanded.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiEncoding\advancedEncoding.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiEncoding\basicEncoding.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiExample\advancedExample.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiInfo\basicInfo.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSchema\advancedSchemaWithReference.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSchema\basicSchemaWithExample.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSchema\dictionarySchema.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSchema\primitiveSchema.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSchema\simpleSchema.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\bearerSecurityScheme.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\oauth2SecurityScheme.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml" />
+        <None Remove="V3Tests\Samples\OpenApiXml\basicXml.yaml" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="ReferenceService\Samples\multipleReferences.v2.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\basic.v2.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\basic.v3.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\minimal.v2.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\minimal.v3.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\formDataParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\headerParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\pathParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\queryParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2AccessCodeSecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2ApplicationSecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\basicCallback.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\basicDocumentWithMultipleServers.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\brokenMinimalDocument.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStore.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStoreExpanded.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiEncoding\advancedEncoding.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiEncoding\basicEncoding.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\advancedExample.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\advancedSchemaWithReference.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithExample.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\dictionarySchema.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\primitiveSchema.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\simpleSchema.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\bearerSecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\oauth2SecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiXml\basicXml.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
@@ -41,15 +195,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="ReferenceService\Samples\multipleReferences.v2.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\basic.v2.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\basic.v3.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="V2Tests\Samples\definitions.v3.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
@@ -62,142 +207,37 @@
         <None Update="V2Tests\Samples\definitions.v2.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="V2Tests\Samples\minimal.v3.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiParameter\formDataParameter.yaml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiParameter\queryParameter.yaml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiParameter\pathParameter.yaml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiParameter\headerParameter.yaml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiSecurityScheme\oauth2AccessCodeSecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiSecurityScheme\oauth2ApplicationSecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="V2Tests\Samples\parameterRef.v2.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="V2Tests\Samples\petStore.v2.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="V2Tests\Samples\minimal.v2.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="V2Tests\Samples\simplest.v3.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Include="V2Tests\Samples\OpenApiSecurityScheme\basicSecurityScheme.yaml">
+        <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\basicSecurityScheme.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2ImplicitSecurityScheme.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\advancedCallbackWithReference.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2ImplicitSecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="V3Tests\Samples\OpenApiCallback\advancedCallbackWithReference.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithReference.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiEncoding\advancedEncoding.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiEncoding\basicEncoding.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiExample\advancedExample.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiDocument\brokenMinimalDocument.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiCallback\basicCallback.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+        </EmbeddedResource>
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithReference.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
         <None Update="V3Tests\Samples\CompleteHeader.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiDocument\basicDocumentWithMultipleServers.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Update="V3Tests\Samples\OpenApiInfo\minimalInfo.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Update="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="V3Tests\Samples\OpenApiInfo\minimalInfoObject.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiDocument\petStoreExpanded.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiDocument\petStore.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSchema\advancedSchemaWithReference.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSchema\basicSchemaWithExample.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSchema\dictionarySchema.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSchema\simpleSchema.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSchema\primitiveSchema.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSecurityScheme\oauth2SecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSecurityScheme\bearerSecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="V3Tests\Samples\OpenApiXml\basicXml.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

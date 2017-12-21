@@ -16,12 +16,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     [Collection("DefaultSettings")]
     public class OpenApiSchemaTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiSchema";
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiSchema/";
 
         [Fact]
         public void ParsePrimitiveSchemaShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "primitiveSchema.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "primitiveSchema.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseSimpleSchemaShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "simpleSchema.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "simpleSchema.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseDictionarySchemaShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "dictionarySchema.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "dictionarySchema.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicSchemaWithExampleShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicSchemaWithExample.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "basicSchemaWithExample.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -180,7 +180,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicSchemaWithReferenceShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "basicSchemaWithReference.yaml"))
             {
                 // Act
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "advancedSchemaWithReference.yaml"))
             {
                 // Act
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);

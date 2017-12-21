@@ -17,12 +17,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     [Collection("DefaultSettings")]
     public class OpenApiInfoTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiInfo";
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiInfo/";
 
         [Fact]
         public void ParseAdvancedInfoShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "advancedInfo.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "advancedInfo.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicInfoShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicInfo.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "basicInfo.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseMinimalInfoShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "minimalInfo.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "minimalInfo.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
