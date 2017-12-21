@@ -18,8 +18,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         //[InlineData("definitions")]  //Currently broken due to V3 references not behaving the same as V2
         public void EquivalentV2AndV3DocumentsShouldProductEquivalentObjects(string fileName)
         {
-            using (var streamV2 = File.OpenRead(Path.Combine(SampleFolderPath, $"{fileName}.v2.yaml")))
-            using (var streamV3 = File.OpenRead(Path.Combine(SampleFolderPath, $"{fileName}.v3.yaml")))
+            using (var streamV2 = Resources.GetStream(SampleFolderPath + $"{fileName}.v2.yaml"))
+            using (var streamV3 = Resources.GetStream(SampleFolderPath + $"{fileName}.v3.yaml"))
             {
                 var openApiDocV2 = new OpenApiStreamReader().Read(streamV2, out var contextV2);
                 var openApiDocV3 = new OpenApiStreamReader().Read(streamV3, out var contextV3);

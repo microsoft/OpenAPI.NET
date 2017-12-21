@@ -15,12 +15,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     [Collection("DefaultSettings")]
     public class OpenApiDiscriminatorTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiDiscriminator";
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiDiscriminator/";
 
         [Fact]
         public void ParseBasicDiscriminatorShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicDiscriminator.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "basicDiscriminator.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));

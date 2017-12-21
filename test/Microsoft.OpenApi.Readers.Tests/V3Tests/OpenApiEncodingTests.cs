@@ -15,12 +15,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     [Collection("DefaultSettings")]
     public class OpenApiEncodingTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiEncoding";
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiEncoding/";
 
         [Fact]
         public void ParseBasicEncodingShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicEncoding.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "basicEncoding.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseAdvancedEncodingShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "advancedEncoding.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "advancedEncoding.yaml"))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));

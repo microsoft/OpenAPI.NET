@@ -16,13 +16,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     [Collection("DefaultSettings")]
     public class OpenApiCallbackTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiCallback";
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiCallback/";
 
         [Fact]
         public void ParseBasicCallbackShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicCallback.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "basicCallback.yaml"))
             {
+                // Arrange
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
@@ -76,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseAdvancedCallbackWithReferenceShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "advancedCallbackWithReference.yaml")))
+            using (var stream = Resources.GetStream(SampleFolderPath + "advancedCallbackWithReference.yaml"))
             {
                 // Act
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
