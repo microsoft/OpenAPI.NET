@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: '#/components/schemas/Pet'";
 
             // Act
-            var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual.Should().Be(expected);
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = reference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual = actual.MakeLineBreaksEnvironmentNeutral();
 
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"$ref: main.json#/Pets";
 
             // Act
-            var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = reference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual.Should().Be(expected);

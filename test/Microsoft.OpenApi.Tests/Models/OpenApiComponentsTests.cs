@@ -259,7 +259,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"{ }";
 
             // Act
-            var actual = BasicComponents.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = BasicComponents.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -274,7 +274,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = @"{ }";
 
             // Act
-            var actual = BasicComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = BasicComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -323,7 +323,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedComponents.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvancedComponents.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -378,7 +378,7 @@ namespace Microsoft.OpenApi.Tests.Models
 }";
 
             // Act
-            var actual = AdvancedComponentsWithReference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvancedComponentsWithReference.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
             
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -414,7 +414,7 @@ securitySchemes:
     openIdConnectUrl: https://example.com/openIdConnect";
 
             // Act
-            var actual = AdvancedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvancedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -453,7 +453,7 @@ securitySchemes:
     openIdConnectUrl: https://example.com/openIdConnect";
 
             // Act
-            var actual = AdvancedComponentsWithReference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = AdvancedComponentsWithReference.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -488,7 +488,7 @@ securitySchemes:
 }";
 
             // Act
-            var actual = BrokenComponents.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = BrokenComponents.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -515,7 +515,7 @@ securitySchemes:
       - ";
 
             // Act
-            var actual = BrokenComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = BrokenComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -546,7 +546,7 @@ securitySchemes:
             //         type: string";
 
             // Act
-            var actual = TopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = TopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -562,7 +562,7 @@ securitySchemes:
   schema1: { }";
 
             // Act
-            var actual = TopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = TopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -587,7 +587,7 @@ securitySchemes:
         type: string";
 
             // Act
-            var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0_0);
+            var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

@@ -97,6 +97,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
                     break;
 
                 case ReferenceType.Parameter:
+                    // TODO: Handle referencing to a "body" parameter in V2
                     referencedObject = OpenApiV2Deserializer.LoadParameter(node);
                     break;
 
