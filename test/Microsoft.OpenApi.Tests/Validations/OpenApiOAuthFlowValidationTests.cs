@@ -24,7 +24,9 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator();
-            validator.Visit(oAuthFlow);
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(oAuthFlow);
+
             errors = validator.Errors;
             bool result = !errors.Any();
 

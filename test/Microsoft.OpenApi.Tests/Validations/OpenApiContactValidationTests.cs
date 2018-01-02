@@ -19,14 +19,15 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             const string testEmail = "support/example.com";
             IEnumerable<ValidationError> errors;
-            OpenApiContact Contact = new OpenApiContact()
+            OpenApiContact contact = new OpenApiContact()
             {
                 Email = testEmail
             };
 
             // Act
             var validator = new OpenApiValidator();
-            validator.Visit(Contact);
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(contact);
 
             errors = validator.Errors;
             bool result = !errors.Any();

@@ -147,6 +147,13 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiEncoding"/>
+        /// </summary>
+        public virtual void Visit(OpenApiEncoding encoding)
+        {
+        }
+
+        /// <summary>
         /// Visits the examples.
         /// </summary>
         public virtual void Visit(IDictionary<string, OpenApiExample> examples)

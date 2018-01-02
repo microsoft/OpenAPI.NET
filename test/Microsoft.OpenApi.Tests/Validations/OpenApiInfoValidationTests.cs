@@ -24,7 +24,9 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator();
-            validator.Visit(info);
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(info);
+
 
             // Assert
             errors = validator.Errors;

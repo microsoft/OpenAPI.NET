@@ -22,7 +22,9 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator();
-            validator.Visit(response);
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(response);
+
             errors = validator.Errors;
             bool result = !errors.Any();
 

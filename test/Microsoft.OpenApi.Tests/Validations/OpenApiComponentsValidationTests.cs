@@ -29,7 +29,9 @@ namespace Microsoft.OpenApi.Validations.Tests
             };
 
             var validator = new OpenApiValidator();
-            validator.Visit(components);
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
             // Act
             errors = validator.Errors;
             bool result = !errors.Any();
