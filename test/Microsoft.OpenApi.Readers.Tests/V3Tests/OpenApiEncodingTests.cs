@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicEncodingShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "basicEncoding.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicEncoding.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseAdvancedEncodingShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "advancedEncoding.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedEncoding.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
