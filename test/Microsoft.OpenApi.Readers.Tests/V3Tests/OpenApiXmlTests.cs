@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicXmlShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "basicXml.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicXml.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));

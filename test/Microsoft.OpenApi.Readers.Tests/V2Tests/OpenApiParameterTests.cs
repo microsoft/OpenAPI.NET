@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = Resources.GetStream(SampleFolderPath + "bodyParameter.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bodyParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = Resources.GetStream(SampleFolderPath + "pathParameter.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = Resources.GetStream(SampleFolderPath + "queryParameter.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = Resources.GetStream(SampleFolderPath + "formDataParameter.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "formDataParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = Resources.GetStream(SampleFolderPath + "headerParameter.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }

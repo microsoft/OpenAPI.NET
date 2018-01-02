@@ -13,47 +13,6 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="ReferenceService\Samples\multipleReferences.v2.yaml" />
-        <None Remove="V2Tests\Samples\basic.v2.yaml" />
-        <None Remove="V2Tests\Samples\basic.v3.yaml" />
-        <None Remove="V2Tests\Samples\minimal.v2.yaml" />
-        <None Remove="V2Tests\Samples\minimal.v3.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiParameter\formDataParameter.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiParameter\headerParameter.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiParameter\pathParameter.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiParameter\queryParameter.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\oauth2AccessCodeSecurityScheme.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\oauth2ApplicationSecurityScheme.yaml" />
-        <None Remove="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiCallback\basicCallback.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiDocument\basicDocumentWithMultipleServers.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiDocument\brokenMinimalDocument.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiDocument\petStore.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiDocument\petStoreExpanded.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiEncoding\advancedEncoding.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiEncoding\basicEncoding.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiExample\advancedExample.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiInfo\basicInfo.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSchema\advancedSchemaWithReference.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSchema\basicSchemaWithExample.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSchema\dictionarySchema.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSchema\primitiveSchema.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSchema\simpleSchema.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\bearerSecurityScheme.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\httpSecurityScheme.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\oauth2SecurityScheme.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml" />
-        <None Remove="V3Tests\Samples\OpenApiXml\basicXml.yaml" />
-    </ItemGroup>
-    <ItemGroup>
       <EmbeddedResource Include="ReferenceService\Samples\multipleReferences.v2.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

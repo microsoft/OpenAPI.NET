@@ -53,7 +53,7 @@ paths: {}",
         [Fact]
         public void ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "basicDocumentWithMultipleServers.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml")))
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
@@ -87,7 +87,7 @@ paths: {}",
         [Fact]
         public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "brokenMinimalDocument.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml")))
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
@@ -114,7 +114,7 @@ paths: {}",
         [Fact]
         public void ParseMinimalDocumentShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "minimalDocument.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml")))
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
@@ -137,7 +137,7 @@ paths: {}",
         public void ParseStandardPetStoreDocumentShouldSucceed()
         {
             OpenApiDiagnostic context;
-            using (var stream = Resources.GetStream(SampleFolderPath + "petStore.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStore.yaml")))
             {
                 var actual = new OpenApiStreamReader().Read(stream, out context);
 
@@ -548,7 +548,7 @@ paths: {}",
         public void ParseModifiedPetStoreDocumentWithTagAndSecurityShouldSucceed()
         {
             OpenApiDiagnostic context;
-            using (var stream = Resources.GetStream(SampleFolderPath + "petStoreWithTagAndSecurity.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreWithTagAndSecurity.yaml")))
             {
                 var actual = new OpenApiStreamReader().Read(stream, out context);
 
@@ -1050,7 +1050,7 @@ paths: {}",
         {
             OpenApiDiagnostic context;
 
-            using (var stream = Resources.GetStream(SampleFolderPath + "petStoreExpanded.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "petStoreExpanded.yaml")))
             {
                 var actual = new OpenApiStreamReader().Read(stream, out context);
 

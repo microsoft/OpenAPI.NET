@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseHttpSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "httpSecurityScheme.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseApiKeySecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "apiKeySecurityScheme.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBearerSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "bearerSecurityScheme.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseOAuth2SecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "oauth2SecurityScheme.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseOpenIdConnectSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "openIdConnectSecurityScheme.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));

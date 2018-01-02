@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicCallbackShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "basicCallback.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicCallback.yaml")))
             {
                 // Arrange
                 var yamlStream = new YamlStream();
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseAdvancedCallbackWithReferenceShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "advancedCallbackWithReference.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedCallbackWithReference.yaml")))
             {
                 // Act
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);

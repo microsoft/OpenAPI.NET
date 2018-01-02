@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseAdvancedExampleShouldSucceed()
         {
-            using (var stream = Resources.GetStream(SampleFolderPath + "advancedExample.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedExample.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));

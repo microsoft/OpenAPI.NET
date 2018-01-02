@@ -42,9 +42,8 @@ namespace Microsoft.OpenApi.Readers.Tests
 
         private static string GetPath(string fileName)
         {
-            const string projectDefaultNamespace = "Microsoft.OpenApi.Readers.Tests";
-            const string resourcesFolderName = "Resources";
             const string pathSeparator = ".";
+            string projectDefaultNamespace = typeof(Resources).Namespace;
 
             if (fileName.Contains("/"))
             {
@@ -52,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                 return projectDefaultNamespace + pathSeparator + temp;
             }
 
-            return projectDefaultNamespace + pathSeparator + resourcesFolderName + pathSeparator + fileName;
+            return projectDefaultNamespace + pathSeparator + fileName;
         }
     }
 }

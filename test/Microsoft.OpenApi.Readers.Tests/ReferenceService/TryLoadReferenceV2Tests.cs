@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var diagnostic = new OpenApiDiagnostic();
             RootNode rootNode;
 
-            using (var stream = Resources.GetStream(SampleFolderPath + "multipleReferences.v2.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var diagnostic = new OpenApiDiagnostic();
             RootNode rootNode;
 
-            using (var stream = Resources.GetStream(SampleFolderPath + "multipleReferences.v2.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var diagnostic = new OpenApiDiagnostic();
             RootNode rootNode;
 
-            using (var stream = Resources.GetStream(SampleFolderPath + "multipleReferences.v2.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var diagnostic = new OpenApiDiagnostic();
             RootNode rootNode;
 
-            using (var stream = Resources.GetStream(SampleFolderPath + "multipleReferences.v2.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -202,7 +202,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var diagnostic = new OpenApiDiagnostic();
             RootNode rootNode;
 
-            using (var stream = Resources.GetStream(SampleFolderPath + "multipleReferences.v2.yaml"))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
