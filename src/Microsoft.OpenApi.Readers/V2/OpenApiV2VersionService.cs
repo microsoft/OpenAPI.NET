@@ -2,50 +2,30 @@
 // Licensed under the MIT license. 
 
 using System;
-using System.Collections.Generic;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
-using Microsoft.OpenApi.Readers.V2;
-using Microsoft.OpenApi.Readers.V3;
 
-namespace Microsoft.OpenApi.Readers.ReferenceServices
+
+namespace Microsoft.OpenApi.Readers.V2
 {
     /// <summary>
-    /// The reference service for the Open API V2.0.
+    /// The version specific implementations for OpenAPI V2.0.
     /// </summary>
-    internal class OpenApiV2ReferenceService : IOpenApiReferenceService
+    internal class OpenApiV2VersionService : IOpenApiVersionService
     {
-        private readonly RootNode _rootNode;
-
-        private readonly List<OpenApiTag> _tags = new List<OpenApiTag>();
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiV2ReferenceService"/> class.
+        /// Return a function that converts a MapNode into a V2 OpenApiTag
         /// </summary>
-        /// <param name="rootNode">The root node.</param>
-        public OpenApiV2ReferenceService(RootNode rootNode)
-        {
-            _rootNode = rootNode ?? throw new ArgumentNullException(nameof(rootNode));
-
-            // Precompute the tags array so that each tag reference does not require a new deserialization.
-            var tagListPointer = new JsonPointer("#/tags");
-
-            var tagListNode = _rootNode.Find(tagListPointer);
-
-            if (tagListNode != null && tagListNode is ListNode)
-            {
-                var tagListNodeAsListNode = (ListNode)tagListNode;
-                _tags.AddRange(tagListNodeAsListNode.CreateList(OpenApiV3Deserializer.LoadTag));
-            }
-        }
+        public Func<MapNode, OpenApiTag> TagLoader => OpenApiV2Deserializer.LoadTag;
 
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        public bool TryLoadReference(OpenApiReference reference, out IOpenApiReferenceable referencedObject)
+        public bool TryLoadReference(ParsingContext context, OpenApiReference reference, out IOpenApiReferenceable referencedObject)
         {
             referencedObject = null;
 
@@ -68,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             // Special case for Tag
             if (reference.Type == ReferenceType.Tag)
             {
-                foreach (var tag in _tags)
+                foreach (var tag in context.Tags)
                 {
                     if (tag.Name == reference.Id)
                     {
@@ -84,7 +64,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             var jsonPointer =
                 new JsonPointer("#/" + GetReferenceTypeV2Name(reference.Type.Value) + "/" + reference.Id);
 
-            var node = _rootNode.Find(jsonPointer);
+            var node = context.RootNode.Find(jsonPointer);
 
             switch (reference.Type)
             {
@@ -116,7 +96,7 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             return true;
         }
 
-        private OpenApiReference ParseLocalReference(string localReference)
+        private static OpenApiReference ParseLocalReference(string localReference)
         {
             if (string.IsNullOrWhiteSpace(localReference))
             {
@@ -243,6 +223,11 @@ namespace Microsoft.OpenApi.Readers.ReferenceServices
             }
 
             throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, reference));
+        }
+
+        public OpenApiDocument LoadDocument(RootNode rootNode)
+        {
+            return OpenApiV2Deserializer.LoadOpenApi(rootNode);
         }
     }
 }

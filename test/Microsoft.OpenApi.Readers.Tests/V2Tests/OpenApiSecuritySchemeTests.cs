@@ -16,21 +16,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     [Collection("DefaultSettings")]
     public class OpenApiSecuritySchemeTests
     {
-        private const string SampleFolderPath = "V2Tests/Samples/OpenApiSecurityScheme";
+        private const string SampleFolderPath = "V2Tests/Samples/OpenApiSecurityScheme/";
 
         [Fact]
         public void ParseHttpSecuritySchemeShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "basicSecurityScheme.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSecurityScheme.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+                var document = OpenApiStreamReader.LoadYamlDocument(stream);
 
                 var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)document.RootNode);
 
                 // Act
                 var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -48,16 +46,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseApiKeySecuritySchemeShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
-
+                var document = OpenApiStreamReader.LoadYamlDocument(stream);
                 var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)document.RootNode);
 
                 // Act
                 var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -76,16 +71,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2ImplicitSecuritySchemeShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "oAuth2ImplicitSecurityScheme.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ImplicitSecurityScheme.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
-
+                var document = OpenApiStreamReader.LoadYamlDocument(stream);
                 var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)document.RootNode);
 
                 // Act
                 var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -114,16 +106,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2PasswordSecuritySchemeShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "oAuth2PasswordSecurityScheme.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2PasswordSecurityScheme.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
-
+                var document = OpenApiStreamReader.LoadYamlDocument(stream);
                 var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)document.RootNode);
 
                 // Act
                 var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -152,16 +141,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2ApplicationSecuritySchemeShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "oAuth2ApplicationSecurityScheme.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ApplicationSecurityScheme.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
-
+                var document = OpenApiStreamReader.LoadYamlDocument(stream);
                 var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)document.RootNode);
 
                 // Act
                 var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
@@ -190,16 +176,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseOAuth2AccessCodeSecuritySchemeShouldSucceed()
         {
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "oAuth2AccessCodeSecurityScheme.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2AccessCodeSecurityScheme.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+                var document = OpenApiStreamReader.LoadYamlDocument(stream);
 
                 var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)document.RootNode);
 
                 // Act
                 var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
