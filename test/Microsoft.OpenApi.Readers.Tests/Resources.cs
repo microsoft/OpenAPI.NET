@@ -43,15 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         private static string GetPath(string fileName)
         {
             const string pathSeparator = ".";
-            string projectDefaultNamespace = typeof(Resources).Namespace;
-
-            if (fileName.Contains("/"))
-            {
-                string temp = fileName.Replace('/', '.');
-                return projectDefaultNamespace + pathSeparator + temp;
-            }
-
-            return projectDefaultNamespace + pathSeparator + fileName;
+            return typeof(Resources).Namespace + pathSeparator + fileName.Replace('/', '.');
         }
     }
 }
