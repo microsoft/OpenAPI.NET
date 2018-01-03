@@ -36,5 +36,16 @@ namespace Microsoft.OpenApi.Expressions
                 return Path + Value;
             }
         }
+
+        /// <summary>
+        /// Gets the name string.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return Value;
+            }
+        }
     }
 }

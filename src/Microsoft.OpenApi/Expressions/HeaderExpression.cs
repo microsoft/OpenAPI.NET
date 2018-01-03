@@ -36,5 +36,16 @@ namespace Microsoft.OpenApi.Expressions
                 return Header + Value;
             }
         }
+
+        /// <summary>
+        /// Gets the token string.
+        /// </summary>
+        public string Token
+        {
+            get
+            {
+                return Value;
+            }
+        }
     }
 }

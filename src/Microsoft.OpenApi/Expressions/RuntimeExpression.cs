@@ -42,19 +42,19 @@ namespace Microsoft.OpenApi.Expressions
             // $url
             if (expression == UrlExpression.Url)
             {
-                return new UrlExpression();
+                return UrlExpression.Instance;
             }
 
             // $method
             if (expression == MethodExpression.Method)
             {
-                return new MethodExpression();
+                return MethodExpression.Instance;
             }
 
             // $statusCode
             if (expression == StatusCodeExpression.StatusCode)
             {
-                return new StatusCodeExpression();
+                return StatusCodeExpression.Instance;
             }
 
             // $request.
@@ -98,6 +98,12 @@ namespace Microsoft.OpenApi.Expressions
         public bool Equals(RuntimeExpression obj)
         {
             return obj != null && obj.Expression == Expression;
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return Expression;
         }
     }
 }
