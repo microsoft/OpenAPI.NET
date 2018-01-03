@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         /// <summary>
         /// Get the file contents.
         /// </summary>
-        /// <param name="fileName">The file name with relative path. "/V3Tests/Samples/OpenApiCallback/..</param>
+        /// <param name="fileName">The file name with relative path. For example: "/V3Tests/Samples/OpenApiCallback/..".</param>
         /// <returns>The file contents.</returns>
         public static string GetString(string fileName)
         {
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         /// <summary>
         /// Get the file stream.
         /// </summary>
-        /// <param name="fileName">The file name with relative path. "/V3Tests/Samples/OpenApiCallback/..</param>
+        /// <param name="fileName">The file name with relative path. For example: "/V3Tests/Samples/OpenApiCallback/..".</param>
         /// <returns>The file stream.</returns>
         public static Stream GetStream(string fileName)
         {
