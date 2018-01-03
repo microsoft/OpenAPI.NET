@@ -24,8 +24,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 var openApiDocV2 = new OpenApiStreamReader().Read(streamV2, out var contextV2);
                 var openApiDocV3 = new OpenApiStreamReader().Read(streamV3, out var contextV3);
 
-                // Everything in the DOM read from V2 and V3 documents should be equal
-                // except the SpecVersion property (2.0 and 3.0.0)
                 openApiDocV3.ShouldBeEquivalentTo(
                     openApiDocV2);
 

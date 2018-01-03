@@ -3,38 +3,25 @@
 
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.ReferenceServices;
-using SharpYaml.Serialization;
+using Microsoft.OpenApi.Readers.V2;
 using Xunit;
 
-namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
+namespace Microsoft.OpenApi.Readers.Tests
 {
     public class ConvertToOpenApiReferenceV2Tests
     {
-        private readonly OpenApiV2ReferenceService _referenceService;
-
-        public ConvertToOpenApiReferenceV2Tests()
-        {
-            var context = new ParsingContext();
-            var diagnostic = new OpenApiDiagnostic();
-
-            var yamlDocument = new YamlDocument("{}");
-            var rootNode = new RootNode(context, diagnostic, yamlDocument);
-
-            _referenceService = new OpenApiV2ReferenceService(rootNode);
-        }
 
         [Fact]
         public void ParseExternalReference()
         {
             // Arrange
+            var versionService = new OpenApiV2VersionService();
             var externalResource = "externalSchema.json";
             var id = "externalPathSegment1/externalPathSegment2/externalPathSegment3";
             var input = $"{externalResource}#/{id}";
 
             // Act
-            var reference = _referenceService.ConvertToOpenApiReference(input, null);
+            var reference = versionService.ConvertToOpenApiReference(input, null);
 
             // Assert
             reference.ExternalResource.Should().Be(externalResource);
@@ -46,12 +33,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void ParseLocalParameterReference()
         {
             // Arrange
+            var versionService = new OpenApiV2VersionService();
             var referenceType = ReferenceType.Parameter;
             var id = "parameterId";
             var input = $"#/parameters/{id}";
 
             // Act
-            var reference = _referenceService.ConvertToOpenApiReference(input, referenceType);
+            var reference = versionService.ConvertToOpenApiReference(input, referenceType);
 
             // Assert
             reference.Type.Should().Be(referenceType);
@@ -63,12 +51,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void ParseLocalSchemaReference()
         {
             // Arrange
+            var versionService = new OpenApiV2VersionService();
             var referenceType = ReferenceType.Schema;
             var id = "parameterId";
             var input = $"#/definitions/{id}";
 
             // Act
-            var reference = _referenceService.ConvertToOpenApiReference(input, referenceType);
+            var reference = versionService.ConvertToOpenApiReference(input, referenceType);
 
             // Assert
             reference.Type.Should().Be(referenceType);
@@ -80,12 +69,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void ParseTagReference()
         {
             // Arrange
+            var versionService = new OpenApiV2VersionService();
             var referenceType = ReferenceType.Tag;
             var id = "tagId";
             var input = $"{id}";
 
             // Act
-            var reference = _referenceService.ConvertToOpenApiReference(input, referenceType);
+            var reference = versionService.ConvertToOpenApiReference(input, referenceType);
 
             // Assert
             reference.Type.Should().Be(referenceType);
@@ -97,12 +87,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void ParseSecuritySchemeReference()
         {
             // Arrange
+            var versionService = new OpenApiV2VersionService();
             var referenceType = ReferenceType.SecurityScheme;
             var id = "securitySchemeId";
             var input = $"{id}";
 
             // Act
-            var reference = _referenceService.ConvertToOpenApiReference(input, referenceType);
+            var reference = versionService.ConvertToOpenApiReference(input, referenceType);
 
             // Assert
             reference.Type.Should().Be(referenceType);
