@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
     [Collection("DefaultSettings")]
     public class TryLoadReferenceV2Tests
     {
-        private const string SampleFolderPath = "ReferenceService/Samples";
+        private const string SampleFolderPath = "ReferenceService/Samples/";
 
         [Fact]
         public void LoadSchemaReference()
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
 
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
 
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
 
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
 
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));
@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
 
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
                 var yamlStream = new YamlStream();
                 yamlStream.Load(new StreamReader(stream));

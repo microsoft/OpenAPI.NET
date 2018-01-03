@@ -13,14 +13,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     [Collection("DefaultSettings")]
     public class OpenApiParameterTests
     {
-        private const string SampleFolderPath = "V2Tests/Samples/OpenApiParameter";
+        private const string SampleFolderPath = "V2Tests/Samples/OpenApiParameter/";
 
         [Fact]
         public void ParseBodyParameterShouldSucceed()
         {
             // Arrange
             MapNode node;
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "bodyParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bodyParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "pathParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "queryParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "formDataParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "formDataParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using (var stream = File.OpenRead(Path.Combine(SampleFolderPath, "headerParameter.yaml")))
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameter.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
