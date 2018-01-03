@@ -108,6 +108,12 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="item">The object to be validated</param>
         public override void Visit(OpenApiEncoding item) => Validate(item);
 
+        /// <summary>
+        /// Execute validation rules against an <see cref="OpenApiCallback"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiCallback item) => Validate(item);
+
 
         /// <summary>
         /// Execute validation rules against an <see cref="IOpenApiExtensible"/>

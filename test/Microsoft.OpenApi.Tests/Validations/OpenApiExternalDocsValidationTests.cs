@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
@@ -17,16 +18,13 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateUrlIsRequiredInExternalDocs()
         {
             // Arrange
-            IEnumerable<ValidationError> errors;
             OpenApiExternalDocs externalDocs = new OpenApiExternalDocs();
 
             // Act
-            var validator = new OpenApiValidator();
-            var walker = new OpenApiWalker(validator);
-            walker.Walk(externalDocs);
+            var errors = externalDocs.Validate();
 
             // Assert
-            errors = validator.Errors;
+          
             bool result = !errors.Any();
 
             Assert.False(result);

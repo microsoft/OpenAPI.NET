@@ -197,11 +197,26 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiCallback"/>
+        /// </summary>
+        public virtual void Visit(OpenApiCallback callback)
+        {
+        }
+
+        /// <summary>
         /// Visits <see cref="OpenApiTag"/>
         /// </summary>
         public virtual void Visit(OpenApiTag tag)
         {
         }
+
+        /// <summary>
+        /// Visits <see cref="OpenApiHeader"/>
+        /// </summary>
+        public virtual void Visit(OpenApiHeader tag)
+        {
+        }
+
         /// <summary>
         /// Visits <see cref="OpenApiOAuthFlow"/>
         /// </summary>
@@ -210,7 +225,14 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiOAuthFlow"/>
+        /// Visits <see cref="OpenApiSecurityRequirement"/>
+        /// </summary>
+        public virtual void Visit(OpenApiSecurityRequirement securityRequirement)
+        {
+        }
+
+        /// <summary>
+        /// Visits list of <see cref="OpenApiTag"/>
         /// </summary>
         public virtual void Visit(IList<OpenApiTag> openApiTags)
         {

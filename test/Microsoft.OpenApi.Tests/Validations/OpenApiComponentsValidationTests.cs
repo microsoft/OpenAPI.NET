@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             const string key = "%@abc";
-            IEnumerable<ValidationError> errors;
+            
             OpenApiComponents components = new OpenApiComponents()
             {
                 Responses = new Dictionary<string, OpenApiResponse>
@@ -28,12 +29,9 @@ namespace Microsoft.OpenApi.Validations.Tests
                 }
             };
 
-            var validator = new OpenApiValidator();
-            var walker = new OpenApiWalker(validator);
-            walker.Walk(components);
+            var errors = components.Validate();
 
             // Act
-            errors = validator.Errors;
             bool result = !errors.Any();
             
 

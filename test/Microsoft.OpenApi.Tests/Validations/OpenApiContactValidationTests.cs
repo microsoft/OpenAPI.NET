@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
@@ -18,18 +19,14 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             const string testEmail = "support/example.com";
-            IEnumerable<ValidationError> errors;
+           
             OpenApiContact contact = new OpenApiContact()
             {
                 Email = testEmail
             };
 
             // Act
-            var validator = new OpenApiValidator();
-            var walker = new OpenApiWalker(validator);
-            walker.Walk(contact);
-
-            errors = validator.Errors;
+            var errors = contact.Validate();
             bool result = !errors.Any();
 
             // Assert
