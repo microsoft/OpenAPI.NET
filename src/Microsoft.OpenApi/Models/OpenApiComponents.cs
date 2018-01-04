@@ -78,32 +78,170 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
+            // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
+            // If the reference exists but points to other objects, the object is serialized to just that reference.
+
             // schemas
-            writer.WriteOptionalMap(OpenApiConstants.Schemas, Schemas, (w, s) => s.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Schemas,
+                Schemas,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Schema &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // responses
-            writer.WriteOptionalMap(OpenApiConstants.Responses, Responses, (w, r) => r.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Responses,
+                Responses,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Response &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // parameters
-            writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Parameters,
+                Parameters,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Parameter &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // examples
-            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Examples,
+                Examples,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Example &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // requestBodies
-            writer.WriteOptionalMap(OpenApiConstants.RequestBodies, RequestBodies, (w, r) => r.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.RequestBodies,
+                RequestBodies,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.RequestBody &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Headers,
+                Headers,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Header &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // securitySchemes
-            writer.WriteOptionalMap(OpenApiConstants.SecuritySchemes, SecuritySchemes, (w, s) => s.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.SecuritySchemes,
+                SecuritySchemes,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // links
-            writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, link) => link.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Links,
+                Links,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Link &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // callbacks
-            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => c.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Callbacks,
+                Callbacks,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Callback &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // extensions
             writer.WriteExtensions(Extensions);

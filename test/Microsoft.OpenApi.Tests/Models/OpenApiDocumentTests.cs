@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -15,6 +16,108 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiDocumentTests
     {
+        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
+        {
+            Schemas =
+            {
+                ["schema1"] = new OpenApiSchema
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "schema2"
+                    }
+                },
+                ["schema2"] = new OpenApiSchema
+                {
+                    Type = "object",
+                    Properties =
+                    {
+                        ["property1"] = new OpenApiSchema()
+                        {
+                            Type = "string"
+                        }
+                    }
+                },
+            }
+        };
+
+        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
+        {
+            Schemas =
+            {
+                ["schema1"] = new OpenApiSchema
+                {
+                    Type = "object",
+                    Properties =
+                    {
+                        ["property1"] = new OpenApiSchema()
+                        {
+                            Type = "string"
+                        }
+                    },
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "schema1"
+                    }
+                },
+                ["schema2"] = new OpenApiSchema
+                {
+                    Type = "object",
+                    Properties =
+                    {
+                        ["property1"] = new OpenApiSchema()
+                        {
+                            Type = "string"
+                        }
+                    }
+                },
+            }
+        };
+
+        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
+        {
+            Schemas =
+            {
+                ["schema1"] = new OpenApiSchema
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "schema1"
+                    }
+                }
+            }
+        };
+
+        public static OpenApiDocument SimpleDocumentWithTopLevelReferencingComponents = new OpenApiDocument()
+        {
+            Info = new OpenApiInfo()
+            {
+                Version = "1.0.0"
+            },
+            Components = TopLevelReferencingComponents
+        };
+
+        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiDocument()
+        {
+            Info = new OpenApiInfo()
+            {
+                Version = "1.0.0"
+            },
+            Components = TopLevelSelfReferencingComponentsWithOtherProperties
+        };
+
+        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponents = new OpenApiDocument()
+        {
+            Info = new OpenApiInfo()
+            {
+                Version = "1.0.0"
+            },
+            Components = TopLevelSelfReferencingComponents
+        };
+
         public static OpenApiComponents AdvancedComponentsWithReference = new OpenApiComponents
         {
             Schemas = new Dictionary<string, OpenApiSchema>
@@ -2312,6 +2415,81 @@ namespace Microsoft.OpenApi.Tests.Models
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeSimpleDocumentWithTopLevelReferencingComponentsAsYamlV2Works()
+        {
+            // Arrange
+            var expected = @"swagger: '2.0'
+info:
+  version: 1.0.0
+paths: { }
+definitions:
+  schema1:
+    $ref: '#/definitions/schema2'
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
+
+            // Act
+            var actual = SimpleDocumentWithTopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeSimpleDocumentWithTopLevelSelfReferencingComponentsAsYamlV3Works()
+        {
+            // Arrange
+            var expected = @"swagger: '2.0'
+info:
+  version: 1.0.0
+paths: { }
+definitions:
+  schema1: { }";
+
+            // Act
+            var actual = SimpleDocumentWithTopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeSimpleDocumentWithTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
+        {
+            // Arrange
+            var expected = @"swagger: '2.0'
+info:
+  version: 1.0.0
+paths: { }
+definitions:
+  schema1:
+    type: object
+    properties:
+      property1:
+        type: string
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
+
+            // Act
+            var actual = SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();

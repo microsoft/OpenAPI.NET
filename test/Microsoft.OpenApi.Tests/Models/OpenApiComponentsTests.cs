@@ -462,7 +462,7 @@ securitySchemes:
         }
 
         [Fact]
-        public void SerializeBrokenComponentsAsJsonWorks()
+        public void SerializeBrokenComponentsAsJsonV3Works()
         {
             // Arrange
             var expected = @"{
@@ -497,7 +497,7 @@ securitySchemes:
         }
 
         [Fact]
-        public void SerializeBrokenComponentsAsYamlWorks()
+        public void SerializeBrokenComponentsAsYamlV3Works()
         {
             // Arrange
             var expected = @"schemas:
@@ -523,8 +523,8 @@ securitySchemes:
             actual.Should().Be(expected);
         }
 
-        [Fact(Skip = "Issue #157 We are not serializing top-level reference in components correctly")]
-        public void SerializeTopLevelReferencingComponentsAsYamlWorks()
+        [Fact]
+        public void SerializeTopLevelReferencingComponentsAsYamlV3Works()
         {
             // Arrange
             var expected = @"schemas:
@@ -536,15 +536,6 @@ securitySchemes:
       property1:
         type: string";
 
-            // Current output
-            // schemas:
-            //   schema1: { }
-            //   schema2:
-            //     type: object
-            //     properties:
-            //       property1:
-            //         type: string";
-
             // Act
             var actual = TopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             
@@ -555,7 +546,7 @@ securitySchemes:
         }
 
         [Fact]
-        public void SerializeTopLevelSelfReferencingComponentsAsYamlWorks()
+        public void SerializeTopLevelSelfReferencingComponentsAsYamlV3Works()
         {
             // Arrange
             var expected = @"schemas:
@@ -571,7 +562,7 @@ securitySchemes:
         }
 
         [Fact]
-        public void SerializeTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlWorks()
+        public void SerializeTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
         {
             // Arrange
             var expected = @"schemas:

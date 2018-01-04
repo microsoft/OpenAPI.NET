@@ -125,17 +125,80 @@ namespace Microsoft.OpenApi.Models
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV2(w));
 
+            // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
+            // If the reference exists but points to other objects, the object is serialized to just that reference.
+
             // definitions
-            writer.WriteOptionalMap(OpenApiConstants.Definitions, Components?.Schemas, (w, s) => s.SerializeAsV2WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Definitions,
+                Components?.Schemas,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Schema &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV2WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV2(w);
+                    }
+                });
 
             // parameters
-            writer.WriteOptionalMap(OpenApiConstants.Parameters, Components?.Parameters, (w, p) => p.SerializeAsV2WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Parameters,
+                Components?.Parameters,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Parameter &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV2WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV2(w);
+                    }
+                });
 
             // responses
-            writer.WriteOptionalMap(OpenApiConstants.Responses, Components?.Responses, (w, r) => r.SerializeAsV2WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.Responses,
+                Components?.Responses,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Response &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV2WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV2(w);
+                    }
+                });
 
             // securityDefinitions
-            writer.WriteOptionalMap(OpenApiConstants.SecurityDefinitions, Components?.SecuritySchemes, (w, s) => s.SerializeAsV2WithoutReference(w));
+            writer.WriteOptionalMap(
+                OpenApiConstants.SecurityDefinitions,
+                Components?.SecuritySchemes,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV2WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV2(w);
+                    }
+                });
 
             // security
             writer.WriteOptionalCollection(
