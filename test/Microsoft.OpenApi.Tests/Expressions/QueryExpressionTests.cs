@@ -8,33 +8,33 @@ using Xunit;
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
-    public class PathExpressionTests
+    public class QueryExpressionTests
     {
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData("        ")]
-        public void PathExpressionConstructorThrows(string name)
+        public void QueryExpressionConstructorThrows(string name)
         {
             // Arrange
-            Action test = () => new PathExpression(name);
+            Action test = () => new QueryExpression(name);
 
             // Act
             Assert.Throws<ArgumentException>("name", test);
         }
 
         [Fact]
-        public void PathExpressionConstructorWorks()
+        public void QueryExpressionConstructorWorks()
         {
             // Arrange
             string name = "anyValue";
 
             // Act
-            var path = new PathExpression(name);
+            var query = new QueryExpression(name);
 
             // Assert
-            Assert.Equal("path.anyValue", path.Expression);
-            Assert.Equal("anyValue", path.Name);
+            Assert.Equal("query.anyValue", query.Expression);
+            Assert.Equal("anyValue", query.Name);
         }
     }
 }
