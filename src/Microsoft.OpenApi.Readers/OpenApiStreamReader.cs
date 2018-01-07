@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Services;
@@ -46,10 +47,8 @@ namespace Microsoft.OpenApi.Readers
             var document = context.Parse(yamlDocument, diagnostic);
 
             // Validate the document
-            var openApiValidator = new OpenApiValidator();
-            var walker = new OpenApiWalker(openApiValidator);
-            walker.Walk(document);
-            foreach (var item in openApiValidator.Errors)
+            var errors = document.Validate();
+            foreach (var item in errors)
             {
                 diagnostic.Errors.Add(new OpenApiError(item.ErrorPath, item.ErrorMessage));
             } 
