@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var requiredFields = new List<string> {"description"};
             var response = new OpenApiResponse();
-            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields, requiredFields);
+            ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields);
 
             return response;
         }

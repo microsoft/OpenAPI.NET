@@ -19,8 +19,7 @@ namespace Microsoft.OpenApi.Readers.V3
             MapNode mapNode,
             T domainObject,
             FixedFieldMap<T> fixedFieldMap,
-            PatternFieldMap<T> patternFieldMap,
-            List<string> requiredFields = null)
+            PatternFieldMap<T> patternFieldMap)
         {
             if (mapNode == null)
             {
@@ -30,7 +29,6 @@ namespace Microsoft.OpenApi.Readers.V3
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap);
-                requiredFields?.Remove(propertyNode.Name);
             }
 
         }

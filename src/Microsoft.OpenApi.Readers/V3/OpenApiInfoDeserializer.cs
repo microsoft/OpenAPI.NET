@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var info = new OpenApiInfo();
             var required = new List<string> {"title", "version"};
 
-            ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields, required);
+            ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields);
 
             return info;
         }
