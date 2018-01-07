@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Validations.Rules;
 
 namespace Microsoft.OpenApi.Validations
@@ -70,7 +71,7 @@ namespace Microsoft.OpenApi.Validations
         {
             get
             {
-                return "#/" + String.Join("/", _path);
+                return "#/" + String.Join("/", _path.Reverse());
             }
         }
         #endregion

@@ -20,12 +20,14 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiInfo>(
                 (context, item) =>
                 {
+                    context.Push("info");
+
                     // title
                     context.Push("title");
                     if (String.IsNullOrEmpty(item.Title))
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
-                            String.Format(SRResource.Validation_FieldIsRequired, "url", "info"));
+                            String.Format(SRResource.Validation_FieldIsRequired, "title", "info"));
                         context.AddError(error);
                     }
                     context.Pop();
@@ -38,6 +40,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                             String.Format(SRResource.Validation_FieldIsRequired, "version", "info"));
                         context.AddError(error);
                     }
+                    context.Pop();
+
                     context.Pop();
                 });
 

@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields, required);
 
-            ReportMissing(openApiNode, required);
+            //ReportMissing(openApiNode, required);
 
             return openApidoc;
         }

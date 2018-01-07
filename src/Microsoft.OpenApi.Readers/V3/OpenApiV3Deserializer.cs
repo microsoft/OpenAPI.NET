@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 requiredFields?.Remove(propertyNode.Name);
             }
 
-            ReportMissing(mapNode, requiredFields);
+            //ReportMissing(mapNode, requiredFields);
         }
 
         private static RuntimeExpression LoadRuntimeExpression(ParseNode node)

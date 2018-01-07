@@ -30,6 +30,16 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
+        /// Create a vistor that will validate an OpenAPIDocument using an existing ValidationContext
+        /// </summary>
+        /// <param name="context">Existing validation context</param>
+        public OpenApiValidator(ValidationContext context)
+        {
+            _ruleSet = context.RuleSet;
+            _context = new ValidationContext(_ruleSet);
+        }
+
+        /// <summary>
         /// Execute validation rules against an <see cref="OpenApiDocument"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>

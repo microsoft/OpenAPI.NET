@@ -105,7 +105,7 @@ paths: {}",
                     {
                         Errors =
                         {
-                            new OpenApiError("#/info", "title is a required property")
+                            new OpenApiError("#/info/title", "The field 'title' in 'info' object is REQUIRED.")
                         }
                     });
             }

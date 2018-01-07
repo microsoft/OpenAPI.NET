@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="element"></param>
-        /// <returns></returns>
+        /// <returns>An IEnumerable of errors.  This function will never return null.</returns>
         public static IEnumerable<ValidationError> Validate(this IOpenApiElement element)         {
             var validator = new OpenApiValidator();
             var walker = new OpenApiWalker(validator);
