@@ -33,7 +33,6 @@ namespace Microsoft.OpenApi.Readers.V3
                 requiredFields?.Remove(propertyNode.Name);
             }
 
-            //ReportMissing(mapNode, requiredFields);
         }
 
         private static RuntimeExpression LoadRuntimeExpression(ParseNode node)
@@ -60,22 +59,7 @@ namespace Microsoft.OpenApi.Readers.V3
             };
         }
 
-        private static void ReportMissing(ParseNode node, IList<string> required)
-        {
-            if (required == null || !required.Any())
-            {
-                return;
-            }
 
-            foreach (var error in required.Select(
-                    r => new OpenApiError(
-                        node.Context.GetLocation(),
-                        $"{r} is a required property"))
-                .ToList())
-            {
-                node.Diagnostic.Errors.Add(error);
-            }
-        }
 
         private static string LoadString(ParseNode node)
         {

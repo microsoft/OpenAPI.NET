@@ -20,7 +20,6 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiInfo>(
                 (context, item) =>
                 {
-                    context.Push("info");
 
                     // title
                     context.Push("title");
@@ -42,7 +41,6 @@ namespace Microsoft.OpenApi.Validations.Rules
                     }
                     context.Pop();
 
-                    context.Pop();
                 });
 
         // add more rule.

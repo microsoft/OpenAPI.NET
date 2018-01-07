@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Exceptions;
@@ -49,19 +50,19 @@ namespace Microsoft.OpenApi.Validations
         /// Execute validation rules against an <see cref="OpenApiInfo"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiInfo item) => Validate(item);
+        public override void Visit(OpenApiInfo item) => Validate("info",item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiContact"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiContact item) => Validate(item);
+        public override void Visit(OpenApiContact item) => Validate("contact",item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiComponents"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiComponents item) => Validate(item);
+        public override void Visit(OpenApiComponents item) => Validate("components", item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiResponse"/>
@@ -73,19 +74,19 @@ namespace Microsoft.OpenApi.Validations
         /// Execute validation rules against an <see cref="OpenApiResponses"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiResponses item) => Validate(item);
+        public override void Visit(OpenApiResponses item) => Validate("responses",item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiExternalDocs"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiExternalDocs item) => Validate(item);
+        public override void Visit(OpenApiExternalDocs item) => Validate("externalDocs",item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiLicense"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiLicense item) => Validate(item);
+        public override void Visit(OpenApiLicense item) => Validate("license",item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiOAuthFlow"/>
@@ -103,14 +104,14 @@ namespace Microsoft.OpenApi.Validations
         /// Execute validation rules against an <see cref="OpenApiSchema"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiSchema item) => Validate(item);
+        public override void Visit(OpenApiSchema item) => Validate("schema",item);
 
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiServer"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiServer item) => Validate(item);
+        public override void Visit(OpenApiServer item) => Validate("server",item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiEncoding"/>
@@ -135,6 +136,13 @@ namespace Microsoft.OpenApi.Validations
         /// Errors accumulated while validating OpenAPI elements
         /// </summary>
         public IEnumerable<ValidationError> Errors => _context.Errors;
+
+        private void Validate<T>(string contextToken, T item)
+        {
+            _context.Push(contextToken);
+            Validate(item);
+            _context.Pop();
+        }
 
         private void Validate<T>(T item)
         {

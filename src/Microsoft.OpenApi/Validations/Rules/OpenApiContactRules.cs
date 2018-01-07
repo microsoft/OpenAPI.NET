@@ -20,6 +20,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiContact>(
                 (context, item) =>
                 {
+
                     context.Push("email");
                     if (item != null && item.Email != null)
                     {
