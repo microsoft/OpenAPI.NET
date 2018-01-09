@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var parameter = new OpenApiParameter();
             var required = new List<string> {"name", "in"};
 
-            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields, required);
+            ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
 
             return parameter;
         }

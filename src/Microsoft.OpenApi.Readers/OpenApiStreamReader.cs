@@ -3,8 +3,11 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi.Validations;
 using SharpYaml;
 using SharpYaml.Serialization;
 
@@ -38,6 +41,7 @@ namespace Microsoft.OpenApi.Readers
             YamlDocument yamlDocument;
             diagnostic = new OpenApiDiagnostic();
 
+            // Parse the YAML/JSON
             try
             {
                 yamlDocument = LoadYamlDocument(input);
@@ -52,7 +56,18 @@ namespace Microsoft.OpenApi.Readers
             {
                 ExtensionParsers = _settings.ExtensionParsers
             };
-            return context.Parse(yamlDocument, diagnostic);
+
+            // Parse the OpenAPI Document
+            var document = context.Parse(yamlDocument, diagnostic);
+
+            // Validate the document
+            var errors = document.Validate();
+            foreach (var item in errors)
+            {
+                diagnostic.Errors.Add(new OpenApiError(item.ErrorPath, item.ErrorMessage));
+            } 
+
+            return document;
         }
 
         /// <summary>
