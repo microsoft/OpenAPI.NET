@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "API Support",
             Url = new Uri("http://www.example.com/support"),
             Email = "support@example.com",
-            Extensions = new Dictionary<string, IOpenApiAny>
+            Extensions = new Dictionary<string, IOpenApiExtension>
             {
                 {"x-internal-id", new OpenApiInteger(42)}
             }

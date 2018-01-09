@@ -41,5 +41,6 @@ namespace Microsoft.OpenApi.Extensions
 
             element.Extensions[name] = any ?? throw Error.ArgumentNull(nameof(any));
         }
+
     }
 }

@@ -2,7 +2,9 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -49,6 +51,18 @@ namespace Microsoft.OpenApi.Readers.V3
             ReportMissing(openApiNode, required);
 
             return openApidoc;
+        }
+
+
+        public static IOpenApiExtension LoadExtension(string name, ParseNode node)
+        {
+            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser)) {
+                return parser(node.CreateAny());
+            }
+            else
+            {
+                return node.CreateAny();
+            }
         }
     }
 }

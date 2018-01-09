@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new Dictionary<string, IOpenApiAny>
+            Extensions = new Dictionary<string, IOpenApiExtension>
             {
                 {"x-tag-extension", new OpenApiNull()}
             }
@@ -32,7 +33,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new Dictionary<string, IOpenApiAny>
+            Extensions = new Dictionary<string, IOpenApiExtension>
             {
                 {"x-tag-extension", new OpenApiNull()}
             },
