@@ -421,11 +421,11 @@ namespace Microsoft.OpenApi.Tests.Models
   ""parameters"": [
     {
       ""name"": ""parameter1"",
-      ""in"": ""Path""
+      ""in"": ""path""
     },
     {
       ""name"": ""parameter2"",
-      ""in"": ""Header""
+      ""in"": ""header""
     },
     {
       ""name"": ""body"",
@@ -489,11 +489,11 @@ namespace Microsoft.OpenApi.Tests.Models
   ""parameters"": [
     {
       ""name"": ""parameter1"",
-      ""in"": ""Path""
+      ""in"": ""path""
     },
     {
       ""name"": ""parameter2"",
-      ""in"": ""Header""
+      ""in"": ""header""
     },
     {
       ""name"": ""body"",
