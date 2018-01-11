@@ -54,5 +54,16 @@ namespace Microsoft.OpenApi.Expressions
                 return Body + PointerPrefix + Value;
             }
         }
+
+        /// <summary>
+        /// Gets the fragment string.
+        /// </summary>
+        public string Fragment
+        {
+            get
+            {
+                return Value;
+            }
+        }
     }
 }

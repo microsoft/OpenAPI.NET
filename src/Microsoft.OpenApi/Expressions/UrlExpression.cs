@@ -17,5 +17,17 @@ namespace Microsoft.OpenApi.Expressions
         /// Gets the expression string.
         /// </summary>
         public override string Expression { get; } = Url;
+
+        /// <summary>
+        /// Gets the singleton.
+        /// </summary>
+        public static UrlExpression Instance = new UrlExpression();
+
+        /// <summary>
+        /// Private constructor.
+        /// </summary>
+        private UrlExpression()
+        {
+        }
     }
 }
