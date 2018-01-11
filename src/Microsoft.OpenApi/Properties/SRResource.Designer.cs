@@ -97,6 +97,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The input item should be in type of &apos;{0}&apos;..
+        /// </summary>
+        internal static string InputItemShouldBeType {
+            get {
+                return ResourceManager.GetString("InputItemShouldBeType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The active scope must be an object scope for property name &apos;{0}&apos; to be written..
         /// </summary>
         internal static string ObjectScopeNeededForPropertyNameWriting {
@@ -237,6 +246,69 @@ namespace Microsoft.OpenApi.Properties {
         internal static string SourceExpressionHasInvalidFormat {
             get {
                 return ResourceManager.GetString("SourceExpressionHasInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can not find visitor type registered for type &apos;{0}&apos;..
+        /// </summary>
+        internal static string UnknownVisitorType {
+            get {
+                return ResourceManager.GetString("UnknownVisitorType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The key &apos;{0}&apos; in &apos;{1}&apos; of components MUST match the regular expression &apos;{2}&apos;..
+        /// </summary>
+        internal static string Validation_ComponentsKeyMustMatchRegularExpr {
+            get {
+                return ResourceManager.GetString("Validation_ComponentsKeyMustMatchRegularExpr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The extension name &apos;{0}&apos; in &apos;{1}&apos; object MUST begin with &apos;x-&apos;..
+        /// </summary>
+        internal static string Validation_ExtensionNameMustBeginWithXDash {
+            get {
+                return ResourceManager.GetString("Validation_ExtensionNameMustBeginWithXDash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field &apos;{0}&apos; in &apos;{1}&apos; object is REQUIRED..
+        /// </summary>
+        internal static string Validation_FieldIsRequired {
+            get {
+                return ResourceManager.GetString("Validation_FieldIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path item name &apos;{0}&apos; MUST begin with a slash..
+        /// </summary>
+        internal static string Validation_PathItemMustBeginWithSlash {
+            get {
+                return ResourceManager.GetString("Validation_PathItemMustBeginWithSlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The same rule cannot be in the same rule set twice..
+        /// </summary>
+        internal static string Validation_RuleAddTwice {
+            get {
+                return ResourceManager.GetString("Validation_RuleAddTwice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The string &apos;{0}&apos; MUST be in the format of an email address..
+        /// </summary>
+        internal static string Validation_StringMustBeEmailAddress {
+            get {
+                return ResourceManager.GetString("Validation_StringMustBeEmailAddress", resourceCulture);
             }
         }
     }
