@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected =
                 @"{
   ""name"": ""name1"",
-  ""in"": ""Path""
+  ""in"": ""path""
 }";
 
             // Act
