@@ -15,5 +15,10 @@ namespace Microsoft.OpenApi.Readers
         /// List of all errors.
         /// </summary>
         public IList<OpenApiError> Errors { get; set; } = new List<OpenApiError>();
+
+        /// <summary>
+        /// Open API specification version of the document parsed.
+        /// </summary>
+        public OpenApiSpecVersion SpecificationVersion { get; set; }
     }
 }

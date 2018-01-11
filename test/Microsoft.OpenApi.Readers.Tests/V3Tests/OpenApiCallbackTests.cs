@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedCallbackWithReference.yaml")))
             {
                 // Act
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 // Assert
                 var path = openApiDoc.Paths.First().Value;
@@ -88,7 +88,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 var callback = subscribeOperation.Callbacks["simpleHook"];
 
-                context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 callback.ShouldBeEquivalentTo(
                     new OpenApiCallback

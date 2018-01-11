@@ -188,7 +188,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 // Assert
                 var components = openApiDoc.Components;
 
-                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 components.ShouldBeEquivalentTo(
                     new OpenApiComponents
@@ -279,8 +280,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 // Assert
                 var components = openApiDoc.Components;
-
-                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                
+                diagnostic.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 components.ShouldBeEquivalentTo(
                     new OpenApiComponents
