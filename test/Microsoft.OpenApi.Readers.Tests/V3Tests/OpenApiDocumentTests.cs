@@ -55,9 +55,9 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml")))
             {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                context.ShouldBeEquivalentTo(
+                diagnostic.ShouldBeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 openApiDoc.ShouldBeEquivalentTo(
@@ -90,7 +90,7 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml")))
             {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 openApiDoc.ShouldBeEquivalentTo(
                     new OpenApiDocument
@@ -101,7 +101,7 @@ paths: {}",
                         }
                     });
 
-                context.ShouldBeEquivalentTo(
+                diagnostic.ShouldBeEquivalentTo(
                     new OpenApiDiagnostic
                     {
                         Errors =
@@ -118,7 +118,7 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml")))
             {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 openApiDoc.ShouldBeEquivalentTo(
                     new OpenApiDocument
@@ -129,8 +129,8 @@ paths: {}",
                             Version = "0.9.1"
                         }
                     });
-                
-                context.ShouldBeEquivalentTo(
+
+                diagnostic.ShouldBeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
             }
         }

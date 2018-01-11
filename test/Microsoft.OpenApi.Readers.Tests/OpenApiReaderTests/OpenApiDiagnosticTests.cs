@@ -24,12 +24,12 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         [Fact]
         public void DetectedSpecificationVersionShouldBeV3_0()
         {
-            using ( var stream = Resources.GetStream("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml"))
+            using (var stream = Resources.GetStream("V3Tests/Samples/OpenApiDocument/minimalDocument.yaml"))
             {
-                new OpenApiStreamReader().Read( stream, out var diagnostic );
+                new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 diagnostic.Should().NotBeNull();
-                diagnostic.SpecificationVersion.Should().Be( OpenApiSpecVersion.OpenApi3_0 );
+                diagnostic.SpecificationVersion.Should().Be( OpenApiSpecVersion.OpenApi3_0);
             }
         }
     }
