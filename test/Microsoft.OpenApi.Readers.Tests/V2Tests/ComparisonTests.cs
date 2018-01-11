@@ -24,10 +24,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 var openApiDocV2 = new OpenApiStreamReader().Read(streamV2, out var contextV2);
                 var openApiDocV3 = new OpenApiStreamReader().Read(streamV3, out var contextV3);
 
-                openApiDocV3.ShouldBeEquivalentTo(
-                    openApiDocV2);
+                openApiDocV3.ShouldBeEquivalentTo(openApiDocV2);
 
-                contextV2.ShouldBeEquivalentTo(contextV3);
+                contextV2.Errors.ShouldBeEquivalentTo(contextV3.Errors);
             }
         }
     }

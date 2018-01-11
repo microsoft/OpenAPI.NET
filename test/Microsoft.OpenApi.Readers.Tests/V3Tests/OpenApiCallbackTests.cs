@@ -88,7 +88,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 var callback = subscribeOperation.Callbacks["simpleHook"];
 
-                context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                context.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 callback.ShouldBeEquivalentTo(
                     new OpenApiCallback

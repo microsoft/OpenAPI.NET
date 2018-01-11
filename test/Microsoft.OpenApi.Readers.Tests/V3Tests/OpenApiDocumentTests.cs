@@ -47,7 +47,7 @@ paths: {}",
                 });
 
             context.ShouldBeEquivalentTo(
-                new OpenApiDiagnostic());
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -57,7 +57,8 @@ paths: {}",
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
 
-                context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                context.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 openApiDoc.ShouldBeEquivalentTo(
                     new OpenApiDocument
@@ -106,7 +107,8 @@ paths: {}",
                         Errors =
                         {
                             new OpenApiError("#/info", "title is a required property")
-                        }
+                        },
+                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                     });
             }
         }
@@ -127,9 +129,9 @@ paths: {}",
                             Version = "0.9.1"
                         }
                     });
-
+                
                 context.ShouldBeEquivalentTo(
-                    new OpenApiDiagnostic());
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
             }
         }
 
@@ -541,7 +543,8 @@ paths: {}",
                 actual.ShouldBeEquivalentTo(expected);
             }
 
-            context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            context.ShouldBeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -1042,7 +1045,8 @@ paths: {}",
                 actual.ShouldBeEquivalentTo(expected);
             }
 
-            context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            context.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -1057,7 +1061,8 @@ paths: {}",
                 // TODO: Create the object in memory and compare with the one read from YAML file.
             }
 
-            context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            context.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
     }
 }
