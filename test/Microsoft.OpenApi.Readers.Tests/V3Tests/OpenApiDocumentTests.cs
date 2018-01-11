@@ -47,7 +47,7 @@ paths: {}",
                 });
 
             context.ShouldBeEquivalentTo(
-                new OpenApiDiagnostic());
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -55,9 +55,10 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml")))
             {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 openApiDoc.ShouldBeEquivalentTo(
                     new OpenApiDocument
@@ -89,7 +90,7 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml")))
             {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 openApiDoc.ShouldBeEquivalentTo(
                     new OpenApiDocument
@@ -100,13 +101,14 @@ paths: {}",
                         }
                     });
 
-                context.ShouldBeEquivalentTo(
+                diagnostic.ShouldBeEquivalentTo(
                     new OpenApiDiagnostic
                     {
                         Errors =
                         {
                             new OpenApiError("#/info", "title is a required property")
-                        }
+                        },
+                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                     });
             }
         }
@@ -116,7 +118,7 @@ paths: {}",
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml")))
             {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var context);
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 openApiDoc.ShouldBeEquivalentTo(
                     new OpenApiDocument
@@ -128,8 +130,8 @@ paths: {}",
                         }
                     });
 
-                context.ShouldBeEquivalentTo(
-                    new OpenApiDiagnostic());
+                diagnostic.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
             }
         }
 
@@ -541,7 +543,8 @@ paths: {}",
                 actual.ShouldBeEquivalentTo(expected);
             }
 
-            context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            context.ShouldBeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -1042,7 +1045,8 @@ paths: {}",
                 actual.ShouldBeEquivalentTo(expected);
             }
 
-            context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            context.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -1057,7 +1061,8 @@ paths: {}",
                 // TODO: Create the object in memory and compare with the one read from YAML file.
             }
 
-            context.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            context.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
     }
 }
