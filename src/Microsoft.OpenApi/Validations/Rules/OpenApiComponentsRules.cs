@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     ValidateKeys(context, components.Callbacks?.Keys, "callbacks");
                 });
 
-        private static void ValidateKeys(ValidationContext context, IEnumerable<string> keys, string component)
+        private static void ValidateKeys(IValidationContext context, IEnumerable<string> keys, string component)
         {
             if (keys == null)
             {

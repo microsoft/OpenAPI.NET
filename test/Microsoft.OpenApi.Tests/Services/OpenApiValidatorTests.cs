@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Services
             validator.Errors.ShouldBeEquivalentTo(
                     new List<ValidationError>
                     {
-                        new ValidationError(ErrorReason.Required, "#/description",
+                        new ValidationError(ErrorReason.Required, "#/paths/~1test/get/responses/200/description",
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"))
         });
         }

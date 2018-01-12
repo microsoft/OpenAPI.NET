@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -12,6 +14,37 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public abstract class OpenApiVisitorBase
     {
+        private readonly Stack<string> _path = new Stack<string>();
+       
+        /// <summary>
+        /// Allow Rule to indicate validation error occured a deeper context level.  
+        /// </summary>
+        /// <param name="segment"></param>
+        public void Enter(string segment)
+        {
+            this._path.Push(segment);
+        }
+
+        /// <summary>
+        /// Exit from path context elevel.  Enter and Exit calls should be matched.
+        /// </summary>
+        public void Exit()
+        {
+            this._path.Pop();
+        }
+
+        /// <summary>
+        /// Pointer to source of validation error in document
+        /// </summary>
+        public string PathString
+        {
+            get
+            {
+                return "#/" + String.Join("/", _path.Reverse());
+            }
+        }
+
+        
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>
         /// </summary>
@@ -244,5 +277,13 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(IOpenApiExtensible openApiExtensible)
         {
         }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiExtension"/>
+        /// </summary>
+        public virtual void Visit(IOpenApiExtension openApiExtension)
+        {
+        }
+
     }
 }

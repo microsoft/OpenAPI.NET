@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -46,12 +48,15 @@ namespace Microsoft.OpenApi.Services
         /// <param name="tags"></param>
         internal void Walk(IList<OpenApiTag> tags)
         {
+            _visitor.Enter(OpenApiConstants.Tags);
             _visitor.Visit(tags);
 
             foreach (var tag in tags)
             {
                 Walk(tag);
             }
+            _visitor.Exit();
+
         }
 
         /// <summary>
@@ -60,7 +65,9 @@ namespace Microsoft.OpenApi.Services
         /// <param name="externalDocs"></param>
         internal void Walk(OpenApiExternalDocs externalDocs)
         {
+            _visitor.Enter(OpenApiConstants.ExternalDocs);
             _visitor.Visit(externalDocs);
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -69,7 +76,9 @@ namespace Microsoft.OpenApi.Services
         /// <param name="components"></param>
         internal void Walk(OpenApiComponents components)
         {
+            _visitor.Enter(OpenApiConstants.Components);
             _visitor.Visit(components);
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -78,11 +87,15 @@ namespace Microsoft.OpenApi.Services
         /// <param name="paths"></param>
         internal void Walk(OpenApiPaths paths)
         {
+            _visitor.Enter(OpenApiConstants.Paths);
             _visitor.Visit(paths);
-            foreach (var pathItem in paths.Values)
+            foreach (var pathItem in paths)
             {
-                Walk(pathItem);
+                _visitor.Enter(pathItem.Key.Replace("/","~1"));
+                Walk(pathItem.Value);
+                _visitor.Exit();
             }
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -91,6 +104,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="servers"></param>
         internal void Walk(IList<OpenApiServer> servers)
         {
+            _visitor.Enter(OpenApiConstants.Servers);
             _visitor.Visit(servers);
 
             // Visit Servers
@@ -101,6 +115,7 @@ namespace Microsoft.OpenApi.Services
                     Walk(server);
                 }
             }
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -109,10 +124,12 @@ namespace Microsoft.OpenApi.Services
         /// <param name="info"></param>
         internal void Walk(OpenApiInfo info)
         {
+            _visitor.Enter(OpenApiConstants.Info);
             _visitor.Visit(info);
             Walk(info.Contact);
             Walk(info.License);
             Walk(info as IOpenApiExtensible);
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -122,6 +139,21 @@ namespace Microsoft.OpenApi.Services
         internal void Walk(IOpenApiExtensible openApiExtensible)
         {
             _visitor.Visit(openApiExtensible);
+            foreach (var item in openApiExtensible.Extensions)
+            {
+                _visitor.Enter(item.Key);
+                Walk(item.Value);
+                _visitor.Exit();
+            }
+        }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiExtension"/> 
+        /// </summary>
+        /// <param name="extension"></param>
+        internal void Walk(IOpenApiExtension extension)
+        {
+            _visitor.Visit(extension);
         }
 
         /// <summary>
@@ -130,7 +162,9 @@ namespace Microsoft.OpenApi.Services
         /// <param name="license"></param>
         internal void Walk(OpenApiLicense license)
         {
+            _visitor.Enter(OpenApiConstants.License);
             _visitor.Visit(license);
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -139,7 +173,9 @@ namespace Microsoft.OpenApi.Services
         /// <param name="contact"></param>
         internal void Walk(OpenApiContact contact)
         {
+            _visitor.Enter(OpenApiConstants.Contact);
             _visitor.Visit(contact);
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -159,12 +195,25 @@ namespace Microsoft.OpenApi.Services
         /// <param name="server"></param>
         internal void Walk(OpenApiServer server)
         {
+            _visitor.Enter(OpenApiConstants.Server);
             _visitor.Visit(server);
-            foreach (var variable in server.Variables.Values)
-            {
-                Walk(variable);
-            }
+            Walk(server.Variables);
             _visitor.Visit(server as IOpenApiExtensible);
+            _visitor.Exit();
+        }
+
+        /// <summary>
+        /// Visits dictionary of <see cref="OpenApiServerVariable"/>
+        /// </summary>
+        /// <param name="serverVariables"></param>
+        internal void Walk(IDictionary<string,OpenApiServerVariable> serverVariables)
+        {
+            foreach (var variable in serverVariables)
+            {
+                _visitor.Enter(variable.Key);
+                Walk(variable.Value);
+                _visitor.Exit();
+            }
         }
 
         /// <summary>
@@ -184,7 +233,6 @@ namespace Microsoft.OpenApi.Services
         internal void Walk(OpenApiPathItem pathItem)
         {
             _visitor.Visit(pathItem);
-
             Walk(pathItem.Operations);
             _visitor.Visit(pathItem as IOpenApiExtensible);
         }
@@ -196,9 +244,11 @@ namespace Microsoft.OpenApi.Services
         internal void Walk(IDictionary<OperationType, OpenApiOperation> operations)
         {
             _visitor.Visit(operations);
-            foreach (var operation in operations.Values)
+            foreach (var operation in operations)
             {
-                Walk(operation);
+                _visitor.Enter(operation.Key.GetDisplayName());
+                Walk(operation.Value);
+                _visitor.Exit();
             }
         }
 
@@ -224,11 +274,13 @@ namespace Microsoft.OpenApi.Services
         {
             if (parameters != null)
             {
+                _visitor.Enter(OpenApiConstants.Parameters);
                 _visitor.Visit(parameters);
                 foreach (var parameter in parameters)
                 {
                     Walk(parameter);
                 }
+                _visitor.Exit();
             }
         }
 
@@ -252,14 +304,18 @@ namespace Microsoft.OpenApi.Services
         {
             if (responses != null)
             {
+                _visitor.Enter(OpenApiConstants.Responses);
                 _visitor.Visit(responses);
 
-                foreach (var response in responses.Values)
+                foreach (var response in responses)
                 {
-                    Walk(response);
+                    _visitor.Enter(response.Key);
+                    Walk(response.Value);
+                    _visitor.Exit();
                 }
 
                 Walk(responses as IOpenApiExtensible);
+                _visitor.Exit();
             }
         }
 
@@ -314,11 +370,15 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            _visitor.Enter(OpenApiConstants.Content);
             _visitor.Visit(content);
-            foreach (var mediaType in content.Values)
+            foreach (var mediaType in content)
             {
-                Walk(mediaType);
+                _visitor.Enter(mediaType.Key);
+                Walk(mediaType.Value);
+                _visitor.Exit();
             }
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -379,6 +439,15 @@ namespace Microsoft.OpenApi.Services
             {
                 Walk(example);
             }
+        }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiAny"/> and child objects
+        /// </summary>
+        /// <param name="example"></param>
+        internal void Walk(IOpenApiAny example)
+        {
+            _visitor.Visit(example);
         }
 
         /// <summary>
@@ -517,6 +586,8 @@ namespace Microsoft.OpenApi.Services
                 case IList<OpenApiTag> e: Walk(e); break;
                 case OpenApiXml e: Walk(e); break;
                 case IOpenApiExtensible e: Walk(e); break;
+                case IOpenApiExtension e: Walk(e); break;
+
             }
         }
 

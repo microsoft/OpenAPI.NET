@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, item) =>
                 {
 
-                    context.Push("email");
+                    context.Enter("email");
                     if (item != null && item.Email != null)
                     {
                         if (!item.Email.IsEmailAddress())
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                             context.AddError(error);
                         }
                     }
-                    context.Pop();
+                    context.Exit();
                 });
 
         /// <summary>
@@ -41,12 +41,12 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiContact>(
                 (context, item) =>
                 {
-                    context.Push("url");
+                    context.Enter("url");
                     if (item != null && item.Url != null)
                     {
                         // TODO:
                     }
-                    context.Pop();
+                    context.Exit();
                 });
     }
 }

@@ -21,14 +21,14 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, item) =>
                 {
                     // url
-                    context.Push("url");
+                    context.Enter("url");
                     if (item.Url == null)
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
                 });
 
         // add more rule.

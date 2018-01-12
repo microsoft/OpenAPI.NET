@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.NotNull(rules);
             Assert.NotEmpty(rules);
-            Assert.Equal(13, rules.ToList().Count); // please update the number if you add new rule.
+            Assert.Equal(14, rules.ToList().Count); // please update the number if you add new rule.
         }
     }
 }

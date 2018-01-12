@@ -21,24 +21,24 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, item) =>
                 {
                     // info
-                    context.Push("info");
+                    context.Enter("info");
                     if (item.Info == null)
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "info", "document"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
 
                     // paths
-                    context.Push("paths");
+                    context.Enter("paths");
                     if (item.Paths == null)
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "paths", "document"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
                 });
     }
 }

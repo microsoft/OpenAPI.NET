@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Readers
             var document = context.Parse(yamlDocument, diagnostic);
 
             // Validate the document
-            var errors = document.Validate();
+            var errors = document.Validate(_settings.RuleSet);
             foreach (var item in errors)
             {
                 diagnostic.Errors.Add(new OpenApiError(item.ErrorPath, item.ErrorMessage));

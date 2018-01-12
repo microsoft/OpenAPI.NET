@@ -21,14 +21,14 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, response) =>
                 {
                     // description
-                    context.Push("description");
+                    context.Enter("description");
                     if (String.IsNullOrEmpty(response.Description))
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
                 });
 
         // add more rule.

@@ -18,11 +18,11 @@ namespace Microsoft.OpenApi.Extensions
         /// <summary>
         /// Validate element and all child elements
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="element"></param>
+        /// <param name="element">Element to validate</param>
+        /// <param name="ruleSet">Optional set of rules to use for validation</param>
         /// <returns>An IEnumerable of errors.  This function will never return null.</returns>
-        public static IEnumerable<ValidationError> Validate(this IOpenApiElement element)         {
-            var validator = new OpenApiValidator();
+        public static IEnumerable<ValidationError> Validate(this IOpenApiElement element, ValidationRuleSet ruleSet = null)         {
+            var validator = new OpenApiValidator(ruleSet);
             var walker = new OpenApiWalker(validator);
             walker.Walk(element);
             return validator.Errors;
