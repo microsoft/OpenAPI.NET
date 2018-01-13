@@ -1762,7 +1762,7 @@ namespace Microsoft.OpenApi.Tests.Models
         ""parameters"": [
           {
             ""name"": ""tags"",
-            ""in"": ""Query"",
+            ""in"": ""query"",
             ""description"": ""tags to filter by"",
             ""type"": ""array"",
             ""items"": {
@@ -1771,7 +1771,7 @@ namespace Microsoft.OpenApi.Tests.Models
           },
           {
             ""name"": ""limit"",
-            ""in"": ""Query"",
+            ""in"": ""query"",
             ""description"": ""maximum number of results to return"",
             ""type"": ""integer"",
             ""format"": ""int32""
@@ -1954,7 +1954,7 @@ namespace Microsoft.OpenApi.Tests.Models
         ""parameters"": [
           {
             ""name"": ""id"",
-            ""in"": ""Path"",
+            ""in"": ""path"",
             ""description"": ""ID of pet to fetch"",
             ""required"": true,
             ""type"": ""integer"",
@@ -2033,7 +2033,7 @@ namespace Microsoft.OpenApi.Tests.Models
         ""parameters"": [
           {
             ""name"": ""id"",
-            ""in"": ""Path"",
+            ""in"": ""path"",
             ""description"": ""ID of pet to delete"",
             ""required"": true,
             ""type"": ""integer"",
@@ -2196,7 +2196,7 @@ namespace Microsoft.OpenApi.Tests.Models
         ""parameters"": [
           {
             ""name"": ""tags"",
-            ""in"": ""Query"",
+            ""in"": ""query"",
             ""description"": ""tags to filter by"",
             ""type"": ""array"",
             ""items"": {
@@ -2205,7 +2205,7 @@ namespace Microsoft.OpenApi.Tests.Models
           },
           {
             ""name"": ""limit"",
-            ""in"": ""Query"",
+            ""in"": ""query"",
             ""description"": ""maximum number of results to return"",
             ""type"": ""integer"",
             ""format"": ""int32""
@@ -2289,7 +2289,7 @@ namespace Microsoft.OpenApi.Tests.Models
         ""parameters"": [
           {
             ""name"": ""id"",
-            ""in"": ""Path"",
+            ""in"": ""path"",
             ""description"": ""ID of pet to fetch"",
             ""required"": true,
             ""type"": ""integer"",
@@ -2326,7 +2326,7 @@ namespace Microsoft.OpenApi.Tests.Models
         ""parameters"": [
           {
             ""name"": ""id"",
-            ""in"": ""Path"",
+            ""in"": ""path"",
             ""description"": ""ID of pet to delete"",
             ""required"": true,
             ""type"": ""integer"",

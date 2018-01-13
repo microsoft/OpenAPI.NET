@@ -236,7 +236,7 @@ namespace Microsoft.OpenApi.Models
             else
             {
                 writer.WriteProperty(OpenApiConstants.Name, Name);
-                writer.WriteProperty(OpenApiConstants.In, In.ToString());
+                writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
             }
 
             // description

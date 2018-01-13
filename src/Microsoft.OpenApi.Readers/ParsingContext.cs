@@ -49,11 +49,13 @@ namespace Microsoft.OpenApi.Readers
             {
                 VersionService = new OpenApiV2VersionService();
                 doc = this.VersionService.LoadDocument(this.RootNode);
+                diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
             }
             else if (inputVersion.StartsWith("3.0."))
             {
                 this.VersionService = new OpenApiV3VersionService();
                 doc = this.VersionService.LoadDocument(this.RootNode);
+                diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
             }
             else
             {
@@ -61,6 +63,7 @@ namespace Microsoft.OpenApi.Readers
                 // our best effort will try to deserialize the document to V3.
                 this.VersionService = new OpenApiV3VersionService();
                 doc = this.VersionService.LoadDocument(this.RootNode);
+                diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
             }
             return doc;
         }
