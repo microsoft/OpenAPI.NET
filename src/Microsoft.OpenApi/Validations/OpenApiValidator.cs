@@ -15,8 +15,8 @@ namespace Microsoft.OpenApi.Validations
     /// </summary>
     public class OpenApiValidator : OpenApiVisitorBase, IValidationContext 
     {
-
-        private ValidationRuleSet _ruleSet;
+        private readonly ValidationRuleSet _ruleSet;
+        private readonly IList<ValidationError> _errors = new List<ValidationError>();
 
         /// <summary>
         /// Create a vistor that will validate an OpenAPIDocument
@@ -26,9 +26,6 @@ namespace Microsoft.OpenApi.Validations
         {
             _ruleSet = ruleSet ?? ValidationRuleSet.DefaultRuleSet;
         }
-
-        private readonly IList<ValidationError> _errors = new List<ValidationError>();
-
         
         /// <summary>
         /// Gets the validation errors.

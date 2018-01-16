@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers
         private OpenApiReaderSettings _settings;
 
         /// <summary>
-        /// 
+        /// Create stream reader with custom settings if desired.
         /// </summary>
         /// <param name="settings"></param>
         public OpenApiStreamReader(OpenApiReaderSettings settings = null)
