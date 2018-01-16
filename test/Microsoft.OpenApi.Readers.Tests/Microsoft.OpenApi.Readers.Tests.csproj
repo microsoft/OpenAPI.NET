@@ -13,6 +13,9 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
+      <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="ReferenceService\Samples\multipleReferences.v2.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
