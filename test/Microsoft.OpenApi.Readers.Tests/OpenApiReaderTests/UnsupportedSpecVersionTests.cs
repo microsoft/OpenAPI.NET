@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using FluentAssertions;
 using Microsoft.OpenApi.Readers.Exceptions;
 using Xunit;
@@ -16,8 +15,14 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         {
             using (var stream = Resources.GetStream("OpenApiReaderTests/Samples/unsupported.v1.yaml"))
             {
-                Action act = () => new OpenApiStreamReader().Read(stream, out var diagnostic);
-                act.ShouldThrow<OpenApiUnsupportedSpecVersionException>();
+                try
+                {
+                    new OpenApiStreamReader().Read(stream, out var diagnostic);
+                }
+                catch (OpenApiUnsupportedSpecVersionException exception)
+                {
+                    exception.SpecificationVersion.Should().Be("1.0.0");
+                }                
             }
         }
     }

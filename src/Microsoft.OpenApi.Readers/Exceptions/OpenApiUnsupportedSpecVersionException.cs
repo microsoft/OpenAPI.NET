@@ -3,7 +3,6 @@
 
 using System;
 using System.Globalization;
-using System.Runtime.Serialization;
 
 namespace Microsoft.OpenApi.Readers.Exceptions
 {
@@ -16,16 +15,19 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         const string messagePattern = "OpenAPI specification version {0} is not supported.";
 
         /// <summary>
-        /// Initializes the <see cref="OpenApiUnsupportedSpecVersionException"/> class.
-        /// </summary>
-        public OpenApiUnsupportedSpecVersionException() { }
-
-        /// <summary>
         /// Initializes the <see cref="OpenApiUnsupportedSpecVersionException"/> class with a specification version.
         /// </summary>
         /// <param name="specificationVersion">Version that caused this exception to be thrown.</param>
         public OpenApiUnsupportedSpecVersionException(string specificationVersion)
-            : base(string.Format(CultureInfo.InvariantCulture, messagePattern, specificationVersion)) { }
+            : base(string.Format(CultureInfo.InvariantCulture, messagePattern, specificationVersion))
+        {
+            if (string.IsNullOrWhiteSpace(specificationVersion))
+            {
+                throw new ArgumentException("Value cannot be null or white space.", nameof(specificationVersion));
+            }
+
+            this.SpecificationVersion = specificationVersion;
+        }
 
         /// <summary>
         /// Initializes the <see cref="OpenApiUnsupportedSpecVersionException"/> class with a specification version and
@@ -34,15 +36,19 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         /// <param name="specificationVersion">Version that caused this exception to be thrown.</param>
         /// <param name="innerException">Inner exception that caused this exception to be thrown.</param>
         public OpenApiUnsupportedSpecVersionException(string specificationVersion, Exception innerException)
-            : base(string.Format(CultureInfo.InvariantCulture, messagePattern, specificationVersion), innerException) { }
+            : base(string.Format(CultureInfo.InvariantCulture, messagePattern, specificationVersion), innerException)
+        {
+            if (string.IsNullOrWhiteSpace(specificationVersion))
+            {
+                throw new ArgumentException("Value cannot be null or white space.", nameof(specificationVersion));
+            }
+
+            this.SpecificationVersion = specificationVersion;
+        }
 
         /// <summary>
-        /// Initializes the <see cref="OpenApiUnsupportedSpecVersionException" /> class based on serialization info and
-        /// context.
+        /// The unsupported specification version.
         /// </summary>
-        /// <param name="info">Info needed to serialize or deserialize this exception.</param>
-        /// <param name="context">Context needed to serialize or deserialize this exception.</param>
-        protected OpenApiUnsupportedSpecVersionException(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
+        public string SpecificationVersion { get; }
     }
 }
