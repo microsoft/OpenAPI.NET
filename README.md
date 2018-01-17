@@ -1,11 +1,11 @@
 ![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
 
 # OpenAPI.NET [Preview]
-[ Disclaimer: This repository is in a preview state. Expect to see some iterating as we work towards the final release candidate slated for early 2018. Feedback is welcome! ]
+[Disclaimer: This repository is in a preview state. Expect to see some iterating as we work towards the final release candidate slated for early 2018. Feedback is welcome!]
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
-**See more information on the OpenAPI spec and its history here: <a href="https://www.openapis.org">Open API Initiative</a>**
+**See more information on the OpenAPI specification and its history here: <a href="https://www.openapis.org">Open API Initiative</a>**
 
 Project Objectives 
 
@@ -98,4 +98,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
-To provide feedback and ask questions you can use StackOverflow with the [OpenApi.net](https://stackoverflow.com/questions/tagged/openapi.net) tag or use the OpenApi.net Slack channel which you can join by registering for the httpapis team at http://slack.httpapis.com 
+To provide feedback and ask questions you can use Stack Overflow with the [OpenAPI.NET](https://stackoverflow.com/questions/tagged/openapi.net) tag or use the OpenAPI.NET Slack channel which you can join by registering for the HTTP APIs team at http://slack.httpapis.com.
