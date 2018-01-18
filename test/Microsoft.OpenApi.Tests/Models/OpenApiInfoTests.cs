@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Xunit;
 
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Contact = OpenApiContactTests.AdvanceContact,
             License = OpenApiLicenseTests.AdvanceLicense,
             Version = "1.1.1",
-            Extensions = new Dictionary<string, IOpenApiAny>
+            Extensions = new Dictionary<string, IOpenApiExtension>
             {
                 {"x-updated", new OpenApiString("metadata")}
             }

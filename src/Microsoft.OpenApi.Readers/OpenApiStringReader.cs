@@ -12,6 +12,17 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiStringReader : IOpenApiReader<string, OpenApiDiagnostic>
     {
+        private readonly OpenApiReaderSettings _settings;
+
+        /// <summary>
+        /// Constructor tha allows reader to use non-default settings
+        /// </summary>
+        /// <param name="settings"></param>
+        public OpenApiStringReader(OpenApiReaderSettings settings = null)
+        {
+            _settings = settings ?? new OpenApiReaderSettings(); 
+        }
+
         /// <summary>
         /// Reads the string input and parses it into an Open API document.
         /// </summary>
@@ -24,7 +35,7 @@ namespace Microsoft.OpenApi.Readers
                 writer.Flush();
                 memoryStream.Position = 0;
 
-                return new OpenApiStreamReader().Read(memoryStream, out diagnostic);
+                return new OpenApiStreamReader(_settings).Read(memoryStream, out diagnostic);
             }
         }
     }

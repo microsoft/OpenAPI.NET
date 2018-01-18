@@ -15,7 +15,17 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiStreamReader : IOpenApiReader<Stream, OpenApiDiagnostic>
     {
+        private OpenApiReaderSettings _settings;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settings"></param>
+        public OpenApiStreamReader(OpenApiReaderSettings settings = null)
+        {
+            _settings = settings ?? new OpenApiReaderSettings();
+
+        }
         /// <summary>
         /// Reads the stream input and parses it into an Open API document.
         /// </summary>
@@ -38,7 +48,10 @@ namespace Microsoft.OpenApi.Readers
                 return new OpenApiDocument();
             }
 
-            context = new ParsingContext();
+            context = new ParsingContext
+            {
+                ExtensionParsers = _settings.ExtensionParsers
+            };
             return context.Parse(yamlDocument, diagnostic);
         }
 
