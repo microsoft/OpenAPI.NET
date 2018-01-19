@@ -280,7 +280,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 // Assert
                 var components = openApiDoc.Components;
-                
+
                 diagnostic.ShouldBeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
@@ -428,6 +428,25 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     });
+            }
+        }
+
+
+        [Fact]
+        public void ParseSelfReferencingSchemaShouldNotStackOverflow()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "selfReferencingSchema.yaml")))
+            {
+                // Act
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+
+                // Assert
+                var components = openApiDoc.Components;
+
+                diagnostic.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+
+
             }
         }
     }

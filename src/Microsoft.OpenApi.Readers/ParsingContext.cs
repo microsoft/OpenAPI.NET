@@ -23,9 +23,11 @@ namespace Microsoft.OpenApi.Readers
         private readonly Dictionary<string, IOpenApiReferenceable> _referenceStore = new Dictionary<string, IOpenApiReferenceable>();
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private IOpenApiVersionService _versionService;
+        private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
+
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
-
+ 
 
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
@@ -197,5 +199,52 @@ namespace Microsoft.OpenApi.Readers
         {
             _currentLocation.Push(objectName);
         }
+
+        /// <summary>
+        /// Maintain history of traversals to avoid stack overflows from cycles
+        /// </summary>
+        /// <param name="loopId">Any unique identifier for a stack</param>
+        /// <param name="key">Identifier used to </param>
+        /// <returns></returns>
+        public bool PushLoop(string loopId, string key)
+        {
+            Stack<string> stack;
+            if (!_loopStacks.TryGetValue(loopId, out stack))
+            {
+                stack = new Stack<string>();
+                _loopStacks.Add(loopId, stack);
+            }
+
+            if (!stack.Contains(key))
+            {
+                stack.Push(key);
+                return true;
+            } else
+            {
+                return false;  // Loop detected
+            }
+        }
+
+        /// <summary>
+        /// Reset loop tracking stack
+        /// </summary>
+        /// <param name="loopid"></param>
+        internal void ClearLoop(string loopid)
+        {
+            _loopStacks[loopid].Clear();
+        }
+
+        /// <summary>
+        /// Exit from the context in cycle detection
+        /// </summary>
+        /// <param name="loopid"></param>
+        public void PopLoop(string loopid)
+        {
+            if (_loopStacks[loopid].Count > 0)
+            {
+                _loopStacks[loopid].Pop();
+            }
+        }
+
     }
 }
