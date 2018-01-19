@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -43,26 +44,24 @@ namespace Microsoft.OpenApi.Readers
 
             OpenApiDocument doc;
 
-            if (inputVersion == "2.0")
+            switch (inputVersion)
             {
-                VersionService = new OpenApiV2VersionService();
-                doc = this.VersionService.LoadDocument(this.RootNode);
-                diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
+                case string version when version == "2.0":
+                    VersionService = new OpenApiV2VersionService();
+                    doc = this.VersionService.LoadDocument(this.RootNode);
+                    diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
+                    break;
+
+                case string version when version.StartsWith("3.0"):
+                    this.VersionService = new OpenApiV3VersionService();
+                    doc = this.VersionService.LoadDocument(this.RootNode);
+                    diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
+                    break;
+
+                default:
+                    throw new OpenApiUnsupportedSpecVersionException(inputVersion);
             }
-            else if (inputVersion.StartsWith("3.0."))
-            {
-                this.VersionService = new OpenApiV3VersionService();
-                doc = this.VersionService.LoadDocument(this.RootNode);
-                diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
-            }
-            else
-            {
-                // If version number is not recognizable,
-                // our best effort will try to deserialize the document to V3.
-                this.VersionService = new OpenApiV3VersionService();
-                doc = this.VersionService.LoadDocument(this.RootNode);
-                diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
-            }
+
             return doc;
         }
 
@@ -83,7 +82,7 @@ namespace Microsoft.OpenApi.Readers
             return versionNode?.GetScalarValue();
         }
 
-        private void ComputeTags(List<OpenApiTag> tags, Func<MapNode,OpenApiTag> loadTag )
+        private void ComputeTags(List<OpenApiTag> tags, Func<MapNode, OpenApiTag> loadTag)
         {
             // Precompute the tags array so that each tag reference does not require a new deserialization.
             var tagListPointer = new JsonPointer("#/tags");

@@ -13,9 +13,9 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="V3Tests\Samples\OpenApiSchema\selfReferencingSchema.yaml" />
-    </ItemGroup>
-    <ItemGroup>
+      <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="ReferenceService\Samples\multipleReferences.v2.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -109,7 +109,9 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\primitiveSchema.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\selfReferencingSchema.yaml" />
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\selfReferencingSchema.yaml">
+              <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\simpleSchema.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
