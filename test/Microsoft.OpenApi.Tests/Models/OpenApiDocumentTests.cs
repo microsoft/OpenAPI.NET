@@ -1726,8 +1726,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
+            var expected = @"{
   ""swagger"": ""2.0"",
   ""info"": {
     ""title"": ""Swagger Petstore (Simple)"",
@@ -1761,8 +1760,8 @@ namespace Microsoft.OpenApi.Tests.Models
         ],
         ""parameters"": [
           {
-            ""name"": ""tags"",
             ""in"": ""query"",
+            ""name"": ""tags"",
             ""description"": ""tags to filter by"",
             ""type"": ""array"",
             ""items"": {
@@ -1770,8 +1769,8 @@ namespace Microsoft.OpenApi.Tests.Models
             }
           },
           {
-            ""name"": ""limit"",
             ""in"": ""query"",
+            ""name"": ""limit"",
             ""description"": ""maximum number of results to return"",
             ""type"": ""integer"",
             ""format"": ""int32""
@@ -1855,9 +1854,10 @@ namespace Microsoft.OpenApi.Tests.Models
         ],
         ""parameters"": [
           {
-            ""name"": ""body"",
             ""in"": ""body"",
+            ""name"": ""body"",
             ""description"": ""Pet to add to the store"",
+            ""required"": true,
             ""schema"": {
               ""required"": [
                 ""name""
@@ -1953,8 +1953,8 @@ namespace Microsoft.OpenApi.Tests.Models
         ],
         ""parameters"": [
           {
-            ""name"": ""id"",
             ""in"": ""path"",
+            ""name"": ""id"",
             ""description"": ""ID of pet to fetch"",
             ""required"": true,
             ""type"": ""integer"",
@@ -2032,8 +2032,8 @@ namespace Microsoft.OpenApi.Tests.Models
         ],
         ""parameters"": [
           {
-            ""name"": ""id"",
             ""in"": ""path"",
+            ""name"": ""id"",
             ""description"": ""ID of pet to delete"",
             ""required"": true,
             ""type"": ""integer"",
@@ -2147,7 +2147,7 @@ namespace Microsoft.OpenApi.Tests.Models
             AdvancedDocument.SerializeAsV2(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
-
+            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -2195,8 +2195,8 @@ namespace Microsoft.OpenApi.Tests.Models
         ],
         ""parameters"": [
           {
-            ""name"": ""tags"",
             ""in"": ""query"",
+            ""name"": ""tags"",
             ""description"": ""tags to filter by"",
             ""type"": ""array"",
             ""items"": {
@@ -2204,8 +2204,8 @@ namespace Microsoft.OpenApi.Tests.Models
             }
           },
           {
-            ""name"": ""limit"",
             ""in"": ""query"",
+            ""name"": ""limit"",
             ""description"": ""maximum number of results to return"",
             ""type"": ""integer"",
             ""format"": ""int32""
@@ -2247,9 +2247,10 @@ namespace Microsoft.OpenApi.Tests.Models
         ],
         ""parameters"": [
           {
-            ""name"": ""body"",
             ""in"": ""body"",
+            ""name"": ""body"",
             ""description"": ""Pet to add to the store"",
+            ""required"": true,
             ""schema"": {
               ""$ref"": ""#/definitions/newPet""
             }
@@ -2288,8 +2289,8 @@ namespace Microsoft.OpenApi.Tests.Models
         ],
         ""parameters"": [
           {
-            ""name"": ""id"",
             ""in"": ""path"",
+            ""name"": ""id"",
             ""description"": ""ID of pet to fetch"",
             ""required"": true,
             ""type"": ""integer"",
@@ -2325,8 +2326,8 @@ namespace Microsoft.OpenApi.Tests.Models
         ],
         ""parameters"": [
           {
-            ""name"": ""id"",
             ""in"": ""path"",
+            ""name"": ""id"",
             ""description"": ""ID of pet to delete"",
             ""required"": true,
             ""type"": ""integer"",
@@ -2414,7 +2415,7 @@ namespace Microsoft.OpenApi.Tests.Models
             AdvancedDocumentWithReference.SerializeAsV2(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
-
+            
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();

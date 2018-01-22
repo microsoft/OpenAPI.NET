@@ -31,6 +31,15 @@
       <EmbeddedResource Include="V2Tests\Samples\minimal.v3.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\basicOperation.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithBody.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithFormData.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

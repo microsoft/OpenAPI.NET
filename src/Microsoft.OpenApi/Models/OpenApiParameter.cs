@@ -221,23 +221,22 @@ namespace Microsoft.OpenApi.Models
         {
             writer.WriteStartObject();
 
-            // name
             // in
-            if (IsFormDataParameter())
+            if (this is OpenApiFormDataParameter)
             {
-                writer.WriteProperty(OpenApiConstants.Name, "formData");
                 writer.WriteProperty(OpenApiConstants.In, "formData");
             }
-            else if (IsBodyParameter())
+            else if (this is OpenApiBodyParameter)
             {
-                writer.WriteProperty(OpenApiConstants.Name, "body");
                 writer.WriteProperty(OpenApiConstants.In, "body");
             }
             else
             {
-                writer.WriteProperty(OpenApiConstants.Name, Name);
                 writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
             }
+
+            // name
+            writer.WriteProperty(OpenApiConstants.Name, Name);
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -249,7 +248,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // schema
-            if (IsBodyParameter())
+            if (this is OpenApiBodyParameter)
             {
                 writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
             }
@@ -283,44 +282,19 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
-
-        private bool IsBodyParameter()
-        {
-            if (this is BodyParameter)
-            {
-                var parameter = (BodyParameter)this;
-
-                return !(
-                    parameter.Format.Contains("application/x-www-form-urlencoded") ||
-                    parameter.Format.Contains("multipart/form-data"));
-            }
-
-            return false;
-        }
-
-        private bool IsFormDataParameter()
-        {
-            if (this is BodyParameter)
-            {
-                var parameter = (BodyParameter)this;
-
-                return
-                    parameter.Format.Contains("application/x-www-form-urlencoded") ||
-                    parameter.Format.Contains("multipart/form-data");
-            }
-
-            return false;
-        }
     }
 
     /// <summary>
     /// Body parameter class to propagate information needed for <see cref="OpenApiParameter.SerializeAsV2"/>
     /// </summary>
-    internal class BodyParameter : OpenApiParameter
+    internal class OpenApiBodyParameter : OpenApiParameter
     {
-        /// <summary>
-        /// Format of the parameter. This should be the same as the "consumes" property in Operation.
-        /// </summary>
-        public IList<string> Format { get; set; }
+    }
+
+    /// <summary>
+    /// Form parameter class to propagate information needed for <see cref="OpenApiParameter.SerializeAsV2"/>
+    /// </summary>
+    internal class OpenApiFormDataParameter : OpenApiParameter
+    {
     }
 }
