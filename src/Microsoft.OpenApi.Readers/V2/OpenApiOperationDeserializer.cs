@@ -92,13 +92,15 @@ namespace Microsoft.OpenApi.Readers.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
             };
 
-        private static FixedFieldMap<OpenApiResponses> _responsesFixedFields = new FixedFieldMap<OpenApiResponses>();
+        private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields =
+            new FixedFieldMap<OpenApiResponses>();
 
-        private static PatternFieldMap<OpenApiResponses> _responsesPatternFields = new PatternFieldMap<OpenApiResponses>
-        {
-            {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
-        };
+        private static readonly PatternFieldMap<OpenApiResponses> _responsesPatternFields =
+            new PatternFieldMap<OpenApiResponses>
+            {
+                {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            };
 
         internal static OpenApiOperation LoadOperation(ParseNode node)
         {
@@ -119,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 var formParameters = node.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                 if (formParameters != null)
                 {
-                    operation.RequestBody = CreateFormBody(formParameters);
+                    operation.RequestBody = CreateFormBody(node.Context, formParameters);
                 }
             }
 
@@ -137,22 +139,33 @@ namespace Microsoft.OpenApi.Readers.V2
             return domainObject;
         }
 
-        private static OpenApiRequestBody CreateFormBody(List<OpenApiParameter> formParameters)
+        private static OpenApiRequestBody CreateFormBody(ParsingContext context, List<OpenApiParameter> formParameters)
         {
             var mediaType = new OpenApiMediaType
             {
                 Schema = new OpenApiSchema
                 {
-                    Properties = formParameters.ToDictionary(k => k.Name, v => v.Schema)
+                    Properties = formParameters.ToDictionary(
+                        k => k.Name,
+                        v =>
+                        {
+                            var schema = v.Schema;
+                            schema.Description = v.Description;
+                            return schema;
+                        }),
+                    Required = formParameters.Where(p => p.Required).Select(p => p.Name).ToList()
                 }
             };
 
+            var consumes = context.GetFromTempStorage<List<string>>("operationconsumes") ??
+                context.GetFromTempStorage<List<string>>("globalconsumes") ??
+                new List<string> {"application/x-www-form-urlencoded"};
+
             var formBody = new OpenApiRequestBody
             {
-                Content = new Dictionary<string, OpenApiMediaType>
-                {
-                    {"application/x-www-form-urlencoded", mediaType}
-                }
+                Content = consumes.ToDictionary(
+                    k => k,
+                    v => mediaType)
             };
 
             return formBody;
@@ -162,8 +175,8 @@ namespace Microsoft.OpenApi.Readers.V2
             ParsingContext context,
             OpenApiParameter bodyParameter)
         {
-            var consumes = context.GetFromTempStorage<List<string>>("operationproduces") ??
-                context.GetFromTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
+            var consumes = context.GetFromTempStorage<List<string>>("operationconsumes") ??
+                context.GetFromTempStorage<List<string>>("globalconsumes") ?? new List<string> {"application/json"};
 
             var requestBody = new OpenApiRequestBody
             {
