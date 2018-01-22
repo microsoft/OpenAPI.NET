@@ -52,5 +52,38 @@ namespace Microsoft.OpenApi.Tests.Services
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"))
         });
         }
+
+        [Fact]
+        public void ServersShouldBeReferencedByIndex()
+        {
+            var openApiDocument = new OpenApiDocument();
+            openApiDocument.Info = new OpenApiInfo()
+            {
+                Title = "foo",
+                Version = "1.2.2"
+            };
+            openApiDocument.Servers = new List<OpenApiServer> {
+                new OpenApiServer
+                {
+                    Url = "http://example.org"
+                },
+                new OpenApiServer
+                {
+
+                }
+            };
+            
+            var validator = new OpenApiValidator();
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(openApiDocument);
+
+            validator.Errors.ShouldBeEquivalentTo(
+                    new List<ValidationError>
+                    {
+                        new ValidationError(ErrorReason.Required, "#/servers/1/url",
+                            String.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
+        });
+        }
+
     }
 }

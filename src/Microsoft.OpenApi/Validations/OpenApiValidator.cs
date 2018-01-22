@@ -150,7 +150,12 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="item">The object to be validated</param>
         public override void Visit(IOpenApiExtension item) => Validate(item, item.GetType());
 
-        
+        /// <summary>
+        /// Execute validation rules against a list of <see cref="OpenApiExample"/>
+        /// </summary>
+        /// <param name="items">The object to be validated</param>
+        public override void Visit(IList<OpenApiExample> items) => Validate(items, items.GetType());
+
         private void Validate<T>(T item)
         {
             var type = typeof(T);

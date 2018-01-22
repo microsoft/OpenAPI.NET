@@ -51,9 +51,15 @@ namespace Microsoft.OpenApi.Services
             _visitor.Enter(OpenApiConstants.Tags);
             _visitor.Visit(tags);
 
-            foreach (var tag in tags)
+            // Visit tags
+            if (tags != null)
             {
-                Walk(tag);
+                for (int i = 0; i < tags.Count; i++)
+                {
+                    _visitor.Enter(i.ToString());
+                    Walk(tags[i]);
+                    _visitor.Exit();
+                }
             }
             _visitor.Exit();
 
@@ -91,7 +97,7 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(paths);
             foreach (var pathItem in paths)
             {
-                _visitor.Enter(pathItem.Key.Replace("/","~1"));
+                _visitor.Enter(pathItem.Key.Replace("/","~1"));  // JSON Pointer uses ~1 as an escape character for /
                 Walk(pathItem.Value);
                 _visitor.Exit();
             }
@@ -110,9 +116,11 @@ namespace Microsoft.OpenApi.Services
             // Visit Servers
             if (servers != null)
             {
-                foreach (var server in servers)
+                for (int i = 0; i < servers.Count; i++)
                 {
-                    Walk(server);
+                    _visitor.Enter(i.ToString());
+                    Walk(servers[i]);
+                    _visitor.Exit();
                 }
             }
             _visitor.Exit();
@@ -195,11 +203,9 @@ namespace Microsoft.OpenApi.Services
         /// <param name="server"></param>
         internal void Walk(OpenApiServer server)
         {
-            _visitor.Enter(OpenApiConstants.Server);
             _visitor.Visit(server);
             Walk(server.Variables);
             _visitor.Visit(server as IOpenApiExtensible);
-            _visitor.Exit();
         }
 
         /// <summary>
@@ -272,16 +278,19 @@ namespace Microsoft.OpenApi.Services
         /// <param name="parameters"></param>
         internal void Walk(IList<OpenApiParameter> parameters)
         {
+            _visitor.Enter(OpenApiConstants.Parameters);
+            _visitor.Visit(parameters);
+
             if (parameters != null)
             {
-                _visitor.Enter(OpenApiConstants.Parameters);
-                _visitor.Visit(parameters);
-                foreach (var parameter in parameters)
+                for (int i = 0; i < parameters.Count; i++)
                 {
-                    Walk(parameter);
+                    _visitor.Enter(i.ToString());
+                    Walk(parameters[i]);
+                    _visitor.Exit();
                 }
-                _visitor.Exit();
             }
+            _visitor.Exit();
         }
 
         /// <summary>
@@ -466,10 +475,20 @@ namespace Microsoft.OpenApi.Services
         /// <param name="examples"></param>
         internal void Walk(IList<OpenApiExample> examples)
         {
-            foreach (var item in examples)
+            _visitor.Enter(OpenApiConstants.Examples);
+            _visitor.Visit(examples);
+
+            // Visit Examples
+            if (examples != null)
             {
-                _visitor.Visit(item);
+                for (int i = 0; i < examples.Count; i++)
+                {
+                    _visitor.Enter(i.ToString());
+                    Walk(examples[i]);
+                    _visitor.Exit();
+                }
             }
+            _visitor.Exit();
         }
 
         /// <summary>

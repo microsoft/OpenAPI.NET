@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Open API visitor base providing base validation logic for each <see cref="IOpenApiElement"/>
+    /// Open API visitor base provides common logic for concrete vistors
     /// </summary>
     public abstract class OpenApiVisitorBase
     {
@@ -285,5 +285,11 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
+        /// <summary>
+        /// Visits list of <see cref="OpenApiExample"/>
+        /// </summary>
+        public virtual void Visit(IList<OpenApiExample> example)
+        {
+        }
     }
 }

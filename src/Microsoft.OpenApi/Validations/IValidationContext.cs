@@ -14,7 +14,6 @@ namespace Microsoft.OpenApi.Validations
     /// </summary>
     public interface IValidationContext 
     {
-
         /// <summary>
         /// Register an error with the validation context.
         /// </summary>
