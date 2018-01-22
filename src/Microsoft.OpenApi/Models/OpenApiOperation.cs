@@ -222,16 +222,36 @@ namespace Microsoft.OpenApi.Models
 
                 writer.WriteEndArray();
 
-                // Create a parameter as BodyParameter type and add to Parameters.
-                // This type will be used to populate the In property as "body" when Parameters is serialized.
-                var bodyParameter = new BodyParameter
+                // This is form data. We need to split the request body into multiple parameters.
+                if (consumes.Contains("application/x-www-form-urlencoded") ||
+                    consumes.Contains("multipart/form-data"))
                 {
-                    Description = RequestBody.Description,
-                    Schema = RequestBody.Content.First().Value.Schema,
-                    Format = new List<string>(consumes)
-                };
+                    foreach (var property in RequestBody.Content.First().Value.Schema.Properties)
+                    {
+                        parameters.Add(
+                            new OpenApiFormDataParameter
+                            {
+                                Description = property.Value.Description,
+                                Name = property.Key,
+                                Schema = property.Value,
+                                Required = RequestBody.Content.First().Value.Schema.Required.Contains(property.Key)
+                            });
+                    }
+                }
+                else
+                {
+                    var bodyParameter = new OpenApiBodyParameter
+                    {
+                        Description = RequestBody.Description,
+                        // V2 spec actually allows the body to have custom name.
+                        // Our library does not support this at the moment.
+                        Name = "body",
+                        Schema = RequestBody.Content.First().Value.Schema,
+                        Required = RequestBody.Required
+                    };
 
-                parameters.Add(bodyParameter);
+                    parameters.Add(bodyParameter);
+                }
             }
 
             if (Responses != null)

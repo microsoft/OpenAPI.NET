@@ -189,8 +189,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
-  ""name"": ""name1"",
-  ""in"": ""path""
+  ""in"": ""path"",
+  ""name"": ""name1""
 }";
 
             // Act
