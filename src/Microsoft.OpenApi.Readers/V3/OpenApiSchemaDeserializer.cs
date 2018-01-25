@@ -244,20 +244,20 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (pointer != null)
             {
-                if (node.Context.PushLoop(schemaLoopId, pointer))
-                {
-                    var schema = mapNode.GetReferencedObject<OpenApiSchema>(ReferenceType.Schema, pointer);
-                    node.Context.PopLoop(schemaLoopId);
-                    return schema;
-                } else
-                {
-                    node.Context.ClearLoop(schemaLoopId);
+                //if (node.Context.PushLoop(schemaLoopId, pointer))
+                //{
+                //    var schema = mapNode.GetReferencedObject<OpenApiSchema>(ReferenceType.Schema, pointer);
+                //    node.Context.PopLoop(schemaLoopId);
+                //    return schema;
+                //} else
+                //{
+                //    node.Context.ClearLoop(schemaLoopId);
                     //TODO.  How do we make the object graph have a cycle.  Or should we break the cycle in the graph?
                     return new OpenApiSchema()
                     {
                         Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer,ReferenceType.Schema)  
                     };
-                }
+                //}
             }
 
             var domainObject = new OpenApiSchema();
