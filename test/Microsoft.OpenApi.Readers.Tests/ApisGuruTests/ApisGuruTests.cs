@@ -48,17 +48,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ApisGuruTests
             }
         }
 
-        private static JToken GetProp(JToken obj, string prop)
-        {
-            if (!(obj is JObject jObj))
-                return null;
-            if (!jObj.TryGetValue(prop, out var jToken))
-                return null;
-            return jToken;
-        }
-
-
-
         [Theory(DisplayName = "APIs.guru")]
         [MemberData(nameof(GetSchemas))]
         public async Task EnsureThatICouldParse(string url)
