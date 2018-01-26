@@ -28,18 +28,7 @@ info:
         baz: hi!
 paths: {}
 ";
-            var ruleset = Validations.ValidationRuleSet.DefaultRuleSet;
-            ruleset.Add(
-             new ValidationRule<FooExtension>(
-                 (context, item) =>
-                 {
-                     if (item.Bar == "hey")
-                     {
-                         context.AddError(new ValidationError(ErrorReason.Format, context.PathString, "Don't say hey"));
-                     }
-                 }));
-
-                     var settings = new OpenApiReaderSettings()
+            var settings = new OpenApiReaderSettings()
             {
                 ExtensionParsers = { { "x-foo", (a) => {
                         var fooNode = (OpenApiObject)a;
@@ -47,8 +36,7 @@ paths: {}
                               Bar = (fooNode["bar"] as OpenApiString)?.Value,
                               Baz = (fooNode["baz"] as OpenApiString)?.Value
                         };
-                } } },
-                RuleSet = ruleset
+                } } }
             };
 
             var reader = new OpenApiStringReader(settings);
@@ -61,9 +49,6 @@ paths: {}
             fooExtension.Should().NotBeNull();
             fooExtension.Bar.Should().Be("hey");
             fooExtension.Baz.Should().Be("hi!");
-            var error = diag.Errors.First();
-            error.Message.Should().Be("Don't say hey");
-            error.Pointer.Should().Be("#/info/x-foo");
         }
     }
 

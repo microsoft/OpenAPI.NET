@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Allow Rule to indicate validation error occured a deeper context level.  
         /// </summary>
-        /// <param name="segment"></param>
+        /// <param name="segment">Identifier for context</param>
         void Enter(string segment);
 
         /// <summary>

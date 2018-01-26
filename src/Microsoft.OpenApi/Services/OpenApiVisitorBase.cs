@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Allow Rule to indicate validation error occured a deeper context level.  
         /// </summary>
-        /// <param name="segment"></param>
+        /// <param name="segment">Identifier for context</param>
         public void Enter(string segment)
         {
             this._path.Push(segment);

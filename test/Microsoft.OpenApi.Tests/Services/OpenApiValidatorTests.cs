@@ -5,10 +5,12 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
@@ -85,5 +87,63 @@ namespace Microsoft.OpenApi.Tests.Services
         });
         }
 
+
+        [Fact]
+        public void ValidateCustomExtension()
+        {
+
+            var ruleset = Validations.ValidationRuleSet.DefaultRuleSet;
+            ruleset.Add(
+             new ValidationRule<FooExtension>(
+                 (context, item) =>
+                 {
+                     if (item.Bar == "hey")
+                     {
+                         context.AddError(new ValidationError(ErrorReason.Format, context.PathString, "Don't say hey"));
+                     }
+                 }));
+
+
+            var openApiDocument = new OpenApiDocument();
+            openApiDocument.Info = new OpenApiInfo()
+            {
+                Title = "foo",
+                Version = "1.2.2"
+            };
+
+            var fooExtension = new FooExtension()
+            {
+                Bar = "hey",
+                Baz = "baz"
+            };
+
+            openApiDocument.Info.Extensions.Add("x-foo",fooExtension);
+
+            var validator = new OpenApiValidator(ruleset);
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(openApiDocument);
+
+            validator.Errors.ShouldBeEquivalentTo(
+                   new List<ValidationError>
+                   {
+                       new ValidationError(ErrorReason.Format, "#/info/x-foo", "Don't say hey")
+                   });
+        }
+
+    }
+
+    public class FooExtension : IOpenApiExtension, IOpenApiElement
+    {
+        public string Baz { get; set; }
+
+        public string Bar { get; set; }
+
+        public void Write(IOpenApiWriter writer)
+        {
+            writer.WriteStartObject();
+            writer.WriteProperty("baz", Baz);
+            writer.WriteProperty("bar", Bar);
+            writer.WriteEndObject();
+        }
     }
 }
