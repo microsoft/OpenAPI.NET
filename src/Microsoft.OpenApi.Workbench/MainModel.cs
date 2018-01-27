@@ -30,12 +30,12 @@ namespace Microsoft.OpenApi.Workbench
         /// <summary>
         /// Default format.
         /// </summary>
-        private string _format = "Yaml";
+        private OpenApiFormat _format = OpenApiFormat.Yaml;
 
         /// <summary>
         /// Default version.
         /// </summary>
-        private string _version = "V3";
+        private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_0;
 
         public string Input
         {
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Workbench
             set
             {
                 _input = value;
-                OnPropertyChanged("Input");
+                OnPropertyChanged(nameof(Input));
             }
         }
 
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Workbench
             set
             {
                 _output = value;
-                OnPropertyChanged("Output");
+                OnPropertyChanged(nameof(Output));
             }
         }
 
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Workbench
             set
             {
                 _errors = value;
-                OnPropertyChanged("Errors");
+                OnPropertyChanged(nameof(Errors));
             }
         }
 
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Workbench
             set
             {
                 _parseTime = value;
-                OnPropertyChanged("ParseTime");
+                OnPropertyChanged(nameof(ParseTime));
             }
         }
 
@@ -83,54 +83,54 @@ namespace Microsoft.OpenApi.Workbench
             set
             {
                 _renderTime = value;
-                OnPropertyChanged("RenderTime");
+                OnPropertyChanged(nameof(RenderTime));
             }
         }
 
-        public string Format
+        public OpenApiFormat Format
         {
             get => _format;
             set
             {
                 _format = value;
-                OnPropertyChanged("IsYaml");
-                OnPropertyChanged("IsJson");
+                OnPropertyChanged(nameof(IsYaml));
+                OnPropertyChanged(nameof(IsJson));
             }
         }
 
-        public string Version
+        public OpenApiSpecVersion Version
         {
             get => _version;
             set
             {
                 _version = value;
-                OnPropertyChanged("IsV2");
-                OnPropertyChanged("IsV3");
+                OnPropertyChanged(nameof(IsV2_0));
+                OnPropertyChanged(nameof(IsV3_0));
             }
         }
 
         public bool IsYaml
         {
-            get => Format == "Yaml";
-            set => Format = "Yaml";
+            get => Format == OpenApiFormat.Yaml;
+            set => Format = OpenApiFormat.Yaml;
         }
 
         public bool IsJson
         {
-            get => Format == "JSON";
-            set => Format = "JSON";
+            get => Format == OpenApiFormat.Json;
+            set => Format = OpenApiFormat.Json;
         }
 
-        public bool IsV2
+        public bool IsV2_0
         {
-            get => Version == "V2";
-            set => Version = "V2";
+            get => Version == OpenApiSpecVersion.OpenApi2_0;
+            set => Version = OpenApiSpecVersion.OpenApi2_0;
         }
 
-        public bool IsV3
+        public bool IsV3_0
         {
-            get => Version == "V3";
-            set => Version = "V3";
+            get => Version == OpenApiSpecVersion.OpenApi3_0;
+            set => Version = OpenApiSpecVersion.OpenApi3_0;
         }
 
         /// <summary>
@@ -200,8 +200,8 @@ namespace Microsoft.OpenApi.Workbench
             var outputStream = new MemoryStream();
             document.Serialize(
                 outputStream,
-                IsV3 ? OpenApiSpecVersion.OpenApi3_0 : OpenApiSpecVersion.OpenApi2_0,
-                _format == "Yaml" ? OpenApiFormat.Yaml : OpenApiFormat.Json);
+                Version,
+                Format);
             
             outputStream.Position = 0;
 
