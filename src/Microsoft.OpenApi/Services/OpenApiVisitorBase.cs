@@ -291,5 +291,20 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(IList<OpenApiExample> example)
         {
         }
+
+        /// <summary>
+        /// Visits a dictionary of server variables
+        /// </summary>
+        public virtual void Visit(IDictionary<string, OpenApiServerVariable> serverVariables)
+        {
+        }
+
+        /// <summary>
+        /// Visits a dictionary of encodings
+        /// </summary>
+        /// <param name="encodings"></param>
+        public virtual void Visit(IDictionary<string, OpenApiEncoding> encodings)
+        {
+        }
     }
 }
