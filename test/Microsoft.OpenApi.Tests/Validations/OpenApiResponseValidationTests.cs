@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             var validator = new OpenApiValidator();
             var walker = new OpenApiWalker(validator);
-            walker.Walk(response);
+            walker.Walk(response, "200");
 
             errors = validator.Errors;
             bool result = !errors.Any();
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             ValidationError error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "description", "response"), error.ErrorMessage);
             Assert.Equal(ErrorReason.Required, error.ErrorCode);
-            Assert.Equal("#/description", error.ErrorPath);
+            Assert.Equal("#/200/description", error.ErrorPath);
         }
     }
 }

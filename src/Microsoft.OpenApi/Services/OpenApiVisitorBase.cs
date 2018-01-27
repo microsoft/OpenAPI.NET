@@ -10,14 +10,14 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Open API visitor base provides common logic for concrete vistors
+    /// Open API visitor base provides common logic for concrete visitors
     /// </summary>
     public abstract class OpenApiVisitorBase
     {
         private readonly Stack<string> _path = new Stack<string>();
        
         /// <summary>
-        /// Allow Rule to indicate validation error occured a deeper context level.  
+        /// Allow Rule to indicate validation error occured at a deeper context level.  
         /// </summary>
         /// <param name="segment">Identifier for context</param>
         public void Enter(string segment)
