@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Examples of the media type.
         /// </summary>
-        public IList<OpenApiExample> Examples { get; set; } = new List<OpenApiExample>();
+        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// A map containing the representations for the header.
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
 
             // examples
-            writer.WriteOptionalCollection(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
 
             // content
             writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
