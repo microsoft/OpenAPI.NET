@@ -11,24 +11,23 @@
             <ColumnDefinition/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="txtInput" Text="{Binding Input}" Margin="10" TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" />
+        <TextBox x:Name="txtInput" Text="{Binding Input}" VerticalScrollBarVisibility="Auto" Margin="10" TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" />
         <DockPanel Grid.Column="1" Margin="0,10" >
-      <StackPanel Orientation="Horizontal"  DockPanel.Dock="Top">
-        <Button Content="Convert" VerticalAlignment="Center" HorizontalAlignment="Left" Height="20" Margin="10" Width="131" Click="Button_Click" Grid.Column="1"/>
-        <StackPanel Orientation="Vertical"  DockPanel.Dock="Top">
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Label>Format:</Label>
-            <RadioButton GroupName="Format" Content="Yaml" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsYaml }" />
-            <RadioButton GroupName="Format" Content="JSON" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsJson }" />
-          </StackPanel>
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Label>Version:</Label>
-            <RadioButton GroupName="Format" Content="V3" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV3 }" />
-            <RadioButton GroupName="Format" Content="V2" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV2 }" />
-          </StackPanel>
-        </StackPanel>
-      </StackPanel>
-            
+            <StackPanel Orientation="Horizontal"  DockPanel.Dock="Top">
+                <Button Content="Convert" VerticalAlignment="Center" HorizontalAlignment="Left" Height="20" Margin="10" Width="131" Click="Button_Click" Grid.Column="1"/>
+                <StackPanel Orientation="Vertical"  DockPanel.Dock="Top">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Label>Format:</Label>
+                        <RadioButton GroupName="Format" Content="YAML" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsYaml}" />
+                        <RadioButton GroupName="Format" Content="JSON" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsJson}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Label>Version:</Label>
+                        <RadioButton GroupName="Format" Content="V3.0.1" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV3_0}" />
+                        <RadioButton GroupName="Format" Content="V2.0" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV2_0}" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
             <TextBox x:Name="txtErrors"  Margin="10,10,10,10" TextWrapping="Wrap" Text="{Binding Errors}"  Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" DockPanel.Dock="Top" MaxHeight="100" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" />
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <Label>Parsing: </Label>
@@ -36,7 +35,7 @@
                 <Label>Rendering:</Label>
                 <TextBlock x:Name="txtRenderTime" Text="{Binding RenderTime}" VerticalAlignment="Center"/>
             </StackPanel>
-            <TextBox x:Name="txtOutput" Text="{Binding Output}" VerticalScrollBarVisibility="Auto" Margin="10,10,10,10" VerticalAlignment="Stretch" TextWrapping="Wrap" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" FontFamily="Consolas" IsReadOnlyCaretVisible="True" VerticalContentAlignment="Stretch" IsManipulationEnabled="True" HorizontalScrollBarVisibility="Auto" DockPanel.Dock="Top" />
+            <TextBox x:Name="txtOutput" Text="{Binding Output}" VerticalScrollBarVisibility="Auto" Margin="10,10,10,0" VerticalAlignment="Stretch" TextWrapping="Wrap" Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" FontFamily="Consolas" IsReadOnlyCaretVisible="True" VerticalContentAlignment="Stretch" IsManipulationEnabled="True" HorizontalScrollBarVisibility="Auto" DockPanel.Dock="Top" />
       
     </DockPanel>
     </Grid>
