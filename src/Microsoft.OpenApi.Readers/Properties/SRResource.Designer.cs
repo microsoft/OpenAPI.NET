@@ -70,6 +70,15 @@ namespace Microsoft.OpenApi.Readers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to JSON pointer &apos;{0}&apos; does not point to an object in the document..
+        /// </summary>
+        internal static string JsonPointerCannotBeResolved {
+            get {
+                return ResourceManager.GetString("JsonPointerCannotBeResolved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not implemented to find referenced element from external resource..
         /// </summary>
         internal static string LoadReferencedObjectFromExternalNotImplmented {

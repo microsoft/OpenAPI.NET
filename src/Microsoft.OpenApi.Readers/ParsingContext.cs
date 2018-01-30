@@ -27,7 +27,6 @@ namespace Microsoft.OpenApi.Readers
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
 
-
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
@@ -143,7 +142,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             var reference = VersionService.ConvertToOpenApiReference(referenceString, referenceType);
-
+            
             var isReferencedObjectFound = VersionService.TryLoadReference(this, reference, out referencedObject);
 
             if (isReferencedObjectFound)

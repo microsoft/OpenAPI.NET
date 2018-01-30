@@ -17,9 +17,36 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiOAuthFlow> _oAuthFlowFixedFileds =
             new FixedFieldMap<OpenApiOAuthFlow>
             {
-                {"authorizationUrl", (o, n) => o.AuthorizationUrl = new Uri(n.GetScalarValue())},
-                {"tokenUrl", (o, n) => o.TokenUrl = new Uri(n.GetScalarValue())},
-                {"refreshUrl", (o, n) => o.RefreshUrl = new Uri(n.GetScalarValue())},
+                {
+                    "authorizationUrl", (o, n) =>
+                    {
+                        Uri uri;
+                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
+                        {
+                            o.AuthorizationUrl = uri;
+                        }
+                    }
+                },
+                {
+                    "tokenUrl", (o, n) =>
+                    {
+                        Uri uri;
+                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
+                        {
+                            o.TokenUrl = uri;
+                        }
+                    }
+                },
+                {
+                    "refreshUrl", (o, n) =>
+                    {
+                        Uri uri;
+                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
+                        {
+                            o.RefreshUrl = uri;
+                        }
+                    }
+                },
                 {"scopes", (o, n) => o.Scopes = n.CreateSimpleMap(LoadString)}
             };
 

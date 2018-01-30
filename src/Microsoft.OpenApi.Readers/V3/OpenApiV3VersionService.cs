@@ -124,6 +124,14 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var node = context.RootNode.Find(componentJsonPointer);
 
+            if (node == null)
+            {
+                throw new OpenApiException(
+                    string.Format(
+                        SRResource.JsonPointerCannotBeResolved,
+                        componentJsonPointer));
+            }
+
             switch (reference.Type)
             {
                 case ReferenceType.Schema:

@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// The URI of the namespace definition.
+        /// The URI of the namespace definition. Value MUST be in the form of an absolute URI.
         /// </summary>
         public Uri Namespace { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
@@ -58,12 +59,12 @@ namespace Microsoft.OpenApi.Readers.V2
                 },
                 {
                     "consumes", (o, n) => n.Context.SetTempStorage(
-                        "operationconsumes",
+                        "operationConsumes",
                         n.CreateSimpleList(s => s.GetScalarValue()))
                 },
                 {
                     "produces", (o, n) => n.Context.SetTempStorage(
-                        "operationproduces",
+                        "operationProduces",
                         n.CreateSimpleList(s => s.GetScalarValue()))
                 },
                 {
@@ -104,6 +105,12 @@ namespace Microsoft.OpenApi.Readers.V2
 
         internal static OpenApiOperation LoadOperation(ParseNode node)
         {
+            // Reset these temp storage parameters for each operation.
+            node.Context.SetTempStorage("bodyParameter", null);
+            node.Context.SetTempStorage("formParameters", null);
+            node.Context.SetTempStorage("operationProduces", null);
+            node.Context.SetTempStorage("operationConsumes", null);
+
             var mapNode = node.CheckMapNode("OpenApiOperation");
 
             var operation = new OpenApiOperation();
@@ -124,7 +131,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     operation.RequestBody = CreateFormBody(node.Context, formParameters);
                 }
             }
-
+            
             return operation;
         }
 
@@ -156,9 +163,9 @@ namespace Microsoft.OpenApi.Readers.V2
                     Required = formParameters.Where(p => p.Required).Select(p => p.Name).ToList()
                 }
             };
-
-            var consumes = context.GetFromTempStorage<List<string>>("operationconsumes") ??
-                context.GetFromTempStorage<List<string>>("globalconsumes") ??
+            
+            var consumes = context.GetFromTempStorage<List<string>>("operationConsumes") ??
+                context.GetFromTempStorage<List<string>>("globalConsumes") ??
                 new List<string> {"application/x-www-form-urlencoded"};
 
             var formBody = new OpenApiRequestBody
@@ -175,8 +182,8 @@ namespace Microsoft.OpenApi.Readers.V2
             ParsingContext context,
             OpenApiParameter bodyParameter)
         {
-            var consumes = context.GetFromTempStorage<List<string>>("operationconsumes") ??
-                context.GetFromTempStorage<List<string>>("globalconsumes") ?? new List<string> {"application/json"};
+            var consumes = context.GetFromTempStorage<List<string>>("operationConsumes") ??
+                context.GetFromTempStorage<List<string>>("globalConsumes") ?? new List<string> {"application/json"};
 
             var requestBody = new OpenApiRequestBody
             {

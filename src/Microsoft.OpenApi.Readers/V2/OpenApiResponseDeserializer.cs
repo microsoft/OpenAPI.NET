@@ -14,6 +14,8 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
+        private static OpenApiSchema _responseSchema;
+
         private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new FixedFieldMap<OpenApiResponse>
         {
             {
@@ -37,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "schema", (o, n) =>
                 {
-                    n.Context.SetTempStorage("operationschema", LoadSchema(n));
+                    _responseSchema = LoadSchema(n);
                 }
             },
         };
@@ -50,22 +52,20 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
         {
-            var produces = context.GetFromTempStorage<List<string>>("operationproduces") ??
-                context.GetFromTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
+            var produces = context.GetFromTempStorage<List<string>>("operationProduces") ??
+                context.GetFromTempStorage<List<string>>("globalProduces") ?? new List<string> {"application/json"};
 
             response.Content = new Dictionary<string, OpenApiMediaType>();
-            foreach (var mt in produces)
+            foreach (var produce in produces)
             {
-                var schema = context.GetFromTempStorage<OpenApiSchema>("operationschema");
-                OpenApiMediaType mediaType = null;
-                if (schema != null)
+                if (_responseSchema != null)
                 {
-                    mediaType = new OpenApiMediaType
+                    var mediaType = new OpenApiMediaType
                     {
-                        Schema = schema
+                        Schema = _responseSchema
                     };
 
-                    response.Content.Add(mt, mediaType);
+                    response.Content.Add(produce, mediaType);
                 }
             }
         }
@@ -102,6 +102,8 @@ namespace Microsoft.OpenApi.Readers.V2
 
         public static OpenApiResponse LoadResponse(ParseNode node)
         {
+            _responseSchema = null;
+
             var mapNode = node.CheckMapNode("response");
 
             var pointer = mapNode.GetReferencePointer();

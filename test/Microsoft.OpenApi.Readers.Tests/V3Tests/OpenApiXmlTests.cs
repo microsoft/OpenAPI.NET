@@ -46,5 +46,35 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     });
             }
         }
+
+        [Fact]
+        public void ParseBasicXmlWithBrokenUrlShouldSucceed()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicXmlWithBrokenUrl.yaml")))
+            {
+                var yamlStream = new YamlStream();
+                yamlStream.Load(new StreamReader(stream));
+                var yamlNode = yamlStream.Documents.First().RootNode;
+
+                var context = new ParsingContext();
+                var diagnostic = new OpenApiDiagnostic();
+
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+
+                // Act
+                var xml = OpenApiV3Deserializer.LoadXml(node);
+
+                // Assert
+                xml.ShouldBeEquivalentTo(
+                    new OpenApiXml
+                    {
+                        Name = "name1",
+                        // TODO: Verify that the URL caused a parsing error.
+                        Namespace = new Uri("brokenUrl/ShouldFail", UriKind.RelativeOrAbsolute),
+                        Prefix = "samplePrefix",
+                        Wrapped = true
+                    });
+            }
+        }
     }
 }

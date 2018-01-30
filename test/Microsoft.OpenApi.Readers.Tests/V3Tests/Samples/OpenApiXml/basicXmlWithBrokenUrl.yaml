@@ -1,0 +1,4 @@
+﻿name: name1
+namespace: brokenUrl/ShouldFail
+prefix: samplePrefix
+wrapped: true

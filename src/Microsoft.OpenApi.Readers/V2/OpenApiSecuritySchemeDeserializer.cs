@@ -56,14 +56,22 @@ namespace Microsoft.OpenApi.Readers.V2
                     "authorizationUrl",
                     (o, n) =>
                     {
-                        _flow.AuthorizationUrl = new Uri(n.GetScalarValue());
+                        Uri uri;
+                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
+                        {
+                            _flow.AuthorizationUrl = uri;
+                        }
                     }
                 },
                 {
                     "tokenUrl",
                     (o, n) =>
                     {
-                        _flow.TokenUrl = new Uri(n.GetScalarValue());
+                        Uri uri;
+                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
+                        {
+                            _flow.TokenUrl = uri;
+                        }
                     }
                 },
                 {

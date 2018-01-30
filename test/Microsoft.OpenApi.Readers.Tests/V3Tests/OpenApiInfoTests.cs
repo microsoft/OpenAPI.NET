@@ -120,6 +120,46 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
+        public void ParseBasicInfoWithBrokenUrlShouldSucceed()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicInfoWithBrokenUrl.yaml")))
+            {
+                var yamlStream = new YamlStream();
+                yamlStream.Load(new StreamReader(stream));
+                var yamlNode = yamlStream.Documents.First().RootNode;
+
+                var context = new ParsingContext();
+                var diagnostic = new OpenApiDiagnostic();
+
+                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+
+                // Act
+                var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
+
+                // Assert
+                openApiInfo.ShouldBeEquivalentTo(
+                    new OpenApiInfo
+                    {
+                        Title = "Basic Info",
+                        Description = "Sample Description",
+                        Version = "1.0.1",
+                        TermsOfService = new Uri("relativeUrl/ShouldWork", UriKind.RelativeOrAbsolute),
+                        Contact = new OpenApiContact
+                        {
+                            Email = "support@swagger.io",
+                            Name = "API Support",
+                            Url = new Uri("http://www.swagger.io/support")
+                        },
+                        License = new OpenApiLicense
+                        {
+                            Name = "Apache 2.0",
+                            Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html")
+                        }
+                    });
+            }
+        }
+
+        [Fact]
         public void ParseMinimalInfoShouldSucceed()
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalInfo.yaml")))

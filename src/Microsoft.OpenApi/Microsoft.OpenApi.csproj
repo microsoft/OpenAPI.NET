@@ -24,7 +24,7 @@
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
         <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <Compile Update="Properties\SRResource.Designer.cs">
             <DesignTime>True</DesignTime>
