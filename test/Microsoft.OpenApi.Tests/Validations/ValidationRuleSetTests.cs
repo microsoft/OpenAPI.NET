@@ -8,6 +8,11 @@ namespace Microsoft.OpenApi.Validations.Tests
 {
     public class ValidationRuleSetTests
     {
+        public ValidationRuleSetTests()
+        {
+            var preload = ValidationRuleSet.DefaultRuleSet;
+        }
+
         [Fact]
         public void DefaultRuleSetReturnsTheCorrectRules()
         {

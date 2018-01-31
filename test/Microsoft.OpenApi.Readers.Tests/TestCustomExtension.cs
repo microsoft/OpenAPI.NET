@@ -48,7 +48,7 @@ paths: {}
         }
     }
 
-    public class FooExtension : IOpenApiExtension, IOpenApiElement
+    internal class FooExtension : IOpenApiExtension, IOpenApiElement
     {
         public string Baz { get; set; }
 

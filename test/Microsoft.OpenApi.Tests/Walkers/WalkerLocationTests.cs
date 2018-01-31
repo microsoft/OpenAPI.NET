@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
+using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -154,7 +157,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         }
     }
 
-    public class LocatorVisitor : OpenApiVisitorBase
+    internal class LocatorVisitor : OpenApiVisitorBase
     {
         public List<string> Locations = new List<string>();
         public override void Visit(OpenApiInfo info)

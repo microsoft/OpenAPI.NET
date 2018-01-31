@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -132,7 +131,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
     }
 
-    public class FooExtension : IOpenApiExtension, IOpenApiElement
+    internal class FooExtension : IOpenApiExtension, IOpenApiElement
     {
         public string Baz { get; set; }
 
