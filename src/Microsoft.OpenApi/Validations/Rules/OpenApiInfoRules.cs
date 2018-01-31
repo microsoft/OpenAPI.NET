@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// The validation rules for <see cref="OpenApiInfo"/>.
     /// </summary>
     [OpenApiRule]
-    internal static class OpenApiInfoRules
+    public static class OpenApiInfoRules
     {
         /// <summary>
         /// Validate the field is required.
@@ -20,25 +20,27 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiInfo>(
                 (context, item) =>
                 {
+
                     // title
-                    context.Push("title");
+                    context.Enter("title");
                     if (String.IsNullOrEmpty(item.Title))
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
-                            String.Format(SRResource.Validation_FieldIsRequired, "url", "info"));
+                            String.Format(SRResource.Validation_FieldIsRequired, "title", "info"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
 
                     // version
-                    context.Push("version");
+                    context.Enter("version");
                     if (String.IsNullOrEmpty(item.Version))
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "version", "info"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
+
                 });
 
         // add more rule.

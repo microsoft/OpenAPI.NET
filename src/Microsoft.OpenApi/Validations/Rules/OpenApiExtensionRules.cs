@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<IOpenApiExtensible>(
                 (context, item) =>
                 {
-                    context.Push("extensions");
+                    context.Enter("extensions");
                     foreach (var extensible in item.Extensions)
                     {
                         if (!extensible.Key.StartsWith("x-"))
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                             context.AddError(error);
                         }
                     }
-                    context.Pop();
+                    context.Exit();
                 });
     }
 }
