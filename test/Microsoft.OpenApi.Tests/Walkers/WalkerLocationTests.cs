@@ -147,10 +147,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/servers",
                 "#/paths",
                 "#/components",
-                "#/components/loopy",
-                "#/components/loopy/properties/name",
-                "#/components/loopy/properties/name/externalDocs",
-                "#/components/loopy/externalDocs",
+                "#/components/schemas/loopy",
+                "#/components/schemas/loopy/properties/name",
+                "#/components/schemas/loopy/properties/name/externalDocs",
+                "#/components/schemas/loopy/externalDocs",
                 "#/externalDocs",
                 "#/tags"
             });

@@ -35,12 +35,12 @@ namespace Microsoft.OpenApi.Services
         {
             _visitor.Visit(doc);
 
-            InContext(OpenApiConstants.Info,() => Walk(doc.Info));
-            InContext(OpenApiConstants.Servers, () => Walk(doc.Servers));
-            InContext(OpenApiConstants.Paths, () => Walk(doc.Paths));
-            InContext(OpenApiConstants.Components, () => Walk(doc.Components));
-            InContext(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
-            InContext(OpenApiConstants.Tags, () => Walk(doc.Tags));
+            Walk(OpenApiConstants.Info,() => Walk(doc.Info));
+            Walk(OpenApiConstants.Servers, () => Walk(doc.Servers));
+            Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
+            Walk(OpenApiConstants.Components, () => Walk(doc.Components));
+            Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
+            Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);
         }
 
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Services
             {
                 for (int i = 0; i < tags.Count; i++)
                 {
-                    InContext(i.ToString(), () => Walk(tags[i]));
+                    Walk(i.ToString(), () => Walk(tags[i]));
                 }
             }
 
@@ -82,69 +82,93 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (components.Schemas != null)
+            Walk(OpenApiConstants.Schemas, () =>
             {
-                foreach (var item in components.Schemas)
+                if (components.Schemas != null)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    foreach (var item in components.Schemas)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
                 }
-            }
+            });
 
-            if (components.Callbacks != null)
+            Walk(OpenApiConstants.Callbacks, () =>
             {
-                foreach (var item in components.Callbacks)
+                if (components.Callbacks != null)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    foreach (var item in components.Callbacks)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
                 }
-            }
+            });
 
-            if (components.Parameters != null)
+            Walk(OpenApiConstants.Parameters, () =>
             {
-                foreach (var item in components.Parameters)
+                if (components.Parameters != null)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    foreach (var item in components.Parameters)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
                 }
-            }
+            });
 
-            if (components.Examples != null)
+            Walk(OpenApiConstants.Examples, () =>
             {
-                foreach (var item in components.Examples)
+                if (components.Examples != null)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    foreach (var item in components.Examples)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
                 }
-            }
+            });
 
-            if (components.Headers != null)
+            Walk(OpenApiConstants.Headers, () =>
             {
-                foreach (var item in components.Headers)
+                if (components.Headers != null)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    foreach (var item in components.Headers)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
                 }
-            }
+            });
 
-            if (components.Links != null)
+            Walk(OpenApiConstants.Links, () =>
             {
-                foreach (var item in components.Links)
+                if (components.Links != null)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    foreach (var item in components.Links)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
                 }
-            }
+            });
 
-            if (components.RequestBodies != null)
+            Walk(OpenApiConstants.RequestBodies, () =>
             {
-                foreach (var item in components.RequestBodies)
+                if (components.RequestBodies != null)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    foreach (var item in components.RequestBodies)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
                 }
-            }
+            });
 
-            if (components.Responses != null)
+            Walk(OpenApiConstants.Responses, () =>
             {
-                foreach (var item in components.Responses)
+                if (components.Responses != null)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    foreach (var item in components.Responses)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
                 }
-            }
+            });
 
             Walk(components as IOpenApiExtensible);
         }
@@ -161,7 +185,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var pathItem in paths)
                 {
-                    InContext(pathItem.Key.Replace("/", "~1"), () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
+                    Walk(pathItem.Key.Replace("/", "~1"), () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
                 }
             }
         }
@@ -178,7 +202,7 @@ namespace Microsoft.OpenApi.Services
             {
                 for (int i = 0; i < servers.Count; i++)
                 {
-                    InContext(i.ToString(),() => Walk(servers[i]));
+                    Walk(i.ToString(),() => Walk(servers[i]));
                 }
             }
         }
@@ -190,8 +214,8 @@ namespace Microsoft.OpenApi.Services
         {
             _visitor.Visit(info);
             if (info != null) {
-                InContext(OpenApiConstants.Contact, () => Walk(info.Contact));
-                InContext(OpenApiConstants.License, () => Walk(info.License));
+                Walk(OpenApiConstants.Contact, () => Walk(info.Contact));
+                Walk(OpenApiConstants.License, () => Walk(info.License));
             }
             Walk(info as IOpenApiExtensible);
         }
@@ -207,7 +231,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var item in openApiExtensible.Extensions)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    Walk(item.Key, () => Walk(item.Value));
                 }
             }
         }
@@ -248,7 +272,7 @@ namespace Microsoft.OpenApi.Services
                 foreach (var item in callback.PathItems)
                 {
                     var pathItem = item.Value;
-                    InContext(item.Key.ToString(), () => Walk(pathItem));
+                    Walk(item.Key.ToString(), () => Walk(pathItem));
                 }
             }
         }
@@ -269,7 +293,7 @@ namespace Microsoft.OpenApi.Services
         internal void Walk(OpenApiServer server)
         {
             _visitor.Visit(server);
-            InContext(OpenApiConstants.Variables, () => Walk(server.Variables));
+            Walk(OpenApiConstants.Variables, () => Walk(server.Variables));
             _visitor.Visit(server as IOpenApiExtensible);
         }
 
@@ -284,7 +308,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var variable in serverVariables)
                 {
-                    InContext(variable.Key, () => Walk(variable.Value));
+                    Walk(variable.Key, () => Walk(variable.Value));
                 }
             }
         }
@@ -333,7 +357,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var operation in operations)
                 {
-                    InContext(operation.Key.GetDisplayName(), () => Walk(operation.Value));
+                    Walk(operation.Key.GetDisplayName(), () => Walk(operation.Value));
                 }
             }
         }
@@ -346,9 +370,9 @@ namespace Microsoft.OpenApi.Services
         {
             _visitor.Visit(operation);
 
-            InContext(OpenApiConstants.Parameters, () => Walk(operation.Parameters));
-            InContext(OpenApiConstants.RequestBody, () => Walk(operation.RequestBody));
-            InContext(OpenApiConstants.Responses, () => Walk(operation.Responses));
+            Walk(OpenApiConstants.Parameters, () => Walk(operation.Parameters));
+            Walk(OpenApiConstants.RequestBody, () => Walk(operation.RequestBody));
+            Walk(OpenApiConstants.Responses, () => Walk(operation.Responses));
             Walk(operation as IOpenApiExtensible);
         }
 
@@ -363,7 +387,7 @@ namespace Microsoft.OpenApi.Services
             {
                 for (int i = 0; i < parameters.Count; i++)
                 {
-                    InContext(i.ToString(), () => Walk(parameters[i]));
+                    Walk(i.ToString(), () => Walk(parameters[i]));
                 }
             }
         }
@@ -374,8 +398,8 @@ namespace Microsoft.OpenApi.Services
         internal void Walk(OpenApiParameter parameter)
         {
             _visitor.Visit(parameter);
-            InContext(OpenApiConstants.Schema, () => Walk(parameter.Schema));
-            InContext(OpenApiConstants.Content, () => Walk(parameter.Content));
+            Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
+            Walk(OpenApiConstants.Content, () => Walk(parameter.Content));
             Walk(parameter as IOpenApiExtensible);
         }
 
@@ -390,7 +414,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var response in responses)
                 {
-                    InContext(response.Key, () => Walk(response.Value));
+                    Walk(response.Key, () => Walk(response.Value));
                 }
             }
             Walk(responses as IOpenApiExtensible);
@@ -402,8 +426,8 @@ namespace Microsoft.OpenApi.Services
         internal void Walk(OpenApiResponse response)
         {
             _visitor.Visit(response);
-            InContext(OpenApiConstants.Content, () => Walk(response.Content));
-            InContext(OpenApiConstants.Links, () => Walk(response.Links));
+            Walk(OpenApiConstants.Content, () => Walk(response.Content));
+            Walk(OpenApiConstants.Links, () => Walk(response.Links));
             Walk(response as IOpenApiExtensible);
         }
 
@@ -419,7 +443,7 @@ namespace Microsoft.OpenApi.Services
             {
                 if (requestBody.Content != null)
                 {
-                    InContext(OpenApiConstants.Content, () => Walk(requestBody.Content));
+                    Walk(OpenApiConstants.Content, () => Walk(requestBody.Content));
                 }
             }
             Walk(requestBody as IOpenApiExtensible);
@@ -435,7 +459,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var mediaType in content)
                 {
-                    InContext(mediaType.Key.Replace("/", "~1"), () => Walk(mediaType.Value));
+                    Walk(mediaType.Key.Replace("/", "~1"), () => Walk(mediaType.Value));
                 }
             }
         }
@@ -447,9 +471,9 @@ namespace Microsoft.OpenApi.Services
         {
             _visitor.Visit(mediaType);
             
-            InContext(OpenApiConstants.Example, () => Walk(mediaType.Examples));
-            InContext(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
-            InContext(OpenApiConstants.Encoding, () => Walk(mediaType.Encoding));
+            Walk(OpenApiConstants.Example, () => Walk(mediaType.Examples));
+            Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
+            Walk(OpenApiConstants.Encoding, () => Walk(mediaType.Encoding));
             Walk(mediaType as IOpenApiExtensible);
         }
 
@@ -462,9 +486,9 @@ namespace Microsoft.OpenApi.Services
 
             if (encodings != null)
             {
-                foreach (var item in encodings.Values)
+                foreach (var item in encodings)
                 {
-                    _visitor.Visit(item);
+                    Walk(item.Key, () => Walk(item.Value));
                 }
             }
         }
@@ -494,20 +518,20 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(schema);
 
             if (schema.Items != null) {
-                InContext("items", () => Walk(schema.Items));
+                Walk("items", () => Walk(schema.Items));
             }
 
             if (schema.Properties != null) {
-                InContext("properties", () =>
+                Walk("properties", () =>
                 {
                     foreach (var item in schema.Properties)
                     {
-                        InContext(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value));
                     }
                 });
             }
 
-            InContext(OpenApiConstants.ExternalDocs, () => Walk(schema.ExternalDocs));
+            Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.ExternalDocs));
 
             Walk(schema as IOpenApiExtensible);
 
@@ -525,7 +549,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var example in examples)
                 {
-                    InContext(example.Key, () => Walk(example.Value));
+                    Walk(example.Key, () => Walk(example.Value));
                 }
             }
         }
@@ -559,7 +583,7 @@ namespace Microsoft.OpenApi.Services
             {
                 for (int i = 0; i < examples.Count; i++)
                 {
-                    InContext(i.ToString(), () => Walk(examples[i]));
+                    Walk(i.ToString(), () => Walk(examples[i]));
                 }
             }
         }
@@ -593,7 +617,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var item in links)
                 {
-                    InContext(item.Key, () => Walk(item.Value));
+                    Walk(item.Key, () => Walk(item.Value));
                 }
             }
         }
@@ -604,7 +628,7 @@ namespace Microsoft.OpenApi.Services
         internal void Walk(OpenApiLink link)
         {
             _visitor.Visit(link);
-            InContext(OpenApiConstants.Server, () => Walk(link.Server));
+            Walk(OpenApiConstants.Server, () => Walk(link.Server));
             Walk(link as IOpenApiExtensible);
         }
 
@@ -614,10 +638,10 @@ namespace Microsoft.OpenApi.Services
         internal void Walk(OpenApiHeader header)
         {
             _visitor.Visit(header);
-            InContext(OpenApiConstants.Content, () => Walk(header.Content));
-            InContext(OpenApiConstants.Example, () => Walk(header.Example));
-            InContext(OpenApiConstants.Examples, () => Walk(header.Examples));
-            InContext(OpenApiConstants.Schema, () => Walk(header.Schema));
+            Walk(OpenApiConstants.Content, () => Walk(header.Content));
+            Walk(OpenApiConstants.Example, () => Walk(header.Example));
+            Walk(OpenApiConstants.Examples, () => Walk(header.Examples));
+            Walk(OpenApiConstants.Schema, () => Walk(header.Schema));
             Walk(header as IOpenApiExtensible);
         }
 
@@ -680,16 +704,18 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Adds a segment to the context path to enable pointing to the current locationin the document
+        /// Adds a segment to the context path to enable pointing to the current location in the document
         /// </summary>
         /// <param name="context">An identifier for the context.</param>
         /// <param name="walk">An action that walks objects within the context.</param>
-        private void InContext(string context, Action walk)
+        private void Walk(string context, Action walk)
         {
             _visitor.Enter(context);
             walk();
             _visitor.Exit();
         }
+
+
 
     }
 }

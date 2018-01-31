@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Validations
             {
                 if (_defaultRuleSet == null)
                 {
-                    _defaultRuleSet = new Lazy<ValidationRuleSet>(() => BuildDefaultRuleSet(), isThreadSafe: true).Value;
+                    _defaultRuleSet = BuildDefaultRuleSet();
                 }
 
                 return _defaultRuleSet;
