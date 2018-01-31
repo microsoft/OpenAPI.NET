@@ -20,14 +20,14 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiServer>(
                 (context, server) =>
                 {
-                    context.Push("url");
+                    context.Enter("url");
                     if (String.IsNullOrEmpty(server.Url))
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
                 });
 
         // add more rules

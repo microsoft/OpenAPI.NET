@@ -12,6 +12,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     [OpenApiRule]
     public static class OpenApiPathsRules
     {
+
         /// <summary>
         /// A relative path to an individual endpoint. The field name MUST begin with a slash.
         /// </summary>
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 {
                     foreach (var pathName in item.Keys)
                     {
-                        context.Push(pathName);
+                        context.Enter(pathName);
 
                         if (string.IsNullOrEmpty(pathName))
                         {
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                             context.AddError(error);
                         }
 
-                        context.Pop();
+                        context.Exit();
                     }
                 });
 

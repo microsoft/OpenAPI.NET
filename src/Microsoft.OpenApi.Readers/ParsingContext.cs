@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -24,8 +25,7 @@ namespace Microsoft.OpenApi.Readers
         private readonly Dictionary<string, IOpenApiReferenceable> _referenceStore = new Dictionary<string, IOpenApiReferenceable>();
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private IOpenApiVersionService _versionService;
-        private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
-
+        private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();        internal Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>> ExtensionParsers { get; set; }  = new Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>>();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
  
@@ -64,6 +64,7 @@ namespace Microsoft.OpenApi.Readers
 
             return doc;
         }
+
 
         /// <summary>
         /// Gets the version of the Open API document.

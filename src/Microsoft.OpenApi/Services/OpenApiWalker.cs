@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -14,6 +16,8 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiWalker
     {
         private readonly OpenApiVisitorBase _visitor;
+        private readonly Stack<OpenApiSchema> _schemaLoop = new Stack<OpenApiSchema>();
+        private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
 
         /// <summary>
         /// Initializes the <see cref="OpenApiWalker"/> class.
@@ -31,33 +35,36 @@ namespace Microsoft.OpenApi.Services
         {
             _visitor.Visit(doc);
 
-            Walk(doc.Info);
-            Walk(doc.Servers);
-            Walk(doc.Paths);
-            Walk(doc.Components);
-            Walk(doc.ExternalDocs);
-            Walk(doc.Tags);
+            Walk(OpenApiConstants.Info,() => Walk(doc.Info));
+            Walk(OpenApiConstants.Servers, () => Walk(doc.Servers));
+            Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
+            Walk(OpenApiConstants.Components, () => Walk(doc.Components));
+            Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
+            Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiTag"/> and child objects
         /// </summary>
-        /// <param name="tags"></param>
         internal void Walk(IList<OpenApiTag> tags)
         {
             _visitor.Visit(tags);
 
-            foreach (var tag in tags)
+            // Visit tags
+            if (tags != null)
             {
-                Walk(tag);
+                for (int i = 0; i < tags.Count; i++)
+                {
+                    Walk(i.ToString(), () => Walk(tags[i]));
+                }
             }
+
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiExternalDocs"/> and child objects
         /// </summary>
-        /// <param name="externalDocs"></param>
         internal void Walk(OpenApiExternalDocs externalDocs)
         {
             _visitor.Visit(externalDocs);
@@ -66,29 +73,126 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiComponents"/> and child objects
         /// </summary>
-        /// <param name="components"></param>
         internal void Walk(OpenApiComponents components)
         {
             _visitor.Visit(components);
+
+            if (components == null)
+            {
+                return;
+            }
+
+            Walk(OpenApiConstants.Schemas, () =>
+            {
+                if (components.Schemas != null)
+                {
+                    foreach (var item in components.Schemas)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                }
+            });
+
+            Walk(OpenApiConstants.Callbacks, () =>
+            {
+                if (components.Callbacks != null)
+                {
+                    foreach (var item in components.Callbacks)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                }
+            });
+
+            Walk(OpenApiConstants.Parameters, () =>
+            {
+                if (components.Parameters != null)
+                {
+                    foreach (var item in components.Parameters)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                }
+            });
+
+            Walk(OpenApiConstants.Examples, () =>
+            {
+                if (components.Examples != null)
+                {
+                    foreach (var item in components.Examples)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                }
+            });
+
+            Walk(OpenApiConstants.Headers, () =>
+            {
+                if (components.Headers != null)
+                {
+                    foreach (var item in components.Headers)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                }
+            });
+
+            Walk(OpenApiConstants.Links, () =>
+            {
+                if (components.Links != null)
+                {
+                    foreach (var item in components.Links)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                }
+            });
+
+            Walk(OpenApiConstants.RequestBodies, () =>
+            {
+                if (components.RequestBodies != null)
+                {
+                    foreach (var item in components.RequestBodies)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                }
+            });
+
+            Walk(OpenApiConstants.Responses, () =>
+            {
+                if (components.Responses != null)
+                {
+                    foreach (var item in components.Responses)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                }
+            });
+
+            Walk(components as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiPaths"/> and child objects
         /// </summary>
-        /// <param name="paths"></param>
         internal void Walk(OpenApiPaths paths)
         {
             _visitor.Visit(paths);
-            foreach (var pathItem in paths.Values)
+
+            // Visit Paths
+            if (paths != null)
             {
-                Walk(pathItem);
+                foreach (var pathItem in paths)
+                {
+                    Walk(pathItem.Key.Replace("/", "~1"), () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
+                }
             }
         }
 
         /// <summary>
         /// Visits list of  <see cref="OpenApiServer"/> and child objects
         /// </summary>
-        /// <param name="servers"></param>
         internal void Walk(IList<OpenApiServer> servers)
         {
             _visitor.Visit(servers);
@@ -96,9 +200,9 @@ namespace Microsoft.OpenApi.Services
             // Visit Servers
             if (servers != null)
             {
-                foreach (var server in servers)
+                for (int i = 0; i < servers.Count; i++)
                 {
-                    Walk(server);
+                    Walk(i.ToString(),() => Walk(servers[i]));
                 }
             }
         }
@@ -106,28 +210,43 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiInfo"/> and child objects
         /// </summary>
-        /// <param name="info"></param>
         internal void Walk(OpenApiInfo info)
         {
             _visitor.Visit(info);
-            Walk(info.Contact);
-            Walk(info.License);
+            if (info != null) {
+                Walk(OpenApiConstants.Contact, () => Walk(info.Contact));
+                Walk(OpenApiConstants.License, () => Walk(info.License));
+            }
             Walk(info as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits dictionary of extensions
         /// </summary>
-        /// <param name="openApiExtensible"></param>
         internal void Walk(IOpenApiExtensible openApiExtensible)
         {
             _visitor.Visit(openApiExtensible);
+
+            if (openApiExtensible != null)
+            {
+                foreach (var item in openApiExtensible.Extensions)
+                {
+                    Walk(item.Key, () => Walk(item.Value));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiExtension"/> 
+        /// </summary>
+        internal void Walk(IOpenApiExtension extension)
+        {
+            _visitor.Visit(extension);
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiLicense"/> and child objects
         /// </summary>
-        /// <param name="license"></param>
         internal void Walk(OpenApiLicense license)
         {
             _visitor.Visit(license);
@@ -136,16 +255,31 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiContact"/> and child objects
         /// </summary>
-        /// <param name="contact"></param>
         internal void Walk(OpenApiContact contact)
         {
             _visitor.Visit(contact);
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiCallback"/> and child objects
+        /// </summary>
+        internal void Walk(OpenApiCallback callback)
+        {
+            _visitor.Visit(callback);
+
+            if (callback != null)
+            {
+                foreach (var item in callback.PathItems)
+                {
+                    var pathItem = item.Value;
+                    Walk(item.Key.ToString(), () => Walk(pathItem));
+                }
+            }
+        }
+
+        /// <summary>
         /// Visits <see cref="OpenApiTag"/> and child objects
         /// </summary>
-        /// <param name="tag"></param>
         internal void Walk(OpenApiTag tag)
         {
             _visitor.Visit(tag);
@@ -156,21 +290,32 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiServer"/> and child objects
         /// </summary>
-        /// <param name="server"></param>
         internal void Walk(OpenApiServer server)
         {
             _visitor.Visit(server);
-            foreach (var variable in server.Variables.Values)
-            {
-                Walk(variable);
-            }
+            Walk(OpenApiConstants.Variables, () => Walk(server.Variables));
             _visitor.Visit(server as IOpenApiExtensible);
+        }
+
+        /// <summary>
+        /// Visits dictionary of <see cref="OpenApiServerVariable"/>
+        /// </summary>
+        internal void Walk(IDictionary<string,OpenApiServerVariable> serverVariables)
+        {
+            _visitor.Visit(serverVariables);
+
+            if (serverVariables != null)
+            {
+                foreach (var variable in serverVariables)
+                {
+                    Walk(variable.Key, () => Walk(variable.Value));
+                }
+            }
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiServerVariable"/> and child objects
         /// </summary>
-        /// <param name="serverVariable"></param>
         internal void Walk(OpenApiServerVariable serverVariable)
         {
             _visitor.Visit(serverVariable);
@@ -180,25 +325,40 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiPathItem"/> and child objects
         /// </summary>
-        /// <param name="pathItem"></param>
         internal void Walk(OpenApiPathItem pathItem)
         {
+            if (_pathItemLoop.Contains(pathItem))
+            {
+                return;  // Loop detected, this pathItem has already been walked.
+            }
+            else
+            {
+                _pathItemLoop.Push(pathItem);
+            }
+
             _visitor.Visit(pathItem);
 
-            Walk(pathItem.Operations);
+            if (pathItem != null)
+            {
+                Walk(pathItem.Operations);
+            }
             _visitor.Visit(pathItem as IOpenApiExtensible);
+
+            _pathItemLoop.Pop();
         }
 
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiOperation"/>
         /// </summary>
-        /// <param name="operations"></param>
         internal void Walk(IDictionary<OperationType, OpenApiOperation> operations)
         {
             _visitor.Visit(operations);
-            foreach (var operation in operations.Values)
+            if (operations != null)
             {
-                Walk(operation);
+                foreach (var operation in operations)
+                {
+                    Walk(operation.Key.GetDisplayName(), () => Walk(operation.Value));
+                }
             }
         }
 
@@ -210,24 +370,24 @@ namespace Microsoft.OpenApi.Services
         {
             _visitor.Visit(operation);
 
-            Walk(operation.Parameters);
-            Walk(operation.RequestBody);
-            Walk(operation.Responses);
+            Walk(OpenApiConstants.Parameters, () => Walk(operation.Parameters));
+            Walk(OpenApiConstants.RequestBody, () => Walk(operation.RequestBody));
+            Walk(OpenApiConstants.Responses, () => Walk(operation.Responses));
             Walk(operation as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
         /// </summary>
-        /// <param name="parameters"></param>
         internal void Walk(IList<OpenApiParameter> parameters)
         {
+            _visitor.Visit(parameters);
+
             if (parameters != null)
             {
-                _visitor.Visit(parameters);
-                foreach (var parameter in parameters)
+                for (int i = 0; i < parameters.Count; i++)
                 {
-                    Walk(parameter);
+                    Walk(i.ToString(), () => Walk(parameters[i]));
                 }
             }
         }
@@ -235,122 +395,107 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiParameter"/> and child objects
         /// </summary>
-        /// <param name="parameter"></param>
         internal void Walk(OpenApiParameter parameter)
         {
             _visitor.Visit(parameter);
-            Walk(parameter.Schema);
-            Walk(parameter.Content);
+            Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
+            Walk(OpenApiConstants.Content, () => Walk(parameter.Content));
             Walk(parameter as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiResponses"/> and child objects
         /// </summary>
-        /// <param name="responses"></param>
         internal void Walk(OpenApiResponses responses)
         {
+            _visitor.Visit(responses);
+
             if (responses != null)
             {
-                _visitor.Visit(responses);
-
-                foreach (var response in responses.Values)
+                foreach (var response in responses)
                 {
-                    Walk(response);
+                    Walk(response.Key, () => Walk(response.Value));
                 }
-
-                Walk(responses as IOpenApiExtensible);
             }
+            Walk(responses as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiResponse"/> and child objects
         /// </summary>
-        /// <param name="response"></param>
         internal void Walk(OpenApiResponse response)
         {
             _visitor.Visit(response);
-            Walk(response.Content);
-
-            if (response.Links != null)
-            {
-                _visitor.Visit(response.Links);
-                foreach (var link in response.Links.Values)
-                {
-                    _visitor.Visit(link);
-                }
-            }
-
-            _visitor.Visit(response as IOpenApiExtensible);
+            Walk(OpenApiConstants.Content, () => Walk(response.Content));
+            Walk(OpenApiConstants.Links, () => Walk(response.Links));
+            Walk(response as IOpenApiExtensible);
         }
+
 
         /// <summary>
         /// Visits <see cref="OpenApiRequestBody"/> and child objects
         /// </summary>
-        /// <param name="requestBody"></param>
         internal void Walk(OpenApiRequestBody requestBody)
         {
+            _visitor.Visit(requestBody);
+
             if (requestBody != null)
             {
-                _visitor.Visit(requestBody);
-
                 if (requestBody.Content != null)
                 {
-                    Walk(requestBody.Content);
+                    Walk(OpenApiConstants.Content, () => Walk(requestBody.Content));
                 }
-
-                Walk(requestBody as IOpenApiExtensible);
             }
+            Walk(requestBody as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiMediaType"/>
         /// </summary>
-        /// <param name="content"></param>
         internal void Walk(IDictionary<string, OpenApiMediaType> content)
         {
-            if (content == null)
-            {
-                return;
-            }
-
             _visitor.Visit(content);
-            foreach (var mediaType in content.Values)
+            if (content != null)
             {
-                Walk(mediaType);
+                foreach (var mediaType in content)
+                {
+                    Walk(mediaType.Key.Replace("/", "~1"), () => Walk(mediaType.Value));
+                }
             }
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiMediaType"/> and child objects
         /// </summary>
-        /// <param name="mediaType"></param>
         internal void Walk(OpenApiMediaType mediaType)
         {
             _visitor.Visit(mediaType);
             
-            Walk(mediaType.Examples);
-            Walk(mediaType.Schema);
-            Walk(mediaType.Encoding);
+            Walk(OpenApiConstants.Example, () => Walk(mediaType.Examples));
+            Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
+            Walk(OpenApiConstants.Encoding, () => Walk(mediaType.Encoding));
             Walk(mediaType as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiEncoding"/>
         /// </summary>
-        /// <param name="encoding"></param>
-        internal void Walk(IDictionary<string, OpenApiEncoding> encoding)
+        internal void Walk(IDictionary<string, OpenApiEncoding> encodings)
         {
-            foreach (var item in encoding.Values)
+            _visitor.Visit(encodings);
+
+            if (encodings != null)
             {
-                _visitor.Visit(item);
+                foreach (var item in encodings)
+                {
+                    Walk(item.Key, () => Walk(item.Value));
+                }
             }
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiEncoding"/> and child objects
         /// </summary>
-        /// <param name="encoding"></param>
         internal void Walk(OpenApiEncoding encoding)
         {
             _visitor.Visit(encoding);
@@ -360,31 +505,66 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiSchema"/> and child objects
         /// </summary>
-        /// <param name="schema"></param>
         internal void Walk(OpenApiSchema schema)
         {
+            if(_schemaLoop.Contains(schema))
+            {
+                return;  // Loop detected, this schema has already been walked.
+            } else
+            {
+                _schemaLoop.Push(schema);
+            }
+
             _visitor.Visit(schema);
-            Walk(schema.ExternalDocs);
+
+            if (schema.Items != null) {
+                Walk("items", () => Walk(schema.Items));
+            }
+
+            if (schema.Properties != null) {
+                Walk("properties", () =>
+                {
+                    foreach (var item in schema.Properties)
+                    {
+                        Walk(item.Key, () => Walk(item.Value));
+                    }
+                });
+            }
+
+            Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.ExternalDocs));
+
             Walk(schema as IOpenApiExtensible);
+
+            _schemaLoop.Pop();
         }
 
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiExample"/>
         /// </summary>
-        /// <param name="examples"></param>
         internal void Walk(IDictionary<string,OpenApiExample> examples)
         {
             _visitor.Visit(examples);
-            foreach (var example in examples.Values)
+
+            if (examples != null)
             {
-                Walk(example);
+                foreach (var example in examples)
+                {
+                    Walk(example.Key, () => Walk(example.Value));
+                }
             }
+        }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiAny"/> and child objects
+        /// </summary>
+        internal void Walk(IOpenApiAny example)
+        {
+            _visitor.Visit(example);
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiExample"/> and child objects
         /// </summary>
-        /// <param name="example"></param>
         internal void Walk(OpenApiExample example)
         {
             _visitor.Visit(example);
@@ -394,19 +574,23 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits the list of <see cref="OpenApiExample"/> and child objects
         /// </summary>
-        /// <param name="examples"></param>
         internal void Walk(IList<OpenApiExample> examples)
         {
-            foreach (var item in examples)
+            _visitor.Visit(examples);
+
+            // Visit Examples
+            if (examples != null)
             {
-                _visitor.Visit(item);
+                for (int i = 0; i < examples.Count; i++)
+                {
+                    Walk(i.ToString(), () => Walk(examples[i]));
+                }
             }
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiOAuthFlows"/> and child objects
         /// </summary>
-        /// <param name="flows"></param>
         internal void Walk(OpenApiOAuthFlows flows)
         {
             _visitor.Visit(flows);
@@ -416,7 +600,6 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiOAuthFlow"/> and child objects
         /// </summary>
-        /// <param name="oAuthFlow"></param>
         internal void Walk(OpenApiOAuthFlow oAuthFlow)
         {
             _visitor.Visit(oAuthFlow);
@@ -426,44 +609,45 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiLink"/> and child objects
         /// </summary>
-        /// <param name="links"></param>
         internal void Walk(IDictionary<string,OpenApiLink> links)
         {
-            foreach (var item in links)
+            _visitor.Visit(links);
+
+            if (links != null)
             {
-                _visitor.Visit(item.Value);
+                foreach (var item in links)
+                {
+                    Walk(item.Key, () => Walk(item.Value));
+                }
             }
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiLink"/> and child objects
         /// </summary>
-        /// <param name="link"></param>
         internal void Walk(OpenApiLink link)
         {
             _visitor.Visit(link);
-            Walk(link.Server);
+            Walk(OpenApiConstants.Server, () => Walk(link.Server));
             Walk(link as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiHeader"/> and child objects
         /// </summary>
-        /// <param name="header"></param>
         internal void Walk(OpenApiHeader header)
         {
             _visitor.Visit(header);
-            Walk(header.Content);
-            Walk(header.Example);
-            Walk(header.Examples);
-            Walk(header.Schema);
+            Walk(OpenApiConstants.Content, () => Walk(header.Content));
+            Walk(OpenApiConstants.Example, () => Walk(header.Example));
+            Walk(OpenApiConstants.Examples, () => Walk(header.Examples));
+            Walk(OpenApiConstants.Schema, () => Walk(header.Schema));
             Walk(header as IOpenApiExtensible);
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiSecurityRequirement"/> and child objects
         /// </summary>
-        /// <param name="securityRequirement"></param>
         internal void Walk(OpenApiSecurityRequirement securityRequirement)
         {
             _visitor.Visit(securityRequirement);
@@ -473,7 +657,6 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiSecurityScheme"/> and child objects
         /// </summary>
-        /// <param name="securityScheme"></param>
         internal void Walk(OpenApiSecurityScheme securityScheme)
         {
             _visitor.Visit(securityScheme);
@@ -481,9 +664,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Walk IOpenApiElement
+        /// Dispatcher method that enables using a single method to walk the model
+        /// starting from any <see cref="IOpenApiElement"/>
         /// </summary>
-        /// <param name="element"></param>
         internal void Walk(IOpenApiElement element)
         {
             switch(element)
@@ -515,10 +698,24 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiServerVariable e: Walk(e); break;
                 case OpenApiTag e: Walk(e); break;
                 case IList<OpenApiTag> e: Walk(e); break;
-                case OpenApiXml e: Walk(e); break;
                 case IOpenApiExtensible e: Walk(e); break;
+                case IOpenApiExtension e: Walk(e); break;
             }
         }
+
+        /// <summary>
+        /// Adds a segment to the context path to enable pointing to the current location in the document
+        /// </summary>
+        /// <param name="context">An identifier for the context.</param>
+        /// <param name="walk">An action that walks objects within the context.</param>
+        private void Walk(string context, Action walk)
+        {
+            _visitor.Enter(context);
+            walk();
+            _visitor.Exit();
+        }
+
+
 
     }
 }

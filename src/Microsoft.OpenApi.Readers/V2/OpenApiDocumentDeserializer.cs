@@ -125,11 +125,8 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var openApiNode = rootNode.GetMap();
 
-            var required = new List<string> {"info", "swagger", "paths"};
+            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
 
-            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields, required);
-
-            ReportMissing(openApiNode, required);
 
             // Post Process OpenApi Object
             if (openApidoc.Servers == null)

@@ -1,6 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Writers;
+
 namespace Microsoft.OpenApi.Any
 {
     /// <summary>
@@ -32,5 +36,77 @@ namespace Microsoft.OpenApi.Any
         /// Value of this <see cref="IOpenApiPrimitive"/>
         /// </summary>
         public T Value { get; }
+
+        /// <summary>
+        /// Write out content of primitive element
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Write(IOpenApiWriter writer)
+        {
+            switch (this.PrimitiveType)
+            {
+                case PrimitiveType.Integer:
+                    var intValue = (OpenApiInteger)(IOpenApiPrimitive)this;
+                    writer.WriteValue(intValue.Value);
+                    break;
+
+                case PrimitiveType.Long:
+                    var longValue = (OpenApiLong)(IOpenApiPrimitive)this;
+                    writer.WriteValue(longValue.Value);
+                    break;
+
+                case PrimitiveType.Float:
+                    var floatValue = (OpenApiFloat)(IOpenApiPrimitive)this;
+                    writer.WriteValue(floatValue.Value);
+                    break;
+
+                case PrimitiveType.Double:
+                    var doubleValue = (OpenApiDouble)(IOpenApiPrimitive)this;
+                    writer.WriteValue(doubleValue.Value);
+                    break;
+
+                case PrimitiveType.String:
+                    var stringValue = (OpenApiString)(IOpenApiPrimitive)this;
+                    writer.WriteValue(stringValue.Value);
+                    break;
+
+                case PrimitiveType.Byte:
+                    var byteValue = (OpenApiByte)(IOpenApiPrimitive)this;
+                    writer.WriteValue(byteValue.Value);
+                    break;
+
+                case PrimitiveType.Binary:
+                    var binaryValue = (OpenApiBinary)(IOpenApiPrimitive)this;
+                    writer.WriteValue(binaryValue.Value);
+                    break;
+
+                case PrimitiveType.Boolean:
+                    var boolValue = (OpenApiBoolean)(IOpenApiPrimitive)this;
+                    writer.WriteValue(boolValue.Value);
+                    break;
+
+                case PrimitiveType.Date:
+                    var dateValue = (OpenApiDate)(IOpenApiPrimitive)this;
+                    writer.WriteValue(dateValue.Value);
+                    break;
+
+                case PrimitiveType.DateTime:
+                    var dateTimeValue = (OpenApiDateTime)(IOpenApiPrimitive)this;
+                    writer.WriteValue(dateTimeValue.Value);
+                    break;
+
+                case PrimitiveType.Password:
+                    var passwordValue = (OpenApiPassword)(IOpenApiPrimitive)this;
+                    writer.WriteValue(passwordValue.Value);
+                    break;
+
+                default:
+                    throw new OpenApiWriterException(
+                        string.Format(
+                            SRResource.PrimitiveTypeNotSupported,
+                            this.PrimitiveType));
+            }
+
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// The Validator attribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    internal class OpenApiRuleAttribute : Attribute
+    public class OpenApiRuleAttribute : Attribute
     {
     }
 }

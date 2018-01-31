@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// The validation rules for <see cref="OpenApiOAuthFlow"/>.
     /// </summary>
     [OpenApiRule]
-    internal static class OpenApiOAuthFlowRules
+    public static class OpenApiOAuthFlowRules
     {
         /// <summary>
         /// Validate the field is required.
@@ -21,34 +21,34 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, flow) =>
                 {
                     // authorizationUrl
-                    context.Push("authorizationUrl");
+                    context.Enter("authorizationUrl");
                     if (flow.AuthorizationUrl == null)
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
 
                     // tokenUrl
-                    context.Push("tokenUrl");
+                    context.Enter("tokenUrl");
                     if (flow.TokenUrl == null)
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
 
                     // scopes
-                    context.Push("scopes");
+                    context.Enter("scopes");
                     if (flow.Scopes == null)
                     {
                         ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "scopes", "OAuth Flow"));
                         context.AddError(error);
                     }
-                    context.Pop();
+                    context.Exit();
                 });
 
         // add more rule.
