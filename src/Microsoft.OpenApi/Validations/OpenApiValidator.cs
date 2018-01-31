@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="ruleSet"></param>
         public OpenApiValidator(ValidationRuleSet ruleSet = null) 
         {
-            _ruleSet = ruleSet ?? ValidationRuleSet.DefaultRuleSet;
+            _ruleSet = ruleSet ?? ValidationRuleSet.GetDefaultRuleSet();
         }
         
         /// <summary>
