@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// The validation rules for <see cref="OpenApiContact"/>.
     /// </summary>
     [OpenApiRule]
-    internal static class OpenApiContactRules
+    public static class OpenApiContactRules
     {
         /// <summary>
         /// Email field MUST be email address.

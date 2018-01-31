@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// The validation rules for <see cref="OpenApiDocument"/>.
     /// </summary>
     [OpenApiRule]
-    internal static class OpenApiDocumentRules
+    public static class OpenApiDocumentRules
     {
         /// <summary>
         /// The Info field is required.
