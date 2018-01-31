@@ -118,29 +118,23 @@ namespace Microsoft.OpenApi.Validations
         private static ValidationRuleSet BuildDefaultRuleSet()
         {
             ValidationRuleSet ruleSet = new ValidationRuleSet();
-
-            IEnumerable<Type> allTypes = typeof(ValidationRuleSet).Assembly.GetTypes().Where(t => t.IsClass && t != typeof(object));
             Type validationRuleType = typeof(ValidationRule);
-            foreach (Type type in allTypes)
-            {
-                if (!type.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
-                {
-                    continue;
-                }
 
-                var properties = type.GetProperties(BindingFlags.Static | BindingFlags.Public);
-                foreach (var property in properties)
-                {
-                    if (validationRuleType.IsAssignableFrom(property.PropertyType))
+            IEnumerable<PropertyInfo> rules = typeof(ValidationRuleSet).Assembly.GetTypes()
+                .Where(t => t.IsClass 
+                            && t != typeof(object)
+                            && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
+                .SelectMany(t2 => t2.GetProperties(BindingFlags.Static | BindingFlags.Public)
+                                .Where(p => validationRuleType.IsAssignableFrom(p.PropertyType)));
+
+            foreach (var property in rules)
+            {
+                    var propertyValue = property.GetValue(null); // static property
+                    ValidationRule rule = propertyValue as ValidationRule;
+                    if (rule != null)
                     {
-                        var propertyValue = property.GetValue(null); // static property
-                        ValidationRule rule = propertyValue as ValidationRule;
-                        if (rule != null)
-                        {
-                            ruleSet.Add(rule);
-                        }
+                        ruleSet.Add(rule);
                     }
-                }
             }
 
             return ruleSet;
