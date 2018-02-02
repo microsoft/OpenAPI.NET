@@ -11,12 +11,20 @@ using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
     [Collection("DefaultSettings")]
     public class OpenApiValidatorTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public OpenApiValidatorTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void ResponseMustHaveADescription()
         {
@@ -90,8 +98,8 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void ValidateCustomExtension()
         {
-
-            var ruleset = Validations.ValidationRuleSet.DefaultRuleSet;
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            
             ruleset.Add(
              new ValidationRule<FooExtension>(
                  (context, item) =>
@@ -101,7 +109,6 @@ namespace Microsoft.OpenApi.Tests.Services
                          context.AddError(new ValidationError(ErrorReason.Format, context.PathString, "Don't say hey"));
                      }
                  }));
-
 
             var openApiDocument = new OpenApiDocument();
             openApiDocument.Info = new OpenApiInfo()
