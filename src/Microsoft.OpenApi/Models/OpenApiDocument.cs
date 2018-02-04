@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -264,5 +265,84 @@ namespace Microsoft.OpenApi.Models
             // schemes
             writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
         }
+
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
+        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        {
+
+            if (reference == null)
+            {
+                return null;
+            }
+
+            if (reference.IsExternal)
+            {
+                // Should not attempt to resolve external references against a single document.
+                throw new ArgumentException(); //TODO Add error message
+            }
+
+            if (!reference.Type.HasValue)
+            {
+                throw new ArgumentException("Local reference must have type specified.");
+            }
+
+            // Special case for Tag
+            if (reference.Type == ReferenceType.Tag)
+            {
+                foreach (var tag in this.Tags)
+                {
+                    if (tag.Name == reference.Id)
+                    {
+                        return tag;
+                    }
+                }
+
+                return null;
+            }
+
+            try
+            {
+                switch (reference.Type)
+                {
+                    case ReferenceType.Schema:
+                        return this.Components.Schemas[reference.Id];
+
+                    case ReferenceType.Response:
+                        return this.Components.Responses[reference.Id];
+
+                    case ReferenceType.Parameter:
+                        return this.Components.Parameters[reference.Id];
+
+                    case ReferenceType.Example:
+                        return this.Components.Examples[reference.Id];
+
+                    case ReferenceType.RequestBody:
+                        return this.Components.RequestBodies[reference.Id];
+
+                    case ReferenceType.Header:
+                        return this.Components.Headers[reference.Id];
+
+                    case ReferenceType.SecurityScheme:
+                        return this.Components.SecuritySchemes[reference.Id];
+
+                    case ReferenceType.Link:
+                        return this.Components.Links[reference.Id];
+
+                    case ReferenceType.Callback:
+                        return this.Components.Callbacks[reference.Id];
+
+                    default:
+                        // TODO: Create resource
+                        throw new OpenApiException("Invalid Reference type");
+                }
+            } catch(KeyNotFoundException)
+            {
+                throw new OpenApiException("Invalid Reference id");
+            }
+
+        }
+
     }
 }

@@ -60,6 +60,11 @@ namespace Microsoft.OpenApi.Readers
             // Parse the OpenAPI Document
             var document = context.Parse(yamlDocument, diagnostic);
 
+            // Resolve References
+            var resolver = new Resolver(document);
+            var walker = new OpenApiWalker(resolver);
+            walker.Walk(document);
+
             // Validate the document
             var errors = document.Validate(_settings.RuleSet);
             foreach (var item in errors)
