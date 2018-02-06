@@ -111,6 +111,26 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="value">The string value.</param>
         public abstract void WriteValue(string value);
+        
+        /// <summary>
+        /// Write float value.
+        /// </summary>
+        /// <param name="value">The float value.</param>
+        public virtual void WriteValue(float value)
+        {
+            WriteValueSeparator();
+            Writer.Write(value);
+        }
+
+        /// <summary>
+        /// Write double value.
+        /// </summary>
+        /// <param name="value">The double value.</param>
+        public virtual void WriteValue(double value)
+        {
+            WriteValueSeparator();
+            Writer.Write(value);
+        }
 
         /// <summary>
         /// Write decimal value.
@@ -127,6 +147,16 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="value">The integer value.</param>
         public virtual void WriteValue(int value)
+        {
+            WriteValueSeparator();
+            Writer.Write(value);
+        }
+
+        /// <summary>
+        /// Write long value.
+        /// </summary>
+        /// <param name="value">The long value.</param>
+        public virtual void WriteValue(long value)
         {
             WriteValueSeparator();
             Writer.Write(value);
