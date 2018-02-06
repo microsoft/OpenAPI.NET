@@ -194,9 +194,21 @@ namespace Microsoft.OpenApi.Writers
             {
                 WriteValue((int)value);
             }
+            else if (type == typeof(long) || type == typeof(long?))
+            {
+                WriteValue((long)value);
+            }
             else if (type == typeof(bool) || type == typeof(bool?))
             {
                 WriteValue((bool)value);
+            }
+            else if (type == typeof(float) || type == typeof(float?))
+            {
+                WriteValue((float)value);
+            }
+            else if (type == typeof(double) || type == typeof(double?))
+            {
+                WriteValue((double)value);
             }
             else if (type == typeof(decimal) || type == typeof(decimal?))
             {
