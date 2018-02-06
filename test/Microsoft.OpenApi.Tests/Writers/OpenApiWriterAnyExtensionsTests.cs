@@ -25,10 +25,10 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Theory]
-        [InlineData(-100)]
-        [InlineData(0)]
+        [InlineData(int.MinValue)]
         [InlineData(42)]
-        public void WriteOpenApiIntergerAsJsonWorks(int input)
+        [InlineData(int.MaxValue)]
+        public void WriteOpenApiIntegerAsJsonWorks(int input)
         {
             // Arrange
             var intValue = new OpenApiInteger(input);
@@ -40,8 +40,8 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Theory]
-        [InlineData(-100)]
-        [InlineData(0)]
+        [InlineData(long.MinValue)]
+        [InlineData(42)]
         [InlineData(long.MaxValue)]
         public void WriteOpenApiLongAsJsonWorks(long input)
         {
@@ -55,9 +55,9 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Theory]
-        [InlineData(-100.1)]
-        [InlineData(0.0)]
-        [InlineData(42.42)]
+        [InlineData(float.MinValue)]
+        [InlineData(42)]
+        [InlineData(float.MaxValue)]
         public void WriteOpenApiFloatAsJsonWorks(float input)
         {
             // Arrange
@@ -70,9 +70,9 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Theory]
-        [InlineData(-100.1)]
-        [InlineData(0.0)]
-        [InlineData(42.42)]
+        [InlineData(double.MinValue)]
+        [InlineData(42)]
+        [InlineData(double.MaxValue)]
         public void WriteOpenApiDoubleAsJsonWorks(double input)
         {
             // Arrange
