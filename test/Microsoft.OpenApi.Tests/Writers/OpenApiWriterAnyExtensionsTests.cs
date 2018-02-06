@@ -40,6 +40,51 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Theory]
+        [InlineData(-100)]
+        [InlineData(0)]
+        [InlineData(long.MaxValue)]
+        public void WriteOpenApiLongAsJsonWorks(long input)
+        {
+            // Arrange
+            var longValue = new OpenApiLong(input);
+
+            var json = WriteAsJson(longValue);
+
+            // Assert
+            json.Should().Be(input.ToString());
+        }
+
+        [Theory]
+        [InlineData(-100.1)]
+        [InlineData(0.0)]
+        [InlineData(42.42)]
+        public void WriteOpenApiFloatAsJsonWorks(float input)
+        {
+            // Arrange
+            var floatValue = new OpenApiFloat(input);
+
+            var json = WriteAsJson(floatValue);
+
+            // Assert
+            json.Should().Be(input.ToString());
+        }
+
+        [Theory]
+        [InlineData(-100.1)]
+        [InlineData(0.0)]
+        [InlineData(42.42)]
+        public void WriteOpenApiDoubleAsJsonWorks(double input)
+        {
+            // Arrange
+            var doubleValue = new OpenApiDouble(input);
+
+            var json = WriteAsJson(doubleValue);
+
+            // Assert
+            json.Should().Be(input.ToString());
+        }
+
+        [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public void WriteOpenApiBooleanAsJsonWorks(bool input)
