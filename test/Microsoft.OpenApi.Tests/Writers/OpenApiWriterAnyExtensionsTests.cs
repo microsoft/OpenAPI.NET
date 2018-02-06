@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         [Theory]
         [InlineData(float.MinValue)]
-        [InlineData(42)]
+        [InlineData(42.42)]
         [InlineData(float.MaxValue)]
         public void WriteOpenApiFloatAsJsonWorks(float input)
         {
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         [Theory]
         [InlineData(double.MinValue)]
-        [InlineData(42)]
+        [InlineData(42.42)]
         [InlineData(double.MaxValue)]
         public void WriteOpenApiDoubleAsJsonWorks(double input)
         {
