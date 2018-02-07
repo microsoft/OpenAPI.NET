@@ -170,6 +170,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 },
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "pet"
                             }
                         },
                         ["newPet"] = new OpenApiSchema
@@ -194,6 +199,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 },
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "newPet"
                             }
                         },
                         ["errorModel"] = new OpenApiSchema
@@ -215,6 +225,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 }
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "errorModel"
                             }
                         },
                     }
@@ -582,6 +597,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 },
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "pet"
                             }
                         },
                         ["newPet"] = new OpenApiSchema
@@ -606,6 +626,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 },
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "newPet"
                             }
                         },
                         ["errorModel"] = new OpenApiSchema
@@ -627,6 +652,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 }
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "errorModel"
                             }
                         },
                     },
@@ -677,14 +707,14 @@ paths: {}",
                 var tag1 = new OpenApiTag
                 {
                     Name = "tagName1",
-                    Description = "tagDescription1"
+                    Description = "tagDescription1",
+                    Reference = new OpenApiReference
+                    {
+                        Id = "tagName1",
+                        Type = ReferenceType.Tag
+                    }
                 };
 
-                tag1.Reference = new OpenApiReference
-                {
-                    Id = "tagName1",
-                    Type = ReferenceType.Tag
-                };
 
                 var tag2 = new OpenApiTag
                 {
@@ -1024,7 +1054,12 @@ paths: {}",
                         new OpenApiTag
                         {
                             Name = "tagName1",
-                            Description = "tagDescription1"
+                            Description = "tagDescription1",
+                            Reference = new OpenApiReference()
+                            {
+                                Id = "tagName1",
+                                Type = ReferenceType.Tag
+                            }
                         }
                     },
                     SecurityRequirements = new List<OpenApiSecurityRequirement>

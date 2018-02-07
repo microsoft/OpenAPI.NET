@@ -60,10 +60,19 @@ namespace Microsoft.OpenApi.Readers
             // Parse the OpenAPI Document
             var document = context.Parse(yamlDocument, diagnostic);
 
-            // Resolve References
-            var resolver = new Resolver(document);
-            var walker = new OpenApiWalker(resolver);
-            walker.Walk(document);
+            // Resolve References if requested
+            switch (_settings.ReferenceResolution) 
+            {
+                case ReferenceResolutionSetting.ResolveRemoteReferences:
+                case ReferenceResolutionSetting.ResolveLocalReferences:
+                    var resolver = new OpenApiReferenceResolver(document);
+                    var walker = new OpenApiWalker(resolver);
+                    walker.Walk(document);
+                    break;
+                case
+                    ReferenceResolutionSetting.DoNotResolveReferences:
+                    break;
+            }
 
             // Validate the document
             var errors = document.Validate(_settings.RuleSet);

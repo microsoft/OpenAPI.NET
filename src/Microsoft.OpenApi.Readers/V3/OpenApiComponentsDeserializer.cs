@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -18,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "schemas", (o, n) =>
                 {
-                    o.Schemas = n.CreateMap(LoadSchema);
+                    o.Schemas = n.CreateMapWithReference(ReferenceType.Schema, "", LoadSchema);
                 }
             },
             {"responses", (o, n) => o.Responses = n.CreateMap(LoadResponse)},
@@ -30,6 +32,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"links", (o, n) => o.Links = n.CreateMap(LoadLink)},
             {"callbacks", (o, n) => o.Callbacks = n.CreateMap(LoadCallback)},
         };
+
 
         private static PatternFieldMap<OpenApiComponents> _componentsPatternFields =
             new PatternFieldMap<OpenApiComponents>

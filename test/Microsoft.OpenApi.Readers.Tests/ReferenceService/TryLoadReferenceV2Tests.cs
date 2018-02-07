@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -228,26 +229,11 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                         {
                             Schema = new OpenApiSchema
                             {
+                                UnresolvedReference = true,
                                 Reference = new OpenApiReference
                                 {
                                     Type = ReferenceType.Schema,
                                     Id = "SampleObject2"
-                                },
-                                Description = "Sample description",
-                                Required =
-                                {
-                                    "name"
-                                },
-                                Properties =
-                                {
-                                    ["name"] = new OpenApiSchema
-                                    {
-                                        Type = "string"
-                                    },
-                                    ["tag"] = new OpenApiSchema
-                                    {
-                                        Type = "string"
-                                    }
                                 }
                             }
                         }

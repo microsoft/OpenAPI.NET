@@ -295,6 +295,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (tag.Name == reference.Id)
                     {
+                        tag.Reference = reference;
                         return tag;
                     }
                 }

@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers
     public class ParsingContext
     {
         private readonly Stack<string> _currentLocation = new Stack<string>();
-        private readonly Dictionary<string, IOpenApiReferenceable> _referenceStore = new Dictionary<string, IOpenApiReferenceable>();
+
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private IOpenApiVersionService _versionService;
         private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();        
@@ -30,6 +30,7 @@ namespace Microsoft.OpenApi.Readers
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
  
+
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
@@ -127,48 +128,6 @@ namespace Microsoft.OpenApi.Readers
         public string GetLocation()
         {
             return "#/" + string.Join("/", _currentLocation.Reverse().ToArray());
-        }
-
-        /// <summary>
-        /// Gets the referenced object.
-        /// </summary>
-        public IOpenApiReferenceable GetReferencedObject(
-            OpenApiDiagnostic diagnostic,
-            ReferenceType referenceType,
-            string referenceString)
-        {
-            _referenceStore.TryGetValue(referenceString, out var referencedObject);
-
-            // If reference has already been accessed once, simply return the same reference object.
-            if (referencedObject != null)
-            {
-                return referencedObject;
-            }
-
-            var reference = VersionService.ConvertToOpenApiReference(referenceString, referenceType);
-
-            var isReferencedObjectFound = VersionService.TryLoadReference(this, reference, out referencedObject);
-
-            if (isReferencedObjectFound)
-            {
-                // Populate the Reference section of the object, so that the writers
-                // can recognize that this is referencing another object.
-                referencedObject.Reference = reference;
-                _referenceStore.Add(referenceString, referencedObject);
-            }
-            else if (referencedObject != null)
-            {
-                return referencedObject;
-            }
-            else
-            {
-                diagnostic.Errors.Add(
-                    new OpenApiError(
-                        GetLocation(),
-                        $"Cannot resolve the reference {referenceString}"));
-            }
-
-            return referencedObject;
         }
 
         /// <summary>

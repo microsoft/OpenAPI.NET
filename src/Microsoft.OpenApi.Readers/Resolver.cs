@@ -4,48 +4,195 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers
 {
-
-    internal class Resolver : OpenApiVisitorBase
+    /// <summary>
+    /// This class is used to walk an OpenApiDocument and convert unresolved references to references to populated objects
+    /// </summary>
+    internal class OpenApiReferenceResolver : OpenApiVisitorBase
     {
         private OpenApiDocument _currentDocument;
+        private bool _resolveRemoteReferences;
 
-        public Resolver(OpenApiDocument currentDocument)  // In future pass in Workbench for remote references
+        public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true)  // In future pass in Workbench for remote references
         {
             _currentDocument = currentDocument;
+            _resolveRemoteReferences = resolveRemoteReferences;
         }
 
-        public override void Visit(OpenApiMediaType mediaType)
+        public override void Visit(OpenApiDocument doc)
         {
-            if (IsReference(mediaType.Schema))
+            if (doc.Tags != null)
             {
-                mediaType.Schema = ResolveReference<OpenApiSchema>(mediaType.Schema.Reference);
+                ResolveTags(doc.Tags);
             }
         }
 
-        private T ResolveReference<T>(OpenApiReference reference) where T : class
+        public override void Visit(OpenApiComponents components)
+        {
+            ResolveMap(components.Schemas);
+        }
+        // TODO: Resolve Paths
+        // TODO: Resolve Callbacks
+
+
+        /// <summary>
+        /// Resolve all references used in an operation
+        /// </summary>
+        public override void Visit(OpenApiOperation operation)
+        {
+            ResolveObject(operation.RequestBody, r => operation.RequestBody = r);
+
+            if (operation.Tags != null)
+            {
+                ResolveTags(operation.Tags);
+            }
+        }
+
+        /// <summary>
+        /// Resolve all references using in mediaType object
+        /// </summary>
+        /// <param name="mediaType"></param>
+        public override void Visit(OpenApiMediaType mediaType)
+        {
+            ResolveObject(mediaType.Schema, r => mediaType.Schema = r);
+        }
+
+        /// <summary>
+        /// Resolve all references to examples
+        /// </summary>
+        /// <param name="examples"></param>
+        public override void Visit(IDictionary<string, OpenApiExample> examples)
+        {
+            ResolveMap(examples);
+        }
+
+        /// <summary>
+        /// Resolve all references to responses
+        /// </summary>
+        public override void Visit(IDictionary<string, OpenApiResponse> responses)
+        {
+            ResolveMap(responses);
+        }
+
+        /// <summary>
+        /// Resolve all references to links
+        /// </summary>
+        public override void Visit(IDictionary<string, OpenApiLink> links)
+        {
+            ResolveMap(links);
+        }
+
+        /// <summary>
+        /// Resolve all references used in a schema
+        /// </summary>
+        public override void Visit(OpenApiSchema schema)
+        {
+            ResolveObject(schema.Items, r => schema.Items = r);
+            ResolveList(schema.OneOf);
+            ResolveList(schema.AllOf);
+            ResolveList(schema.AnyOf);
+            ResolveMap(schema.Properties);
+            ResolveObject(schema.AdditionalProperties, r => schema.AdditionalProperties = r);
+        }
+
+
+        /// <summary>
+        /// Replace references to tags with either tag objects declared in components, or inline tag object
+        /// </summary>
+        private void ResolveTags(IList<OpenApiTag> tags)
+        {
+            for (int i = 0; i < tags.Count; i++)
+            {
+                var tag = tags[i];
+                if (IsUnresolvedReference(tag))
+                {
+                    var resolvedTag = ResolveReference<OpenApiTag>(tag.Reference);
+
+                    if (resolvedTag == null)
+                    {
+                        resolvedTag = new OpenApiTag()
+                        {
+                            Name = tag.Reference.Id
+                        };
+                    }
+                    tags[i] = resolvedTag;
+                }
+            }
+        }
+
+        private void ResolveObject<T>(T entity, Action<T> assign) where T : class, IOpenApiReferenceable, new()
+        {
+            if (entity == null) return;
+
+            if (IsUnresolvedReference(entity))
+            {
+                assign(ResolveReference<T>(entity.Reference));
+            }
+        }
+
+        private void ResolveList<T>(IList<T> list) where T : class, IOpenApiReferenceable, new()
+        {
+            if (list == null) return;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                var entity = list[i];
+                if (IsUnresolvedReference(entity))
+                {
+                    list[i] = ResolveReference<T>(entity.Reference);
+                }
+            }
+        }
+
+        private void ResolveMap<T>(IDictionary<string, T> map) where T : class, IOpenApiReferenceable, new()
+        {
+            if (map == null) return;
+
+            foreach (var key in map.Keys.ToList())
+            {
+                var entity = map[key];
+                if (IsUnresolvedReference(entity))
+                {
+                    map[key] = ResolveReference<T>(entity.Reference);
+                }
+            }
+        }
+
+
+        private T ResolveReference<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable, new()
         {
             if (string.IsNullOrEmpty(reference.ExternalResource))
             {
                 return _currentDocument.ResolveReference(reference) as T;
             }
-            else
+            else if (_resolveRemoteReferences == true)
             {
                 // TODO
-                return default(T);
+                return new T()
+                {
+                    UnresolvedReference = true,
+                    Reference = reference
+                };
+            }
+            else
+            {
+                // Leave as unresolved reference
+                return new T()
+                {
+                    UnresolvedReference = true,
+                    Reference = reference
+                };
             }
         }
 
-        private bool IsReference(IOpenApiReferenceable possibleReference)
+        private bool IsUnresolvedReference(IOpenApiReferenceable possibleReference)
         {
-            return (possibleReference != null && possibleReference.Reference != null);
+            return (possibleReference != null && possibleReference.UnresolvedReference);
         }
     }
 }

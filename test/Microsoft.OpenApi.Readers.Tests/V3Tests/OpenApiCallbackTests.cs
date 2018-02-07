@@ -94,44 +94,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 callback.ShouldBeEquivalentTo(
                     new OpenApiCallback
                     {
+                        UnresolvedReference =true,
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.Callback,
                             Id = "simpleHook",
-                        },
-                        PathItems =
-                        {
-                            [RuntimeExpression.Build("$request.body#/url")]
-                            = new OpenApiPathItem
-                            {
-                                Operations =
-                                {
-                                    [OperationType.Post] =
-                                    new OpenApiOperation
-                                    {
-                                        RequestBody = new OpenApiRequestBody
-                                        {
-                                            Content =
-                                            {
-                                                ["application/json"] = new OpenApiMediaType
-                                                {
-                                                    Schema = new OpenApiSchema
-                                                    {
-                                                        Type = "object"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        Responses = new OpenApiResponses
-                                        {
-                                            ["200"] = new OpenApiResponse
-                                            {
-                                                Description = "Success"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                         }
                     });
             }

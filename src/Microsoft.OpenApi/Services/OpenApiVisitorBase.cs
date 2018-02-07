@@ -152,6 +152,14 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits headers.
+        /// </summary>
+        public virtual void Visit(IDictionary<string, OpenApiHeader> headers)
+        {
+        }
+
+
+        /// <summary>
         /// Visits <see cref="OpenApiResponse"/>
         /// </summary>
         public virtual void Visit(OpenApiResponse response)
