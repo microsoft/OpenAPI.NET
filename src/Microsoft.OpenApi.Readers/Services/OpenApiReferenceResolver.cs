@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.Services
 {
     /// <summary>
     /// This class is used to walk an OpenApiDocument and convert unresolved references to references to populated objects
@@ -36,9 +36,9 @@ namespace Microsoft.OpenApi.Readers
         {
             ResolveMap(components.Schemas);
         }
-        // TODO: Resolve Paths
-        // TODO: Resolve Callbacks
 
+        // TODO: Resolve Paths (Only external)
+        // TODO: Resolve Callbacks (need to add to visitor)
 
         /// <summary>
         /// Resolve all references used in an operation
@@ -99,7 +99,6 @@ namespace Microsoft.OpenApi.Readers
             ResolveMap(schema.Properties);
             ResolveObject(schema.AdditionalProperties, r => schema.AdditionalProperties = r);
         }
-
 
         /// <summary>
         /// Replace references to tags with either tag objects declared in components, or inline tag object

@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -16,6 +16,11 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
+        /// <summary>
+        /// Related workspace containing OpenApiDocuments that are referenced in this document
+        /// </summary>
+        public OpenApiWorkspace Workspace { get; set; }
+
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
         /// </summary>
