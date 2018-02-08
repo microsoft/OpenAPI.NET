@@ -80,7 +80,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
          public override Dictionary<string, T> CreateMapWithReference<T>(
              ReferenceType referenceType,
-             string refpointerbase,
              Func<MapNode, T> map)
          {
              var yamlMap = _node;

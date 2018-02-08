@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Readers.Services
 {
     /// <summary>
     /// This class is used to walk an OpenApiDocument and convert unresolved references to references to populated objects
@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers
         private OpenApiDocument _currentDocument;
         private bool _resolveRemoteReferences;
 
-        public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true)  // In future pass in Workbench for remote references
+        public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true) 
         {
             _currentDocument = currentDocument;
             _resolveRemoteReferences = resolveRemoteReferences;
@@ -34,11 +34,21 @@ namespace Microsoft.OpenApi.Readers
 
         public override void Visit(OpenApiComponents components)
         {
+            ResolveMap(components.Parameters);
+            ResolveMap(components.RequestBodies);
+            ResolveMap(components.Responses);
+            ResolveMap(components.Links);
+            ResolveMap(components.Callbacks);
+            ResolveMap(components.Examples);
             ResolveMap(components.Schemas);
+            ResolveMap(components.SecuritySchemes);
         }
-        // TODO: Resolve Paths
-        // TODO: Resolve Callbacks
 
+
+        public override void Visit(IDictionary<string, OpenApiCallback> callbacks)
+        {
+            ResolveMap(callbacks);
+        }
 
         /// <summary>
         /// Resolve all references used in an operation

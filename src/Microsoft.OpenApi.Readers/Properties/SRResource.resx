@@ -120,6 +120,9 @@
   <data name="ArgumentNullOrWhiteSpace" xml:space="preserve">
     <value>The argument '{0}' is null, empty or consists only of white-space.</value>
   </data>
+  <data name="CannotResolveRemoteReferencesSynchronously" xml:space="preserve">
+    <value>"Cannot resolve remote references automatically in a syncronous call."</value>
+  </data>
   <data name="LoadReferencedObjectFromExternalNotImplmented" xml:space="preserve">
     <value>Not implemented to find referenced element from external resource.</value>
   </data>

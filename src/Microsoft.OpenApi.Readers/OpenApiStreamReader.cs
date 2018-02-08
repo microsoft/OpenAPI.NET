@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Readers.Services;
 using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
 using SharpYaml;
 using SharpYaml.Serialization;
 
@@ -64,6 +65,7 @@ namespace Microsoft.OpenApi.Readers
             switch (_settings.ReferenceResolution) 
             {
                 case ReferenceResolutionSetting.ResolveRemoteReferences:
+                    throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
                 case ReferenceResolutionSetting.ResolveLocalReferences:
                     var resolver = new OpenApiReferenceResolver(document);
                     var walker = new OpenApiWalker(resolver);
