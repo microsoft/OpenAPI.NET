@@ -144,12 +144,6 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
-        /// <summary>
-        /// Visits responses.
-        /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiResponse> responses)
-        {
-        }
 
         /// <summary>
         /// Visits headers.

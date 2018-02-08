@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Services
         /// <summary>
         /// Resolve all references to responses
         /// </summary>
-        public override void Visit(IDictionary<string, OpenApiResponse> responses)
+        public override void Visit(OpenApiResponses responses)
         {
             ResolveMap(responses);
         }
