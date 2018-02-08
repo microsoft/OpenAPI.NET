@@ -387,14 +387,14 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and pass on parent required properties and 
-        /// property name that should not be marked as read only if part of parent required property.
+        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property 
+        /// as readonly if its included in the provided list of required properties of parent schema.
         /// </summary>
         /// <param name="writer">The open api writer.</param>
         /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
-        /// <param name="currentPropertyName">The property name that will be serialized.</param>
+        /// <param name="propertyName">The property name that will be serialized.</param>
         internal void SerializeAsV2(IOpenApiWriter writer, IList<string> parentRequiredProperties,
-            string currentPropertyName)
+            string propertyName)
         {
             if (writer == null)
             {
@@ -412,20 +412,21 @@ namespace Microsoft.OpenApi.Models
                 parentRequiredProperties = new List<string>();
             }
 
-            SerializeAsV2WithoutReference(writer, parentRequiredProperties, currentPropertyName);
+            SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
         }
 
         /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
+        /// Serialize to OpenAPI V2 document without using reference and handles not marking the provided property 
+        /// as readonly if its included in the provided list of required properties of parent schema.
         /// </summary>
         /// <param name="writer">The open api writer.</param>
         /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
-        /// <param name="currentPropertyName">The property name that will be serialized.</param>
+        /// <param name="propertyName">The property name that will be serialized.</param>
         internal void SerializeAsV2WithoutReference(IOpenApiWriter writer, IList<string> parentRequiredProperties,
-            string currentPropertyName)
+            string propertyName)
         {
             writer.WriteStartObject();
-            WriteAsSchemaProperties(writer, parentRequiredProperties, currentPropertyName);
+            WriteAsSchemaProperties(writer, parentRequiredProperties, propertyName);
             writer.WriteEndObject();
         }
 
