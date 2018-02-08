@@ -44,7 +44,6 @@ namespace Microsoft.OpenApi.Readers.Services
             ResolveMap(components.SecuritySchemes);
         }
 
-
         public override void Visit(IDictionary<string, OpenApiCallback> callbacks)
         {
             ResolveMap(callbacks);
@@ -172,7 +171,6 @@ namespace Microsoft.OpenApi.Readers.Services
                 }
             }
         }
-
 
         private T ResolveReference<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable, new()
         {

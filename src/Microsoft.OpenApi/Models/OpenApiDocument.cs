@@ -271,7 +271,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
-
             if (reference == null)
             {
                 return null;
@@ -335,15 +334,12 @@ namespace Microsoft.OpenApi.Models
                         return this.Components.Callbacks[reference.Id];
 
                     default:
-                        // TODO: Create resource
-                        throw new OpenApiException("Invalid Reference type");
+                        throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
                 }
             } catch(KeyNotFoundException)
             {
-                throw new OpenApiException("Invalid Reference id");
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId,reference.Id));
             }
-
         }
-
     }
 }
