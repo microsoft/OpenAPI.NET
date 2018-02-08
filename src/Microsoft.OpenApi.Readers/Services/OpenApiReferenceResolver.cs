@@ -55,7 +55,8 @@ namespace Microsoft.OpenApi.Readers.Services
         public override void Visit(OpenApiOperation operation)
         {
             ResolveObject(operation.RequestBody, r => operation.RequestBody = r);
-
+            ResolveList(operation.Parameters);
+   
             if (operation.Tags != null)
             {
                 ResolveTags(operation.Tags);
