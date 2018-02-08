@@ -38,7 +38,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 .ToList();
         }
 
-
         public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
             var yamlSequence = _nodeList;
