@@ -124,6 +124,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Local reference must have type specified..
+        /// </summary>
+        internal static string LocalReferenceRequiresType {
+            get {
+                return ResourceManager.GetString("LocalReferenceRequiresType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The active scope must be an object scope for property name &apos;{0}&apos; to be written..
         /// </summary>
         internal static string ObjectScopeNeededForPropertyNameWriting {
@@ -219,6 +228,15 @@ namespace Microsoft.OpenApi.Properties {
         internal static string ReferenceHasInvalidFormat {
             get {
                 return ResourceManager.GetString("ReferenceHasInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remote reference not supported..
+        /// </summary>
+        internal static string RemoteReferenceNotSupported {
+            get {
+                return ResourceManager.GetString("RemoteReferenceNotSupported", resourceCulture);
             }
         }
         

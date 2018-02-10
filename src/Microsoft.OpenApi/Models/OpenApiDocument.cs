@@ -279,12 +279,12 @@ namespace Microsoft.OpenApi.Models
             if (reference.IsExternal)
             {
                 // Should not attempt to resolve external references against a single document.
-                throw new ArgumentException(); //TODO Add error message
+                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported); 
             }
 
             if (!reference.Type.HasValue)
             {
-                throw new ArgumentException("Local reference must have type specified.");
+                throw new ArgumentException(Properties.SRResource.LocalReferenceRequiresType);
             }
 
             // Special case for Tag

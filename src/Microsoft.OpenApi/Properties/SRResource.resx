@@ -138,6 +138,9 @@
   <data name="InvalidReferenceType" xml:space="preserve">
     <value>Invalid Reference Type.</value>
   </data>
+  <data name="LocalReferenceRequiresType" xml:space="preserve">
+    <value>Local reference must have type specified.</value>
+  </data>
   <data name="ObjectScopeNeededForPropertyNameWriting" xml:space="preserve">
     <value>The active scope must be an object scope for property name '{0}' to be written.</value>
   </data>
@@ -170,6 +173,9 @@
   </data>
   <data name="ReferenceHasInvalidFormat" xml:space="preserve">
     <value>The reference string '{0}' has invalid format.</value>
+  </data>
+  <data name="RemoteReferenceNotSupported" xml:space="preserve">
+    <value>Remote reference not supported.</value>
   </data>
   <data name="RuntimeExpressionHasInvalidFormat" xml:space="preserve">
     <value>The runtime expression '{0}' has invalid format.</value>

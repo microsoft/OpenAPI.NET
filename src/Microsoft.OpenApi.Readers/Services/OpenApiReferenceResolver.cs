@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Readers.Services
             }
             else if (_resolveRemoteReferences == true)
             {
-                // TODO
+                // TODO: Resolve Remote reference
                 return new T()
                 {
                     UnresolvedReference = true,
