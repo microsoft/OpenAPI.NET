@@ -375,6 +375,32 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
+            SerializeAsV2(writer: writer, parentRequiredProperties: new List<string>(), propertyName: null);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        {
+            SerializeAsV2WithoutReference(
+                writer: writer,
+                parentRequiredProperties: new List<string>(),
+                propertyName: null);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property 
+        /// as readonly if its included in the provided list of required properties of parent schema.
+        /// </summary>
+        /// <param name="writer">The open api writer.</param>
+        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
+        /// <param name="propertyName">The property name that will be serialized.</param>
+        internal void SerializeAsV2(
+            IOpenApiWriter writer,
+            IList<string> parentRequiredProperties,
+            string propertyName)
+        {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
@@ -386,16 +412,28 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            SerializeAsV2WithoutReference(writer);
+            if (parentRequiredProperties == null)
+            {
+                parentRequiredProperties = new List<string>();
+            }
+
+            SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
         }
 
         /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
+        /// Serialize to OpenAPI V2 document without using reference and handles not marking the provided property 
+        /// as readonly if its included in the provided list of required properties of parent schema.
         /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
+        /// <param name="writer">The open api writer.</param>
+        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
+        /// <param name="propertyName">The property name that will be serialized.</param>
+        internal void SerializeAsV2WithoutReference(
+            IOpenApiWriter writer,
+            IList<string> parentRequiredProperties,
+            string propertyName)
         {
             writer.WriteStartObject();
-            WriteAsSchemaProperties(writer);
+            WriteAsSchemaProperties(writer, parentRequiredProperties, propertyName);
             writer.WriteEndObject();
         }
 
@@ -463,7 +501,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions);
         }
 
-        internal void WriteAsSchemaProperties(IOpenApiWriter writer)
+        internal void WriteAsSchemaProperties(
+            IOpenApiWriter writer,
+            IList<string> parentRequiredProperties,
+            string propertyName)
         {
             if (writer == null)
             {
@@ -537,7 +578,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, key, s) =>
+                s.SerializeAsV2(w, Required, key));
 
             // additionalProperties
             writer.WriteOptionalObject(
@@ -549,7 +591,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
 
             // readOnly
-            writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
+            // In V2 schema if a property is part of required properties of parent schema,
+            // it cannot be marked as readonly.
+            if (!parentRequiredProperties.Contains(propertyName))
+            {
+                writer.WriteProperty(name: OpenApiConstants.ReadOnly, value: ReadOnly, defaultValue: false);
+            }
 
             // xml
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
