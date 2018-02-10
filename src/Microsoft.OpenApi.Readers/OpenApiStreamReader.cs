@@ -10,7 +10,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.Services;
 using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
 using SharpYaml;
 using SharpYaml.Serialization;
 

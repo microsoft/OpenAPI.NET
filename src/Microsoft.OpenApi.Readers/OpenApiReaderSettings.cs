@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Indicates how references in the source document should be handled.
         /// </summary>
-        public ReferenceResolutionSetting ReferenceResolution { get; set; } = ReferenceResolutionSetting.ResolveRemoteReferences;
+        public ReferenceResolutionSetting ReferenceResolution { get; set; } = ReferenceResolutionSetting.ResolveLocalReferences;
 
         /// <summary>
         /// Dictionary of parsers for converting extensions into strongly typed classes

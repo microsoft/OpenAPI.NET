@@ -276,7 +276,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
-
             if (reference == null)
             {
                 return null;
@@ -285,12 +284,12 @@ namespace Microsoft.OpenApi.Models
             if (reference.IsExternal)
             {
                 // Should not attempt to resolve external references against a single document.
-                throw new ArgumentException(); //TODO Add error message
+                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported); 
             }
 
             if (!reference.Type.HasValue)
             {
-                throw new ArgumentException("Local reference must have type specified.");
+                throw new ArgumentException(Properties.SRResource.LocalReferenceRequiresType);
             }
 
             // Special case for Tag
@@ -340,15 +339,12 @@ namespace Microsoft.OpenApi.Models
                         return this.Components.Callbacks[reference.Id];
 
                     default:
-                        // TODO: Create resource
-                        throw new OpenApiException("Invalid Reference type");
+                        throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
                 }
             } catch(KeyNotFoundException)
             {
-                throw new OpenApiException("Invalid Reference id");
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId,reference.Id));
             }
-
         }
-
     }
 }

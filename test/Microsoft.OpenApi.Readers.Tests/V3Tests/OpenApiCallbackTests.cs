@@ -94,7 +94,35 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 callback.ShouldBeEquivalentTo(
                     new OpenApiCallback
                     {
-                        UnresolvedReference =true,
+                        PathItems = 
+                        {
+                            [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
+                                Operations = {
+                                    [OperationType.Post] = new OpenApiOperation()
+                                    {
+                                        RequestBody = new OpenApiRequestBody
+                                        {
+                                            Content =
+                                            {
+                                                ["application/json"] = new OpenApiMediaType
+                                                {
+                                                    Schema = new OpenApiSchema()
+                                                    {
+                                                        Type = "object"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        Responses = {
+                                            ["200"]= new OpenApiResponse
+                                            {
+                                                Description = "Success"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.Callback,

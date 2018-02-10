@@ -468,6 +468,8 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Parameters, () => Walk(operation.Parameters));
             Walk(OpenApiConstants.RequestBody, () => Walk(operation.RequestBody));
             Walk(OpenApiConstants.Responses, () => Walk(operation.Responses));
+            Walk(OpenApiConstants.Callbacks, () => Walk(operation.Callbacks));
+
             Walk(operation as IOpenApiExtensible);
         }
 
@@ -591,6 +593,25 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+        /// <summary>
+        /// Visits dictionary of <see cref="OpenApiCallback"/>
+        /// </summary>
+        internal void Walk(IDictionary<string, OpenApiCallback> callbacks)
+        {
+            if (callbacks == null)
+            {
+                return;
+            }
+
+            _visitor.Visit(callbacks);
+            if (callbacks != null)
+            {
+                foreach (var header in callbacks)
+                {
+                    Walk(header.Key.Replace("/", "~1"), () => Walk(header.Value));
+                }
+            }
+        }
 
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiMediaType"/>

@@ -666,12 +666,23 @@ paths: {}",
                         {
                             Type = SecuritySchemeType.ApiKey,
                             Name = "apiKeyName1",
-                            In = ParameterLocation.Header
+                            In = ParameterLocation.Header,
+                            Reference = new OpenApiReference
+                            {
+                                Id = "securitySchemeName1",
+                                Type = ReferenceType.SecurityScheme
+                            }
+
                         },
                         ["securitySchemeName2"] = new OpenApiSecurityScheme
                         {
                             Type = SecuritySchemeType.OpenIdConnect,
-                            OpenIdConnectUrl = new Uri("http://example.com")
+                            OpenIdConnectUrl = new Uri("http://example.com"),
+                            Reference = new OpenApiReference
+                            {
+                                Id = "securitySchemeName2",
+                                Type = ReferenceType.SecurityScheme
+                            }
                         }
                     }
                 };

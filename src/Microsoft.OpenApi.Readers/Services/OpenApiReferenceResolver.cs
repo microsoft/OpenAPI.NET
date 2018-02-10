@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Services
         private OpenApiDocument _currentDocument;
         private bool _resolveRemoteReferences;
 
-        public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true)  // In future pass in Workbench for remote references
+        public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true) 
         {
             _currentDocument = currentDocument;
             _resolveRemoteReferences = resolveRemoteReferences;
@@ -34,11 +34,20 @@ namespace Microsoft.OpenApi.Readers.Services
 
         public override void Visit(OpenApiComponents components)
         {
+            ResolveMap(components.Parameters);
+            ResolveMap(components.RequestBodies);
+            ResolveMap(components.Responses);
+            ResolveMap(components.Links);
+            ResolveMap(components.Callbacks);
+            ResolveMap(components.Examples);
             ResolveMap(components.Schemas);
+            ResolveMap(components.SecuritySchemes);
         }
 
-        // TODO: Resolve Paths (Only external)
-        // TODO: Resolve Callbacks (need to add to visitor)
+        public override void Visit(IDictionary<string, OpenApiCallback> callbacks)
+        {
+            ResolveMap(callbacks);
+        }
 
         /// <summary>
         /// Resolve all references used in an operation
@@ -46,7 +55,8 @@ namespace Microsoft.OpenApi.Readers.Services
         public override void Visit(OpenApiOperation operation)
         {
             ResolveObject(operation.RequestBody, r => operation.RequestBody = r);
-
+            ResolveList(operation.Parameters);
+   
             if (operation.Tags != null)
             {
                 ResolveTags(operation.Tags);
@@ -74,7 +84,7 @@ namespace Microsoft.OpenApi.Readers.Services
         /// <summary>
         /// Resolve all references to responses
         /// </summary>
-        public override void Visit(IDictionary<string, OpenApiResponse> responses)
+        public override void Visit(OpenApiResponses responses)
         {
             ResolveMap(responses);
         }
@@ -162,7 +172,6 @@ namespace Microsoft.OpenApi.Readers.Services
             }
         }
 
-
         private T ResolveReference<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable, new()
         {
             if (string.IsNullOrEmpty(reference.ExternalResource))
@@ -171,7 +180,7 @@ namespace Microsoft.OpenApi.Readers.Services
             }
             else if (_resolveRemoteReferences == true)
             {
-                // TODO
+                // TODO: Resolve Remote reference
                 return new T()
                 {
                     UnresolvedReference = true,
