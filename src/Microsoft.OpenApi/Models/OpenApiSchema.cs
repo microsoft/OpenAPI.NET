@@ -375,7 +375,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            SerializeAsV2(writer, new List<string>(), null);
+            SerializeAsV2(writer: writer, parentRequiredProperties: new List<string>(), propertyName: null);
         }
 
         /// <summary>
@@ -383,7 +383,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
-            SerializeAsV2WithoutReference(writer, new List<string>(), null);
+            SerializeAsV2WithoutReference(
+                writer: writer,
+                parentRequiredProperties: new List<string>(),
+                propertyName: null);
         }
 
         /// <summary>
@@ -393,7 +396,9 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer">The open api writer.</param>
         /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
         /// <param name="propertyName">The property name that will be serialized.</param>
-        internal void SerializeAsV2(IOpenApiWriter writer, IList<string> parentRequiredProperties,
+        internal void SerializeAsV2(
+            IOpenApiWriter writer,
+            IList<string> parentRequiredProperties,
             string propertyName)
         {
             if (writer == null)
@@ -422,7 +427,9 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer">The open api writer.</param>
         /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
         /// <param name="propertyName">The property name that will be serialized.</param>
-        internal void SerializeAsV2WithoutReference(IOpenApiWriter writer, IList<string> parentRequiredProperties,
+        internal void SerializeAsV2WithoutReference(
+            IOpenApiWriter writer,
+            IList<string> parentRequiredProperties,
             string propertyName)
         {
             writer.WriteStartObject();
@@ -494,7 +501,9 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions);
         }
 
-        internal void WriteAsSchemaProperties(IOpenApiWriter writer, IList<string> parentRequiredProperties,
+        internal void WriteAsSchemaProperties(
+            IOpenApiWriter writer,
+            IList<string> parentRequiredProperties,
             string propertyName)
         {
             if (writer == null)
@@ -582,14 +591,11 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
 
             // readOnly
-            // In V2 schema if a property is part of required properties of schema, it cannot be marked as readonly.
-            if (parentRequiredProperties.Contains(propertyName))
+            // In V2 schema if a property is part of required properties of parent schema,
+            // it cannot be marked as readonly.
+            if (!parentRequiredProperties.Contains(propertyName))
             {
-                writer.WriteProperty(OpenApiConstants.ReadOnly, false, false);
-            }
-            else
-            {
-                writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
+                writer.WriteProperty(name: OpenApiConstants.ReadOnly, value: ReadOnly, defaultValue: false);
             }
 
             // xml

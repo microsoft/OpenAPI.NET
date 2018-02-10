@@ -424,7 +424,6 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var outputStringWriter = new StringWriter();
             var writer = new OpenApiJsonWriter(outputStringWriter);
-            // Arrange
             var expected = @"{
   ""title"": ""title1"",
   ""required"": [
