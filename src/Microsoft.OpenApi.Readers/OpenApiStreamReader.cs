@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Readers
             return yamlDocument;
         }
 
-        private static Task ResolveAllReferences(OpenApiDocument document)
+        private static async Task ResolveAllReferences(OpenApiDocument document)
         {
             // Collect remote references by walking document
             var referenceCollector = new OpenApiRemoteReferenceCollector();
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Readers
 
             // Load References into a workspace
             var openApiWorkspace = new OpenApiWorkspace();
-            openApiWorkspace.LoadAsync(referenceCollector.References).Wait();
+            await openApiWorkspace.LoadAsync(referenceCollector.References);
 
             // Attach Workspace to primary document
             document.Workspace = openApiWorkspace;
