@@ -6,23 +6,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Contains a set of OpenApi documents that reference each other
+    /// Contains a set of OpenApi documents and document fragments that reference each other
     /// </summary>
     public class OpenApiWorkspace
     {
-        /// <summary>
-        /// Load OpenApiDocuments and IOpenApiElements referenced
-        /// </summary>
-        /// <param name="remoteReferences">List of remote references to load</param>
-        public async Task LoadAsync(List<OpenApiReference> remoteReferences)
+
+        public IEnumerable<OpenApiDocument> Documents { get; }  
+
+        public IEnumerable<IOpenApiFragment> Fragments { get; }
+
+
+        public bool Contains(string location)
         {
-            //TODO: Load remote documents
-            return;
+            return true;
         }
+        public void AddDocument(string location, OpenApiDocument  document)
+        {
+
+        }
+
+        public void AddFragment(string location, IOpenApiFragment fragment)
+        {
+
+        }
+
+        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        {
+            // Find the doc/fragment
+            // Call ResolveReference on it
+            return null;
+        }
+
+    }
+
+    public interface IOpenApiFragment
+    {
+        IOpenApiReferenceable ResolveReference(OpenApiReference reference);
     }
 }

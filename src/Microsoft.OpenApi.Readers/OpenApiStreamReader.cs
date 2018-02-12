@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers
                 case ReferenceResolutionSetting.ResolveRemoteReferences:
                     throw new ArgumentException("Cannot resolve remote references using synchronous Read method, use ReadAsync instead");
                 case ReferenceResolutionSetting.ResolveLocalReferences:
-                    ResolveLocalReferences(document);
+                    ResolveReferences(document,false);
                     break;
                 case
                     ReferenceResolutionSetting.DoNotResolveReferences:
@@ -73,29 +73,44 @@ namespace Microsoft.OpenApi.Readers
         /// <remarks>Will be made public once finalized.</remarks>
         internal async Task<OpenApiDocument> ReadAsync(Stream input, OpenApiDiagnostic diagnostic, OpenApiWorkspace openApiWorkspace = null) 
         {
-
             // Parse the OpenAPI Document
             OpenApiDocument document = ParseStream(input, diagnostic);
+
+            // Load Document into workspace and load all referenced documents
+            var workspace = openApiWorkspace ?? new OpenApiWorkspace();
+            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkspace, new DefaultStreamLoader(), _settings);
+            await workspaceLoader.LoadAsync(null,document);
 
             // Resolve References if requested
             switch (_settings.ReferenceResolution)
             {
                 case ReferenceResolutionSetting.ResolveRemoteReferences:
-                    await ResolveAllReferences(document);
+                    // Resolve references in documents
+                    foreach (var item in workspace.Documents)
+                    {
+                        ResolveReferences(item, true);
+                    }
                     break;
                 case ReferenceResolutionSetting.ResolveLocalReferences:
-                    ResolveLocalReferences(document);
+                    // Resolve references in documents
+                    foreach (var item in workspace.Documents)
+                    {
+                        ResolveReferences(item,false);
+                    }
                     break;
                 case
                     ReferenceResolutionSetting.DoNotResolveReferences:
                     break;
             }
 
-            ValidateDocument(diagnostic, document);
+            // Validate loaded documents
+            foreach (var item in workspace.Documents)
+            {
+                ValidateDocument(diagnostic, item);
+            }
 
             return document;
         }
-
 
         private OpenApiDocument ParseStream(Stream input, OpenApiDiagnostic diagnostic)
         {
@@ -150,28 +165,9 @@ namespace Microsoft.OpenApi.Readers
             return yamlDocument;
         }
 
-        private static async Task ResolveAllReferences(OpenApiDocument document)
+        private static void ResolveReferences(OpenApiDocument document, bool includeRemote)
         {
-            // Collect remote references by walking document
-            var referenceCollector = new OpenApiRemoteReferenceCollector();
-            var collectorWalker = new OpenApiWalker(referenceCollector);
-
-            // Load References into a workspace
-            var openApiWorkspace = new OpenApiWorkspace();
-            await openApiWorkspace.LoadAsync(referenceCollector.References);
-
-            // Attach Workspace to primary document
-            document.Workspace = openApiWorkspace;
-
-            // Load all remote references into OpenApiWorkspace
-            var resolver = new OpenApiReferenceResolver(document, true);
-            var walker = new OpenApiWalker(resolver);
-            walker.Walk(document);
-        }
-
-        private static void ResolveLocalReferences(OpenApiDocument document)
-        {
-            var resolver = new OpenApiReferenceResolver(document, false);
+            var resolver = new OpenApiReferenceResolver(document, includeRemote);
             var walker = new OpenApiWalker(resolver);
             walker.Walk(document);
         }
