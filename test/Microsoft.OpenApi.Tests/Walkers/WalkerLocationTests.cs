@@ -22,10 +22,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             walker.Walk(doc);
 
             locator.Locations.ShouldBeEquivalentTo(new List<string> {
-                "#/info",
                 "#/servers",
-                "#/components",
-                "#/externalDocs",
                 "#/paths",
                 "#/tags"
             });
@@ -34,14 +31,16 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateTopLevelArrayItems()
         {
-            var doc = new OpenApiDocument();
-            doc.Servers = new List<OpenApiServer>() {
-                new OpenApiServer(),
-                new OpenApiServer()
-            };
-            doc.Tags = new List<OpenApiTag>()
+            var doc = new OpenApiDocument()
             {
-                new OpenApiTag()
+                Servers = new List<OpenApiServer>() {
+                    new OpenApiServer(),
+                    new OpenApiServer()
+                },
+                Tags = new List<OpenApiTag>()
+                {
+                    new OpenApiTag()
+                }
             };
 
             var locator = new LocatorVisitor();
@@ -49,13 +48,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
             walker.Walk(doc);
 
             locator.Locations.ShouldBeEquivalentTo(new List<string> {
-                "#/info",
                 "#/servers",
                 "#/servers/0",
                 "#/servers/1",
                 "#/paths",
-                "#/components",
-                "#/externalDocs",
                 "#/tags",
                 "#/tags/0"
             });
@@ -97,20 +93,18 @@ namespace Microsoft.OpenApi.Tests.Walkers
             walker.Walk(doc);
 
             locator.Locations.ShouldBeEquivalentTo(new List<string> {
-                "#/info",
                 "#/servers",
-                "#/components",
-                "#/externalDocs",
                 "#/tags",
                 "#/paths",
                 "#/paths/~1test",
                 "#/paths/~1test/get",
+                "#/paths/~1test/get/tags",
                 "#/paths/~1test/get/responses",
                 "#/paths/~1test/get/responses/200",
                 "#/paths/~1test/get/responses/200/content",
                 "#/paths/~1test/get/responses/200/content/application~1json",
                 "#/paths/~1test/get/responses/200/content/application~1json/schema",
-                "#/paths/~1test/get/responses/200/content/application~1json/schema/externalDocs",
+
             });
         }
 
@@ -122,19 +116,20 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 Type = "object",
                 Properties = new Dictionary<string,OpenApiSchema>()
                 {
-                    { "name", new OpenApiSchema() { Type = "string" }
-                    }
+                    ["name"] = new OpenApiSchema() { Type = "string" }
                 }
             };
 
             loopySchema.Properties.Add("parent", loopySchema);
 
-            var doc = new OpenApiDocument();
-            doc.Components = new OpenApiComponents()
+            var doc = new OpenApiDocument()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>
+                Components = new OpenApiComponents()
                 {
-                    { "loopy", loopySchema } 
+                    Schemas = new Dictionary<string, OpenApiSchema>
+                    {
+                        ["loopy"] = loopySchema
+                    }
                 }
             };
 
@@ -143,15 +138,11 @@ namespace Microsoft.OpenApi.Tests.Walkers
             walker.Walk(doc);
 
             locator.Locations.ShouldBeEquivalentTo(new List<string> {
-                "#/info",
                 "#/servers",
                 "#/paths",
                 "#/components",
                 "#/components/schemas/loopy",
                 "#/components/schemas/loopy/properties/name",
-                "#/components/schemas/loopy/properties/name/externalDocs",
-                "#/components/schemas/loopy/externalDocs",
-                "#/externalDocs",
                 "#/tags"
             });
         }

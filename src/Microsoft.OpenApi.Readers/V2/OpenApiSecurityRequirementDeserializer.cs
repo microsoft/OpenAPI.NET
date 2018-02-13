@@ -46,10 +46,15 @@ namespace Microsoft.OpenApi.Readers.V2
             OpenApiDiagnostic diagnostic,
             string schemeName)
         {
-            var securitySchemeObject = (OpenApiSecurityScheme)context.GetReferencedObject(
-                diagnostic,
-                ReferenceType.SecurityScheme,
-                schemeName);
+            var securitySchemeObject = new OpenApiSecurityScheme()
+            {
+                UnresolvedReference = true,
+                Reference = new OpenApiReference()
+                {
+                    Id = schemeName,
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
 
             return securitySchemeObject;
         }

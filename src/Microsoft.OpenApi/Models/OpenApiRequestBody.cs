@@ -14,6 +14,11 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiRequestBody : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
+        /// Indicates if object is populated with data or is just a reference to the data
+        /// </summary>
+        public bool UnresolvedReference { get; set;}
+
+        /// <summary>
         /// Reference object.
         /// </summary>
         public OpenApiReference Reference { get; set; }

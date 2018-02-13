@@ -226,6 +226,11 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
+        /// </summary>
+        public bool UnresolvedReference { get; set; }
+
+        /// <summary>
         /// Reference object.
         /// </summary>
         public OpenApiReference Reference { get; set; }

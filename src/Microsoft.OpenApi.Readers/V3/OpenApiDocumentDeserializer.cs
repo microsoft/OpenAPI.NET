@@ -27,7 +27,16 @@ namespace Microsoft.OpenApi.Readers.V3
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
-            {"tags", (o, n) => o.Tags = n.CreateList(LoadTag)},
+            {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
+                foreach (var tag in o.Tags)
+    {
+                    tag.Reference = new OpenApiReference()
+                    {
+                        Id = tag.Name,
+                        Type = ReferenceType.Tag
+                    };
+    }
+            } },
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)},
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}
         };

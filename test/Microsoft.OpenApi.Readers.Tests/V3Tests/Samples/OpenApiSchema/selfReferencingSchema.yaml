@@ -1,0 +1,26 @@
+﻿openapi: 3.0.0
+info:
+  title: Self Referencing schema
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    microsoft.graph.schemaExtension: 
+      allOf: 
+        - 
+          title: "schemaExtension"
+          type: "object"
+          properties: 
+            description: 
+              type: "string"
+              nullable: true
+            targetTypes: 
+              type: "array"
+              items: 
+                type: "string"
+            status: 
+              type: "string"
+            owner: 
+              type: "string"
+            child:
+              $ref: "#/components/schemas/microsoft.graph.schemaExtension"

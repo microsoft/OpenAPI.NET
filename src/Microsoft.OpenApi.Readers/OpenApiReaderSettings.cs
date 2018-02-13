@@ -11,10 +11,34 @@ using System.Threading.Tasks;
 namespace Microsoft.OpenApi.Readers
 {
     /// <summary>
+    /// Indicates if and when the reader should convert unresolved references into resolved objects
+    /// </summary>
+    public enum ReferenceResolutionSetting
+    {
+        /// <summary>
+        /// Create placeholder objects with an OpenApiReference instance and UnresolvedReference set to true.
+        /// </summary>
+        DoNotResolveReferences,
+        /// <summary>
+        /// Convert local references to references of valid domain objects.
+        /// </summary>
+        ResolveLocalReferences,
+        /// <summary>
+        /// Convert all references to references of valid domain objects.
+        /// </summary>
+        ResolveAllReferences
+    }
+
+    /// <summary>
     /// Configuration settings to control how OpenAPI documents are parsed
     /// </summary>
     public class OpenApiReaderSettings
     {
+        /// <summary>
+        /// Indicates how references in the source document should be handled.
+        /// </summary>
+        public ReferenceResolutionSetting ReferenceResolution { get; set; } = ReferenceResolutionSetting.ResolveLocalReferences;
+
         /// <summary>
         /// Dictionary of parsers for converting extensions into strongly typed classes
         /// </summary>

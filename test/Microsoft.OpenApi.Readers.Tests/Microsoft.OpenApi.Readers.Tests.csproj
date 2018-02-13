@@ -118,6 +118,9 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\primitiveSchema.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\selfReferencingSchema.yaml">
+              <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\simpleSchema.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

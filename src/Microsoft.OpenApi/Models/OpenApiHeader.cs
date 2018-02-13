@@ -16,6 +16,11 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiHeader : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
+        /// Indicates if object is populated with data or is just a reference to the data
+        /// </summary>
+        public bool UnresolvedReference { get; set;}
+
+        /// <summary>
         /// Reference pointer.
         /// </summary>
         public OpenApiReference Reference { get; set; }

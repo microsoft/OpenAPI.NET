@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -21,19 +23,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void LoadSchemaReference()
         {
             // Arrange
-            var context = new ParsingContext();
+            OpenApiDocument document;
             var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlDocument = yamlStream.Documents.First();
-
-                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
+                document = new OpenApiStreamReader().Read(stream, out diagnostic);
             }
-
-            context.VersionService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -42,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.VersionService.TryLoadReference(context, reference, out var referencedObject);
+            var referencedObject = document.ResolveReference(reference);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -68,6 +64,11 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                         {
                             Type = "string"
                         }
+                    },
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "SampleObject"
                     }
                 }
             );
@@ -77,19 +78,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void LoadParameterReference()
         {
             // Arrange
-            var context = new ParsingContext();
+            OpenApiDocument document;
             var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlDocument = yamlStream.Documents.First();
-
-                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
+                document = new OpenApiStreamReader().Read(stream, out diagnostic);
             }
-
-            context.VersionService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -98,7 +93,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.VersionService.TryLoadReference(context, reference, out var referencedObject);
+            var referencedObject = document.ResolveReference(reference);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -112,6 +107,11 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     {
                         Type = "integer",
                         Format = "int32"
+                    },
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Parameter,
+                        Id = "skipParam"
                     }
                 }
             );
@@ -121,19 +121,14 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void LoadSecuritySchemeReference()
         {
             // Arrange
-            var context = new ParsingContext();
+            OpenApiDocument document;
             var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlDocument = yamlStream.Documents.First();
-
-                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
+                document = new OpenApiStreamReader().Read(stream, out diagnostic);
             }
 
-            context.VersionService = new OpenApiV2VersionService();
             var reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
@@ -141,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.VersionService.TryLoadReference(context, reference, out var referencedObject);
+            var referencedObject = document.ResolveReference(reference);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -149,7 +144,12 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 {
                     Type = SecuritySchemeType.ApiKey,
                     Name = "api_key",
-                    In = ParameterLocation.Header
+                    In = ParameterLocation.Header,
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "api_key_sample"
+                    }
                 }
             );
         }
@@ -158,19 +158,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void LoadResponseReference()
         {
             // Arrange
-            var context = new ParsingContext();
+            OpenApiDocument document;
             var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlDocument = yamlStream.Documents.First();
-
-                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
+                document = new OpenApiStreamReader().Read(stream, out diagnostic);
             }
-
-            context.VersionService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -179,13 +173,18 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.VersionService.TryLoadReference(context,reference, out var referencedObject);
+            var referencedObject = document.ResolveReference(reference);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
                 new OpenApiResponse
                 {
-                    Description = "Entity not found."
+                    Description = "Entity not found.",
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Response,
+                        Id = "NotFound"
+                    }
                 }
             );
         }
@@ -194,19 +193,13 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         public void LoadResponseAndSchemaReference()
         {
             // Arrange
-            var context = new ParsingContext();
+            OpenApiDocument document;
             var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlDocument = yamlStream.Documents.First();
-
-                context.RootNode = new RootNode(context, diagnostic, yamlDocument);
+                document = new OpenApiStreamReader().Read(stream, out diagnostic);
             }
-
-            context.VersionService = new OpenApiV2VersionService();
 
             var reference = new OpenApiReference
             {
@@ -215,7 +208,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            context.VersionService.TryLoadReference(context, reference, out var referencedObject);
+            var referencedObject = document.ResolveReference(reference);
 
             // Assert
             referencedObject.ShouldBeEquivalentTo(
@@ -228,29 +221,31 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                         {
                             Schema = new OpenApiSchema
                             {
+                                Description = "Sample description",
+                                Required = new List<string> {"name" },
+                                Properties = {
+                                    ["name"] = new OpenApiSchema()
+                                    {
+                                        Type = "string"
+                                    },
+                                    ["tag"] = new OpenApiSchema()
+                                    {
+                                        Type = "string"
+                                    }
+                                },
+
                                 Reference = new OpenApiReference
                                 {
                                     Type = ReferenceType.Schema,
                                     Id = "SampleObject2"
-                                },
-                                Description = "Sample description",
-                                Required =
-                                {
-                                    "name"
-                                },
-                                Properties =
-                                {
-                                    ["name"] = new OpenApiSchema
-                                    {
-                                        Type = "string"
-                                    },
-                                    ["tag"] = new OpenApiSchema
-                                    {
-                                        Type = "string"
-                                    }
                                 }
                             }
                         }
+                    },
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Response,
+                        Id = "GeneralError"
                     }
                 }
             );

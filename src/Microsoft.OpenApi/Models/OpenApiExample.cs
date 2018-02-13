@@ -50,6 +50,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
+        /// </summary>
+        public bool UnresolvedReference { get; set; } = false;
+
+        /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

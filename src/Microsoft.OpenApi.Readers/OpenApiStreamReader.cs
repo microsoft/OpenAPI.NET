@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Readers.Services;
 using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
 using SharpYaml;
 using SharpYaml.Serialization;
 
@@ -59,6 +60,20 @@ namespace Microsoft.OpenApi.Readers
 
             // Parse the OpenAPI Document
             var document = context.Parse(yamlDocument, diagnostic);
+
+            // Resolve References if requested
+            switch (_settings.ReferenceResolution) 
+            {
+                case ReferenceResolutionSetting.ResolveAllReferences:
+                    throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
+                case ReferenceResolutionSetting.ResolveLocalReferences:
+                    var resolver = new OpenApiReferenceResolver(document);
+                    var walker = new OpenApiWalker(resolver);
+                    walker.Walk(document);
+                    break;
+                case ReferenceResolutionSetting.DoNotResolveReferences:
+                    break;
+            }
 
             // Validate the document
             var errors = document.Validate(_settings.RuleSet);

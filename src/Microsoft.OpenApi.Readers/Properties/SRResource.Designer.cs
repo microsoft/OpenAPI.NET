@@ -70,6 +70,15 @@ namespace Microsoft.OpenApi.Readers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Cannot resolve remote references automatically in a syncronous call.&quot;.
+        /// </summary>
+        internal static string CannotResolveRemoteReferencesSynchronously {
+            get {
+                return ResourceManager.GetString("CannotResolveRemoteReferencesSynchronously", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not implemented to find referenced element from external resource..
         /// </summary>
         internal static string LoadReferencedObjectFromExternalNotImplmented {

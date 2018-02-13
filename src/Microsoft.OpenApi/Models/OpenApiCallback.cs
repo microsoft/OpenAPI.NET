@@ -21,6 +21,11 @@ namespace Microsoft.OpenApi.Models
             = new Dictionary<RuntimeExpression, OpenApiPathItem>();
 
         /// <summary>
+        /// Indicates if object is populated with data or is just a reference to the data
+        /// </summary>
+        public bool UnresolvedReference { get; set;}
+
+        /// <summary>
         /// Reference pointer.
         /// </summary>
         public OpenApiReference Reference { get; set; }
