@@ -56,20 +56,32 @@ namespace Microsoft.OpenApi.Readers.V2
                     "authorizationUrl",
                     (o, n) =>
                     {
+                        var value = n.GetScalarValue();
+                        if (!String.IsNullOrEmpty(value))
+                        {
                         _flow.AuthorizationUrl = new Uri(n.GetScalarValue());
+                        }
                     }
                 },
                 {
                     "tokenUrl",
                     (o, n) =>
                     {
-                        _flow.TokenUrl = new Uri(n.GetScalarValue());
+                        var value = n.GetScalarValue();
+                        if (!String.IsNullOrEmpty(value))
+                        {
+                            _flow.TokenUrl = new Uri(n.GetScalarValue());
+                        }
                     }
                 },
                 {
                     "scopes", (o, n) =>
                     {
-                        _flow.Scopes = n.CreateSimpleMap(LoadString);
+                        var value = n.GetScalarValue();
+                        if (!String.IsNullOrEmpty(value))
+                        {
+                            _flow.Scopes = n.CreateSimpleMap(LoadString);
+                        }
                     }
                 }
             };

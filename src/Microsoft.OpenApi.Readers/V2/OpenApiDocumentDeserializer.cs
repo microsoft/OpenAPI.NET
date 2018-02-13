@@ -65,6 +65,8 @@ namespace Microsoft.OpenApi.Readers.V2
                     o.Components.Parameters = n.CreateMapWithReference(
                         ReferenceType.Parameter,
                         LoadParameter);
+
+                    //TODO: Convert reusable body parameters into Requestbody parameters
                 }
             },
             {

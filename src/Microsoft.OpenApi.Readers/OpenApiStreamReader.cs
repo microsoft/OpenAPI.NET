@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
@@ -58,21 +59,31 @@ namespace Microsoft.OpenApi.Readers
                 ExtensionParsers = _settings.ExtensionParsers
             };
 
-            // Parse the OpenAPI Document
-            var document = context.Parse(yamlDocument, diagnostic);
+            OpenApiDocument document = null;
 
-            // Resolve References if requested
-            switch (_settings.ReferenceResolution) 
+            try
             {
-                case ReferenceResolutionSetting.ResolveAllReferences:
-                    throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
-                case ReferenceResolutionSetting.ResolveLocalReferences:
-                    var resolver = new OpenApiReferenceResolver(document);
-                    var walker = new OpenApiWalker(resolver);
-                    walker.Walk(document);
-                    break;
-                case ReferenceResolutionSetting.DoNotResolveReferences:
-                    break;
+                // Parse the OpenAPI Document
+                document = context.Parse(yamlDocument, diagnostic);
+
+                // Resolve References if requested
+                switch (_settings.ReferenceResolution)
+                {
+                    case ReferenceResolutionSetting.ResolveAllReferences:
+                        throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
+                    case ReferenceResolutionSetting.ResolveLocalReferences:
+                        var resolver = new OpenApiReferenceResolver(document);
+                        var walker = new OpenApiWalker(resolver);
+                        walker.Walk(document);
+                        break;
+                    case ReferenceResolutionSetting.DoNotResolveReferences:
+                        break;
+                }
+
+            }
+            catch (OpenApiException ex)
+            {
+                diagnostic.Errors.Add(new OpenApiError(ex));
             }
 
             // Validate the document
