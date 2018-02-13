@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Convert all references to references of valid domain objects.
         /// </summary>
-        ResolveRemoteReferences
+        ResolveAllReferences
     }
 
     /// <summary>

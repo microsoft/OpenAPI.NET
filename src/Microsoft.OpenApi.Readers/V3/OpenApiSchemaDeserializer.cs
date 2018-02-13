@@ -234,8 +234,6 @@ namespace Microsoft.OpenApi.Readers.V3
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
 
-        private const string schemaLoopId = "schema";
-
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);

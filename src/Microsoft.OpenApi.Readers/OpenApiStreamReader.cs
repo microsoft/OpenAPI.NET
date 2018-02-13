@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers
             // Resolve References if requested
             switch (_settings.ReferenceResolution)
             {
-                case ReferenceResolutionSetting.ResolveRemoteReferences:
+                case ReferenceResolutionSetting.ResolveAllReferences:
                     throw new ArgumentException("Cannot resolve remote references using synchronous Read method, use ReadAsync instead");
                 case ReferenceResolutionSetting.ResolveLocalReferences:
                     ResolveReferences(document,false);
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Readers
             // Resolve References if requested
             switch (_settings.ReferenceResolution)
             {
-                case ReferenceResolutionSetting.ResolveRemoteReferences:
+                case ReferenceResolutionSetting.ResolveAllReferences:
                     // Resolve references in documents
                     foreach (var item in workspace.Documents)
                     {

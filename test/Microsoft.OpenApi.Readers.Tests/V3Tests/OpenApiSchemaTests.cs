@@ -471,34 +471,34 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 diagnostic.ShouldBeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-                //var schemaExtension = new OpenApiSchema()
-                //{
-                //    AllOf = { new OpenApiSchema()
-                //    {
-                //        Title = "schemaExtension",
-                //        Type = "object",
-                //        Properties = {
-                //                        ["description"] = new OpenApiSchema() { Type = "string", Nullable = true},
-                //                        ["targetTypes"] = new OpenApiSchema() {
-                //                            Type = "array",
-                //                            Items = new OpenApiSchema() {
-                //                                Type = "string"
-                //                            }
-                //                        },
-                //                        ["status"] = new OpenApiSchema() { Type = "string"},
-                //                        ["owner"] = new OpenApiSchema() { Type = "string"},
-                //                        ["child"] = null
-                //                    }
-                //        }
-                //    },
-                //    Reference = new OpenApiReference()
-                //    {
-                //        Type = ReferenceType.Schema,
-                //        Id = "microsoft.graph.schemaExtension"
-                //    }
-                //};
+                var schemaExtension = new OpenApiSchema()
+                {
+                    AllOf = { new OpenApiSchema()
+                    {
+                        Title = "schemaExtension",
+                        Type = "object",
+                        Properties = {
+                                        ["description"] = new OpenApiSchema() { Type = "string", Nullable = true},
+                                        ["targetTypes"] = new OpenApiSchema() {
+                                            Type = "array",
+                                            Items = new OpenApiSchema() {
+                                                Type = "string"
+                                            }
+                                        },
+                                        ["status"] = new OpenApiSchema() { Type = "string"},
+                                        ["owner"] = new OpenApiSchema() { Type = "string"},
+                                        ["child"] = null
+                                    }
+                        }
+                    },
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "microsoft.graph.schemaExtension"
+                    }
+                };
 
-                //schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
+                schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
 
                 components.Schemas["microsoft.graph.schemaExtension"].ShouldBeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].AllOf[0].Properties["child"]);
             }

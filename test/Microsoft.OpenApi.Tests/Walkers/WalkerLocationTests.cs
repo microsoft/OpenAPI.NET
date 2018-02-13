@@ -98,6 +98,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths",
                 "#/paths/~1test",
                 "#/paths/~1test/get",
+                "#/paths/~1test/get/tags",
                 "#/paths/~1test/get/responses",
                 "#/paths/~1test/get/responses/200",
                 "#/paths/~1test/get/responses/200/content",
