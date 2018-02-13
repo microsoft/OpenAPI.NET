@@ -160,9 +160,9 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Maintain history of traversals to avoid stack overflows from cycles
         /// </summary>
-        /// <param name="loopId">Any unique identifier for a stack</param>
-        /// <param name="key">Identifier used to </param>
-        /// <returns></returns>
+        /// <param name="loopId">Any unique identifier for a stack.</param>
+        /// <param name="key">Identifier used for current context.</param>
+        /// <returns>If method returns false a loop was detected and the key is not added.</returns>
         public bool PushLoop(string loopId, string key)
         {
             Stack<string> stack;
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Reset loop tracking stack
         /// </summary>
-        /// <param name="loopid"></param>
+        /// <param name="loopid">Identifier of loop to clear</param>
         internal void ClearLoop(string loopid)
         {
             _loopStacks[loopid].Clear();
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Exit from the context in cycle detection
         /// </summary>
-        /// <param name="loopid"></param>
+        /// <param name="loopid">Identifier of loop</param>
         public void PopLoop(string loopid)
         {
             if (_loopStacks[loopid].Count > 0)

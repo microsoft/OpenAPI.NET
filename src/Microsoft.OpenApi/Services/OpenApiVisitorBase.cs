@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits headers.
+        /// Visits callbacks.
         /// </summary>
         public virtual void Visit(IDictionary<string, OpenApiCallback> callbacks)
         {

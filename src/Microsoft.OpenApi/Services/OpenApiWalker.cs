@@ -210,7 +210,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var pathItem in paths)
                 {
-                    Walk(pathItem.Key.Replace("/", "~1"), () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
+                    Walk(pathItem.Key, () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
                 }
             }
         }
@@ -469,6 +469,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.RequestBody, () => Walk(operation.RequestBody));
             Walk(OpenApiConstants.Responses, () => Walk(operation.Responses));
             Walk(OpenApiConstants.Callbacks, () => Walk(operation.Callbacks));
+            Walk(OpenApiConstants.Tags, () => Walk(operation.Tags));
 
             Walk(operation as IOpenApiExtensible);
         }
@@ -588,7 +589,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var header in headers)
                 {
-                    Walk(header.Key.Replace("/", "~1"), () => Walk(header.Value));
+                    Walk(header.Key, () => Walk(header.Value));
                 }
             }
         }
@@ -608,7 +609,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var header in callbacks)
                 {
-                    Walk(header.Key.Replace("/", "~1"), () => Walk(header.Value));
+                    Walk(header.Key, () => Walk(header.Value));
                 }
             }
         }
@@ -628,7 +629,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var mediaType in content)
                 {
-                    Walk(mediaType.Key.Replace("/", "~1"), () => Walk(mediaType.Value));
+                    Walk(mediaType.Key, () => Walk(mediaType.Value));
                 }
             }
         }
@@ -988,7 +989,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="walk">An action that walks objects within the context.</param>
         private void Walk(string context, Action walk)
         {
-            _visitor.Enter(context);
+            _visitor.Enter(context.Replace("/", "~1"));
             walk();
             _visitor.Exit();
         }

@@ -64,15 +64,14 @@ namespace Microsoft.OpenApi.Readers
             // Resolve References if requested
             switch (_settings.ReferenceResolution) 
             {
-                case ReferenceResolutionSetting.ResolveRemoteReferences:
+                case ReferenceResolutionSetting.ResolveAllReferences:
                     throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
                 case ReferenceResolutionSetting.ResolveLocalReferences:
                     var resolver = new OpenApiReferenceResolver(document);
                     var walker = new OpenApiWalker(resolver);
                     walker.Walk(document);
                     break;
-                case
-                    ReferenceResolutionSetting.DoNotResolveReferences:
+                case ReferenceResolutionSetting.DoNotResolveReferences:
                     break;
             }
 
