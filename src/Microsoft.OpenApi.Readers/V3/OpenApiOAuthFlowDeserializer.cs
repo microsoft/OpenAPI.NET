@@ -20,31 +20,19 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "authorizationUrl", (o, n) =>
                     {
-                        Uri uri;
-                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
-                        {
-                            o.AuthorizationUrl = uri;
-                        }
+                        o.AuthorizationUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
                     "tokenUrl", (o, n) =>
                     {
-                        Uri uri;
-                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
-                        {
-                            o.TokenUrl = uri;
-                        }
+                        o.TokenUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
                     "refreshUrl", (o, n) =>
                     {
-                        Uri uri;
-                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
-                        {
-                            o.RefreshUrl = uri;
-                        }
+                        o.RefreshUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {"scopes", (o, n) => o.Scopes = n.CreateSimpleMap(LoadString)}

@@ -59,12 +59,12 @@ namespace Microsoft.OpenApi.Readers.V2
                 },
                 {
                     "consumes", (o, n) => n.Context.SetTempStorage(
-                        "operationConsumes",
+                        TempStorageKeys.OperationConsumes,
                         n.CreateSimpleList(s => s.GetScalarValue()))
                 },
                 {
                     "produces", (o, n) => n.Context.SetTempStorage(
-                        "operationProduces",
+                        TempStorageKeys.OperationProduces,
                         n.CreateSimpleList(s => s.GetScalarValue()))
                 },
                 {
@@ -106,10 +106,10 @@ namespace Microsoft.OpenApi.Readers.V2
         internal static OpenApiOperation LoadOperation(ParseNode node)
         {
             // Reset these temp storage parameters for each operation.
-            node.Context.SetTempStorage("bodyParameter", null);
-            node.Context.SetTempStorage("formParameters", null);
-            node.Context.SetTempStorage("operationProduces", null);
-            node.Context.SetTempStorage("operationConsumes", null);
+            node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
+            node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);
+            node.Context.SetTempStorage(TempStorageKeys.OperationProduces, null);
+            node.Context.SetTempStorage(TempStorageKeys.OperationConsumes, null);
 
             var mapNode = node.CheckMapNode("OpenApiOperation");
 
@@ -118,14 +118,14 @@ namespace Microsoft.OpenApi.Readers.V2
             ParseMap(mapNode, operation, _operationFixedFields, _operationPatternFields);
 
             // Build request body based on information determined while parsing OpenApiOperation
-            var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>("bodyParameter");
+            var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);
             if (bodyParameter != null)
             {
                 operation.RequestBody = CreateRequestBody(node.Context, bodyParameter);
             }
             else
             {
-                var formParameters = node.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
+                var formParameters = node.Context.GetFromTempStorage<List<OpenApiParameter>>(TempStorageKeys.FormParameters);
                 if (formParameters != null)
                 {
                     operation.RequestBody = CreateFormBody(node.Context, formParameters);
@@ -164,8 +164,8 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             };
             
-            var consumes = context.GetFromTempStorage<List<string>>("operationConsumes") ??
-                context.GetFromTempStorage<List<string>>("globalConsumes") ??
+            var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
+                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
                 new List<string> {"application/x-www-form-urlencoded"};
 
             var formBody = new OpenApiRequestBody
@@ -182,8 +182,9 @@ namespace Microsoft.OpenApi.Readers.V2
             ParsingContext context,
             OpenApiParameter bodyParameter)
         {
-            var consumes = context.GetFromTempStorage<List<string>>("operationConsumes") ??
-                context.GetFromTempStorage<List<string>>("globalConsumes") ?? new List<string> {"application/json"};
+            var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
+                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
+                new List<string> {"application/json"};
 
             var requestBody = new OpenApiRequestBody
             {
@@ -193,7 +194,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     k => k,
                     v => new OpenApiMediaType
                     {
-                        Schema = bodyParameter.Schema // Should we clone this?
+                        Schema = bodyParameter.Schema
                     })
             };
 

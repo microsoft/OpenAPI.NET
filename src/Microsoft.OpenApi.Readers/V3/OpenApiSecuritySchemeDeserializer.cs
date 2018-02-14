@@ -56,11 +56,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "openIdConnectUrl", (o, n) =>
                     {
-                        Uri uri;
-                        if (Uri.TryCreate(n.GetScalarValue(), UriKind.RelativeOrAbsolute, out uri))
-                        {
-                            o.OpenIdConnectUrl = uri;
-                        }
+                        o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {

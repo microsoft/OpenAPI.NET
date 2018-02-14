@@ -32,11 +32,11 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "consumes",
-                (o, n) => n.Context.SetTempStorage("globalConsumes", n.CreateSimpleList(s => s.GetScalarValue()))
+                (o, n) => n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, n.CreateSimpleList(s => s.GetScalarValue()))
             },
             {
                 "produces",
-                (o, n) => n.Context.SetTempStorage("globalProduces", n.CreateSimpleList(s => s.GetScalarValue()))
+                (o, n) => n.Context.SetTempStorage(TempStorageKeys.GlobalProduces, n.CreateSimpleList(s => s.GetScalarValue()))
             },
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
             {

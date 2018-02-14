@@ -142,7 +142,6 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiXml\basicXml.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiXml\basicXmlWithBrokenUrl.yaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -205,9 +204,6 @@
         </EmbeddedResource>
         <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithReference.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\basicInfoWithBrokenUrl.yaml">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
         <None Update="V3Tests\Samples\CompleteHeader.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

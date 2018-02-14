@@ -14,8 +14,6 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static OpenApiSchema _responseSchema;
-
         private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new FixedFieldMap<OpenApiResponse>
         {
             {
@@ -39,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "schema", (o, n) =>
                 {
-                    _responseSchema = LoadSchema(n);
+                    n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n));
                 }
             },
         };
@@ -58,11 +56,12 @@ namespace Microsoft.OpenApi.Readers.V2
             response.Content = new Dictionary<string, OpenApiMediaType>();
             foreach (var produce in produces)
             {
-                if (_responseSchema != null)
+                var responseSchema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema);
+                if (responseSchema != null)
                 {
                     var mediaType = new OpenApiMediaType
                     {
-                        Schema = _responseSchema
+                        Schema = responseSchema
                     };
 
                     response.Content.Add(produce, mediaType);
@@ -102,7 +101,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         public static OpenApiResponse LoadResponse(ParseNode node)
         {
-            _responseSchema = null;
+            node.Context.SetTempStorage(TempStorageKeys.ResponseSchema, null);
 
             var mapNode = node.CheckMapNode("response");
 
