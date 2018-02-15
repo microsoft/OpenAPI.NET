@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         context.Enter(key);
 
-                        if (key != "default" && !Regex.IsMatch(key, "^[1-5][0-9][0-9]$"))
+                        if (key != "default" && !Regex.IsMatch(key, "^[1-5|X][0-9|X][0-9|X]$"))
                         {
                             context.AddError(
                                 new ValidationError(
