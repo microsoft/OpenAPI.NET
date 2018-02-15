@@ -154,6 +154,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             switch (v)
             {
+                // TODO: Handle "csv" for query / form parameter. The style should be Form, not Simple.
                 case "csv":
                     p.Style = ParameterStyle.Simple;
                     return;
@@ -197,8 +198,6 @@ namespace Microsoft.OpenApi.Readers.V2
             var value = n.GetScalarValue();
             switch (value)
             {
-                // TODO: There could be multiple body/form parameters, so setting it to a global storage
-                // will overwrite the old parameter. Need to handle this on a per-parameter basis.
                 case "body":
                     n.Context.SetTempStorage("bodyParameter", o);
                     break;

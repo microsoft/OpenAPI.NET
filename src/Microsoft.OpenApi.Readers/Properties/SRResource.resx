@@ -123,6 +123,9 @@
   <data name="CannotResolveRemoteReferencesSynchronously" xml:space="preserve">
     <value>"Cannot resolve remote references automatically in a syncronous call."</value>
   </data>
+  <data name="JsonPointerCannotBeResolved" xml:space="preserve">
+    <value>JSON pointer '{0}' does not point to an object in the document.</value>
+  </data>
   <data name="LoadReferencedObjectFromExternalNotImplmented" xml:space="preserve">
     <value>Not implemented to find referenced element from external resource.</value>
   </data>

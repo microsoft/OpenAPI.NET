@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "termsOfService", (o, n) =>
                 {
-                    o.TermsOfService = new Uri(n.GetScalarValue());
+                    o.TermsOfService = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                 }
             },
             {

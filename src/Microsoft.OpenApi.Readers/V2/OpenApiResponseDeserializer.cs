@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "schema", (o, n) =>
                 {
-                    n.Context.SetTempStorage("operationschema", LoadSchema(n));
+                    n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n));
                 }
             },
         };
@@ -50,22 +50,21 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
         {
-            var produces = context.GetFromTempStorage<List<string>>("operationproduces") ??
-                context.GetFromTempStorage<List<string>>("globalproduces") ?? new List<string> {"application/json"};
+            var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
+                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces) ?? new List<string> {"application/json"};
 
             response.Content = new Dictionary<string, OpenApiMediaType>();
-            foreach (var mt in produces)
+            foreach (var produce in produces)
             {
-                var schema = context.GetFromTempStorage<OpenApiSchema>("operationschema");
-                OpenApiMediaType mediaType = null;
-                if (schema != null)
+                var responseSchema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema);
+                if (responseSchema != null)
                 {
-                    mediaType = new OpenApiMediaType
+                    var mediaType = new OpenApiMediaType
                     {
-                        Schema = schema
+                        Schema = responseSchema
                     };
 
-                    response.Content.Add(mt, mediaType);
+                    response.Content.Add(produce, mediaType);
                 }
             }
         }
@@ -102,6 +101,8 @@ namespace Microsoft.OpenApi.Readers.V2
 
         public static OpenApiResponse LoadResponse(ParseNode node)
         {
+            node.Context.SetTempStorage(TempStorageKeys.ResponseSchema, null);
+
             var mapNode = node.CheckMapNode("response");
 
             var pointer = mapNode.GetReferencePointer();

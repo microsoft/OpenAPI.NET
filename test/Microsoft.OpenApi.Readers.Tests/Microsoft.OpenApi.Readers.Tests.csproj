@@ -55,6 +55,9 @@
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\queryParameter.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiPathItem\basicPathItemWithFormData.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

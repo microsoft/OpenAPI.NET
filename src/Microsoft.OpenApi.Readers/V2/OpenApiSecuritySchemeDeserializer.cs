@@ -56,14 +56,14 @@ namespace Microsoft.OpenApi.Readers.V2
                     "authorizationUrl",
                     (o, n) =>
                     {
-                        _flow.AuthorizationUrl = new Uri(n.GetScalarValue());
+                        _flow.AuthorizationUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
                     "tokenUrl",
                     (o, n) =>
                     {
-                        _flow.TokenUrl = new Uri(n.GetScalarValue());
+                        _flow.TokenUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
@@ -83,6 +83,7 @@ namespace Microsoft.OpenApi.Readers.V2
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
         {
             // Reset the local variables every time this method is called.
+            // TODO: Change _flow to a tempStorage variable to make the deserializer thread-safe.
             _flowValue = null;
             _flow = new OpenApiOAuthFlow();
 
