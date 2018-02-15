@@ -2,8 +2,8 @@
 // Licensed under the MIT license. 
 
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -14,16 +14,44 @@ namespace Microsoft.OpenApi.Validations.Rules
     public static class OpenApiResponsesRules
     {
         /// <summary>
-        /// An OpenAPI operation must contain at least one successful response
+        /// An OpenAPI operation must contain at least one response
         /// </summary>
-        public static ValidationRule<OpenApiResponses> ResponsesMustContainSuccessResponse =>
+        public static ValidationRule<OpenApiResponses> ResponsesMustContainAtLeastOneResponse =>
             new ValidationRule<OpenApiResponses>(
-                (context, item) =>
+                (context, responses) =>
                 {
-                    if (!item.Keys.Any(k => k.StartsWith("2"))) {
-                        context.AddError(new ValidationError(ErrorReason.Required,context.PathString,"Responses must contain success response"));
+                    if (!responses.Keys.Any())
+                    {
+                        context.AddError(
+                            new ValidationError(
+                                ErrorReason.Required,
+                                context.PathString,
+                                "Responses must contain at least one response"));
                     }
                 });
 
+        /// <summary>
+        /// The response key must either be "default" or an HTTP status code (1xx, 2xx, 3xx, 4xx, 5xx)
+        /// </summary>
+        public static ValidationRule<OpenApiResponses> ResponsesMustBeIdentifiedByDefaultOrStatusCode =>
+            new ValidationRule<OpenApiResponses>(
+                (context, responses) =>
+                {
+                    foreach (var key in responses.Keys)
+                    {
+                        context.Enter(key);
+
+                        if (key != "default" && !Regex.IsMatch(key, "^[1-5][0-9][0-9]$"))
+                        {
+                            context.AddError(
+                                new ValidationError(
+                                    ErrorReason.Format,
+                                    context.PathString,
+                                    "Responses key must be 'default' or an HTTP status code"));
+                        }
+
+                        context.Exit();
+                    }
+                });
     }
 }
