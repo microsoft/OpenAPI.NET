@@ -41,13 +41,15 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         context.Enter(key);
 
-                        if (key != "default" && !Regex.IsMatch(key, "^[1-5|X][0-9|X][0-9|X]$"))
+                        if (key != "default" && !Regex.IsMatch(key, "^[1-5]([0-9][0-9]|XX)$"))
                         {
                             context.AddError(
                                 new ValidationError(
                                     ErrorReason.Format,
                                     context.PathString,
-                                    "Responses key must be 'default' or an HTTP status code"));
+                                    "Responses key must be 'default', an HTTP status code, " +
+                                    "or one of the following strings representing a range of HTTP status codes: " +
+                                    "'1XX', '2XX', '3XX', '4XX', '5XX'"));
                         }
 
                         context.Exit();
