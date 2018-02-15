@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.V2
             node.Context.SetTempStorage(TempStorageKeys.OperationProduces, null);
             node.Context.SetTempStorage(TempStorageKeys.OperationConsumes, null);
 
-            var mapNode = node.CheckMapNode("OpenApiOperation");
+            var mapNode = node.CheckMapNode("Operation");
 
             var operation = new OpenApiOperation();
 

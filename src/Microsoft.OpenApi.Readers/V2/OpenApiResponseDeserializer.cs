@@ -50,8 +50,8 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
         {
-            var produces = context.GetFromTempStorage<List<string>>("operationProduces") ??
-                context.GetFromTempStorage<List<string>>("globalProduces") ?? new List<string> {"application/json"};
+            var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
+                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces) ?? new List<string> {"application/json"};
 
             response.Content = new Dictionary<string, OpenApiMediaType>();
             foreach (var produce in produces)
