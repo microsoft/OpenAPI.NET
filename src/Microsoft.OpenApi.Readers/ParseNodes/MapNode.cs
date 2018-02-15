@@ -78,26 +78,33 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-        public override Dictionary<string, T> CreateMapWithReference<T>(
-            ReferenceType referenceType,
-            string refpointerbase,
-            Func<MapNode, T> map)
-        {
-            var yamlMap = _node;
-            if (yamlMap == null)
-            {
-                throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
-            }
+         public override Dictionary<string, T> CreateMapWithReference<T>(
+             ReferenceType referenceType,
+             Func<MapNode, T> map)
+         {
+             var yamlMap = _node;
+             if (yamlMap == null)
+             {
+                 throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
+             }
 
-            var nodes = yamlMap.Select(
-                n => new
-                {
-                    key = n.Key.GetScalarValue(),
-                    value = GetReferencedObject<T>(referenceType, refpointerbase + n.Key.GetScalarValue()) ??
-                    map(new MapNode(Context, Diagnostic, (YamlMappingNode)n.Value))
-                });
-            return nodes.ToDictionary(k => k.key, v => v.value);
-        }
+             var nodes = yamlMap.Select(
+                 n => {
+                     var entry = new
+                     {
+                         key = n.Key.GetScalarValue(),
+                         value = map(new MapNode(Context, Diagnostic, (YamlMappingNode)n.Value))
+                     };
+                     entry.value.Reference = new OpenApiReference()
+                     {
+                         Type = referenceType,
+                         Id = entry.key
+                     };
+                     return entry;
+                 }
+                 );
+             return nodes.ToDictionary(k => k.key, v => v.value);
+         }
 
         public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
@@ -133,12 +140,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         }
 
         public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId)
-            where T : IOpenApiReferenceable
+            where T : IOpenApiReferenceable, new()
         {
-            return (T)Context.GetReferencedObject(
-                Diagnostic,
-                referenceType,
-                referenceId);
+            return new T()
+                    {
+                        UnresolvedReference = true,
+                        Reference = Context.VersionService.ConvertToOpenApiReference(referenceId,referenceType)  
+                    };
         }
 
         public string GetReferencePointer()

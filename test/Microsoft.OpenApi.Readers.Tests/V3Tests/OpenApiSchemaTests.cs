@@ -212,6 +212,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         Type = "string"
                                     }
                                 },
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.Schema,
+                                    Id = "ErrorModel"
+                                },
                                 Required =
                                 {
                                     "message",
@@ -220,6 +225,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             },
                             ["ExtendedErrorModel"] = new OpenApiSchema
                             {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.Schema,
+                                    Id = "ExtendedErrorModel"
+                                },
                                 AllOf =
                                 {
                                     new OpenApiSchema
@@ -280,7 +290,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 // Assert
                 var components = openApiDoc.Components;
-                
+
                 diagnostic.ShouldBeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
@@ -311,6 +321,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 {
                                     "name",
                                     "petType"
+                                }, 
+                                Reference = new OpenApiReference()
+                                {
+                                    Id= "Pet",
+                                    Type = ReferenceType.Schema
                                 }
                             },
                             ["Cat"] = new OpenApiSchema
@@ -369,6 +384,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             }
                                         }
                                     }
+                                },
+                                Reference = new OpenApiReference()
+                                {
+                                    Id= "Cat",
+                                    Type = ReferenceType.Schema
                                 }
                             },
                             ["Dog"] = new OpenApiSchema
@@ -424,10 +444,63 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             }
                                         }
                                     }
+                                },
+                                Reference = new OpenApiReference()
+                                {
+                                    Id= "Dog",
+                                    Type = ReferenceType.Schema
                                 }
                             }
                         }
                     });
+            }
+        }
+
+
+        [Fact]
+        public void ParseSelfReferencingSchemaShouldNotStackOverflow()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "selfReferencingSchema.yaml")))
+            {
+                // Act
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+
+                // Assert
+                var components = openApiDoc.Components;
+
+                diagnostic.ShouldBeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+
+                var schemaExtension = new OpenApiSchema()
+                {
+                    AllOf = { new OpenApiSchema()
+                    {
+                        Title = "schemaExtension",
+                        Type = "object",
+                        Properties = {
+                                        ["description"] = new OpenApiSchema() { Type = "string", Nullable = true},
+                                        ["targetTypes"] = new OpenApiSchema() {
+                                            Type = "array",
+                                            Items = new OpenApiSchema() {
+                                                Type = "string"
+                                            }
+                                        },
+                                        ["status"] = new OpenApiSchema() { Type = "string"},
+                                        ["owner"] = new OpenApiSchema() { Type = "string"},
+                                        ["child"] = null
+                                    }
+                        }
+                    },
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "microsoft.graph.schemaExtension"
+                    }
+                };
+
+                schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
+
+                components.Schemas["microsoft.graph.schemaExtension"].ShouldBeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].AllOf[0].Properties["child"]);
             }
         }
     }

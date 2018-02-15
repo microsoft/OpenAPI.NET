@@ -106,7 +106,7 @@ paths: {}",
                     {
                         Errors =
                         {
-                            new OpenApiError("#/info", "title is a required property")
+                            new OpenApiError("#/info/title", "The field 'title' in 'info' object is REQUIRED.")
                         },
                         SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                     });
@@ -170,6 +170,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 },
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "pet"
                             }
                         },
                         ["newPet"] = new OpenApiSchema
@@ -194,6 +199,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 },
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "newPet"
                             }
                         },
                         ["errorModel"] = new OpenApiSchema
@@ -215,6 +225,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 }
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "errorModel"
                             }
                         },
                     }
@@ -582,6 +597,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 },
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "pet"
                             }
                         },
                         ["newPet"] = new OpenApiSchema
@@ -606,6 +626,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 },
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "newPet"
                             }
                         },
                         ["errorModel"] = new OpenApiSchema
@@ -627,6 +652,11 @@ paths: {}",
                                 {
                                     Type = "string"
                                 }
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "errorModel"
                             }
                         },
                     },
@@ -636,12 +666,23 @@ paths: {}",
                         {
                             Type = SecuritySchemeType.ApiKey,
                             Name = "apiKeyName1",
-                            In = ParameterLocation.Header
+                            In = ParameterLocation.Header,
+                            Reference = new OpenApiReference
+                            {
+                                Id = "securitySchemeName1",
+                                Type = ReferenceType.SecurityScheme
+                            }
+
                         },
                         ["securitySchemeName2"] = new OpenApiSecurityScheme
                         {
                             Type = SecuritySchemeType.OpenIdConnect,
-                            OpenIdConnectUrl = new Uri("http://example.com")
+                            OpenIdConnectUrl = new Uri("http://example.com"),
+                            Reference = new OpenApiReference
+                            {
+                                Id = "securitySchemeName2",
+                                Type = ReferenceType.SecurityScheme
+                            }
                         }
                     }
                 };
@@ -677,14 +718,14 @@ paths: {}",
                 var tag1 = new OpenApiTag
                 {
                     Name = "tagName1",
-                    Description = "tagDescription1"
+                    Description = "tagDescription1",
+                    Reference = new OpenApiReference
+                    {
+                        Id = "tagName1",
+                        Type = ReferenceType.Tag
+                    }
                 };
 
-                tag1.Reference = new OpenApiReference
-                {
-                    Id = "tagName1",
-                    Type = ReferenceType.Tag
-                };
 
                 var tag2 = new OpenApiTag
                 {
@@ -1024,7 +1065,12 @@ paths: {}",
                         new OpenApiTag
                         {
                             Name = "tagName1",
-                            Description = "tagDescription1"
+                            Description = "tagDescription1",
+                            Reference = new OpenApiReference()
+                            {
+                                Id = "tagName1",
+                                Type = ReferenceType.Tag
+                            }
                         }
                     },
                     SecurityRequirements = new List<OpenApiSecurityRequirement>

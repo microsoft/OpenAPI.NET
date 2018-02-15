@@ -1,33 +1,57 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.OpenApi.Validations
 {
     /// <summary>
     /// Class containing dispatchers to execute validation rules on for Open API document.
     /// </summary>
-    public class OpenApiValidator : OpenApiVisitorBase
+    public class OpenApiValidator : OpenApiVisitorBase, IValidationContext 
     {
-        readonly ValidationRuleSet _ruleSet;
-        readonly ValidationContext _context;
+        private readonly ValidationRuleSet _ruleSet;
+        private readonly IList<ValidationError> _errors = new List<ValidationError>();
 
         /// <summary>
         /// Create a vistor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
-        public OpenApiValidator(ValidationRuleSet ruleSet = null)
+        public OpenApiValidator(ValidationRuleSet ruleSet = null) 
         {
-            _ruleSet = ruleSet ?? ValidationRuleSet.DefaultRuleSet;
-            _context = new ValidationContext(_ruleSet);
+            _ruleSet = ruleSet ?? ValidationRuleSet.GetDefaultRuleSet();
         }
+        
+        /// <summary>
+        /// Gets the validation errors.
+        /// </summary>
+        public IEnumerable<ValidationError> Errors
+        {
+            get
+            {
+                return _errors;
+            }
+        }
+
+        /// <summary>
+        /// Register an error with the validation context.
+        /// </summary>
+        /// <param name="error">Error to register.</param>
+        public void AddError(ValidationError error)
+        {
+            if (error == null)
+            {
+                throw Error.ArgumentNull(nameof(error));
+            }
+
+            _errors.Add(error);
+        }
+
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiDocument"/>
@@ -114,7 +138,6 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="item">The object to be validated</param>
         public override void Visit(OpenApiCallback item) => Validate(item);
 
-
         /// <summary>
         /// Execute validation rules against an <see cref="IOpenApiExtensible"/>
         /// </summary>
@@ -122,17 +145,35 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(IOpenApiExtensible item) => Validate(item);
 
         /// <summary>
-        /// Errors accumulated while validating OpenAPI elements
+        /// Execute validation rules against an <see cref="IOpenApiExtension"/>
         /// </summary>
-        public IEnumerable<ValidationError> Errors => _context.Errors;
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IOpenApiExtension item) => Validate(item, item.GetType());
+
+        /// <summary>
+        /// Execute validation rules against a list of <see cref="OpenApiExample"/>
+        /// </summary>
+        /// <param name="items">The object to be validated</param>
+        public override void Visit(IList<OpenApiExample> items) => Validate(items, items.GetType());
 
         private void Validate<T>(T item)
         {
+            var type = typeof(T);
+
+            Validate(item, type);
+        }
+
+        /// <summary>
+        /// This overload allows applying rules based on actual object type, rather than matched interface.  This is 
+        /// needed for validating extensions.
+        /// </summary>
+        private void Validate(object item, Type type)
+        {
             if (item == null) return;  // Required fields should be checked by higher level objects
-            var rules = _ruleSet.Where(r => r.ElementType == typeof(T));
+            var rules = _ruleSet.Where(r => r.ElementType == type);
             foreach (var rule in rules)
             {
-                rule.Evaluate(_context, item);
+                rule.Evaluate(this as IValidationContext, item);
             }
         }
     }

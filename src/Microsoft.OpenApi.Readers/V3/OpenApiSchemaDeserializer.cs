@@ -236,13 +236,17 @@ namespace Microsoft.OpenApi.Readers.V3
 
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("schema");
+            var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 
             var pointer = mapNode.GetReferencePointer();
 
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiSchema>(ReferenceType.Schema, pointer);
+                    return new OpenApiSchema()
+                    {
+                        UnresolvedReference = true,
+                        Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer,ReferenceType.Schema)  
+                    };
             }
 
             var domainObject = new OpenApiSchema();

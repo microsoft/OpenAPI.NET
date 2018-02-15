@@ -160,6 +160,60 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new OpenApiSchema
+        {
+            Title = "title1",
+            Required = new List<string>(){ "property1" },
+            Properties = new Dictionary<string, OpenApiSchema>
+            {
+                ["property1"] = new OpenApiSchema
+                {
+                    Required = new List<string>() { "property3" },
+                    Properties = new Dictionary<string, OpenApiSchema>
+                    {
+                        ["property2"] = new OpenApiSchema
+                        {
+                            Type = "integer"
+                        },
+                        ["property3"] = new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15,
+                            ReadOnly = true
+                        }
+                    },
+                    ReadOnly = true,
+                },
+                ["property4"] = new OpenApiSchema
+                {
+                    Properties = new Dictionary<string, OpenApiSchema>
+                    {
+                        ["property5"] = new OpenApiSchema
+                        {
+                            Properties = new Dictionary<string, OpenApiSchema>
+                            {
+                                ["property6"] = new OpenApiSchema
+                                {
+                                    Type = "boolean"
+                                }
+                            }
+                        },
+                        ["property7"] = new OpenApiSchema
+                        {
+                            Type = "string",
+                            MinLength = 2
+                        }
+                    },
+                    ReadOnly = true,
+                },
+            },
+            Nullable = true,
+            ExternalDocs = new OpenApiExternalDocs
+            {
+                Url = new Uri("http://example.com/externalDocs")
+            }
+        };
+
         private readonly ITestOutputHelper _output;
 
         public OpenApiSchemaTests(ITestOutputHelper output)
@@ -355,6 +409,65 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedSchema.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeSchemaWRequiredPropertiesAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected = @"{
+  ""title"": ""title1"",
+  ""required"": [
+    ""property1""
+  ],
+  ""properties"": {
+    ""property1"": {
+      ""required"": [
+        ""property3""
+      ],
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        },
+        ""property3"": {
+          ""maxLength"": 15,
+          ""type"": ""string""
+        }
+      }
+    },
+    ""property4"": {
+      ""properties"": {
+        ""property5"": {
+          ""properties"": {
+            ""property6"": {
+              ""type"": ""boolean""
+            }
+          }
+        },
+        ""property7"": {
+          ""minLength"": 2,
+          ""type"": ""string""
+        }
+      },
+      ""readOnly"": true
+    }
+  },
+  ""externalDocs"": {
+    ""url"": ""http://example.com/externalDocs""
+  }
+}";
+
+            // Act
+            AdvancedSchemaWithRequiredPropertiesObject.SerializeAsV2(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 

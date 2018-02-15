@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
@@ -17,19 +18,14 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInInfo()
         {
             // Arrange
-            string urlError = String.Format(SRResource.Validation_FieldIsRequired, "url", "info");
+            string urlError = String.Format(SRResource.Validation_FieldIsRequired, "title", "info");
             string versionError = String.Format(SRResource.Validation_FieldIsRequired, "version", "info");
-            IEnumerable<ValidationError> errors;
             OpenApiInfo info = new OpenApiInfo();
 
             // Act
-            var validator = new OpenApiValidator();
-            var walker = new OpenApiWalker(validator);
-            walker.Walk(info);
-
+            var errors = info.Validate();
 
             // Assert
-            errors = validator.Errors;
             bool result = !errors.Any();
 
             // Assert

@@ -1,17 +1,50 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Open API visitor base providing base validation logic for each <see cref="IOpenApiElement"/>
+    /// Open API visitor base provides common logic for concrete visitors
     /// </summary>
     public abstract class OpenApiVisitorBase
     {
+        private readonly Stack<string> _path = new Stack<string>();
+       
+        /// <summary>
+        /// Allow Rule to indicate validation error occured at a deeper context level.  
+        /// </summary>
+        /// <param name="segment">Identifier for context</param>
+        public void Enter(string segment)
+        {
+            this._path.Push(segment);
+        }
+
+        /// <summary>
+        /// Exit from path context elevel.  Enter and Exit calls should be matched.
+        /// </summary>
+        public void Exit()
+        {
+            this._path.Pop();
+        }
+
+        /// <summary>
+        /// Pointer to source of validation error in document
+        /// </summary>
+        public string PathString
+        {
+            get
+            {
+                return "#/" + String.Join("/", _path.Reverse());
+            }
+        }
+
+        
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>
         /// </summary>
@@ -111,10 +144,18 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
+
         /// <summary>
-        /// Visits responses.
+        /// Visits headers.
         /// </summary>
-        public virtual void Visit(IDictionary<string, OpenApiResponse> responses)
+        public virtual void Visit(IDictionary<string, OpenApiHeader> headers)
+        {
+        }
+
+        /// <summary>
+        /// Visits callbacks.
+        /// </summary>
+        public virtual void Visit(IDictionary<string, OpenApiCallback> callbacks)
         {
         }
 
@@ -242,6 +283,35 @@ namespace Microsoft.OpenApi.Services
         /// Visits <see cref="IOpenApiExtensible"/>
         /// </summary>
         public virtual void Visit(IOpenApiExtensible openApiExtensible)
+        {
+        }
+
+        /// <summary>
+        /// Visits <see cref="IOpenApiExtension"/>
+        /// </summary>
+        public virtual void Visit(IOpenApiExtension openApiExtension)
+        {
+        }
+
+        /// <summary>
+        /// Visits list of <see cref="OpenApiExample"/>
+        /// </summary>
+        public virtual void Visit(IList<OpenApiExample> example)
+        {
+        }
+
+        /// <summary>
+        /// Visits a dictionary of server variables
+        /// </summary>
+        public virtual void Visit(IDictionary<string, OpenApiServerVariable> serverVariables)
+        {
+        }
+
+        /// <summary>
+        /// Visits a dictionary of encodings
+        /// </summary>
+        /// <param name="encodings"></param>
+        public virtual void Visit(IDictionary<string, OpenApiEncoding> encodings)
         {
         }
     }

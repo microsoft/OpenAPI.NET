@@ -24,17 +24,22 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the default validation rule sets.
         /// </summary>
-        public static ValidationRuleSet DefaultRuleSet
+        /// <remarks>
+        /// This is a method instead of a property to signal that a new default ruleset object is created
+        /// per call. Making this a property may be misleading callers to think the returned rulesets from multiple calls
+        /// are the same objects.
+        /// </remarks>
+        public static ValidationRuleSet GetDefaultRuleSet()
         {
-            get
+            // Reflection can be an expensive operation, so we cache the default rule set that has already been built.
+            if (_defaultRuleSet == null)
             {
-                if (_defaultRuleSet == null)
-                {
-                    _defaultRuleSet = new Lazy<ValidationRuleSet>(() => BuildDefaultRuleSet(), isThreadSafe: false).Value;
-                }
-
-                return _defaultRuleSet;
+                _defaultRuleSet = BuildDefaultRuleSet();
             }
+
+            // We create a new instance of ValidationRuleSet per call as a safeguard
+            // against unintentional modification of the private _defaultRuleSet.
+            return new ValidationRuleSet(_defaultRuleSet);
         }
 
         /// <summary>
@@ -47,48 +52,65 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRuleSet"/> class.
         /// </summary>
+        /// <param name="ruleSet">Rule set to be copied from.</param>
+        public ValidationRuleSet(ValidationRuleSet ruleSet)
+        {
+            if (ruleSet == null)
+            {
+                return;
+            }
+
+            foreach (ValidationRule rule in ruleSet)
+            {
+                Add(rule);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationRuleSet"/> class.
+        /// </summary>
         /// <param name="rules">Rules to be contained in this ruleset.</param>
         public ValidationRuleSet(IEnumerable<ValidationRule> rules)
         {
-            if (rules != null)
+            if (rules == null)
             {
-                foreach (ValidationRule rule in rules)
-                {
-                    Add(rule);
-                }
+                return;
+            }
+
+            foreach (ValidationRule rule in rules)
+            {
+                Add(rule);
             }
         }
 
         /// <summary>
         /// Gets the rules in this rule set.
         /// </summary>
-        public IEnumerable<ValidationRule> Rules
+        public IList<ValidationRule> Rules
         {
             get
             {
-                return _rules.Values.SelectMany(v => v);
+                return _rules.Values.SelectMany(v => v).ToList();
             }
         }
 
         /// <summary>
-        /// Add the new rule into rule set.
+        /// Add the new rule into the rule set.
         /// </summary>
         /// <param name="rule">The rule.</param>
         public void Add(ValidationRule rule)
         {
-            IList<ValidationRule> typeRules;
-            if (!_rules.TryGetValue(rule.ElementType, out typeRules))
+            if (!_rules.ContainsKey(rule.ElementType))
             {
-                typeRules = new List<ValidationRule>();
-                _rules[rule.ElementType] = typeRules;
+                _rules[rule.ElementType] = new List<ValidationRule>();
             }
 
-            if (typeRules.Contains(rule))
+            if (_rules[rule.ElementType].Contains(rule))
             {
                 throw new OpenApiException(SRResource.Validation_RuleAddTwice);
             }
 
-            typeRules.Add(rule);
+            _rules[rule.ElementType].Add(rule);
         }
 
         /// <summary>
@@ -97,7 +119,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>The enumerator.</returns>
         public IEnumerator<ValidationRule> GetEnumerator()
         {
-            foreach (List<ValidationRule> ruleList in _rules.Values)
+            foreach (var ruleList in _rules.Values)
             {
                 foreach (var rule in ruleList)
                 {
@@ -118,29 +140,23 @@ namespace Microsoft.OpenApi.Validations
         private static ValidationRuleSet BuildDefaultRuleSet()
         {
             ValidationRuleSet ruleSet = new ValidationRuleSet();
-
-            IEnumerable<Type> allTypes = typeof(ValidationRuleSet).Assembly.GetTypes().Where(t => t.IsClass && t != typeof(object));
             Type validationRuleType = typeof(ValidationRule);
-            foreach (Type type in allTypes)
-            {
-                if (!type.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
-                {
-                    continue;
-                }
 
-                var properties = type.GetProperties(BindingFlags.Static | BindingFlags.Public);
-                foreach (var property in properties)
-                {
-                    if (validationRuleType.IsAssignableFrom(property.PropertyType))
+            IEnumerable<PropertyInfo> rules = typeof(ValidationRuleSet).Assembly.GetTypes()
+                .Where(t => t.IsClass 
+                            && t != typeof(object)
+                            && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
+                .SelectMany(t2 => t2.GetProperties(BindingFlags.Static | BindingFlags.Public)
+                                .Where(p => validationRuleType.IsAssignableFrom(p.PropertyType)));
+
+            foreach (var property in rules)
+            {
+                    var propertyValue = property.GetValue(null); // static property
+                    ValidationRule rule = propertyValue as ValidationRule;
+                    if (rule != null)
                     {
-                        var propertyValue = property.GetValue(null); // static property
-                        ValidationRule rule = propertyValue as ValidationRule;
-                        if (rule != null)
-                        {
-                            ruleSet.Add(rule);
-                        }
+                        ruleSet.Add(rule);
                     }
-                }
             }
 
             return ruleSet;

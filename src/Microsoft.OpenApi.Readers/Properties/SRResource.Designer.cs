@@ -70,6 +70,15 @@ namespace Microsoft.OpenApi.Readers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Cannot resolve remote references automatically in a syncronous call.&quot;.
+        /// </summary>
+        internal static string CannotResolveRemoteReferencesSynchronously {
+            get {
+                return ResourceManager.GetString("CannotResolveRemoteReferencesSynchronously", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to JSON pointer &apos;{0}&apos; does not point to an object in the document..
         /// </summary>
         internal static string JsonPointerCannotBeResolved {

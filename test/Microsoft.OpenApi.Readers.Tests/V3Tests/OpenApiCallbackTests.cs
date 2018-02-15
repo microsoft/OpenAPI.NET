@@ -94,20 +94,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 callback.ShouldBeEquivalentTo(
                     new OpenApiCallback
                     {
-                        Reference = new OpenApiReference
+                        PathItems = 
                         {
-                            Type = ReferenceType.Callback,
-                            Id = "simpleHook",
-                        },
-                        PathItems =
-                        {
-                            [RuntimeExpression.Build("$request.body#/url")]
-                            = new OpenApiPathItem
-                            {
-                                Operations =
-                                {
-                                    [OperationType.Post] =
-                                    new OpenApiOperation
+                            [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
+                                Operations = {
+                                    [OperationType.Post] = new OpenApiOperation()
                                     {
                                         RequestBody = new OpenApiRequestBody
                                         {
@@ -115,16 +106,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = new OpenApiSchema
+                                                    Schema = new OpenApiSchema()
                                                     {
                                                         Type = "object"
                                                     }
                                                 }
                                             }
                                         },
-                                        Responses = new OpenApiResponses
-                                        {
-                                            ["200"] = new OpenApiResponse
+                                        Responses = {
+                                            ["200"]= new OpenApiResponse
                                             {
                                                 Description = "Success"
                                             }
@@ -132,6 +122,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
+                        },
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.Callback,
+                            Id = "simpleHook",
                         }
                     });
             }

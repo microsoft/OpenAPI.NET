@@ -21,6 +21,11 @@ namespace Microsoft.OpenApi.Models
             = new Dictionary<RuntimeExpression, OpenApiPathItem>();
 
         /// <summary>
+        /// Indicates if object is populated with data or is just a reference to the data
+        /// </summary>
+        public bool UnresolvedReference { get; set;}
+
+        /// <summary>
         /// Reference pointer.
         /// </summary>
         public OpenApiReference Reference { get; set; }
@@ -28,7 +33,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Add a <see cref="OpenApiPathItem"/> into the <see cref="PathItems"/>.

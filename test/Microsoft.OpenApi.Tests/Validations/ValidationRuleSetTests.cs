@@ -1,13 +1,20 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
     public class ValidationRuleSetTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public ValidationRuleSetTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void DefaultRuleSetReturnsTheCorrectRules()
         {
@@ -26,7 +33,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void DefaultRuleSetPropertyReturnsTheCorrectRules()
         {
             // Arrange & Act
-            var ruleSet = ValidationRuleSet.DefaultRuleSet;
+            var ruleSet = ValidationRuleSet.GetDefaultRuleSet();
             Assert.NotNull(ruleSet); // guard
 
             var rules = ruleSet.Rules;
@@ -34,7 +41,9 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.NotNull(rules);
             Assert.NotEmpty(rules);
-            Assert.Equal(13, rules.ToList().Count); // please update the number if you add new rule.
+
+            // Update the number if you add new default rule(s).
+            Assert.Equal(14, rules.Count);
         }
     }
 }

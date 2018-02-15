@@ -50,7 +50,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     o.Components.Schemas = n.CreateMapWithReference(
                         ReferenceType.Schema,
-                        "#/definitions/",
                         LoadSchema);
                 }
             },
@@ -65,7 +64,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     o.Components.Parameters = n.CreateMapWithReference(
                         ReferenceType.Parameter,
-                        "#/parameters/",
                         LoadParameter);
                 }
             },
@@ -77,7 +75,9 @@ namespace Microsoft.OpenApi.Readers.V2
                         o.Components = new OpenApiComponents();
                     }
 
-                    o.Components.Responses = n.CreateMap(LoadResponse);
+                    o.Components.Responses = n.CreateMapWithReference(
+                        ReferenceType.Response,
+                        LoadResponse);
                 }
             },
             {
@@ -88,7 +88,10 @@ namespace Microsoft.OpenApi.Readers.V2
                         o.Components = new OpenApiComponents();
                     }
 
-                    o.Components.SecuritySchemes = n.CreateMap(LoadSecurityScheme);
+                    o.Components.SecuritySchemes = n.CreateMapWithReference(
+                        ReferenceType.SecurityScheme,
+                        LoadSecurityScheme
+                        );
                 }
             },
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)},
@@ -125,11 +128,8 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var openApiNode = rootNode.GetMap();
 
-            var required = new List<string> {"info", "swagger", "paths"};
+            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
 
-            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields, required);
-
-            ReportMissing(openApiNode, required);
 
             // Post Process OpenApi Object
             if (openApidoc.Servers == null)

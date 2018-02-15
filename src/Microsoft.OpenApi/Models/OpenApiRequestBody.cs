@@ -14,6 +14,11 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiRequestBody : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
+        /// Indicates if object is populated with data or is just a reference to the data
+        /// </summary>
+        public bool UnresolvedReference { get; set;}
+
+        /// <summary>
         /// Reference object.
         /// </summary>
         public OpenApiReference Reference { get; set; }
@@ -38,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0

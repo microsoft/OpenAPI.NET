@@ -114,16 +114,16 @@ namespace Microsoft.OpenApi.Readers.V3
             OpenApiDiagnostic diagnostic,
             string tagName)
         {
-            var tagObject = (OpenApiTag)context.GetReferencedObject(
-                diagnostic,
-                ReferenceType.Tag,
-                tagName);
-
-            if (tagObject == null)
+            var tagObject = new OpenApiTag()
             {
-                tagObject = new OpenApiTag {Name = tagName};
-            }
-
+                UnresolvedReference = true,
+                Reference = new OpenApiReference()
+                {
+                    Type = ReferenceType.Tag,
+                    Id = tagName
+                }
+            };
+            
             return tagObject;
         }
     }

@@ -1,10 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.IO;
 using System.Linq;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
+using Microsoft.OpenApi.Readers.Services;
+using Microsoft.OpenApi.Services;
 using SharpYaml;
 using SharpYaml.Serialization;
 
@@ -15,7 +19,17 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiStreamReader : IOpenApiReader<Stream, OpenApiDiagnostic>
     {
+        private OpenApiReaderSettings _settings;
 
+        /// <summary>
+        /// Create stream reader with custom settings if desired.
+        /// </summary>
+        /// <param name="settings"></param>
+        public OpenApiStreamReader(OpenApiReaderSettings settings = null)
+        {
+            _settings = settings ?? new OpenApiReaderSettings();
+
+        }
         /// <summary>
         /// Reads the stream input and parses it into an Open API document.
         /// </summary>
@@ -28,6 +42,7 @@ namespace Microsoft.OpenApi.Readers
             YamlDocument yamlDocument;
             diagnostic = new OpenApiDiagnostic();
 
+            // Parse the YAML/JSON
             try
             {
                 yamlDocument = LoadYamlDocument(input);
@@ -38,8 +53,36 @@ namespace Microsoft.OpenApi.Readers
                 return new OpenApiDocument();
             }
 
-            context = new ParsingContext();
-            return context.Parse(yamlDocument, diagnostic);
+            context = new ParsingContext
+            {
+                ExtensionParsers = _settings.ExtensionParsers
+            };
+
+            // Parse the OpenAPI Document
+            var document = context.Parse(yamlDocument, diagnostic);
+
+            // Resolve References if requested
+            switch (_settings.ReferenceResolution) 
+            {
+                case ReferenceResolutionSetting.ResolveAllReferences:
+                    throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
+                case ReferenceResolutionSetting.ResolveLocalReferences:
+                    var resolver = new OpenApiReferenceResolver(document);
+                    var walker = new OpenApiWalker(resolver);
+                    walker.Walk(document);
+                    break;
+                case ReferenceResolutionSetting.DoNotResolveReferences:
+                    break;
+            }
+
+            // Validate the document
+            var errors = document.Validate(_settings.RuleSet);
+            foreach (var item in errors)
+            {
+                diagnostic.Errors.Add(new OpenApiError(item.ErrorPath, item.ErrorMessage));
+            } 
+
+            return document;
         }
 
         /// <summary>

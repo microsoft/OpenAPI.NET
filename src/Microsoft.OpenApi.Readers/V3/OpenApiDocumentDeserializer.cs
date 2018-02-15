@@ -2,7 +2,9 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -25,7 +27,16 @@ namespace Microsoft.OpenApi.Readers.V3
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
-            {"tags", (o, n) => o.Tags = n.CreateList(LoadTag)},
+            {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
+                foreach (var tag in o.Tags)
+    {
+                    tag.Reference = new OpenApiReference()
+                    {
+                        Id = tag.Name,
+                        Type = ReferenceType.Tag
+                    };
+    }
+            } },
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)},
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}
         };
@@ -42,13 +53,21 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var openApiNode = rootNode.GetMap();
 
-            var required = new List<string> {"info", "openapi", "paths"};
-
-            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields, required);
-
-            ReportMissing(openApiNode, required);
+            ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
 
             return openApidoc;
+        }
+
+
+        public static IOpenApiExtension LoadExtension(string name, ParseNode node)
+        {
+            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser)) {
+                return parser(node.CreateAny());
+            }
+            else
+            {
+                return node.CreateAny();
+            }
         }
     }
 }

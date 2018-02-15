@@ -42,12 +42,17 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Reference object.
         /// </summary>
         public OpenApiReference Reference { get; set; }
+
+        /// <summary>
+        /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
+        /// </summary>
+        public bool UnresolvedReference { get; set; } = false;
 
         /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0

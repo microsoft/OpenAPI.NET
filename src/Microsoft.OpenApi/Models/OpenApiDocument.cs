@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -54,7 +55,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiAny> Extensions { get; set; } = new Dictionary<string, IOpenApiAny>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.
@@ -263,6 +264,82 @@ namespace Microsoft.OpenApi.Models
 
             // schemes
             writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+        }
+
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
+        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        {
+            if (reference == null)
+            {
+                return null;
+            }
+
+            if (reference.IsExternal)
+            {
+                // Should not attempt to resolve external references against a single document.
+                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported); 
+            }
+
+            if (!reference.Type.HasValue)
+            {
+                throw new ArgumentException(Properties.SRResource.LocalReferenceRequiresType);
+            }
+
+            // Special case for Tag
+            if (reference.Type == ReferenceType.Tag)
+            {
+                foreach (var tag in this.Tags)
+                {
+                    if (tag.Name == reference.Id)
+                    {
+                        tag.Reference = reference;
+                        return tag;
+                    }
+                }
+
+                return null;
+            }
+
+            try
+            {
+                switch (reference.Type)
+                {
+                    case ReferenceType.Schema:
+                        return this.Components.Schemas[reference.Id];
+
+                    case ReferenceType.Response:
+                        return this.Components.Responses[reference.Id];
+
+                    case ReferenceType.Parameter:
+                        return this.Components.Parameters[reference.Id];
+
+                    case ReferenceType.Example:
+                        return this.Components.Examples[reference.Id];
+
+                    case ReferenceType.RequestBody:
+                        return this.Components.RequestBodies[reference.Id];
+
+                    case ReferenceType.Header:
+                        return this.Components.Headers[reference.Id];
+
+                    case ReferenceType.SecurityScheme:
+                        return this.Components.SecuritySchemes[reference.Id];
+
+                    case ReferenceType.Link:
+                        return this.Components.Links[reference.Id];
+
+                    case ReferenceType.Callback:
+                        return this.Components.Callbacks[reference.Id];
+
+                    default:
+                        throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
+                }
+            } catch(KeyNotFoundException)
+            {
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId,reference.Id));
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="item">The object item.</param>
-        internal abstract void Evaluate(ValidationContext context, object item);
+        internal abstract void Evaluate(IValidationContext context, object item);
     }
 
     /// <summary>
@@ -31,13 +31,13 @@ namespace Microsoft.OpenApi.Validations
     /// <typeparam name="T"></typeparam>
     public class ValidationRule<T> : ValidationRule where T: IOpenApiElement
     {
-        private readonly Action<ValidationContext, T> _validate;
+        private readonly Action<IValidationContext, T> _validate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRule"/> class.
         /// </summary>
         /// <param name="validate">Action to perform the validation.</param>
-        public ValidationRule(Action<ValidationContext, T> validate)
+        public ValidationRule(Action<IValidationContext, T> validate)
         {
             _validate = validate ?? throw Error.ArgumentNull(nameof(validate));
         }
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Validations
             get { return typeof(T); }
         }
 
-        internal override void Evaluate(ValidationContext context, object item)
+        internal override void Evaluate(IValidationContext context, object item)
         {
             if (context == null)
             {

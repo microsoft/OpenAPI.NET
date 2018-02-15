@@ -2,9 +2,10 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="writer">The Open API writer.</param>
         /// <param name="extensions">The specification extensions.</param>
-        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiAny> extensions)
+        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions)
         {
             if (writer == null)
             {
@@ -30,7 +31,7 @@ namespace Microsoft.OpenApi.Writers
                 foreach (var item in extensions)
                 {
                     writer.WritePropertyName(item.Key);
-                    writer.WriteAny(item.Value);
+                    item.Value.Write(writer);
                 }
             }
         }

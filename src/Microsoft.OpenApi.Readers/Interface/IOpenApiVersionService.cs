@@ -13,19 +13,6 @@ namespace Microsoft.OpenApi.Readers.Interface
     /// </summary>
     internal interface IOpenApiVersionService
     {
-        /// <summary>
-        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
-        /// </summary>
-        /// <param name="context">Instance of ParsingContext to use for retrieving references.</param>
-        /// <param name="reference">The <see cref="OpenApiReference"/> object.</param>
-        /// <param name="referencedObject">The object that is being referenced.</param>
-        /// <returns>
-        /// If the reference is found, return true and the referenced object in the out parameter.
-        /// In the case of tag, it is psosible that the referenced object does not exist. In this case,
-        /// a new tag will be returned in the outer parameter and the return value will be false.
-        /// If reference is null, no object will be returned and the return value will be false.
-        /// </returns>
-        bool TryLoadReference(ParsingContext context, OpenApiReference reference, out IOpenApiReferenceable referencedObject);
 
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.

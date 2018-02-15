@@ -25,15 +25,60 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Theory]
-        [InlineData(-100)]
-        [InlineData(0)]
+        [InlineData(int.MinValue)]
         [InlineData(42)]
-        public void WriteOpenApiIntergerAsJsonWorks(int input)
+        [InlineData(int.MaxValue)]
+        public void WriteOpenApiIntegerAsJsonWorks(int input)
         {
             // Arrange
             var intValue = new OpenApiInteger(input);
 
             var json = WriteAsJson(intValue);
+
+            // Assert
+            json.Should().Be(input.ToString());
+        }
+
+        [Theory]
+        [InlineData(long.MinValue)]
+        [InlineData(42)]
+        [InlineData(long.MaxValue)]
+        public void WriteOpenApiLongAsJsonWorks(long input)
+        {
+            // Arrange
+            var longValue = new OpenApiLong(input);
+
+            var json = WriteAsJson(longValue);
+
+            // Assert
+            json.Should().Be(input.ToString());
+        }
+
+        [Theory]
+        [InlineData(float.MinValue)]
+        [InlineData(42.42)]
+        [InlineData(float.MaxValue)]
+        public void WriteOpenApiFloatAsJsonWorks(float input)
+        {
+            // Arrange
+            var floatValue = new OpenApiFloat(input);
+
+            var json = WriteAsJson(floatValue);
+
+            // Assert
+            json.Should().Be(input.ToString());
+        }
+
+        [Theory]
+        [InlineData(double.MinValue)]
+        [InlineData(42.42)]
+        [InlineData(double.MaxValue)]
+        public void WriteOpenApiDoubleAsJsonWorks(double input)
+        {
+            // Arrange
+            var doubleValue = new OpenApiDouble(input);
+
+            var json = WriteAsJson(doubleValue);
 
             // Assert
             json.Should().Be(input.ToString());

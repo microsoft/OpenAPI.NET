@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -21,9 +22,10 @@ namespace Microsoft.OpenApi.Readers
     public class ParsingContext
     {
         private readonly Stack<string> _currentLocation = new Stack<string>();
-        private readonly Dictionary<string, IOpenApiReferenceable> _referenceStore = new Dictionary<string, IOpenApiReferenceable>();
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private IOpenApiVersionService _versionService;
+        private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();        
+        internal Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>> ExtensionParsers { get; set; }  = new Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>>();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
 
@@ -61,6 +63,7 @@ namespace Microsoft.OpenApi.Readers
 
             return doc;
         }
+
 
         /// <summary>
         /// Gets the version of the Open API document.
@@ -126,48 +129,6 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <summary>
-        /// Gets the referenced object.
-        /// </summary>
-        public IOpenApiReferenceable GetReferencedObject(
-            OpenApiDiagnostic diagnostic,
-            ReferenceType referenceType,
-            string referenceString)
-        {
-            _referenceStore.TryGetValue(referenceString, out var referencedObject);
-
-            // If reference has already been accessed once, simply return the same reference object.
-            if (referencedObject != null)
-            {
-                return referencedObject;
-            }
-
-            var reference = VersionService.ConvertToOpenApiReference(referenceString, referenceType);
-            
-            var isReferencedObjectFound = VersionService.TryLoadReference(this, reference, out referencedObject);
-
-            if (isReferencedObjectFound)
-            {
-                // Populate the Reference section of the object, so that the writers
-                // can recognize that this is referencing another object.
-                referencedObject.Reference = reference;
-                _referenceStore.Add(referenceString, referencedObject);
-            }
-            else if (referencedObject != null)
-            {
-                return referencedObject;
-            }
-            else
-            {
-                diagnostic.Errors.Add(
-                    new OpenApiError(
-                        GetLocation(),
-                        $"Cannot resolve the reference {referenceString}"));
-            }
-
-            return referencedObject;
-        }
-
-        /// <summary>
         /// Gets the value from the temporary storage matching the given key.
         /// </summary>
         public T GetFromTempStorage<T>(string key) where T : class
@@ -195,5 +156,52 @@ namespace Microsoft.OpenApi.Readers
         {
             _currentLocation.Push(objectName);
         }
+
+        /// <summary>
+        /// Maintain history of traversals to avoid stack overflows from cycles
+        /// </summary>
+        /// <param name="loopId">Any unique identifier for a stack.</param>
+        /// <param name="key">Identifier used for current context.</param>
+        /// <returns>If method returns false a loop was detected and the key is not added.</returns>
+        public bool PushLoop(string loopId, string key)
+        {
+            Stack<string> stack;
+            if (!_loopStacks.TryGetValue(loopId, out stack))
+            {
+                stack = new Stack<string>();
+                _loopStacks.Add(loopId, stack);
+            }
+
+            if (!stack.Contains(key))
+            {
+                stack.Push(key);
+                return true;
+            } else
+            {
+                return false;  // Loop detected
+            }
+        }
+
+        /// <summary>
+        /// Reset loop tracking stack
+        /// </summary>
+        /// <param name="loopid">Identifier of loop to clear</param>
+        internal void ClearLoop(string loopid)
+        {
+            _loopStacks[loopid].Clear();
+        }
+
+        /// <summary>
+        /// Exit from the context in cycle detection
+        /// </summary>
+        /// <param name="loopid">Identifier of loop</param>
+        public void PopLoop(string loopid)
+        {
+            if (_loopStacks[loopid].Count > 0)
+            {
+                _loopStacks[loopid].Pop();
+            }
+        }
+
     }
 }

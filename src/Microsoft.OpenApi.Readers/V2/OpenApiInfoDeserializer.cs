@@ -65,11 +65,8 @@ namespace Microsoft.OpenApi.Readers.V2
             var mapNode = node.CheckMapNode("Info");
 
             var info = new OpenApiInfo();
-            var required = new List<string> {"title", "version"};
 
-            ParseMap(mapNode, info, _infoFixedFields, _infoPatternFields, required);
-
-            ReportMissing(node, required);
+            ParseMap(mapNode, info, _infoFixedFields, _infoPatternFields);
 
             return info;
         }
