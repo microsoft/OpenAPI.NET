@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         },
                         License = new OpenApiLicense
                         {
-                            Extensions = { ["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer") },
+                            Extensions = {["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer")},
                             Name = "licenseName",
                             Url = new Uri("http://www.example.com/url2")
                         },
