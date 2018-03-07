@@ -75,6 +75,10 @@ namespace Microsoft.OpenApi.Readers
                         var resolver = new OpenApiReferenceResolver(document);
                         var walker = new OpenApiWalker(resolver);
                         walker.Walk(document);
+                        foreach (var item in resolver.Errors)
+                        {
+                            diagnostic.Errors.Add(item);
+                        }
                         break;
                     case ReferenceResolutionSetting.DoNotResolveReferences:
                         break;

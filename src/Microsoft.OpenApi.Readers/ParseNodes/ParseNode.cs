@@ -31,8 +31,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var mapNode = this as MapNode;
             if (mapNode == null)
             {
-                Diagnostic.Errors.Add(
-                    new OpenApiError("", $"{nodeName} must be a map/object at " + Context.GetLocation()));
+                throw new OpenApiException($"{nodeName} must be a map/object");
+                //Diagnostic.Errors.Add(
+                //    new OpenApiError("", $"{nodeName} must be a map/object at " + Context.GetLocation()));
             }
 
             return mapNode;

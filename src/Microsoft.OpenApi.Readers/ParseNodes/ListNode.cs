@@ -74,5 +74,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             return array;
         }
+
+        //public override string GetScalarValue()
+        //{
+        //    throw new OpenApiException()
+        //}
     }
 }

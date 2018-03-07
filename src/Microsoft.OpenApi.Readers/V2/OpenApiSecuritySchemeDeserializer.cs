@@ -69,11 +69,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "scopes", (o, n) =>
                     {
-                        var value = n.GetScalarValue();
-                        if (!String.IsNullOrEmpty(value))
-                        {
-                            _flow.Scopes = n.CreateSimpleMap(LoadString);
-                        }
+                        _flow.Scopes = n.CreateSimpleMap(LoadString);
                     }
                 }
             };

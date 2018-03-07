@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "enum", (o, n) =>
                 {
-                    o.Enum = n.CreateSimpleList<IOpenApiAny>(s => new OpenApiString(s.GetScalarValue()));
+                    o.Enum = n.CreateList<IOpenApiAny>(s => s.CreateAny());
                 }
             },
 
