@@ -114,5 +114,11 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             throw new OpenApiException("Cannot get scalar value");
         }
+
+        public virtual List<IOpenApiAny> CreateListOfAny()
+        {
+            throw new OpenApiException("Cannot create list of any from here");
+        }
+
     }
 }

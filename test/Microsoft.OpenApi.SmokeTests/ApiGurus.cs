@@ -70,8 +70,8 @@ namespace Microsoft.OpenApi.SmokeTests
         }
 
 
-//        [Theory(DisplayName = "APIs.guru")]
-//        [MemberData(nameof(GetSchemas))]
+        [Theory(DisplayName = "APIs.guru")]
+        [MemberData(nameof(GetSchemas))]
         public async Task EnsureThatICouldParse(string url)
         {
             var stopwatch = new Stopwatch();
@@ -87,19 +87,24 @@ namespace Microsoft.OpenApi.SmokeTests
 
             stopwatch.Start();
 
-            var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings() {
+            });
+            var openApiDocument = reader.Read(stream, out var diagnostic);
 
-            output.WriteLine(String.Join("\n", diagnostic.Errors));
-                Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
-                Assert.Equal(0, diagnostic.Errors.Count);
-                
-                Assert.NotNull(openApiDocument);
+            if (diagnostic.Errors.Count > 0)
+            {
+                output.WriteLine($"Errors parsing {url}");
+                output.WriteLine(String.Join("\n", diagnostic.Errors));
+                Assert.True(false);
+            }
+
+            Assert.NotNull(openApiDocument);
             stopwatch.Stop();
                 output.WriteLine($"Parsing {url} took {stopwatch.ElapsedMilliseconds} ms.");
         }
 
-        [Theory(DisplayName = "APIs.guru")]
-        [MemberData(nameof(GetSchemas))]
+        //[Theory(DisplayName = "APIs.guru")]
+        //[MemberData(nameof(GetSchemas))]
         public async Task EnsureAllErrorsAreHandled(string url)
         {
             var stopwatch = new Stopwatch();

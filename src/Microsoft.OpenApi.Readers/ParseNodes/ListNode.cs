@@ -38,6 +38,20 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 .ToList();
         }
 
+        public override List<IOpenApiAny> CreateListOfAny()
+        {
+            var yamlSequence = _nodeList;
+            if (yamlSequence == null)
+            {
+                throw new OpenApiException(
+                    $"Expected list at line {_nodeList.Start.Line}");
+            }
+
+            return yamlSequence.Select(n => ParseNode.Create(Context, Diagnostic,n).CreateAny())
+                .Where(i => i != null)
+                .ToList();
+        }
+
         public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
             var yamlSequence = _nodeList;

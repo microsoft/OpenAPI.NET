@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "enum", (o, n) =>
                 {
-                    o.Enum = n.CreateList<IOpenApiAny>(s => s.CreateAny());
+                    o.Enum = n.CreateListOfAny();
                 }
             },
 
