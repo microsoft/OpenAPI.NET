@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Models
                         writer.WritePropertyName(OpenApiConstants.Examples);
                         writer.WriteStartObject();
                         writer.WritePropertyName(mediatype.Key);
-                        writer.WriteValue(mediatype.Value.Example);
+                        writer.WriteAny(mediatype.Value.Example);
                         writer.WriteEndObject();
                     }
                 }
