@@ -109,8 +109,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "enum", (o, n) =>
                 {
-                    o.Enum = n.CreateSimpleList<IOpenApiAny>(s => new OpenApiString(s.GetScalarValue()));
-                }
+                    o.Enum = n.CreateListOfAny();                }
             },
             {
                 "type", (o, n) =>
@@ -157,7 +156,14 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "additionalProperties", (o, n) =>
                 {
-                    o.AdditionalProperties = LoadSchema(n);
+                    if (n is ValueNode)
+                    {
+                        o.AdditionalPropertiesAllowed = bool.Parse(n.GetScalarValue());
+                    }
+                    else
+                    {
+                        o.AdditionalProperties = LoadSchema(n);
+                    }
                 }
             },
             {

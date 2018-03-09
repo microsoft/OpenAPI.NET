@@ -91,7 +91,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 Format = "int32",
                                 Minimum = 0
                             }
-                        }
+                        },
+                        AdditionalPropertiesAllowed = false  
                     });
             }
         }

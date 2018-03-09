@@ -140,7 +140,14 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "additionalProperties", (o, n) =>
                 {
-                    o.AdditionalProperties = LoadSchema(n);
+                    if (n is ValueNode)
+                    {
+                        o.AdditionalPropertiesAllowed = bool.Parse(n.GetScalarValue());
+                    }
+                    else
+                    {
+                        o.AdditionalProperties = LoadSchema(n);
+                    }
                 }
             },
             {
