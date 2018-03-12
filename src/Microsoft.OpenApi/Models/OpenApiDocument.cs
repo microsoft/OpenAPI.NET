@@ -307,7 +307,7 @@ namespace Microsoft.OpenApi.Models
                 switch (reference.Type)
                 {
                     case ReferenceType.Schema:
-                        return this.Components.Schemas[reference.Id];  
+                        return this.Components.Schemas[reference.Id];
 
                     case ReferenceType.Response:
                         return this.Components.Responses[reference.Id];

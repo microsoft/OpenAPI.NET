@@ -190,7 +190,8 @@ namespace Microsoft.OpenApi.Readers.Services
                 try
                 {
                     return _currentDocument.ResolveReference(reference) as T;
-                } catch(OpenApiException ex)
+                }
+                catch (OpenApiException ex)
                 {
                     _errors.Add(new OpenApiError(ex));
                     return null;
@@ -198,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.Services
             }
             else if (_resolveRemoteReferences == true)
             {
-                // TODO: Resolve Remote reference
+                // TODO: Resolve Remote reference (Targeted for 1.1 release)
                 return new T()
                 {
                     UnresolvedReference = true,
