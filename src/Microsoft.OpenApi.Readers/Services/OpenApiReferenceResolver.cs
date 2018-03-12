@@ -90,6 +90,14 @@ namespace Microsoft.OpenApi.Readers.Services
         }
 
         /// <summary>
+        /// Resolve all references to parameters
+        /// </summary>
+        public override void Visit(IList<OpenApiParameter> parameters)
+        {
+            ResolveList(parameters);
+        }
+
+        /// <summary>
         /// Resolve all references to links
         /// </summary>
         public override void Visit(IDictionary<string, OpenApiLink> links)
