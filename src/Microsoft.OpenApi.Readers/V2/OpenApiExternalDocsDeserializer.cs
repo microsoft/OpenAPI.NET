@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "url", (o, n) =>
                     {
-                        o.Url = new Uri(n.GetScalarValue());
+                        o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
             };

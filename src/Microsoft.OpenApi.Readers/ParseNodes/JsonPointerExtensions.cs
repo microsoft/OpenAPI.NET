@@ -14,9 +14,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// <summary>
         /// Finds the YAML node that corresponds to this JSON pointer based on the base YAML node.
         /// </summary>
-        public static YamlNode Find(this JsonPointer currentpointer, YamlNode baseYamlNode)
+        public static YamlNode Find(this JsonPointer currentPointer, YamlNode baseYamlNode)
         {
-            if (currentpointer.Tokens.Length == 0)
+            if (currentPointer.Tokens.Length == 0)
             {
                 return baseYamlNode;
             }
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             try
             {
                 var pointer = baseYamlNode;
-                foreach (var token in currentpointer.Tokens)
+                foreach (var token in currentPointer.Tokens)
                 {
                     var sequence = pointer as YamlSequenceNode;
 
@@ -47,9 +47,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
                 return pointer;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new ArgumentException("Failed to dereference pointer", ex);
+                return null;
             }
         }
     }

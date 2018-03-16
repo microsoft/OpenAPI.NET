@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "namespace", (o, n) =>
                 {
-                    o.Namespace = new Uri(n.GetScalarValue());
+                    o.Namespace = new Uri(n.GetScalarValue(), UriKind.Absolute);
                 }
             },
             {

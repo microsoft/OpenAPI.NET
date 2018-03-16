@@ -1,0 +1,80 @@
+﻿# Modified from https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#path-item-object-example
+put:
+    summary: Puts a pet in the store with form data
+    description: ""
+    operationId: putPetWithForm
+    consumes:
+    - application/x-www-form-urlencoded
+    - multipart/form-data
+    produces:
+    - application/json
+    - application/xml
+    parameters:
+    - name: petId
+      in: path
+      description: ID of pet that needs to be updated
+      required: true
+      type: string
+    - name: name
+      in: formData
+      description: Updated name of the pet
+      required: true
+      type: string
+    - name: status
+      in: formData
+      description: Updated status of the pet
+      required: false
+      type: string
+    responses:
+      '200':
+        description: Pet updated.
+      '405':
+        description: Invalid input
+post:
+    summary: Posts a pet in the store with form data
+    description: ""
+    operationId: postPetWithForm
+    consumes:
+    - application/x-www-form-urlencoded
+    - multipart/form-data
+    produces:
+    - application/json
+    - application/xml
+    parameters:
+    - name: petId
+      in: path
+      description: ID of pet that needs to be updated
+      required: true
+      type: string
+    - name: petName
+      in: path
+      description: Name of pet that needs to be updated
+      required: true
+      type: string
+    - name: name
+      in: formData
+      description: Updated name of the pet
+      required: true
+      type: string
+    - name: status
+      in: formData
+      description: Updated status of the pet
+      required: false
+      type: string
+    - name: skill
+      in: formData
+      description: Updated skill of the pet
+      required: false
+      type: string
+    responses:
+      '200':
+        description: Pet updated.
+parameters:
+- name: id
+  in: path
+  description: ID of pet to use
+  required: true
+  type: array
+  items:
+    type: string
+  collectionFormat: csv

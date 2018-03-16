@@ -3,6 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -30,7 +31,8 @@ namespace Microsoft.OpenApi.Tests.Models
                         {
                             Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
                         }
-                    }
+                    },
+                    Example = new OpenApiString("Blabla")
                 }
             },
             Headers =
@@ -147,7 +149,8 @@ namespace Microsoft.OpenApi.Tests.Models
         ""items"": {
           ""$ref"": ""#/components/schemas/customType""
         }
-      }
+      },
+      ""example"": ""Blabla""
     }
   }
 }";
@@ -181,7 +184,8 @@ content:
     schema:
       type: array
       items:
-        $ref: '#/components/schemas/customType'";
+        $ref: '#/components/schemas/customType'
+    example: Blabla";
 
             // Act
             var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -203,6 +207,9 @@ content:
     ""items"": {
       ""$ref"": ""#/definitions/customType""
     }
+  },
+  ""examples"": {
+    ""text/plain"": ""Blabla""
   },
   ""headers"": {
     ""X-Rate-Limit-Limit"": {
@@ -239,6 +246,8 @@ schema:
   type: array
   items:
     $ref: '#/definitions/customType'
+examples:
+  text/plain: Blabla
 headers:
   X-Rate-Limit-Limit:
     description: The number of allowed requests in the current period
