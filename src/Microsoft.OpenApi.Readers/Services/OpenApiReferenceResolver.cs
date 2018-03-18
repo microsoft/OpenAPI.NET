@@ -180,12 +180,7 @@ namespace Microsoft.OpenApi.Readers.Services
             }
             else if (_resolveRemoteReferences == true)
             {
-                // TODO: Resolve Remote reference
-                return new T()
-                {
-                    UnresolvedReference = true,
-                    Reference = reference
-                };
+                return _currentDocument.Workspace.ResolveReference(reference) as T;
             }
             else
             {

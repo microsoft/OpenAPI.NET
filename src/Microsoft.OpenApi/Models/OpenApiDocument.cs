@@ -274,14 +274,14 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
-        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        public IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal = false)
         {
             if (reference == null)
             {
                 return null;
             }
 
-            if (reference.IsExternal)
+            if (reference.IsExternal && !useExternal)
             {
                 // Should not attempt to resolve external references against a single document.
                 throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported); 

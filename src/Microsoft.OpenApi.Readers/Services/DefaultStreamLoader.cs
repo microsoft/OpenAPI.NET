@@ -13,9 +13,9 @@ using Microsoft.OpenApi.Readers.Interface;
 namespace Microsoft.OpenApi.Readers.Services
 {
     /// <summary>
-    /// Implementation of <see cref="IStreamLoader"/> that loads streams from URIs
+    /// Implementation of IInputLoader that loads streams from URIs
     /// </summary>
-    internal class DefaultStreamLoader : IStreamLoader
+    internal class DefaultStreamLoader : IInputLoader<Stream>
     {
         private HttpClient _httpClient = new HttpClient();
 

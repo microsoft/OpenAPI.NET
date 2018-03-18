@@ -10,19 +10,18 @@ using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers.Services
 {
-    internal class OpenApiWorkspaceLoader
+    internal class OpenApiWorkspaceLoader<TInput,TDiagnostic> where TDiagnostic: IDiagnostic
     {
         private OpenApiWorkspace _workspace;
-        private IStreamLoader _streamLoader;
-        private OpenApiDiagnostic _diagnostics;
-        private OpenApiReaderSettings _readerSettings;
+        private IInputLoader<TInput> _loader;
+        private TDiagnostic _diagnostics;
+        private IOpenApiReader<TInput, TDiagnostic> _reader;
 
-        public OpenApiWorkspaceLoader(OpenApiWorkspace workspace, IStreamLoader streamloader, OpenApiReaderSettings readerSettings)
+        public OpenApiWorkspaceLoader(OpenApiWorkspace workspace, IInputLoader<TInput> loader, IOpenApiReader<TInput, TDiagnostic> reader)
         {
             _workspace = workspace;
-            _streamLoader = streamloader;
-            _readerSettings = readerSettings;
-            _readerSettings.ReferenceResolution = ReferenceResolutionSetting.DoNotResolveReferences;
+            _loader = loader;
+            _reader = reader;
         }
 
         internal async Task LoadAsync(OpenApiReference reference, OpenApiDocument document)
@@ -41,9 +40,8 @@ namespace Microsoft.OpenApi.Readers.Services
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
-                    var stream = await _streamLoader.LoadAsync(new Uri(item.ExternalResource));
-                    var reader = new OpenApiStreamReader(_readerSettings);
-                    var newDocument = reader.Read(stream, out _diagnostics);
+                    var input = await _loader.LoadAsync(new Uri(item.ExternalResource));
+                    var newDocument = _reader.Read(input, out _diagnostics);
                     await LoadAsync(item, newDocument);
                 }
             }

@@ -78,7 +78,15 @@ namespace Microsoft.OpenApi.Readers
 
             // Load Document into workspace and load all referenced documents
             var workspace = openApiWorkspace ?? new OpenApiWorkspace();
-            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkspace, new DefaultStreamLoader(), _settings);
+            var settings = new OpenApiReaderSettings()
+            {
+                ExtensionParsers = _settings.ExtensionParsers,
+                RuleSet = _settings.RuleSet,
+                ReferenceResolution = ReferenceResolutionSetting.DoNotResolveReferences
+            };
+
+            var reader = new OpenApiStreamReader(settings);
+            var workspaceLoader = new OpenApiWorkspaceLoader<Stream, OpenApiDiagnostic>(openApiWorkspace, new DefaultStreamLoader(), reader);
             await workspaceLoader.LoadAsync(null,document);
 
             // Resolve References if requested

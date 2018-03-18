@@ -16,8 +16,13 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
+        private Dictionary<string, OpenApiDocument> _documents = new Dictionary<string, OpenApiDocument>();
 
-        public IEnumerable<OpenApiDocument> Documents { get; }  
+        public IEnumerable<OpenApiDocument> Documents {
+            get {
+                return _documents.Values;
+            }
+        }  
 
         public IEnumerable<IOpenApiFragment> Fragments { get; }
 
@@ -26,9 +31,10 @@ namespace Microsoft.OpenApi.Services
         {
             return true;
         }
-        public void AddDocument(string location, OpenApiDocument  document)
-        {
 
+        public void AddDocument(string location, OpenApiDocument  document) 
+        {
+            _documents.Add(location, document);
         }
 
         public void AddFragment(string location, IOpenApiFragment fragment)
@@ -38,9 +44,12 @@ namespace Microsoft.OpenApi.Services
 
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
-            // Find the doc/fragment
-            // Call ResolveReference on it
-            return null;
+            if (!_documents.TryGetValue(reference.ExternalResource,out var doc))
+            {
+                return null;
+            }
+            
+            return doc.ResolveReference(reference,true);
         }
 
     }
