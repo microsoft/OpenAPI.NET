@@ -425,6 +425,7 @@ namespace Microsoft.OpenApi.Services
 
             if (pathItem != null)
             {
+                Walk(OpenApiConstants.Parameters, () => Walk(pathItem.Parameters));
                 Walk(pathItem.Operations);
             }
             _visitor.Visit(pathItem as IOpenApiExtensible);
