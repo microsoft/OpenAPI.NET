@@ -44,6 +44,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Servers, () => Walk(doc.Servers));
             Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
             Walk(OpenApiConstants.Components, () => Walk(doc.Components));
+            Walk(OpenApiConstants.Security, () => Walk(doc.SecurityRequirements));
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
             Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);

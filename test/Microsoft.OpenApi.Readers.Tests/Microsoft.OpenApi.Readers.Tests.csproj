@@ -13,6 +13,7 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="V3Tests\Samples\OpenApiDocument\securedApi.yaml" />
       <None Remove="V3Tests\Samples\OpenApiOperation\securedOperation.yaml" />
     </ItemGroup>
     <ItemGroup>
@@ -97,6 +98,7 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\securedApi.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiEncoding\advancedEncoding.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

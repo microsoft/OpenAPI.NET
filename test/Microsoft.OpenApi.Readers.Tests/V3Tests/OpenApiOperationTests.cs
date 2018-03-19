@@ -23,5 +23,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
             }
         }
+
+     
     }
 }
