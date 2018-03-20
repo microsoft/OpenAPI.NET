@@ -1,0 +1,12 @@
+﻿openapi: 3.0.0
+info:
+  title: Example of Security Requirement referencing a security scheme
+  version: 1.0.0
+paths: {}
+security:
+  - basicAuth: []
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
