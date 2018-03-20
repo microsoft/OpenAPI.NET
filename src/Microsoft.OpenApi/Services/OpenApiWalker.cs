@@ -532,6 +532,8 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(parameter);
             Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
             Walk(OpenApiConstants.Content, () => Walk(parameter.Content));
+            Walk(OpenApiConstants.Examples, () => Walk(parameter.Examples));
+
             Walk(parameter as IOpenApiExtensible);
         }
 
