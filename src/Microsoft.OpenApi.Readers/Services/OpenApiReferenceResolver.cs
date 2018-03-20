@@ -90,6 +90,23 @@ namespace Microsoft.OpenApi.Readers.Services
         }
 
         /// <summary>
+        /// Resolve all references to SecuritySchemes
+        /// </summary>
+        public override void Visit(OpenApiSecurityRequirement securityRequirement)
+        {
+            foreach (var scheme in securityRequirement.Keys.ToList())
+            {
+                ResolveObject(scheme, (resolvedScheme) => {
+                    // If scheme was unresolved
+                    // copy Scopes and remove old unresolved scheme
+                    var scopes = securityRequirement[scheme];
+                    securityRequirement.Remove(scheme);
+                    securityRequirement.Add(resolvedScheme, scopes);
+                });
+            }
+        }
+
+        /// <summary>
         /// Resolve all references to parameters
         /// </summary>
         public override void Visit(IList<OpenApiParameter> parameters)
