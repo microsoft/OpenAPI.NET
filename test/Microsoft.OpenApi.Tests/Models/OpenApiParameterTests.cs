@@ -47,9 +47,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 Title = "title2",
                 Description = "description2"
             },
-            Examples = new List<OpenApiExample>
+            Examples = new Dictionary<string,OpenApiExample>
             {
-                new OpenApiExample
+                ["test"] = new OpenApiExample
                 {
                     Summary = "summary3",
                     Description = "description3"
@@ -149,12 +149,12 @@ namespace Microsoft.OpenApi.Tests.Models
     ""title"": ""title2"",
     ""description"": ""description2""
   },
-  ""examples"": [
-    {
+  ""examples"": {
+    ""test"": {
       ""summary"": ""summary3"",
       ""description"": ""description3""
     }
-  ]
+  }
 }";
 
             // Act

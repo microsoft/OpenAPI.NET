@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "examples", (o, n) =>
                     {
-                        o.Examples = ((ListNode)n).Select(s => LoadExample(s)).ToList();
+                        o.Examples = n.CreateMap(LoadExample);
                     }
                 },
                 {

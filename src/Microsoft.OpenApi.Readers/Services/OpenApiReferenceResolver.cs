@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -17,11 +18,20 @@ namespace Microsoft.OpenApi.Readers.Services
     {
         private OpenApiDocument _currentDocument;
         private bool _resolveRemoteReferences;
+        private List<OpenApiError> _errors = new List<OpenApiError>();
 
         public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true) 
         {
             _currentDocument = currentDocument;
             _resolveRemoteReferences = resolveRemoteReferences;
+        }
+
+        public IEnumerable<OpenApiError> Errors
+        {
+            get
+            {
+                return _errors;
+            }
         }
 
         public override void Visit(OpenApiDocument doc)
@@ -87,6 +97,31 @@ namespace Microsoft.OpenApi.Readers.Services
         public override void Visit(OpenApiResponses responses)
         {
             ResolveMap(responses);
+        }
+
+        /// <summary>
+        /// Resolve all references to SecuritySchemes
+        /// </summary>
+        public override void Visit(OpenApiSecurityRequirement securityRequirement)
+        {
+            foreach (var scheme in securityRequirement.Keys.ToList())
+            {
+                ResolveObject(scheme, (resolvedScheme) => {
+                    // If scheme was unresolved
+                    // copy Scopes and remove old unresolved scheme
+                    var scopes = securityRequirement[scheme];
+                    securityRequirement.Remove(scheme);
+                    securityRequirement.Add(resolvedScheme, scopes);
+                });
+            }
+        }
+
+        /// <summary>
+        /// Resolve all references to parameters
+        /// </summary>
+        public override void Visit(IList<OpenApiParameter> parameters)
+        {
+            ResolveList(parameters);
         }
 
         /// <summary>
@@ -177,11 +212,19 @@ namespace Microsoft.OpenApi.Readers.Services
         {
             if (string.IsNullOrEmpty(reference.ExternalResource))
             {
-                return _currentDocument.ResolveReference(reference) as T;
+                try
+                {
+                    return _currentDocument.ResolveReference(reference) as T;
+                }
+                catch (OpenApiException ex)
+                {
+                    _errors.Add(new OpenApiError(ex));
+                    return null;
+                }
             }
             else if (_resolveRemoteReferences == true)
             {
-                // TODO: Resolve Remote reference
+                // TODO: Resolve Remote reference (Targeted for 1.1 release)
                 return new T()
                 {
                     UnresolvedReference = true,

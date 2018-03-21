@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.V2
             switch (value)
             {
                 case "body":
-                    n.Context.SetTempStorage("bodyParameter", o);
+                    n.Context.SetTempStorage(TempStorageKeys.BodyParameter, o);
                     break;
                 case "formData":
                     var formParameters = n.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
@@ -219,6 +219,11 @@ namespace Microsoft.OpenApi.Readers.V2
         }
 
         public static OpenApiParameter LoadParameter(ParseNode node)
+        {
+            return LoadParameter(node, false);
+        }
+
+        public static OpenApiParameter LoadParameter(ParseNode node, bool evenBody)
         {
             // Reset the local variables every time this method is called.
             _in = null;
@@ -243,7 +248,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 node.Context.SetTempStorage("schema", null);
             }
 
-            if (_in == null)
+            if (_in == null && !evenBody)
             {
                 return null; // Don't include Form or Body parameters in OpenApiOperation.Parameters list
             }

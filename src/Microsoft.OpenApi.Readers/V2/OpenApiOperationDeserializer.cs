@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Readers.V2
             return formBody;
         }
 
-        private static OpenApiRequestBody CreateRequestBody(
+        internal static OpenApiRequestBody CreateRequestBody(
             ParsingContext context,
             OpenApiParameter bodyParameter)
         {

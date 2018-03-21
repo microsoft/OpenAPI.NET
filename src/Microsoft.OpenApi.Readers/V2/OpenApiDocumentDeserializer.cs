@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers.V2
 {
@@ -65,6 +68,17 @@ namespace Microsoft.OpenApi.Readers.V2
                     o.Components.Parameters = n.CreateMapWithReference(
                         ReferenceType.Parameter,
                         LoadParameter);
+
+                    o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, p => 
+                            {
+                                var parameter = LoadParameter(p, evenBody: true);
+                                if (parameter.In == null)
+                                {
+                                    return CreateRequestBody(n.Context,parameter); 
+                                }
+                                return null;
+                            }
+                      );
                 }
             },
             {
@@ -139,7 +153,49 @@ namespace Microsoft.OpenApi.Readers.V2
 
             MakeServers(openApidoc.Servers, openApiNode.Context);
 
+            FixRequestBodyReferences(openApidoc);
             return openApidoc;
+        }
+
+        private static void FixRequestBodyReferences(OpenApiDocument doc)
+        {
+            // Walk all unresolved parameter references
+            // if id matches with request body Id, change type
+            if (doc.Components?.RequestBodies != null && doc.Components?.RequestBodies.Count > 0)
+            {
+                var fixer = new RequestBodyReferenceFixer(doc.Components?.RequestBodies);
+                var walker = new OpenApiWalker(fixer);
+                walker.Walk(doc);
+            }
+
+        }
+    }
+
+    internal class RequestBodyReferenceFixer : OpenApiVisitorBase
+    {
+        private IDictionary<string, OpenApiRequestBody> _requestBodies;
+        public RequestBodyReferenceFixer(IDictionary<string, OpenApiRequestBody> requestBodies)
+        {
+            _requestBodies = requestBodies;
+        }
+        public override void Visit(OpenApiOperation operation)
+        {
+            var body = operation.Parameters.Where(p => p.UnresolvedReference == true
+            && _requestBodies.ContainsKey(p.Reference.Id)).FirstOrDefault();
+
+            if (body != null)
+            {
+                operation.Parameters.Remove(body);
+                operation.RequestBody = new OpenApiRequestBody()
+                {
+                    UnresolvedReference = true,
+                    Reference = new OpenApiReference()
+                    {
+                        Id = body.Reference.Id,
+                        Type = ReferenceType.RequestBody
+                    }
+                };
+            }
         }
     }
 }
