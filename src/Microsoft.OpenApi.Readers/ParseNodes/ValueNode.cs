@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         dblValue); // Note(darrmi): This may be better as decimal.  Further investigation required.
             }
 
-            if (DateTime.TryParse(value, out var datetimeValue))
+            if (DateTimeOffset.TryParse(value, out var datetimeValue))
             {
                 return new OpenApiDateTime(datetimeValue);
             }

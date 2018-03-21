@@ -26,28 +26,33 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override List<T> CreateList<T>(Func<MapNode, T> map)
         {
-            var yamlSequence = _nodeList;
-            if (yamlSequence == null)
+            if (_nodeList == null)
             {
                 throw new OpenApiException(
                     $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
             }
 
-            return yamlSequence.Select(n => map(new MapNode(Context, Diagnostic, n as YamlMappingNode)))
+            return _nodeList.Select(n => map(new MapNode(Context, Diagnostic, n as YamlMappingNode)))
+                .Where(i => i != null)
+                .ToList();
+        }
+
+        public override List<IOpenApiAny> CreateListOfAny()
+        {
+            return _nodeList.Select(n => ParseNode.Create(Context, Diagnostic,n).CreateAny())
                 .Where(i => i != null)
                 .ToList();
         }
 
         public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
-            var yamlSequence = _nodeList;
-            if (yamlSequence == null)
+            if (_nodeList == null)
             {
                 throw new OpenApiException(
                     $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
             }
 
-            return yamlSequence.Select(n => map(new ValueNode(Context, Diagnostic, (YamlScalarNode)n))).ToList();
+            return _nodeList.Select(n => map(new ValueNode(Context, Diagnostic, (YamlScalarNode)n))).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()
