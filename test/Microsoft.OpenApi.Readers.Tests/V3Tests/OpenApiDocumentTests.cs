@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -1109,6 +1110,19 @@ paths: {}",
 
             context.ShouldBeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+        }
+
+        [Fact]
+        public void GlobalSecurityRequirementShouldReferenceSecurityScheme()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedApi.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+
+                var securityRequirement = openApiDoc.SecurityRequirements.First();
+
+                Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
+            }
         }
     }
 }

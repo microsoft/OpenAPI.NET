@@ -31,8 +31,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var mapNode = this as MapNode;
             if (mapNode == null)
             {
-                Diagnostic.Errors.Add(
-                    new OpenApiError("", $"{nodeName} must be a map/object at " + Context.GetLocation()));
+                throw new OpenApiException($"{nodeName} must be a map/object");
             }
 
             return mapNode;
@@ -69,12 +68,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public virtual List<T> CreateList<T>(Func<MapNode, T> map)
         {
-            throw new OpenApiException("Cannot create list");
+            throw new OpenApiException("Cannot create list from this type of node.");
         }
 
         public virtual Dictionary<string, T> CreateMap<T>(Func<MapNode, T> map)
         {
-            throw new OpenApiException("Cannot create map");
+            throw new OpenApiException("Cannot create map from this type of node.");
         }
 
         public virtual Dictionary<string, T> CreateMapWithReference<T>(
@@ -82,36 +81,38 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             Func<MapNode, T> map)
             where T : class, IOpenApiReferenceable
         {
-            throw new OpenApiException("Cannot create map from reference");
+            throw new OpenApiException("Cannot create map from this reference.");
         }
 
         public virtual List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
-            throw new OpenApiException("Cannot create simple list");
+            throw new OpenApiException("Cannot create simple list from this type of node.");
         }
 
         public virtual Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
-            throw new OpenApiException("Cannot create simple map");
+            throw new OpenApiException("Cannot create simple map from this type of node.");
         }
 
-        /// <summary>
-        /// Create a <see cref="IOpenApiAny"/>
-        /// </summary>
-        /// <returns></returns>
         public virtual IOpenApiAny CreateAny()
         {
-            throw new NotSupportedException();
+            throw new OpenApiException("Cannot create an Any object this type of node.");
         }
 
         public virtual string GetRaw()
         {
-            throw new OpenApiException("Cannot get raw value");
+            throw new OpenApiException("Cannot get raw value from this type of node.");
         }
 
         public virtual string GetScalarValue()
         {
-            throw new OpenApiException("Cannot get scalar value");
+            throw new OpenApiException("Cannot create a scalar value from this type of node.");
         }
+
+        public virtual List<IOpenApiAny> CreateListOfAny()
+        {
+            throw new OpenApiException("Cannot create a list from this type of node.");
+        }
+
     }
 }

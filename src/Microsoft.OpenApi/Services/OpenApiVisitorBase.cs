@@ -280,6 +280,13 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits list of <see cref="OpenApiSecurityRequirement"/>
+        /// </summary>
+        public virtual void Visit(IList<OpenApiSecurityRequirement> openApiSecurityRequirements)
+        {
+        }
+        
+        /// <summary>
         /// Visits <see cref="IOpenApiExtensible"/>
         /// </summary>
         public virtual void Visit(IOpenApiExtensible openApiExtensible)

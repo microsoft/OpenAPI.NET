@@ -95,6 +95,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                          key = n.Key.GetScalarValue(),
                          value = map(new MapNode(Context, Diagnostic, (YamlMappingNode)n.Value))
                      };
+                     if (entry.value == null)
+                     {
+                         return null;  // Body Parameters shouldn't be converted to Parameters
+                     }
                      entry.value.Reference = new OpenApiReference()
                      {
                          Type = referenceType,
@@ -103,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                      return entry;
                  }
                  );
-             return nodes.ToDictionary(k => k.key, v => v.value);
+             return nodes.Where(n => n!= null).ToDictionary(k => k.key, v => v.value);
          }
 
         public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)

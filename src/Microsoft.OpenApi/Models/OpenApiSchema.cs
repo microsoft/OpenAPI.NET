@@ -174,11 +174,17 @@ namespace Microsoft.OpenApi.Models
         public int? MinProperties { get; set; }
 
         /// <summary>
+        /// Indicates if the schema can contain properties other than those defined by the properties map.
+        /// </summary>
+        public bool AdditionalPropertiesAllowed { get; set; } = true;
+
+        /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Value can be boolean or object. Inline or referenced schema
         /// MUST be of a Schema Object and not a standard JSON Schema.
         /// </summary>
         public OpenApiSchema AdditionalProperties { get; set; }
+
 
         /// <summary>
         /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate
@@ -331,10 +337,17 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
 
             // additionalProperties
-            writer.WriteOptionalObject(
-                OpenApiConstants.AdditionalProperties,
-                AdditionalProperties,
-                (w, s) => s.SerializeAsV3(w));
+            if (AdditionalPropertiesAllowed)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.AdditionalProperties,
+                    AdditionalProperties,
+                    (w, s) => s.SerializeAsV3(w));
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
+            }
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);

@@ -44,6 +44,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Servers, () => Walk(doc.Servers));
             Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
             Walk(OpenApiConstants.Components, () => Walk(doc.Components));
+            Walk(OpenApiConstants.Security, () => Walk(doc.SecurityRequirements));
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
             Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);
@@ -425,6 +426,7 @@ namespace Microsoft.OpenApi.Services
 
             if (pathItem != null)
             {
+                Walk(OpenApiConstants.Parameters, () => Walk(pathItem.Parameters));
                 Walk(pathItem.Operations);
             }
             _visitor.Visit(pathItem as IOpenApiExtensible);
@@ -470,9 +472,31 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Responses, () => Walk(operation.Responses));
             Walk(OpenApiConstants.Callbacks, () => Walk(operation.Callbacks));
             Walk(OpenApiConstants.Tags, () => Walk(operation.Tags));
-
+            Walk(OpenApiConstants.Security, () => Walk(operation.Security));
             Walk(operation as IOpenApiExtensible);
         }
+
+        /// <summary>
+        /// Visits list of <see cref="OpenApiSecurityRequirement"/>
+        /// </summary>
+        internal void Walk(IList<OpenApiSecurityRequirement> securityRequirements)
+        {
+            if (securityRequirements == null)
+            {
+                return;
+            }
+
+            _visitor.Visit(securityRequirements);
+
+            if (securityRequirements != null)
+            {
+                for (int i = 0; i < securityRequirements.Count; i++)
+                {
+                    Walk(i.ToString(), () => Walk(securityRequirements[i]));
+                }
+            }
+        }
+
 
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>
@@ -508,6 +532,8 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(parameter);
             Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
             Walk(OpenApiConstants.Content, () => Walk(parameter.Content));
+            Walk(OpenApiConstants.Examples, () => Walk(parameter.Examples));
+
             Walk(parameter as IOpenApiExtensible);
         }
 
