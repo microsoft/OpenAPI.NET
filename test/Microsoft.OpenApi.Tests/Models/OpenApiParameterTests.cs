@@ -75,9 +75,9 @@ namespace Microsoft.OpenApi.Tests.Models
                     Id = "schemaObject1"
                 }
             },
-            Examples = new List<OpenApiExample>
+            Examples = new Dictionary<string, OpenApiExample>
             {
-                new OpenApiExample
+                ["test"] = new OpenApiExample
                 {
                     Summary = "summary3",
                     Description = "description3"
@@ -99,9 +99,9 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Type = "object"
             },
-            Examples = new List<OpenApiExample>
+            Examples = new Dictionary<string, OpenApiExample>
             {
-                new OpenApiExample
+                ["test"] = new OpenApiExample
                 {
                     Summary = "summary3",
                     Description = "description3"
