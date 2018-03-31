@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("info");
                     if (item.Info == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "info", "document"));
                         context.AddError(error);
                     }
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("paths");
                     if (item.Paths == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "paths", "document"));
                         context.AddError(error);
                     }

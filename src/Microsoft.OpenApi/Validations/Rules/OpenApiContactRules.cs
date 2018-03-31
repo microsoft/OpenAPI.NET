@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         if (!item.Email.IsEmailAddress())
                         {
-                            ValidationError error = new ValidationError(ErrorReason.Format, context.PathString,
+                            OpenApiError error = new OpenApiError(ErrorReason.Format, context.PathString,
                                 String.Format(SRResource.Validation_StringMustBeEmailAddress, item.Email));
                             context.AddError(error);
                         }

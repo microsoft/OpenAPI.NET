@@ -55,9 +55,9 @@ namespace Microsoft.OpenApi.Tests.Services
             walker.Walk(openApiDocument);
 
             validator.Errors.ShouldBeEquivalentTo(
-                    new List<ValidationError>
+                    new List<OpenApiError>
                     {
-                        new ValidationError(ErrorReason.Required, "#/paths/~1test/get/responses/200/description",
+                        new OpenApiError(ErrorReason.Required, "#/paths/~1test/get/responses/200/description",
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"))
         });
         }
@@ -87,9 +87,9 @@ namespace Microsoft.OpenApi.Tests.Services
             walker.Walk(openApiDocument);
 
             validator.Errors.ShouldBeEquivalentTo(
-                    new List<ValidationError>
+                    new List<OpenApiError>
                     {
-                        new ValidationError(ErrorReason.Required, "#/servers/1/url",
+                        new OpenApiError(ErrorReason.Required, "#/servers/1/url",
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
         });
         }
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Tests.Services
                  {
                      if (item.Bar == "hey")
                      {
-                         context.AddError(new ValidationError(ErrorReason.Format, context.PathString, "Don't say hey"));
+                         context.AddError(new OpenApiError(ErrorReason.Format, context.PathString, "Don't say hey"));
                      }
                  }));
 
@@ -130,9 +130,9 @@ namespace Microsoft.OpenApi.Tests.Services
             walker.Walk(openApiDocument);
 
             validator.Errors.ShouldBeEquivalentTo(
-                   new List<ValidationError>
+                   new List<OpenApiError>
                    {
-                       new ValidationError(ErrorReason.Format, "#/info/x-foo", "Don't say hey")
+                       new OpenApiError(ErrorReason.Format, "#/info/x-foo", "Don't say hey")
                    });
         }
 

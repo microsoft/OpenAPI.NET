@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Readers
             var errors = document.Validate(_settings.RuleSet);
             foreach (var item in errors)
             {
-                diagnostic.Errors.Add(new OpenApiError(item.ErrorPath, item.ErrorMessage));
+                diagnostic.Errors.Add(item);
             } 
 
             return document;

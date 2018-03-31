@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateNameIsRequiredInTag()
         {
             // Arrange
-            IEnumerable<ValidationError> errors;
+            IEnumerable<OpenApiError> errors;
             OpenApiTag tag = new OpenApiTag();
 
             // Act
@@ -31,15 +31,15 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            ValidationError error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"), error.ErrorMessage);
+            OpenApiError error = Assert.Single(errors);
+            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"), error.Message);
         }
 
         [Fact]
         public void ValidateExtensionNameStartsWithXDashInTag()
         {
             // Arrange
-            IEnumerable<ValidationError> errors;
+            IEnumerable<OpenApiError> errors;
             OpenApiTag tag = new OpenApiTag
             {
                 Name = "tag"
@@ -55,8 +55,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            ValidationError error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, "tagExt", "#/extensions"), error.ErrorMessage);
+            OpenApiError error = Assert.Single(errors);
+            Assert.Equal(String.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, "tagExt", "#/extensions"), error.Message);
         }
     }
 }

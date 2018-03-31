@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("title");
                     if (String.IsNullOrEmpty(item.Title))
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "title", "info"));
                         context.AddError(error);
                     }
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("version");
                     if (String.IsNullOrEmpty(item.Version))
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "version", "info"));
                         context.AddError(error);
                     }

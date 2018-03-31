@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("authorizationUrl");
                     if (flow.AuthorizationUrl == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow"));
                         context.AddError(error);
                     }
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("tokenUrl");
                     if (flow.TokenUrl == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow"));
                         context.AddError(error);
                     }
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("scopes");
                     if (flow.Scopes == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "scopes", "OAuth Flow"));
                         context.AddError(error);
                     }

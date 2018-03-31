@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateDescriptionIsRequiredInResponse()
         {
             // Arrange
-            IEnumerable<ValidationError> errors;
+            IEnumerable<OpenApiError> errors;
             OpenApiResponse response = new OpenApiResponse();
 
             // Act
@@ -31,10 +31,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            ValidationError error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "description", "response"), error.ErrorMessage);
-            Assert.Equal(ErrorReason.Required, error.ErrorCode);
-            Assert.Equal("#/description", error.ErrorPath);
+            OpenApiError error = Assert.Single(errors);
+            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "description", "response"), error.Message);
+            Assert.Equal(ErrorReason.Required, error.ReasonClass);
+            Assert.Equal("#/description", error.Pointer);
         }
     }
 }

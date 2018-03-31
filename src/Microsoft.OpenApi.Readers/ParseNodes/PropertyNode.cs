@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Models;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes

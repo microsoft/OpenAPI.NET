@@ -32,8 +32,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            ValidationError error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_StringMustBeEmailAddress, testEmail), error.ErrorMessage);
+            OpenApiError error = Assert.Single(errors);
+            Assert.Equal(String.Format(SRResource.Validation_StringMustBeEmailAddress, testEmail), error.Message);
         }
     }
 }

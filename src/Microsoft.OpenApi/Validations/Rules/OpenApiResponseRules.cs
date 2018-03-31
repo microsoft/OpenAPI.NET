@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("description");
                     if (String.IsNullOrEmpty(response.Description))
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"));
                         context.AddError(error);
                     }

@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("name");
                     if (String.IsNullOrEmpty(license.Name))
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
                             String.Format(SRResource.Validation_FieldIsRequired, "name", "license"));
                         context.AddError(error);
                     }
