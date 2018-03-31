@@ -111,10 +111,11 @@ namespace Microsoft.OpenApi.Tests
                       re.CreateContent("application/json", co =>
                           co.Schema = new OpenApiSchema()
                           {
-                              Reference = new OpenApiReference()
+                              Reference = new OpenApiReference()  // Reference 
                               {
                                   Id = "test",
-                                  Type = ReferenceType.Schema
+                                  Type = ReferenceType.Schema,
+                                  ExternalResource = "common"
                               },
                               UnresolvedReference = true
                           }
@@ -126,6 +127,8 @@ namespace Microsoft.OpenApi.Tests
             workspace.AddDocument("root", doc);
 
             workspace.AddDocument("common", CreateCommonDocument());
+
+
 
             var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             Assert.True(schema.UnresolvedReference);
