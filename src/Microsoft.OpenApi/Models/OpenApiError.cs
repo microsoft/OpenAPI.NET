@@ -76,6 +76,11 @@ namespace Microsoft.OpenApi.Models
         public string Pointer { get; set; }
 
         /// <summary>
+        /// Name of rule that detected the error.
+        /// </summary>
+        public string RuleName { get; set; }
+
+        /// <summary>
         /// Gets the string representation of <see cref="OpenApiError"/>.
         /// </summary>
         public override string ToString()

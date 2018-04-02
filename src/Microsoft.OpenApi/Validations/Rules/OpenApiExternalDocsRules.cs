@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the field is required.
         /// </summary>
-        public static ValidationRule<OpenApiExternalDocs> FieldIsRequired =>
+        public static ValidationRule<OpenApiExternalDocs> UrlIsRequired =>
             new ValidationRule<OpenApiExternalDocs>(
                 (context, item) =>
                 {
@@ -24,9 +24,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("url");
                     if (item.Url == null)
                     {
-                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(UrlIsRequired),ErrorReason.Required, 
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"));
-                        context.AddError(error);
                     }
                     context.Exit();
                 });

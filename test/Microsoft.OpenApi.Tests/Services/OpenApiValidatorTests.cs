@@ -59,6 +59,9 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         new OpenApiError(ErrorReason.Required, "#/paths/~1test/get/responses/200/description",
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"))
+                        {
+                            RuleName = "ResponseRequiredFields"
+                        }
         });
         }
 
@@ -91,6 +94,9 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         new OpenApiError(ErrorReason.Required, "#/servers/1/url",
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
+                        {
+                            RuleName = "ServerRequiredFields"
+                        }
         });
         }
 

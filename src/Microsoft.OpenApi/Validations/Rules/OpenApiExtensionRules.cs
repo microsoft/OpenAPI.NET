@@ -26,9 +26,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         if (!extensible.Key.StartsWith("x-"))
                         {
-                            OpenApiError error = new OpenApiError(ErrorReason.Format, context.PathString,
+                            context.CreateError(nameof(ExtensionNameMustStartWithXDash),ErrorReason.Format, 
                                 String.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible.Key, context.PathString));
-                            context.AddError(error);
                         }
                     }
                     context.Exit();

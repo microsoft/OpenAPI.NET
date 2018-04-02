@@ -32,9 +32,8 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                         if (!pathName.StartsWith("/"))
                         {
-                            OpenApiError error = new OpenApiError(ErrorReason.Format, context.PathString,
+                            context.CreateError(nameof(PathNameMustBeginWithSlash),ErrorReason.Format,
                                 string.Format(SRResource.Validation_PathItemMustBeginWithSlash, pathName));
-                            context.AddError(error);
                         }
 
                         context.Exit();

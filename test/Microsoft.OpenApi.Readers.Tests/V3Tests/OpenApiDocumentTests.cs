@@ -108,6 +108,9 @@ paths: {}",
                         Errors =
                         {
                             new OpenApiError("#/info/title", "The field 'title' in 'info' object is REQUIRED.")
+                            {
+                                RuleName = "InfoRequiredFields"
+                            }
                         },
                         SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                     });

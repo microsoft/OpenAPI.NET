@@ -16,16 +16,15 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the field is required.
         /// </summary>
-        public static ValidationRule<OpenApiTag> FieldIsRequired =>
+        public static ValidationRule<OpenApiTag> TagRequiredFields =>
             new ValidationRule<OpenApiTag>(
                 (context, tag) =>
                 {
                     context.Enter("name");
                     if (String.IsNullOrEmpty(tag.Name))
                     {
-                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(TagRequiredFields),ErrorReason.Required,
                             String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"));
-                        context.AddError(error);
                     }
                     context.Exit();
                 });

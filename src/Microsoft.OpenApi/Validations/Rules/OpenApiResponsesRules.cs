@@ -22,11 +22,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 {
                     if (!responses.Keys.Any())
                     {
-                        context.AddError(
-                            new OpenApiError(
-                                ErrorReason.Required,
-                                context.PathString,
-                                "Responses must contain at least one response"));
+                        context.CreateError(nameof(ResponsesMustContainAtLeastOneResponse),ErrorReason.Required,
+                                "Responses must contain at least one response");
                     }
                 });
 

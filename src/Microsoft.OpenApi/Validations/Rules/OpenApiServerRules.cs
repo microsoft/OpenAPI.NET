@@ -16,16 +16,15 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the field is required.
         /// </summary>
-        public static ValidationRule<OpenApiServer> FieldIsRequired =>
+        public static ValidationRule<OpenApiServer> ServerRequiredFields =>
             new ValidationRule<OpenApiServer>(
                 (context, server) =>
                 {
                     context.Enter("url");
                     if (String.IsNullOrEmpty(server.Url))
                     {
-                        OpenApiError error = new OpenApiError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(ServerRequiredFields),ErrorReason.Required,
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"));
-                        context.AddError(error);
                     }
                     context.Exit();
                 });
