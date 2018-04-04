@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         public static void CreateError(this IValidationContext context, string ruleName, ErrorReason reason, string message)
         {
-            OpenApiValidationError error = new OpenApiValidationError(reason, context.PathString, message);
+            OpenApiValidatorError error = new OpenApiValidatorError(reason, context.PathString, message);
             error.RuleName = ruleName;
             context.AddError(error);
         }

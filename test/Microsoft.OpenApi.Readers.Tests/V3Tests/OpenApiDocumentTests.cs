@@ -109,7 +109,7 @@ paths: {}",
                     {
                         Errors =
                         {
-                            new OpenApiValidationError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
+                            new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
                         },
                         SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                     });

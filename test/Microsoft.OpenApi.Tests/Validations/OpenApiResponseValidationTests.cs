@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            OpenApiValidationError error = Assert.Single(errors) as OpenApiValidationError;
+            OpenApiValidatorError error = Assert.Single(errors) as OpenApiValidatorError;
             Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "description", "response"), error.Message);
             Assert.Equal(ErrorReason.Required, error.ReasonClass);
             Assert.Equal("#/description", error.Pointer);

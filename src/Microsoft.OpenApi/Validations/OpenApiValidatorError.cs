@@ -35,12 +35,12 @@ namespace Microsoft.OpenApi.Validations
     /// <summary>
     /// Errors detected when validating a OpenAPI Element
     /// </summary>
-    public class OpenApiValidationError : OpenApiError
+    public class OpenApiValidatorError : OpenApiError
     {
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class.
         /// </summary>
-        public OpenApiValidationError(ErrorReason reason, string pointer, string message) : base(pointer, message)
+        public OpenApiValidatorError(ErrorReason reason, string pointer, string message) : base(pointer, message)
         {
             Pointer = pointer;
             Message = message;
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class.
         /// </summary>
-        public OpenApiValidationError(string ruleName, string pointer, string message) : base(pointer, message)
+        public OpenApiValidatorError(string ruleName, string pointer, string message) : base(pointer, message)
         {
             Pointer = pointer;
             Message = message;
