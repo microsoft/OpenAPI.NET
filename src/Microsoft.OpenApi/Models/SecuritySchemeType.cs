@@ -29,5 +29,6 @@ namespace Microsoft.OpenApi.Models
         /// Use OAuth2 with OpenId Connect URL to discover OAuth2 configuration value.
         /// </summary>
         [Display("openIdConnect")] OpenIdConnect
+
     }
 }

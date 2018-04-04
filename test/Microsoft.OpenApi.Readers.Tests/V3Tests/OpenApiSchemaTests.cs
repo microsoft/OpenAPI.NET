@@ -439,8 +439,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                                 Type = "integer",
                                                 Format = "int32",
                                                 Description = "the size of the pack the dog is from",
-                                                // TODO: Issue #26. This should be parsed as number.
-                                                Default = new OpenApiString("0"),
+                                                Default = new OpenApiInteger(0),
                                                 Minimum = 0
                                             }
                                         }

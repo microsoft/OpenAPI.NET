@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -12,27 +13,45 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
+        private static readonly FixedFieldMap<OpenApiTag> _tagFixedFields = new FixedFieldMap<OpenApiTag>
+        {
+            {
+                OpenApiConstants.Name, (o, n) =>
+                {
+                    o.Name = n.GetScalarValue();
+                }
+            },
+            {
+                OpenApiConstants.Description, (o, n) =>
+                {
+                    o.Description = n.GetScalarValue();
+                }
+            },
+            {
+                OpenApiConstants.ExternalDocs, (o, n) =>
+                {
+                    o.ExternalDocs = LoadExternalDocs(n);
+                }
+            }
+        };
+
+        private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new PatternFieldMap<OpenApiTag>
+        {
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+        };
+
         public static OpenApiTag LoadTag(ParseNode n)
         {
             var mapNode = n.CheckMapNode("tag");
 
-            var obj = new OpenApiTag();
+            var domainObject = new OpenApiTag();
 
-            foreach (var node in mapNode)
+            foreach (var propertyNode in mapNode)
             {
-                var key = node.Name;
-                switch (key)
-                {
-                    case "description":
-                        obj.Description = node.Value.GetScalarValue();
-                        break;
-                    case "name":
-                        obj.Name = node.Value.GetScalarValue();
-                        break;
-                }
+                propertyNode.ParseField(domainObject, _tagFixedFields, _tagPatternFields);
             }
 
-            return obj;
+            return domainObject;
         }
     }
 }
