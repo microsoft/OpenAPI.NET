@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, server) =>
                 {
                     context.Enter("url");
-                    if (String.IsNullOrEmpty(server.Url))
+                    if (server.Url == null)
                     {
                         context.CreateError(nameof(ServerRequiredFields),ErrorReason.Required,
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"));

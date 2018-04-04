@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, license) =>
                 {
                     context.Enter("name");
-                    if (String.IsNullOrEmpty(license.Name))
+                    if (license.Name == null)
                     {
                         context.CreateError(nameof(LicenseRequiredFields),ErrorReason.Required,
                             String.Format(SRResource.Validation_FieldIsRequired, "name", "license"));

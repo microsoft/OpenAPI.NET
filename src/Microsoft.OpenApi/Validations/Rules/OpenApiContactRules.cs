@@ -33,19 +33,5 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Exit();
                 });
 
-        /// <summary>
-        /// Url field MUST be url format.
-        /// </summary>
-        public static ValidationRule<OpenApiContact> UrlMustBeUrlFormat =>
-            new ValidationRule<OpenApiContact>(
-                (context, item) =>
-                {
-                    context.Enter("url");
-                    if (item != null && item.Url != null)
-                    {
-                        // TODO:
-                    }
-                    context.Exit();
-                });
     }
 }

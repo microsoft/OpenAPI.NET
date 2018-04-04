@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, tag) =>
                 {
                     context.Enter("name");
-                    if (String.IsNullOrEmpty(tag.Name))
+                    if (tag.Name == null)
                     {
                         context.CreateError(nameof(TagRequiredFields),ErrorReason.Required,
                             String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"));

@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class using the message and pointer from the given exception.
         /// </summary>
-        public OpenApiError(OpenApiException exception)
+        public OpenApiError(OpenApiException exception) : this(exception.Pointer, exception.Message)
         {
             Message = exception.Message;
             Pointer = exception.Pointer;
