@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 catch (OpenApiException ex)
                 {
                     ex.Pointer = Context.GetLocation();
-                    Diagnostic.Errors.Add(new OpenApiError(ex));
+                    Diagnostic.Errors.Add(new OpenApiReaderError(ex));
                 }
                 finally
                 {
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = Context.GetLocation();
-                        Diagnostic.Errors.Add(new OpenApiError(ex));
+                        Diagnostic.Errors.Add(new OpenApiReaderError(ex));
                     }
                     finally
                     {

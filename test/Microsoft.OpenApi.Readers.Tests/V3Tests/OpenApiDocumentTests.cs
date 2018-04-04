@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Rules;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
@@ -107,10 +109,7 @@ paths: {}",
                     {
                         Errors =
                         {
-                            new OpenApiError("#/info/title", "The field 'title' in 'info' object is REQUIRED.")
-                            {
-                                RuleName = "InfoRequiredFields"
-                            }
+                            new OpenApiValidationError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
                         },
                         SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
                     });

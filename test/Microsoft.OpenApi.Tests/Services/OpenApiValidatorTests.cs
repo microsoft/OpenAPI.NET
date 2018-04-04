@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Services
             validator.Errors.ShouldBeEquivalentTo(
                     new List<OpenApiError>
                     {
-                        new OpenApiError(ErrorReason.Required, "#/paths/~1test/get/responses/200/description",
+                        new OpenApiValidationError(ErrorReason.Required, "#/paths/~1test/get/responses/200/description",
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"))
                         {
                             RuleName = "ResponseRequiredFields"
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.Services
             validator.Errors.ShouldBeEquivalentTo(
                     new List<OpenApiError>
                     {
-                        new OpenApiError(ErrorReason.Required, "#/servers/1/url",
+                        new OpenApiValidationError(ErrorReason.Required, "#/servers/1/url",
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
                         {
                             RuleName = "ServerRequiredFields"
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Tests.Services
                  {
                      if (item.Bar == "hey")
                      {
-                         context.AddError(new OpenApiError(ErrorReason.Format, context.PathString, "Don't say hey"));
+                         context.AddError(new OpenApiValidationError(ErrorReason.Format, context.PathString, "Don't say hey"));
                      }
                  }));
 
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Tests.Services
             validator.Errors.ShouldBeEquivalentTo(
                    new List<OpenApiError>
                    {
-                       new OpenApiError(ErrorReason.Format, "#/info/x-foo", "Don't say hey")
+                       new OpenApiValidationError(ErrorReason.Format, "#/info/x-foo", "Don't say hey")
                    });
         }
 

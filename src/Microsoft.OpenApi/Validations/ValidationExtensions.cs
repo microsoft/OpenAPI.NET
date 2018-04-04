@@ -13,14 +13,14 @@ namespace Microsoft.OpenApi.Validations
     /// <summary>
     /// Helper methods to simplify creating validation rules
     /// </summary>
-    public static class ValidationExtensions
+    public static class ValidationContextExtensions
     {
         /// <summary>
         /// Helper method to simplify validation rules
         /// </summary>
         public static void CreateError(this IValidationContext context, string ruleName, ErrorReason reason, string message)
         {
-            OpenApiError error = new OpenApiError(reason, context.PathString,message);
+            OpenApiValidationError error = new OpenApiValidationError(reason, context.PathString, message);
             error.RuleName = ruleName;
             context.AddError(error);
         }
