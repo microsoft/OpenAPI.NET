@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
@@ -57,11 +58,8 @@ namespace Microsoft.OpenApi.Tests.Services
             validator.Errors.ShouldBeEquivalentTo(
                     new List<OpenApiError>
                     {
-                        new OpenApiValidatorError(ErrorReason.Required, "#/paths/~1test/get/responses/200/description",
+                        new OpenApiValidatorError(nameof(OpenApiResponseRules.ResponseRequiredFields),"#/paths/~1test/get/responses/200/description",
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"))
-                        {
-                            RuleName = "ResponseRequiredFields"
-                        }
         });
         }
 
@@ -92,11 +90,8 @@ namespace Microsoft.OpenApi.Tests.Services
             validator.Errors.ShouldBeEquivalentTo(
                     new List<OpenApiError>
                     {
-                        new OpenApiValidatorError(ErrorReason.Required, "#/servers/1/url",
+                        new OpenApiValidatorError(nameof(OpenApiServerRules.ServerRequiredFields), "#/servers/1/url",
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
-                        {
-                            RuleName = "ServerRequiredFields"
-                        }
         });
         }
 
@@ -112,7 +107,7 @@ namespace Microsoft.OpenApi.Tests.Services
                  {
                      if (item.Bar == "hey")
                      {
-                         context.AddError(new OpenApiValidatorError(ErrorReason.Format, context.PathString, "Don't say hey"));
+                         context.AddError(new OpenApiValidatorError("FooExtensionRule", context.PathString, "Don't say hey"));
                      }
                  }));
 
@@ -138,7 +133,7 @@ namespace Microsoft.OpenApi.Tests.Services
             validator.Errors.ShouldBeEquivalentTo(
                    new List<OpenApiError>
                    {
-                       new OpenApiValidatorError(ErrorReason.Format, "#/info/x-foo", "Don't say hey")
+                       new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
                    });
         }
 

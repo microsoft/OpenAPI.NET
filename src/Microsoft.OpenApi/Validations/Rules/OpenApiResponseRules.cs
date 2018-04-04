@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("description");
                     if (response.Description == null)
                     {
-                        context.CreateError(nameof(ResponseRequiredFields),ErrorReason.Required,
+                        context.CreateError(nameof(ResponseRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "description", "response"));
                     }
                     context.Exit();

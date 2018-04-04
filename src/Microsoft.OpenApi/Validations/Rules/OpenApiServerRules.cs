@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("url");
                     if (server.Url == null)
                     {
-                        context.CreateError(nameof(ServerRequiredFields),ErrorReason.Required,
+                        context.CreateError(nameof(ServerRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"));
                     }
                     context.Exit();

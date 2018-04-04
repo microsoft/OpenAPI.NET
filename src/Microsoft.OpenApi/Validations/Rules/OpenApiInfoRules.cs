@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("title");
                     if (item.Title == null)
                     {
-                        context.CreateError(nameof(InfoRequiredFields),ErrorReason.Required, 
+                        context.CreateError(nameof(InfoRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "title", "info"));
                     }
                     context.Exit();
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("version");
                     if (item.Version == null)
                     {
-                        context.CreateError(nameof(InfoRequiredFields), ErrorReason.Required, 
+                        context.CreateError(nameof(InfoRequiredFields), 
                             String.Format(SRResource.Validation_FieldIsRequired, "version", "info"));
                     }
                     context.Exit();

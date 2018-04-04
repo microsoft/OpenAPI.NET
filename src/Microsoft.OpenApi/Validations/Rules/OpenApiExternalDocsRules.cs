@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("url");
                     if (item.Url == null)
                     {
-                        context.CreateError(nameof(UrlIsRequired),ErrorReason.Required, 
+                        context.CreateError(nameof(UrlIsRequired),
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"));
                     }
                     context.Exit();

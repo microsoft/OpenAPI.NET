@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("info");
                     if (item.Info == null)
                     {
-                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing),ErrorReason.Required, 
+                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing),
                             String.Format(SRResource.Validation_FieldIsRequired, "info", "document"));
                     }
                     context.Exit();
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("paths");
                     if (item.Paths == null)
                     {
-                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing), ErrorReason.Required, 
+                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing), 
                             String.Format(SRResource.Validation_FieldIsRequired, "paths", "document"));
                     }
                     context.Exit();

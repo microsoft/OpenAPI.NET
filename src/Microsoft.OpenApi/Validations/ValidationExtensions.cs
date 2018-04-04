@@ -18,10 +18,9 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Helper method to simplify validation rules
         /// </summary>
-        public static void CreateError(this IValidationContext context, string ruleName, ErrorReason reason, string message)
+        public static void CreateError(this IValidationContext context, string ruleName, string message)
         {
-            OpenApiValidatorError error = new OpenApiValidatorError(reason, context.PathString, message);
-            error.RuleName = ruleName;
+            OpenApiValidatorError error = new OpenApiValidatorError(ruleName, context.PathString, message);
             context.AddError(error);
         }
     }

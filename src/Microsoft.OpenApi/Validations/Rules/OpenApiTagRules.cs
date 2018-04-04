@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("name");
                     if (tag.Name == null)
                     {
-                        context.CreateError(nameof(TagRequiredFields),ErrorReason.Required,
+                        context.CreateError(nameof(TagRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "name", "tag"));
                     }
                     context.Exit();
