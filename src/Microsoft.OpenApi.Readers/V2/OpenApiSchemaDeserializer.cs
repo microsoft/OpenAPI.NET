@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "default", (o, n) =>
                 {
-                    o.Default = new OpenApiString(n.GetScalarValue());
+                    o.Default = n.CreateAny();
                 }
             },
             {

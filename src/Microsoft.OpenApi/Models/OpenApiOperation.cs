@@ -240,13 +240,14 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
+                    var content = RequestBody.Content.Values.FirstOrDefault();
                     var bodyParameter = new OpenApiBodyParameter
                     {
                         Description = RequestBody.Description,
                         // V2 spec actually allows the body to have custom name.
                         // Our library does not support this at the moment.
                         Name = "body",
-                        Schema = RequestBody.Content.First().Value.Schema,
+                        Schema = content?.Schema,
                         Required = RequestBody.Required
                     };
 

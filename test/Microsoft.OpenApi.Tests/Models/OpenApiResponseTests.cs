@@ -214,15 +214,11 @@ content:
   ""headers"": {
     ""X-Rate-Limit-Limit"": {
       ""description"": ""The number of allowed requests in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
+      ""type"": ""integer""
     },
     ""X-Rate-Limit-Reset"": {
       ""description"": ""The number of seconds left in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
+      ""type"": ""integer""
     }
   }
 }";
@@ -251,12 +247,10 @@ examples:
 headers:
   X-Rate-Limit-Limit:
     description: The number of allowed requests in the current period
-    schema:
-      type: integer
+    type: integer
   X-Rate-Limit-Reset:
     description: The number of seconds left in the current period
-    schema:
-      type: integer";
+    type: integer";
 
             // Act
             var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -375,15 +369,11 @@ headers:
   ""headers"": {
     ""X-Rate-Limit-Limit"": {
       ""description"": ""The number of allowed requests in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
+      ""type"": ""integer""
     },
     ""X-Rate-Limit-Reset"": {
       ""description"": ""The number of seconds left in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
+      ""type"": ""integer""
     }
   }
 }";

@@ -154,9 +154,15 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             switch (v)
             {
-                // TODO: Handle "csv" for query / form parameter. The style should be Form, not Simple.
                 case "csv":
-                    p.Style = ParameterStyle.Simple;
+                    if (p.In == ParameterLocation.Query)
+                    {
+                        p.Style = ParameterStyle.Form;
+                    }
+                    else
+                    {
+                        p.Style = ParameterStyle.Simple;
+                    }
                     return;
                 case "ssv":
                     p.Style = ParameterStyle.SpaceDelimited;
