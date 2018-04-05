@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the validation errors.
         /// </summary>
-        public IEnumerable<OpenApiError> Errors
+        public IEnumerable<OpenApiValidatorError> Errors
         {
             get
             {
