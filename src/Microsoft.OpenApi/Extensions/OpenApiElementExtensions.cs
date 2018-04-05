@@ -20,7 +20,8 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">Element to validate</param>
         /// <param name="ruleSet">Optional set of rules to use for validation</param>
         /// <returns>An IEnumerable of errors.  This function will never return null.</returns>
-        public static IEnumerable<OpenApiError> Validate(this IOpenApiElement element, ValidationRuleSet ruleSet = null)         {
+        public static IEnumerable<OpenApiError> Validate(this IOpenApiElement element, ValidationRuleSet ruleSet = null)
+        {
             var validator = new OpenApiValidator(ruleSet);
             var walker = new OpenApiWalker(validator);
             walker.Walk(element);

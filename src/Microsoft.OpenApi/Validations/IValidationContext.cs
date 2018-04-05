@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Validations
         /// Register an error with the validation context.
         /// </summary>
         /// <param name="error">Error to register.</param>
-        void AddError(OpenApiError error);
+        void AddError(OpenApiValidatorError error);
 
 
         /// <summary>

@@ -11,7 +11,7 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Validations
 {
     /// <summary>
-    /// Errors detected when validating a OpenAPI Element
+    /// Errors detected when validating an OpenAPI Element
     /// </summary>
     public class OpenApiValidatorError : OpenApiError
     {
@@ -20,8 +20,6 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         public OpenApiValidatorError(string ruleName, string pointer, string message) : base(pointer, message)
         {
-            Pointer = pointer;
-            Message = message;
             RuleName = ruleName;
         }
 

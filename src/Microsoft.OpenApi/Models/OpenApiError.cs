@@ -15,8 +15,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiError(OpenApiException exception) : this(exception.Pointer, exception.Message)
         {
-            Message = exception.Message;
-            Pointer = exception.Pointer;
         }
 
         /// <summary>
