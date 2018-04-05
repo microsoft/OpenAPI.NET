@@ -3,6 +3,7 @@
 
 using System;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -25,9 +26,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         if (!extensible.Key.StartsWith("x-"))
                         {
-                            ValidationError error = new ValidationError(ErrorReason.Format, context.PathString,
+                            context.CreateError(nameof(ExtensionNameMustStartWithXDash),
                                 String.Format(SRResource.Validation_ExtensionNameMustBeginWithXDash, extensible.Key, context.PathString));
-                            context.AddError(error);
                         }
                     }
                     context.Exit();

@@ -24,8 +24,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public OpenApiDiagnostic Diagnostic { get; }
 
-        public string DomainType { get; internal set; }
-
         public MapNode CheckMapNode(string nodeName)
         {
             var mapNode = this as MapNode;
@@ -35,17 +33,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             return mapNode;
-        }
-
-        internal string CheckRegex(string value, Regex versionRegex, string defaultValue)
-        {
-            if (!versionRegex.IsMatch(value))
-            {
-                Diagnostic.Errors.Add(new OpenApiError("", "Value does not match regex: " + versionRegex));
-                return defaultValue;
-            }
-
-            return value;
         }
 
         public static ParseNode Create(ParsingContext context, OpenApiDiagnostic diagnostic, YamlNode node)

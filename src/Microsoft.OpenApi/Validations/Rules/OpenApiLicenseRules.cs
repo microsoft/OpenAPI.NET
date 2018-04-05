@@ -16,16 +16,15 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// REQUIRED.
         /// </summary>
-        public static ValidationRule<OpenApiLicense> FieldIsRequired =>
+        public static ValidationRule<OpenApiLicense> LicenseRequiredFields =>
             new ValidationRule<OpenApiLicense>(
                 (context, license) =>
                 {
                     context.Enter("name");
-                    if (String.IsNullOrEmpty(license.Name))
+                    if (license.Name == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(LicenseRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "name", "license"));
-                        context.AddError(error);
                     }
                     context.Exit();
                 });

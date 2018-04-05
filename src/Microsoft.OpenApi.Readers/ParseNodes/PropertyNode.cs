@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Models;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -42,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 catch (OpenApiException ex)
                 {
                     ex.Pointer = Context.GetLocation();
-                    Diagnostic.Errors.Add(new OpenApiError(ex));
+                    Diagnostic.Errors.Add(new OpenApiReaderError(ex));
                 }
                 finally
                 {
@@ -62,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = Context.GetLocation();
-                        Diagnostic.Errors.Add(new OpenApiError(ex));
+                        Diagnostic.Errors.Add(new OpenApiReaderError(ex));
                     }
                     finally
                     {
