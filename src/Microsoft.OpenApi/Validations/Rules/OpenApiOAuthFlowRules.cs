@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Validate the field is required.
         /// </summary>
-        public static ValidationRule<OpenApiOAuthFlow> FieldIsRequired =>
+        public static ValidationRule<OpenApiOAuthFlow> OAuthFlowRequiredFields =>
             new ValidationRule<OpenApiOAuthFlow>(
                 (context, flow) =>
                 {
@@ -24,9 +24,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("authorizationUrl");
                     if (flow.AuthorizationUrl == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(OAuthFlowRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow"));
-                        context.AddError(error);
                     }
                     context.Exit();
 
@@ -34,9 +33,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("tokenUrl");
                     if (flow.TokenUrl == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(OAuthFlowRequiredFields), 
                             String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow"));
-                        context.AddError(error);
                     }
                     context.Exit();
 
@@ -44,9 +42,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("scopes");
                     if (flow.Scopes == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(OAuthFlowRequiredFields), 
                             String.Format(SRResource.Validation_FieldIsRequired, "scopes", "OAuth Flow"));
-                        context.AddError(error);
                     }
                     context.Exit();
                 });

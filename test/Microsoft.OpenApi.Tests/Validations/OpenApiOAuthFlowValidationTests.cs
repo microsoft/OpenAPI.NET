@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             string authorizationUrlError = String.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow");
             string tokenUrlError = String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow");
-            IEnumerable<ValidationError> errors;
+            IEnumerable<OpenApiError> errors;
             OpenApiOAuthFlow oAuthFlow = new OpenApiOAuthFlow();
 
             // Act
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
             Assert.Equal(2, errors.Count());
-            Assert.Equal(new[] { authorizationUrlError, tokenUrlError }, errors.Select(e => e.ErrorMessage));
+            Assert.Equal(new[] { authorizationUrlError, tokenUrlError }, errors.Select(e => e.Message));
         }
     }
 }

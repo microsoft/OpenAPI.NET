@@ -57,9 +57,8 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!KeyRegex.IsMatch(key))
                 {
-                    ValidationError error = new ValidationError(ErrorReason.Format, context.PathString,
+                    context.CreateError(nameof(KeyMustBeRegularExpression), 
                         string.Format(SRResource.Validation_ComponentsKeyMustMatchRegularExpr, key, component, KeyRegex.ToString()));
-                    context.AddError(error);
                 }
             }
         }

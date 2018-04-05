@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInLicense()
         {
             // Arrange
-            IEnumerable<ValidationError> errors;
+            IEnumerable<OpenApiError> errors;
             OpenApiLicense license = new OpenApiLicense();
 
             // Act
@@ -31,8 +31,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            ValidationError error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "name", "license"), error.ErrorMessage);
+            OpenApiError error = Assert.Single(errors);
+            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "name", "license"), error.Message);
         }
     }
 }
