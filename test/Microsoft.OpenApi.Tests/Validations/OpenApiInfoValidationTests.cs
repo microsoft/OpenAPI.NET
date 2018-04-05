@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
 
-            Assert.Equal(new[] { urlError, versionError }, errors.Select(e => e.ErrorMessage));
+            Assert.Equal(new[] { urlError, versionError }, errors.Select(e => e.Message));
         }
     }
 }

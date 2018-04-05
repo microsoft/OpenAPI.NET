@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 
@@ -18,7 +19,8 @@ namespace Microsoft.OpenApi.Validations
         /// Register an error with the validation context.
         /// </summary>
         /// <param name="error">Error to register.</param>
-        void AddError(ValidationError error);
+        void AddError(OpenApiValidatorError error);
+
 
         /// <summary>
         /// Allow Rule to indicate validation error occured at a deeper context level.  

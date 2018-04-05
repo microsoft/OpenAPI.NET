@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInServer()
         {
             // Arrange
-            IEnumerable<ValidationError> errors;
+            IEnumerable<OpenApiError> errors;
             OpenApiServer server = new OpenApiServer();
 
             // Act
@@ -29,8 +29,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            ValidationError error = Assert.Single(errors);
-            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "server"), error.ErrorMessage);
+            OpenApiError error = Assert.Single(errors);
+            Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "server"), error.Message);
         }
     }
 }

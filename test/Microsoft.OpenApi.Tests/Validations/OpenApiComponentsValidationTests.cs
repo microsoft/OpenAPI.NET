@@ -38,9 +38,9 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            ValidationError error = Assert.Single(errors);
+            OpenApiError error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_ComponentsKeyMustMatchRegularExpr, key, "responses", OpenApiComponentsRules.KeyRegex.ToString()),
-                error.ErrorMessage);
+                error.Message);
         }
     }
 }

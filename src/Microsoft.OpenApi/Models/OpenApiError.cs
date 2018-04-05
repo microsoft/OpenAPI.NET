@@ -3,20 +3,18 @@
 
 using Microsoft.OpenApi.Exceptions;
 
-namespace Microsoft.OpenApi.Readers
+namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// Error related to reading Open API YAML/JSON.
+    /// Error related to the Open API Document.
     /// </summary>
     public class OpenApiError
     {
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class using the message and pointer from the given exception.
         /// </summary>
-        public OpenApiError(OpenApiException exception)
+        public OpenApiError(OpenApiException exception) : this(exception.Pointer, exception.Message)
         {
-            Message = exception.Message;
-            Pointer = exception.Pointer;
         }
 
         /// <summary>

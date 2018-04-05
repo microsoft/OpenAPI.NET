@@ -26,27 +26,12 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         if (!item.Email.IsEmailAddress())
                         {
-                            ValidationError error = new ValidationError(ErrorReason.Format, context.PathString,
+                            context.CreateError(nameof(EmailMustBeEmailFormat), 
                                 String.Format(SRResource.Validation_StringMustBeEmailAddress, item.Email));
-                            context.AddError(error);
                         }
                     }
                     context.Exit();
                 });
 
-        /// <summary>
-        /// Url field MUST be url format.
-        /// </summary>
-        public static ValidationRule<OpenApiContact> UrlMustBeUrlFormat =>
-            new ValidationRule<OpenApiContact>(
-                (context, item) =>
-                {
-                    context.Enter("url");
-                    if (item != null && item.Url != null)
-                    {
-                        // TODO:
-                    }
-                    context.Exit();
-                });
     }
 }

@@ -22,11 +22,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 {
                     if (!responses.Keys.Any())
                     {
-                        context.AddError(
-                            new ValidationError(
-                                ErrorReason.Required,
-                                context.PathString,
-                                "Responses must contain at least one response"));
+                        context.CreateError(nameof(ResponsesMustContainAtLeastOneResponse),
+                                "Responses must contain at least one response");
                     }
                 });
 
@@ -43,13 +40,10 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                         if (key != "default" && !Regex.IsMatch(key, "^[1-5]([0-9][0-9]|XX)$"))
                         {
-                            context.AddError(
-                                new ValidationError(
-                                    ErrorReason.Format,
-                                    context.PathString,
+                            context.CreateError(nameof(ResponsesMustBeIdentifiedByDefaultOrStatusCode), 
                                     "Responses key must be 'default', an HTTP status code, " +
                                     "or one of the following strings representing a range of HTTP status codes: " +
-                                    "'1XX', '2XX', '3XX', '4XX', '5XX'"));
+                                    "'1XX', '2XX', '3XX', '4XX', '5XX'");
                         }
 
                         context.Exit();
