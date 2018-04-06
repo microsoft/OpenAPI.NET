@@ -298,7 +298,7 @@ namespace Microsoft.OpenApi.Models
                     {
                         writer.WriteProperty("collectionFormat", "pipes");
                     }
-                    else if (this.Style == ParameterStyle.PipeDelimited)
+                    else if (this.Style == ParameterStyle.SpaceDelimited)
                     {
                         writer.WriteProperty("collectionFormat", "ssv");
                     }
