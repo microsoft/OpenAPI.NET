@@ -73,7 +73,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Type = ReferenceType.Schema,
                     Id = "schemaObject1"
-                }
+                },
+                UnresolvedReference = true
             },
             Examples = new Dictionary<string, OpenApiExample>
             {
