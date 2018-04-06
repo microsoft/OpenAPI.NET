@@ -116,11 +116,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         ["200"] = new OpenApiResponse
                         {
-                            Description = "Pet updated."
+                            Description = "Pet updated.",
+                            Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType(),
+                                    ["application/xml"] = new OpenApiMediaType()
+                                }
                         },
                         ["405"] = new OpenApiResponse
                         {
-                            Description = "Invalid input"
+                            Description = "Invalid input",
+                            Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType(),
+                                    ["application/xml"] = new OpenApiMediaType()
+                                }
                         }
                     }
                 },
@@ -220,7 +230,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         ["200"] = new OpenApiResponse
                         {
-                            Description = "Pet updated."
+                            Description = "Pet updated.",
+                            Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType(),
+                                    ["application/xml"] = new OpenApiMediaType()
+                                }
                         }
                     }
                 }

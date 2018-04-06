@@ -286,7 +286,24 @@ namespace Microsoft.OpenApi.Models
 
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
+
+                if (this.In == ParameterLocation.Query )
+                {
+                    if (this.Style == ParameterStyle.Form && this.Explode == true)
+                    {
+                        writer.WriteProperty("collectionFormat", "multi");
+                    }
+                    else if (this.Style == ParameterStyle.PipeDelimited)
+                    {
+                        writer.WriteProperty("collectionFormat", "pipes");
+                    }
+                    else if (this.Style == ParameterStyle.PipeDelimited)
+                    {
+                        writer.WriteProperty("collectionFormat", "ssv");
+                    }
+                }
             }
+
 
             // extensions
             writer.WriteExtensions(Extensions);

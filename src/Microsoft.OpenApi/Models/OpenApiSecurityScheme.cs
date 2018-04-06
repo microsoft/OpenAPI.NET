@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Models
                     // authorizationUrl
                     // tokenUrl
                     // scopes
-                    writer.WriteProperty(OpenApiConstants.Type, Type.ToString());
+                    writer.WriteProperty(OpenApiConstants.Type, Type.GetDisplayName());
                     WriteOAuthFlowForV2(writer, Flows);
                     break;
 
@@ -202,9 +202,9 @@ namespace Microsoft.OpenApi.Models
                     // These properties apply to apiKey type only.
                     // name
                     // in
-                    writer.WriteProperty(OpenApiConstants.Type, Type.ToString());
+                    writer.WriteProperty(OpenApiConstants.Type, Type.GetDisplayName());
                     writer.WriteProperty(OpenApiConstants.Name, Name);
-                    writer.WriteProperty(OpenApiConstants.In, In.ToString());
+                    writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
                     break;
             }
 

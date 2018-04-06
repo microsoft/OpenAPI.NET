@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                Reference.SerializeAsV3(writer);
+                Reference.SerializeAsV2(writer);
                 return;
             }
 

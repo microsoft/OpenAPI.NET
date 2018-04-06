@@ -16,15 +16,14 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly FixedFieldMap<OpenApiExternalDocs> _externalDocsFixedFields =
             new FixedFieldMap<OpenApiExternalDocs>
             {
-                // $ref
                 {
-                    "description", (o, n) =>
+                    OpenApiConstants.Description, (o, n) =>
                     {
                         o.Description = n.GetScalarValue();
                     }
                 },
                 {
-                    "url", (o, n) =>
+                    OpenApiConstants.Url, (o, n) =>
                     {
                         o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }

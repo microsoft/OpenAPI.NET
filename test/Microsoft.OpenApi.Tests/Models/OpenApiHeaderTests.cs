@@ -128,10 +128,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected =
                 @"{
   ""description"": ""sampleHeader"",
-  ""schema"": {
-    ""format"": ""int32"",
-    ""type"": ""integer""
-  }
+  ""type"": ""integer"",
+  ""format"": ""int32""
 }";
 
             // Act
@@ -176,10 +174,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected =
                 @"{
   ""description"": ""sampleHeader"",
-  ""schema"": {
-    ""format"": ""int32"",
-    ""type"": ""integer""
-  }
+  ""type"": ""integer"",
+  ""format"": ""int32""
 }";
 
             // Act
