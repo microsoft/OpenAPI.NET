@@ -257,6 +257,13 @@ namespace Microsoft.OpenApi.Models
             {
                 writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
             }
+            // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
+            // So in that case map the type as string.
+            else 
+            if (Schema?.UnresolvedReference == true || Schema?.Type == "object")
+            {
+                writer.WriteProperty(OpenApiConstants.Type, "string");
+            }
             else
             {
                 // type
