@@ -57,6 +57,59 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter
+        {
+            Name = "name1",
+            In = ParameterLocation.Header,
+            Description = "description1",
+            Required = true,
+            Deprecated = false,
+
+            Style = ParameterStyle.Simple,
+            Explode = true,
+            Schema = new OpenApiSchema
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.Schema,
+                    Id = "schemaObject1"
+                },
+                UnresolvedReference = true
+            },
+            Examples = new Dictionary<string, OpenApiExample>
+            {
+                ["test"] = new OpenApiExample
+                {
+                    Summary = "summary3",
+                    Description = "description3"
+                }
+            }
+        };
+
+        public static OpenApiParameter AdvancedHeaderParameterWithSchemaTypeObject = new OpenApiParameter
+        {
+            Name = "name1",
+            In = ParameterLocation.Header,
+            Description = "description1",
+            Required = true,
+            Deprecated = false,
+
+            Style = ParameterStyle.Simple,
+            Explode = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "object"
+            },
+            Examples = new Dictionary<string, OpenApiExample>
+            {
+                ["test"] = new OpenApiExample
+                {
+                    Summary = "summary3",
+                    Description = "description3"
+                }
+            }
+        };
+
         private readonly ITestOutputHelper _output;
 
         public OpenApiParameterTests(ITestOutputHelper output)
@@ -195,6 +248,58 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedParameter.SerializeAsV2WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeParameterWithSchemaReferenceAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""in"": ""header"",
+  ""name"": ""name1"",
+  ""description"": ""description1"",
+  ""required"": true,
+  ""type"": ""string""
+}";
+
+            // Act
+            AdvancedHeaderParameterWithSchemaReference.SerializeAsV2(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeParameterWithSchemaTypeObjectAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""in"": ""header"",
+  ""name"": ""name1"",
+  ""description"": ""description1"",
+  ""required"": true,
+  ""type"": ""string""
+}";
+
+            // Act
+            AdvancedHeaderParameterWithSchemaTypeObject.SerializeAsV2(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
