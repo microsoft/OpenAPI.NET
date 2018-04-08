@@ -24,17 +24,10 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         context.Enter(pathName);
 
-                        if (string.IsNullOrEmpty(pathName))
+                         if (pathName == null || !pathName.StartsWith("/"))
                         {
-                            // Add the error message
-                            // context.Add(...);
-                        }
-
-                        if (!pathName.StartsWith("/"))
-                        {
-                            ValidationError error = new ValidationError(ErrorReason.Format, context.PathString,
+                            context.CreateError(nameof(PathNameMustBeginWithSlash),
                                 string.Format(SRResource.Validation_PathItemMustBeginWithSlash, pathName));
-                            context.AddError(error);
                         }
 
                         context.Exit();

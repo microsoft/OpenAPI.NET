@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (SyntaxErrorException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError(string.Empty, ex.Message));
+                diagnostic.Errors.Add(new OpenApiReaderError(ex));
                 return new OpenApiDocument();
             }
 
@@ -152,8 +152,8 @@ namespace Microsoft.OpenApi.Readers
             var errors = document.Validate(_settings.RuleSet);
             foreach (var item in errors)
             {
-                diagnostic.Errors.Add(new OpenApiError(item.ErrorPath, item.ErrorMessage));
-            }
+                diagnostic.Errors.Add(item);
+            } 
         }
 
 

@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// The Info field is required.
         /// </summary>
-        public static ValidationRule<OpenApiDocument> FieldIsRequired =>
+        public static ValidationRule<OpenApiDocument> OpenApiDocumentFieldIsMissing =>
             new ValidationRule<OpenApiDocument>(
                 (context, item) =>
                 {
@@ -24,9 +24,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("info");
                     if (item.Info == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing),
                             String.Format(SRResource.Validation_FieldIsRequired, "info", "document"));
-                        context.AddError(error);
                     }
                     context.Exit();
 
@@ -34,9 +33,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("paths");
                     if (item.Paths == null)
                     {
-                        ValidationError error = new ValidationError(ErrorReason.Required, context.PathString,
+                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing), 
                             String.Format(SRResource.Validation_FieldIsRequired, "paths", "document"));
-                        context.AddError(error);
                     }
                     context.Exit();
                 });

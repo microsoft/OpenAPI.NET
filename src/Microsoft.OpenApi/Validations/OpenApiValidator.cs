@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations
     public class OpenApiValidator : OpenApiVisitorBase, IValidationContext 
     {
         private readonly ValidationRuleSet _ruleSet;
-        private readonly IList<ValidationError> _errors = new List<ValidationError>();
+        private readonly IList<OpenApiValidatorError> _errors = new List<OpenApiValidatorError>();
 
         /// <summary>
         /// Create a vistor that will validate an OpenAPIDocument
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the validation errors.
         /// </summary>
-        public IEnumerable<ValidationError> Errors
+        public IEnumerable<OpenApiValidatorError> Errors
         {
             get
             {
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Validations
         /// Register an error with the validation context.
         /// </summary>
         /// <param name="error">Error to register.</param>
-        public void AddError(ValidationError error)
+        public void AddError(OpenApiValidatorError error)
         {
             if (error == null)
             {
