@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Readers
                 case ReferenceResolutionSetting.ResolveAllReferences:
                     throw new ArgumentException("Cannot resolve remote references using synchronous Read method, use ReadAsync instead");
                 case ReferenceResolutionSetting.ResolveLocalReferences:
-                    ResolveReferences(document,false);
+                    document.ResolveReferences(false);
                     break;
                 case
                     ReferenceResolutionSetting.DoNotResolveReferences:
@@ -97,14 +97,14 @@ namespace Microsoft.OpenApi.Readers
                     // Resolve references in documents
                     foreach (var item in workspace.Documents)
                     {
-                        ResolveReferences(item, true);
+                        item.ResolveReferences(true);
                     }
                     break;
                 case ReferenceResolutionSetting.ResolveLocalReferences:
                     // Resolve references in documents
                     foreach (var item in workspace.Documents)
                     {
-                        ResolveReferences(item,false);
+                        item.ResolveReferences(false);
                     }
                     break;
                 case
@@ -156,7 +156,6 @@ namespace Microsoft.OpenApi.Readers
             } 
         }
 
-
         /// <summary>
         /// Helper method to turn streams into YamlDocument
         /// </summary>
@@ -173,13 +172,5 @@ namespace Microsoft.OpenApi.Readers
             }
             return yamlDocument;
         }
-
-        private static void ResolveReferences(OpenApiDocument document, bool includeRemote)
-        {
-            var resolver = new OpenApiReferenceResolver(document, includeRemote);
-            var walker = new OpenApiWalker(resolver);
-            walker.Walk(document);
-        }
-
     }
 }

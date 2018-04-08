@@ -18,12 +18,18 @@ namespace Microsoft.OpenApi.Services
     {
         private Dictionary<string, OpenApiDocument> _documents = new Dictionary<string, OpenApiDocument>();
 
+        /// <summary>
+        /// A list of OpenApiDocuments contained in the workspace
+        /// </summary>
         public IEnumerable<OpenApiDocument> Documents {
             get {
                 return _documents.Values;
             }
         }  
 
+        /// <summary>
+        /// A list of document fragments that are contained in the workspace
+        /// </summary>
         public IEnumerable<IOpenApiFragment> Fragments { get; }
 
 

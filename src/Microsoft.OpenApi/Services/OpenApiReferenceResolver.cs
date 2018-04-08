@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
-namespace Microsoft.OpenApi.Readers.Services
+namespace Microsoft.OpenApi.Services
 {
     /// <summary>
     /// This class is used to walk an OpenApiDocument and convert unresolved references to references to populated objects

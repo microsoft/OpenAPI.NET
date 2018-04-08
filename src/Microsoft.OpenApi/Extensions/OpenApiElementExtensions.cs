@@ -27,5 +27,6 @@ namespace Microsoft.OpenApi.Extensions
             walker.Walk(element);
             return validator.Errors;
         }
+
     }
 }
