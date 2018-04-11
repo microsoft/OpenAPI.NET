@@ -35,15 +35,21 @@ namespace Microsoft.OpenApi.Services
 
         public bool Contains(string location)
         {
-            return true;
+            return _documents.ContainsKey(location);
         }
 
         public void AddDocument(string location, OpenApiDocument  document) 
         {
+            document.Workspace = this;
             _documents.Add(location, document);
         }
 
         public void AddFragment(string location, IOpenApiFragment fragment)
+        {
+
+        }
+
+        public void AddArtifact<T>(string location, T artifact)
         {
 
         }

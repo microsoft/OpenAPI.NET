@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Error related to the Open API Document.
     /// </summary>
-    public class OpenApiError
+    public abstract class OpenApiError
     {
         /// <summary>
         /// Initializes the <see cref="OpenApiError"/> class using the message and pointer from the given exception.

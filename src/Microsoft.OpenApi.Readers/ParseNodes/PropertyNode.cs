@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 else
                 {
                     Diagnostic.Errors.Add(
-                        new OpenApiError("", $"{Name} is not a valid property at {Context.GetLocation()}"));
+                        new OpenApiReaderError(Context, $"{Name} is not a valid property"));
                 }
             }
         }

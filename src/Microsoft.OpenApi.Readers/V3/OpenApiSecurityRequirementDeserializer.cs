@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 else
                 {
                     node.Diagnostic.Errors.Add(
-                        new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
+                        new OpenApiReaderError(node.Context, $"Scheme {property.Name} is not found"));
                 }
             }
 

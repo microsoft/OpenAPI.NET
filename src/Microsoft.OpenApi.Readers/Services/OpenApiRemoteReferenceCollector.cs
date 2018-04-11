@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.Services
     internal class OpenApiRemoteReferenceCollector : OpenApiVisitorBase
     {
         private OpenApiDocument _document;
-        private Dictionary<string, OpenApiReference> _references;
+        private Dictionary<string, OpenApiReference> _references = new Dictionary<string, OpenApiReference>();
         public OpenApiRemoteReferenceCollector(OpenApiDocument document)
         {
             _document = document;

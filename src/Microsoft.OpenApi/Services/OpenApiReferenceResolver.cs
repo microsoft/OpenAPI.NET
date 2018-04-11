@@ -217,13 +217,27 @@ namespace Microsoft.OpenApi.Services
                 }
                 catch (OpenApiException ex)
                 {
-                    _errors.Add(new OpenApiError(ex));
+                    _errors.Add(new OpenApiReferenceError(ex));
                     return null;
                 }
             }
             else if (_resolveRemoteReferences == true)
             {
-                return _currentDocument.Workspace.ResolveReference(reference) as T;
+                if (_currentDocument.Workspace == null)
+                {
+                    _errors.Add(new OpenApiReferenceError(reference,"Cannot resolve external references for documents not in workspaces."));
+                    // Leave as unresolved reference
+                    return new T()
+                    {
+                        UnresolvedReference = true,
+                        Reference = reference
+                    };
+                }
+                var target = _currentDocument.Workspace.ResolveReference(reference);
+
+                // TODO:  If it is a document fragment, then we should resolve it within the current context
+
+                return target as T;
             }
             else
             {

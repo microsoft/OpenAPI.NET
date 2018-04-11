@@ -27,6 +27,12 @@ namespace Microsoft.OpenApi.Readers
 
         }
 
+        public OpenApiReaderError(ParsingContext context, string message) : base(context.GetLocation(), message)
+        {
+
+        }
+
+
         /// <summary>
         /// Create error object from YAML SyntaxErrorException
         /// </summary>

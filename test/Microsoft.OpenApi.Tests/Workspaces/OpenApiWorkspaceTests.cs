@@ -128,11 +128,24 @@ namespace Microsoft.OpenApi.Tests
 
             workspace.AddDocument("common", CreateCommonDocument());
 
-
+            doc.ResolveReferences(true);
 
             var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            Assert.True(schema.UnresolvedReference);
+            Assert.False(schema.UnresolvedReference);
         }
+
+
+        [Fact]
+        public void OpenApiWorkspacesShouldNormalizeDocumentLocations()
+        {
+            Assert.True(false);
+        }
+
+        // Enable Workspace to load from any reader, not just streams.
+
+        // Test fragments
+
+        // Test artifacts
 
         private static OpenApiDocument CreateCommonDocument()
         {
