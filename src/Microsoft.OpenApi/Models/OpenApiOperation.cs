@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Models
                 Tags,
                 (w, t) =>
                 {
-                    t.SerializeAsV2(w);
+                    t.SerializeAsV3(w);
                 });
 
             // summary
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Models
                 Tags,
                 (w, t) =>
                 {
-                    t.SerializeAsV3(w);
+                    t.SerializeAsV2(w);
                 });
 
             // summary
