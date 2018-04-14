@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiExternalDocs externalDocs = new OpenApiExternalDocs();
 
             // Act
-            var errors = externalDocs.Validate();
+            var errors = externalDocs.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
           

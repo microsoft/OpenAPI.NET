@@ -96,6 +96,8 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            _visitor.EnterComponents();
+
             _visitor.Visit(components);
 
             if (components == null)
@@ -192,6 +194,7 @@ namespace Microsoft.OpenApi.Services
             });
 
             Walk(components as IOpenApiExtensible);
+            _visitor.ExitComponents();
         }
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiTag tag = new OpenApiTag();
 
             // Act
-            var validator = new OpenApiValidator();
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Visit(tag);
             errors = validator.Errors;
             bool result = !errors.Any();
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             tag.Extensions.Add("tagExt", new OpenApiString("value"));
 
             // Act
-            var validator = new OpenApiValidator();
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Visit(tag as IOpenApiExtensible);
             errors = validator.Errors;
             bool result = !errors.Any(); 

@@ -22,9 +22,9 @@ namespace Microsoft.OpenApi.Validations
         /// Create a vistor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
-        public OpenApiValidator(ValidationRuleSet ruleSet = null) 
+        public OpenApiValidator(ValidationRuleSet ruleSet) 
         {
-            _ruleSet = ruleSet ?? ValidationRuleSet.GetDefaultRuleSet();
+            _ruleSet = ruleSet;
         }
         
         /// <summary>
@@ -170,7 +170,24 @@ namespace Microsoft.OpenApi.Validations
         private void Validate(object item, Type type)
         {
             if (item == null) return;  // Required fields should be checked by higher level objects
-            var rules = _ruleSet.Where(r => r.ElementType == type);
+            var potentialReference = item as IOpenApiReferenceable;
+
+            if (potentialReference != null && potentialReference.Reference != null)
+            {
+                if (potentialReference.UnresolvedReference)
+                {
+                    return; // Don't attempt to validate unresolved references
+                }
+                else
+                {
+                    if (potentialReference.Reference != null && !InComponents)
+                    {
+                        // Don't validate references if they are in not in Components to avoid validating on every reference
+                        return;
+                    }
+                }
+            }
+            var rules = _ruleSet.FindRules(type);
             foreach (var rule in rules)
             {
                 rule.Evaluate(this as IValidationContext, item);

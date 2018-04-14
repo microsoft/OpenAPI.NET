@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiInfo info = new OpenApiInfo();
 
             // Act
-            var errors = info.Validate();
+            var errors = info.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
             bool result = !errors.Any();

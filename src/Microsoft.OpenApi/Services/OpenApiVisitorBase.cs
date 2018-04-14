@@ -15,6 +15,7 @@ namespace Microsoft.OpenApi.Services
     public abstract class OpenApiVisitorBase
     {
         private readonly Stack<string> _path = new Stack<string>();
+        private bool _inComponents = false;
        
         /// <summary>
         /// Allow Rule to indicate validation error occured at a deeper context level.  
@@ -33,6 +34,16 @@ namespace Microsoft.OpenApi.Services
             this._path.Pop();
         }
 
+        public void EnterComponents()
+        {
+            _inComponents = true;
+        }
+
+        public void ExitComponents()
+        {
+            _inComponents = false;
+        }
+
         /// <summary>
         /// Pointer to source of validation error in document
         /// </summary>
@@ -44,7 +55,14 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
-        
+        public bool InComponents
+        {
+            get
+            {
+                return _inComponents;
+            }
+        }
+
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>
         /// </summary>
