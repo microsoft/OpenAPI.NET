@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.OpenApi.Workbench
@@ -211,6 +212,12 @@ namespace Microsoft.OpenApi.Workbench
                 stopwatch.Stop();
 
                 RenderTime = $"{stopwatch.ElapsedMilliseconds} ms";
+
+                var statsVisitor = new StatsVisitor();
+                var walker = new OpenApiWalker(statsVisitor);
+                walker.Walk(document);
+
+                Errors += Environment.NewLine + "Statistics:" + Environment.NewLine + statsVisitor.GetStatisticsReport();    
             }
             catch (Exception ex)
             {
