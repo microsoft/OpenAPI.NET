@@ -346,7 +346,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiTag tag)
         {
-            if (tag == null)
+            if (tag == null || IsReference(tag))
             {
                 return;
             }
@@ -527,7 +527,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiParameter parameter)
         {
-            if (parameter == null)
+            if (parameter == null || IsReference(parameter))
             {
                 return;
             }
@@ -567,7 +567,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiResponse response)
         {
-            if (response == null)
+            if (response == null || IsReference(response))
             {
                 return;
             }
@@ -580,13 +580,12 @@ namespace Microsoft.OpenApi.Services
             Walk(response as IOpenApiExtensible);
         }
 
-
         /// <summary>
         /// Visits <see cref="OpenApiRequestBody"/> and child objects
         /// </summary>
         internal void Walk(OpenApiRequestBody requestBody)
         {
-            if (requestBody == null)
+            if (requestBody == null || IsReference(requestBody))
             {
                 return;
             }
@@ -668,7 +667,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiMediaType mediaType)
         {
-            if (mediaType == null)
+            if (mediaType == null) 
             {
                 return;
             }
@@ -721,7 +720,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiSchema schema)
         {
-            if (schema == null)
+            if (schema == null || IsReference(schema))
             {
                 return;
             }
@@ -806,7 +805,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiExample example)
         {
-            if (example == null)
+            if (example == null || IsReference(example))
             {
                 return;
             }
@@ -910,7 +909,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiLink link)
         {
-            if (link == null)
+            if (link == null || IsReference(link))
             {
                 return;
             }
@@ -925,7 +924,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiHeader header)
         {
-            if (header == null)
+            if (header == null || IsReference(header))
             {
                 return;
             }
@@ -957,7 +956,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiSecurityScheme securityScheme)
         {
-            if (securityScheme == null)
+            if (securityScheme == null || IsReference(securityScheme))
             {
                 return;
             }
@@ -1023,7 +1022,12 @@ namespace Microsoft.OpenApi.Services
             _visitor.Exit();
         }
 
-
-
+        /// <summary>
+        /// Identify if an element is just a reference to a component, or an actual component
+        /// </summary>
+        private bool IsReference(IOpenApiReferenceable referenceable)
+        {
+            return referenceable.Reference != null && !_visitor.InComponents;
+        }
     }
 }

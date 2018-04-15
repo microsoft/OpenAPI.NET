@@ -119,7 +119,6 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="item">The object to be validated</param>
         public override void Visit(OpenApiSchema item) => Validate(item);
 
-
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiServer"/>
         /// </summary>
@@ -170,23 +169,14 @@ namespace Microsoft.OpenApi.Validations
         private void Validate(object item, Type type)
         {
             if (item == null) return;  // Required fields should be checked by higher level objects
-            var potentialReference = item as IOpenApiReferenceable;
 
-            if (potentialReference != null && potentialReference.Reference != null)
+            // Validate unresolved references as references
+            var potentialReference = item as IOpenApiReferenceable;
+            if (potentialReference != null && potentialReference.UnresolvedReference)
             {
-                if (potentialReference.UnresolvedReference)
-                {
-                    return; // Don't attempt to validate unresolved references
-                }
-                else
-                {
-                    if (potentialReference.Reference != null && !InComponents)
-                    {
-                        // Don't validate references if they are in not in Components to avoid validating on every reference
-                        return;
-                    }
-                }
+                type = typeof(IOpenApiReferenceable);  
             }
+
             var rules = _ruleSet.FindRules(type);
             foreach (var rule in rules)
             {

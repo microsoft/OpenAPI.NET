@@ -106,7 +106,8 @@ namespace Microsoft.OpenApi.Readers.Services
         {
             foreach (var scheme in securityRequirement.Keys.ToList())
             {
-                ResolveObject(scheme, (resolvedScheme) => {
+                ResolveObject(scheme, (resolvedScheme) =>
+                {
                     // If scheme was unresolved
                     // copy Scopes and remove old unresolved scheme
                     var scopes = securityRequirement[scheme];
@@ -176,7 +177,8 @@ namespace Microsoft.OpenApi.Readers.Services
 
             if (IsUnresolvedReference(entity))
             {
-                assign(ResolveReference<T>(entity.Reference));
+                var x = ResolveReference<T>(entity.Reference);
+                assign(x);
             }
         }
 
