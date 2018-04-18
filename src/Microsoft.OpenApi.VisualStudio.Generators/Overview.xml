@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+ 
+Copyright (c) Microsoft Corporation. All rights reserved.
+THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+
+-->
+
+<?xml-stylesheet href="../../../../Common/Overview.xsl" type="text/xsl"?>
+<VSSDKSample>
+  <ImagePath>../../../../Common</ImagePath>
+  <Status>
+    <Accessibility>true</Accessibility>
+    <Comments>true</Comments>
+    <Documentation>true</Documentation>
+    <ErrorHandling>false</ErrorHandling>
+    <FollowSDKCodingStandards>true</FollowSDKCodingStandards>
+    <Localizable>true</Localizable>
+    <Overview>true</Overview>
+    <ScenarioTests>true</ScenarioTests>
+    <Supported>true</Supported>
+    <Style>Example</Style>
+  </Status>
+  <Overview>
+    <ShortName>C# Example.SingleFileGenerator</ShortName>
+    <LongName>C# Single File Generator Example</LongName>
+    <Phrase>Generating a code file from a XML file</Phrase>
+  </Overview>
+  <Introduction>
+    <Summary>
+      This sample demonstrates how to build a single file generator.
+    </Summary>
+    <Goal>Show how to implement a single file generator.</Goal>
+    <Goal>Show how to use CodeDom to generate source code in Visual Basic, C#, or J#.</Goal>
+    <Image width="400" height="400">Example.SingleFileGenerator.jpg</Image>
+  </Introduction>
+  <SampleInfo>
+    <State>
+    </State>
+    <Type>Example</Type>
+    <Complexity>2</Complexity>
+    <Screenshot>Example.SingleFileGenerator.jpg</Screenshot>
+    <Area>Project</Area>
+    <Language>C#</Language>
+    <Folder>VisualStudioIntegration\Samples\Project\CSharp\Example.SingleFileGenerator\</Folder>
+    <SampleSolution>GeneratorSample.sln</SampleSolution>
+    <Doc>ms-help://MS.VSCC.v90/MS.VSIPCC.v90/MS.VSSDK.v90/dv_vsintegration/html/54b34cda-8b09-428f-bbe0-536864b911a3.htm</Doc>
+    <Keywords>
+      <Keyword>Single</Keyword>
+      <Keyword>File</Keyword>
+      <Keyword>Generator</Keyword>
+      <Keyword>CodeDom</Keyword>
+    </Keywords>
+  </SampleInfo>
+  <GettingStarted>
+    <Paragraph>
+      The sample shows how to implement a single file generator.
+      It demonstrates leveraging CodeDom to generate source code in Visual Basic, C#, or J#.
+      It also demonstrates how to validate a XML document against a schema and communicate errors through the Error List.
+    </Paragraph>
+  </GettingStarted>
+  <AdditionalResources>
+    <Resource>
+      <Title>Visual Studio SDK Website</Title>
+      <URL>http://msdn.microsoft.com/vstudio/extend</URL>
+    </Resource>
+  </AdditionalResources>
+  <FunctionalTests>
+    <Test>Load the sample</Test>
+    <Test>Verify the sample builds in Debug Configuration.</Test>
+    <Test>Verify the sample builds in Release Configuration.</Test>
+    <Test>Verify that the generator is properly registered when building.</Test>
+    <Test>Verify that the generator works (C#).</Test>
+    <Test>Verify that the generator works (Visual Basic).</Test>
+    <Test>Verify that the generator works (J#).</Test>
+    <Test>Verify that the generator fails for bad XML (C#).</Test>
+    <Test>Verify that the generator fails for bad XML (Visual Basic).</Test>
+    <Test>Verify that the generator fails for bad XML (J#).</Test>
+  </FunctionalTests>
+  <ProjectFiles>
+    <File>
+      <Name>AssemblyInfo.cs</Name>
+      <Description>This file contains assembly custom attributes.</Description>
+    </File>
+    <File>
+      <Name>BaseCodeGenerator.cs</Name>
+      <Description>Abstract class that implements the IVsSingleFileGenerator interface.</Description>
+    </File>
+    <File>
+      <Name>BaseCodeGeneratorWithSite.cs</Name>
+      <Description>Abstract class that inherits from BaseCodeGenerator and implements the IObjectWithSite interface.</Description>
+    </File>
+    <File>
+      <Name>XmlClassGenerator.cs</Name>
+      <Description>The single file generator class.</Description>
+    </File>
+    <File>
+      <Name>SourceCodeGenerator.cs</Name>
+      <Description>Static class that contains the CodeDom code used to generate source code.</Description>
+    </File>
+    <File>
+      <Name>Support.cs</Name>
+      <Description>Static class containing support functions.</Description>
+    </File>
+    <File>
+      <Name>XmlClassGeneratorSchema.xsd</Name>
+      <Description>Schema for XML documents that the generator knows how to convert into source code.</Description>
+    </File>
+    <File>
+      <Name>Strings.resx</Name>
+      <Description>Resource strings (localizable).</Description>
+    </File>
+  </ProjectFiles>
+</VSSDKSample>
