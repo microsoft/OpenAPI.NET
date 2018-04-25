@@ -18,6 +18,7 @@ namespace Microsoft.OpenApi.Services
         private readonly OpenApiVisitorBase _visitor;
         private readonly Stack<OpenApiSchema> _schemaLoop = new Stack<OpenApiSchema>();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
+        private bool _inComponents = false;
 
         /// <summary>
         /// Initializes the <see cref="OpenApiWalker"/> class.
@@ -37,6 +38,9 @@ namespace Microsoft.OpenApi.Services
             {
                 return;
             }
+            _schemaLoop.Clear();
+            _pathItemLoop.Clear();
+            _inComponents = false;
 
             _visitor.Visit(doc);
 
@@ -96,7 +100,7 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            _visitor.EnterComponents();
+            EnterComponents();
 
             _visitor.Visit(components);
 
@@ -194,7 +198,7 @@ namespace Microsoft.OpenApi.Services
             });
 
             Walk(components as IOpenApiExtensible);
-            _visitor.ExitComponents();
+            ExitComponents();
         }
 
         /// <summary>
@@ -1027,7 +1031,17 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private bool IsReference(IOpenApiReferenceable referenceable)
         {
-            return referenceable.Reference != null && !_visitor.InComponents;
+            return referenceable.Reference != null && !_inComponents;
+        }
+
+        private void EnterComponents()
+        {
+            _inComponents = true;
+        }
+
+        private void ExitComponents()
+        {
+            _inComponents = false;
         }
     }
 }
