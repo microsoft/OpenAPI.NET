@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiServer server = new OpenApiServer();
 
             // Act
-            var validator = new OpenApiValidator();
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Visit(server);
             errors = validator.Errors;
             bool result = !errors.Any();

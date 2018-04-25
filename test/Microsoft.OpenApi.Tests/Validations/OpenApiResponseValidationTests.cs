@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiResponse response = new OpenApiResponse();
 
             // Act
-            var validator = new OpenApiValidator();
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
             walker.Walk(response);
 
