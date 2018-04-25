@@ -11,8 +11,24 @@
             <ColumnDefinition/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="txtInput" Text="{Binding Input}" VerticalScrollBarVisibility="Auto" Margin="10" TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" />
-        <DockPanel Grid.Column="1" Margin="0,10" >
+    <DockPanel Grid.Column="0"  >
+      <StackPanel DockPanel.Dock="Top">
+        <Label>Input File:</Label>
+        <TextBox x:Name="txtInputFile"
+               Text="{Binding InputFile}" 
+               Margin="10" 
+               TextWrapping="Wrap" AcceptsReturn="false" FontFamily="Consolas" />
+        <Label>Input Content:</Label>
+      </StackPanel>
+      <TextBox x:Name="txtInput" Text="{Binding Input}" 
+               VerticalScrollBarVisibility="Auto" 
+               Margin="10" 
+               TextWrapping="Wrap" 
+               AcceptsReturn="True" 
+               FontFamily="Consolas"
+               VerticalContentAlignment="Stretch" />
+    </DockPanel>
+    <DockPanel Grid.Column="1" Margin="0,10" >
             <StackPanel Orientation="Horizontal"  DockPanel.Dock="Top">
                 <Button Content="Convert" VerticalAlignment="Center" HorizontalAlignment="Left" Height="20" Margin="10" Width="131" Click="Button_Click" Grid.Column="1"/>
                 <StackPanel Orientation="Vertical"  DockPanel.Dock="Top">

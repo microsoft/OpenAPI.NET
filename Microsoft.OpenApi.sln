@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E546B92F-20A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6357D7FD-2DE4-4900-ADB9-ABC37052040A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.SmokeTests", "test\Microsoft.OpenApi.SmokeTests\Microsoft.OpenApi.SmokeTests.csproj", "{AD79B61D-88CF-497C-9ED5-41AE3867C5AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.SmokeTests", "test\Microsoft.OpenApi.SmokeTests\Microsoft.OpenApi.SmokeTests.csproj", "{AD79B61D-88CF-497C-9ED5-41AE3867C5AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

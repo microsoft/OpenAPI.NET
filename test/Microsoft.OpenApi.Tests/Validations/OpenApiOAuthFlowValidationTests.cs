@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiOAuthFlow oAuthFlow = new OpenApiOAuthFlow();
 
             // Act
-            var validator = new OpenApiValidator();
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
             walker.Walk(oAuthFlow);
 

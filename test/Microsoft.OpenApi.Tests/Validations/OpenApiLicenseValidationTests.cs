@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             OpenApiLicense license = new OpenApiLicense();
 
             // Act
-            var validator = new OpenApiValidator();
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
             walker.Walk(license);
 

@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Rules to use for validating OpenAPI specification.  If none are provided a default set of rules are applied.
         /// </summary>
-        public ValidationRuleSet RuleSet { get; set; }
+        public ValidationRuleSet RuleSet { get; set; } = ValidationRuleSet.GetDefaultRuleSet();
 
     }
 }

@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 }
             };
 
-            var errors = components.Validate();
+            var errors = components.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Act
             bool result = !errors.Any();

@@ -90,11 +90,14 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the document
-            var errors = document.Validate(_settings.RuleSet);
-            foreach (var item in errors)
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
-                diagnostic.Errors.Add(item);
-            } 
+                var errors = document.Validate(_settings.RuleSet);
+                foreach (var item in errors)
+                {
+                    diagnostic.Errors.Add(item);
+                }
+            }
 
             return document;
         }
