@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Workbench
 {
-    public class StatsVisitor : OpenApiVisitorBase
+    internal class StatsVisitor : OpenApiVisitorBase
     {
         public int ParameterCount { get; set; } = 0;
 

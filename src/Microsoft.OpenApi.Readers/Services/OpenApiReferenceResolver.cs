@@ -177,8 +177,7 @@ namespace Microsoft.OpenApi.Readers.Services
 
             if (IsUnresolvedReference(entity))
             {
-                var x = ResolveReference<T>(entity.Reference);
-                assign(x);
+                assign(ResolveReference<T>(entity.Reference));
             }
         }
 

@@ -56,12 +56,16 @@ namespace Microsoft.OpenApi.Validations
             return new ValidationRuleSet(_defaultRuleSet);
         }
 
+        /// <summary>
+        /// Return Ruleset with no rules
+        /// </summary>
         public static ValidationRuleSet GetEmptyRuleSet()
         {
             // We create a new instance of ValidationRuleSet per call as a safeguard
             // against unintentional modification of the private _defaultRuleSet.
             return new ValidationRuleSet();
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRuleSet"/> class.
         /// </summary>

@@ -168,7 +168,10 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         private void Validate(object item, Type type)
         {
-            if (item == null) return;  // Required fields should be checked by higher level objects
+            if (item == null)
+            {
+                return;  // Required fields should be checked by higher level objects
+            }
 
             // Validate unresolved references as references
             var potentialReference = item as IOpenApiReferenceable;

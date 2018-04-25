@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,12 +67,13 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AllwaysFailRule<OpenApiSchema>()});
+            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>()});
 
 
             // Assert
             Assert.True(errors.Count() == 1);            
         }
+
         [Fact]
         public void UnResolvedReferencedSchemaShouldNotBeValidated()
         {
@@ -94,17 +98,65 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AllwaysFailRule<OpenApiSchema>() });
+            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
 
             // Assert
             Assert.True(errors.Count() == 0);
         }
 
+        [Fact]
+        public void UnResolvedSchemaReferencedShouldNotBeValidated()
+        {
+            // Arrange
+
+            var sharedSchema = new OpenApiSchema
+            {
+                Reference = new OpenApiReference()
+                {
+                    Id = "test"
+                },
+                UnresolvedReference = true
+            };
+
+            OpenApiDocument document = new OpenApiDocument();
+
+            document.Paths = new OpenApiPaths()
+            {
+                ["/"] = new OpenApiPathItem()
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Get] = new OpenApiOperation()
+                        {
+                            Responses = new OpenApiResponses()
+                            {
+                                ["200"] = new OpenApiResponse()
+                                {
+                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    {
+                                        ["application/json"] = new OpenApiMediaType()
+                                        {
+                                            Schema = sharedSchema
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
+
+            // Assert
+            Assert.True(errors.Count() == 0);
+        }
     }
 
-    public class AllwaysFailRule<P> : ValidationRule<P> where P: IOpenApiElement
+    public class AlwaysFailRule<T> : ValidationRule<T> where T: IOpenApiElement
     {
-        public AllwaysFailRule() : base( (c,t) =>  c.CreateError("x","y"))
+        public AlwaysFailRule() : base( (c,t) =>  c.CreateError("x","y"))
         {
             
         }
