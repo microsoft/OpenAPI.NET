@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Workbench
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _mainModel.Validate();
+            _mainModel.ParseDocument();
         }
     }
 }

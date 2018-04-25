@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Validations
         }
 
         [Fact]
-        public void UnResolvedReferencedSchemaShouldNotBeValidated()
+        public void UnresolvedReferenceSchemaShouldNotBeValidated()
         {
             // Arrange
             var sharedSchema = new OpenApiSchema
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Tests.Validations
         }
 
         [Fact]
-        public void UnResolvedSchemaReferencedShouldNotBeValidated()
+        public void UnresolvedSchemaReferencedShouldNotBeValidated()
         {
             // Arrange
 

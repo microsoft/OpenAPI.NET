@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Workbench
         /// The core method of the class.
         /// Runs the parsing and serializing.
         /// </summary>
-        internal void Validate()
+        internal void ParseDocument()
         {
             try
             {

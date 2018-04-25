@@ -38,6 +38,7 @@ namespace Microsoft.OpenApi.Services
             {
                 return;
             }
+
             _schemaLoop.Clear();
             _pathItemLoop.Clear();
             _inComponents = false;
