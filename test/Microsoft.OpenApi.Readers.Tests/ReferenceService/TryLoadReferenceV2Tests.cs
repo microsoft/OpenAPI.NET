@@ -226,7 +226,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                             Schema = new OpenApiSchema
                             {
                                 Description = "Sample description",
-                                Required = new List<string> {"name" },
+                                Required = new HashSet<string> {"name" },
                                 Properties = {
                                     ["name"] = new OpenApiSchema()
                                     {
