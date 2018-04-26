@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public IList<string> Required { get; set; } = new List<string>();
+        public ISet<string> Required { get; set; } = new HashSet<string>();
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -393,7 +393,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            SerializeAsV2(writer: writer, parentRequiredProperties: new List<string>(), propertyName: null);
+            SerializeAsV2(writer: writer, parentRequiredProperties: new HashSet<string>(), propertyName: null);
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeAsV2WithoutReference(
                 writer: writer,
-                parentRequiredProperties: new List<string>(),
+                parentRequiredProperties: new HashSet<string>(),
                 propertyName: null);
         }
 
@@ -416,7 +416,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="propertyName">The property name that will be serialized.</param>
         internal void SerializeAsV2(
             IOpenApiWriter writer,
-            IList<string> parentRequiredProperties,
+            ISet<string> parentRequiredProperties,
             string propertyName)
         {
             if (writer == null)
@@ -432,7 +432,7 @@ namespace Microsoft.OpenApi.Models
 
             if (parentRequiredProperties == null)
             {
-                parentRequiredProperties = new List<string>();
+                parentRequiredProperties = new HashSet<string>();
             }
 
             SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
@@ -447,7 +447,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="propertyName">The property name that will be serialized.</param>
         internal void SerializeAsV2WithoutReference(
             IOpenApiWriter writer,
-            IList<string> parentRequiredProperties,
+            ISet<string> parentRequiredProperties,
             string propertyName)
         {
             writer.WriteStartObject();
@@ -521,7 +521,7 @@ namespace Microsoft.OpenApi.Models
 
         internal void WriteAsSchemaProperties(
             IOpenApiWriter writer,
-            IList<string> parentRequiredProperties,
+            ISet<string> parentRequiredProperties,
             string propertyName)
         {
             if (writer == null)

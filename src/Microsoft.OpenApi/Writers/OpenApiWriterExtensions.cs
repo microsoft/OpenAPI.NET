@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalCollection(
             this IOpenApiWriter writer,
             string name,
-            IList<string> elements,
+            IEnumerable<string> elements,
             Action<IOpenApiWriter, string> action)
         {
             if (elements != null && elements.Any())
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Writers
         public static void WriteOptionalCollection<T>(
             this IOpenApiWriter writer,
             string name,
-            IList<T> elements,
+            IEnumerable<T> elements,
             Action<IOpenApiWriter, T> action)
             where T : IOpenApiElement
         {
