@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Readers.V3
 {
@@ -103,7 +104,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "required", (o, n) =>
                 {
-                    o.Required = n.CreateSimpleList(n2 => n2.GetScalarValue()).ToArray();
+                    o.Required = new HashSet<string>(n.CreateSimpleList(n2 => n2.GetScalarValue()));
                 }
             },
             {
