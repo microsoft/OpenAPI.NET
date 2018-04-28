@@ -176,6 +176,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
     </Compile>
     <Compile Include="CodeGenerators\BaseCodeGenerator.cs" />
     <Compile Include="CodeGenerators\BaseCodeGeneratorWithSite.cs" />
+    <Compile Include="CodeGenerators\CodeGeneratorRegistrationWithFileExtensionAttribute.cs" />
     <Compile Include="OpenApi2_0JsonToYamlGenerator.cs" />
     <Compile Include="OpenApi3_0JsonToYamlGenerator.cs" />
     <Compile Include="OpenApi3_0YamlToJsonGenerator.cs" />
