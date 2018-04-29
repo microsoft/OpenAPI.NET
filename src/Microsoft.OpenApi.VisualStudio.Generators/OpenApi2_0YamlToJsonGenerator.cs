@@ -27,8 +27,8 @@ namespace Microsoft.OpenApi.VisualStudio.Generators
     [ComVisible(true)]
     [Guid("DCF62102-43C0-4660-964B-76071EFA9753")]
     [ProvideObject(typeof(OpenApi2_0YamlToJsonGenerator))]
-    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi2_0YamlToJsonGenerator), "C# OpenAPI 2.0 YAML to JSON Generator", "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}", GeneratesDesignTimeSource = true, FileExtension = ".yaml")]
-    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi2_0YamlToJsonGenerator), "C# OpenAPI 2.0 YAML to JSON Generator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true, FileExtension = ".yaml")]
+    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi2_0YamlToJsonGenerator), "C# OpenAPI 2.0 YAML to JSON Generator", "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}", GeneratesDesignTimeSource = true, FileExtension = ".oayaml")]
+    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi2_0YamlToJsonGenerator), "C# OpenAPI 2.0 YAML to JSON Generator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true, FileExtension = ".oayaml")]
     public class OpenApi2_0YamlToJsonGenerator : BaseCodeGeneratorWithSite
     {
 #pragma warning disable 0414

@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.VisualStudio.Generators.CodeGenerators
 
         /// <summary>
         ///     Called to register this attribute with the given context.  The context
-        ///     contains the location where the registration inforomation should be placed.
+        ///     contains the location where the registration information should be placed.
         ///     It also contains other information such as the type being registered and path information.
         /// </summary>
         public override void Register(RegistrationContext context)
