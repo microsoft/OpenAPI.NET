@@ -28,8 +28,8 @@ namespace Microsoft.OpenApi.VisualStudio.Generators
     [Guid("5930505F-3C4B-4E54-B02A-C99226870507")]
     [ProvideObject(typeof(OpenApi2_0JsonToYamlGenerator))]
     // Must register new project type which contains the new multi target model, https://github.com/aspnet/Tooling/issues/394#issuecomment-319244129
-    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi2_0JsonToYamlGenerator), "C# OpenAPI 2.0 JSON to YAML Generator", "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}", GeneratesDesignTimeSource = true, FileExtension = ".oajson")]
-    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi2_0JsonToYamlGenerator), "C# OpenAPI 2.0 JSON to YAML Generator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true, FileExtension = ".oajson")]
+    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi2_0JsonToYamlGenerator), "C# OpenAPI 2.0 JSON to YAML Generator", "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}", GeneratesDesignTimeSource = true)]
+    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi2_0JsonToYamlGenerator), "C# OpenAPI 2.0 JSON to YAML Generator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
     public class OpenApi2_0JsonToYamlGenerator : BaseCodeGeneratorWithSite
     {
 #pragma warning disable 0414
