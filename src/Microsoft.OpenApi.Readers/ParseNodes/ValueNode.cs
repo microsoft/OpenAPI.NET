@@ -59,6 +59,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return new OpenApiInteger(intValue);
             }
 
+            if (long.TryParse(value, out var longValue))
+            {
+                return
+                    new OpenApiLong(
+                        longValue); 
+            }
+
             if (double.TryParse(value, out var dblValue))
             {
                 return

@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var json = WriteAsJson(dateTimeValue);
 
             // Assert
-            json.Should().Be(input.ToString(@"o"));
+            json.Should().Be(input.ToString("o"));
         }
 
         [Theory]

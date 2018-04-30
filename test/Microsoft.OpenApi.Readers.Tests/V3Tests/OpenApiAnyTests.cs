@@ -80,7 +80,7 @@ aDateTime: 2017-01-01
         }
 
         [Fact]
-        public void ParseScalarIntegertAsAnyShouldSucceed()
+        public void ParseScalarIntegerAsAnyShouldSucceed()
         {
             var input = @"
 10
