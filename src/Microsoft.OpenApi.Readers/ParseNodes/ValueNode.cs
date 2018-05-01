@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             return scalarNode.Value;
-        }
+       }
 
         /// <summary>
         /// Create a <see cref="IOpenApiPrimitive"/>
@@ -59,11 +59,18 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return new OpenApiInteger(intValue);
             }
 
+            if (long.TryParse(value, out var longValue))
+            {
+                return
+                    new OpenApiLong(
+                        longValue); 
+            }
+
             if (double.TryParse(value, out var dblValue))
             {
                 return
                     new OpenApiDouble(
-                        dblValue); // Note(darrmi): This may be better as decimal.  Further investigation required.
+                        dblValue); // Note(darrmi): This may be better as decimal. Further investigation required.
             }
 
             if (DateTimeOffset.TryParse(value, out var datetimeValue))

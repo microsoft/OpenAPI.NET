@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Exceptions;
@@ -163,6 +164,16 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write dateTimeOffset value.
+        /// </summary>
+        /// <param name="value">The decimal value.</param>
+        public virtual void WriteValue(DateTimeOffset value)
+        {
+            WriteValueSeparator();
+            Writer.Write(value.ToString("o"));
+        }
+
+        /// <summary>
         /// Write boolean value.
         /// </summary>
         /// <param name="value">The boolean value.</param>
@@ -213,6 +224,10 @@ namespace Microsoft.OpenApi.Writers
             else if (type == typeof(decimal) || type == typeof(decimal?))
             {
                 WriteValue((decimal)value);
+            }
+            else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
+            {
+                WriteValue((DateTimeOffset)value);
             }
             else
             {
