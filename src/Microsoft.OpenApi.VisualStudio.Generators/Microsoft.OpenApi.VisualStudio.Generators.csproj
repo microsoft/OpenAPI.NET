@@ -205,6 +205,16 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
       <AdditionalProperties>TargetFramework=net46</AdditionalProperties>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Microsoft.OpenApi.VisualStudio.Generators.Preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Package.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
   <PropertyGroup>
     <!--
     To specify a different registry root to register your package, uncomment the TargetRegistryRoot

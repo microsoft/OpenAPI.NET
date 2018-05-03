@@ -10,11 +10,11 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 -->
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="f980cce7-10b3-4463-b991-4d1144c3f408" Version="1.0.2" Language="en-US" Publisher="Microsoft" />
-        <DisplayName>Microsoft OpenAPI Visual Studio Generators</DisplayName>
+        <Identity Id="f980cce7-10b3-4463-b991-4d1144c3f408" Version="1.0.3" Language="en-US" Publisher="Microsoft" />
+        <DisplayName>wha</DisplayName>
         <Description xml:space="preserve">Converts OpenAPI documents between YAML and JSON formats</Description>
         <Icon>Package.ico</Icon>
-        <PreviewImage>Example.SingleFileGenerator.jpg</PreviewImage>
+        <PreviewImage>Microsoft.OpenApi.VisualStudio.Generators.Preview.png</PreviewImage>
     </Metadata>
     <Installation InstalledByMsi="false">
         <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[14.0,16.0)" />
