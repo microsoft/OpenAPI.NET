@@ -14,12 +14,12 @@ Project Objectives
 - Provide OpenAPI description writers for both V2 and V3 specification formats.
 - Enable developers to create Readers that translate different data formats into OpenAPI descriptions. 
 
-# Readers
-The OpenAPI.NET project holds the base object model for representing OpenAPI descriptions as .NET objects. Translation for different data types into this object model is handled by reading raw JSON/YAML or from individual "Readers", a number of which are in the works.
+# Processors
+The OpenAPI.NET project holds the base object model for representing OpenAPI documents as .NET objects. Some developers have found the need to write processors that convert other data formats into this OpenAPI.NET object model. We'd like to curate that list of processors in this section of the readme. 
 
-The base JSON and YAML Readers are built into this project. Below is the list of supported "reader" projects.
+The base JSON and YAML processors are built into this project. Below is the list of the other supported processor projects.
 
-- .NET Comment Reader: [Coming Soon]
+- [**C# Comment / Annotation Processor**](https://github.com/Microsoft/OpenAPI.NET.CSharpAnnotations) : Converts standard .NET annotations ( /// comments ) emitted from your build (MSBuild.exe) into OpenAPI.NET document object. 
 
 # Example Usage
 
