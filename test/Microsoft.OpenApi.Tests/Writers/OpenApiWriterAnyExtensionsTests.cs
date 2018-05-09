@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -82,6 +83,23 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Assert
             json.Should().Be(input.ToString());
+        }
+
+        [Theory]
+        [InlineData("2017-1-2")]
+        [InlineData("1999-01-02T12:10:22")]
+        [InlineData("1999-01-03")]
+        [InlineData("10:30:12")]
+        public void WriteOpenApiDateTimeAsJsonWorks(string inputString)
+        {
+            // Arrange
+            var input = DateTimeOffset.Parse(inputString);
+            var dateTimeValue = new OpenApiDateTime(input);
+
+            var json = WriteAsJson(dateTimeValue);
+
+            // Assert
+            json.Should().Be(input.ToString("o"));
         }
 
         [Theory]

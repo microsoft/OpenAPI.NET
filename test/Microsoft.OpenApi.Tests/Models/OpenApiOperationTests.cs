@@ -251,7 +251,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = "string"
                                     }
                                 },
-                                Required = new List<string>()
+                                Required = new HashSet<string>()
                                 {
                                     "name"
                                 }
@@ -274,7 +274,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = "string"
                                     }
                                 },
-                                Required = new List<string>()
+                                Required = new HashSet<string>()
                                 {
                                     "name"
                                 }

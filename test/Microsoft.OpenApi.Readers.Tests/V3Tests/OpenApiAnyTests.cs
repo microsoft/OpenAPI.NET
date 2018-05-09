@@ -80,7 +80,7 @@ aDateTime: 2017-01-01
         }
 
         [Fact]
-        public void ParseScalarIntegertAsAnyShouldSucceed()
+        public void ParseScalarIntegerAsAnyShouldSucceed()
         {
             var input = @"
 10
@@ -100,6 +100,30 @@ aDateTime: 2017-01-01
 
             any.ShouldBeEquivalentTo(
                 new OpenApiInteger(10)
+            );
+        }
+
+        [Fact]
+        public void ParseScalarDateTimeAsAnyShouldSucceed()
+        {
+            var input = @"
+2012-07-23T12:33:00
+                ";
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StringReader(input));
+            var yamlNode = yamlStream.Documents.First().RootNode;
+
+            var context = new ParsingContext();
+            var diagnostic = new OpenApiDiagnostic();
+
+            var node = new ValueNode(context, diagnostic, (YamlScalarNode)yamlNode);
+
+            var any = node.CreateAny();
+
+            diagnostic.Errors.Should().BeEmpty();
+
+            any.ShouldBeEquivalentTo(
+                new OpenApiDateTime(DateTimeOffset.Parse("2012-07-23T12:33:00"))
             );
         }
     }

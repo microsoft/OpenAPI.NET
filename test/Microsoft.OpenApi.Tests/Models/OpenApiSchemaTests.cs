@@ -163,12 +163,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new OpenApiSchema
         {
             Title = "title1",
-            Required = new List<string>(){ "property1" },
+            Required = new HashSet<string>(){ "property1" },
             Properties = new Dictionary<string, OpenApiSchema>
             {
                 ["property1"] = new OpenApiSchema
                 {
-                    Required = new List<string>() { "property3" },
+                    Required = new HashSet<string>() { "property3" },
                     Properties = new Dictionary<string, OpenApiSchema>
                     {
                         ["property2"] = new OpenApiSchema

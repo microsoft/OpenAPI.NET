@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["pet"] = new OpenApiSchema
                 {
                     Type = "object",
-                    Required = new List<string>
+                    Required = new HashSet<string>
                     {
                         "id",
                         "name"
@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["newPet"] = new OpenApiSchema
                 {
                     Type = "object",
-                    Required = new List<string>
+                    Required = new HashSet<string>
                     {
                         "name"
                     },
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["errorModel"] = new OpenApiSchema
                 {
                     Type = "object",
-                    Required = new List<string>
+                    Required = new HashSet<string>
                     {
                         "code",
                         "message"
@@ -516,7 +516,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["pet"] = new OpenApiSchema
                 {
                     Type = "object",
-                    Required = new List<string>
+                    Required = new HashSet<string>
                     {
                         "id",
                         "name"
@@ -541,7 +541,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["newPet"] = new OpenApiSchema
                 {
                     Type = "object",
-                    Required = new List<string>
+                    Required = new HashSet<string>
                     {
                         "name"
                     },
@@ -565,7 +565,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["errorModel"] = new OpenApiSchema
                 {
                     Type = "object",
-                    Required = new List<string>
+                    Required = new HashSet<string>
                     {
                         "code",
                         "message"

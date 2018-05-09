@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             };
 
             // Act
-            var errors = contact.Validate();
+            var errors = contact.Validate(ValidationRuleSet.GetDefaultRuleSet());
             bool result = !errors.Any();
 
             // Assert

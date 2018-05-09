@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     }
                 });
 
-            var validator = new OpenApiValidator();
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
             
-            var validator = new OpenApiValidator();
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 

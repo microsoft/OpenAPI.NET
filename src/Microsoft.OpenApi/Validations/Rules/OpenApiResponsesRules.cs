@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 });
 
         /// <summary>
-        /// The response key must either be "default" or an HTTP status code (1xx, 2xx, 3xx, 4xx, 5xx)
+        /// The response key must either be "default" or an HTTP status code (1xx, 2xx, 3xx, 4xx, 5xx).
         /// </summary>
         public static ValidationRule<OpenApiResponses> ResponsesMustBeIdentifiedByDefaultOrStatusCode =>
             new ValidationRule<OpenApiResponses>(
@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         context.Enter(key);
 
-                        if (key != "default" && !Regex.IsMatch(key, "^[1-5]([0-9][0-9]|XX)$"))
+                        if (key != "default" && !Regex.IsMatch(key, "^[1-5](?>[0-9]{2}|XX)$"))
                         {
                             context.CreateError(nameof(ResponsesMustBeIdentifiedByDefaultOrStatusCode), 
                                     "Responses key must be 'default', an HTTP status code, " +
