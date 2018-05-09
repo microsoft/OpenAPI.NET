@@ -9,7 +9,7 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
 
 ***************************************************************************/
 
-namespace Microsoft.OpenApi.VisualStudio.Generators
+namespace Microsoft.OpenApi.VisualStudio.Generators.Converters
 {
     using System;
     using System.Runtime.InteropServices;
@@ -21,19 +21,19 @@ namespace Microsoft.OpenApi.VisualStudio.Generators
     using VSLangProj80;
 
     /// <summary>
-    /// When setting the 'Custom Tool' property of a C#, VB, or J# project item to "OpenApi3_0JsonToYamlGenerator", 
+    /// When setting the 'Custom Tool' property of a C#, VB, or J# project item to "ConvertToOpenApi_3_0_Yaml", 
     /// the GenerateCode function will get called and will return the contents of the generated file to the project system
     /// </summary>
     [ComVisible(true)]
     [Guid("5FE20A01-597D-47AD-9635-08C91E64281A")]
-    [ProvideObject(typeof(OpenApi3_0JsonToYamlGenerator))]
-    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi3_0JsonToYamlGenerator), "C# OpenAPI 3.0 JSON to YAML Generator", "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}", GeneratesDesignTimeSource = true)]
-    [CodeGeneratorRegistrationWithFileExtension(typeof(OpenApi3_0JsonToYamlGenerator), "C# OpenAPI 3.0 JSON to YAML Generator", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
-    public class OpenApi3_0JsonToYamlGenerator : BaseCodeGeneratorWithSite
+    [ProvideObject(typeof(ConvertToOpenApi_3_0_Yaml))]
+    [CodeGeneratorRegistrationWithFileExtension(typeof(ConvertToOpenApi_3_0_Yaml), "Convert to OpenAPI 3.0 YAML", "{9A19103F-16F7-4668-BE54-9A1E7A4F7556}", GeneratesDesignTimeSource = true)]
+    [CodeGeneratorRegistrationWithFileExtension(typeof(ConvertToOpenApi_3_0_Yaml), "Convert to OpenAPI 3.0 YAML", vsContextGuids.vsContextGuidVCSProject, GeneratesDesignTimeSource = true)]
+    public class ConvertToOpenApi_3_0_Yaml : BaseCodeGeneratorWithSite
     {
 #pragma warning disable 0414
         //The name of this generator (use for 'Custom Tool' property of project item)
-        internal static string name = "OpenApi3_0JsonToYamlGenerator";
+        internal static string name = "ConvertToOpenApi_3_0_Yaml";
 #pragma warning restore 0414
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.VisualStudio.Generators
         {
             try
             {
-                var openApiGenerator = new OpenApiGenerator(this.CodeGeneratorProgress);
+                var openApiGenerator = new OpenApiConverter(this.CodeGeneratorProgress);
                 return openApiGenerator.ConvertOpenApiDocument(inputFileContent, OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);
             }
             catch (Exception e)

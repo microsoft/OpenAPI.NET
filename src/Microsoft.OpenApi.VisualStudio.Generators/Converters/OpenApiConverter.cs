@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OpenApi.VisualStudio.Generators
+﻿namespace Microsoft.OpenApi.VisualStudio.Generators.Converters
 {
     using System;
     using System.IO;
@@ -8,11 +8,11 @@
     using Microsoft.OpenApi.Readers;
     using Microsoft.VisualStudio.Shell.Interop;
 
-    internal class OpenApiGenerator
+    internal class OpenApiConverter
     {
         private readonly IVsGeneratorProgress codeGeneratorProgress;
 
-        internal OpenApiGenerator(IVsGeneratorProgress codeGeneratorProgress)
+        internal OpenApiConverter(IVsGeneratorProgress codeGeneratorProgress)
         {
             this.codeGeneratorProgress = codeGeneratorProgress;
         }

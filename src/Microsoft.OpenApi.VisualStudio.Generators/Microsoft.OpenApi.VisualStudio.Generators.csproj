@@ -177,11 +177,11 @@ PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
     <Compile Include="CodeGenerators\BaseCodeGenerator.cs" />
     <Compile Include="CodeGenerators\BaseCodeGeneratorWithSite.cs" />
     <Compile Include="CodeGenerators\CodeGeneratorRegistrationWithFileExtensionAttribute.cs" />
-    <Compile Include="OpenApi2_0JsonToYamlGenerator.cs" />
-    <Compile Include="OpenApi3_0JsonToYamlGenerator.cs" />
-    <Compile Include="OpenApi3_0YamlToJsonGenerator.cs" />
-    <Compile Include="OpenApiGenerator.cs" />
-    <Compile Include="OpenApi2_0YamlToJsonGenerator.cs" />
+    <Compile Include="Converters\ConvertToOpenApi_2_0_Yaml.cs" />
+    <Compile Include="Converters\ConvertToOpenApi_3_0_Yaml.cs" />
+    <Compile Include="Converters\ConvertToOpenApi_3_0_Json.cs" />
+    <Compile Include="Converters\OpenApiConverter.cs" />
+    <Compile Include="Converters\ConvertToOpenApi_2_0_Json.cs" />
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
