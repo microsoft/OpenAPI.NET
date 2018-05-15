@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.Services;
@@ -101,6 +102,51 @@ namespace Microsoft.OpenApi.Readers
 
             return document;
         }
+
+        /// <summary>
+        /// Reads the stream input and parses the fragment of an OpenAPI descinto an Open API Element.
+        /// </summary>
+        /// <param name="input">Stream containing OpenAPI description to parse.</param>
+        /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
+        /// <returns>Instance of newly created OpenApiDocument</returns>
+        public T ReadFragment<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
+        {
+            ParsingContext context;
+            YamlDocument yamlDocument;
+            diagnostic = new OpenApiDiagnostic();
+
+            // Parse the YAML/JSON
+            try
+            {
+                yamlDocument = LoadYamlDocument(input);
+            }
+            catch (SyntaxErrorException ex)
+            {
+                diagnostic.Errors.Add(new OpenApiReaderError(ex));
+                return default(T);
+            }
+
+            context = new ParsingContext
+            {
+                ExtensionParsers = _settings.ExtensionParsers
+            };
+
+            IOpenApiElement element = null;
+
+            try
+            {
+                // Parse the OpenAPI element
+                element = context.ParseFragment<T>(yamlDocument, version, diagnostic);
+            }
+            catch (OpenApiException ex)
+            {
+                diagnostic.Errors.Add(new OpenApiError(ex));
+            }
+
+            return (T)element;
+        }
+
 
         /// <summary>
         /// Helper method to turn streams into YamlDocument

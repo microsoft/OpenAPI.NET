@@ -64,6 +64,33 @@ namespace Microsoft.OpenApi.Readers
             return doc;
         }
 
+        /// <summary>
+        /// Initiates the parsing process of a fragment.  Not thread safe and should only be called once on a parsing context
+        /// </summary>
+        /// <param name="yamlDocument"></param>
+        /// <param name="diagnostic"></param>
+        /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
+        internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version, OpenApiDiagnostic diagnostic) where T: IOpenApiElement
+        {
+            var node = ParseNode.Create(this, diagnostic, yamlDocument.RootNode);
+
+            T element = default(T);
+
+            switch (version)
+            {
+                case OpenApiSpecVersion.OpenApi2_0:
+                    VersionService = new OpenApiV2VersionService();
+                    element = this.VersionService.LoadElement<T>(node);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi3_0:
+                    this.VersionService = new OpenApiV3VersionService();
+                    element = this.VersionService.LoadElement<T>(node);
+                    break;
+            }
+
+            return element;
+        }
 
         /// <summary>
         /// Gets the version of the Open API document.
@@ -108,7 +135,7 @@ namespace Microsoft.OpenApi.Readers
             set
             {
                 _versionService = value;
-                ComputeTags(Tags, VersionService.TagLoader);
+                //ComputeTags(Tags, VersionService.TagLoader);
             }
         }
 

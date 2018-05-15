@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -18,6 +19,36 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal class OpenApiV3VersionService : IOpenApiVersionService
     {
+        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>> {
+            [typeof(IOpenApiAny)] = OpenApiV3Deserializer.LoadAny,
+            [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
+            [typeof(OpenApiComponents)] = OpenApiV3Deserializer.LoadComponents,
+            [typeof(OpenApiEncoding)] = OpenApiV3Deserializer.LoadEncoding,
+            [typeof(OpenApiExample)] = OpenApiV3Deserializer.LoadExample,
+            [typeof(OpenApiExternalDocs)] = OpenApiV3Deserializer.LoadExternalDocs,
+            [typeof(OpenApiHeader)] = OpenApiV3Deserializer.LoadHeader,
+            [typeof(OpenApiInfo)] = OpenApiV3Deserializer.LoadInfo,
+            [typeof(OpenApiLicense)] = OpenApiV3Deserializer.LoadLicense,
+            [typeof(OpenApiLink)] = OpenApiV3Deserializer.LoadLink,
+            [typeof(OpenApiMediaType)] = OpenApiV3Deserializer.LoadMediaType,
+            [typeof(OpenApiOAuthFlow)] = OpenApiV3Deserializer.LoadOAuthFlow,
+            [typeof(OpenApiOAuthFlows)] = OpenApiV3Deserializer.LoadOAuthFlows,
+            [typeof(OpenApiOperation)] = OpenApiV3Deserializer.LoadOperation,
+            [typeof(OpenApiParameter)] = OpenApiV3Deserializer.LoadParameter,
+            [typeof(OpenApiPathItem)] = OpenApiV3Deserializer.LoadPathItem,
+            [typeof(OpenApiPaths)] = OpenApiV3Deserializer.LoadPaths,
+            [typeof(OpenApiRequestBody)] = OpenApiV3Deserializer.LoadRequestBody,
+            [typeof(OpenApiResponse)] = OpenApiV3Deserializer.LoadResponse,
+            [typeof(OpenApiResponses)] = OpenApiV3Deserializer.LoadResponses,
+            [typeof(OpenApiSchema)] = OpenApiV3Deserializer.LoadSchema,
+            [typeof(OpenApiSecurityRequirement)] = OpenApiV3Deserializer.LoadSecurityRequirement,
+            [typeof(OpenApiSecurityScheme)] = OpenApiV3Deserializer.LoadSecurityScheme,
+            [typeof(OpenApiServer)] = OpenApiV3Deserializer.LoadServer,
+            [typeof(OpenApiServerVariable)] = OpenApiV3Deserializer.LoadServerVariable,
+            [typeof(OpenApiTag)] = OpenApiV3Deserializer.LoadTag,
+            [typeof(OpenApiXml)] = OpenApiV3Deserializer.LoadXml
+        };
+            
         /// <summary>
         /// Return a function that converts a MapNode into a V3 OpenApiTag
         /// </summary>
@@ -78,6 +109,11 @@ namespace Microsoft.OpenApi.Readers.V3
         public OpenApiDocument LoadDocument(RootNode rootNode)
         {
             return OpenApiV3Deserializer.LoadOpenApi(rootNode);
+        }
+
+        public T LoadElement<T>(ParseNode node) where T : IOpenApiElement
+        {
+            return (T)_loaders[typeof(T)](node); 
         }
 
         private OpenApiReference ParseLocalReference(string localReference)
