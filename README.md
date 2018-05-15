@@ -1,7 +1,6 @@
 ![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
 
-# OpenAPI.NET [Preview]
-[Disclaimer: This repository is in a preview state. Expect to see some iterating as we work towards the final release candidate slated for early 2018. Feedback is welcome!]
+# OpenAPI.NET
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
