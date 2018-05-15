@@ -31,11 +31,6 @@ namespace Microsoft.OpenApi.Readers.Interface
         T LoadElement<T>(ParseNode node) where T : IOpenApiElement;
 
         /// <summary>
-        /// Function that converts a MapNode into a Tag object in a version specific way
-        /// </summary>
-        Func<MapNode, OpenApiTag> TagLoader { get; }
-
-        /// <summary>
         /// Converts a generic RootNode instance into a strongly typed OpenApiDocument
         /// </summary>
         /// <param name="rootNode">RootNode containing the information to be converted into an OpenAPI Document</param>

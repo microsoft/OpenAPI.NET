@@ -68,6 +68,7 @@ namespace Microsoft.OpenApi.Readers
         /// Initiates the parsing process of a fragment.  Not thread safe and should only be called once on a parsing context
         /// </summary>
         /// <param name="yamlDocument"></param>
+        /// <param name="version">OpenAPI version of the fragment</param>
         /// <param name="diagnostic"></param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version, OpenApiDiagnostic diagnostic) where T: IOpenApiElement
@@ -109,20 +110,6 @@ namespace Microsoft.OpenApi.Readers
             return versionNode?.GetScalarValue();
         }
 
-        private void ComputeTags(List<OpenApiTag> tags, Func<MapNode, OpenApiTag> loadTag)
-        {
-            // Precompute the tags array so that each tag reference does not require a new deserialization.
-            var tagListPointer = new JsonPointer("#/tags");
-
-            var tagListNode = RootNode.Find(tagListPointer);
-
-            if (tagListNode != null && tagListNode is ListNode)
-            {
-                var tagListNodeAsListNode = (ListNode)tagListNode;
-                tags.AddRange(tagListNodeAsListNode.CreateList(loadTag));
-            }
-        }
-
         /// <summary>
         /// Service providing all Version specific conversion functions
         /// </summary>
@@ -135,7 +122,6 @@ namespace Microsoft.OpenApi.Readers
             set
             {
                 _versionService = value;
-                //ComputeTags(Tags, VersionService.TagLoader);
             }
         }
 

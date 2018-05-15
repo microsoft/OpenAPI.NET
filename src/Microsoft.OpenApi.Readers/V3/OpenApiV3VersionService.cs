@@ -50,11 +50,6 @@ namespace Microsoft.OpenApi.Readers.V3
         };
             
         /// <summary>
-        /// Return a function that converts a MapNode into a V3 OpenApiTag
-        /// </summary>
-        public Func<MapNode, OpenApiTag> TagLoader => OpenApiV3Deserializer.LoadTag;
-
-        /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
         public OpenApiReference ConvertToOpenApiReference(

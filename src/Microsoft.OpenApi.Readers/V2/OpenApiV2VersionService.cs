@@ -39,12 +39,6 @@ namespace Microsoft.OpenApi.Readers.V2
             [typeof(OpenApiXml)] = OpenApiV2Deserializer.LoadXml
         };
 
-
-        /// <summary>
-        /// Return a function that converts a MapNode into a V2 OpenApiTag
-        /// </summary>
-        public Func<MapNode, OpenApiTag> TagLoader => OpenApiV2Deserializer.LoadTag;
-
         private static OpenApiReference ParseLocalReference(string localReference)
         {
             if (string.IsNullOrWhiteSpace(localReference))
