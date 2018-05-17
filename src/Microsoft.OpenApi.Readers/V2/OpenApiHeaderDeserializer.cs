@@ -122,8 +122,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "enum", (o, n) =>
                 {
-                    GetOrCreateSchema(o).Enum =
-                        n.CreateSimpleList<IOpenApiAny>(l => new OpenApiString(l.GetScalarValue()));
+                    GetOrCreateSchema(o).Enum = n.CreateListOfAny();
                 }
             }
         };
@@ -151,7 +150,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
             return header;
         }
-
 
         private static void LoadStyle(OpenApiHeader h, string v)
         {
