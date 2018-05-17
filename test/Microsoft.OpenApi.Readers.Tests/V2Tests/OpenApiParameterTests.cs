@@ -3,6 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -137,6 +138,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Description = "token to be passed as a header",
                     Required = true,
                     Style = ParameterStyle.Simple,
+                   
                     Schema = new OpenApiSchema
                     {
                         Type = "array",
@@ -144,6 +146,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             Type = "integer",
                             Format = "int64"
+                        },
+                        Default = new OpenApiArray() {
+                            new OpenApiInteger(1),
+                            new OpenApiInteger(2)
                         }
                     }
                 });

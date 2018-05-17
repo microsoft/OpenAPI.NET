@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "default", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Default = new OpenApiString(n.GetScalarValue());
+                        GetOrCreateSchema(o).Default = n.CreateAny();
                     }
                 },
                 {
