@@ -166,10 +166,6 @@ namespace Microsoft.OpenApi.Readers.V2
                     return;
                 case "tsv":
                     throw new NotSupportedException();
-                case "multi":
-                    h.Style = ParameterStyle.Form;
-                    h.Explode = true;
-                    return;
             }
         }
     }

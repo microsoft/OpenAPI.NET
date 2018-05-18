@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -145,11 +146,24 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Items = new OpenApiSchema
                         {
                             Type = "integer",
-                            Format = "int64"
+                            Format = "int64",
+                            Enum = new List<IOpenApiAny>
+                            {
+                                new OpenApiInteger(1),
+                                new OpenApiInteger(2),
+                                new OpenApiInteger(3),
+                                new OpenApiInteger(4),
+                            }
                         },
                         Default = new OpenApiArray() {
                             new OpenApiInteger(1),
                             new OpenApiInteger(2)
+                        },
+                        Enum = new List<IOpenApiAny>
+                        {
+                            new OpenApiArray() { new OpenApiInteger(1), new OpenApiInteger(2) },
+                            new OpenApiArray() { new OpenApiInteger(2), new OpenApiInteger(3) },
+                            new OpenApiArray() { new OpenApiInteger(3), new OpenApiInteger(4) }
                         }
                     }
                 });
