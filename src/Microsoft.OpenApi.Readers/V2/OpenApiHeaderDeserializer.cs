@@ -5,6 +5,7 @@ using System;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -151,21 +152,23 @@ namespace Microsoft.OpenApi.Readers.V2
             return header;
         }
 
-        private static void LoadStyle(OpenApiHeader h, string v)
+        private static void LoadStyle(OpenApiHeader header, string style)
         {
-            switch (v)
+            switch (style)
             {
                 case "csv":
-                    h.Style = ParameterStyle.Simple;
+                    header.Style = ParameterStyle.Simple;
                     return;
                 case "ssv":
-                    h.Style = ParameterStyle.SpaceDelimited;
+                    header.Style = ParameterStyle.SpaceDelimited;
                     return;
                 case "pipes":
-                    h.Style = ParameterStyle.PipeDelimited;
+                    header.Style = ParameterStyle.PipeDelimited;
                     return;
                 case "tsv":
                     throw new NotSupportedException();
+                default:
+                    throw new OpenApiReaderException("Unrecognized header style: " + style);
             }
         }
     }
