@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -57,7 +58,10 @@ namespace Microsoft.OpenApi.Readers.V3
             };
         }
 
-
+        public static IOpenApiAny LoadAny(ParseNode node)
+        {
+            return node.CreateAny();
+        }
 
         private static string LoadString(ParseNode node)
         {
