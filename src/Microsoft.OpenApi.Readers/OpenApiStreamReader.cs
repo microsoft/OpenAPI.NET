@@ -153,9 +153,11 @@ namespace Microsoft.OpenApi.Readers
             if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
                 var errors = document.Validate(_settings.RuleSet);
-                diagnostic.Errors.Add(errors);
+                foreach (var item in errors)
+                {
+                    diagnostic.Errors.Add(item);
+                }
             }
-            return document;
         }
 
         /// <summary>
@@ -196,7 +198,7 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (OpenApiException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError(ex));
+                diagnostic.Errors.Add(new OpenApiReaderError(ex));
             }
 
             // Validate the element
