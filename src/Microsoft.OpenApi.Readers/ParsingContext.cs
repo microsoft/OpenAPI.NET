@@ -32,8 +32,8 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
-        /// <param name="yamlDocument"></param>
-        /// <param name="diagnostic"></param>
+        /// <param name="yamlDocument">Yaml document to parse.</param>
+        /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal OpenApiDocument Parse(YamlDocument yamlDocument, OpenApiDiagnostic diagnostic)
         {
@@ -47,13 +47,13 @@ namespace Microsoft.OpenApi.Readers
             {
                 case string version when version == "2.0":
                     VersionService = new OpenApiV2VersionService();
-                    doc = this.VersionService.LoadDocument(this.RootNode);
+                    doc = VersionService.LoadDocument(RootNode);
                     diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     break;
 
                 case string version when version.StartsWith("3.0"):
-                    this.VersionService = new OpenApiV3VersionService();
-                    doc = this.VersionService.LoadDocument(this.RootNode);
+                    VersionService = new OpenApiV3VersionService();
+                    doc = VersionService.LoadDocument(RootNode);
                     diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
                     break;
 
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         /// <param name="yamlDocument"></param>
         /// <param name="version">OpenAPI version of the fragment</param>
-        /// <param name="diagnostic"></param>
+        /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version, OpenApiDiagnostic diagnostic) where T: IOpenApiElement
         {

@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <summary>
-        /// Reads the stream input and parses the fragment of an OpenAPI descinto an Open API Element.
+        /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
         /// <param name="input">Stream containing OpenAPI description to parse.</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
