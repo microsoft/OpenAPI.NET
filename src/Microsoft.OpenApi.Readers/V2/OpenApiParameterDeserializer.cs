@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "default", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Default = new OpenApiString(n.GetScalarValue());
+                        GetOrCreateSchema(o).Default = n.CreateAny();
                     }
                 },
                 {
@@ -132,8 +132,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "enum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Enum =
-                            n.CreateSimpleList<IOpenApiAny>(l => new OpenApiString(l.GetScalarValue()));
+                        GetOrCreateSchema(o).Enum = n.CreateListOfAny();
                     }
                 },
                 {
