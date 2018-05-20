@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -45,6 +46,109 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Format = "email"
                     });
             }
+        }
+
+        [Fact]
+        public void ParsePrimitiveSchemaFragmentShouldSucceed()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "primitiveSchema.yaml")))
+            {
+                var reader = new OpenApiStreamReader();
+                var diagnostic = new OpenApiDiagnostic();
+
+                // Act
+                var schema = reader.ReadFragment<OpenApiSchema>(stream, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+
+                // Assert
+                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+
+                schema.ShouldBeEquivalentTo(
+                    new OpenApiSchema
+                    {
+                        Type = "string",
+                        Format = "email"
+                    });
+            }
+        }
+
+        [Fact]
+        public void ParsePrimitiveStringSchemaFragmentShouldSucceed()
+        {
+            var input = @"
+{ ""type"": ""integer"",
+""format"": ""int64"",
+""default"": 88
+}
+";
+            var reader = new OpenApiStringReader();
+            var diagnostic = new OpenApiDiagnostic();
+
+            // Act
+            var schema = reader.ReadFragment<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+
+            // Assert
+            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+
+            schema.ShouldBeEquivalentTo(
+                new OpenApiSchema
+                {
+                    Type = "integer",
+                    Format = "int64",
+                    Default = new OpenApiInteger(88)
+                });
+        }
+
+        [Fact]
+        public void ParseExampleStringFragmentShouldSucceed()
+        {
+            var input = @"
+{ 
+  ""foo"": ""bar"",
+  ""baz"": [ 1,2]
+}";
+            var reader = new OpenApiStringReader();
+            var diagnostic = new OpenApiDiagnostic();
+
+            // Act
+            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+
+            // Assert
+            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+
+            openApiAny.ShouldBeEquivalentTo(
+                new OpenApiObject
+                {
+                    ["foo"] = new OpenApiString("bar"),
+                    ["baz"] = new OpenApiArray() { 
+                    new OpenApiInteger(1),
+                    new OpenApiInteger(2)
+                    }
+                });
+        }
+
+        [Fact]
+        public void ParseEnumFragmentShouldSucceed()
+        {
+            var input = @"
+[ 
+  ""foo"",
+  ""baz""
+]";
+            var reader = new OpenApiStringReader();
+            var diagnostic = new OpenApiDiagnostic();
+
+            // Act
+            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+
+            // Assert
+            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+
+            openApiAny.ShouldBeEquivalentTo(
+                new OpenApiArray
+                {
+                    new OpenApiString("foo"),
+                    new OpenApiString("baz")
+                });
         }
 
         [Fact]
@@ -95,6 +199,44 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         AdditionalPropertiesAllowed = false  
                     });
             }
+        }
+
+        [Fact]
+        public void ParsePathFragmentShouldSucceed()
+        {
+            var input = @"
+summary: externally referenced path item
+get:
+  responses:
+    '200':
+      description: Ok
+";
+            var reader = new OpenApiStringReader();
+            var diagnostic = new OpenApiDiagnostic();
+
+            // Act
+            var openApiAny = reader.ReadFragment<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+
+            // Assert
+            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+
+            openApiAny.ShouldBeEquivalentTo(
+                new OpenApiPathItem
+                {
+                    Summary = "externally referenced path item",
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Get] = new OpenApiOperation()
+                        {
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse {
+                                   Description = "Ok"
+                                }
+                            }
+                        }
+                    }
+                });
         }
 
         [Fact]

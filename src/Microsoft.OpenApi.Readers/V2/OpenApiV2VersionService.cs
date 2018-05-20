@@ -2,6 +2,8 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -17,10 +19,25 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal class OpenApiV2VersionService : IOpenApiVersionService
     {
-        /// <summary>
-        /// Return a function that converts a MapNode into a V2 OpenApiTag
-        /// </summary>
-        public Func<MapNode, OpenApiTag> TagLoader => OpenApiV2Deserializer.LoadTag;
+        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        {
+            [typeof(IOpenApiAny)] = OpenApiV2Deserializer.LoadAny,
+            [typeof(OpenApiExternalDocs)] = OpenApiV2Deserializer.LoadExternalDocs,
+            [typeof(OpenApiHeader)] = OpenApiV2Deserializer.LoadHeader,
+            [typeof(OpenApiInfo)] = OpenApiV2Deserializer.LoadInfo,
+            [typeof(OpenApiLicense)] = OpenApiV2Deserializer.LoadLicense,
+            [typeof(OpenApiOperation)] = OpenApiV2Deserializer.LoadOperation,
+            [typeof(OpenApiParameter)] = OpenApiV2Deserializer.LoadParameter,
+            [typeof(OpenApiPathItem)] = OpenApiV2Deserializer.LoadPathItem,
+            [typeof(OpenApiPaths)] = OpenApiV2Deserializer.LoadPaths,
+            [typeof(OpenApiResponse)] = OpenApiV2Deserializer.LoadResponse,
+            [typeof(OpenApiResponses)] = OpenApiV2Deserializer.LoadResponses,
+            [typeof(OpenApiSchema)] = OpenApiV2Deserializer.LoadSchema,
+            [typeof(OpenApiSecurityRequirement)] = OpenApiV2Deserializer.LoadSecurityRequirement,
+            [typeof(OpenApiSecurityScheme)] = OpenApiV2Deserializer.LoadSecurityScheme,
+            [typeof(OpenApiTag)] = OpenApiV2Deserializer.LoadTag,
+            [typeof(OpenApiXml)] = OpenApiV2Deserializer.LoadXml
+        };
 
         private static OpenApiReference ParseLocalReference(string localReference)
         {
@@ -154,6 +171,11 @@ namespace Microsoft.OpenApi.Readers.V2
         public OpenApiDocument LoadDocument(RootNode rootNode)
         {
             return OpenApiV2Deserializer.LoadOpenApi(rootNode);
+        }
+
+        public T LoadElement<T>(ParseNode node) where T : IOpenApiElement
+        {
+            return (T)_loaders[typeof(T)](node);
         }
     }
 }
