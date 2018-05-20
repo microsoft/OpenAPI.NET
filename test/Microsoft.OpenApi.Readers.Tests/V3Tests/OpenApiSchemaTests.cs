@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -198,6 +199,44 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         AdditionalPropertiesAllowed = false  
                     });
             }
+        }
+
+        [Fact]
+        public void ParsePathFragmentShouldSucceed()
+        {
+            var input = @"
+summary: externally referenced path item
+get:
+  responses:
+    '200':
+      description: Ok
+";
+            var reader = new OpenApiStringReader();
+            var diagnostic = new OpenApiDiagnostic();
+
+            // Act
+            var openApiAny = reader.ReadFragment<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+
+            // Assert
+            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+
+            openApiAny.ShouldBeEquivalentTo(
+                new OpenApiPathItem
+                {
+                    Summary = "externally referenced path item",
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Get] = new OpenApiOperation()
+                        {
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse {
+                                   Description = "Ok"
+                                }
+                            }
+                        }
+                    }
+                });
         }
 
         [Fact]
