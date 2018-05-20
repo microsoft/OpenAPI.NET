@@ -144,6 +144,16 @@ namespace Microsoft.OpenApi.Readers
                 diagnostic.Errors.Add(new OpenApiError(ex));
             }
 
+            // Validate the element
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
+            {
+                var errors = element.Validate(_settings.RuleSet);
+                foreach (var item in errors)
+                {
+                    diagnostic.Errors.Add(item);
+                }
+            }
+
             return (T)element;
         }
 
