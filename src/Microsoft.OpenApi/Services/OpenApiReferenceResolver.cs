@@ -106,7 +106,8 @@ namespace Microsoft.OpenApi.Services
         {
             foreach (var scheme in securityRequirement.Keys.ToList())
             {
-                ResolveObject(scheme, (resolvedScheme) => {
+                ResolveObject(scheme, (resolvedScheme) =>
+                {
                     // If scheme was unresolved
                     // copy Scopes and remove old unresolved scheme
                     var scopes = securityRequirement[scheme];

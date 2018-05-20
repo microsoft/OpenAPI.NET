@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Readers.V2
                             schema.Description = v.Description;
                             return schema;
                         }),
-                    Required = formParameters.Where(p => p.Required).Select(p => p.Name).ToList()
+                    Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
                 }
             };
             

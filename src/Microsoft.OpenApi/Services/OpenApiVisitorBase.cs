@@ -44,7 +44,8 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
-        
+    
+
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>
         /// </summary>

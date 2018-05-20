@@ -9,6 +9,8 @@ using System.Text;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.OpenApi.Workbench
 {
@@ -18,6 +20,8 @@ namespace Microsoft.OpenApi.Workbench
     public class MainModel : INotifyPropertyChanged
     {
         private string _input;
+
+        private string _inputFile;
 
         private string _output;
 
@@ -44,6 +48,16 @@ namespace Microsoft.OpenApi.Workbench
             {
                 _input = value;
                 OnPropertyChanged(nameof(Input));
+            }
+        }
+
+        public string InputFile
+        {
+            get => _inputFile;
+            set
+            {
+                _inputFile = value;
+                OnPropertyChanged(nameof(InputFile));
             }
         }
 
@@ -149,16 +163,30 @@ namespace Microsoft.OpenApi.Workbench
         /// The core method of the class.
         /// Runs the parsing and serializing.
         /// </summary>
-        internal void Validate()
+        internal void ParseDocument()
         {
             try
             {
-                var stream = CreateStream(_input);
+                Stream stream;
+                if (!String.IsNullOrWhiteSpace(_inputFile))
+                {
+                    stream = new FileStream(_inputFile, FileMode.Open);
+                }
+                else
+                {
+                    stream = CreateStream(_input);
+                }
+                
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                var document = new OpenApiStreamReader().Read(stream, out var context);
+                var document = new OpenApiStreamReader(new OpenApiReaderSettings
+                    {
+                        ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences,
+                        RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                    }
+                ).Read(stream, out var context);
                 stopwatch.Stop();
                 ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
 
@@ -184,6 +212,12 @@ namespace Microsoft.OpenApi.Workbench
                 stopwatch.Stop();
 
                 RenderTime = $"{stopwatch.ElapsedMilliseconds} ms";
+
+                var statsVisitor = new StatsVisitor();
+                var walker = new OpenApiWalker(statsVisitor);
+                walker.Walk(document);
+
+                Errors += Environment.NewLine + "Statistics:" + Environment.NewLine + statsVisitor.GetStatisticsReport();    
             }
             catch (Exception ex)
             {

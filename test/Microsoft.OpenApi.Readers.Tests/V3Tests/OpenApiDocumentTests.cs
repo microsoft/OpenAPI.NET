@@ -153,7 +153,7 @@ paths: {}",
                         ["pet"] = new OpenApiSchema
                         {
                             Type = "object",
-                            Required = new List<string>
+                            Required = new HashSet<string>
                             {
                                 "id",
                                 "name"
@@ -183,7 +183,7 @@ paths: {}",
                         ["newPet"] = new OpenApiSchema
                         {
                             Type = "object",
-                            Required = new List<string>
+                            Required = new HashSet<string>
                             {
                                 "name"
                             },
@@ -212,7 +212,7 @@ paths: {}",
                         ["errorModel"] = new OpenApiSchema
                         {
                             Type = "object",
-                            Required = new List<string>
+                            Required = new HashSet<string>
                             {
                                 "code",
                                 "message"
@@ -580,7 +580,7 @@ paths: {}",
                         ["pet"] = new OpenApiSchema
                         {
                             Type = "object",
-                            Required = new List<string>
+                            Required = new HashSet<string>
                             {
                                 "id",
                                 "name"
@@ -610,7 +610,7 @@ paths: {}",
                         ["newPet"] = new OpenApiSchema
                         {
                             Type = "object",
-                            Required = new List<string>
+                            Required = new HashSet<string>
                             {
                                 "name"
                             },
@@ -639,7 +639,7 @@ paths: {}",
                         ["errorModel"] = new OpenApiSchema
                         {
                             Type = "object",
-                            Required = new List<string>
+                            Required = new HashSet<string>
                             {
                                 "code",
                                 "message"

@@ -149,11 +149,12 @@ namespace Microsoft.OpenApi.Readers
         private void ValidateDocument(OpenApiDiagnostic diagnostic, OpenApiDocument document)
         {
             // Validate the document
-            var errors = document.Validate(_settings.RuleSet);
-            foreach (var item in errors)
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
-                diagnostic.Errors.Add(item);
-            } 
+                var errors = document.Validate(_settings.RuleSet);
+                diagnostic.Errors.Add(errors);
+            }
+            return document;
         }
 
         /// <summary>

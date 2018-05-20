@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Type = "string"
                                         }
                                     },
-                                    Required = new List<string>
+                                    Required = new HashSet<string>
                                     {
                                         "name"
                                     }
@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Type = "string"
                                         }
                                     },
-                                    Required = new List<string>
+                                    Required = new HashSet<string>
                                     {
                                         "name"
                                     }
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Type = "string"
                                         }
                                     },
-                                    Required = new List<string>
+                                    Required = new HashSet<string>
                                     {
                                         "name"
                                     }
@@ -218,7 +218,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Type = "string"
                                         }
                                     },
-                                    Required = new List<string>
+                                    Required = new HashSet<string>
                                     {
                                         "name"
                                     }
