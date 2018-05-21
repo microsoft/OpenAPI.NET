@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,9 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
-        private Dictionary<string, OpenApiDocument> _documents = new Dictionary<string, OpenApiDocument>();
+        private Dictionary<Uri, OpenApiDocument> _documents = new Dictionary<Uri, OpenApiDocument>();
+        private Dictionary<Uri, IOpenApiElement> _fragments = new Dictionary<Uri, IOpenApiElement>();
+        private Dictionary<Uri, Stream> _artifacts = new Dictionary<Uri, Stream>();
 
         /// <summary>
         /// A list of OpenApiDocuments contained in the workspace
@@ -30,33 +33,42 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// A list of document fragments that are contained in the workspace
         /// </summary>
-        public IEnumerable<IOpenApiFragment> Fragments { get; }
+        public IEnumerable<IOpenApiElement> Fragments { get; }
 
+        /// <summary>
+        /// The base location from where all relative references are resolved
+        /// </summary>
+        public Uri BaseUrl { get; }
+
+        /// <summary>
+        /// A list of document fragments that are contained in the workspace
+        /// </summary>
+        public IEnumerable<Stream> Artifacts { get; }
 
         public bool Contains(string location)
         {
-            return _documents.ContainsKey(location);
+            return _documents.ContainsKey(ToLocationUrl(location));
         }
 
-        public void AddDocument(string location, OpenApiDocument  document) 
+        public void AddDocument(string location, OpenApiDocument  document)
         {
             document.Workspace = this;
-            _documents.Add(location, document);
+            _documents.Add(ToLocationUrl(location), document);
         }
 
-        public void AddFragment(string location, IOpenApiFragment fragment)
+        public void AddFragment(string location, IOpenApiElement fragment)
         {
-
+            _fragments.Add(ToLocationUrl(location), fragment);
         }
 
-        public void AddArtifact<T>(string location, T artifact)
+        public void AddArtifact(string location, Stream artifact)
         {
-
+            _artifacts.Add(ToLocationUrl(location), artifact);
         }
 
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
-            if (!_documents.TryGetValue(reference.ExternalResource,out var doc))
+            if (!_documents.TryGetValue(new Uri(reference.ExternalResource,UriKind.RelativeOrAbsolute),out var doc))
             {
                 return null;
             }
@@ -64,10 +76,9 @@ namespace Microsoft.OpenApi.Services
             return doc.ResolveReference(reference,true);
         }
 
-    }
-
-    public interface IOpenApiFragment
-    {
-        IOpenApiReferenceable ResolveReference(OpenApiReference reference);
+        private Uri ToLocationUrl(string location)
+        {
+            return new Uri(BaseUrl, location);
+        }
     }
 }

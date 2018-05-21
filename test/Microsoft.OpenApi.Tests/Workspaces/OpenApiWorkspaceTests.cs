@@ -138,12 +138,30 @@ namespace Microsoft.OpenApi.Tests
         [Fact]
         public void OpenApiWorkspacesShouldNormalizeDocumentLocations()
         {
+            // what does normalize mean?
+            // If we use Urls as locators then normalization happens automatically.
+
+            // How do we set a base location for a workspace?
+                // A base could be a folder.  Should we use file://
+                // A base could be a root url
+                // Are absolute locations allowed?
+                // Can a base URI change once a workspace has been created?
+                // What should be the default base URL?
+            // Can we infer it from a root document?
+                // Is the root document the first document loaded?
+                // Can we load multiple APIs into a Workspace?  Does root document make sense?
+            // What data type should "location" really be?  Is it a Uri?
+                //             
             Assert.True(false);
         }
 
         // Enable Workspace to load from any reader, not just streams.
 
         // Test fragments
+        public void OpenApiWorkspacesShouldLoadDocumentFragments()
+        {
+            Assert.True(false);
+        }
 
         // Test artifacts
 
