@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
-        public OpenApiPaths Paths { get; set; } = new OpenApiPaths();
+        public OpenApiPaths Paths { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
