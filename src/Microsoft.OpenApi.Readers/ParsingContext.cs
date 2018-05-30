@@ -28,6 +28,7 @@ namespace Microsoft.OpenApi.Readers
         internal Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>> ExtensionParsers { get; set; }  = new Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>>();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
+        internal Uri BaseUrl { get; set; }
 
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context

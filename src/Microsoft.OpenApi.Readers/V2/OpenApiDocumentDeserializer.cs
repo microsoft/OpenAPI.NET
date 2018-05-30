@@ -119,21 +119,35 @@ namespace Microsoft.OpenApi.Readers.V2
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
 
-        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context)
+        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, Uri defaultUrl)
         {
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
             var schemes = context.GetFromTempStorage<List<string>>("schemes");
 
+            // If nothing is provided, don't create a server
+            if (host == null && basePath == null && schemes == null)
+            {
+                return;
+            }
+
+            // Fill in missing information based on the defaultUrl
+            host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
+            basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
+            schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
+
+            // Create the Server objects
             if (schemes != null)
             {
                 foreach (var scheme in schemes)
                 {
-                    var server = new OpenApiServer();
-                    server.Url = scheme + "://" + (host ?? "example.org/") + (basePath ?? "/");
+                    var server = new OpenApiServer
+                    {
+                        Url = $"{scheme}://{host}{basePath}"
+                    };
                     servers.Add(server);
                 }
-            }
+            } 
         }
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
@@ -151,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 openApidoc.Servers = new List<OpenApiServer>();
             }
 
-            MakeServers(openApidoc.Servers, openApiNode.Context);
+            MakeServers(openApidoc.Servers, openApiNode.Context, rootNode.Context.BaseUrl);
 
             FixRequestBodyReferences(openApidoc);
             return openApidoc;

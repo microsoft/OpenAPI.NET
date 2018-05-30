@@ -49,5 +49,9 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public ValidationRuleSet RuleSet { get; set; } = ValidationRuleSet.GetDefaultRuleSet();
 
+        /// <summary>
+        /// URL where relative references should be resolved from if the description does not contain Server definitions
+        /// </summary>
+        public Uri BaseUrl { get; internal set; } = new Uri("https://example.org/");
     }
 }

@@ -57,7 +57,8 @@ namespace Microsoft.OpenApi.Readers
 
             context = new ParsingContext
             {
-                ExtensionParsers = _settings.ExtensionParsers
+                ExtensionParsers = _settings.ExtensionParsers,
+                BaseUrl = _settings.BaseUrl
             };
 
             OpenApiDocument document = null;
