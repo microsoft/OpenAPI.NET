@@ -136,15 +136,28 @@ namespace Microsoft.OpenApi.Readers.V2
             basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
             schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
 
+            
             // Create the Server objects
             if (schemes != null)
             {
                 foreach (var scheme in schemes)
                 {
+                    var ub = new UriBuilder(scheme, host)
+                    {
+                        Path = basePath
+                    };
+
                     var server = new OpenApiServer
                     {
-                        Url = $"{scheme}://{host}{basePath}"
+                        Url = ub.ToString()
                     };
+
+                    // Server Urls are always appended to Paths and Paths must start with /
+                    // so removing the slash prevents a double slash.
+                    if (server.Url.EndsWith("/"))
+                    {
+                        server.Url = server.Url.Substring(0, server.Url.Length - 1);
+                    }
                     servers.Add(server);
                 }
             } 

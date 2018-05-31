@@ -52,6 +52,6 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// URL where relative references should be resolved from if the description does not contain Server definitions
         /// </summary>
-        public Uri BaseUrl { get; internal set; } = new Uri("https://example.org/");
+        public Uri BaseUrl { get; set; } = new Uri("https://example.org/");
     }
 }
