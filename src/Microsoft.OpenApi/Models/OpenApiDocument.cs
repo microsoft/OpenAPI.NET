@@ -240,7 +240,10 @@ namespace Microsoft.OpenApi.Models
                 firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
 
             // basePath
-            writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            if (firstServerUrl.AbsolutePath != "/")
+            {
+                writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            }
 
             // Consider all schemes of the URLs in the server list that have the same
             // host, port, and base path as the first server.
