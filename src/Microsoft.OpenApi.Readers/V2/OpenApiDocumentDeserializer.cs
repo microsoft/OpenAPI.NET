@@ -132,35 +132,63 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             // Fill in missing information based on the defaultUrl
-            host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
-            basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
-            schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
-
+            if (defaultUrl != null)
+            {
+                host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
+                basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
+                schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
+            } else if (String.IsNullOrEmpty(host) && String.IsNullOrEmpty(basePath))
+            {
+                return;  // Can't make a server object out of just a Scheme
+            }
             
             // Create the Server objects
             if (schemes != null)
             {
                 foreach (var scheme in schemes)
                 {
-                    var ub = new UriBuilder(scheme, host)
+                    var uriBuilder = new UriBuilder(scheme, host)
                     {
                         Path = basePath
                     };
 
                     var server = new OpenApiServer
                     {
-                        Url = ub.ToString()
+                        Url = uriBuilder.ToString()
                     };
 
-                    // Server Urls are always appended to Paths and Paths must start with /
-                    // so removing the slash prevents a double slash.
-                    if (server.Url.EndsWith("/"))
-                    {
-                        server.Url = server.Url.Substring(0, server.Url.Length - 1);
-                    }
                     servers.Add(server);
                 }
-            } 
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(host))
+                {
+                    host = "//" + host;
+                }
+                var uriBuilder = new UriBuilder()
+                {
+                    Scheme = null,
+                    Host = host,
+                    Path = basePath
+                };
+                var server = new OpenApiServer
+                {
+                    Url = uriBuilder.ToString()
+                };
+
+                servers.Add(server);
+            }
+
+            foreach (var server in servers)
+            {
+                // Server Urls are always appended to Paths and Paths must start with /
+                // so removing the slash prevents a double slash.
+                if (server.Url.EndsWith("/"))
+                {
+                    server.Url = server.Url.Substring(0, server.Url.Length - 1);
+                }
+            }
         }
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)

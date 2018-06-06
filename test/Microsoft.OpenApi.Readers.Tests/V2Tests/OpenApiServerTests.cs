@@ -28,7 +28,7 @@ paths: {}
         }
 
         [Fact]
-        public void JustScheme()
+        public void JustSchemeNoDefault()
         {
             var input = @"
 swagger: 2.0
@@ -45,9 +45,51 @@ paths: {}
 
             var doc = reader.Read(input, out var diagnostic);
 
+            Assert.Equal(0, doc.Servers.Count);
+        }
+
+        [Fact]
+        public void JustHostNoDefault()
+        {
+            var input = @"
+swagger: 2.0
+info: 
+  title: test
+  version: 1.0.0
+host: www.foo.com
+paths: {}
+";
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            {
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
             var server = doc.Servers.First();
-            Assert.Equal(1,doc.Servers.Count);
-            Assert.Equal("http://example.org", server.Url);
+            Assert.Equal(1, doc.Servers.Count);
+            Assert.Equal("//www.foo.com", server.Url);
+        }
+
+        [Fact]
+        public void JustBasePathNoDefault()
+        {
+            var input = @"
+swagger: 2.0
+info: 
+  title: test
+  version: 1.0.0
+basePath: /baz
+paths: {}
+";
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            {
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Equal(1, doc.Servers.Count);
+            Assert.Equal("/baz", server.Url);
         }
 
         [Fact]

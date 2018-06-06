@@ -49,6 +49,11 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Returns the settings being used the Writer for controlling serialization
+        /// </summary>
+        public OpenApiSerializerSettings Settings { get; }
+
+        /// <summary>
         /// Base Indentation Level.
         /// This denotes how many indentations are needed for the property in the base object.
         /// </summary>

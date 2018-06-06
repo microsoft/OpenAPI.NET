@@ -115,6 +115,42 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to Open API document using the given specification version and writer.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="writer">The output writer.</param>
+        public static void Serialize<T>(this T element, IOpenApiWriter writer)
+            where T : IOpenApiSerializable
+        {
+            if (element == null)
+            {
+                throw Error.ArgumentNull(nameof(element));
+            }
+
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            switch (writer.Settings.SpecVersion)
+            {
+                case OpenApiSpecVersion.OpenApi3_0:
+                    element.SerializeAsV3(writer);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi2_0:
+                    element.SerializeAsV2(writer);
+                    break;
+
+                default:
+                    throw new OpenApiException(string.Format(SRResource.OpenApiSpecVersionNotSupported, writer.Settings.SpecVersion));
+            }
+
+            writer.Flush();
+        }
+
+        /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in JSON format.
         /// </summary>
         /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
