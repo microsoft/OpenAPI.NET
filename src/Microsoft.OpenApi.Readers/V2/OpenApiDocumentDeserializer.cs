@@ -137,7 +137,8 @@ namespace Microsoft.OpenApi.Readers.V2
                 host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
                 basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
                 schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
-            } else if (String.IsNullOrEmpty(host) && String.IsNullOrEmpty(basePath))
+            }
+            else if (String.IsNullOrEmpty(host) && String.IsNullOrEmpty(basePath))
             {
                 return;  // Can't make a server object out of just a Scheme
             }
@@ -147,6 +148,11 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 foreach (var scheme in schemes)
                 {
+                    if (String.IsNullOrEmpty(scheme))
+                    {
+                        host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
+                    }
+
                     var uriBuilder = new UriBuilder(scheme, host)
                     {
                         Path = basePath
@@ -164,7 +170,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 if (!String.IsNullOrEmpty(host))
                 {
-                    host = "//" + host;
+                    host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
                 }
                 var uriBuilder = new UriBuilder()
                 {

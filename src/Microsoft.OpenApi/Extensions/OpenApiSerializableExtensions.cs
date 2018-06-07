@@ -123,31 +123,7 @@ namespace Microsoft.OpenApi.Extensions
         public static void Serialize<T>(this T element, IOpenApiWriter writer)
             where T : IOpenApiSerializable
         {
-            if (element == null)
-            {
-                throw Error.ArgumentNull(nameof(element));
-            }
-
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            switch (writer.Settings.SpecVersion)
-            {
-                case OpenApiSpecVersion.OpenApi3_0:
-                    element.SerializeAsV3(writer);
-                    break;
-
-                case OpenApiSpecVersion.OpenApi2_0:
-                    element.SerializeAsV2(writer);
-                    break;
-
-                default:
-                    throw new OpenApiException(string.Format(SRResource.OpenApiSpecVersionNotSupported, writer.Settings.SpecVersion));
-            }
-
-            writer.Flush();
+            element.Serialize(writer, writer.Settings.SpecVersion);
         }
 
         /// <summary>
