@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
-        public OpenApiPaths Paths { get; set; } = new OpenApiPaths();
+        public OpenApiPaths Paths { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -240,7 +240,10 @@ namespace Microsoft.OpenApi.Models
                 firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
 
             // basePath
-            writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            if (firstServerUrl.AbsolutePath != "/")
+            {
+                writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            }
 
             // Consider all schemes of the URLs in the server list that have the same
             // host, port, and base path as the first server.

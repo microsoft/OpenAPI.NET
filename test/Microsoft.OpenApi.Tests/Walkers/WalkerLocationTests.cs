@@ -23,7 +23,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             locator.Locations.ShouldBeEquivalentTo(new List<string> {
                 "#/servers",
-                "#/paths",
                 "#/tags"
             });
         }
@@ -37,6 +36,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     new OpenApiServer(),
                     new OpenApiServer()
                 },
+                Paths = new OpenApiPaths(),
                 Tags = new List<OpenApiTag>()
                 {
                     new OpenApiTag()
@@ -61,6 +61,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         public void LocatePathOperationContentSchema()
         {
             var doc = new OpenApiDocument();
+            doc.Paths = new OpenApiPaths();
             doc.Paths.Add("/test", new OpenApiPathItem()
             {
                 Operations = new Dictionary<OperationType, OpenApiOperation>()
@@ -124,6 +125,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             var doc = new OpenApiDocument()
             {
+                Paths = new OpenApiPaths(),
                 Components = new OpenApiComponents()
                 {
                     Schemas = new Dictionary<string, OpenApiSchema>

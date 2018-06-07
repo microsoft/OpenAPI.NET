@@ -53,15 +53,22 @@ namespace Microsoft.OpenApi.Readers.V2
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces) ?? new List<string>();
 
-            response.Content = new Dictionary<string, OpenApiMediaType>();
+            if (response.Content == null)
+            {
+                response.Content = new Dictionary<string, OpenApiMediaType>();
+            }
+
             foreach (var produce in produces)
             {
-                var mediaType = new OpenApiMediaType
+                if (!response.Content.ContainsKey(produce))
                 {
-                    Schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema)
-                };
+                    var mediaType = new OpenApiMediaType
+                    {
+                        Schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema)
+                    };
 
-                response.Content.Add(produce, mediaType);
+                    response.Content.Add(produce, mediaType);
+                }
             }
         }
 

@@ -35,6 +35,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 Title = "foo",
                 Version = "1.2.2"
             };
+            openApiDocument.Paths = new OpenApiPaths();
             openApiDocument.Paths.Add(
                 "/test",
                 new OpenApiPathItem
@@ -66,13 +67,14 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void ServersShouldBeReferencedByIndex()
         {
-            var openApiDocument = new OpenApiDocument();
-            openApiDocument.Info = new OpenApiInfo()
+            var openApiDocument = new OpenApiDocument
             {
-                Title = "foo",
-                Version = "1.2.2"
-            };
-            openApiDocument.Servers = new List<OpenApiServer> {
+                Info = new OpenApiInfo()
+                {
+                    Title = "foo",
+                    Version = "1.2.2"
+                },
+                Servers = new List<OpenApiServer> {
                 new OpenApiServer
                 {
                     Url = "http://example.org"
@@ -80,9 +82,11 @@ namespace Microsoft.OpenApi.Tests.Services
                 new OpenApiServer
                 {
 
-                }
+                },
+            },
+                Paths = new OpenApiPaths()
             };
-            
+
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
@@ -111,11 +115,14 @@ namespace Microsoft.OpenApi.Tests.Services
                      }
                  }));
 
-            var openApiDocument = new OpenApiDocument();
-            openApiDocument.Info = new OpenApiInfo()
+            var openApiDocument = new OpenApiDocument
             {
-                Title = "foo",
-                Version = "1.2.2"
+                Info = new OpenApiInfo()
+                {
+                    Title = "foo",
+                    Version = "1.2.2"
+                },
+                Paths = new OpenApiPaths()
             };
 
             var fooExtension = new FooExtension()

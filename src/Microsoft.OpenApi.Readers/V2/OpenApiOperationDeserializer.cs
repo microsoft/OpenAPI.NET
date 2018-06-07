@@ -131,7 +131,12 @@ namespace Microsoft.OpenApi.Readers.V2
                     operation.RequestBody = CreateFormBody(node.Context, formParameters);
                 }
             }
-            
+
+            foreach (var response in operation.Responses.Values)
+            {
+                ProcessProduces(response, node.Context);
+            }
+
             return operation;
         }
 

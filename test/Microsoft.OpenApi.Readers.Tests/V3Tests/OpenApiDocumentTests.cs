@@ -46,7 +46,8 @@ paths: {}",
                     {
                         Title = "Simple Document",
                         Version = "0.9.1"
-                    }
+                    },
+                    Paths = new OpenApiPaths()
                 });
 
             context.ShouldBeEquivalentTo(
@@ -83,7 +84,8 @@ paths: {}",
                                 Url = new Uri("https://www.example.org/api").ToString(),
                                 Description = "The https endpoint"
                             }
-                        }
+                        },
+                        Paths = new OpenApiPaths()
                     });
             }
         }
@@ -101,7 +103,8 @@ paths: {}",
                         Info = new OpenApiInfo
                         {
                             Version = "0.9"
-                        }
+                        },
+                        Paths = new OpenApiPaths()
                     });
 
                 diagnostic.ShouldBeEquivalentTo(
@@ -130,7 +133,8 @@ paths: {}",
                         {
                             Title = "Simple Document",
                             Version = "0.9.1"
-                        }
+                        },
+                        Paths = new OpenApiPaths()
                     });
 
                 diagnostic.ShouldBeEquivalentTo(

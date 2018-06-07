@@ -119,19 +119,80 @@ namespace Microsoft.OpenApi.Readers.V2
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
         };
 
-        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context)
+        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, Uri defaultUrl)
         {
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
             var schemes = context.GetFromTempStorage<List<string>>("schemes");
 
+            // If nothing is provided, don't create a server
+            if (host == null && basePath == null && schemes == null)
+            {
+                return;
+            }
+
+            // Fill in missing information based on the defaultUrl
+            if (defaultUrl != null)
+            {
+                host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
+                basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
+                schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
+            }
+            else if (String.IsNullOrEmpty(host) && String.IsNullOrEmpty(basePath))
+            {
+                return;  // Can't make a server object out of just a Scheme
+            }
+            
+            // Create the Server objects
             if (schemes != null)
             {
                 foreach (var scheme in schemes)
                 {
-                    var server = new OpenApiServer();
-                    server.Url = scheme + "://" + (host ?? "example.org/") + (basePath ?? "/");
+                    if (String.IsNullOrEmpty(scheme))
+                    {
+                        host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
+                    }
+
+                    var uriBuilder = new UriBuilder(scheme, host)
+                    {
+                        Path = basePath
+                    };
+
+                    var server = new OpenApiServer
+                    {
+                        Url = uriBuilder.ToString()
+                    };
+
                     servers.Add(server);
+                }
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(host))
+                {
+                    host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
+                }
+                var uriBuilder = new UriBuilder()
+                {
+                    Scheme = null,
+                    Host = host,
+                    Path = basePath
+                };
+                var server = new OpenApiServer
+                {
+                    Url = uriBuilder.ToString()
+                };
+
+                servers.Add(server);
+            }
+
+            foreach (var server in servers)
+            {
+                // Server Urls are always appended to Paths and Paths must start with /
+                // so removing the slash prevents a double slash.
+                if (server.Url.EndsWith("/"))
+                {
+                    server.Url = server.Url.Substring(0, server.Url.Length - 1);
                 }
             }
         }
@@ -151,7 +212,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 openApidoc.Servers = new List<OpenApiServer>();
             }
 
-            MakeServers(openApidoc.Servers, openApiNode.Context);
+            MakeServers(openApidoc.Servers, openApiNode.Context, rootNode.Context.BaseUrl);
 
             FixRequestBodyReferences(openApidoc);
             return openApidoc;
