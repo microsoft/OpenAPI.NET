@@ -75,7 +75,6 @@ namespace Microsoft.OpenApi.Extensions
             }
 
             writer.Settings.SpecVersion = specVersion;
-
             element.Serialize(writer);
         }
 
