@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
         public string Bar { get; set; }
 
-        public void Write(IOpenApiWriter writer)
+        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             writer.WriteStartObject();
             writer.WriteProperty("baz", Baz);

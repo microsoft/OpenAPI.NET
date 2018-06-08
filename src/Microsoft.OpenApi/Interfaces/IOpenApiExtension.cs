@@ -14,6 +14,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// Write out contents of custom extension
         /// </summary>
         /// <param name="writer"></param>
-        void Write(IOpenApiWriter writer);
+        void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion);
     }
 }

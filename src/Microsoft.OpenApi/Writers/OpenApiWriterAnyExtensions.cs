@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="writer">The Open API writer.</param>
         /// <param name="extensions">The specification extensions.</param>
-        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions)
+        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions, OpenApiSpecVersion specVersion)
         {
             if (writer == null)
             {
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Writers
                 foreach (var item in extensions)
                 {
                     writer.WritePropertyName(item.Key);
-                    item.Value.Write(writer);
+                    item.Value.Write(writer, specVersion);
                 }
             }
         }

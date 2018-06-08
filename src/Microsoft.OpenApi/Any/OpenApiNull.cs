@@ -19,7 +19,8 @@ namespace Microsoft.OpenApi.Any
         /// Write out null representation
         /// </summary>
         /// <param name="writer"></param>
-        public void Write(IOpenApiWriter writer)
+        /// <param name="specVersion"></param>
+        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             writer.WriteAny(this);
         }

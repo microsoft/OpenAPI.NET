@@ -74,8 +74,7 @@ namespace Microsoft.OpenApi.Extensions
                     throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format));
             }
 
-            writer.Settings.SpecVersion = specVersion;
-            element.Serialize(writer);
+            element.Serialize(writer, specVersion);
         }
 
         /// <summary>
@@ -84,21 +83,8 @@ namespace Microsoft.OpenApi.Extensions
         /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
         /// <param name="element">The Open API element.</param>
         /// <param name="writer">The output writer.</param>
-        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="specVersion">Version of the specification the output should conform to</param>
         public static void Serialize<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion)
-            where T : IOpenApiSerializable
-        {
-            writer.Settings.SpecVersion = specVersion;
-            element.Serialize(writer);
-        }
-
-        /// <summary>
-        /// Serializes the <see cref="IOpenApiSerializable"/> to Open API document using the given specification version and writer.
-        /// </summary>
-        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
-        /// <param name="element">The Open API element.</param>
-        /// <param name="writer">The output writer.</param>
-        public static void Serialize<T>(this T element, IOpenApiWriter writer)
             where T : IOpenApiSerializable
         {
             if (element == null)
@@ -111,7 +97,7 @@ namespace Microsoft.OpenApi.Extensions
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            switch (writer.Settings.SpecVersion)
+            switch (specVersion)
             {
                 case OpenApiSpecVersion.OpenApi3_0:
                     element.SerializeAsV3(writer);
@@ -122,7 +108,7 @@ namespace Microsoft.OpenApi.Extensions
                     break;
 
                 default:
-                    throw new OpenApiException(string.Format(SRResource.OpenApiSpecVersionNotSupported, writer.Settings.SpecVersion));
+                    throw new OpenApiException(string.Format(SRResource.OpenApiSpecVersionNotSupported, specVersion));
             }
 
             writer.Flush();
