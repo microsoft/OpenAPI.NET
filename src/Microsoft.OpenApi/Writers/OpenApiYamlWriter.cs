@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         public OpenApiYamlWriter(TextWriter textWriter)
-            : this(textWriter, new OpenApiSerializerSettings())
+            : this(textWriter, new OpenApiSerializerSettings() { Format = OpenApiFormat.Yaml })
         {
         }
 

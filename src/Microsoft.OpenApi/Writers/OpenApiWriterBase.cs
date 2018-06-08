@@ -51,7 +51,12 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Returns the settings being used the Writer for controlling serialization
         /// </summary>
-        public OpenApiSerializerSettings Settings { get; }
+        public OpenApiSerializerSettings Settings {
+            get
+            {
+                return _settings; 
+            }
+        }
 
         /// <summary>
         /// Base Indentation Level.
