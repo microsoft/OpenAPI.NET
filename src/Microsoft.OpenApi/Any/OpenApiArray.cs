@@ -20,6 +20,7 @@ namespace Microsoft.OpenApi.Any
         /// Write out contents of OpenApiArray to passed writer
         /// </summary>
         /// <param name="writer">Instance of JSON or YAML writer.</param>
+        /// <param name="specVersion">Version of the OpenAPI specification that that will be output.</param>
         public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             writer.WriteStartArray();

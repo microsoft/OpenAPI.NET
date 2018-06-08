@@ -20,6 +20,7 @@ namespace Microsoft.OpenApi.Any
         /// Serialize OpenApiObject to writer
         /// </summary>
         /// <param name="writer"></param>
+        /// <param name="specVersion">Version of the OpenAPI specification that that will be output.</param>
         public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             writer.WriteStartObject();
