@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
 
             // specification extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -309,7 +309,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.SerializeAsV2(w));
 
             // specification extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }

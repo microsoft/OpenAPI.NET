@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }

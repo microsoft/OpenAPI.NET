@@ -9,11 +9,6 @@ namespace Microsoft.OpenApi.Writers
     public interface IOpenApiWriter
     {
         /// <summary>
-        /// Returns the settings being used the Writer for controlling serialization
-        /// </summary>
-        OpenApiSerializerSettings Settings { get; }
-
-        /// <summary>
         /// Write the start object.
         /// </summary>
         void WriteStartObject();

@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.SerializeAsV3(w));
             }
 
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.SerializeAsV2(w));
             }
 
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }

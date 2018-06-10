@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            Write(writer);
+            Write(writer, OpenApiSpecVersion.OpenApi3_0);
         }
 
         /// <summary>
@@ -59,10 +59,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            Write(writer);
+            Write(writer, OpenApiSpecVersion.OpenApi2_0);
         }
 
-        private void Write(IOpenApiWriter writer)
+        private void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             if (writer == null)
             {
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Wrapped, Wrapped, false);
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, specVersion);
 
             writer.WriteEndObject();
         }

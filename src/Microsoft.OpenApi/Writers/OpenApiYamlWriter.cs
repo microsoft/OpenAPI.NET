@@ -14,20 +14,10 @@ namespace Microsoft.OpenApi.Writers
         /// Initializes a new instance of the <see cref="OpenApiYamlWriter"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        public OpenApiYamlWriter(TextWriter textWriter)
-            : this(textWriter, new OpenApiSerializerSettings())
+        public OpenApiYamlWriter(TextWriter textWriter) : base(textWriter)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OpenApiYamlWriter"/> class.
-        /// </summary>
-        /// <param name="textWriter">The text writer.</param>
-        /// <param name="settings">The writer settings.</param>
-        public OpenApiYamlWriter(TextWriter textWriter, OpenApiSerializerSettings settings)
-            : base(textWriter, settings)
-        {
-        }
 
         /// <summary>
         /// Base Indentation Level.

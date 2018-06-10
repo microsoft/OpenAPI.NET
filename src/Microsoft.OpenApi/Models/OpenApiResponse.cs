@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, l) => l.SerializeAsV3(w));
 
             // extension
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV2(w));
 
             // extension
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }
