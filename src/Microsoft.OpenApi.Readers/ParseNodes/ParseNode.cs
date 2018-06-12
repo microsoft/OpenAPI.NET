@@ -26,8 +26,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public MapNode CheckMapNode(string nodeName)
         {
-            var mapNode = this as MapNode;
-            if (mapNode == null)
+            if (!(this is MapNode mapNode))
             {
                 throw new OpenApiException($"{nodeName} must be a map/object");
             }
@@ -37,15 +36,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public static ParseNode Create(ParsingContext context, OpenApiDiagnostic diagnostic, YamlNode node)
         {
-            var listNode = node as YamlSequenceNode;
 
-            if (listNode != null)
+            if (node is YamlSequenceNode listNode)
             {
                 return new ListNode(context, diagnostic, listNode);
             }
 
-            var mapNode = node as YamlMappingNode;
-            if (mapNode != null)
+            if (node is YamlMappingNode mapNode)
             {
                 return new MapNode(context, diagnostic, mapNode);
             }

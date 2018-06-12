@@ -49,9 +49,13 @@ namespace Microsoft.OpenApi.Readers
             {
                 yamlDocument = LoadYamlDocument(input);
             }
+            catch (SemanticErrorException ex) {
+                diagnostic.Errors.Add(new OpenApiError($"#char={ex.Start.Index},{ex.End.Index}", ex.Message));
+                return new OpenApiDocument();
+            }
             catch (SyntaxErrorException ex)
             {
-                diagnostic.Errors.Add(new OpenApiReaderError(ex));
+                diagnostic.Errors.Add(new OpenApiError($"#char={ex.Start.Index},{ex.End.Index}", ex.Message));
                 return new OpenApiDocument();
             }
 
@@ -124,7 +128,7 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (SyntaxErrorException ex)
             {
-                diagnostic.Errors.Add(new OpenApiReaderError(ex));
+                diagnostic.Errors.Add(new OpenApiError($"#char={ex.Start.Index},{ex.End.Index}", ex.Message));
                 return default(T);
             }
 
@@ -157,7 +161,6 @@ namespace Microsoft.OpenApi.Readers
 
             return (T)element;
         }
-
 
         /// <summary>
         /// Helper method to turn streams into YamlDocument
