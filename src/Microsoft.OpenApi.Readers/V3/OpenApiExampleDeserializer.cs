@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =
             new PatternFieldMap<OpenApiExample>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiExample LoadExample(ParseNode node)

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Services;
@@ -116,7 +117,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, Uri defaultUrl)
@@ -228,7 +229,6 @@ namespace Microsoft.OpenApi.Readers.V2
                 var walker = new OpenApiWalker(fixer);
                 walker.Walk(doc);
             }
-
         }
     }
 
@@ -258,5 +258,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 };
             }
         }
+
+      
     }
 }

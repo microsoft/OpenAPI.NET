@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Models
                         // V2 spec actually allows the body to have custom name.
                         // Our library does not support this at the moment.
                         Name = "body",
-                        Schema = content?.Schema,
+                        Schema = content?.Schema ?? new OpenApiSchema(),
                         Required = RequestBody.Required
                     };
 
