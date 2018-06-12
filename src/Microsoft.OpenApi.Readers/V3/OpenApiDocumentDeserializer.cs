@@ -57,17 +57,5 @@ namespace Microsoft.OpenApi.Readers.V3
 
             return openApidoc;
         }
-
-
-        internal static IOpenApiExtension LoadExtension(string name, ParseNode node)
-        {
-            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser)) {
-                return parser(node.CreateAny());
-            }
-            else
-            {
-                return node.CreateAny();
-            }
-        }
     }
 }

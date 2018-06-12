@@ -230,18 +230,6 @@ namespace Microsoft.OpenApi.Readers.V2
                 walker.Walk(doc);
             }
         }
-
-        internal static IOpenApiExtension LoadExtension(string name, ParseNode node)
-        {
-            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
-            {
-                return parser(node.CreateAny());
-            }
-            else
-            {
-                return node.CreateAny();
-            }
-        }
     }
 
     internal class RequestBodyReferenceFixer : OpenApiVisitorBase
