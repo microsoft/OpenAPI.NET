@@ -29,7 +29,7 @@ paths: { }";
 
             diagnostic.Errors.ShouldBeEquivalentTo(new List<OpenApiError>() {
                 new OpenApiError(new OpenApiReaderException("Expected a value.") {
-                    Pointer = "#char=64,64"
+                    Pointer = "#line=4"
                 })
             });
         }
