@@ -18,6 +18,8 @@ namespace Microsoft.OpenApi.Services
         private readonly OpenApiVisitorBase _visitor;
         private readonly Stack<OpenApiSchema> _schemaLoop = new Stack<OpenApiSchema>();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
+        private Dictionary<string, string> _currentKeys = new Dictionary<string, string>();
+
         private bool _inComponents = false;
 
         /// <summary>
