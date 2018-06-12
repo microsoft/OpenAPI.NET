@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new PatternFieldMap<OpenApiHeader>
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiHeader LoadHeader(ParseNode node)

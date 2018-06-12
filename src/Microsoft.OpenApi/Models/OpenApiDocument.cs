@@ -305,6 +305,10 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
+            if (this.Components == null) {
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
+            }
+
             try
             {
                 switch (reference.Type)

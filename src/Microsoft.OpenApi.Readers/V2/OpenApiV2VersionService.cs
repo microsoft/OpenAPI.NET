@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
@@ -90,7 +91,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     return ReferenceType.SecurityScheme;
 
                 default:
-                    throw new ArgumentException();
+                    throw new OpenApiReaderException($"Unknown reference type '{referenceTypeName}'");
             }
         }
 
