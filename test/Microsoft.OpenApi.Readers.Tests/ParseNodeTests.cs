@@ -1,8 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -11,9 +10,8 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests
 {
-    public class NodeTests
+    public class ParseNodeTests
     {
-
         [Fact]
         public void BrokenSimpleList()
         {

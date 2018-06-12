@@ -31,8 +31,9 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         /// <param name="node">Parsing node where error occured</param>
         public OpenApiReaderException(string message, YamlNode node) : base(message)
         {
-            Pointer = $"#line={node.Start.Line}";  // This only includes line because using a char range causes tests to break due to CR/LF & LF differences
-                                                   // See https://tools.ietf.org/html/rfc5147 for syntax
+            // This only includes line because using a char range causes tests to break due to CR/LF & LF differences
+            // See https://tools.ietf.org/html/rfc5147 for syntax
+            Pointer = $"#line={node.Start.Line}";  
         }
 
         /// <summary>

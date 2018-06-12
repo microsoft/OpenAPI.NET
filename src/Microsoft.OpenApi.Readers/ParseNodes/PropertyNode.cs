@@ -65,6 +65,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         Context.StartObject(Name);
                         map(parentInstance, Name, Value);
                     }
+                    catch (OpenApiReaderException ex)
+                    {
+                        Diagnostic.Errors.Add(new OpenApiError(ex));
+                    }
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = Context.GetLocation();

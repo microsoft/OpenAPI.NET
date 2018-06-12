@@ -26,14 +26,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override string GetScalarValue()
         {
-            var scalarNode = _node;
-
-            if (scalarNode == null)
-            {
-                throw new OpenApiException($"Expected scalar at line {_node.Start.Line}");
-            }
-
-            return scalarNode.Value;
+            return _node.Value;
        }
 
         /// <summary>
