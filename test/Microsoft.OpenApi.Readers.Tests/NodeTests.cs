@@ -28,7 +28,7 @@ paths: { }";
             reader.Read(input, out var diagnostic);
 
             diagnostic.Errors.ShouldBeEquivalentTo(new List<OpenApiError>() {
-                new OpenApiError(new OpenApiReaderException("Expected a value. Line: 4 Column: 11") {
+                new OpenApiError(new OpenApiReaderException("Expected a value.") {
                     Pointer = "#char=64,64"
                 })
             });
