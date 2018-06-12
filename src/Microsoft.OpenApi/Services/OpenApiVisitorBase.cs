@@ -15,7 +15,21 @@ namespace Microsoft.OpenApi.Services
     public abstract class OpenApiVisitorBase
     {
         private readonly Stack<string> _path = new Stack<string>();
-       
+        private CurrentKeys _currentKeys = new CurrentKeys();
+
+
+
+        /// <summary>
+        /// Properties available to identify context of where an object is within OpenAPI Document
+        /// </summary>
+        public CurrentKeys CurrentKeys
+        {
+            get
+            {
+                return _currentKeys;
+            }
+        }
+
         /// <summary>
         /// Allow Rule to indicate validation error occured at a deeper context level.  
         /// </summary>
@@ -44,6 +58,15 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+        internal void AttachCurrentKeys(CurrentKeys currentKeys)
+        {
+
+        }
+
+        internal void ClearCurrentKeys()
+        {
+
+        }
     
 
         /// <summary>

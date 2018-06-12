@@ -18,7 +18,6 @@ namespace Microsoft.OpenApi.Services
         private readonly OpenApiVisitorBase _visitor;
         private readonly Stack<OpenApiSchema> _schemaLoop = new Stack<OpenApiSchema>();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
-        private Dictionary<string, string> _currentKeys = new Dictionary<string, string>();
 
         private bool _inComponents = false;
 
@@ -55,6 +54,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
             Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);
+
         }
 
         /// <summary>
@@ -77,7 +77,6 @@ namespace Microsoft.OpenApi.Services
                     Walk(i.ToString(), () => Walk(tags[i]));
                 }
             }
-
         }
 
         /// <summary>
@@ -221,8 +220,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var pathItem in paths)
                 {
+                    _visitor.CurrentKeys.Path = pathItem.Key;
                     Walk(pathItem.Key, () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
                 }
+                _visitor.CurrentKeys.Path = null;
             }
         }
 
@@ -282,8 +283,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var item in openApiExtensible.Extensions)
                 {
+                    _visitor.CurrentKeys.Extension = item.Key;
                     Walk(item.Key, () => Walk(item.Value));
                 }
+                _visitor.CurrentKeys.Extension = null;
             }
         }
 
@@ -342,9 +345,11 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var item in callback.PathItems)
                 {
+                    _visitor.CurrentKeys.Callback = item.Key.ToString();
                     var pathItem = item.Value;
                     Walk(item.Key.ToString(), () => Walk(pathItem));
                 }
+                _visitor.CurrentKeys.Callback = null;
             }
         }
 
@@ -394,8 +399,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var variable in serverVariables)
                 {
+                    _visitor.CurrentKeys.ServerVariable = variable.Key;
                     Walk(variable.Key, () => Walk(variable.Value));
                 }
+                _visitor.CurrentKeys.ServerVariable = null;
             }
         }
 
@@ -459,8 +466,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var operation in operations)
                 {
+                    _visitor.CurrentKeys.Operation = operation.Key;
                     Walk(operation.Key.GetDisplayName(), () => Walk(operation.Value));
                 }
+                _visitor.CurrentKeys.Operation = null;
             }
         }
 
@@ -563,8 +572,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var response in responses)
                 {
+                    _visitor.CurrentKeys.Response = response.Key;
                     Walk(response.Key, () => Walk(response.Value));
                 }
+                _visitor.CurrentKeys.Response = null;
             }
             Walk(responses as IOpenApiExtensible);
         }
@@ -624,8 +635,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var header in headers)
                 {
+                    _visitor.CurrentKeys.Header = header.Key;
                     Walk(header.Key, () => Walk(header.Value));
                 }
+                _visitor.CurrentKeys.Header = null;
             }
         }
 
@@ -642,10 +655,12 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(callbacks);
             if (callbacks != null)
             {
-                foreach (var header in callbacks)
+                foreach (var callback in callbacks)
                 {
-                    Walk(header.Key, () => Walk(header.Value));
+                    _visitor.CurrentKeys.Callback = callback.Key;
+                    Walk(callback.Key, () => Walk(callback.Value));
                 }
+                _visitor.CurrentKeys.Callback = null;
             }
         }
 
@@ -664,8 +679,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var mediaType in content)
                 {
+                    _visitor.CurrentKeys.Content = mediaType.Key;
                     Walk(mediaType.Key, () => Walk(mediaType.Value));
                 }
+                _visitor.CurrentKeys.Content = null;
             }
         }
 
@@ -703,8 +720,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var item in encodings)
                 {
+                    _visitor.CurrentKeys.Encoding = item.Key;
                     Walk(item.Key, () => Walk(item.Value));
                 }
+                _visitor.CurrentKeys.Encoding = null;
             }
         }
 
@@ -789,6 +808,7 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var example in examples)
                 {
+                    _visitor.CurrentKeys.Example = example.Key;
                     Walk(example.Key, () => Walk(example.Value));
                 }
             }
@@ -906,8 +926,10 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var item in links)
                 {
+                    _visitor.CurrentKeys.Link = item.Key;
                     Walk(item.Key, () => Walk(item.Value));
                 }
+                _visitor.CurrentKeys.Link = null;
             }
         }
 
@@ -1046,5 +1068,20 @@ namespace Microsoft.OpenApi.Services
         {
             _inComponents = false;
         }
+    }
+
+    public class CurrentKeys
+    {
+        public string Path { get; set; }
+        public OperationType? Operation { get; set; }
+        public string Response { get; set; }
+        public string Content { get; set; }
+        public string Callback { get; set; }
+        public string Link { get; set; }
+        public string Header { get; internal set; }
+        public string Encoding { get; internal set; }
+        public string Example { get; internal set; }
+        public string Extension { get; internal set; }
+        public string ServerVariable { get; internal set; }
     }
 }
