@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Readers.V3
             new PatternFieldMap<OpenApiCallback>
             {
                 {s => s.StartsWith("$"), (o, p, n) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n))},
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())},
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
         public static OpenApiCallback LoadCallback(ParseNode node)
