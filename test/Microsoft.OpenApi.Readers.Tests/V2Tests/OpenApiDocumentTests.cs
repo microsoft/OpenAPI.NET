@@ -1,8 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
@@ -28,18 +27,14 @@ paths:
         '200':
           description: ok
           schema:
-            $ref: '#/definition/does/notexist'
+            $ref: '#/defi888nition/does/notexist'
 ";
 
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings() {
+            var reader = new OpenApiStringReader();
+
+            Assert.Throws<OpenApiReaderException>(() => { 
+                var doc = reader.Read(input, out var diagnostic);
             });
-
-            OpenApiDocument doc = null;
-
-            Assert.Throws<OpenApiReaderException>(() =>
-            doc = reader.Read(input, out var diagnostic));
-
-            Assert.Null(doc);
         }
 
 
@@ -62,16 +57,13 @@ paths:
             $ref: '#/definitions/doesnotexist'
 ";
 
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
-            {
-            });
+            var reader = new OpenApiStringReader();
 
-            OpenApiDocument doc = null;
-
-            doc = reader.Read(input, out var diagnostic);
+            var doc = reader.Read(input, out var diagnostic);
 
             diagnostic.Errors.ShouldBeEquivalentTo(new List<OpenApiError> {
                 new OpenApiError( new OpenApiException("Invalid Reference identifier 'doesnotexist'.")) });
+            doc.Should().NotBeNull();
         }
     }
 }
