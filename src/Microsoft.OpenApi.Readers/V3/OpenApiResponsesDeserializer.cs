@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.V3
         public static PatternFieldMap<OpenApiResponses> ResponsesPatternFields = new PatternFieldMap<OpenApiResponses>
         {
             {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiResponses LoadResponses(ParseNode node)
