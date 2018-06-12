@@ -49,16 +49,6 @@ namespace Microsoft.OpenApi.Readers
             {
                 yamlDocument = LoadYamlDocument(input);
             }
-            catch (SemanticErrorException ex)
-            {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
-                return new OpenApiDocument();
-            }
-            catch (SyntaxErrorException ex)
-            {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
-                return new OpenApiDocument();
-            }
             catch (YamlException ex)
             {
                 diagnostic.Errors.Add(new OpenApiError($"#char={ex.Start.Line}", ex.Message));
@@ -131,16 +121,6 @@ namespace Microsoft.OpenApi.Readers
             try
             {
                 yamlDocument = LoadYamlDocument(input);
-            }
-            catch (SyntaxErrorException ex)
-            {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
-                return default(T);
-            }
-            catch (SemanticErrorException ex)
-            {
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
-                return default(T);
             }
             catch (YamlException ex)
             {
