@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.V3
         }
 
 
-        public static IOpenApiExtension LoadExtension(string name, ParseNode node)
+        internal static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser)) {
                 return parser(node.CreateAny());

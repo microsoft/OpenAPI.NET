@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
             new PatternFieldMap<OpenApiPathItem>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())},
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))},
             };
 
         public static OpenApiPathItem LoadPathItem(ParseNode node)
