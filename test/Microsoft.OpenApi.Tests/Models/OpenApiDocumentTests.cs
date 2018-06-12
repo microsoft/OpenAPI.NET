@@ -2496,5 +2496,60 @@ definitions:
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
+
+        [Fact]
+        public void SerializeDocumentWithReferenceButNoComponents()
+        {
+            // Arrange
+            var document = new OpenApiDocument()
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "Test",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths
+                {
+                    ["/"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse
+                                    {
+                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        {
+                                            ["application/json"] = new OpenApiMediaType
+                                            {
+                                                Schema = new OpenApiSchema
+                                                {
+                                                    Reference = new OpenApiReference
+                                                    {
+                                                        Id = "test",
+                                                        Type = ReferenceType.Schema
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+
+            var reference = document.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Reference;
+
+            // Act
+            var actual = document.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
+
+            // Assert
+            Assert.NotEmpty(actual);
+        }
     }
 }
