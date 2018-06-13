@@ -15,7 +15,12 @@ namespace Microsoft.OpenApi.Services
     public abstract class OpenApiVisitorBase
     {
         private readonly Stack<string> _path = new Stack<string>();
-       
+
+        /// <summary>
+        /// Properties available to identify context of where an object is within OpenAPI Document
+        /// </summary>
+        public CurrentKeys CurrentKeys { get; } = new CurrentKeys();
+
         /// <summary>
         /// Allow Rule to indicate validation error occured at a deeper context level.  
         /// </summary>
@@ -43,8 +48,6 @@ namespace Microsoft.OpenApi.Services
                 return "#/" + String.Join("/", _path.Reverse());
             }
         }
-
-    
 
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>

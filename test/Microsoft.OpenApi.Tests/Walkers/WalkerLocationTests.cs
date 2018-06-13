@@ -107,6 +107,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths/~1test/get/responses/200/content/application~1json/schema",
 
             });
+
+            locator.Keys.ShouldAllBeEquivalentTo(new List<string> { "/test","Get","200", "application/json" });
         }
 
         [Fact]
@@ -153,6 +155,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
     internal class LocatorVisitor : OpenApiVisitorBase
     {
         public List<string> Locations = new List<string>();
+        public List<string> Keys = new List<string>();
+
         public override void Visit(OpenApiInfo info)
         {
             Locations.Add(this.PathString);
@@ -175,6 +179,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
         public override void Visit(OpenApiPathItem pathItem)
         {
+            Keys.Add(CurrentKeys.Path);
             Locations.Add(this.PathString);
         }
 
@@ -185,10 +190,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
         public override void Visit(OpenApiOperation operation)
         {
+            Keys.Add(CurrentKeys.Operation.ToString());
             Locations.Add(this.PathString);
         }
         public override void Visit(OpenApiResponse response)
         {
+            Keys.Add(CurrentKeys.Response);
             Locations.Add(this.PathString);
         }
 
@@ -199,6 +206,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
         public override void Visit(OpenApiMediaType mediaType)
         {
+            Keys.Add(CurrentKeys.Content);
             Locations.Add(this.PathString);
         }
 
