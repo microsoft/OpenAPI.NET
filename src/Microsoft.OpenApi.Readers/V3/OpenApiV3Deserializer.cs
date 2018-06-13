@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
-                return parser(node.CreateAny());
+                return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_0);
             }
             else
             {

@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
-                return parser(node.CreateAny());
+                return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi2_0);
             }
             else
             {
