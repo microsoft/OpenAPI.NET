@@ -31,10 +31,11 @@ paths:
 ";
 
             var reader = new OpenApiStringReader();
+            var doc = reader.Read(input, out var diagnostic);
 
-            Assert.Throws<OpenApiReaderException>(() => { 
-                var doc = reader.Read(input, out var diagnostic);
-            });
+            diagnostic.Errors.ShouldBeEquivalentTo(new List<OpenApiError> {
+                new OpenApiError( new OpenApiException("Unknown reference type 'defi888nition'")) });
+            doc.Should().NotBeNull();
         }
 
 

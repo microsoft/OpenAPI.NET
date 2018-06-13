@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
             }
 
-            return _nodeList.Select(n => map(new ValueNode(Context, Diagnostic, (YamlScalarNode)n))).ToList();
+            return _nodeList.Select(n => map(new ValueNode(Context, Diagnostic, n))).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()

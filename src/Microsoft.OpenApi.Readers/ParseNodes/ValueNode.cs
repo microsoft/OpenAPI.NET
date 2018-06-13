@@ -4,6 +4,7 @@
 using System;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -12,23 +13,20 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     {
         private readonly YamlScalarNode _node;
 
-        public ValueNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlScalarNode scalarNode) : base(
+        public ValueNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlNode node) : base(
             context,
             diagnostic)
         {
+            if (!(node is YamlScalarNode scalarNode))
+            {
+                throw new OpenApiReaderException("Expected a value.", node);
+            }
             _node = scalarNode;
         }
 
         public override string GetScalarValue()
         {
-            var scalarNode = _node;
-
-            if (scalarNode == null)
-            {
-                throw new OpenApiException($"Expected scalar at line {_node.Start.Line}");
-            }
-
-            return scalarNode.Value;
+            return _node.Value;
        }
 
         /// <summary>
