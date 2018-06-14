@@ -1,7 +1,7 @@
 @echo off
 if "%~1"=="" goto :error
 
-SET %VERSION%=%~1
+SET VERSION=%~1
 
 Echo Building Microsoft.OpenApi
 
