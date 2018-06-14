@@ -26,7 +26,7 @@ paths: {}
 ";
             var settings = new OpenApiReaderSettings()
             {
-                ExtensionParsers = { { "x-foo", (a) => {
+                ExtensionParsers = { { "x-foo", (a,v) => {
                         var fooNode = (OpenApiObject)a;
                         return new FooExtension() {
                               Bar = (fooNode["bar"] as OpenApiString)?.Value,
