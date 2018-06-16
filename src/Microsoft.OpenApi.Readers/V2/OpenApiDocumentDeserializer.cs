@@ -153,11 +153,22 @@ namespace Microsoft.OpenApi.Readers.V2
                     {
                         host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
                     }
-
+                    int? port = null;
+                    if (host.Contains(":"))
+                    {
+                        var pieces = host.Split(':');
+                        host = pieces.First();
+                        port = int.Parse(pieces.Last());
+                    }
                     var uriBuilder = new UriBuilder(scheme, host)
                     {
                         Path = basePath
                     };
+
+                    if (port != null)
+                    {
+                        uriBuilder.Port = port.Value;
+                    }
 
                     var server = new OpenApiServer
                     {
