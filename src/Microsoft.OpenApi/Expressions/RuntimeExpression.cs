@@ -34,6 +34,11 @@ namespace Microsoft.OpenApi.Expressions
                 throw Error.ArgumentNullOrWhiteSpace(nameof(expression));
             }
 
+            if (expression.Contains("{$"))
+            {
+                return new CompositeExpression(expression);
+            }
+
             if (!expression.StartsWith(Prefix))
             {
                 throw new OpenApiException(string.Format(SRResource.RuntimeExpressionMustBeginWithDollar, expression));
