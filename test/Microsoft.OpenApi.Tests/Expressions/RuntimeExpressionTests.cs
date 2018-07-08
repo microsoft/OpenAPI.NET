@@ -213,6 +213,29 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.IsType<UrlExpression>(compositeExpression.ContainedExpressions.First());
             Assert.IsType<RequestExpression>(compositeExpression.ContainedExpressions.Last());
         }
+        
+
+
+        [Fact]
+        public void CompositeRuntimeExpressionForWebHook()
+        {
+            // Arrange
+            string expression = "http://notificationServer.com?transactionId={$request.body#/id}&email={$request.body#/email}";
+
+            // Act
+            var runtimeExpression = RuntimeExpression.Build(expression);
+
+            // Assert
+            Assert.NotNull(runtimeExpression);
+            var response = Assert.IsType<CompositeExpression>(runtimeExpression);
+            Assert.Equal(expression, response.Expression);
+
+            var compositeExpression = runtimeExpression as CompositeExpression;
+            Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
+
+            Assert.IsType<RequestExpression>(compositeExpression.ContainedExpressions.First());
+            Assert.IsType<RequestExpression>(compositeExpression.ContainedExpressions.Last());
+        }
 
         [Theory]
         [InlineData("This is a composite expression  yay and {} and {$sddsd}")]
