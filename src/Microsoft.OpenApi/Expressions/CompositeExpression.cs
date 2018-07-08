@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +15,7 @@ namespace Microsoft.OpenApi.Expressions
     /// </summary>
     public class CompositeExpression : RuntimeExpression
     {
-        private string template;
+        private readonly string template;
         private Regex expressionPattern = new Regex("{(?<exp>[^}]+)");
         /// <summary>
         /// Expressions embedded into string literal
