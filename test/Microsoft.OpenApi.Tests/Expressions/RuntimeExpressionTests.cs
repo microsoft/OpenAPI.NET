@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Properties;
 using System;
+using System.Linq;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Writers
@@ -170,6 +171,61 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             Assert.NotSame(runtimeExpression1, runtimeExpression2);
             Assert.Equal(runtimeExpression1, runtimeExpression2);
+        }
+
+
+        [Fact]
+        public void CompositeRuntimeExpressionContainsExpression()
+        {
+            // Arrange
+            string expression = "This is a composite expression {$url} yay";
+
+            // Act
+            var runtimeExpression = RuntimeExpression.Build(expression);
+
+            // Assert
+            Assert.NotNull(runtimeExpression);
+            var response = Assert.IsType<CompositeExpression>(runtimeExpression);
+            Assert.Equal(expression, response.Expression);
+
+            var compositeExpression = runtimeExpression as CompositeExpression;
+            Assert.Single(compositeExpression.ContainedExpressions);
+
+        }
+
+        [Fact]
+        public void CompositeRuntimeExpressionContainsMultipleExpressions()
+        {
+            // Arrange
+            string expression = "This is a composite expression {$url} yay and {$request.header.foo}";
+
+            // Act
+            var runtimeExpression = RuntimeExpression.Build(expression);
+
+            // Assert
+            Assert.NotNull(runtimeExpression);
+            var response = Assert.IsType<CompositeExpression>(runtimeExpression);
+            Assert.Equal(expression, response.Expression);
+
+            var compositeExpression = runtimeExpression as CompositeExpression;
+            Assert.Equal(2,compositeExpression.ContainedExpressions.Count);
+
+            Assert.IsType<UrlExpression>(compositeExpression.ContainedExpressions.First());
+            Assert.IsType<RequestExpression>(compositeExpression.ContainedExpressions.Last());
+        }
+
+        [Theory]
+        [InlineData("This is a composite expression  yay and {} and {$sddsd}")]
+        [InlineData("This is a composite expression {url} yay and {} and {$url}")]
+        public void CompositeRuntimeExpressionContainsInvalidExpressions(string expression)
+        {
+            // Arrange
+
+            // Act
+            Action test = () => RuntimeExpression.Build(expression);
+
+            // Assert
+            Assert.Throws<OpenApiException>(test);
         }
     }
 }
