@@ -145,23 +145,13 @@ namespace Microsoft.OpenApi.Readers.V2
             }
             
             // Create the Server objects
-            if (schemes != null)
+            if (schemes != null && schemes.Count > 0)
             {
                 foreach (var scheme in schemes)
                 {
-                    if (String.IsNullOrEmpty(scheme))
-                    {
-                        host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
-                    }
-
-                    var uriBuilder = new UriBuilder(scheme, host)
-                    {
-                        Path = basePath
-                    };
-
                     var server = new OpenApiServer
                     {
-                        Url = uriBuilder.ToString()
+                        Url = BuildUrl(scheme, host, basePath)
                     };
 
                     servers.Add(server);
@@ -169,19 +159,9 @@ namespace Microsoft.OpenApi.Readers.V2
             }
             else
             {
-                if (!String.IsNullOrEmpty(host))
-                {
-                    host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
-                }
-                var uriBuilder = new UriBuilder()
-                {
-                    Scheme = null,
-                    Host = host,
-                    Path = basePath
-                };
                 var server = new OpenApiServer
                 {
-                    Url = uriBuilder.ToString()
+                    Url = BuildUrl(null, host, basePath)
                 };
 
                 servers.Add(server);
@@ -196,6 +176,37 @@ namespace Microsoft.OpenApi.Readers.V2
                     server.Url = server.Url.Substring(0, server.Url.Length - 1);
                 }
             }
+        }
+
+        private static string BuildUrl(string scheme, string host, string basePath)
+        {
+            if (String.IsNullOrEmpty(scheme) && !String.IsNullOrEmpty(host))
+            {
+                host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
+            }
+
+            int? port = null;
+
+            if (!String.IsNullOrEmpty(host) && host.Contains(":"))
+            {
+                var pieces = host.Split(':');
+                host = pieces.First();
+                port = int.Parse(pieces.Last());
+            }
+
+            var uriBuilder = new UriBuilder()
+            {
+                Scheme = scheme,
+                Host = host,
+                Path = basePath
+            };
+
+            if (port != null)
+            {
+                uriBuilder.Port = port.Value;
+            }
+
+            return uriBuilder.ToString();
         }
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
