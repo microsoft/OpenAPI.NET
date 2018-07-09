@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
             
             // Create the Server objects
-            if (schemes != null)
+            if (schemes != null || schemes.Count > 0)
             {
                 foreach (var scheme in schemes)
                 {
