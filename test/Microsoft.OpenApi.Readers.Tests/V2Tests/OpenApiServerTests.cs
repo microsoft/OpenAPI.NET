@@ -235,5 +235,27 @@ paths: {}
             Assert.Equal("https://dev.bing.com/api", doc.Servers.Last().Url);
         }
 
+        [Fact]
+        public void LocalHostWithCustomHost()
+        {
+            var input = @"
+swagger: 2.0
+info: 
+  title: test
+  version: 1.0.0
+host: localhost:23232
+paths: {}
+";
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            {
+                BaseUrl = new Uri("https://bing.com")
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Equal(1, doc.Servers.Count);
+            Assert.Equal("https://localhost:23232", server.Url);
+        }
     }
 }
