@@ -1,16 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.IO;
 using System.Linq;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
-using Microsoft.OpenApi.Readers.Services;
-using Microsoft.OpenApi.Services;
 using SharpYaml;
 using SharpYaml.Serialization;
 
@@ -21,7 +16,7 @@ namespace Microsoft.OpenApi.Readers
     /// </summary>
     public class OpenApiStreamReader : IOpenApiReader<Stream, OpenApiDiagnostic>
     {
-        private OpenApiReaderSettings _settings;
+        private readonly OpenApiReaderSettings _settings;
 
         /// <summary>
         /// Create stream reader with custom settings if desired.
@@ -40,7 +35,6 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
-            ParsingContext context;
             YamlDocument yamlDocument;
             diagnostic = new OpenApiDiagnostic();
 
@@ -49,59 +43,13 @@ namespace Microsoft.OpenApi.Readers
             {
                 yamlDocument = LoadYamlDocument(input);
             }
-            catch (YamlException ex)
+            catch (SyntaxErrorException ex)
             {
                 diagnostic.Errors.Add(new OpenApiError($"#char={ex.Start.Line}", ex.Message));
                 return new OpenApiDocument();
             }
 
-            context = new ParsingContext
-            {
-                ExtensionParsers = _settings.ExtensionParsers,
-                BaseUrl = _settings.BaseUrl
-            };
-
-            OpenApiDocument document = null;
-
-            try
-            {
-                // Parse the OpenAPI Document
-                document = context.Parse(yamlDocument, diagnostic);
-
-                // Resolve References if requested
-                switch (_settings.ReferenceResolution)
-                {
-                    case ReferenceResolutionSetting.ResolveAllReferences:
-                        throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
-                    case ReferenceResolutionSetting.ResolveLocalReferences:
-                        var resolver = new OpenApiReferenceResolver(document);
-                        var walker = new OpenApiWalker(resolver);
-                        walker.Walk(document);
-                        foreach (var item in resolver.Errors)
-                        {
-                            diagnostic.Errors.Add(item);
-                        }
-                        break;
-                    case ReferenceResolutionSetting.DoNotResolveReferences:
-                        break;
-                }
-            }
-            catch (OpenApiException ex)
-            {
-                diagnostic.Errors.Add(new OpenApiError(ex));
-            }
-
-            // Validate the document
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
-            {
-                var errors = document.Validate(_settings.RuleSet);
-                foreach (var item in errors)
-                {
-                    diagnostic.Errors.Add(item);
-                }
-            }
-
-            return document;
+            return new OpenApiDocumentReader(_settings).Read(yamlDocument, out diagnostic);
         }
 
         /// <summary>
@@ -113,7 +61,6 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public T ReadFragment<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
         {
-            ParsingContext context;
             YamlDocument yamlDocument;
             diagnostic = new OpenApiDiagnostic();
 
@@ -128,34 +75,7 @@ namespace Microsoft.OpenApi.Readers
                 return default(T);
             }
 
-            context = new ParsingContext
-            {
-                ExtensionParsers = _settings.ExtensionParsers
-            };
-
-            IOpenApiElement element = null;
-
-            try
-            {
-                // Parse the OpenAPI element
-                element = context.ParseFragment<T>(yamlDocument, version, diagnostic);
-            }
-            catch (OpenApiException ex)
-            {
-                diagnostic.Errors.Add(new OpenApiError(ex));
-            }
-
-            // Validate the element
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
-            {
-                var errors = element.Validate(_settings.RuleSet);
-                foreach (var item in errors)
-                {
-                    diagnostic.Errors.Add(item);
-                }
-            }
-
-            return (T)element;
+            return new OpenApiDocumentReader(_settings).ReadFragment<T>(yamlDocument, version, out diagnostic);
         }
 
         /// <summary>
