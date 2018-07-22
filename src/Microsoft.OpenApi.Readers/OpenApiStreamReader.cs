@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers
             {
                 yamlDocument = LoadYamlDocument(input);
             }
-            catch (SyntaxErrorException ex)
+            catch (YamlException ex)
             {
                 diagnostic.Errors.Add(new OpenApiError($"#char={ex.Start.Line}", ex.Message));
                 return new OpenApiDocument();
