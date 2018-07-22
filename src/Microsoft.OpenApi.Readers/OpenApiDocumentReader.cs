@@ -40,7 +40,8 @@ namespace Microsoft.OpenApi.Readers
             diagnostic = new OpenApiDiagnostic();
             ParsingContext context = new ParsingContext
             {
-                ExtensionParsers = _settings.ExtensionParsers
+                ExtensionParsers = _settings.ExtensionParsers,
+                BaseUrl = _settings.BaseUrl
             };
 
             OpenApiDocument document = null;
@@ -84,6 +85,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             return document;
+
         }
 
 
