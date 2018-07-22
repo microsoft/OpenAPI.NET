@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
-        /// <param name="yamlDocument">Document containing Yaml File</param>
+        /// <param name="yamlDocument">Yaml Document containing OpenAPI description</param>
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
         /// <returns>Instance of newly created OpenApiDocument</returns>
