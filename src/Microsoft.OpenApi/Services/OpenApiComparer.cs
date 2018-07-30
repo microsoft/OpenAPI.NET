@@ -14,10 +14,23 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Compares two <see cref="OpenApiDocument"/>s and returns a list of differences.
         /// </summary>
-        public static List<OpenApiDifference> Compare(OpenApiDocument source, OpenApiDocument target)
+        public static IEnumerable<OpenApiDifference> Compare(OpenApiDocument source, OpenApiDocument target)
         {
-            var diffs = new List<OpenApiDifference>();
-            return diffs;
+            if (source == null)
+            {
+                throw Error.ArgumentNull(nameof(source));
+            }
+
+            if (target == null)
+            {
+                throw Error.ArgumentNull(nameof(target));
+            }
+
+            var comparisionContext = new ComparisonContext(new OpenApiComparerFactory());
+
+            new OpenApiDocumentComparer().Compare(source, target, comparisionContext);
+
+            return comparisionContext.OpenApiDifferences;
         }
     }
 }
