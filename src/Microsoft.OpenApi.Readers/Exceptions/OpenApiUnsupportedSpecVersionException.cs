@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Readers.Exceptions
     /// Defines an exception indicating OpenAPI Reader encountered an unsupported specification version while reading.
     /// </summary>
     [Serializable]
-    public class OpenApiUnsupportedSpecVersionException : OpenApiReaderException
+    public class OpenApiUnsupportedSpecVersionException : Exception
     {
         const string messagePattern = "OpenAPI specification version '{0}' is not supported.";
 
