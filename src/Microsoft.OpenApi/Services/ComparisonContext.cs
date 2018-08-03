@@ -3,12 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// A class encapsulating the comarision context.
+    /// A class encapsulating the comparision context.
     /// </summary>
     public class ComparisonContext
     {
