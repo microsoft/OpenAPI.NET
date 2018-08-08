@@ -18,24 +18,29 @@ namespace Microsoft.OpenApi.Readers.V3
             new FixedFieldMap<OpenApiMediaType>
             {
                 {
-                    "schema", (o, n) =>
+                    OpenApiConstants.Schema, (o, n) =>
                     {
                         o.Schema = LoadSchema(n);
                     }
                 },
                 {
-                    "examples", (o, n) =>
+                    OpenApiConstants.Examples, (o, n) =>
                     {
                         o.Examples = n.CreateMap(LoadExample);
                     }
                 },
                 {
-                    "example", (o, n) =>
+                    OpenApiConstants.Example, (o, n) =>
                     {
                         o.Example = n.CreateAny();
                     }
                 },
-                //Encoding
+                {
+                    OpenApiConstants.Encoding, (o, n) =>
+                    {
+                        o.Encoding = n.CreateMap(LoadEncoding);
+                    }
+                },
             };
 
         private static readonly PatternFieldMap<OpenApiMediaType> _mediaTypePatternFields =
@@ -46,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
         public static OpenApiMediaType LoadMediaType(ParseNode node)
         {
-            var mapNode = node.CheckMapNode("content");
+            var mapNode = node.CheckMapNode(OpenApiConstants.Content);
 
             if (!mapNode.Any())
             {
