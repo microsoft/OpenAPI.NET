@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Readers.V2
             // Fill in missing information based on the defaultUrl
             if (defaultUrl != null)
             {
-                host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
+                host = host ?? defaultUrl.GetComponents(UriComponents.StrongAuthority, UriFormat.SafeUnescaped);
                 basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
                 schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
             }
