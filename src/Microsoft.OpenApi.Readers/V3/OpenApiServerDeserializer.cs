@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -47,6 +48,19 @@ namespace Microsoft.OpenApi.Readers.V3
             var server = new OpenApiServer();
 
             ParseMap(mapNode, server, _serverFixedFields, _serverPatternFields);
+
+            if (server.Url != null && server.Url.StartsWith("/") && node.Context.BaseUrl != null && !string.IsNullOrEmpty(node.Context.BaseUrl.ToString()))
+            {
+                string backup = server.Url; //just in case
+                try
+                {
+                    server.Url = new Uri(node.Context.BaseUrl, server.Url).ToString();
+                }
+                catch (Exception)
+                {
+                    server.Url = backup;
+                }
+            }
 
             return server;
         }
