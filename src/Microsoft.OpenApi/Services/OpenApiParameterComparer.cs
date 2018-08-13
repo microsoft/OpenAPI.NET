@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -23,10 +24,36 @@ namespace Microsoft.OpenApi.Services
         {
             if (sourceParameter == null && targetParameter == null)
             {
+                return;
             }
 
-            // To Do Compare Schema
-            // To Do Compare Content
+            if (sourceParameter == null || targetParameter == null)
+            {
+                comparisonContext.AddOpenApiDifference(
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        SourceValue = sourceParameter,
+                        TargetValue = targetParameter,
+                        OpenApiComparedElementType = typeof(OpenApiParameter),
+                        Pointer = comparisonContext.PathString
+                    });
+
+                return;
+            }
+
+            comparisonContext.GetComparer<OpenApiSchema>().Compare(
+                sourceParameter?.Schema,
+                targetParameter?.Schema,
+                comparisonContext);
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Content,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiMediaType>>()
+                    .Compare(sourceParameter.Content, targetParameter.Content, comparisonContext));
+
             // To Do Compare Examples
             // To Do Compare parameter as IOpenApiExtensible
         }

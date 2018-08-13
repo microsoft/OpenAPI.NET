@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Services
                 throw Error.ArgumentNull(nameof(target));
             }
 
-            var comparisionContext = new ComparisonContext(new OpenApiComparerFactory());
+            var comparisionContext = new ComparisonContext(new OpenApiComparerFactory(), source, target);
 
             new OpenApiDocumentComparer().Compare(source, target, comparisionContext);
 

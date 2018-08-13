@@ -40,8 +40,14 @@ namespace Microsoft.OpenApi.Services
             comparisonContext.GetComparer<IDictionary<OperationType, OpenApiOperation>>()
                 .Compare(sourcePathItem?.Operations, targetPathItem?.Operations, comparisonContext);
 
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Parameters,
+                () => comparisonContext
+                    .GetComparer<IList<OpenApiParameter>>()
+                    .Compare(sourcePathItem?.Parameters, targetPathItem?.Parameters, comparisonContext));
+
             // To Do Compare Servers
-            // To Do Compare Parameters
             // To Do Compare Extensions
         }
     }

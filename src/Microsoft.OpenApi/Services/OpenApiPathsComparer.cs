@@ -17,7 +17,9 @@ namespace Microsoft.OpenApi.Services
         /// <param name="sourcePaths">The source.</param>
         /// <param name="targetPaths">The target.</param>
         /// <param name="comparisonContext">Context under which to compare the source and target.</param>
-        public override void Compare(OpenApiPaths sourcePaths, OpenApiPaths targetPaths,
+        public override void Compare(
+            OpenApiPaths sourcePaths,
+            OpenApiPaths targetPaths,
             ComparisonContext comparisonContext)
         {
             if (sourcePaths == null && targetPaths == null)
@@ -25,40 +27,17 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            comparisonContext.Enter(OpenApiConstants.Paths);
-
-            if (sourcePaths != null && targetPaths == null)
+            if (sourcePaths == null || targetPaths == null)
             {
-                foreach (var sourcePathKey in sourcePaths.Keys)
-                {
-                    WalkAndAddOpenApiDifference(
-                        comparisonContext,
-                        sourcePathKey,
-                        new OpenApiDifference
-                        {
-                            OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                            SourceValue = sourcePaths[sourcePathKey],
-                            OpenApiComparedElementType = typeof(OpenApiPathItem)
-                        });
-                }
-
-                return;
-            }
-
-            if (sourcePaths == null)
-            {
-                foreach (var targetPathKey in targetPaths.Keys)
-                {
-                    WalkAndAddOpenApiDifference(
-                        comparisonContext,
-                        targetPathKey,
-                        new OpenApiDifference
-                        {
-                            OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                            TargetValue = targetPaths[targetPathKey],
-                            OpenApiComparedElementType = typeof(OpenApiPathItem)
-                        });
-                }
+                comparisonContext.AddOpenApiDifference(
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        SourceValue = sourcePaths,
+                        TargetValue = targetPaths,
+                        OpenApiComparedElementType = typeof(OpenApiPaths),
+                        Pointer = comparisonContext.PathString
+                    });
 
                 return;
             }
@@ -87,7 +66,7 @@ namespace Microsoft.OpenApi.Services
                         sourcePathKey,
                         () => comparisonContext
                             .GetComparer<OpenApiPathItem>()
-                            .Compare( sourcePaths[sourcePathKey], targetPaths[sourcePathKey], comparisonContext ) );
+                            .Compare(sourcePaths[sourcePathKey], targetPaths[sourcePathKey], comparisonContext));
                 }
                 else
                 {
@@ -102,8 +81,6 @@ namespace Microsoft.OpenApi.Services
                         });
                 }
             }
-
-            comparisonContext.Exit();
         }
     }
 }
