@@ -19,7 +19,13 @@ namespace Microsoft.OpenApi.Services
             {typeof(OpenApiOperation), new OpenApiOperationComparer()},
             {typeof(IDictionary<OperationType, OpenApiOperation>), new OpenApiOperationsComparer()},
             {typeof(IList<OpenApiParameter>), new OpenApiParametersComparer()},
-            {typeof(OpenApiParameter), new OpenApiParameterComparer()}
+            {typeof(OpenApiParameter), new OpenApiParameterComparer()},
+            {typeof(OpenApiSchema), new OpenApiSchemaComparer()},
+            {typeof(OpenApiMediaType), new OpenApiMediaTypeComparer()},
+            {typeof(IDictionary<string, OpenApiMediaType>), new OpenApiDictionaryComparer<OpenApiMediaType>()},
+            {typeof(IDictionary<string, OpenApiResponse>), new OpenApiDictionaryComparer<OpenApiResponse>()},
+            {typeof(OpenApiRequestBody), new OpenApiRequestBodyComparer()},
+            {typeof(OpenApiResponse), new OpenApiResponseComparer()}
         };
 
         private readonly Dictionary<Type, object> _typeToComparerMap = new Dictionary<Type, object>();

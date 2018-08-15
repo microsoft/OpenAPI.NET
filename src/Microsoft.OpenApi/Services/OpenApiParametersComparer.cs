@@ -75,6 +75,19 @@ namespace Microsoft.OpenApi.Services
                 var targetParameter = targetParameters
                     .FirstOrDefault(param => param.Name == sourceParameter.Name && param.In == sourceParameter.In);
 
+                if (targetParameter == null)
+                {
+                    WalkAndAddOpenApiDifference(
+                        comparisonContext, i.ToString(),
+                        new OpenApiDifference
+                        {
+                            OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                            SourceValue = sourceParameter,
+                            OpenApiComparedElementType = typeof(OpenApiParameter)
+                        });
+                    return;
+                }
+
                 WalkAndCompare(
                     comparisonContext,
                     i.ToString(),

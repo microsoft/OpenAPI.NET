@@ -2,11 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Defines behavior for comparing parts of <see cref="OpenAPiDocument"/> class.
+    /// Defines behavior for comparing parts of <see cref="OpenApiDocument"/> class.
     /// </summary>
     /// <typeparam name="T">Type of class to compare.</typeparam>
     public abstract class OpenApiComparerBase<T>
@@ -64,6 +65,32 @@ namespace Microsoft.OpenApi.Services
                 {
                     OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                     OpenApiComparedElementType = typeof(bool),
+                    SourceValue = source,
+                    TargetValue = target,
+                    Pointer = comparisonContext.PathString
+                });
+            }
+        }
+
+        /// <summary>
+        /// Compares two decimal object.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="comparisonContext">The context under which to compare the objects.</param>
+        internal void Compare(decimal? source, decimal? target, ComparisonContext comparisonContext)
+        {
+            if (source == null && target == null)
+            {
+                return;
+            }
+
+            if (source != target)
+            {
+                comparisonContext.AddOpenApiDifference(new OpenApiDifference
+                {
+                    OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                    OpenApiComparedElementType = typeof(decimal),
                     SourceValue = source,
                     TargetValue = target,
                     Pointer = comparisonContext.PathString

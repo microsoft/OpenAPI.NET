@@ -21,10 +21,12 @@ namespace Microsoft.OpenApi.Services
             OpenApiDocument targetDocument,
             ComparisonContext comparisonContext)
         {
-            comparisonContext.GetComparer<OpenApiPaths>().Compare(
-                sourceDocument.Paths,
-                targetDocument.Paths,
-                comparisonContext);
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Paths,
+                () => comparisonContext
+                    .GetComparer<OpenApiPaths>()
+                    .Compare(sourceDocument.Paths, targetDocument.Paths, comparisonContext));
 
             // To Do Compare Info
             // To Do Compare Servers

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -13,15 +14,23 @@ namespace Microsoft.OpenApi.Services
     {
         private readonly IList<OpenApiDifference> _openApiDifferences = new List<OpenApiDifference>();
         private readonly Stack<string> _path = new Stack<string>();
+        internal readonly OpenApiDocument SourceDocument;
+        internal readonly Stack<OpenApiSchema> SourceSchemaLoop = new Stack<OpenApiSchema>();
+        internal readonly OpenApiDocument TargetDocument;
+        internal readonly Stack<OpenApiSchema> TargetSchemaLoop = new Stack<OpenApiSchema>();
         internal OpenApiComparerFactory OpenApiComparerFactory;
 
         /// <summary>
         /// Creates instance of <see cref="ComparisonContext"/>.
         /// </summary>
-        /// <param name="openApiComparerFactory"></param>
-        public ComparisonContext(OpenApiComparerFactory openApiComparerFactory)
+        public ComparisonContext(
+            OpenApiComparerFactory openApiComparerFactory,
+            OpenApiDocument sourceDocument,
+            OpenApiDocument targetDocument)
         {
             OpenApiComparerFactory = openApiComparerFactory;
+            SourceDocument = sourceDocument;
+            TargetDocument = targetDocument;
         }
 
         /// <summary>
