@@ -47,7 +47,13 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<IList<OpenApiParameter>>()
                     .Compare(sourcePathItem?.Parameters, targetPathItem?.Parameters, comparisonContext));
 
-            // To Do Compare Servers
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Parameters,
+                () => comparisonContext
+                    .GetComparer<IList<OpenApiServer>>()
+                    .Compare(sourcePathItem?.Servers, targetPathItem?.Servers, comparisonContext));
+
             // To Do Compare Extensions
         }
     }

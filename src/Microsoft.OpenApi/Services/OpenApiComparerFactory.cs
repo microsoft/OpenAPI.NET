@@ -24,8 +24,23 @@ namespace Microsoft.OpenApi.Services
             {typeof(OpenApiMediaType), new OpenApiMediaTypeComparer()},
             {typeof(IDictionary<string, OpenApiMediaType>), new OpenApiDictionaryComparer<OpenApiMediaType>()},
             {typeof(IDictionary<string, OpenApiResponse>), new OpenApiDictionaryComparer<OpenApiResponse>()},
+            {typeof(IDictionary<string, OpenApiHeader>), new OpenApiDictionaryComparer<OpenApiHeader>()},
+            {typeof(IDictionary<string, OpenApiEncoding>), new OpenApiDictionaryComparer<OpenApiEncoding>()},
+            {
+                typeof(IDictionary<string, OpenApiServerVariable>),
+                new OpenApiDictionaryComparer<OpenApiServerVariable>()
+            },
+            {typeof(IDictionary<string, OpenApiParameter>), new OpenApiDictionaryComparer<OpenApiParameter>()},
+            {typeof(IDictionary<string, OpenApiRequestBody>), new OpenApiDictionaryComparer<OpenApiRequestBody>()},
+            {typeof(IDictionary<string, OpenApiSchema>), new OpenApiDictionaryComparer<OpenApiSchema>()},
+            {typeof(OpenApiHeader), new OpenApiHeaderComparer()},
             {typeof(OpenApiRequestBody), new OpenApiRequestBodyComparer()},
-            {typeof(OpenApiResponse), new OpenApiResponseComparer()}
+            {typeof(OpenApiResponse), new OpenApiResponseComparer()},
+            {typeof(OpenApiComponents), new OpenApiComponentsComparer()},
+            {typeof(OpenApiEncoding), new OpenApiEncodingComparer()},
+            {typeof(IList<OpenApiServer>), new OpenApiServersComparer()},
+            {typeof(OpenApiServer), new OpenApiServerComparer()},
+            {typeof(OpenApiServerVariable), new OpenApiServerVariableComparer()}
         };
 
         private readonly Dictionary<Type, object> _typeToComparerMap = new Dictionary<Type, object>();

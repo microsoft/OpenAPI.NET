@@ -77,15 +77,7 @@ namespace Microsoft.OpenApi.Services
 
                 if (targetParameter == null)
                 {
-                    WalkAndAddOpenApiDifference(
-                        comparisonContext, i.ToString(),
-                        new OpenApiDifference
-                        {
-                            OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                            SourceValue = sourceParameter,
-                            OpenApiComparedElementType = typeof(OpenApiParameter)
-                        });
-                    return;
+                    continue;
                 }
 
                 WalkAndCompare(

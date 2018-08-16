@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Services
                 comparisonContext.AddOpenApiDifference(new OpenApiDifference
                 {
                     OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                    OpenApiComparedElementType = typeof(bool),
+                    OpenApiComparedElementType = typeof(bool?),
                     SourceValue = source,
                     TargetValue = target,
                     Pointer = comparisonContext.PathString
@@ -90,7 +90,47 @@ namespace Microsoft.OpenApi.Services
                 comparisonContext.AddOpenApiDifference(new OpenApiDifference
                 {
                     OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                    OpenApiComparedElementType = typeof(decimal),
+                    OpenApiComparedElementType = typeof(decimal?),
+                    SourceValue = source,
+                    TargetValue = target,
+                    Pointer = comparisonContext.PathString
+                });
+            }
+        }
+
+        /// <summary>
+        /// Compares Enum.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="comparisonContext">The context under which to compare the objects.</param>
+        internal void Compare<TE>(Enum source, Enum target, ComparisonContext comparisonContext)
+        {
+            if (source == null && target == null)
+            {
+                return;
+            }
+
+            if (source == null || target == null)
+            {
+                comparisonContext.AddOpenApiDifference(new OpenApiDifference
+                {
+                    OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                    OpenApiComparedElementType = typeof(TE),
+                    SourceValue = source,
+                    TargetValue = target,
+                    Pointer = comparisonContext.PathString
+                });
+
+                return;
+            }
+
+            if (!source.Equals(target))
+            {
+                comparisonContext.AddOpenApiDifference(new OpenApiDifference
+                {
+                    OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                    OpenApiComparedElementType = typeof(T),
                     SourceValue = source,
                     TargetValue = target,
                     Pointer = comparisonContext.PathString

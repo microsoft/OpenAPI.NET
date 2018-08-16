@@ -640,14 +640,13 @@ namespace Microsoft.OpenApi.Tests.Services
 
             differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
 
-            for (var i = 0; i < differences.Count(); i++)
-            {
-                differences[i].Pointer.ShouldBeEquivalentTo(expectedDifferences[i].Pointer);
-                differences[i].OpenApiComparedElementType
-                    .ShouldBeEquivalentTo(expectedDifferences[i].OpenApiComparedElementType);
-                differences[i].OpenApiDifferenceOperation
-                    .ShouldBeEquivalentTo(expectedDifferences[i].OpenApiDifferenceOperation);
-            }
+            var notExpectedDifferences = differences.Where(
+                actualDiff => !expectedDifferences.Any(
+                    expectedDiff => expectedDiff.Pointer == actualDiff.Pointer
+                        && expectedDiff.OpenApiComparedElementType == actualDiff.OpenApiComparedElementType
+                        && expectedDiff.OpenApiDifferenceOperation == actualDiff.OpenApiDifferenceOperation)).ToList();
+
+            notExpectedDifferences.Count.ShouldBeEquivalentTo(0);
         }
     }
 }

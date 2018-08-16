@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 namespace Microsoft.OpenApi.Tests.Services
 {
     [Collection("DefaultSettings")]
-    public class OpenApiRequestBodyComparerTests
+    public class OpenApiServerVariableComparerTests
     {
         private readonly ITestOutputHelper _output;
 
@@ -210,46 +210,36 @@ namespace Microsoft.OpenApi.Tests.Services
             }
         };
 
-        public OpenApiRequestBodyComparerTests(ITestOutputHelper output)
+        public OpenApiServerVariableComparerTests(ITestOutputHelper output)
         {
             _output = output;
         }
 
-        public static IEnumerable<object[]> GetTestCasesForOpenApiRequestBodyComparerShouldSucceed()
+        public static IEnumerable<object[]> GetTestCasesForOpenApiServerVariableComparerShouldSucceed()
         {
-            // Differences in description and Required
+            // Differences in default and description
             yield return new object[]
             {
-                "Differences in description and Required",
-                new OpenApiRequestBody
+                "Differences in default and description",
+                new OpenApiServerVariable
                 {
-                    Description = "description",
-                    Required = true,
-                    Content =
+                    Default = "8443",
+                    Enum = new List<string>
                     {
-                        ["application/json"] = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        }
-                    }
+                        "8443",
+                        "443"
+                    },
+                    Description = "test description"
                 },
-                new OpenApiRequestBody
+                new OpenApiServerVariable
                 {
-                    Description = "udpated description",
-                    Required = false,
-                    Content =
+                    Default = "1003",
+                    Enum = new List<string>
                     {
-                        ["application/json"] = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        }
-                    }
+                        "8443",
+                        "443"
+                    },
+                    Description = "test description updated"
                 },
                 new List<OpenApiDifference>
                 {
@@ -261,246 +251,37 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/required",
+                        Pointer = "#/default",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?)
-                    }
-                }
-            };
-
-            // Differences in Content
-            yield return new object[]
-            {
-                "Differences in Content",
-                new OpenApiRequestBody
-                {
-                    Description = "description",
-                    Required = true,
-                    Content =
-                    {
-                        ["application/json"] = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        }
-                    }
-                },
-                new OpenApiRequestBody
-                {
-                    Description = "description",
-                    Required = true,
-                    Content =
-                    {
-                        ["application/xml"] = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        }
-                    }
-                },
-                new List<OpenApiDifference>
-                {
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/content/application~1xml",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiMediaType>)
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/content/application~1json",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiMediaType>)
-                    }
-                }
-            };
-
-            // Null source
-            yield return new object[]
-            {
-                "Null source",
-                null,
-                new OpenApiRequestBody
-                {
-                    Description = "udpated description",
-                    Required = false,
-                    Content =
-                    {
-                        ["application/xml"] = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        }
-                    }
-                },
-                new List<OpenApiDifference>
-                {
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiRequestBody)
-                    }
-                }
-            };
-
-            // Null target
-            yield return new object[]
-            {
-                "Null target",
-                new OpenApiRequestBody
-                {
-                    Description = "udpated description",
-                    Required = false,
-                    Content =
-                    {
-                        ["application/xml"] = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        }
-                    }
-                },
-                null,
-                new List<OpenApiDifference>
-                {
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiRequestBody)
-                    }
-                }
-            };
-
-            // Differences in reference id
-            yield return new object[]
-            {
-                "Differences in reference id",
-                new OpenApiRequestBody
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Id = "Id",
-                        Type = ReferenceType.RequestBody
-                    },
-
-                    Description = "description",
-                    Required = true
-                },
-                new OpenApiRequestBody
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Id = "NewId",
-                        Type = ReferenceType.RequestBody
-                    },
-
-                    Description = "description",
-                    Required = true
-                },
-                new List<OpenApiDifference>
-                {
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/$ref",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiReference)
-                    }
-                }
-            };
-
-            // Differences in schema
-            yield return new object[]
-            {
-                "Differences in schema",
-                new OpenApiRequestBody
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Id = "requestBody1",
-                        Type = ReferenceType.RequestBody
-                    },
-
-                    Description = "description",
-                    Required = true
-                },
-                new OpenApiRequestBody
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Id = "requestBody1",
-                        Type = ReferenceType.RequestBody
-                    },
-
-                    Description = "description",
-                    Required = true
-                },
-                new List<OpenApiDifference>
-                {
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/content/application~1json/properties/property5",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/content/application~1json/properties/property7",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer =
-                            "#/content/application~1json/properties/property6/properties/property6/properties/property5",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer =
-                            "#/content/application~1json/properties/property6/properties/property6/properties/property7",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
+                        OpenApiComparedElementType = typeof(string)
                     }
                 }
             };
         }
 
         [Theory]
-        [MemberData(nameof(GetTestCasesForOpenApiRequestBodyComparerShouldSucceed))]
-        public void OpenApiRequestBodyComparerShouldSucceed(
+        [MemberData(nameof(GetTestCasesForOpenApiServerVariableComparerShouldSucceed))]
+        public void OpenApiServerVariableComparerShouldSucceed(
             string testCaseName,
-            OpenApiRequestBody source,
-            OpenApiRequestBody target,
+            OpenApiServerVariable source,
+            OpenApiServerVariable target,
             List<OpenApiDifference> expectedDifferences)
         {
             _output.WriteLine(testCaseName);
 
             var comparisonContext = new ComparisonContext(new OpenApiComparerFactory(), _sourceDocument,
                 _targetDocument);
-            var comparer = new OpenApiRequestBodyComparer();
+            var comparer = new OpenApiServerVariableComparer();
             comparer.Compare(source, target, comparisonContext);
 
             var differences = comparisonContext.OpenApiDifferences.ToList();
-
             differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
 
             var notExpectedDifferences = differences.Where(
                 actualDiff => !expectedDifferences.Any(
                     expectedDiff => expectedDiff.Pointer == actualDiff.Pointer
                         && expectedDiff.OpenApiComparedElementType == actualDiff.OpenApiComparedElementType
-                        && expectedDiff.OpenApiDifferenceOperation ==
-                            actualDiff.OpenApiDifferenceOperation)).ToList();
+                        && expectedDiff.OpenApiDifferenceOperation == actualDiff.OpenApiDifferenceOperation)).ToList();
 
             notExpectedDifferences.Count.ShouldBeEquivalentTo(0);
         }

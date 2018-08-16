@@ -62,10 +62,16 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<IDictionary<string, OpenApiResponse>>()
                     .Compare(sourceOperation?.Responses, targetOperation?.Responses, comparisonContext));
 
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Components,
+                () => comparisonContext
+                    .GetComparer<IList<OpenApiServer>>()
+                    .Compare(sourceOperation?.Servers, targetOperation?.Servers, comparisonContext));
+
             // Compare CallBack
             // Compare Security Requirements
             // Compare Extensions
-            // Compare Servers
             // Compare External Docs
             // Compare Tags
         }

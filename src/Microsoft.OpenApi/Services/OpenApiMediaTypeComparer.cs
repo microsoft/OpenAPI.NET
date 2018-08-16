@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -45,9 +46,15 @@ namespace Microsoft.OpenApi.Services
                 .GetComparer<OpenApiSchema>()
                 .Compare(sourceMediaType.Schema, targetMediaType.Schema, comparisonContext);
 
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Content,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiEncoding>>()
+                    .Compare(sourceMediaType.Encoding, sourceMediaType.Encoding, comparisonContext));
+
             // To Do Compare Example
             // To Do Compare Examples
-            // To Do Compare Encoding
             // To Do Compare Extensions
         }
     }

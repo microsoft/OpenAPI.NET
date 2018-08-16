@@ -82,7 +82,13 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<IDictionary<string, OpenApiMediaType>>()
                     .Compare(sourceResponse.Content, targetResponse.Content, comparisonContext));
 
-            // To Do Compare Headers
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Headers,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiHeader>>()
+                    .Compare(sourceResponse.Headers, targetResponse.Headers, comparisonContext));
+
             // To Do Compare Link
             // To Do Compare Extensions
         }
