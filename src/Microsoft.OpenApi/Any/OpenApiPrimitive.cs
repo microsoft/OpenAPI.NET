@@ -41,7 +41,8 @@ namespace Microsoft.OpenApi.Any
         /// Write out content of primitive element
         /// </summary>
         /// <param name="writer"></param>
-        public void Write(IOpenApiWriter writer)
+        /// <param name="specVersion"></param>
+        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             switch (this.PrimitiveType)
             {

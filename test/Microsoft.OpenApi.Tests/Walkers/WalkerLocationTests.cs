@@ -23,7 +23,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             locator.Locations.ShouldBeEquivalentTo(new List<string> {
                 "#/servers",
-                "#/paths",
                 "#/tags"
             });
         }
@@ -37,6 +36,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                     new OpenApiServer(),
                     new OpenApiServer()
                 },
+                Paths = new OpenApiPaths(),
                 Tags = new List<OpenApiTag>()
                 {
                     new OpenApiTag()
@@ -61,6 +61,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         public void LocatePathOperationContentSchema()
         {
             var doc = new OpenApiDocument();
+            doc.Paths = new OpenApiPaths();
             doc.Paths.Add("/test", new OpenApiPathItem()
             {
                 Operations = new Dictionary<OperationType, OpenApiOperation>()
@@ -106,6 +107,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths/~1test/get/responses/200/content/application~1json/schema",
 
             });
+
+            locator.Keys.ShouldAllBeEquivalentTo(new List<string> { "/test","Get","200", "application/json" });
         }
 
         [Fact]
@@ -124,6 +127,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             var doc = new OpenApiDocument()
             {
+                Paths = new OpenApiPaths(),
                 Components = new OpenApiComponents()
                 {
                     Schemas = new Dictionary<string, OpenApiSchema>
@@ -151,6 +155,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
     internal class LocatorVisitor : OpenApiVisitorBase
     {
         public List<string> Locations = new List<string>();
+        public List<string> Keys = new List<string>();
+
         public override void Visit(OpenApiInfo info)
         {
             Locations.Add(this.PathString);
@@ -173,6 +179,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
         public override void Visit(OpenApiPathItem pathItem)
         {
+            Keys.Add(CurrentKeys.Path);
             Locations.Add(this.PathString);
         }
 
@@ -183,10 +190,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
         public override void Visit(OpenApiOperation operation)
         {
+            Keys.Add(CurrentKeys.Operation.ToString());
             Locations.Add(this.PathString);
         }
         public override void Visit(OpenApiResponse response)
         {
+            Keys.Add(CurrentKeys.Response);
             Locations.Add(this.PathString);
         }
 
@@ -197,6 +206,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
         public override void Visit(OpenApiMediaType mediaType)
         {
+            Keys.Add(CurrentKeys.Content);
             Locations.Add(this.PathString);
         }
 

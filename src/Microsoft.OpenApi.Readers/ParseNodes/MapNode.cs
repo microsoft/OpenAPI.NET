@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Schemas;
 using SharpYaml.Serialization;
 
@@ -27,16 +28,16 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
         }
 
-        public MapNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlMappingNode node) : base(
+        public MapNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlNode node) : base(
             context,
             diagnostic)
         {
-            if (node == null)
+            if (!(node is YamlMappingNode mapNode))
             {
-                throw new OpenApiException("Expected map");
+                throw new OpenApiReaderException("Expected map.", node);
             }
 
-            this._node = node;
+            this._node = mapNode;
 
             _nodes = this._node.Children
                 .Select(kvp => new PropertyNode(Context, Diagnostic, kvp.Key.GetScalarValue(), kvp.Value))

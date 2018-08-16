@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
         /// <param name="element">The Open API element.</param>
         /// <param name="writer">The output writer.</param>
-        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="specVersion">Version of the specification the output should conform to</param>
         public static void Serialize<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion)
             where T : IOpenApiSerializable
         {

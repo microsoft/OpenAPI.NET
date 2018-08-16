@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
 
             // specification extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Models
                         // V2 spec actually allows the body to have custom name.
                         // Our library does not support this at the moment.
                         Name = "body",
-                        Schema = content?.Schema,
+                        Schema = content?.Schema ?? new OpenApiSchema(),
                         Required = RequestBody.Required
                     };
 
@@ -309,7 +309,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => s.SerializeAsV2(w));
 
             // specification extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }

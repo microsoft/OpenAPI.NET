@@ -196,6 +196,11 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         internal static string GetJsonCompatibleString(this string value)
         {
+            if (value == null)
+            {
+                return "null";
+            }
+
             // Show the control characters as strings
             // http://json.org/
 

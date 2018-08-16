@@ -25,15 +25,16 @@ namespace Microsoft.OpenApi.Readers
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private IOpenApiVersionService _versionService;
         private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();        
-        internal Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>> ExtensionParsers { get; set; }  = new Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>>();
+        internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; }  = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
+        internal Uri BaseUrl { get; set; }
 
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
-        /// <param name="yamlDocument"></param>
-        /// <param name="diagnostic"></param>
+        /// <param name="yamlDocument">Yaml document to parse.</param>
+        /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal OpenApiDocument Parse(YamlDocument yamlDocument, OpenApiDiagnostic diagnostic)
         {
@@ -47,13 +48,13 @@ namespace Microsoft.OpenApi.Readers
             {
                 case string version when version == "2.0":
                     VersionService = new OpenApiV2VersionService();
-                    doc = this.VersionService.LoadDocument(this.RootNode);
+                    doc = VersionService.LoadDocument(RootNode);
                     diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     break;
 
                 case string version when version.StartsWith("3.0"):
-                    this.VersionService = new OpenApiV3VersionService();
-                    doc = this.VersionService.LoadDocument(this.RootNode);
+                    VersionService = new OpenApiV3VersionService();
+                    doc = VersionService.LoadDocument(RootNode);
                     diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
                     break;
 
@@ -64,6 +65,34 @@ namespace Microsoft.OpenApi.Readers
             return doc;
         }
 
+        /// <summary>
+        /// Initiates the parsing process of a fragment.  Not thread safe and should only be called once on a parsing context
+        /// </summary>
+        /// <param name="yamlDocument"></param>
+        /// <param name="version">OpenAPI version of the fragment</param>
+        /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
+        /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
+        internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version, OpenApiDiagnostic diagnostic) where T: IOpenApiElement
+        {
+            var node = ParseNode.Create(this, diagnostic, yamlDocument.RootNode);
+
+            T element = default(T);
+
+            switch (version)
+            {
+                case OpenApiSpecVersion.OpenApi2_0:
+                    VersionService = new OpenApiV2VersionService();
+                    element = this.VersionService.LoadElement<T>(node);
+                    break;
+
+                case OpenApiSpecVersion.OpenApi3_0:
+                    this.VersionService = new OpenApiV3VersionService();
+                    element = this.VersionService.LoadElement<T>(node);
+                    break;
+            }
+
+            return element;
+        }
 
         /// <summary>
         /// Gets the version of the Open API document.
@@ -82,20 +111,6 @@ namespace Microsoft.OpenApi.Readers
             return versionNode?.GetScalarValue();
         }
 
-        private void ComputeTags(List<OpenApiTag> tags, Func<MapNode, OpenApiTag> loadTag)
-        {
-            // Precompute the tags array so that each tag reference does not require a new deserialization.
-            var tagListPointer = new JsonPointer("#/tags");
-
-            var tagListNode = RootNode.Find(tagListPointer);
-
-            if (tagListNode != null && tagListNode is ListNode)
-            {
-                var tagListNodeAsListNode = (ListNode)tagListNode;
-                tags.AddRange(tagListNodeAsListNode.CreateList(loadTag));
-            }
-        }
-
         /// <summary>
         /// Service providing all Version specific conversion functions
         /// </summary>
@@ -108,7 +123,6 @@ namespace Microsoft.OpenApi.Readers
             set
             {
                 _versionService = value;
-                ComputeTags(Tags, VersionService.TagLoader);
             }
         }
 

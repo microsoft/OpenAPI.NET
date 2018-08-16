@@ -23,9 +23,12 @@ namespace Microsoft.OpenApi.Readers.Interface
         OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type);
 
         /// <summary>
-        /// Function that converts a MapNode into a Tag object in a version specific way
+        /// Loads an OpenAPI Element from a document fragment
         /// </summary>
-        Func<MapNode, OpenApiTag> TagLoader { get; }
+        /// <typeparam name="T">Type of element to load</typeparam>
+        /// <param name="node">document fragment node</param>
+        /// <returns>Instance of OpenAPIElement</returns>
+        T LoadElement<T>(ParseNode node) where T : IOpenApiElement;
 
         /// <summary>
         /// Converts a generic RootNode instance into a strongly typed OpenApiDocument

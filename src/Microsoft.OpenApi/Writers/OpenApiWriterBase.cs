@@ -30,22 +30,15 @@ namespace Microsoft.OpenApi.Writers
         private int _indentLevel;
 
         /// <summary>
-        /// Settings controlling the format and the version of the serialization.
-        /// </summary>
-        private OpenApiSerializerSettings _settings;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        /// <param name="settings">The writer settings.</param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiSerializerSettings settings)
+        public OpenApiWriterBase(TextWriter textWriter)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
 
             Scopes = new Stack<Scope>();
-            this._settings = settings;
         }
 
         /// <summary>

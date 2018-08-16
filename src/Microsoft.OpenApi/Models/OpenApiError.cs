@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public override string ToString()
         {
-            return Message + (!string.IsNullOrEmpty(Pointer) ? " at " + Pointer : "");
+            return Message + (!string.IsNullOrEmpty(Pointer) ? " [" + Pointer + "]" : "" );
         }
     }
 }

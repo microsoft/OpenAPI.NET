@@ -2,8 +2,10 @@
 // Licensed under the MIT license. 
 
 using System;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -25,7 +27,14 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "namespace", (o, n) =>
                 {
-                    o.Namespace = new Uri(n.GetScalarValue(), UriKind.Absolute);
+                    if (Uri.IsWellFormedUriString(n.GetScalarValue(), UriKind.Absolute))
+                    {
+                        o.Namespace = new Uri(n.GetScalarValue(), UriKind.Absolute);
+                    }
+                    else
+                    {
+                        throw new OpenApiReaderException($"Xml Namespace requires absolute URL. '{n.GetScalarValue()}' is not valid.");
+                    }
                 }
             },
             {
@@ -51,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =
             new PatternFieldMap<OpenApiXml>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiXml LoadXml(ParseNode node)

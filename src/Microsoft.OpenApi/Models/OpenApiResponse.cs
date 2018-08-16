@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, l) => l.SerializeAsV3(w));
 
             // extension
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -136,12 +136,20 @@ namespace Microsoft.OpenApi.Models
                         (w, s) => s.SerializeAsV2(w));
 
                     // examples
-                    if (mediatype.Value.Example != null)
+                    if (Content.Values.Any(m => m.Example != null))
                     {
                         writer.WritePropertyName(OpenApiConstants.Examples);
                         writer.WriteStartObject();
-                        writer.WritePropertyName(mediatype.Key);
-                        writer.WriteAny(mediatype.Value.Example);
+
+                        foreach (var mediaTypePair in Content)
+                        {
+                            if (mediaTypePair.Value.Example != null)
+                            {
+                                writer.WritePropertyName(mediaTypePair.Key);
+                                writer.WriteAny(mediaTypePair.Value.Example);
+                            }
+                        }
+
                         writer.WriteEndObject();
                     }
                 }
@@ -151,7 +159,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV2(w));
 
             // extension
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }

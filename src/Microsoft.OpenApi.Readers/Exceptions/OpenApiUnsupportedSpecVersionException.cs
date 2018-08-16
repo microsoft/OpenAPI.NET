@@ -10,9 +10,9 @@ namespace Microsoft.OpenApi.Readers.Exceptions
     /// Defines an exception indicating OpenAPI Reader encountered an unsupported specification version while reading.
     /// </summary>
     [Serializable]
-    public class OpenApiUnsupportedSpecVersionException : OpenApiReaderException
+    public class OpenApiUnsupportedSpecVersionException : Exception
     {
-        const string messagePattern = "OpenAPI specification version {0} is not supported.";
+        const string messagePattern = "OpenAPI specification version '{0}' is not supported.";
 
         /// <summary>
         /// Initializes the <see cref="OpenApiUnsupportedSpecVersionException"/> class with a specification version.
@@ -21,11 +21,6 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         public OpenApiUnsupportedSpecVersionException(string specificationVersion)
             : base(string.Format(CultureInfo.InvariantCulture, messagePattern, specificationVersion))
         {
-            if (string.IsNullOrWhiteSpace(specificationVersion))
-            {
-                throw new ArgumentException("Value cannot be null or white space.", nameof(specificationVersion));
-            }
-
             this.SpecificationVersion = specificationVersion;
         }
 
@@ -38,11 +33,6 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         public OpenApiUnsupportedSpecVersionException(string specificationVersion, Exception innerException)
             : base(string.Format(CultureInfo.InvariantCulture, messagePattern, specificationVersion), innerException)
         {
-            if (string.IsNullOrWhiteSpace(specificationVersion))
-            {
-                throw new ArgumentException("Value cannot be null or white space.", nameof(specificationVersion));
-            }
-
             this.SpecificationVersion = specificationVersion;
         }
 

@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
-        public OpenApiPaths Paths { get; set; } = new OpenApiPaths();
+        public OpenApiPaths Paths { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }
@@ -240,7 +240,10 @@ namespace Microsoft.OpenApi.Models
                 firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
 
             // basePath
-            writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            if (firstServerUrl.AbsolutePath != "/")
+            {
+                writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            }
 
             // Consider all schemes of the URLs in the server list that have the same
             // host, port, and base path as the first server.
@@ -300,6 +303,10 @@ namespace Microsoft.OpenApi.Models
                 }
 
                 return null;
+            }
+
+            if (this.Components == null) {
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
 
             try
