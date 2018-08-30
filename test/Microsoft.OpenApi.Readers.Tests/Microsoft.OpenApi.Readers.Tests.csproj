@@ -159,7 +159,7 @@
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="10.0.3">
         </PackageReference>
-        <PackageReference Include="SharpYaml" Version="1.6.1">
+        <PackageReference Include="SharpYaml" Version="1.6.4">
         </PackageReference>
         <PackageReference Include="xunit" Version="2.3.0">
         </PackageReference>

@@ -26,7 +26,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="SharpYaml" Version="1.6.1" />
+        <PackageReference Include="SharpYaml" Version="1.6.4" />
     </ItemGroup>
 
     <ItemGroup>
