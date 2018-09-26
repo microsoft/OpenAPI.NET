@@ -19,14 +19,9 @@ namespace Microsoft.OpenApi.Expressions
         public override string Expression { get; } = Method;
 
         /// <summary>
-        /// Gets the singleton.
-        /// </summary>
-        public static MethodExpression Instance = new MethodExpression();
-
-        /// <summary>
         /// Private constructor.
         /// </summary>
-        private MethodExpression()
+        public MethodExpression()
         {
         }
     }

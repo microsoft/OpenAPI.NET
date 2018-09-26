@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void MethodExpressionReturnsCorrectExpression()
         {
             // Arrange & Act
-            var method = MethodExpression.Instance;
+            var method = new MethodExpression();
 
             // Assert
             Assert.Equal("$method", method.Expression);

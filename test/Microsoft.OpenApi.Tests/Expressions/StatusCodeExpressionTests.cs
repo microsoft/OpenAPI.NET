@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void StatusCodeExpressionReturnsCorrectExpression()
         {
             // Arrange & Act
-            var statusCode = StatusCodeExpression.Instance;
+            var statusCode = new StatusCodeExpression();
 
             // Assert
             Assert.Equal("$statusCode", statusCode.Expression);
