@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Assert
             // Body parameter is currently not translated via LoadParameter.
             // This design may be revisited and this unit test may likely change.
-            parameter.ShouldBeEquivalentTo(null);
+            parameter.Should().BeNull();
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             // Assert
             // Form data parameter is currently not translated via LoadParameter.
             // This design may be revisited and this unit test may likely change.
-            parameter.ShouldBeEquivalentTo(null);
+            parameter.Should().BeNull();
         }
 
         [Fact]

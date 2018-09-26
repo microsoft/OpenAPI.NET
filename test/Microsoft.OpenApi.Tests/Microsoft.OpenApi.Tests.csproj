@@ -21,9 +21,9 @@
         </PackageReference>
         <PackageReference Include="SharpYaml" Version="1.6.1">
         </PackageReference>
-        <PackageReference Include="xunit" Version="2.3.0">
+        <PackageReference Include="xunit" Version="2.3.1">
         </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0">
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1">
         </PackageReference>
     </ItemGroup>
 

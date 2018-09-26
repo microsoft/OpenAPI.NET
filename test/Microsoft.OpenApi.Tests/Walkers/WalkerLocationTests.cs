@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             });
 
-            locator.Keys.ShouldAllBeEquivalentTo(new List<string> { "/test","Get","200", "application/json" });
+            locator.Keys.ShouldBeEquivalentTo(new List<string> { "/test","Get","200", "application/json" });
         }
 
         [Fact]
