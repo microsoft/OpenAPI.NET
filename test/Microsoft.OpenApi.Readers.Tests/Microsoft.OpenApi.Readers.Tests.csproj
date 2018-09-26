@@ -13,10 +13,6 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="V3Tests\Samples\OpenApiDocument\securedApi.yaml" />
-      <None Remove="V3Tests\Samples\OpenApiOperation\securedOperation.yaml" />
-    </ItemGroup>
-    <ItemGroup>
       <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -73,6 +69,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\multipleCallbacksWithReference.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\basicCallback.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -161,9 +160,9 @@
         </PackageReference>
         <PackageReference Include="SharpYaml" Version="1.6.1">
         </PackageReference>
-        <PackageReference Include="xunit" Version="2.3.0">
+        <PackageReference Include="xunit" Version="2.3.1">
         </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0">
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1">
         </PackageReference>
     </ItemGroup>
 
@@ -205,7 +204,7 @@
         <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2ImplicitSecurityScheme.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\advancedCallbackWithReference.yaml">
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\callbackWithReference.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">

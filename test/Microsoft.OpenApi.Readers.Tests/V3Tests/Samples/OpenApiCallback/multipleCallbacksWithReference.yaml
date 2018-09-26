@@ -1,0 +1,58 @@
+﻿openapi : 3.0.0
+info:
+  title: The API
+  version: 0.9.1
+paths: 
+  "/subscribe":
+    post:
+      requestBody:
+        content:
+          application/json: 
+            schema:
+              type: object
+      responses:
+        200:
+          description: Register
+      callbacks:
+        simpleHook:
+          $ref: "#/components/callbacks/simpleHook" 
+        callback2:
+          "/simplePath": 
+            post:
+              requestBody:
+                description: Callback 2
+                content: 
+                  application/json:
+                    schema:
+                      type: string
+              responses:
+                400:
+                  description: Callback Response
+        callback3:
+          "http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}": 
+            post:
+              requestBody:
+                content:
+                  application/xml: 
+                    schema:
+                      type: object
+              responses:
+                200:
+                  description: Success
+                401:
+                  description: Unauthorized
+                404:
+                  description: Not Found
+components:
+  callbacks:
+    simpleHook:
+      '$request.body#/url':
+        post:
+          requestBody:
+            content:
+              application/json: 
+                schema:
+                  type: object
+          responses:
+            200:
+              description: Success
