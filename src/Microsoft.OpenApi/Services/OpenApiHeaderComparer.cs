@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Services
             {
                 WalkAndAddOpenApiDifference(
                     comparisonContext,
-                    "$ref",
+                    OpenApiConstants.DollarRef,
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Services
             if (sourceHeader.Reference != null)
             {
                 sourceHeader = (OpenApiHeader) comparisonContext.SourceDocument.ResolveReference(
-                    targetHeader.Reference);
+                    sourceHeader.Reference);
             }
 
             if (targetHeader.Reference != null)

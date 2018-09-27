@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Services
             {
                 WalkAndCompare(
                     comparisonContext,
-                    "items",
+                    OpenApiConstants.Items,
                     () => comparisonContext
                         .GetComparer<OpenApiSchema>()
                         .Compare(sourceSchema.Items, targetSchema.Items, comparisonContext));
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Services
             {
                 WalkAndAddOpenApiDifference(
                     comparisonContext,
-                    "$ref",
+                    OpenApiConstants.DollarRef,
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,

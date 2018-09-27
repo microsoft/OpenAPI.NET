@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Services
             {
                 WalkAndAddOpenApiDifference(
                     comparisonContext,
-                    i.ToString(),
+                    targetParameters.IndexOf(newParametersInTarget[i]).ToString(),
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Services
             {
                 WalkAndAddOpenApiDifference(
                     comparisonContext,
-                    i.ToString(),
+                    sourceParameters.IndexOf(removedParameters[i]).ToString(),
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,

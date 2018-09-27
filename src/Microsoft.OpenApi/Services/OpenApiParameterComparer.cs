@@ -54,6 +54,7 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<IDictionary<string, OpenApiMediaType>>()
                     .Compare(sourceParameter.Content, targetParameter.Content, comparisonContext));
 
+            // To Do Add compare for reference object
             // To Do Compare Examples
             // To Do Compare parameter as IOpenApiExtensible
         }

@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
         /// <param name="comparisonContext">The context under which to compare the objects.</param>
-        internal void Compare<TE>(Enum source, Enum target, ComparisonContext comparisonContext)
+        internal void Compare<TEnum>(Enum source, Enum target, ComparisonContext comparisonContext)
         {
             if (source == null && target == null)
             {
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Services
                 comparisonContext.AddOpenApiDifference(new OpenApiDifference
                 {
                     OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                    OpenApiComparedElementType = typeof(TE),
+                    OpenApiComparedElementType = typeof(TEnum),
                     SourceValue = source,
                     TargetValue = target,
                     Pointer = comparisonContext.PathString
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Services
                 comparisonContext.AddOpenApiDifference(new OpenApiDifference
                 {
                     OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                    OpenApiComparedElementType = typeof(T),
+                    OpenApiComparedElementType = typeof(TEnum),
                     SourceValue = source,
                     TargetValue = target,
                     Pointer = comparisonContext.PathString
@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Services
             string segment,
             OpenApiDifference openApiDifference)
         {
-            comparisonContext.Enter(segment.Replace("/", "~1"));
+            comparisonContext.Enter(segment.Replace("/", "~1").Replace("~", "~0"));
             openApiDifference.Pointer = comparisonContext.PathString;
             comparisonContext.AddOpenApiDifference(openApiDifference);
             comparisonContext.Exit();
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Services
             string segment,
             Action compare)
         {
-            comparisonContext.Enter(segment.Replace("/", "~1"));
+            comparisonContext.Enter(segment.Replace("/", "~1").Replace("~", "~0"));
             compare();
             comparisonContext.Exit();
         }

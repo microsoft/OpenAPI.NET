@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Services
 
             WalkAndCompare(
                 comparisonContext,
-                OpenApiConstants.Content,
+                OpenApiConstants.Encoding,
                 () => comparisonContext
                     .GetComparer<IDictionary<string, OpenApiEncoding>>()
                     .Compare(sourceMediaType.Encoding, sourceMediaType.Encoding, comparisonContext));

@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Services
 
             WalkAndCompare(
                 comparisonContext,
-                OpenApiConstants.Components,
+                OpenApiConstants.Servers,
                 () => comparisonContext
                     .GetComparer<IList<OpenApiServer>>()
                     .Compare(sourceOperation?.Servers, targetOperation?.Servers, comparisonContext));

@@ -26,11 +26,11 @@ namespace Microsoft.OpenApi.Services
                 throw Error.ArgumentNull(nameof(target));
             }
 
-            var comparisionContext = new ComparisonContext(new OpenApiComparerFactory(), source, target);
+            var comparisonContext = new ComparisonContext(new OpenApiComparerFactory(), source, target);
 
-            new OpenApiDocumentComparer().Compare(source, target, comparisionContext);
+            new OpenApiDocumentComparer().Compare(source, target, comparisonContext);
 
-            return comparisionContext.OpenApiDifferences;
+            return comparisonContext.OpenApiDifferences;
         }
     }
 }

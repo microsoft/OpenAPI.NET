@@ -51,7 +51,6 @@ namespace Microsoft.OpenApi.Services
             WalkAndCompare(comparisonContext, OpenApiConstants.AllowReserved,
                 () => Compare(sourceEncoding.AllowReserved, targetEncoding.AllowReserved, comparisonContext));
 
-
             WalkAndCompare(comparisonContext, OpenApiConstants.Style,
                 () => Compare<ParameterStyle>(sourceEncoding.Style, targetEncoding.Style, comparisonContext));
 

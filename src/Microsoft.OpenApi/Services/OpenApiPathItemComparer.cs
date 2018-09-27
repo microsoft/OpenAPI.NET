@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Services
 
             WalkAndCompare(
                 comparisonContext,
-                OpenApiConstants.Parameters,
+                OpenApiConstants.Servers,
                 () => comparisonContext
                     .GetComparer<IList<OpenApiServer>>()
                     .Compare(sourcePathItem?.Servers, targetPathItem?.Servers, comparisonContext));
