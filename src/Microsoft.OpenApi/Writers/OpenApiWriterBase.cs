@@ -157,13 +157,21 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write dateTimeOffset value.
+        /// Write DateTime value.
         /// </summary>
-        /// <param name="value">The decimal value.</param>
+        /// <param name="value">The DateTime value.</param>
+        public virtual void WriteValue(DateTime value)
+        {
+            this.WriteValue(value.ToString("o"));
+        }
+
+        /// <summary>
+        /// Write DateTimeOffset value.
+        /// </summary>
+        /// <param name="value">The DateTimeOffset value.</param>
         public virtual void WriteValue(DateTimeOffset value)
         {
-            WriteValueSeparator();
-            Writer.Write(value.ToString("o"));
+            this.WriteValue(value.ToString("o"));
         }
 
         /// <summary>
@@ -217,6 +225,10 @@ namespace Microsoft.OpenApi.Writers
             else if (type == typeof(decimal) || type == typeof(decimal?))
             {
                 WriteValue((decimal)value);
+            }
+            else if ( type == typeof(DateTime) || type == typeof(DateTime?) )
+            {
+                WriteValue((DateTime)value);
             }
             else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
             {
