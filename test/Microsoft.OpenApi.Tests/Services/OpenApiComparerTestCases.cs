@@ -1127,7 +1127,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     new OpenApiDifference
                     {
-                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/properties/property5",
+                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/schema/properties/property5",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = null,
@@ -1139,7 +1139,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/properties/property7",
+                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/schema/properties/property7",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
@@ -1152,7 +1152,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/paths/~1test/get/requestBody/content/application~1xml/properties/property6/properties/property6/properties/property5",
+                            "#/paths/~1test/get/requestBody/content/application~1xml/schema/properties/property6/properties/property6/properties/property5",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = null,
@@ -1165,7 +1165,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/paths/~1test/get/requestBody/content/application~1xml/properties/property6/properties/property6/properties/property7",
+                            "#/paths/~1test/get/requestBody/content/application~1xml/schema/properties/property6/properties/property6/properties/property7",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
@@ -1199,7 +1199,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/paths/~1test/get/responses/200/content/application~1json/items/properties/property5",
+                            "#/paths/~1test/get/responses/200/content/application~1json/schema/items/properties/property5",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = null,
@@ -1212,7 +1212,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/paths/~1test/get/responses/200/content/application~1json/items/properties/property7",
+                            "#/paths/~1test/get/responses/200/content/application~1json/schema/items/properties/property7",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
@@ -1225,7 +1225,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/paths/~1test/get/responses/200/content/application~1json/items/properties/property6/properties/property6/properties/property5",
+                            "#/paths/~1test/get/responses/200/content/application~1json/schema/items/properties/property6/properties/property6/properties/property5",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = null,
@@ -1238,7 +1238,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/paths/~1test/get/responses/200/content/application~1json/items/properties/property6/properties/property6/properties/property7",
+                            "#/paths/~1test/get/responses/200/content/application~1json/schema/items/properties/property6/properties/property6/properties/property7",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema

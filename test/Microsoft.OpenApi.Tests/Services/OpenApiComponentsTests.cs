@@ -373,7 +373,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     new OpenApiDifference
                     {
-                        Pointer = "#/requestBodies/requestBody1/content/application~1json/properties/property5",
+                        Pointer = "#/requestBodies/requestBody1/content/application~1json/schema/properties/property5",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = null,
@@ -385,7 +385,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/requestBodies/requestBody1/content/application~1json/properties/property7",
+                        Pointer = "#/requestBodies/requestBody1/content/application~1json/schema/properties/property7",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
@@ -398,7 +398,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/requestBodies/requestBody1/content/application~1json/properties/property6/properties/property6/properties/property5",
+                            "#/requestBodies/requestBody1/content/application~1json/schema/properties/property6/properties/property6/properties/property5",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = null,
@@ -411,7 +411,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/requestBodies/requestBody1/content/application~1json/properties/property6/properties/property6/properties/property7",
+                            "#/requestBodies/requestBody1/content/application~1json/schema/properties/property6/properties/property6/properties/property7",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
                         OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
                         SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema

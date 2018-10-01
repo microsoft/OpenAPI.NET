@@ -42,9 +42,12 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            comparisonContext
-                .GetComparer<OpenApiSchema>()
-                .Compare(sourceMediaType.Schema, targetMediaType.Schema, comparisonContext);
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Schema,
+                () => comparisonContext
+                    .GetComparer<OpenApiSchema>()
+                    .Compare( sourceMediaType.Schema, targetMediaType.Schema, comparisonContext ) );
 
             WalkAndCompare(
                 comparisonContext,
