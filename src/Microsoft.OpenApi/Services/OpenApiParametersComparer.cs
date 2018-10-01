@@ -30,11 +30,6 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (!sourceParameters.Any() && !targetParameters.Any())
-            {
-                return;
-            }
-
             if (sourceParameters == null || targetParameters == null)
             {
                 comparisonContext.AddOpenApiDifference(
@@ -43,7 +38,7 @@ namespace Microsoft.OpenApi.Services
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         SourceValue = sourceParameters,
                         TargetValue = targetParameters,
-                        OpenApiComparedElementType = typeof(OpenApiParameter),
+                        OpenApiComparedElementType = typeof(IList<OpenApiParameter>),
                         Pointer = comparisonContext.PathString
                     });
 

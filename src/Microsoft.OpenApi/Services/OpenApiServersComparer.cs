@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Services
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         SourceValue = sourceServers,
                         TargetValue = targetServers,
-                        OpenApiComparedElementType = typeof(IList<OpenApiParameter>),
+                        OpenApiComparedElementType = typeof(IList<OpenApiServer>),
                         Pointer = comparisonContext.PathString
                     });
 
