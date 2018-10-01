@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -23,10 +24,66 @@ namespace Microsoft.OpenApi.Services
         {
             if (sourceParameter == null && targetParameter == null)
             {
+                return;
             }
 
-            // To Do Compare Schema
-            // To Do Compare Content
+            if (sourceParameter == null || targetParameter == null)
+            {
+                comparisonContext.AddOpenApiDifference(
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        SourceValue = sourceParameter,
+                        TargetValue = targetParameter,
+                        OpenApiComparedElementType = typeof(OpenApiParameter),
+                        Pointer = comparisonContext.PathString
+                    });
+
+                return;
+            }
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Content,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiMediaType>>()
+                    .Compare(sourceParameter.Content, targetParameter.Content, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.Description,
+                () => Compare(sourceParameter.Description, targetParameter.Description, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.Required,
+                () => Compare(sourceParameter.Required, targetParameter.Required, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.Name,
+                () => Compare(sourceParameter.Name, targetParameter.Name, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.Deprecated,
+                () => Compare(sourceParameter.Deprecated, targetParameter.Deprecated, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.AllowEmptyValue,
+                () => Compare(sourceParameter.AllowEmptyValue, targetParameter.AllowEmptyValue, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.Explode,
+                () => Compare(sourceParameter.Explode, targetParameter.Explode, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.AllowReserved,
+                () => Compare(sourceParameter.AllowReserved, targetParameter.AllowReserved, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.Style,
+                () => Compare<ParameterStyle>(sourceParameter.Style, targetParameter.Style, comparisonContext));
+
+            WalkAndCompare(comparisonContext, OpenApiConstants.In,
+                () => Compare<ParameterLocation>(sourceParameter.In, targetParameter.In, comparisonContext));
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Schema,
+                () => comparisonContext
+                    .GetComparer<OpenApiSchema>()
+                    .Compare(sourceParameter.Schema, targetParameter.Schema, comparisonContext));
+
+            // To Do Add compare for reference object
             // To Do Compare Examples
             // To Do Compare parameter as IOpenApiExtensible
         }

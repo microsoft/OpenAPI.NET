@@ -31,38 +31,17 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            if (sourceOperations != null && targetOperations == null)
+            if (sourceOperations == null || targetOperations == null)
             {
-                foreach (var sourceOperation in sourceOperations)
-                {
-                    WalkAndAddOpenApiDifference(
-                        comparisonContext,
-                        sourceOperation.Key.GetDisplayName(),
-                        new OpenApiDifference
-                        {
-                            OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                            SourceValue = sourceOperation,
-                            OpenApiComparedElementType = typeof(KeyValuePair<OperationType, OpenApiOperation>)
-                        });
-                }
-
-                return;
-            }
-
-            if (sourceOperations == null)
-            {
-                foreach (var targetOperation in targetOperations)
-                {
-                    WalkAndAddOpenApiDifference(
-                        comparisonContext,
-                        targetOperation.Key.GetDisplayName(),
-                        new OpenApiDifference
-                        {
-                            OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                            SourceValue = targetOperation,
-                            OpenApiComparedElementType = typeof(KeyValuePair<OperationType, OpenApiOperation>)
-                        });
-                }
+                comparisonContext.AddOpenApiDifference(
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        SourceValue = sourceOperations,
+                        TargetValue = targetOperations,
+                        OpenApiComparedElementType = typeof(IDictionary<OperationType, OpenApiOperation>),
+                        Pointer = comparisonContext.PathString
+                    });
 
                 return;
             }

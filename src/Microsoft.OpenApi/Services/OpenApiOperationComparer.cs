@@ -52,13 +52,26 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<IList<OpenApiParameter>>()
                     .Compare(sourceOperation?.Parameters, targetOperation?.Parameters, comparisonContext));
 
+            WalkAndCompare(comparisonContext, OpenApiConstants.RequestBody,
+                () => comparisonContext
+                    .GetComparer<OpenApiRequestBody>()
+                    .Compare(sourceOperation?.RequestBody, targetOperation?.RequestBody, comparisonContext));
 
-            // Compare Responses
-            // Compare Request Body
+            WalkAndCompare(comparisonContext, OpenApiConstants.Responses,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiResponse>>()
+                    .Compare(sourceOperation?.Responses, targetOperation?.Responses, comparisonContext));
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Servers,
+                () => comparisonContext
+                    .GetComparer<IList<OpenApiServer>>()
+                    .Compare(sourceOperation?.Servers, targetOperation?.Servers, comparisonContext));
+
             // Compare CallBack
             // Compare Security Requirements
             // Compare Extensions
-            // Compare Servers
             // Compare External Docs
             // Compare Tags
         }

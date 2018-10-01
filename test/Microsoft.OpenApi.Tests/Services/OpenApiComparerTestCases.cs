@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
@@ -55,17 +57,41 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new List<OpenApiDifference>
                 {
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1newPath",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiPathItem)
+                        OpenApiComparedElementType = typeof(OpenApiPathItem),
+                        SourceValue = null,
+                        TargetValue = new OpenApiPathItem
+                        {
+                            Summary = "test",
+                            Description = "test",
+                            Operations = new Dictionary<OperationType, OpenApiOperation>
+                            {
+                                {
+                                    OperationType.Get, new OpenApiOperation()
+                                }
+                            }
+                        }
                     },
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiPathItem)
+                        OpenApiComparedElementType = typeof(OpenApiPathItem),
+                        TargetValue = null,
+                        SourceValue = new OpenApiPathItem
+                        {
+                            Summary = "test",
+                            Description = "test",
+                            Operations = new Dictionary<OperationType, OpenApiOperation>
+                            {
+                                {
+                                    OperationType.Get, new OpenApiOperation()
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -120,17 +146,25 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new List<OpenApiDifference>
                 {
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test/patch",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType,OpenApiOperation>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType, OpenApiOperation>),
+                        SourceValue = null,
+                        TargetValue =
+                            new KeyValuePair<OperationType, OpenApiOperation>(OperationType.Patch,
+                                new OpenApiOperation())
                     },
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test/post",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType,OpenApiOperation>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType, OpenApiOperation>),
+                        TargetValue = null,
+                        SourceValue =
+                            new KeyValuePair<OperationType, OpenApiOperation>(OperationType.Post,
+                                new OpenApiOperation())
                     }
                 }
             };
@@ -161,11 +195,28 @@ namespace Microsoft.OpenApi.Tests.Services
                 new OpenApiDocument(),
                 new List<OpenApiDifference>
                 {
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
-                        Pointer = "#/paths/~1test",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiPathItem)
+                        Pointer = "#/paths",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiPaths),
+                        SourceValue = new OpenApiPaths
+                        {
+                            {
+                                "/test", new OpenApiPathItem
+                                {
+                                    Summary = "test",
+                                    Description = "test",
+                                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                                    {
+                                        {
+                                            OperationType.Get, new OpenApiOperation()
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        TargetValue = null
                     }
                 }
             };
@@ -196,11 +247,28 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new List<OpenApiDifference>
                 {
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
-                        Pointer = "#/paths/~1newPath",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiPathItem)
+                        Pointer = "#/paths",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiPaths),
+                        SourceValue = null,
+                        TargetValue = new OpenApiPaths
+                        {
+                            {
+                                "/newPath", new OpenApiPathItem
+                                {
+                                    Summary = "test",
+                                    Description = "test",
+                                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                                    {
+                                        {
+                                            OperationType.Get, new OpenApiOperation()
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -247,17 +315,24 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new List<OpenApiDifference>
                 {
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test/get",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType,OpenApiOperation>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType, OpenApiOperation>),
+                        TargetValue = null,
+                        SourceValue =
+                            new KeyValuePair<OperationType, OpenApiOperation>(OperationType.Get, new OpenApiOperation())
                     },
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test/post",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType,OpenApiOperation>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType, OpenApiOperation>),
+                        TargetValue = null,
+                        SourceValue =
+                            new KeyValuePair<OperationType, OpenApiOperation>(OperationType.Post,
+                                new OpenApiOperation())
                     }
                 }
             };
@@ -304,17 +379,24 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new List<OpenApiDifference>
                 {
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test/get",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType,OpenApiOperation>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType, OpenApiOperation>),
+                        SourceValue = null,
+                        TargetValue =
+                            new KeyValuePair<OperationType, OpenApiOperation>(OperationType.Get, new OpenApiOperation())
                     },
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test/patch",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType,OpenApiOperation>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<OperationType, OpenApiOperation>),
+                        SourceValue = null,
+                        TargetValue =
+                            new KeyValuePair<OperationType, OpenApiOperation>(OperationType.Patch,
+                                new OpenApiOperation())
                     }
                 }
             };
@@ -420,17 +502,827 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new List<OpenApiDifference>
                 {
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test/summary",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string)
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "test",
+                        TargetValue = "updated"
                     },
-                    new OpenApiDifference()
+                    new OpenApiDifference
                     {
                         Pointer = "#/paths/~1test/description",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string)
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "test",
+                        TargetValue = "updated"
+                    }
+                }
+            };
+
+            // Differences in schema
+            yield return new object[]
+            {
+                "Differences in schema",
+                new OpenApiDocument
+                {
+                    Paths = new OpenApiPaths
+                    {
+                        {
+                            "/test", new OpenApiPathItem
+                            {
+                                Summary = "test",
+                                Description = "test",
+                                Operations = new Dictionary<OperationType, OpenApiOperation>
+                                {
+                                    {
+                                        OperationType.Get, new OpenApiOperation
+                                        {
+                                            Parameters = new List<OpenApiParameter>
+                                            {
+                                                new OpenApiParameter
+                                                {
+                                                    Name = "Test Parameter",
+                                                    In = ParameterLocation.Path,
+                                                    Schema = new OpenApiSchema
+                                                    {
+                                                        Title = "title1",
+                                                        MultipleOf = 3,
+                                                        Maximum = 42,
+                                                        ExclusiveMinimum = true,
+                                                        Minimum = 10,
+                                                        Default = new OpenApiInteger(15),
+                                                        Type = "integer",
+
+                                                        Nullable = true,
+                                                        ExternalDocs = new OpenApiExternalDocs
+                                                        {
+                                                            Url = new Uri("http://example.com/externalDocs")
+                                                        },
+
+                                                        Reference = new OpenApiReference
+                                                        {
+                                                            Type = ReferenceType.Schema,
+                                                            Id = "schemaObject1"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Components = new OpenApiComponents
+                    {
+                        Schemas = new Dictionary<string, OpenApiSchema>
+                        {
+                            ["schemaObject1"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property7"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject2"
+                                        }
+                                    }
+                                }
+                            },
+                            ["schemaObject2"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property5"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject1"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                new OpenApiDocument
+                {
+                    Paths = new OpenApiPaths
+                    {
+                        {
+                            "/test", new OpenApiPathItem
+                            {
+                                Summary = "test",
+                                Description = "test",
+                                Operations = new Dictionary<OperationType, OpenApiOperation>
+                                {
+                                    {
+                                        OperationType.Get, new OpenApiOperation
+                                        {
+                                            Parameters = new List<OpenApiParameter>
+                                            {
+                                                new OpenApiParameter
+                                                {
+                                                    Name = "Test Parameter",
+                                                    In = ParameterLocation.Path,
+                                                    Schema = new OpenApiSchema
+                                                    {
+                                                        Title = "title1",
+                                                        MultipleOf = 3,
+                                                        Maximum = 42,
+                                                        ExclusiveMinimum = true,
+                                                        Minimum = 10,
+                                                        Default = new OpenApiInteger(15),
+                                                        Type = "integer",
+
+                                                        Nullable = true,
+                                                        ExternalDocs = new OpenApiExternalDocs
+                                                        {
+                                                            Url = new Uri("http://example.com/externalDocs")
+                                                        },
+
+                                                        Reference = new OpenApiReference
+                                                        {
+                                                            Type = ReferenceType.Schema,
+                                                            Id = "schemaObject1"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Components = new OpenApiComponents
+                    {
+                        Schemas = new Dictionary<string, OpenApiSchema>
+                        {
+                            ["schemaObject1"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property5"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject2"
+                                        }
+                                    }
+                                }
+                            },
+                            ["schemaObject2"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property5"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject1"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                new List<OpenApiDifference>
+                {
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/parameters/0/schema/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/parameters/0/schema/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/parameters/0/schema/properties/property6/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/parameters/0/schema/properties/property6/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject1/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject1/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject2/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject2/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    }
+                }
+            };
+
+            // Differences in request and response
+            yield return new object[]
+            {
+                "Differences in request and response",
+                new OpenApiDocument
+                {
+                    Paths = new OpenApiPaths
+                    {
+                        {
+                            "/test", new OpenApiPathItem
+                            {
+                                Summary = "test",
+                                Description = "test",
+                                Operations = new Dictionary<OperationType, OpenApiOperation>
+                                {
+                                    {
+                                        OperationType.Get, new OpenApiOperation
+                                        {
+                                            RequestBody = new OpenApiRequestBody
+                                            {
+                                                Description = "description",
+                                                Required = true,
+                                                Content =
+                                                {
+                                                    ["application/xml"] = new OpenApiMediaType
+                                                    {
+                                                        Schema = new OpenApiSchema
+                                                        {
+                                                            Reference = new OpenApiReference
+                                                            {
+                                                                Id = "schemaObject1",
+                                                                Type = ReferenceType.Schema
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            Responses = new OpenApiResponses
+                                            {
+                                                {
+                                                    "200",
+                                                    new OpenApiResponse
+                                                    {
+                                                        Description = "An updated complex object array response",
+                                                        Content =
+                                                        {
+                                                            ["application/json"] = new OpenApiMediaType
+                                                            {
+                                                                Schema = new OpenApiSchema
+                                                                {
+                                                                    Type = "array",
+                                                                    Items = new OpenApiSchema
+                                                                    {
+                                                                        Reference = new OpenApiReference
+                                                                        {
+                                                                            Type = ReferenceType.Schema,
+                                                                            Id = "schemaObject1"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Components = new OpenApiComponents
+                    {
+                        Schemas = new Dictionary<string, OpenApiSchema>
+                        {
+                            ["schemaObject1"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property7"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject2"
+                                        }
+                                    }
+                                }
+                            },
+                            ["schemaObject2"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property5"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject1"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                new OpenApiDocument
+                {
+                    Paths = new OpenApiPaths
+                    {
+                        {
+                            "/test", new OpenApiPathItem
+                            {
+                                Summary = "test",
+                                Description = "test",
+                                Operations = new Dictionary<OperationType, OpenApiOperation>
+                                {
+                                    {
+                                        OperationType.Get, new OpenApiOperation
+                                        {
+                                            RequestBody = new OpenApiRequestBody
+                                            {
+                                                Description = "description",
+                                                Required = true,
+                                                Content =
+                                                {
+                                                    ["application/xml"] = new OpenApiMediaType
+                                                    {
+                                                        Schema = new OpenApiSchema
+                                                        {
+                                                            Reference = new OpenApiReference
+                                                            {
+                                                                Id = "schemaObject1",
+                                                                Type = ReferenceType.Schema
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            Responses = new OpenApiResponses
+                                            {
+                                                {
+                                                    "200",
+                                                    new OpenApiResponse
+                                                    {
+                                                        Description = "An updated complex object array response",
+                                                        Content =
+                                                        {
+                                                            ["application/json"] = new OpenApiMediaType
+                                                            {
+                                                                Schema = new OpenApiSchema
+                                                                {
+                                                                    Type = "array",
+                                                                    Items = new OpenApiSchema
+                                                                    {
+                                                                        Reference = new OpenApiReference
+                                                                        {
+                                                                            Type = ReferenceType.Schema,
+                                                                            Id = "schemaObject1"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "400",
+                                                    new OpenApiResponse
+                                                    {
+                                                        Description = "An updated complex object array response",
+                                                        Content =
+                                                        {
+                                                            ["application/json"] = new OpenApiMediaType
+                                                            {
+                                                                Schema = new OpenApiSchema
+                                                                {
+                                                                    Type = "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Components = new OpenApiComponents
+                    {
+                        Schemas = new Dictionary<string, OpenApiSchema>
+                        {
+                            ["schemaObject1"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property5"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject2"
+                                        }
+                                    }
+                                }
+                            },
+                            ["schemaObject2"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property5"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject1"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                new List<OpenApiDifference>
+                {
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/schema/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/schema/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/requestBody/content/application~1xml/schema/properties/property6/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/requestBody/content/application~1xml/schema/properties/property6/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/responses/400",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiResponse>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiResponse>("400", new OpenApiResponse
+                        {
+                            Description = "An updated complex object array response",
+                            Content =
+                            {
+                                ["application/json"] = new OpenApiMediaType
+                                {
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "string"
+                                    }
+                                }
+                            }
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/responses/200/content/application~1json/schema/items/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/responses/200/content/application~1json/schema/items/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/responses/200/content/application~1json/schema/items/properties/property6/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/responses/200/content/application~1json/schema/items/properties/property6/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject1/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject1/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject2/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject2/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
                     }
                 }
             };

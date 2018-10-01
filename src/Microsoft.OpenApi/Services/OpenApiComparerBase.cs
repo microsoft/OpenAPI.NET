@@ -2,11 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Defines behavior for comparing parts of <see cref="OpenAPiDocument"/> class.
+    /// Defines behavior for comparing parts of <see cref="OpenApiDocument"/> class.
     /// </summary>
     /// <typeparam name="T">Type of class to compare.</typeparam>
     public abstract class OpenApiComparerBase<T>
@@ -63,7 +64,73 @@ namespace Microsoft.OpenApi.Services
                 comparisonContext.AddOpenApiDifference(new OpenApiDifference
                 {
                     OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                    OpenApiComparedElementType = typeof(bool),
+                    OpenApiComparedElementType = typeof(bool?),
+                    SourceValue = source,
+                    TargetValue = target,
+                    Pointer = comparisonContext.PathString
+                });
+            }
+        }
+
+        /// <summary>
+        /// Compares two decimal object.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="comparisonContext">The context under which to compare the objects.</param>
+        internal void Compare(decimal? source, decimal? target, ComparisonContext comparisonContext)
+        {
+            if (source == null && target == null)
+            {
+                return;
+            }
+
+            if (source != target)
+            {
+                comparisonContext.AddOpenApiDifference(new OpenApiDifference
+                {
+                    OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                    OpenApiComparedElementType = typeof(decimal?),
+                    SourceValue = source,
+                    TargetValue = target,
+                    Pointer = comparisonContext.PathString
+                });
+            }
+        }
+
+        /// <summary>
+        /// Compares Enum.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="comparisonContext">The context under which to compare the objects.</param>
+        internal void Compare<TEnum>(Enum source, Enum target, ComparisonContext comparisonContext)
+        {
+            if (source == null && target == null)
+            {
+                return;
+            }
+
+            if (source == null || target == null)
+            {
+                comparisonContext.AddOpenApiDifference(new OpenApiDifference
+                {
+                    OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                    OpenApiComparedElementType = typeof(TEnum),
+                    SourceValue = source,
+                    TargetValue = target,
+                    Pointer = comparisonContext.PathString
+                });
+
+                return;
+            }
+
+            if (!source.Equals(target))
+            {
+                comparisonContext.AddOpenApiDifference(new OpenApiDifference
+                {
+                    OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                    OpenApiComparedElementType = typeof(TEnum),
                     SourceValue = source,
                     TargetValue = target,
                     Pointer = comparisonContext.PathString
@@ -82,7 +149,7 @@ namespace Microsoft.OpenApi.Services
             string segment,
             OpenApiDifference openApiDifference)
         {
-            comparisonContext.Enter(segment.Replace("/", "~1"));
+            comparisonContext.Enter(segment.Replace("~", "~0").Replace("/", "~1"));
             openApiDifference.Pointer = comparisonContext.PathString;
             comparisonContext.AddOpenApiDifference(openApiDifference);
             comparisonContext.Exit();
@@ -99,7 +166,7 @@ namespace Microsoft.OpenApi.Services
             string segment,
             Action compare)
         {
-            comparisonContext.Enter(segment.Replace("/", "~1"));
+            comparisonContext.Enter(segment.Replace("~", "~0").Replace("/", "~1"));
             compare();
             comparisonContext.Exit();
         }

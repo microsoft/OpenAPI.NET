@@ -36,14 +36,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var differences = OpenApiComparer.Compare(source, target).ToList();
             differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
 
-            for (int i = 0; i < differences.Count(); i++)
-            {
-                differences[i].Pointer.ShouldBeEquivalentTo(expectedDifferences[i].Pointer);
-                differences[i].OpenApiComparedElementType
-                    .ShouldBeEquivalentTo( expectedDifferences[i].OpenApiComparedElementType );
-                differences[i].OpenApiDifferenceOperation
-                    .ShouldBeEquivalentTo( expectedDifferences[i].OpenApiDifferenceOperation );
-            }
+            differences.ShouldBeEquivalentTo(expectedDifferences);
         }
     }
 }
