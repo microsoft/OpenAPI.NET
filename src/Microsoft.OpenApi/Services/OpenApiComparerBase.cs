@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Services
             string segment,
             OpenApiDifference openApiDifference)
         {
-            comparisonContext.Enter(segment.Replace("/", "~1").Replace("~", "~0"));
+            comparisonContext.Enter(segment.Replace("~", "~0").Replace("/", "~1"));
             openApiDifference.Pointer = comparisonContext.PathString;
             comparisonContext.AddOpenApiDifference(openApiDifference);
             comparisonContext.Exit();
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Services
             string segment,
             Action compare)
         {
-            comparisonContext.Enter(segment.Replace("/", "~1").Replace("~", "~0"));
+            comparisonContext.Enter(segment.Replace("~", "~0").Replace("/", "~1"));
             compare();
             comparisonContext.Exit();
         }

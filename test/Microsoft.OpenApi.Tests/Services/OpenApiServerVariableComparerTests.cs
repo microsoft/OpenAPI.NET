@@ -247,13 +247,17 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/description",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string)
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "test description",
+                        TargetValue = "test description updated"
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/default",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string)
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "8443",
+                        TargetValue = "1003"
                     }
                 }
             };
@@ -277,13 +281,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var differences = comparisonContext.OpenApiDifferences.ToList();
             differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
 
-            var notExpectedDifferences = differences.Where(
-                actualDiff => !expectedDifferences.Any(
-                    expectedDiff => expectedDiff.Pointer == actualDiff.Pointer
-                        && expectedDiff.OpenApiComparedElementType == actualDiff.OpenApiComparedElementType
-                        && expectedDiff.OpenApiDifferenceOperation == actualDiff.OpenApiDifferenceOperation)).ToList();
-
-            notExpectedDifferences.Count.ShouldBeEquivalentTo(0);
+            differences.ShouldBeEquivalentTo(expectedDifferences);
         }
     }
 }

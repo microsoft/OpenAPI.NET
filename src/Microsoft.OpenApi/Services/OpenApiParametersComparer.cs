@@ -35,28 +35,26 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            var newParametersInTarget = targetParameters?.Where(
-                targetParam => !sourceParameters.Any(
-                    sourceParam => sourceParam.Name == targetParam.Name && sourceParam.In == targetParam.In)).ToList();
-
-            for (var i = 0; i < newParametersInTarget?.Count; i++)
+            if (sourceParameters == null || targetParameters == null)
             {
-                WalkAndAddOpenApiDifference(
-                    comparisonContext,
-                    targetParameters.IndexOf(newParametersInTarget[i]).ToString(),
+                comparisonContext.AddOpenApiDifference(
                     new OpenApiDifference
                     {
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        TargetValue = targetParameters[i],
-                        OpenApiComparedElementType = typeof(OpenApiParameter)
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        SourceValue = sourceParameters,
+                        TargetValue = targetParameters,
+                        OpenApiComparedElementType = typeof(OpenApiParameter),
+                        Pointer = comparisonContext.PathString
                     });
+
+                return;
             }
 
             var removedParameters = sourceParameters?.Where(
                 sourceParam => !targetParameters.Any(
                     targetParam => sourceParam.Name == targetParam.Name && sourceParam.In == targetParam.In)).ToList();
 
-            for (var i = 0; i < removedParameters.Count; i++)
+            for (var i = removedParameters.Count - 1; i >= 0; i--)
             {
                 WalkAndAddOpenApiDifference(
                     comparisonContext,
@@ -69,9 +67,25 @@ namespace Microsoft.OpenApi.Services
                     });
             }
 
-            for (var i = 0; i < sourceParameters.Count; i++)
+            var newParametersInTarget = targetParameters?.Where(
+                targetParam => !sourceParameters.Any(
+                    sourceParam => sourceParam.Name == targetParam.Name && sourceParam.In == targetParam.In)).ToList();
+
+            foreach (var newParameterInTarget in newParametersInTarget)
             {
-                var sourceParameter = sourceParameters[i];
+                WalkAndAddOpenApiDifference(
+                    comparisonContext,
+                    targetParameters.IndexOf(newParameterInTarget).ToString(),
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        TargetValue = newParameterInTarget,
+                        OpenApiComparedElementType = typeof(OpenApiParameter)
+                    });
+            }
+
+            foreach (var sourceParameter in sourceParameters)
+            {
                 var targetParameter = targetParameters
                     .FirstOrDefault(param => param.Name == sourceParameter.Name && param.In == sourceParameter.In);
 
@@ -82,7 +96,7 @@ namespace Microsoft.OpenApi.Services
 
                 WalkAndCompare(
                     comparisonContext,
-                    i.ToString(),
+                    targetParameters.IndexOf(targetParameter).ToString(),
                     () => comparisonContext
                         .GetComparer<OpenApiParameter>()
                         .Compare(sourceParameter, targetParameter, comparisonContext));

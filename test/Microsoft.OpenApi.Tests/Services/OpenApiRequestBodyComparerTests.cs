@@ -257,13 +257,17 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/description",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string)
+                        OpenApiComparedElementType = typeof(string),
+                        TargetValue = "udpated description",
+                        SourceValue = "description"
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/required",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?)
+                        OpenApiComparedElementType = typeof(bool?),
+                        TargetValue = false,
+                        SourceValue = true
                     }
                 }
             };
@@ -308,13 +312,30 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/content/application~1xml",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiMediaType>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiMediaType>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiMediaType>("application/xml", new OpenApiMediaType
+                        {
+                            Schema = new OpenApiSchema
+                            {
+                                Type = "string"
+                            }
+                        })
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/content/application~1json",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiMediaType>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiMediaType>),
+                        TargetValue = null,
+                        SourceValue = new KeyValuePair<string, OpenApiMediaType>("application/json",
+                            new OpenApiMediaType
+                            {
+                                Schema = new OpenApiSchema
+                                {
+                                    Type = "string"
+                                }
+                            })
                     }
                 }
             };
@@ -345,7 +366,23 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiRequestBody)
+                        OpenApiComparedElementType = typeof(OpenApiRequestBody),
+                        SourceValue = null,
+                        TargetValue = new OpenApiRequestBody
+                        {
+                            Description = "udpated description",
+                            Required = false,
+                            Content =
+                            {
+                                ["application/xml"] = new OpenApiMediaType
+                                {
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "string"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -376,7 +413,23 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiRequestBody)
+                        OpenApiComparedElementType = typeof(OpenApiRequestBody),
+                        SourceValue = new OpenApiRequestBody
+                        {
+                            Description = "udpated description",
+                            Required = false,
+                            Content =
+                            {
+                                ["application/xml"] = new OpenApiMediaType
+                                {
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "string"
+                                    }
+                                }
+                            }
+                        },
+                        TargetValue = null
                     }
                 }
             };
@@ -413,7 +466,17 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/$ref",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiReference)
+                        OpenApiComparedElementType = typeof(OpenApiReference),
+                        TargetValue = new OpenApiReference
+                        {
+                            Id = "NewId",
+                            Type = ReferenceType.RequestBody
+                        },
+                        SourceValue = new OpenApiReference
+                        {
+                            Id = "Id",
+                            Type = ReferenceType.RequestBody
+                        }
                     }
                 }
             };
@@ -450,27 +513,51 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/content/application~1json/properties/property5",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/content/application~1json/properties/property7",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
                     },
                     new OpenApiDifference
                     {
                         Pointer =
                             "#/content/application~1json/properties/property6/properties/property6/properties/property5",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSchema>("property5", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        })
                     },
                     new OpenApiDifference
                     {
                         Pointer =
                             "#/content/application~1json/properties/property6/properties/property6/properties/property7",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>),
+                        SourceValue = new KeyValuePair<string, OpenApiSchema>("property7", new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }),
+                        TargetValue = null
                     }
                 }
             };
@@ -495,14 +582,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
 
-            var notExpectedDifferences = differences.Where(
-                actualDiff => !expectedDifferences.Any(
-                    expectedDiff => expectedDiff.Pointer == actualDiff.Pointer
-                        && expectedDiff.OpenApiComparedElementType == actualDiff.OpenApiComparedElementType
-                        && expectedDiff.OpenApiDifferenceOperation ==
-                            actualDiff.OpenApiDifferenceOperation)).ToList();
-
-            notExpectedDifferences.Count.ShouldBeEquivalentTo(0);
+            differences.ShouldBeEquivalentTo(expectedDifferences);
         }
     }
 }

@@ -287,7 +287,9 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/0/description",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string)
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "description1",
+                        TargetValue = "description2"
                     }
                 }
             };
@@ -389,19 +391,103 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/0",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiServer)
+                        OpenApiComparedElementType = typeof(OpenApiServer),
+                        SourceValue = null,
+                        TargetValue = new OpenApiServer
+                        {
+                            Description = "description1",
+                            Url = "https://{username}.example.com:{port}/test",
+                            Variables = new Dictionary<string, OpenApiServerVariable>
+                            {
+                                ["username"] = new OpenApiServerVariable
+                                {
+                                    Default = "unknown",
+                                    Description = "variableDescription1"
+                                },
+                                ["port"] = new OpenApiServerVariable
+                                {
+                                    Default = "8443",
+                                    Description = "variableDescription2",
+                                    Enum = new List<string>
+                                    {
+                                        "443",
+                                        "8443"
+                                    }
+                                },
+                                ["basePath"] = new OpenApiServerVariable
+                                {
+                                    Default = "v1"
+                                }
+                            }
+                        }
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/1",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiServer)
+                        OpenApiComparedElementType = typeof(OpenApiServer),
+                        SourceValue = null,
+                        TargetValue = new OpenApiServer
+                        {
+                            Description = "description3",
+                            Url = "https://{username}.example.com:{port}/{basePath}/test",
+                            Variables = new Dictionary<string, OpenApiServerVariable>
+                            {
+                                ["username"] = new OpenApiServerVariable
+                                {
+                                    Default = "unknown",
+                                    Description = "variableDescription1"
+                                },
+                                ["port"] = new OpenApiServerVariable
+                                {
+                                    Default = "8443",
+                                    Description = "variableDescription2",
+                                    Enum = new List<string>
+                                    {
+                                        "443",
+                                        "8443"
+                                    }
+                                },
+                                ["basePath"] = new OpenApiServerVariable
+                                {
+                                    Default = "v1"
+                                }
+                            }
+                        }
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/0",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiServer)
+                        OpenApiComparedElementType = typeof(OpenApiServer),
+                        TargetValue = null,
+                        SourceValue = new OpenApiServer
+                        {
+                            Description = "description1",
+                            Url = "https://{username}.example.com:{port}/{basePath}",
+                            Variables = new Dictionary<string, OpenApiServerVariable>
+                            {
+                                ["username"] = new OpenApiServerVariable
+                                {
+                                    Default = "unknown",
+                                    Description = "variableDescription1"
+                                },
+                                ["port"] = new OpenApiServerVariable
+                                {
+                                    Default = "8443",
+                                    Description = "variableDescription2",
+                                    Enum = new List<string>
+                                    {
+                                        "443",
+                                        "8443"
+                                    }
+                                },
+                                ["basePath"] = new OpenApiServerVariable
+                                {
+                                    Default = "v1"
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -425,13 +511,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var differences = comparisonContext.OpenApiDifferences.ToList();
             differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
 
-            var notExpectedDifferences = differences.Where(
-                actualDiff => !expectedDifferences.Any(
-                    expectedDiff => expectedDiff.Pointer == actualDiff.Pointer
-                        && expectedDiff.OpenApiComparedElementType == actualDiff.OpenApiComparedElementType
-                        && expectedDiff.OpenApiDifferenceOperation == actualDiff.OpenApiDifferenceOperation)).ToList();
-
-            notExpectedDifferences.Count.ShouldBeEquivalentTo(0);
+            differences.ShouldBeEquivalentTo(expectedDifferences);
         }
     }
 }

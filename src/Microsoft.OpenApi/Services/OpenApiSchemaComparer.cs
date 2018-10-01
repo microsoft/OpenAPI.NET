@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Services
                                 new OpenApiDifference
                                 {
                                     OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                                    TargetValue = sourceSchemaProperty,
+                                    SourceValue = sourceSchemaProperty,
                                     OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
                                 });
                         }

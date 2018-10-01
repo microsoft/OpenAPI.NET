@@ -45,30 +45,14 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            var newServersInTarget = targetServers.Where(
-                targetServer => sourceServers.All(sourceServer => sourceServer.Url != targetServer.Url)).ToList();
-
-            for (var i = 0; i < newServersInTarget?.Count; i++)
-            {
-                WalkAndAddOpenApiDifference(
-                    comparisonContext,
-                    i.ToString(),
-                    new OpenApiDifference
-                    {
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        TargetValue = newServersInTarget[i],
-                        OpenApiComparedElementType = typeof(OpenApiServer)
-                    });
-            }
-
             var removedServers = sourceServers.Where(
                 sourceServer => targetServers.All(targetServer => sourceServer.Url != targetServer.Url)).ToList();
 
-            for (var i = 0; i < removedServers.Count; i++)
+            for (var i = removedServers.Count - 1; i >= 0; i--)
             {
                 WalkAndAddOpenApiDifference(
                     comparisonContext,
-                    i.ToString(),
+                    removedServers.IndexOf(removedServers[i]).ToString(),
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
@@ -77,9 +61,24 @@ namespace Microsoft.OpenApi.Services
                     });
             }
 
-            for (var i = 0; i < sourceServers.Count; i++)
+            var newServersInTarget = targetServers.Where(
+                targetServer => sourceServers.All(sourceServer => sourceServer.Url != targetServer.Url)).ToList();
+
+            foreach (var newServerInTarget in newServersInTarget)
             {
-                var sourceServer = sourceServers[i];
+                WalkAndAddOpenApiDifference(
+                    comparisonContext,
+                    targetServers.IndexOf(newServerInTarget).ToString(),
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        TargetValue = newServerInTarget,
+                        OpenApiComparedElementType = typeof(OpenApiServer)
+                    });
+            }
+
+            foreach (var sourceServer in sourceServers)
+            {
                 var targetServer = targetServers
                     .FirstOrDefault(server => server.Url == sourceServer.Url);
 
@@ -90,7 +89,7 @@ namespace Microsoft.OpenApi.Services
 
                 WalkAndCompare(
                     comparisonContext,
-                    i.ToString(),
+                    targetServers.IndexOf(targetServer).ToString(),
                     () => comparisonContext
                         .GetComparer<OpenApiServer>()
                         .Compare(sourceServer, targetServer, comparisonContext));

@@ -241,25 +241,33 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/contentType",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string)
+                        OpenApiComparedElementType = typeof(string),
+                        TargetValue = "image/jpeg",
+                        SourceValue = "image/png, image/jpeg"
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/style",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(ParameterStyle)
+                        OpenApiComparedElementType = typeof(ParameterStyle),
+                        TargetValue = ParameterStyle.Form,
+                        SourceValue = ParameterStyle.Simple
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/explode",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?)
+                        OpenApiComparedElementType = typeof(bool?),
+                        TargetValue = false,
+                        SourceValue = true
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/allowReserved",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?)
+                        OpenApiComparedElementType = typeof(bool?),
+                        TargetValue = false,
+                        SourceValue = true
                     }
                 }
             };
@@ -282,7 +290,15 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiEncoding)
+                        OpenApiComparedElementType = typeof(OpenApiEncoding),
+                        SourceValue = null,
+                        TargetValue = new OpenApiEncoding
+                        {
+                            ContentType = "image/jpeg",
+                            Style = ParameterStyle.Form,
+                            Explode = false,
+                            AllowReserved = false
+                        }
                     }
                 }
             };
@@ -305,7 +321,15 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiEncoding)
+                        OpenApiComparedElementType = typeof(OpenApiEncoding),
+                        TargetValue = null,
+                        SourceValue = new OpenApiEncoding
+                        {
+                            ContentType = "image/jpeg",
+                            Style = ParameterStyle.Form,
+                            Explode = false,
+                            AllowReserved = false
+                        }
                     }
                 }
             };
@@ -329,14 +353,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var differences = comparisonContext.OpenApiDifferences.ToList();
             differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
 
-            var notExpectedDifferences = differences.Where(
-                actualDiff => !expectedDifferences.Any(
-                    expectedDiff => expectedDiff.Pointer == actualDiff.Pointer
-                        && expectedDiff.OpenApiComparedElementType == actualDiff.OpenApiComparedElementType
-                        && expectedDiff.OpenApiDifferenceOperation ==
-                            actualDiff.OpenApiDifferenceOperation)).ToList();
-
-            notExpectedDifferences.Count.ShouldBeEquivalentTo(0);
+            differences.ShouldBeEquivalentTo(expectedDifferences);
         }
     }
 }
