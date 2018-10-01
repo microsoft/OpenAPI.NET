@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -171,6 +172,20 @@ property10: 'null'
 property11: ''"
             };
 
+            // DateTime
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = new DateTime(1970, 01, 01),
+                    ["property2"] = new DateTimeOffset(new DateTime(1970, 01, 01), TimeSpan.FromHours(3)),
+                    ["property3"] = new DateTime(2018, 04, 03),
+                },
+                @"property1: '1970-01-01T00:00:00.0000000'
+property2: '1970-01-01T00:00:00.0000000+03:00'
+property3: '2018-04-03T00:00:00.0000000'"
+            };
+
             // Nested map
             yield return new object[]
             {
@@ -237,13 +252,18 @@ property4: value4"
 
         private void WriteValueRecursive(OpenApiYamlWriter writer, object value)
         {
-            if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
+            if (value == null
+                || value.GetType().IsPrimitive
+                || value is decimal
+                || value is string
+                || value is DateTimeOffset
+                || value is DateTime)
             {
                 writer.WriteValue(value);
             }
             else if (value.GetType().IsGenericType &&
                 (typeof(IDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
-                    typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
+                    typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ) )
             {
                 writer.WriteStartObject();
                 foreach (var elementValue in (dynamic)(value))
@@ -283,6 +303,47 @@ property4: value4"
             actualYaml = actualYaml.MakeLineBreaksEnvironmentNeutral();
             expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
             actualYaml.Should().Be(expectedYaml);
+        }
+
+        public static IEnumerable<object[]> WriteDateTimeAsJsonTestCases()
+        {
+            yield return new object[]
+            {
+                new DateTimeOffset(2018, 1, 1, 10, 20, 30, TimeSpan.Zero)
+            };
+
+            yield return new object[]
+            {
+                new DateTimeOffset(2018, 1, 1, 10, 20, 30, 100, TimeSpan.FromHours(14))
+            };
+
+            yield return new object[]
+            {
+                DateTimeOffset.UtcNow + TimeSpan.FromDays(4)
+            };
+
+            yield return new object[]
+            {
+                DateTime.UtcNow + TimeSpan.FromDays(4)
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(WriteDateTimeAsJsonTestCases))]
+        public void WriteDateTimeAsJsonShouldMatchExpected(DateTimeOffset dateTimeOffset)
+        {
+            // Arrange
+            var outputString = new StringWriter();
+            var writer = new OpenApiYamlWriter(outputString);
+
+            // Act
+            writer.WriteValue(dateTimeOffset);
+
+            var writtenString = outputString.GetStringBuilder().ToString();
+            var expectedString = " '" + dateTimeOffset.ToString("o") + "'";
+
+            // Assert
+            writtenString.Should().Be(expectedString);
         }
     }
 }

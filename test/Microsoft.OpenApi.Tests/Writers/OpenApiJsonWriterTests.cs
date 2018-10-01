@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -134,6 +135,17 @@ namespace Microsoft.OpenApi.Tests.Writers
                 }
             };
 
+            // DateTime
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = new DateTime(1970, 01, 01),
+                    ["property2"] = new DateTimeOffset(new DateTime(1970, 01, 01)),
+                    ["property3"] = new DateTime(2018, 04, 03),
+                }
+            };
+
             // Nested map
             yield return new object[]
             {
@@ -183,7 +195,12 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         private void WriteValueRecursive(OpenApiJsonWriter writer, object value)
         {
-            if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
+            if (value == null 
+                || value.GetType().IsPrimitive 
+                || value is decimal 
+                || value is string 
+                || value is DateTimeOffset
+                || value is DateTime)
             {
                 writer.WriteValue(value);
             }
@@ -229,6 +246,50 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Assert
             parsedObject.ShouldBeEquivalentTo(expectedObject);
+        }
+
+        public static IEnumerable<object[]> WriteDateTimeAsJsonTestCases()
+        {
+            yield return new object[]
+            {
+                new DateTimeOffset(2018, 1, 1, 10, 20, 30, TimeSpan.Zero),
+            };
+
+            yield return new object[]
+            {
+                new DateTimeOffset(2018, 1, 1, 10, 20, 30, 100, TimeSpan.FromHours(14)),
+            };
+
+            yield return new object[]
+            {
+                DateTimeOffset.UtcNow + TimeSpan.FromDays(4)
+            };
+
+            yield return new object[]
+            {
+                DateTime.UtcNow + TimeSpan.FromDays(4)
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(WriteDateTimeAsJsonTestCases))]
+        public void WriteDateTimeAsJsonShouldMatchExpected(DateTimeOffset dateTimeOffset)
+        {
+            // Arrange
+            var outputString = new StringWriter();
+            var writer = new OpenApiJsonWriter(outputString);
+
+            // Act
+            writer.WriteValue(dateTimeOffset);
+
+            var writtenString = outputString.GetStringBuilder().ToString();
+            var expectedString = JsonConvert.SerializeObject(dateTimeOffset, new JsonSerializerSettings
+            {
+                DateFormatString = "yyyy-MM-ddTHH:mm:ss.fffffffK",
+            });
+
+            // Assert
+            writtenString.Should().Be(expectedString);
         }
     }
 }

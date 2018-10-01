@@ -97,9 +97,10 @@ namespace Microsoft.OpenApi.Tests.Writers
             var dateTimeValue = new OpenApiDateTime(input);
 
             var json = WriteAsJson(dateTimeValue);
+            var expectedJson = "\"" + input.ToString("o") + "\"";
 
             // Assert
-            json.Should().Be(input.ToString("o"));
+            json.Should().Be(expectedJson);
         }
 
         [Theory]
