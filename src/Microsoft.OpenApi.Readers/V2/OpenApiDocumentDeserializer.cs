@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -191,7 +192,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 var pieces = host.Split(':');
                 host = pieces.First();
-                port = int.Parse(pieces.Last());
+                port = int.Parse(pieces.Last(), CultureInfo.InvariantCulture);
             }
 
             var uriBuilder = new UriBuilder()

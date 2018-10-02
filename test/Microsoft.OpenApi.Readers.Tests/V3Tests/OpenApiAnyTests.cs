@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -43,7 +44,7 @@ aDateTime: 2017-01-01
                     ["aString"] = new OpenApiString("fooBar"),
                     ["aInteger"] = new OpenApiInteger(10),
                     ["aDouble"] = new OpenApiDouble(2.34),
-                    ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01"))
+                    ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))
                 });
         }
 
@@ -75,7 +76,7 @@ aDateTime: 2017-01-01
                     new OpenApiString("fooBar"),
                     new OpenApiInteger(10),
                     new OpenApiDouble(2.34),
-                    new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01"))
+                    new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))
                 });
         }
 
@@ -123,7 +124,7 @@ aDateTime: 2017-01-01
             diagnostic.Errors.Should().BeEmpty();
 
             any.ShouldBeEquivalentTo(
-                new OpenApiDateTime(DateTimeOffset.Parse("2012-07-23T12:33:00"))
+                new OpenApiDateTime(DateTimeOffset.Parse("2012-07-23T12:33:00", CultureInfo.InvariantCulture))
             );
         }
     }
