@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Microsoft.OpenApi.Readers.V3
 {
@@ -26,13 +27,13 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.MultipleOf = decimal.Parse(n.GetScalarValue());
+                    o.MultipleOf = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
                 "maximum", (o, n) =>
                 {
-                    o.Maximum = decimal.Parse(n.GetScalarValue());
+                    o.Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -44,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "minimum", (o, n) =>
                 {
-                    o.Minimum = decimal.Parse(n.GetScalarValue());
+                    o.Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -56,13 +57,13 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "maxLength", (o, n) =>
                 {
-                    o.MaxLength = int.Parse(n.GetScalarValue());
+                    o.MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
                 "minLength", (o, n) =>
                 {
-                    o.MinLength = int.Parse(n.GetScalarValue());
+                    o.MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -74,13 +75,13 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "maxItems", (o, n) =>
                 {
-                    o.MaxItems = int.Parse(n.GetScalarValue());
+                    o.MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
                 "minItems", (o, n) =>
                 {
-                    o.MinItems = int.Parse(n.GetScalarValue());
+                    o.MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -92,13 +93,13 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "maxProperties", (o, n) =>
                 {
-                    o.MaxProperties = int.Parse(n.GetScalarValue());
+                    o.MaxProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
                 "minProperties", (o, n) =>
                 {
-                    o.MinProperties = int.Parse(n.GetScalarValue());
+                    o.MinProperties = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {

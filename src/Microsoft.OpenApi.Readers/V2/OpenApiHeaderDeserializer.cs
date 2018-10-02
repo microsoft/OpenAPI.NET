@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Globalization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -54,10 +55,10 @@ namespace Microsoft.OpenApi.Readers.V2
                     GetOrCreateSchema(o).Default = n.CreateAny();
                 }
             },
-                        {
+            {
                 "maximum", (o, n) =>
                 {
-                    GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -69,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "minimum", (o, n) =>
                 {
-                    GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -81,13 +82,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "maxLength", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
                 "minLength", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -99,13 +100,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "maxItems", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MaxItems = int.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
                 "minItems", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MinItems = int.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -117,7 +118,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "multipleOf", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MultipleOf = decimal.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MultipleOf = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -90,25 +91,25 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "minimum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
                     "maximum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
                     "maxLength", (o, n) =>
                     {
-                        GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
                     "minLength", (o, n) =>
                     {
-                        GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
