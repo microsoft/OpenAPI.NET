@@ -69,11 +69,28 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<IList<OpenApiServer>>()
                     .Compare(sourceOperation?.Servers, targetOperation?.Servers, comparisonContext));
 
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Tags,
+                () => comparisonContext
+                    .GetComparer<IList<OpenApiTag>>()
+                    .Compare(sourceOperation?.Tags, targetOperation?.Tags, comparisonContext));
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Security,
+                () => comparisonContext
+                    .GetComparer<IList<OpenApiSecurityRequirement>>()
+                    .Compare(sourceOperation?.Security, targetOperation?.Security, comparisonContext));
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.ExternalDocs,
+                () => comparisonContext
+                    .GetComparer<OpenApiExternalDocs>()
+                    .Compare(sourceOperation?.ExternalDocs, targetOperation?.ExternalDocs, comparisonContext));
+
             // Compare CallBack
-            // Compare Security Requirements
-            // Compare Extensions
-            // Compare External Docs
-            // Compare Tags
         }
     }
 }

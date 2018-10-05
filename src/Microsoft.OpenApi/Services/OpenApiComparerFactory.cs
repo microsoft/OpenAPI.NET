@@ -33,6 +33,10 @@ namespace Microsoft.OpenApi.Services
             {typeof(IDictionary<string, OpenApiParameter>), new OpenApiDictionaryComparer<OpenApiParameter>()},
             {typeof(IDictionary<string, OpenApiRequestBody>), new OpenApiDictionaryComparer<OpenApiRequestBody>()},
             {typeof(IDictionary<string, OpenApiSchema>), new OpenApiDictionaryComparer<OpenApiSchema>()},
+            {
+                typeof(IDictionary<string, OpenApiSecurityScheme>),
+                new OpenApiDictionaryComparer<OpenApiSecurityScheme>()
+            },
             {typeof(OpenApiHeader), new OpenApiHeaderComparer()},
             {typeof(OpenApiRequestBody), new OpenApiRequestBodyComparer()},
             {typeof(OpenApiResponse), new OpenApiResponseComparer()},
@@ -40,7 +44,18 @@ namespace Microsoft.OpenApi.Services
             {typeof(OpenApiEncoding), new OpenApiEncodingComparer()},
             {typeof(IList<OpenApiServer>), new OpenApiServersComparer()},
             {typeof(OpenApiServer), new OpenApiServerComparer()},
-            {typeof(OpenApiServerVariable), new OpenApiServerVariableComparer()}
+            {typeof(OpenApiServerVariable), new OpenApiServerVariableComparer()},
+            {typeof(OpenApiOAuthFlow), new OpenApiOAuthFlowComparer()},
+            {typeof(OpenApiOAuthFlows), new OpenApiOAuthFlowsComparer()},
+            {typeof(OpenApiSecurityRequirement), new OpenApiSecurityRequirementComparer()},
+            {typeof(OpenApiInfo), new OpenApiInfoComparer()},
+            {typeof(OpenApiContact), new OpenApiContactComparer()},
+            {typeof(OpenApiLicense), new OpenApiLicenseComparer()},
+            {typeof(IList<OpenApiSecurityRequirement>), new OpenApiOrderedListComparer<OpenApiSecurityRequirement>()},
+            {typeof(IList<OpenApiTag>), new OpenApiOrderedListComparer<OpenApiTag>()},
+            {typeof(OpenApiExternalDocs), new OpenApiExternalDocsComparer()},
+            {typeof(OpenApiTag), new OpenApiTagComparer()},
+            {typeof(OpenApiSecurityScheme), new OpenApiSecuritySchemeComparer()}
         };
 
         private readonly Dictionary<Type, object> _typeToComparerMap = new Dictionary<Type, object>();

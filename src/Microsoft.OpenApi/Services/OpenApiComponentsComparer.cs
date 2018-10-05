@@ -77,8 +77,14 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<IDictionary<string, OpenApiHeader>>()
                     .Compare(sourceComponents.Headers, targetComponents.Headers, comparisonContext));
 
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.SecuritySchemes,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiSecurityScheme>>()
+                    .Compare(sourceComponents.SecuritySchemes, targetComponents.SecuritySchemes, comparisonContext));
+
             // To Do compare Examples
-            // To Do compare SecuritySchemes
             // To Do compare Links
             // To Do compare Callbacks
             // To Do compare Extensions

@@ -1326,6 +1326,727 @@ namespace Microsoft.OpenApi.Tests.Services
                     }
                 }
             };
+
+            // Differences in tags and security requirements
+            yield return new object[]
+            {
+                "Differences in tags and security requirements",
+                new OpenApiDocument
+                {
+                    Paths = new OpenApiPaths
+                    {
+                        {
+                            "/test", new OpenApiPathItem
+                            {
+                                Summary = "test",
+                                Description = "test",
+                                Operations = new Dictionary<OperationType, OpenApiOperation>
+                                {
+                                    {
+                                        OperationType.Get, new OpenApiOperation
+                                        {
+                                            RequestBody = new OpenApiRequestBody
+                                            {
+                                                Description = "description",
+                                                Required = true,
+                                                Content =
+                                                {
+                                                    ["application/xml"] = new OpenApiMediaType
+                                                    {
+                                                        Schema = new OpenApiSchema
+                                                        {
+                                                            Reference = new OpenApiReference
+                                                            {
+                                                                Id = "schemaObject1",
+                                                                Type = ReferenceType.Schema
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            Responses = new OpenApiResponses
+                                            {
+                                                {
+                                                    "200",
+                                                    new OpenApiResponse
+                                                    {
+                                                        Description = "An updated complex object array response",
+                                                        Content =
+                                                        {
+                                                            ["application/json"] = new OpenApiMediaType
+                                                            {
+                                                                Schema = new OpenApiSchema
+                                                                {
+                                                                    Type = "array",
+                                                                    Items = new OpenApiSchema
+                                                                    {
+                                                                        Reference = new OpenApiReference
+                                                                        {
+                                                                            Type = ReferenceType.Schema,
+                                                                            Id = "schemaObject1"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            Security = new List<OpenApiSecurityRequirement>
+                                            {
+                                                new OpenApiSecurityRequirement
+                                                {
+                                                    [
+                                                        new OpenApiSecurityScheme
+                                                        {
+                                                            Reference = new OpenApiReference
+                                                            {
+                                                                Type = ReferenceType.SecurityScheme,
+                                                                Id = "scheme1"
+                                                            }
+                                                        }
+                                                    ] = new List<string>()
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Tags = new List<OpenApiTag>
+                    {
+                        new OpenApiTag
+                        {
+                            Description = "test description",
+                            Name = "Tag1",
+                            ExternalDocs = new OpenApiExternalDocs
+                            {
+                                Description = "test description",
+                                Url = new Uri("http://localhost/doc")
+                            }
+                        },
+                        new OpenApiTag
+                        {
+                            Description = "test description",
+                            Name = "Tag2",
+                            ExternalDocs = new OpenApiExternalDocs
+                            {
+                                Description = "test description",
+                                Url = new Uri("http://localhost/doc")
+                            }
+                        }
+                    },
+                    Components = new OpenApiComponents
+                    {
+                        Schemas = new Dictionary<string, OpenApiSchema>
+                        {
+                            ["schemaObject1"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property7"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject2"
+                                        }
+                                    }
+                                }
+                            },
+                            ["schemaObject2"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property5"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject1"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+                        {
+                            {
+                                "scheme1", new OpenApiSecurityScheme
+                                {
+                                    Description = "Test",
+                                    Name = "Test",
+                                    Flows = new OpenApiOAuthFlows
+                                    {
+                                        Implicit = new OpenApiOAuthFlow
+                                        {
+                                            AuthorizationUrl = new Uri("http://localhost/1")
+                                        },
+                                        AuthorizationCode = new OpenApiOAuthFlow
+                                        {
+                                            AuthorizationUrl = new Uri("http://localhost/2")
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "scheme2", new OpenApiSecurityScheme
+                                {
+                                    Description = "Test",
+                                    Name = "Test"
+                                }
+                            },
+                            {
+                                "scheme3", new OpenApiSecurityScheme
+                                {
+                                    Description = "Test",
+                                    Name = "Test"
+                                }
+                            }
+                        }
+                    },
+                    SecurityRequirements = new List<OpenApiSecurityRequirement>
+                    {
+                        new OpenApiSecurityRequirement
+                        {
+                            [
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "scheme1"
+                                    }
+                                }
+                            ] = new List<string>()
+                        },
+                        new OpenApiSecurityRequirement
+                        {
+                            [
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "scheme2"
+                                    }
+                                }
+                            ] = new List<string>()
+                        },
+                        new OpenApiSecurityRequirement
+                        {
+                            [
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "scheme3"
+                                    }
+                                }
+                            ] = new List<string>()
+                        }
+                    }
+                },
+                new OpenApiDocument
+                {
+                    Paths = new OpenApiPaths
+                    {
+                        {
+                            "/test", new OpenApiPathItem
+                            {
+                                Summary = "test",
+                                Description = "test",
+                                Operations = new Dictionary<OperationType, OpenApiOperation>
+                                {
+                                    {
+                                        OperationType.Get, new OpenApiOperation
+                                        {
+                                            RequestBody = new OpenApiRequestBody
+                                            {
+                                                Description = "description",
+                                                Required = true,
+                                                Content =
+                                                {
+                                                    ["application/xml"] = new OpenApiMediaType
+                                                    {
+                                                        Schema = new OpenApiSchema
+                                                        {
+                                                            Reference = new OpenApiReference
+                                                            {
+                                                                Id = "schemaObject1",
+                                                                Type = ReferenceType.Schema
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            Responses = new OpenApiResponses
+                                            {
+                                                {
+                                                    "200",
+                                                    new OpenApiResponse
+                                                    {
+                                                        Description = "An updated complex object array response",
+                                                        Content =
+                                                        {
+                                                            ["application/json"] = new OpenApiMediaType
+                                                            {
+                                                                Schema = new OpenApiSchema
+                                                                {
+                                                                    Type = "array",
+                                                                    Items = new OpenApiSchema
+                                                                    {
+                                                                        Reference = new OpenApiReference
+                                                                        {
+                                                                            Type = ReferenceType.Schema,
+                                                                            Id = "schemaObject1"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            Security = new List<OpenApiSecurityRequirement>
+                                            {
+                                                new OpenApiSecurityRequirement
+                                                {
+                                                    {
+                                                        new OpenApiSecurityScheme
+                                                        {
+                                                            Reference = new OpenApiReference
+                                                            {
+                                                                Type = ReferenceType.SecurityScheme,
+                                                                Id = "scheme1"
+                                                            }
+                                                        },
+                                                        new List<string>()
+                                                    }
+                                                },
+                                                new OpenApiSecurityRequirement
+                                                {
+                                                    [
+                                                        new OpenApiSecurityScheme
+                                                        {
+                                                            Reference = new OpenApiReference
+                                                            {
+                                                                Type = ReferenceType.SecurityScheme,
+                                                                Id = "scheme4"
+                                                            }
+                                                        }
+                                                    ] = new List<string>()
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    Tags = new List<OpenApiTag>
+                    {
+                        new OpenApiTag
+                        {
+                            Description = "test description updated",
+                            Name = "Tag1",
+                            ExternalDocs = new OpenApiExternalDocs
+                            {
+                                Description = "test description",
+                                Url = new Uri("http://localhost/doc")
+                            }
+                        }
+                    },
+                    Components = new OpenApiComponents
+                    {
+                        Schemas = new Dictionary<string, OpenApiSchema>
+                        {
+                            ["schemaObject1"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property7"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject2"
+                                        }
+                                    }
+                                }
+                            },
+                            ["schemaObject2"] = new OpenApiSchema
+                            {
+                                Properties = new Dictionary<string, OpenApiSchema>
+                                {
+                                    ["property2"] = new OpenApiSchema
+                                    {
+                                        Type = "integer"
+                                    },
+                                    ["property5"] = new OpenApiSchema
+                                    {
+                                        Type = "string",
+                                        MaxLength = 15
+                                    },
+                                    ["property6"] = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "schemaObject1"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
+                        {
+                            {
+                                "scheme1", new OpenApiSecurityScheme
+                                {
+                                    Description = "Test",
+                                    Name = "Test",
+                                    Flows = new OpenApiOAuthFlows
+                                    {
+                                        Implicit = new OpenApiOAuthFlow
+                                        {
+                                            AuthorizationUrl = new Uri("http://localhost/3")
+                                        },
+                                        ClientCredentials = new OpenApiOAuthFlow
+                                        {
+                                            AuthorizationUrl = new Uri("http://localhost/2")
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "scheme2", new OpenApiSecurityScheme
+                                {
+                                    Description = "Test",
+                                    Name = "Test"
+                                }
+                            },
+                            {
+                                "scheme4", new OpenApiSecurityScheme
+                                {
+                                    Description = "Test",
+                                    Name = "Test"
+                                }
+                            }
+                        }
+                    },
+                    SecurityRequirements = new List<OpenApiSecurityRequirement>
+                    {
+                        new OpenApiSecurityRequirement
+                        {
+                            {
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "scheme1"
+                                    }
+                                },
+                                new List<string>()
+                            },
+                            {
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "scheme2"
+                                    }
+                                },
+                                new List<string>()
+                            }
+                        },
+                        new OpenApiSecurityRequirement
+                        {
+                            [
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "scheme4"
+                                    }
+                                }
+                            ] = new List<string>()
+                        }
+                    }
+                },
+                new List<OpenApiDifference>
+                {
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/security/0/scheme2",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<OpenApiSecurityScheme, IList<string>>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<OpenApiSecurityScheme, IList<string>>(new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "scheme2"
+                                }
+                            },
+                            new List<string>())
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/security/1/scheme4",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<OpenApiSecurityScheme, IList<string>>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<OpenApiSecurityScheme, IList<string>>(new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "scheme4"
+                            }
+                        }, new List<string>())
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/securitySchemes/scheme4",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSecurityScheme>),
+                        SourceValue = null,
+                        TargetValue = new KeyValuePair<string, OpenApiSecurityScheme>("scheme4",
+                            new OpenApiSecurityScheme
+                            {
+                                Description = "Test",
+                                Name = "Test"
+                            })
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/security/1",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(OpenApiSecurityRequirement),
+                        SourceValue = null,
+                        TargetValue = new OpenApiSecurityRequirement
+                        {
+                            {
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "scheme4"
+                                    }
+                                },
+                                new List<string>()
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/tags/0/description",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "test description",
+                        TargetValue = "test description updated"
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/securitySchemes/scheme1/flows/implicit/authorizationUrl",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(Uri),
+                        SourceValue = "http://localhost/1",
+                        TargetValue = "http://localhost/3"
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/security/0/scheme1/flows/implicit/authorizationUrl",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(Uri),
+                        SourceValue = "http://localhost/1",
+                        TargetValue = "http://localhost/3"
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/security/0/scheme1/flows/implicit/authorizationUrl",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(Uri),
+                        SourceValue = "http://localhost/1",
+                        TargetValue = "http://localhost/3"
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/securitySchemes/scheme1/flows/clientCredentials",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = null,
+                        TargetValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/security/0/scheme1/flows/clientCredentials",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = null,
+                        TargetValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/security/0/scheme1/flows/clientCredentials",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = null,
+                        TargetValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/securitySchemes/scheme1/flows/authorizationCode",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/security/0/scheme1/flows/authorizationCode",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/security/0/scheme1/flows/authorizationCode",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/securitySchemes/scheme3",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSecurityScheme>),
+                        SourceValue = new KeyValuePair<string, OpenApiSecurityScheme>("scheme3",
+                            new OpenApiSecurityScheme
+                            {
+                                Description = "Test",
+                                Name = "Test"
+                            }),
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/tags/1",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(OpenApiTag),
+                        SourceValue = new OpenApiTag
+                        {
+                            Description = "test description",
+                            Name = "Tag2",
+                            ExternalDocs = new OpenApiExternalDocs
+                            {
+                                Description = "test description",
+                                Url = new Uri("http://localhost/doc")
+                            }
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/security/2",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(OpenApiSecurityRequirement),
+                        SourceValue = new OpenApiSecurityRequirement
+                        {
+                            [
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.SecurityScheme,
+                                        Id = "scheme3"
+                                    }
+                                }
+                            ] = new List<string>()
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/security/1/scheme2",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(KeyValuePair<OpenApiSecurityScheme, IList<string>>),
+                        SourceValue = new KeyValuePair<OpenApiSecurityScheme, IList<string>>(new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "scheme2"
+                                }
+                            },
+                            new List<string>()),
+                        TargetValue = null
+                    }
+                }
+            };
         }
     }
 }

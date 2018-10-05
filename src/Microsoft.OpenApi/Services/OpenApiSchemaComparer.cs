@@ -202,9 +202,15 @@ namespace Microsoft.OpenApi.Services
                 });
             }
 
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.ExternalDocs,
+                () => comparisonContext
+                    .GetComparer<OpenApiExternalDocs>()
+                    .Compare(sourceSchema?.ExternalDocs, sourceSchema?.ExternalDocs, comparisonContext));
+
             // To Do Compare schema.AllOf
             // To Do Compare schema.AnyOf
-            // To Do compare external Docs
             // To Do compare schema as IOpenApiExtensible
 
             comparisonContext.SourceSchemaLoop.Pop();
