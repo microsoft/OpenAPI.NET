@@ -27,7 +27,15 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "in", (o, n) =>
                     {
-                        o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
+                        var inString = n.GetScalarValue();
+                        if ( inString == null || inString == "null" )
+                        {
+                            o.In = null;
+                        }
+                        else
+                        {
+                            o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
+                        }
                     }
                 },
                 {

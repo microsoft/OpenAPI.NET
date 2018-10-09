@@ -73,11 +73,12 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, p => 
                             {
-                                var parameter = LoadParameter(p, evenBody: true);
-                                if (parameter.In == null)
+                                var parameter = LoadParameter(p, loadRequestBody: true);
+                                if (parameter != null)
                                 {
-                                    return CreateRequestBody(n.Context,parameter); 
+                                    return CreateRequestBody(n.Context, parameter); 
                                 }
+
                                 return null;
                             }
                       );

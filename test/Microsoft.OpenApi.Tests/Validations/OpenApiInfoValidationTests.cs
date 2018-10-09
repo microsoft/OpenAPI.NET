@@ -18,9 +18,9 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInInfo()
         {
             // Arrange
-            string urlError = String.Format(SRResource.Validation_FieldIsRequired, "title", "info");
+            string titleError = String.Format(SRResource.Validation_FieldIsRequired, "title", "info");
             string versionError = String.Format(SRResource.Validation_FieldIsRequired, "version", "info");
-            OpenApiInfo info = new OpenApiInfo();
+            var info = new OpenApiInfo();
 
             // Act
             var errors = info.Validate(ValidationRuleSet.GetDefaultRuleSet());
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.False(result);
             Assert.NotNull(errors);
 
-            Assert.Equal(new[] { urlError, versionError }, errors.Select(e => e.Message));
+            Assert.Equal(new[] { titleError, versionError }, errors.Select(e => e.Message));
         }
     }
 }

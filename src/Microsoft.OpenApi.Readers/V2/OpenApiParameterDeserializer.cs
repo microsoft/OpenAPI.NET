@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -17,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static ParameterLocation? _in;
+        private static bool _isBodyOrFormData;
 
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
@@ -205,9 +204,11 @@ namespace Microsoft.OpenApi.Readers.V2
             switch (value)
             {
                 case "body":
+                    _isBodyOrFormData = true;
                     n.Context.SetTempStorage(TempStorageKeys.BodyParameter, o);
                     break;
                 case "formData":
+                    _isBodyOrFormData = true;
                     var formParameters = n.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                     if (formParameters == null)
                     {
@@ -217,9 +218,12 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     formParameters.Add(o);
                     break;
+                case "null":
+                case null:
+                    o.In = null;
+                    break;
                 default:
-                    _in = value.GetEnumFromDisplayName<ParameterLocation>();
-                    o.In = _in;
+                    o.In = value.GetEnumFromDisplayName<ParameterLocation>();
                     break;
             }
         }
@@ -229,10 +233,10 @@ namespace Microsoft.OpenApi.Readers.V2
             return LoadParameter(node, false);
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, bool evenBody)
+        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody)
         {
             // Reset the local variables every time this method is called.
-            _in = null;
+            _isBodyOrFormData = false;
 
             var mapNode = node.CheckMapNode("parameter");
 
@@ -254,9 +258,14 @@ namespace Microsoft.OpenApi.Readers.V2
                 node.Context.SetTempStorage("schema", null);
             }
 
-            if (_in == null && !evenBody)
+            if (_isBodyOrFormData && !loadRequestBody)
             {
-                return null; // Don't include Form or Body parameters in OpenApiOperation.Parameters list
+                return null; // Don't include Form or Body parameters when normal parameters are loaded.
+            }
+
+            if ( loadRequestBody && !_isBodyOrFormData )
+            {
+                return null; // Don't include non-Body or non-Form parameters when request bodies are loaded.
             }
 
             return parameter;
