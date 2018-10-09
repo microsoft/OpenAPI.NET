@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -28,13 +28,16 @@ namespace Microsoft.OpenApi.Readers.V3
                     "in", (o, n) =>
                     {
                         var inString = n.GetScalarValue();
-                        if ( inString == null || inString == "null" )
+
+                        if ( Enum.GetValues(typeof(ParameterLocation)).Cast<ParameterLocation>()
+                            .Select( e => e.GetDisplayName() )
+                            .Contains(inString) )
                         {
-                            o.In = null;
+                            o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
                         }
                         else
                         {
-                            o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
+                            o.In = null;
                         }
                     }
                 },
@@ -123,7 +126,6 @@ namespace Microsoft.OpenApi.Readers.V3
             }
 
             var parameter = new OpenApiParameter();
-            var required = new List<string> {"name", "in"};
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
 

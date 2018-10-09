@@ -224,5 +224,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 });
         }
+
+        [Fact]
+        public void ParseParameterWithUnknownLocationShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml")) )
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = null,
+                    Name = "username",
+                    Description = "username to fetch",
+                    Required = true,
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "string"
+                    }
+                });
+        }
     }
 }

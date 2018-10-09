@@ -218,12 +218,13 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     formParameters.Add(o);
                     break;
-                case "null":
-                case null:
-                    o.In = null;
+                case "query":
+                case "header":
+                case "path":
+                    o.In = value.GetEnumFromDisplayName<ParameterLocation>();
                     break;
                 default:
-                    o.In = value.GetEnumFromDisplayName<ParameterLocation>();
+                    o.In = null;
                     break;
             }
         }

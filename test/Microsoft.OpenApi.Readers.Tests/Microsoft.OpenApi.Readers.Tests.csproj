@@ -49,6 +49,9 @@
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNoLocation.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithUnknownLocation.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNullLocation.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -119,11 +122,19 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiOperation\securedOperation.yaml" />
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiOperation\operationWithParameterWithNoLocation.json">
+       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiOperation\securedOperation.yaml">
+       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\headerParameter.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithNoLocation.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithUnknownLocation.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithNullLocation.yaml">
