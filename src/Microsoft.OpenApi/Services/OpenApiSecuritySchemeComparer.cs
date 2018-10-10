@@ -41,8 +41,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            Compare<OpenApiSecurityScheme>(sourcecSecurityScheme.Reference, targetSecurityScheme.Reference,
-                comparisonContext);
+            new OpenApiReferenceComparer<OpenApiSecurityScheme>()
+                .Compare(sourcecSecurityScheme.Reference, targetSecurityScheme.Reference,
+                    comparisonContext);
 
             WalkAndCompare(comparisonContext, OpenApiConstants.Description,
                 () => Compare(sourcecSecurityScheme.Description, targetSecurityScheme.Description, comparisonContext));

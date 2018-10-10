@@ -167,64 +167,6 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Compares <see cref="OpenApiReference"/> object.
-        /// </summary>
-        /// <param name="sourceReference">The source.</param>
-        /// <param name="targetReference">The target.</param>
-        /// <param name="comparisonContext">The context under which to compare the objects.</param>
-        internal void Compare<TReference>(
-            OpenApiReference sourceReference,
-            OpenApiReference targetReference,
-            ComparisonContext comparisonContext)
-        {
-            if (sourceReference == null && targetReference == null)
-            {
-                return;
-            }
-
-            if (sourceReference == null || targetReference == null)
-            {
-                comparisonContext.AddOpenApiDifference(
-                    new OpenApiDifference
-                    {
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        SourceValue = sourceReference,
-                        TargetValue = targetReference,
-                        OpenApiComparedElementType = typeof(OpenApiReference),
-                        Pointer = comparisonContext.PathString
-                    });
-
-                return;
-            }
-
-            if (sourceReference.Id != targetReference.Id || sourceReference.Type != targetReference.Type)
-            {
-                WalkAndAddOpenApiDifference(
-                    comparisonContext,
-                    OpenApiConstants.DollarRef,
-                    new OpenApiDifference
-                    {
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        SourceValue = sourceReference,
-                        TargetValue = targetReference,
-                        OpenApiComparedElementType = typeof(OpenApiReference)
-                    });
-
-                return;
-            }
-
-            var source = (TReference) comparisonContext.SourceDocument.ResolveReference(
-                sourceReference);
-
-            var target = (TReference) comparisonContext.TargetDocument.ResolveReference(
-                targetReference);
-
-            comparisonContext
-                .GetComparer<TReference>()
-                .Compare(source, target, comparisonContext);
-        }
-
-        /// <summary>
         /// Compares <see cref="IDictionary{TKey,TValue}"/> where TKey is <see cref="string"/> and TValue is
         /// <see cref="string"/>.
         /// </summary>
@@ -258,14 +200,14 @@ namespace Microsoft.OpenApi.Services
 
             foreach (var newKeyInTarget in newKeysInTarget)
             {
-                comparisonContext.AddOpenApiDifference(
+                WalkAndAddOpenApiDifference(
+                    comparisonContext,
+                    newKeyInTarget,
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        TargetValue = new KeyValuePair<string, string>(
-                            newKeyInTarget,
-                            target[newKeyInTarget]),
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, string>)
+                        TargetValue = target[newKeyInTarget],
+                        OpenApiComparedElementType = typeof(string)
                     });
             }
 
@@ -273,14 +215,14 @@ namespace Microsoft.OpenApi.Services
 
             foreach (var removedKeyFromSource in removedKeysFromSource)
             {
-                comparisonContext.AddOpenApiDifference(
+                WalkAndAddOpenApiDifference(
+                    comparisonContext,
+                    removedKeyFromSource,
                     new OpenApiDifference
                     {
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        TargetValue = new KeyValuePair<string, string>(
-                            removedKeyFromSource,
-                            source[removedKeyFromSource]),
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, string>)
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        SourceValue = source[removedKeyFromSource],
+                        OpenApiComparedElementType = typeof(string)
                     });
             }
         }

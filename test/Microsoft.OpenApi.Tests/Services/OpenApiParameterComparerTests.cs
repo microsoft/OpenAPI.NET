@@ -344,29 +344,28 @@ namespace Microsoft.OpenApi.Tests.Services
                     {
                         Pointer = "#/content/text~1plain",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiMediaType>),
-                        TargetValue = new KeyValuePair<string, OpenApiMediaType>("text/plain", new OpenApiMediaType
+                        OpenApiComparedElementType = typeof(OpenApiMediaType),
+                        TargetValue = new OpenApiMediaType
                         {
                             Schema = new OpenApiSchema
                             {
                                 Type = "string"
                             }
-                        }),
+                        },
                         SourceValue = null
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/content/application~1json",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiMediaType>),
-                        SourceValue = new KeyValuePair<string, OpenApiMediaType>("application/json",
-                            new OpenApiMediaType
+                        OpenApiComparedElementType = typeof(OpenApiMediaType),
+                        SourceValue = new OpenApiMediaType
+                        {
+                            Schema = new OpenApiSchema
                             {
-                                Schema = new OpenApiSchema
-                                {
-                                    Type = "string"
-                                }
-                            }),
+                                Type = "string"
+                            }
+                        },
                         TargetValue = null
                     },
                     new OpenApiDifference

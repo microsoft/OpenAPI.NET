@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -51,6 +50,36 @@ namespace Microsoft.OpenApi.Services
 
             comparisonContext.SourceSchemaLoop.Push(sourceSchema);
             comparisonContext.TargetSchemaLoop.Push(targetSchema);
+
+            if (sourceSchema.Reference != null
+                && targetSchema.Reference != null
+                && sourceSchema.Reference.Id != targetSchema.Reference.Id)
+            {
+                WalkAndAddOpenApiDifference(
+                    comparisonContext,
+                    OpenApiConstants.DollarRef,
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        SourceValue = sourceSchema.Reference?.Id,
+                        TargetValue = targetSchema.Reference?.Id,
+                        OpenApiComparedElementType = typeof(string)
+                    });
+
+                return;
+            }
+
+            if (sourceSchema.Reference != null)
+            {
+                sourceSchema = (OpenApiSchema) comparisonContext.SourceDocument.ResolveReference(
+                    sourceSchema.Reference);
+            }
+
+            if (targetSchema.Reference != null)
+            {
+                targetSchema = (OpenApiSchema) comparisonContext.TargetDocument.ResolveReference(
+                    targetSchema.Reference);
+            }
 
             WalkAndCompare(
                 comparisonContext,
@@ -115,99 +144,20 @@ namespace Microsoft.OpenApi.Services
                         .Compare(sourceSchema.Items, targetSchema.Items, comparisonContext));
             }
 
-            if (sourceSchema.Reference != null
-                && targetSchema.Reference != null
-                && sourceSchema.Reference.Id != targetSchema.Reference.Id)
-            {
-                WalkAndAddOpenApiDifference(
-                    comparisonContext,
-                    OpenApiConstants.DollarRef,
-                    new OpenApiDifference
-                    {
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        SourceValue = sourceSchema.Reference?.Id,
-                        TargetValue = targetSchema.Reference?.Id,
-                        OpenApiComparedElementType = typeof(string)
-                    });
-
-                return;
-            }
-
-            if (sourceSchema.Reference != null)
-            {
-                sourceSchema = (OpenApiSchema) comparisonContext.SourceDocument.ResolveReference(
-                    sourceSchema.Reference);
-            }
-
-            if (targetSchema.Reference != null)
-            {
-                targetSchema = (OpenApiSchema) comparisonContext.TargetDocument.ResolveReference(
-                    targetSchema.Reference);
-            }
-
-            if (targetSchema.Properties != null)
-            {
-                IEnumerable<string> newPropertiesInTarget = sourceSchema.Properties == null
-                    ? targetSchema.Properties.Keys
-                    : targetSchema.Properties.Keys.Except(sourceSchema.Properties.Keys)
-                        .ToList();
-
-                WalkAndCompare(comparisonContext, OpenApiConstants.Properties, () =>
-                {
-                    foreach (var newPropertyInTarget in newPropertiesInTarget)
-                    {
-                        WalkAndAddOpenApiDifference(
-                            comparisonContext,
-                            newPropertyInTarget,
-                            new OpenApiDifference
-                            {
-                                OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                                TargetValue = new KeyValuePair<string, OpenApiSchema>(newPropertyInTarget,
-                                    targetSchema.Properties[newPropertyInTarget]),
-                                OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
-                            });
-                    }
-                });
-            }
-
-            if (sourceSchema.Properties != null)
-            {
-                WalkAndCompare(comparisonContext, OpenApiConstants.Properties, () =>
-                {
-                    foreach (var sourceSchemaProperty in sourceSchema.Properties)
-                    {
-                        if (targetSchema.Properties.ContainsKey(sourceSchemaProperty.Key))
-                        {
-                            WalkAndCompare(
-                                comparisonContext,
-                                sourceSchemaProperty.Key,
-                                () => comparisonContext
-                                    .GetComparer<OpenApiSchema>()
-                                    .Compare(sourceSchemaProperty.Value,
-                                        targetSchema.Properties[sourceSchemaProperty.Key], comparisonContext));
-                        }
-                        else
-                        {
-                            WalkAndAddOpenApiDifference(
-                                comparisonContext,
-                                sourceSchemaProperty.Key,
-                                new OpenApiDifference
-                                {
-                                    OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                                    SourceValue = sourceSchemaProperty,
-                                    OpenApiComparedElementType = typeof(KeyValuePair<string, OpenApiSchema>)
-                                });
-                        }
-                    }
-                });
-            }
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Properties,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiSchema>>()
+                    .Compare(sourceSchema.Properties,
+                        targetSchema.Properties, comparisonContext));
 
             WalkAndCompare(
                 comparisonContext,
                 OpenApiConstants.ExternalDocs,
                 () => comparisonContext
                     .GetComparer<OpenApiExternalDocs>()
-                    .Compare(sourceSchema?.ExternalDocs, sourceSchema?.ExternalDocs, comparisonContext));
+                    .Compare(sourceSchema?.ExternalDocs, targetSchema?.ExternalDocs, comparisonContext));
 
             // To Do Compare schema.AllOf
             // To Do Compare schema.AnyOf

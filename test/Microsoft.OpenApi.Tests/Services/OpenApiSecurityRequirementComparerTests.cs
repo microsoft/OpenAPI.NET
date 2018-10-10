@@ -152,25 +152,11 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     new OpenApiDifference
                     {
-                        Pointer = "#/scheme3",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(KeyValuePair<OpenApiSecurityScheme, IList<string>>),
-                        SourceValue = new KeyValuePair<OpenApiSecurityScheme, IList<string>>(new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme3"}
-                        }, new List<string>()),
-                        TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
                         Pointer = "#/scheme4",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(KeyValuePair<OpenApiSecurityScheme, IList<string>>),
+                        OpenApiComparedElementType = typeof(IList<string>),
                         SourceValue = null,
-                        TargetValue = new KeyValuePair<OpenApiSecurityScheme, IList<string>>(new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme4"}
-                        }, new List<string>())
+                        TargetValue = new List<string>()
                     },
                     new OpenApiDifference
                     {
@@ -179,6 +165,14 @@ namespace Microsoft.OpenApi.Tests.Services
                         OpenApiComparedElementType = typeof(string),
                         SourceValue = "Test",
                         TargetValue = "Test Updated"
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/scheme3",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(IList<string>),
+                        SourceValue = new List<string>(),
+                        TargetValue = null
                     }
                 }
             };
@@ -275,6 +269,8 @@ namespace Microsoft.OpenApi.Tests.Services
             OpenApiSecurityRequirement source,
             OpenApiSecurityRequirement target,
             List<OpenApiDifference> expectedDifferences)
+
+
         {
             _output.WriteLine(testCaseName);
 

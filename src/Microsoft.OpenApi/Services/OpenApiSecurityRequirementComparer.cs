@@ -55,10 +55,8 @@ namespace Microsoft.OpenApi.Services
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        TargetValue = new KeyValuePair<OpenApiSecurityScheme, IList<string>>(
-                            newSecuritySchemeInTarget,
-                            targetSecurityRequirement[newSecuritySchemeInTarget]),
-                        OpenApiComparedElementType = typeof(KeyValuePair<OpenApiSecurityScheme, IList<string>>)
+                        TargetValue = targetSecurityRequirement[newSecuritySchemeInTarget],
+                        OpenApiComparedElementType = typeof(IList<string>)
                     });
             }
 
@@ -76,10 +74,8 @@ namespace Microsoft.OpenApi.Services
                         new OpenApiDifference
                         {
                             OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                            SourceValue = new KeyValuePair<OpenApiSecurityScheme, IList<string>>(
-                                sourceSecurityScheme,
-                                sourceSecurityRequirement[sourceSecurityScheme]),
-                            OpenApiComparedElementType = typeof(KeyValuePair<OpenApiSecurityScheme, IList<string>>)
+                            SourceValue = sourceSecurityRequirement[sourceSecurityScheme],
+                            OpenApiComparedElementType = typeof(IList<string>)
                         });
                 }
                 else

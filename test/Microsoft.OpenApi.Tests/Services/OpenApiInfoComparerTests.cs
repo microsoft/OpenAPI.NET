@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -217,57 +218,56 @@ namespace Microsoft.OpenApi.Tests.Services
 
         public static IEnumerable<object[]> GetTestCasesForOpenApiInfoComparerShouldSucceed()
         {
-            // Differences in ContentType,Style,Explode and AllowReserved
             yield return new object[]
             {
-                "Differences in ContentType,Style,Explode and AllowReserved",
-                new OpenApiEncoding
+                "Differences in title, description, version and tos",
+                new OpenApiInfo
                 {
-                    ContentType = "image/png, image/jpeg",
-                    Style = ParameterStyle.Simple,
-                    Explode = true,
-                    AllowReserved = true
+                    Title = "Test title",
+                    Description = "Test description",
+                    Version = "Test version",
+                    TermsOfService = new Uri("http://localhost/1")
                 },
-                new OpenApiEncoding
+                new OpenApiInfo
                 {
-                    ContentType = "image/jpeg",
-                    Style = ParameterStyle.Form,
-                    Explode = false,
-                    AllowReserved = false
+                    Title = "Test title updated",
+                    Description = "Test description updated",
+                    Version = "Test version updated",
+                    TermsOfService = new Uri("http://localhost/2")
                 },
                 new List<OpenApiDifference>
                 {
                     new OpenApiDifference
                     {
-                        Pointer = "#/contentType",
+                        Pointer = "#/title",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(string),
-                        TargetValue = "image/jpeg",
-                        SourceValue = "image/png, image/jpeg"
+                        TargetValue = "Test title updated",
+                        SourceValue = "Test title"
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/style",
+                        Pointer = "#/description",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(ParameterStyle),
-                        TargetValue = ParameterStyle.Form,
-                        SourceValue = ParameterStyle.Simple
+                        OpenApiComparedElementType = typeof(string),
+                        TargetValue = "Test description updated",
+                        SourceValue = "Test description"
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/explode",
+                        Pointer = "#/version",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?),
-                        TargetValue = false,
-                        SourceValue = true
+                        OpenApiComparedElementType = typeof(string),
+                        TargetValue = "Test version updated",
+                        SourceValue = "Test version"
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/allowReserved",
+                        Pointer = "#/termsOfService",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?),
-                        TargetValue = false,
-                        SourceValue = true
+                        OpenApiComparedElementType = typeof(Uri),
+                        TargetValue = new Uri("http://localhost/2"),
+                        SourceValue = new Uri("http://localhost/1")
                     }
                 }
             };

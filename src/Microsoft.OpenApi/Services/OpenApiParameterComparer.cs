@@ -42,7 +42,8 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            Compare<OpenApiParameter>(sourceParameter.Reference, targetParameter.Reference, comparisonContext);
+            new OpenApiReferenceComparer<OpenApiParameter>()
+                .Compare(sourceParameter.Reference, targetParameter.Reference, comparisonContext);
 
             WalkAndCompare(
                 comparisonContext,

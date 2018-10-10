@@ -42,7 +42,8 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            Compare<OpenApiRequestBody>(sourceRequestBody.Reference, targetRequestBody.Reference, comparisonContext);
+            new OpenApiReferenceComparer<OpenApiRequestBody>()
+                .Compare(sourceRequestBody.Reference, targetRequestBody.Reference, comparisonContext);
 
             WalkAndCompare(comparisonContext, OpenApiConstants.Description,
                 () => Compare(sourceRequestBody.Description, targetRequestBody.Description, comparisonContext));
