@@ -590,6 +590,19 @@ namespace Microsoft.OpenApi.Tests.Services
                                             Id = "schemaObject2"
                                         }
                                     }
+                                },
+                                Example = new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["rel"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
                                 }
                             },
                             ["schemaObject2"] = new OpenApiSchema
@@ -691,6 +704,19 @@ namespace Microsoft.OpenApi.Tests.Services
                                         {
                                             Type = ReferenceType.Schema,
                                             Id = "schemaObject2"
+                                        }
+                                    }
+                                },
+                                Example = new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["relupdate"] = new OpenApiString("sampleRel1")
                                         }
                                     }
                                 }
@@ -848,6 +874,168 @@ namespace Microsoft.OpenApi.Tests.Services
                             MaxLength = 15
                         },
                         TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject1/example",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["rel"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["relupdate"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject2/properties/property6/example",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["rel"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["relupdate"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/paths/~1test/get/parameters/0/schema/properties/property6/properties/property6/example",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["rel"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["relupdate"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/parameters/0/schema/example",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["rel"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["relupdate"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/example",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["rel"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["relupdate"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        }
                     }
                 }
             };
@@ -884,6 +1072,19 @@ namespace Microsoft.OpenApi.Tests.Services
                                                             {
                                                                 Id = "schemaObject1",
                                                                 Type = ReferenceType.Schema
+                                                            }
+                                                        },
+                                                        Examples = new Dictionary<string, OpenApiExample>
+                                                        {
+                                                            {
+                                                                "example1", new OpenApiExample
+                                                                {
+                                                                    Reference = new OpenApiReference
+                                                                    {
+                                                                        Id = "example1",
+                                                                        Type = ReferenceType.Example
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -973,6 +1174,50 @@ namespace Microsoft.OpenApi.Tests.Services
                                     }
                                 }
                             }
+                        },
+                        Examples = new Dictionary<string, OpenApiExample>
+                        {
+                            ["example1"] = new OpenApiExample
+                            {
+                                Value = new OpenApiObject
+                                {
+                                    ["versions"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["status"] = new OpenApiString("Status1"),
+                                            ["id"] = new OpenApiString("v1"),
+                                            ["links"] = new OpenApiArray
+                                            {
+                                                new OpenApiObject
+                                                {
+                                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                                    ["rel"] = new OpenApiString("sampleRel1")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            ["example3"] = new OpenApiExample
+                            {
+                                Value = new OpenApiObject
+                                {
+                                    ["versions"] = new OpenApiObject
+                                    {
+                                        ["status"] = new OpenApiString("Status1"),
+                                        ["id"] = new OpenApiString("v1"),
+                                        ["links"] = new OpenApiArray
+                                        {
+                                            new OpenApiObject
+                                            {
+                                                ["href"] = new OpenApiString("http://example.com/1"),
+                                                ["rel"] = new OpenApiString("sampleRel1")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 },
@@ -1004,6 +1249,19 @@ namespace Microsoft.OpenApi.Tests.Services
                                                             {
                                                                 Id = "schemaObject1",
                                                                 Type = ReferenceType.Schema
+                                                            }
+                                                        },
+                                                        Examples = new Dictionary<string, OpenApiExample>
+                                                        {
+                                                            {
+                                                                "example1", new OpenApiExample
+                                                                {
+                                                                    Reference = new OpenApiReference
+                                                                    {
+                                                                        Id = "example1",
+                                                                        Type = ReferenceType.Example
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -1106,6 +1364,50 @@ namespace Microsoft.OpenApi.Tests.Services
                                         {
                                             Type = ReferenceType.Schema,
                                             Id = "schemaObject1"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        Examples = new Dictionary<string, OpenApiExample>
+                        {
+                            ["example1"] = new OpenApiExample
+                            {
+                                Value = new OpenApiObject
+                                {
+                                    ["versions"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["status"] = new OpenApiString("Status1"),
+                                            ["id"] = new OpenApiString("v1"),
+                                            ["links"] = new OpenApiArray
+                                            {
+                                                new OpenApiObject
+                                                {
+                                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                                    ["relupdate"] = new OpenApiString("sampleRel1")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            ["example3"] = new OpenApiExample
+                            {
+                                Value = new OpenApiObject
+                                {
+                                    ["versions"] = new OpenApiObject
+                                    {
+                                        ["status"] = new OpenApiString("Status1"),
+                                        ["id"] = new OpenApiString("v1"),
+                                        ["links"] = new OpenApiArray
+                                        {
+                                            new OpenApiObject
+                                            {
+                                                ["href"] = new OpenApiString("http://example.com/1"),
+                                                ["rel"] = new OpenApiString("sampleRel1")
+                                            }
                                         }
                                     }
                                 }
@@ -1313,6 +1615,94 @@ namespace Microsoft.OpenApi.Tests.Services
                             MaxLength = 15
                         },
                         TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/examples/example1/value",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["versions"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["rel"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["versions"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["relupdate"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/examples/example1/value",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["versions"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["rel"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["versions"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["relupdate"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             };

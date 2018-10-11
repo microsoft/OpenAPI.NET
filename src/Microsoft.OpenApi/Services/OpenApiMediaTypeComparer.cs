@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -47,7 +48,7 @@ namespace Microsoft.OpenApi.Services
                 OpenApiConstants.Schema,
                 () => comparisonContext
                     .GetComparer<OpenApiSchema>()
-                    .Compare( sourceMediaType.Schema, targetMediaType.Schema, comparisonContext ) );
+                    .Compare(sourceMediaType.Schema, targetMediaType.Schema, comparisonContext));
 
             WalkAndCompare(
                 comparisonContext,
@@ -56,9 +57,19 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<IDictionary<string, OpenApiEncoding>>()
                     .Compare(sourceMediaType.Encoding, sourceMediaType.Encoding, comparisonContext));
 
-            // To Do Compare Example
-            // To Do Compare Examples
-            // To Do Compare Extensions
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Examples,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiExample>>()
+                    .Compare(sourceMediaType.Examples, targetMediaType.Examples, comparisonContext));
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Example,
+                () => comparisonContext
+                    .GetComparer<IOpenApiAny>()
+                    .Compare(sourceMediaType.Example, targetMediaType.Example, comparisonContext));
         }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -86,8 +87,19 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<OpenApiSchema>()
                     .Compare(sourceParameter.Schema, targetParameter.Schema, comparisonContext));
 
-            // To Do Compare Examples
-            // To Do Compare parameter as IOpenApiExtensible
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Examples,
+                () => comparisonContext
+                    .GetComparer<IDictionary<string, OpenApiExample>>()
+                    .Compare(sourceParameter.Examples, targetParameter.Examples, comparisonContext));
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Example,
+                () => comparisonContext
+                    .GetComparer<IOpenApiAny>()
+                    .Compare(sourceParameter.Example, targetParameter.Example, comparisonContext));
         }
     }
 }
