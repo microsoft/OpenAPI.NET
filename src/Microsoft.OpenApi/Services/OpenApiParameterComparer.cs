@@ -42,6 +42,9 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            new OpenApiReferenceComparer<OpenApiParameter>()
+                .Compare(sourceParameter.Reference, targetParameter.Reference, comparisonContext);
+
             WalkAndCompare(
                 comparisonContext,
                 OpenApiConstants.Content,
@@ -83,7 +86,6 @@ namespace Microsoft.OpenApi.Services
                     .GetComparer<OpenApiSchema>()
                     .Compare(sourceParameter.Schema, targetParameter.Schema, comparisonContext));
 
-            // To Do Add compare for reference object
             // To Do Compare Examples
             // To Do Compare parameter as IOpenApiExtensible
         }

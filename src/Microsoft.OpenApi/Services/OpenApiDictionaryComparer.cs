@@ -56,10 +56,8 @@ namespace Microsoft.OpenApi.Services
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        TargetValue = new KeyValuePair<string, T>(
-                            newKeyInTarget,
-                            targetFragment[newKeyInTarget]),
-                        OpenApiComparedElementType = typeof(KeyValuePair<string, T>)
+                        TargetValue = targetFragment[newKeyInTarget],
+                        OpenApiComparedElementType = typeof(T)
                     });
             }
 
@@ -80,8 +78,8 @@ namespace Microsoft.OpenApi.Services
                         new OpenApiDifference
                         {
                             OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                            SourceValue = source,
-                            OpenApiComparedElementType = typeof(KeyValuePair<string, T>)
+                            SourceValue = source.Value,
+                            OpenApiComparedElementType = typeof(T)
                         });
                 }
             }

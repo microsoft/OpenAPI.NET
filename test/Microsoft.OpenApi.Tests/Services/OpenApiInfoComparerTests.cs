@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -12,7 +13,7 @@ using Xunit.Abstractions;
 namespace Microsoft.OpenApi.Tests.Services
 {
     [Collection("DefaultSettings")]
-    public class OpenApiParameterComparerTests
+    public class OpenApiInfoComparerTests
     {
         private readonly ITestOutputHelper _output;
 
@@ -210,262 +211,81 @@ namespace Microsoft.OpenApi.Tests.Services
             }
         };
 
-        public OpenApiParameterComparerTests(ITestOutputHelper output)
+        public OpenApiInfoComparerTests(ITestOutputHelper output)
         {
             _output = output;
         }
 
-        public static IEnumerable<object[]> GetTestCasesForOpenApiParameterComparerShouldSucceed()
+        public static IEnumerable<object[]> GetTestCasesForOpenApiInfoComparerShouldSucceed()
         {
-            // Source and Target are null
             yield return new object[]
             {
-                "Source and Target are null",
-                null,
-                null,
-                new List<OpenApiDifference>()
-            };
-
-            // Source is null
-            yield return new object[]
-            {
-                "Source is null",
-                null,
-                new OpenApiParameter
+                "Differences in title, description, version and tos",
+                new OpenApiInfo
                 {
-                    Name = "pathParam",
-                    In = ParameterLocation.Path
+                    Title = "Test title",
+                    Description = "Test description",
+                    Version = "Test version",
+                    TermsOfService = new Uri("http://localhost/1")
+                },
+                new OpenApiInfo
+                {
+                    Title = "Test title updated",
+                    Description = "Test description updated",
+                    Version = "Test version updated",
+                    TermsOfService = new Uri("http://localhost/2")
                 },
                 new List<OpenApiDifference>
                 {
                     new OpenApiDifference
                     {
-                        Pointer = "#/",
+                        Pointer = "#/title",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiParameter),
-                        SourceValue = null,
-                        TargetValue = new OpenApiParameter
-                        {
-                            Name = "pathParam",
-                            In = ParameterLocation.Path
-                        }
-                    }
-                }
-            };
-
-            // Target is null
-            yield return new object[]
-            {
-                "Target is null",
-                new OpenApiParameter
-                {
-                    Name = "pathParam",
-                    In = ParameterLocation.Path
-                },
-                null,
-                new List<OpenApiDifference>
-                {
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiParameter),
-                        TargetValue = null,
-                        SourceValue = new OpenApiParameter
-                        {
-                            Name = "pathParam",
-                            In = ParameterLocation.Path
-                        }
-                    }
-                }
-            };
-
-            // Differences in target and source
-            yield return new object[]
-            {
-                "Differences in target and source",
-                new OpenApiParameter
-                {
-                    Name = "pathParam",
-                    Description = "Sample path parameter description",
-                    In = ParameterLocation.Path,
-                    Required = true,
-                    AllowEmptyValue = true,
-                    AllowReserved = true,
-                    Style = ParameterStyle.Form,
-                    Deprecated = false,
-                    Explode = false,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string",
-                        MaxLength = 15
-                    },
-                    Content =
-                    {
-                        ["application/json"] = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        }
-                    }
-                },
-                new OpenApiParameter
-                {
-                    Name = "pathParamUpdate",
-                    Description = "Updated Sample path parameter description",
-                    In = ParameterLocation.Query,
-                    Required = false,
-                    AllowEmptyValue = false,
-                    AllowReserved = false,
-                    Style = ParameterStyle.Label,
-                    Deprecated = true,
-                    Explode = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "bool",
-                        MaxLength = 15
-                    },
-                    Content =
-                    {
-                        ["text/plain"] = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        }
-                    }
-                },
-                new List<OpenApiDifference>
-                {
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/content/text~1plain",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiMediaType),
-                        TargetValue = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        },
-                        SourceValue = null
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/content/application~1json",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiMediaType),
-                        SourceValue = new OpenApiMediaType
-                        {
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
-                        },
-                        TargetValue = null
+                        OpenApiComparedElementType = typeof(string),
+                        TargetValue = "Test title updated",
+                        SourceValue = "Test title"
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/description",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(string),
-                        SourceValue = "Sample path parameter description",
-                        TargetValue = "Updated Sample path parameter description"
+                        TargetValue = "Test description updated",
+                        SourceValue = "Test description"
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/required",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?),
-                        TargetValue = false,
-                        SourceValue = true
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/name",
+                        Pointer = "#/version",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(string),
-                        SourceValue = "pathParam",
-                        TargetValue = "pathParamUpdate"
+                        TargetValue = "Test version updated",
+                        SourceValue = "Test version"
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/deprecated",
+                        Pointer = "#/termsOfService",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?),
-                        TargetValue = true,
-                        SourceValue = false
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/allowEmptyValue",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?),
-                        TargetValue = false,
-                        SourceValue = true
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/explode",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?),
-                        TargetValue = true,
-                        SourceValue = false
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/allowReserved",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(bool?),
-                        TargetValue = false,
-                        SourceValue = true
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/style",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(ParameterStyle),
-                        SourceValue = ParameterStyle.Form,
-                        TargetValue = ParameterStyle.Label
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/in",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(ParameterLocation),
-                        SourceValue = ParameterLocation.Path,
-                        TargetValue = ParameterLocation.Query
-                    },
-
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/schema/type",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string),
-                        SourceValue = "string",
-                        TargetValue = "bool"
+                        OpenApiComparedElementType = typeof(Uri),
+                        TargetValue = new Uri("http://localhost/2"),
+                        SourceValue = new Uri("http://localhost/1")
                     }
                 }
             };
         }
 
         [Theory]
-        [MemberData(nameof(GetTestCasesForOpenApiParameterComparerShouldSucceed))]
-        public void OpenApiParameterComparerShouldSucceed(
+        [MemberData(nameof(GetTestCasesForOpenApiInfoComparerShouldSucceed))]
+        public void OpenApiInfoComparerShouldSucceed(
             string testCaseName,
-            OpenApiParameter source,
-            OpenApiParameter target,
+            OpenApiInfo source,
+            OpenApiInfo target,
             List<OpenApiDifference> expectedDifferences)
         {
             _output.WriteLine(testCaseName);
 
             var comparisonContext = new ComparisonContext(new OpenApiComparerFactory(), _sourceDocument,
                 _targetDocument);
-            var comparer = new OpenApiParameterComparer();
+            var comparer = new OpenApiInfoComparer();
             comparer.Compare(source, target, comparisonContext);
 
             var differences = comparisonContext.OpenApiDifferences.ToList();
