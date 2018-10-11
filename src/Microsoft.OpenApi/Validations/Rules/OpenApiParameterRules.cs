@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         context.CreateError(
                             nameof(RequiredMustBeTrueWhenInIsPath),
-                            "\"required\" must be true when parameter location is path");
+                            "\"required\" must be true when parameter location is \"path\"");
                     }
 
                     context.Exit();

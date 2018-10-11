@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             errors.Should().NotBeEmpty();
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                "\"required\" must be true when parameter location is path"
+                "\"required\" must be true when parameter location is \"path\""
             });
         }
     }
