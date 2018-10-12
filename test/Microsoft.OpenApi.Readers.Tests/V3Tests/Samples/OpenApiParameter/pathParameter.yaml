@@ -1,0 +1,7 @@
+﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#parameter-object-examples
+name: username
+in: path
+description: username to fetch
+required: true
+schema:
+  type: string

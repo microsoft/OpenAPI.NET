@@ -1,4 +1,4 @@
-﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject
+﻿# modified from https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject
 name: token
 in: header
 description: token to be passed as a header
