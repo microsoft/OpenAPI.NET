@@ -56,12 +56,7 @@ namespace Microsoft.OpenApi.Services
             target.Write(targetWriter, OpenApiSpecVersion.OpenApi3_0);
             var targetValue = targetStringWriter.GetStringBuilder().ToString();
 
-            if (string.IsNullOrWhiteSpace(sourceValue) && string.IsNullOrWhiteSpace(targetValue))
-            {
-                return;
-            }
-
-            if (string.Compare(sourceValue, targetValue, StringComparison.CurrentCultureIgnoreCase) != 0)
+            if (string.Compare(sourceValue, targetValue, StringComparison.InvariantCulture) != 0)
             {
                 comparisonContext.AddOpenApiDifference(new OpenApiDifference
                 {
