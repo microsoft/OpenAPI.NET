@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -669,6 +670,211 @@ namespace Microsoft.OpenApi.Tests.Services
                                 ["property2"] = new OpenApiSchema
                                 {
                                     Type = "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // New, removed and updated examples
+            yield return new object[]
+            {
+                "New, removed and updated examples",
+                new OpenApiComponents
+                {
+                    Examples = new Dictionary<string, OpenApiExample>
+                    {
+                        ["example1"] = new OpenApiExample
+                        {
+                            Value = new OpenApiObject
+                            {
+                                ["versions"] = new OpenApiArray
+                                {
+                                    new OpenApiObject
+                                    {
+                                        ["status"] = new OpenApiString("Status1"),
+                                        ["id"] = new OpenApiString("v1"),
+                                        ["links"] = new OpenApiArray
+                                        {
+                                            new OpenApiObject
+                                            {
+                                                ["href"] = new OpenApiString("http://example.com/1"),
+                                                ["rel"] = new OpenApiString("sampleRel1")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        ["example3"] = new OpenApiExample
+                        {
+                            Value = new OpenApiObject
+                            {
+                                ["versions"] = new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["rel"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                new OpenApiComponents
+                {
+                    Examples = new Dictionary<string, OpenApiExample>
+                    {
+                        ["example2"] = new OpenApiExample
+                        {
+                            Value = new OpenApiObject
+                            {
+                                ["versions"] = new OpenApiArray
+                                {
+                                    new OpenApiObject
+                                    {
+                                        ["status"] = new OpenApiString("Status1"),
+                                        ["id"] = new OpenApiString("v1"),
+                                        ["links"] = new OpenApiArray
+                                        {
+                                            new OpenApiObject
+                                            {
+                                                ["href"] = new OpenApiString("http://example.com/1"),
+                                                ["rel"] = new OpenApiString("sampleRel1")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        ["example3"] = new OpenApiExample
+                        {
+                            Value = new OpenApiObject
+                            {
+                                ["versions"] = new OpenApiArray
+                                {
+                                    new OpenApiObject
+                                    {
+                                        ["status"] = new OpenApiString("Status1"),
+                                        ["id"] = new OpenApiString("v1"),
+                                        ["links"] = new OpenApiArray
+                                        {
+                                            new OpenApiObject
+                                            {
+                                                ["href"] = new OpenApiString("http://example.com/1"),
+                                                ["rel"] = new OpenApiString("sampleRel1")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                new List<OpenApiDifference>
+                {
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/examples/example2",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(OpenApiExample),
+                        SourceValue = null,
+                        TargetValue = new OpenApiExample
+                        {
+                            Value = new OpenApiObject
+                            {
+                                ["versions"] = new OpenApiArray
+                                {
+                                    new OpenApiObject
+                                    {
+                                        ["status"] = new OpenApiString("Status1"),
+                                        ["id"] = new OpenApiString("v1"),
+                                        ["links"] = new OpenApiArray
+                                        {
+                                            new OpenApiObject
+                                            {
+                                                ["href"] = new OpenApiString("http://example.com/1"),
+                                                ["rel"] = new OpenApiString("sampleRel1")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/examples/example1",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(OpenApiExample),
+                        SourceValue = new OpenApiExample
+                        {
+                            Value = new OpenApiObject
+                            {
+                                ["versions"] = new OpenApiArray
+                                {
+                                    new OpenApiObject
+                                    {
+                                        ["status"] = new OpenApiString("Status1"),
+                                        ["id"] = new OpenApiString("v1"),
+                                        ["links"] = new OpenApiArray
+                                        {
+                                            new OpenApiObject
+                                            {
+                                                ["href"] = new OpenApiString("http://example.com/1"),
+                                                ["rel"] = new OpenApiString("sampleRel1")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/examples/example3/value",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["versions"] = new OpenApiObject
+                            {
+                                ["status"] = new OpenApiString("Status1"),
+                                ["id"] = new OpenApiString("v1"),
+                                ["links"] = new OpenApiArray
+                                {
+                                    new OpenApiObject
+                                    {
+                                        ["href"] = new OpenApiString("http://example.com/1"),
+                                        ["rel"] = new OpenApiString("sampleRel1")
+                                    }
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["versions"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["rel"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
                                 }
                             }
                         }

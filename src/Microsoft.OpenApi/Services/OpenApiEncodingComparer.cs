@@ -60,8 +60,6 @@ namespace Microsoft.OpenApi.Services
                 () => comparisonContext
                     .GetComparer<IDictionary<string, OpenApiHeader>>()
                     .Compare(sourceEncoding.Headers, targetEncoding.Headers, comparisonContext));
-
-            // To Do Compare Extensions
         }
     }
 }

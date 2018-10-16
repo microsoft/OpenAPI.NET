@@ -53,8 +53,6 @@ namespace Microsoft.OpenApi.Services
                 () => comparisonContext
                     .GetComparer<IList<OpenApiServer>>()
                     .Compare(sourcePathItem?.Servers, targetPathItem?.Servers, comparisonContext));
-
-            // To Do Compare Extensions
         }
     }
 }

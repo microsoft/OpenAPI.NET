@@ -54,8 +54,6 @@ namespace Microsoft.OpenApi.Services
                 () => comparisonContext
                     .GetComparer<IDictionary<string, OpenApiServerVariable>>()
                     .Compare(sourceServer.Variables, sourceServer.Variables, comparisonContext));
-
-            // To Do compare extensions
         }
     }
 }

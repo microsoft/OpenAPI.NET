@@ -57,8 +57,6 @@ namespace Microsoft.OpenApi.Services
                 () => comparisonContext
                     .GetComparer<IDictionary<string, OpenApiMediaType>>()
                     .Compare(sourceRequestBody.Content, targetRequestBody.Content, comparisonContext));
-
-            //To Do Compare Extensions
         }
     }
 }

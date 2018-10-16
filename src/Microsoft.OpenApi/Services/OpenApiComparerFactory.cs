@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -55,7 +56,10 @@ namespace Microsoft.OpenApi.Services
             {typeof(IList<OpenApiTag>), new OpenApiOrderedListComparer<OpenApiTag>()},
             {typeof(OpenApiExternalDocs), new OpenApiExternalDocsComparer()},
             {typeof(OpenApiTag), new OpenApiTagComparer()},
-            {typeof(OpenApiSecurityScheme), new OpenApiSecuritySchemeComparer()}
+            {typeof(OpenApiSecurityScheme), new OpenApiSecuritySchemeComparer()},
+            {typeof(OpenApiExample), new OpenApiExampleComparer()},
+            {typeof(IDictionary<string, OpenApiExample>), new OpenApiDictionaryComparer<OpenApiExample>()},
+            {typeof(IOpenApiAny), new OpenApiAnyComparer()}
         };
 
         private readonly Dictionary<Type, object> _typeToComparerMap = new Dictionary<Type, object>();

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -157,11 +158,17 @@ namespace Microsoft.OpenApi.Services
                 OpenApiConstants.ExternalDocs,
                 () => comparisonContext
                     .GetComparer<OpenApiExternalDocs>()
-                    .Compare(sourceSchema?.ExternalDocs, targetSchema?.ExternalDocs, comparisonContext));
+                    .Compare(sourceSchema.ExternalDocs, targetSchema.ExternalDocs, comparisonContext));
+
+            WalkAndCompare(
+                comparisonContext,
+                OpenApiConstants.Example,
+                () => comparisonContext
+                    .GetComparer<IOpenApiAny>()
+                    .Compare(sourceSchema.Example, targetSchema.Example, comparisonContext));
 
             // To Do Compare schema.AllOf
             // To Do Compare schema.AnyOf
-            // To Do compare schema as IOpenApiExtensible
 
             comparisonContext.SourceSchemaLoop.Pop();
             comparisonContext.TargetSchemaLoop.Pop();

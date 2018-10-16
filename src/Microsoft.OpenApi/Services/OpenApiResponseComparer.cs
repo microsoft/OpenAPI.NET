@@ -90,7 +90,6 @@ namespace Microsoft.OpenApi.Services
                     .Compare(sourceResponse.Headers, targetResponse.Headers, comparisonContext));
 
             // To Do Compare Link
-            // To Do Compare Extensions
         }
     }
 }
