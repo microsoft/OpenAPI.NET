@@ -2,8 +2,8 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Globalization;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Serialization;
 
@@ -52,28 +52,28 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return new OpenApiBoolean(false);
             }
 
-            if (int.TryParse(value, out var intValue))
+            if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var intValue))
             {
                 return new OpenApiInteger(intValue);
             }
 
-            if (long.TryParse(value, out var longValue))
+            if (long.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var longValue))
             {
                 return
                     new OpenApiLong(
                         longValue); 
             }
 
-            if (double.TryParse(value, out var dblValue))
+            if (double.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var doubleValue))
             {
                 return
                     new OpenApiDouble(
-                        dblValue); // Note(darrmi): This may be better as decimal. Further investigation required.
+                        doubleValue); // Note(darrmi): This may be better as decimal. Further investigation required.
             }
 
-            if (DateTimeOffset.TryParse(value, out var datetimeValue))
+            if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
             {
-                return new OpenApiDateTime(datetimeValue);
+                return new OpenApiDateTime(dateTimeValue);
             }
 
             // if we can't identify the type of value, return it as string.
