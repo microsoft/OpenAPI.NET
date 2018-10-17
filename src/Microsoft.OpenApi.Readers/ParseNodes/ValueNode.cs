@@ -52,23 +52,21 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return new OpenApiBoolean(false);
             }
 
-            if (int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var intValue))
+            // The NumberStyles below are the default ones based on 
+            // https://docs.microsoft.com/en-us/dotnet/api/?view=netframework-4.7.2
+            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
             {
                 return new OpenApiInteger(intValue);
             }
 
-            if (long.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var longValue))
+            if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue))
             {
-                return
-                    new OpenApiLong(
-                        longValue); 
+                return new OpenApiLong(longValue); 
             }
 
-            if (double.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var doubleValue))
+            if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
             {
-                return
-                    new OpenApiDouble(
-                        doubleValue); // Note(darrmi): This may be better as decimal. Further investigation required.
+                return new OpenApiDouble(doubleValue); 
             }
 
             if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
