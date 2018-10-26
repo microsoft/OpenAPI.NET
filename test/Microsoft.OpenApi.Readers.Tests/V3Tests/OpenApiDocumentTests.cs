@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
@@ -46,6 +48,78 @@ paths: {}",
                     {
                         Title = "Simple Document",
                         Version = "0.9.1"
+                    },
+                    Paths = new OpenApiPaths()
+                });
+
+            context.ShouldBeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+        }
+
+        [Theory]
+        [InlineData("en-US")]
+        [InlineData("hi-IN")]
+        // The equivalent of English 1,000.36 in French and Danish is 1.000,36
+        [InlineData("fr-FR")]
+        [InlineData("da-DK")]
+        public void ParseDocumentWithDifferentCultureShouldSucceed(string culture)
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+
+            var openApiDoc = new OpenApiStringReader().Read(
+                @"
+openapi : 3.0.0
+info:
+    title: Simple Document
+    version: 0.9.1
+components:
+  schemas:
+    sampleSchema:
+      type: object
+      properties:
+        sampleProperty:
+          type: double
+          minimum: 100.54
+          maximum: 60,000,000.35
+          exclusiveMaximum: true
+          exclusiveMinimum: false
+paths: {}",
+                out var context);
+
+            openApiDoc.ShouldBeEquivalentTo(
+                new OpenApiDocument
+                {
+                    Info = new OpenApiInfo
+                    {
+                        Title = "Simple Document",
+                        Version = "0.9.1"
+                    },
+                    Components = new OpenApiComponents()
+                    {
+                        Schemas =
+                        {
+                            ["sampleSchema"] = new OpenApiSchema()
+                            {
+                                Type = "object",
+                                Properties =
+                                {
+                                    ["sampleProperty"] = new OpenApiSchema()
+                                    {
+                                        Type = "double",
+                                        Minimum = (decimal)100.54,
+                                        Maximum = (decimal)60000000.35,
+                                        ExclusiveMaximum = true,
+                                        ExclusiveMinimum = false
+                                    }
+                                },
+                                Reference = new OpenApiReference()
+                                {
+                                    Id = "sampleSchema",
+                                    Type = ReferenceType.Schema
+                                }
+                            }
+                        }
                     },
                     Paths = new OpenApiPaths()
                 });

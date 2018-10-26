@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Name, Name);
 
             // in
-            writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
+            writer.WriteProperty(OpenApiConstants.In, In?.GetDisplayName());
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -237,7 +237,7 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
+                writer.WriteProperty(OpenApiConstants.In, In?.GetDisplayName());
             }
 
             // name

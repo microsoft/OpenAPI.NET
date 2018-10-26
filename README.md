@@ -20,6 +20,8 @@ The base JSON and YAML processors are built into this project. Below is the list
 
 - [**C# Comment / Annotation Processor**](https://github.com/Microsoft/OpenAPI.NET.CSharpAnnotations) : Converts standard .NET annotations ( /// comments ) emitted from your build (MSBuild.exe) into OpenAPI.NET document object. 
 
+- [**OData CSDL Processor**](https://github.com/Microsoft/OpenAPI.NET.OData) : Converts the XML representation of the Entity Data Model (EDM) describing an OData Service into OpenAPI.NET document object. 
+
 # Example Usage
 
 Creating an OpenAPI Document

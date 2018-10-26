@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -72,11 +73,12 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, p => 
                             {
-                                var parameter = LoadParameter(p, evenBody: true);
-                                if (parameter.In == null)
+                                var parameter = LoadParameter(p, loadRequestBody: true);
+                                if (parameter != null)
                                 {
-                                    return CreateRequestBody(n.Context,parameter); 
+                                    return CreateRequestBody(n.Context, parameter); 
                                 }
+
                                 return null;
                             }
                       );
@@ -191,7 +193,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 var pieces = host.Split(':');
                 host = pieces.First();
-                port = int.Parse(pieces.Last());
+                port = int.Parse(pieces.Last(), CultureInfo.InvariantCulture);
             }
 
             var uriBuilder = new UriBuilder()

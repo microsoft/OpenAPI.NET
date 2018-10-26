@@ -1,40 +1,19 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
+using Microsoft.OpenApi.Readers.V3;
 using Xunit;
 
-namespace Microsoft.OpenApi.Readers.Tests.V2Tests
+namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
     [Collection("DefaultSettings")]
     public class OpenApiParameterTests
     {
-        private const string SampleFolderPath = "V2Tests/Samples/OpenApiParameter/";
-
-        [Fact]
-        public void ParseBodyParameterShouldSucceed()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bodyParameter.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
-
-            // Assert
-            // Body parameter is currently not translated via LoadParameter.
-            // This design may be revisited and this unit test may likely change.
-            parameter.Should().BeNull();
-        }
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiParameter/";
 
         [Fact]
         public void ParsePathParameterShouldSucceed()
@@ -47,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
             parameter.ShouldBeEquivalentTo(
@@ -75,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
             parameter.ShouldBeEquivalentTo(
@@ -99,22 +78,82 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ParseFormDataParameterShouldSucceed()
+        public void ParseQueryParameterWithObjectTypeShouldSucceed()
         {
             // Arrange
             MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "formDataParameter.yaml")))
+            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml")) )
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            // Form data parameter is currently not translated via LoadParameter.
-            // This design may be revisited and this unit test may likely change.
-            parameter.Should().BeNull();
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = ParameterLocation.Query,
+                    Name = "freeForm",
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "object",
+                        AdditionalProperties = new OpenApiSchema
+                        {
+                            Type = "integer"
+                        }
+                    },
+                    Style = ParameterStyle.Form
+                });
+        }
+
+        [Fact]
+        public void ParseQueryParameterWithObjectTypeAndContentShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml")) )
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = ParameterLocation.Query,
+                    Name = "coordinates",
+                    Content =
+                    {
+                        ["application/json"] = new OpenApiMediaType
+                        {
+                            Schema = new OpenApiSchema
+                            {
+                                Type = "object",
+                                Required =
+                                {
+                                    "lat",
+                                    "long"
+                                },
+                                Properties =
+                                {
+                                    ["lat"] = new OpenApiSchema
+                                    {
+                                        Type = "number"
+                                    },
+                                    ["long"] = new OpenApiSchema
+                                    {
+                                        Type = "number"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
         }
 
         [Fact]
@@ -128,7 +167,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
             parameter.ShouldBeEquivalentTo(
@@ -147,23 +186,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             Type = "integer",
                             Format = "int64",
-                            Enum = new List<IOpenApiAny>
-                            {
-                                new OpenApiInteger(1),
-                                new OpenApiInteger(2),
-                                new OpenApiInteger(3),
-                                new OpenApiInteger(4),
-                            }
-                        },
-                        Default = new OpenApiArray() {
-                            new OpenApiInteger(1),
-                            new OpenApiInteger(2)
-                        },
-                        Enum = new List<IOpenApiAny>
-                        {
-                            new OpenApiArray() { new OpenApiInteger(1), new OpenApiInteger(2) },
-                            new OpenApiArray() { new OpenApiInteger(2), new OpenApiInteger(3) },
-                            new OpenApiArray() { new OpenApiInteger(3), new OpenApiInteger(4) }
                         }
                     }
                 });
@@ -180,7 +202,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
             parameter.ShouldBeEquivalentTo(
@@ -208,7 +230,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
             parameter.ShouldBeEquivalentTo(
@@ -236,7 +258,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
             parameter.ShouldBeEquivalentTo(
