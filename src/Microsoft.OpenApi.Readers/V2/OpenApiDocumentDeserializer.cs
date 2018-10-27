@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -122,11 +123,12 @@ namespace Microsoft.OpenApi.Readers.V2
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, Uri defaultUrl)
+        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, RootNode rootNode)
         {
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
             var schemes = context.GetFromTempStorage<List<string>>("schemes");
+            Uri defaultUrl = rootNode.Context.BaseUrl;
 
             // If nothing is provided, don't create a server
             if (host == null && basePath == null && schemes == null)
@@ -134,6 +136,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 return;
             }
 
+            //Validate host
+            if (host != null && !IsHostValid(host))
+            {
+                rootNode.Diagnostic.Errors.Add(new OpenApiError(new OpenApiException("Invalid host")));
+                return;
+            }
+            
             // Fill in missing information based on the defaultUrl
             if (defaultUrl != null)
             {
@@ -226,7 +235,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 openApidoc.Servers = new List<OpenApiServer>();
             }
 
-            MakeServers(openApidoc.Servers, openApiNode.Context, rootNode.Context.BaseUrl);
+            MakeServers(openApidoc.Servers, openApiNode.Context, rootNode);
 
             FixRequestBodyReferences(openApidoc);
             return openApidoc;
@@ -241,6 +250,26 @@ namespace Microsoft.OpenApi.Readers.V2
                 var fixer = new RequestBodyReferenceFixer(doc.Components?.RequestBodies);
                 var walker = new OpenApiWalker(fixer);
                 walker.Walk(doc);
+            }
+        }
+
+        private static bool IsHostValid(string host)
+        {
+            try
+            {
+                //Check if the host contains ://
+                if (host.Contains(Uri.SchemeDelimiter))
+                {
+                    return false;
+                }
+                
+                //Check if the host (excluding port number) is a valid dns/ip address.
+                var hostPart = host.Split(':').First();
+                return Uri.CheckHostName(hostPart) != UriHostNameType.Unknown;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }
