@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Exceptions;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -86,6 +86,7 @@ swagger: 2.0
 info: 
   title: Simple Document
   version: 0.9.1
+  x-extension: 2.335
 definitions:
   sampleSchema:
     type: object
@@ -105,7 +106,11 @@ paths: {}",
                     Info = new OpenApiInfo
                     {
                         Title = "Simple Document",
-                        Version = "0.9.1"
+                        Version = "0.9.1",
+                        Extensions =
+                        {
+                            ["x-extension"] = new OpenApiDouble(2.335)
+                        }
                     },
                     Components = new OpenApiComponents()
                     {
