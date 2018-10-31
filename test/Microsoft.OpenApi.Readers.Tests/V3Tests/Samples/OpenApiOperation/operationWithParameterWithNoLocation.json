@@ -1,0 +1,25 @@
+﻿{
+    "tags": [ "user" ],
+    "summary": "Logs user into the system",
+    "description": "",
+    "operationId": "loginUser",
+    "parameters": [
+        {
+            "name": "username",
+            "description": "The user name for login",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "password",
+            "in": "query",
+            "description": "The password for login in clear text",
+            "required": true,
+            "schema": {
+                "type": "string"
+            }
+        }
+    ]
+}

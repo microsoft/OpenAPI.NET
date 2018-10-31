@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Globalization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Serialization;
