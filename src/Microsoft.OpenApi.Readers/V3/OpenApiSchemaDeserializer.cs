@@ -245,8 +245,20 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new AnyFieldMap<OpenApiSchema>
         {
-            { "default", new AnyFieldMapParameter<OpenApiSchema>(s => s.Default, (s, v) => s.Default = v, s => s) },
-            { "example", new AnyFieldMapParameter<OpenApiSchema>(s => s.Example, (s, v) => s.Example = v, s => s) }
+            {
+                "default",
+                new AnyFieldMapParameter<OpenApiSchema>(
+                    s => s.Default,
+                    (s, v) => s.Default = v,
+                    s => s)
+            },
+            {
+                "example",
+                new AnyFieldMapParameter<OpenApiSchema>(
+                    s => s.Example, 
+                    (s, v) => s.Example = v, 
+                    s => s)
+            }
         };
 
         private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new AnyListFieldMap<OpenApiSchema>

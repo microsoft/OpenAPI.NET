@@ -3,7 +3,6 @@
 
 using System;
 using System.Globalization;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -157,7 +156,6 @@ namespace Microsoft.OpenApi.Readers.V2
                         p => p.Schema)
                 },
             };
-
 
         public static OpenApiHeader LoadHeader(ParseNode node)
         {
