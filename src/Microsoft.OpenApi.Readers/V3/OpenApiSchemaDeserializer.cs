@@ -269,17 +269,17 @@ namespace Microsoft.OpenApi.Readers.V3
                     };
             }
 
-            var domainObject = new OpenApiSchema();
+            var schema = new OpenApiSchema();
 
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(domainObject, _schemaFixedFields, _schemaPatternFields);
+                propertyNode.ParseField(schema, _schemaFixedFields, _schemaPatternFields);
             }
 
-            ProcessAnyFields(mapNode, domainObject, _schemaAnyFields);
-            ProcessAnyListFields(mapNode, domainObject, _schemaAnyListFields);
+            ProcessAnyFields(mapNode, schema, _schemaAnyFields);
+            ProcessAnyListFields(mapNode, schema, _schemaAnyListFields);
 
-            return domainObject;
+            return schema;
         }
     }
 }

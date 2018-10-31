@@ -81,7 +81,7 @@ aDate: 2017-01-02
                     ["aInteger"] = new OpenApiInteger(10),
                     ["aDouble"] = new OpenApiDouble(2.34),
                     ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)),
-                    ["aDate"] = new OpenApiDate(DateTime.Parse("2017-01-02", CultureInfo.InvariantCulture)),
+                    ["aDate"] = new OpenApiDate(DateTimeOffset.Parse("2017-01-02", CultureInfo.InvariantCulture).Date),
                 });
         }
     
@@ -258,7 +258,7 @@ aDate: 2017-01-02
                     },
                     ["aObject"] = new OpenApiObject()
                     {
-                        ["aDate"] = new OpenApiDate(DateTime.Parse("2017-02-03", CultureInfo.InvariantCulture))
+                        ["aDate"] = new OpenApiDate(DateTimeOffset.Parse("2017-02-03", CultureInfo.InvariantCulture).Date)
                     },
                     ["aDouble"] = new OpenApiDouble(2.34),
                     ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))

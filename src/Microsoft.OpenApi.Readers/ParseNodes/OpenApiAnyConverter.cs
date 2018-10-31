@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
@@ -62,22 +63,22 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return new OpenApiBoolean(false);
             }
 
-            if (int.TryParse(value, out var intValue))
+            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
             {
                 return new OpenApiInteger(intValue);
             }
 
-            if (long.TryParse(value, out var longValue))
+            if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue))
             {
                 return new OpenApiLong(longValue);
             }
 
-            if (double.TryParse(value, out var doubleValue))
+            if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
             {
                 return new OpenApiDouble(doubleValue);
             }
 
-            if (DateTimeOffset.TryParse(value, out var dateTimeValue))
+            if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
             {
                 return new OpenApiDateTime(dateTimeValue);
             }
@@ -146,7 +147,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "integer" && format == "int32")
             {
-                if (int.TryParse(value, out var intValue))
+                if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
                 {
                     return new OpenApiInteger(intValue);
                 }
@@ -158,7 +159,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "integer" && format == "int64")
             {
-                if (long.TryParse(value, out var longValue))
+                if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue))
                 {
                     return new OpenApiLong(longValue);
                 }
@@ -170,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "integer")
             {
-                if (int.TryParse(value, out var intValue))
+                if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
                 {
                     return new OpenApiInteger(intValue);
                 }
@@ -182,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "number" && format == "float")
             {
-                if ( float.TryParse(value, out var floatValue))
+                if (float.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var floatValue))
                 {
                     return new OpenApiFloat(floatValue);
                 }
@@ -194,7 +195,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "number" && format == "double" )
             {
-                if (double.TryParse(value, out var doubleValue))
+                if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
                 {
                     return new OpenApiDouble(doubleValue);
                 }
@@ -206,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "number")
             {
-                if (double.TryParse(value, out var doubleValue))
+                if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
                 {
                     return new OpenApiDouble(doubleValue);
                 }
@@ -218,7 +219,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "string" && format == "byte")
             {
-                if ( byte.TryParse(value, out var byteValue))
+                if ( byte.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var byteValue))
                 {
                     return new OpenApiByte(byteValue);
                 }
@@ -232,7 +233,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "string" && format == "date")
             {
-                if (DateTime.TryParse(value, out var dateValue))
+                if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateValue))
                 {
                     return new OpenApiDate(dateValue.Date);
                 }
@@ -244,7 +245,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "string" && format == "date-time")
             {
-                if (DateTime.TryParse(value, out var dateTimeValue))
+                if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
                 {
                     return new OpenApiDateTime(dateTimeValue);
                 }
