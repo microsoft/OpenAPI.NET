@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         public static IOpenApiAny LoadAny(ParseNode node)
         {
-            return node.CreateAny();
+            return OpenApiStringConverter.GetSpecificOpenApiAny(node.CreateAny());
         }
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)

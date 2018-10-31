@@ -10,6 +10,29 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     {
         public static IOpenApiAny GetSpecificOpenApiAny(IOpenApiAny openApiAny)
         {
+            if (openApiAny is OpenApiArray openApiArray)
+            {
+                var newArray = new OpenApiArray();
+                foreach (var element in openApiArray)
+                {
+                    newArray.Add(GetSpecificOpenApiAny(element));
+                }
+
+                return newArray;
+            }
+
+            if (openApiAny is OpenApiObject openApiObject)
+            {
+                var newObject = new OpenApiObject();
+
+                foreach (var key in openApiObject.Keys.ToList())
+                {
+                    newObject[key] = GetSpecificOpenApiAny(openApiObject[key]);
+                }
+
+                return newObject;
+            }
+
             if ( !(openApiAny is OpenApiString))
             {
                 return openApiAny;
@@ -58,15 +81,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public static IOpenApiAny GetSpecificOpenApiAny(IOpenApiAny openApiAny, OpenApiSchema schema)
         {
-            var type = schema.Type;
-            var format = schema.Format;
-
             if (openApiAny is OpenApiArray openApiArray)
             {
                 var newArray = new OpenApiArray();
                 foreach (var element in openApiArray)
                 {
-                    newArray.Add(GetSpecificOpenApiAny(element, schema.Items));
+                    newArray.Add(GetSpecificOpenApiAny(element, schema?.Items));
                 }
 
                 return newArray;
@@ -78,7 +98,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
                 foreach (var key in openApiObject.Keys.ToList())
                 {
-                    newObject[key] = GetSpecificOpenApiAny(openApiObject[key], schema.AdditionalProperties);
+                    if ( schema != null && schema.Properties != null && schema.Properties.ContainsKey(key) )
+                    {
+                        newObject[key] = GetSpecificOpenApiAny(openApiObject[key], schema.Properties[key]);
+                    }
+                    else
+                    {
+                        newObject[key] = GetSpecificOpenApiAny(openApiObject[key], schema?.AdditionalProperties);
+                    }
                 }
 
                 return newObject;
@@ -89,10 +116,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return openApiAny;
             }
 
-            if (type == null && format == null)
+            if (schema?.Type == null)
             {
-                GetSpecificOpenApiAny(openApiAny);
+                return GetSpecificOpenApiAny(openApiAny);
             }
+
+            var type = schema.Type;
+            var format = schema.Format;
 
             var value = ((OpenApiString)openApiAny).Value;
 

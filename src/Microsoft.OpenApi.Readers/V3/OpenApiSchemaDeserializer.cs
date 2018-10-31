@@ -276,6 +276,9 @@ namespace Microsoft.OpenApi.Readers.V3
                 propertyNode.ParseField(domainObject, _schemaFixedFields, _schemaPatternFields);
             }
 
+            ProcessAnyFields(mapNode, domainObject, _schemaAnyFields);
+            ProcessAnyListFields(mapNode, domainObject, _schemaAnyListFields);
+
             return domainObject;
         }
     }
