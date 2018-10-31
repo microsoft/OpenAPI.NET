@@ -170,9 +170,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "integer")
             {
-                if (long.TryParse(value, out var longValue))
+                if (int.TryParse(value, out var intValue))
                 {
-                    return new OpenApiLong(longValue);
+                    return new OpenApiInteger(intValue);
                 }
                 else
                 {
