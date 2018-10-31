@@ -262,7 +262,7 @@ paths: {}
         }
 
         [Fact]
-        public void InvalidHostShouldYieldDiagnostic()
+        public void InvalidHostShouldYieldError()
         {
             var input = @"
 swagger: 2.0
@@ -278,13 +278,13 @@ BaseUrl = new Uri("https://bing.com")
             });
 
             var doc = reader.Read(input, out var diagnostic);
-            Assert.Equal(0, doc.Servers.Count);
+            doc.Servers.Count.Should().Be(0);
             diagnostic.ShouldBeEquivalentTo(
                 new OpenApiDiagnostic
                 {
                     Errors =
                     {
-                        new OpenApiError(new OpenApiException("Invalid host"))
+                        new OpenApiError("#/", "Invalid host")
                     },
                     SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
                 });

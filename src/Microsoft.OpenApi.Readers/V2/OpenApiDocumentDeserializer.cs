@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.V2
             //Validate host
             if (host != null && !IsHostValid(host))
             {
-                rootNode.Diagnostic.Errors.Add(new OpenApiError(new OpenApiException("Invalid host")));
+                rootNode.Diagnostic.Errors.Add(new OpenApiError(rootNode.Context.GetLocation(), "Invalid host"));
                 return;
             }
             
@@ -255,22 +255,15 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static bool IsHostValid(string host)
         {
-            try
-            {
-                //Check if the host contains ://
-                if (host.Contains(Uri.SchemeDelimiter))
-                {
-                    return false;
-                }
-                
-                //Check if the host (excluding port number) is a valid dns/ip address.
-                var hostPart = host.Split(':').First();
-                return Uri.CheckHostName(hostPart) != UriHostNameType.Unknown;
-            }
-            catch (Exception)
+            //Check if the host contains :// 
+            if (host.Contains(Uri.SchemeDelimiter))
             {
                 return false;
             }
+                
+            //Check if the host (excluding port number) is a valid dns/ip address.
+            var hostPart = host.Split(':').First();
+            return Uri.CheckHostName(hostPart) != UriHostNameType.Unknown;
         }
     }
 
