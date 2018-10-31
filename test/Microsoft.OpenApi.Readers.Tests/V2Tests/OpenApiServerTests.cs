@@ -1,4 +1,7 @@
-﻿using System;
+﻿using FluentAssertions;
+using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -257,5 +260,35 @@ paths: {}
             Assert.Equal(1, doc.Servers.Count);
             Assert.Equal("https://localhost:23232", server.Url);
         }
+
+        [Fact]
+        public void InvalidHostShouldYieldError()
+        {
+            var input = @"
+swagger: 2.0
+info: 
+  title: test
+  version: 1.0.0
+host: http://test.microsoft.com
+paths: {}
+";
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            {
+BaseUrl = new Uri("https://bing.com")
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+            doc.Servers.Count.Should().Be(0);
+            diagnostic.ShouldBeEquivalentTo(
+                new OpenApiDiagnostic
+                {
+                    Errors =
+                    {
+                        new OpenApiError("#/", "Invalid host")
+                    },
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
+                });
+        }
+
     }
 }
