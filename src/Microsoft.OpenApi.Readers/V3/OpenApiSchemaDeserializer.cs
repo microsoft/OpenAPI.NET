@@ -243,6 +243,17 @@ namespace Microsoft.OpenApi.Readers.V3
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
+        private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new AnyFieldMap<OpenApiSchema>
+        {
+            { "default", new AnyFieldMapParameter<OpenApiSchema>(s => s.Default, (s, v) => s.Default = v, s => s) },
+            { "example", new AnyFieldMapParameter<OpenApiSchema>(s => s.Example, (s, v) => s.Example = v, s => s) }
+        };
+
+        private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new AnyListFieldMap<OpenApiSchema>
+        {
+            { "enum", new AnyListFieldMapParameter<OpenApiSchema>(s => s.Enum, (s, v) => s.Enum = v, s => s) }
+        };
+
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);

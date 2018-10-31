@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Any;
+using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using System.Collections.Generic;
-using System.Globalization;
 
 namespace Microsoft.OpenApi.Readers.V2
 {
@@ -210,6 +209,17 @@ namespace Microsoft.OpenApi.Readers.V2
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
+        private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new AnyFieldMap<OpenApiSchema>
+        {
+            { "default", new AnyFieldMapParameter<OpenApiSchema>(s => s.Default, (s, v) => s.Default = v, s => s) },
+            { "example", new AnyFieldMapParameter<OpenApiSchema>(s => s.Example, (s, v) => s.Example = v, s => s) }
+        };
+
+        private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new AnyListFieldMap<OpenApiSchema>
+        {
+            { "enum", new AnyListFieldMapParameter<OpenApiSchema>(s => s.Enum, (s, v) => s.Enum = v, s => s) }
+        };
+
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode("schema");
@@ -220,14 +230,17 @@ namespace Microsoft.OpenApi.Readers.V2
                 return mapNode.GetReferencedObject<OpenApiSchema>(ReferenceType.Schema, pointer);
             }
 
-            var domainObject = new OpenApiSchema();
+            var schema = new OpenApiSchema();
 
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(domainObject, _schemaFixedFields, _schemaPatternFields);
+                propertyNode.ParseField(schema, _schemaFixedFields, _schemaPatternFields);
             }
 
-            return domainObject;
+            ProcessAnyFields(mapNode, schema, _schemaAnyFields);
+            ProcessAnyListFields(mapNode, schema, _schemaAnyListFields);
+
+            return schema;
         }
     }
 }

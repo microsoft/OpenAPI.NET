@@ -149,21 +149,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             Format = "int64",
                             Enum = new List<IOpenApiAny>
                             {
-                                new OpenApiInteger(1),
-                                new OpenApiInteger(2),
-                                new OpenApiInteger(3),
-                                new OpenApiInteger(4),
+                                new OpenApiLong(1),
+                                new OpenApiLong(2),
+                                new OpenApiLong(3),
+                                new OpenApiLong(4),
                             }
                         },
                         Default = new OpenApiArray() {
-                            new OpenApiInteger(1),
-                            new OpenApiInteger(2)
+                            new OpenApiLong(1),
+                            new OpenApiLong(2)
                         },
                         Enum = new List<IOpenApiAny>
                         {
-                            new OpenApiArray() { new OpenApiInteger(1), new OpenApiInteger(2) },
-                            new OpenApiArray() { new OpenApiInteger(2), new OpenApiInteger(3) },
-                            new OpenApiArray() { new OpenApiInteger(3), new OpenApiInteger(4) }
+                            new OpenApiArray() { new OpenApiLong(1), new OpenApiLong(2) },
+                            new OpenApiArray() { new OpenApiLong(2), new OpenApiLong(3) },
+                            new OpenApiArray() { new OpenApiLong(3), new OpenApiLong(4) }
                         }
                     }
                 });
