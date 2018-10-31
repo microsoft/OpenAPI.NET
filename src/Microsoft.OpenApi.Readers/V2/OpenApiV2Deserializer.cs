@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
@@ -48,7 +47,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     mapNode.Context.StartObject(anyFieldName);
 
-                    var convertedOpenApiAny = OpenApiStringConverter.GetSpecificOpenApiAny(
+                    var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
                         anyFieldMap[anyFieldName].PropertyGetter(domainObject),
                         anyFieldMap[anyFieldName].SchemaGetter(domainObject));
 
@@ -82,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     foreach (var propertyElement in anyListFieldMap[anyListFieldName].PropertyGetter(domainObject))
                     {
                         newProperty.Add(
-                            OpenApiStringConverter.GetSpecificOpenApiAny(
+                            OpenApiAnyConverter.GetSpecificOpenApiAny(
                                 propertyElement,
                                 anyListFieldMap[anyListFieldName].SchemaGetter(domainObject)));
                     }
@@ -103,7 +102,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         public static IOpenApiAny LoadAny(ParseNode node)
         {
-            return OpenApiStringConverter.GetSpecificOpenApiAny(node.CreateAny());
+            return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
         }
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
@@ -111,12 +110,12 @@ namespace Microsoft.OpenApi.Readers.V2
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
                 return parser(
-                    OpenApiStringConverter.GetSpecificOpenApiAny(node.CreateAny()),
+                    OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()),
                     OpenApiSpecVersion.OpenApi2_0);
             }
             else
             {
-                return OpenApiStringConverter.GetSpecificOpenApiAny(node.CreateAny());
+                return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
             }
         }
 

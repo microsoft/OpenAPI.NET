@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void LoadExample(OpenApiResponse response, string mediaType, ParseNode node)
         {
-            var exampleNode = OpenApiStringConverter.GetSpecificOpenApiAny(node.CreateAny());
+            var exampleNode = OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
 
             if (response.Content == null)
             {

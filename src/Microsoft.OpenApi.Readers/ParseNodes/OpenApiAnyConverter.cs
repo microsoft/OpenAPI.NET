@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
+using System;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
@@ -6,8 +9,12 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
-    internal static class OpenApiStringConverter
+    internal static class OpenApiAnyConverter
     {
+        /// <summary>
+        /// Converts the <see cref="OpenApiString"/>s in the given <see cref="IOpenApiAny"/>
+        /// into the most specific <see cref="IOpenApiPrimitive"/> type based on the value.
+        /// </summary>
         public static IOpenApiAny GetSpecificOpenApiAny(IOpenApiAny openApiAny)
         {
             if (openApiAny is OpenApiArray openApiArray)
@@ -79,6 +86,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return new OpenApiString(value);
         }
 
+        /// <summary>
+        /// Converts the <see cref="OpenApiString"/>s in the given <see cref="IOpenApiAny"/>
+        /// into the appropriate <see cref="IOpenApiPrimitive"/> type based on the given <see cref="OpenApiSchema"/>.
+        /// For those strings that the schema does not specify the type for, convert them into
+        /// the most specific type based on the value.
+        /// </summary>
         public static IOpenApiAny GetSpecificOpenApiAny(IOpenApiAny openApiAny, OpenApiSchema schema)
         {
             if (openApiAny is OpenApiArray openApiArray)
