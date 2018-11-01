@@ -49,6 +49,17 @@ namespace Microsoft.OpenApi.Readers.V3
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
+        private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new AnyFieldMap<OpenApiMediaType>
+        {
+            {
+                OpenApiConstants.Example,
+                new AnyFieldMapParameter<OpenApiMediaType>(
+                    s => s.Example,
+                    (s, v) => s.Example = v,
+                    s => s.Schema)
+            }
+        };
+
         public static OpenApiMediaType LoadMediaType(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Content);
@@ -61,6 +72,8 @@ namespace Microsoft.OpenApi.Readers.V3
             var mediaType = new OpenApiMediaType();
 
             ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields);
+
+            ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
 
             return mediaType;
         }

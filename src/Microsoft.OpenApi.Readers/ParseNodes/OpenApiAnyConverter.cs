@@ -151,10 +151,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiInteger(intValue);
                 }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
-                }
             }
 
             if (type == "integer" && format == "int64")
@@ -162,10 +158,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue))
                 {
                     return new OpenApiLong(longValue);
-                }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
                 }
             }
 
@@ -175,10 +167,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiInteger(intValue);
                 }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
-                }
             }
 
             if (type == "number" && format == "float")
@@ -186,10 +174,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 if (float.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var floatValue))
                 {
                     return new OpenApiFloat(floatValue);
-                }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
                 }
             }
 
