@@ -199,10 +199,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiDouble(doubleValue);
                 }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
-                }
             }
 
             if (type == "number")
@@ -211,10 +207,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiDouble(doubleValue);
                 }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
-                }
             }
 
             if (type == "string" && format == "byte")
@@ -222,10 +214,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 if ( byte.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var byteValue))
                 {
                     return new OpenApiByte(byteValue);
-                }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
                 }
             }
 
@@ -237,10 +225,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiDate(dateValue.Date);
                 }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
-                }
             }
 
             if (type == "string" && format == "date-time")
@@ -248,10 +232,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
                 {
                     return new OpenApiDateTime(dateTimeValue);
-                }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
                 }
             }
 
@@ -271,13 +251,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiBoolean(booleanValue);
                 }
-                else
-                {
-                    throw new OpenApiException("The value is not compatible with the given type and format.");
-                }
             }
 
-            throw new OpenApiException("The specified type is not supported.");
+            // If data conflicts with the given type, return a string.
+            // This converter is used in the parser, so it does not perform any validations, 
+            // but the validator can be used to validate whether the data and given type conflicts.
+            return new OpenApiString(value);
         }
     }
 }

@@ -46,6 +46,9 @@
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\formDataParameter.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\headerParameterWithIncorrectDataType.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNoLocation.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

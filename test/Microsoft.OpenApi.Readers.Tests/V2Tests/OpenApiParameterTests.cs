@@ -170,6 +170,58 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
+        public void ParseHeaderParameterWithIncorrectDataTypeShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameterWithIncorrectDataType.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = ParameterLocation.Header,
+                    Name = "token",
+                    Description = "token to be passed as a header",
+                    Required = true,
+                    Style = ParameterStyle.Simple,
+
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "array",
+                        Items = new OpenApiSchema
+                        {
+                            Type = "string",
+                            Format = "date-time",
+                            Enum = new List<IOpenApiAny>
+                            {
+                                new OpenApiString("1"),
+                                new OpenApiString("2"),
+                                new OpenApiString("3"),
+                                new OpenApiString("4"),
+                            }
+                        },
+                        Default = new OpenApiArray() {
+                            new OpenApiString("1"),
+                            new OpenApiString("2")
+                        },
+                        Enum = new List<IOpenApiAny>
+                        {
+                            new OpenApiArray() { new OpenApiString("1"), new OpenApiString("2") },
+                            new OpenApiArray() { new OpenApiString("2"), new OpenApiString("3") },
+                            new OpenApiArray() { new OpenApiString("3"), new OpenApiString("4") }
+                        }
+                    }
+                });
+        }
+
+        [Fact]
         public void ParseParameterWithNullLocationShouldSucceed()
         {
             // Arrange
