@@ -13,14 +13,6 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="V2Tests\Samples\OpenApiParameter\parameterWithDefault.yaml" />
-      <None Remove="V2Tests\Samples\OpenApiParameter\parameterWithEnum.yaml" />
-      <None Remove="V3Tests\Samples\OpenApiMediaType\mediaTypeWithExample.yaml" />
-      <None Remove="V3Tests\Samples\OpenApiMediaType\mediaTypeWithExamples.yaml" />
-      <None Remove="V3Tests\Samples\OpenApiParameter\parameterWithExample.yaml" />
-      <None Remove="V3Tests\Samples\OpenApiParameter\parameterWithExamples.yaml" />
-    </ItemGroup>
-    <ItemGroup>
       <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -84,6 +76,12 @@
       <EmbeddedResource Include="V2Tests\Samples\OpenApiPathItem\basicPathItemWithFormData.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiResponse\responseWithExamples.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiHeader\headerWithDefault.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiHeader\headerWithEnum.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithDefault.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithEnum.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithExample.yaml" />
       <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
