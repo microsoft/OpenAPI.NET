@@ -304,5 +304,70 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 });
         }
+
+        [Fact]
+        public void ParseParameterWithDefaultShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithDefault.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = ParameterLocation.Path,
+                    Name = "username",
+                    Description = "username to fetch",
+                    Required = true,
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Default = new OpenApiFloat(5)
+                    }
+                });
+        }
+
+        [Fact]
+        public void ParseParameterWithEnumShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithEnum.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = ParameterLocation.Path,
+                    Name = "username",
+                    Description = "username to fetch",
+                    Required = true,
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Enum =
+                        {
+                            new OpenApiFloat(7),
+                            new OpenApiFloat(8),
+                            new OpenApiFloat(9)
+                        }
+                    }
+                });
+        }
     }
 }

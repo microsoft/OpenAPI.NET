@@ -100,6 +100,47 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
+        private static void ProcessAnyMapFields<T, U>(
+            MapNode mapNode,
+            T domainObject,
+            AnyMapFieldMap<T, U> anyMapFieldMap)
+        {
+            foreach (var anyMapFieldName in anyMapFieldMap.Keys.ToList())
+            {
+                try
+                {
+                    var newProperty = new List<IOpenApiAny>();
+
+                    mapNode.Context.StartObject(anyMapFieldName);
+
+                    foreach (var propertyMapElement in anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject))
+                    {
+                        if (propertyMapElement.Value != null)
+                        {
+                            mapNode.Context.StartObject(propertyMapElement.Key);
+
+                            var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
+
+                            var newAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
+                                    any,
+                                    anyMapFieldMap[anyMapFieldName].SchemaGetter(domainObject));
+
+                            anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, newAny);
+                        }
+                    }
+                }
+                catch (OpenApiException exception)
+                {
+                    exception.Pointer = mapNode.Context.GetLocation();
+                    mapNode.Diagnostic.Errors.Add(new OpenApiError(exception));
+                }
+                finally
+                {
+                    mapNode.Context.EndObject();
+                }
+            }
+        }
+
         public static IOpenApiAny LoadAny(ParseNode node)
         {
             return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());

@@ -7,7 +7,6 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
@@ -18,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Tests
     public class OpenApiSchemaValidationTests
     {
         [Fact]
-        public void ValidateDefaultShouldNotHaveDataTypeForSimpleSchemaMismatch()
+        public void ValidateDefaultShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
@@ -40,7 +39,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
@@ -49,7 +48,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
-        public void ValidateExampleAndDefaultShouldNotHaveDataTypeForSimpleSchemaMismatch()
+        public void ValidateExampleAndDefaultShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
@@ -72,8 +71,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage
             });
             errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
@@ -83,7 +82,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
-        public void ValidateEnumShouldNotHaveDataTypeForSimpleSchemaMismatch()
+        public void ValidateEnumShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
@@ -127,14 +126,14 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
             });
             errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/enum/0",
+                // #enum/0 is not an error since the spec allows
+                // representing an object using a string.
                 "#/enum/1/y",
                 "#/enum/1/z",
                 "#/enum/2"
@@ -142,7 +141,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
-        public void ValidateDefaultShouldNotHaveDataTypeForComplexSchemaMismatch()
+        public void ValidateDefaultShouldNotHaveDataTypeMismatchForComplexSchema()
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
@@ -217,11 +216,11 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
-                OpenApiSchemaRules.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
             });
             errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {

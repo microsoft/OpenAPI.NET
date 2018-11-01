@@ -48,6 +48,19 @@ namespace Microsoft.OpenApi.Readers.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
+        private static readonly AnyMapFieldMap<OpenApiMediaType, OpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
+            new AnyMapFieldMap<OpenApiMediaType, OpenApiExample>
+        {
+            {
+                OpenApiConstants.Examples,
+                new AnyMapFieldMapParameter<OpenApiMediaType, OpenApiExample>(
+                    m => m.Examples,
+                    e => e.Value,
+                    (e, v) => e.Value = v,
+                    m => m.Schema)
+            }
+        };
+
         private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
         {
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
@@ -121,6 +134,11 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             ProcessProduces(response, node.Context);
+
+            foreach( var mediaType in response.Content.Values)
+            {
+                ProcessAnyMapFields(mapNode, mediaType, _mediaTypeAnyMapOpenApiExampleFields);
+            }
 
             return response;
         }

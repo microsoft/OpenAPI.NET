@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// </summary>
         public AnyFieldMapParameter(
             Func<T, IOpenApiAny> propertyGetter,
-            Func<T, IOpenApiAny, IOpenApiAny> propertySetter,
+            Action<T, IOpenApiAny> propertySetter,
             Func<T, OpenApiSchema> schemaGetter)
         {
             this.PropertyGetter = propertyGetter;
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// <summary>
         /// Function to set the value of the property.
         /// </summary>
-        public Func<T, IOpenApiAny, IOpenApiAny> PropertySetter { get; }
+        public Action<T, IOpenApiAny> PropertySetter { get; }
 
         /// <summary>
         /// Function to get the schema to apply to the property.

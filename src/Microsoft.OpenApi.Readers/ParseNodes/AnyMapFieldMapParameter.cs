@@ -4,34 +4,42 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
-    internal class AnyListFieldMapParameter<T>
+    internal class AnyMapFieldMapParameter<T, U>
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        public AnyListFieldMapParameter(
-            Func<T, IList<IOpenApiAny>> propertyGetter,
-            Action<T, IList<IOpenApiAny>> propertySetter,
+        public AnyMapFieldMapParameter(
+            Func<T, IDictionary<string, U>> propertyMapGetter,
+            Func<U, IOpenApiAny> propertyGetter,
+            Action<U, IOpenApiAny> propertySetter,
             Func<T, OpenApiSchema> schemaGetter)
         {
+            this.PropertyMapGetter = propertyMapGetter;
             this.PropertyGetter = propertyGetter;
             this.PropertySetter = propertySetter;
             this.SchemaGetter = schemaGetter;
         }
 
         /// <summary>
-        /// Function to retrieve the value of the property.
+        /// Function to retrieve the property that is a map from string to an inner element containing IOpenApiAny.
         /// </summary>
-        public Func<T, IList<IOpenApiAny>> PropertyGetter { get; }
+        public Func<T, IDictionary<string, U>> PropertyMapGetter { get; }
+
+        /// <summary>
+        /// Function to retrieve the value of the property from an inner element.
+        /// </summary>
+        public Func<U, IOpenApiAny> PropertyGetter { get; }
 
         /// <summary>
         /// Function to set the value of the property.
         /// </summary>
-        public Action<T, IList<IOpenApiAny>> PropertySetter { get; }
+        public Action<U, IOpenApiAny> PropertySetter { get; }
 
         /// <summary>
         /// Function to get the schema to apply to the property.
