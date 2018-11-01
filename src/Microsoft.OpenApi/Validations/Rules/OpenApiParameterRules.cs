@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Exit();
 
 
-                    // enum
+                    // examples
                     context.Enter("examples");
 
                     if (parameter.Examples != null)
