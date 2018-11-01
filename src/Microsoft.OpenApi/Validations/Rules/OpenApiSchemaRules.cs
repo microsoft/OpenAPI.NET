@@ -39,7 +39,6 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     context.Exit();
 
-
                     // enum
                     context.Enter("enum");
 

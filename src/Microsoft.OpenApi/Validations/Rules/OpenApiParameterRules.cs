@@ -75,7 +75,6 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     context.Exit();
 
-
                     // examples
                     context.Enter("examples");
 
