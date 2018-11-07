@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Readers.V2
             new AnyFieldMap<OpenApiParameter>
             {
                 {
-                    "default",
+                    OpenApiConstants.Default,
                     new AnyFieldMapParameter<OpenApiParameter>(
                         p => p.Schema.Default,
                         (p, v) => p.Schema.Default = v,
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Readers.V2
             new AnyListFieldMap<OpenApiParameter>
             {
                 {
-                    "enum",
+                    OpenApiConstants.Enum,
                     new AnyListFieldMapParameter<OpenApiParameter>(
                         p => p.Schema.Enum,
                         (p, v) => p.Schema.Enum = v,

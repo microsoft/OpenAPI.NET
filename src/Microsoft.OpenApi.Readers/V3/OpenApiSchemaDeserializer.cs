@@ -246,14 +246,14 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new AnyFieldMap<OpenApiSchema>
         {
             {
-                "default",
+                OpenApiConstants.Default,
                 new AnyFieldMapParameter<OpenApiSchema>(
                     s => s.Default,
                     (s, v) => s.Default = v,
                     s => s)
             },
             {
-                "example",
+                 OpenApiConstants.Example,
                 new AnyFieldMapParameter<OpenApiSchema>(
                     s => s.Example, 
                     (s, v) => s.Example = v, 
@@ -263,7 +263,13 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new AnyListFieldMap<OpenApiSchema>
         {
-            { "enum", new AnyListFieldMapParameter<OpenApiSchema>(s => s.Enum, (s, v) => s.Enum = v, s => s) }
+            {
+                OpenApiConstants.Enum,
+                new AnyListFieldMapParameter<OpenApiSchema>(
+                    s => s.Enum, 
+                    (s, v) => s.Enum = v,
+                    s => s)
+            }
         };
 
         public static OpenApiSchema LoadSchema(ParseNode node)

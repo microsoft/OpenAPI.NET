@@ -211,13 +211,30 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new AnyFieldMap<OpenApiSchema>
         {
-            { "default", new AnyFieldMapParameter<OpenApiSchema>(s => s.Default, (s, v) => s.Default = v, s => s) },
-            { "example", new AnyFieldMapParameter<OpenApiSchema>(s => s.Example, (s, v) => s.Example = v, s => s) }
+            {
+                OpenApiConstants.Default,
+                new AnyFieldMapParameter<OpenApiSchema>(
+                    s => s.Default, 
+                    (s, v) => s.Default = v, 
+                    s => s)
+            },
+            {
+                OpenApiConstants.Example,
+                new AnyFieldMapParameter<OpenApiSchema>(
+                    s => s.Example, 
+                    (s, v) => s.Example = v, 
+                    s => s) }
         };
 
         private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new AnyListFieldMap<OpenApiSchema>
         {
-            { "enum", new AnyListFieldMapParameter<OpenApiSchema>(s => s.Enum, (s, v) => s.Enum = v, s => s) }
+            {
+                OpenApiConstants.Enum,
+                new AnyListFieldMapParameter<OpenApiSchema>(
+                    s => s.Enum, 
+                    (s, v) => s.Enum = v, 
+                    s => s)
+            }
         };
 
         public static OpenApiSchema LoadSchema(ParseNode node)
