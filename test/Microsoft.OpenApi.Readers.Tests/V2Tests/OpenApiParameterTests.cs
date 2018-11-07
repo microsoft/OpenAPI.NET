@@ -149,21 +149,73 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             Format = "int64",
                             Enum = new List<IOpenApiAny>
                             {
-                                new OpenApiInteger(1),
-                                new OpenApiInteger(2),
-                                new OpenApiInteger(3),
-                                new OpenApiInteger(4),
+                                new OpenApiLong(1),
+                                new OpenApiLong(2),
+                                new OpenApiLong(3),
+                                new OpenApiLong(4),
                             }
                         },
                         Default = new OpenApiArray() {
-                            new OpenApiInteger(1),
-                            new OpenApiInteger(2)
+                            new OpenApiLong(1),
+                            new OpenApiLong(2)
                         },
                         Enum = new List<IOpenApiAny>
                         {
-                            new OpenApiArray() { new OpenApiInteger(1), new OpenApiInteger(2) },
-                            new OpenApiArray() { new OpenApiInteger(2), new OpenApiInteger(3) },
-                            new OpenApiArray() { new OpenApiInteger(3), new OpenApiInteger(4) }
+                            new OpenApiArray() { new OpenApiLong(1), new OpenApiLong(2) },
+                            new OpenApiArray() { new OpenApiLong(2), new OpenApiLong(3) },
+                            new OpenApiArray() { new OpenApiLong(3), new OpenApiLong(4) }
+                        }
+                    }
+                });
+        }
+
+        [Fact]
+        public void ParseHeaderParameterWithIncorrectDataTypeShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameterWithIncorrectDataType.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = ParameterLocation.Header,
+                    Name = "token",
+                    Description = "token to be passed as a header",
+                    Required = true,
+                    Style = ParameterStyle.Simple,
+
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "array",
+                        Items = new OpenApiSchema
+                        {
+                            Type = "string",
+                            Format = "date-time",
+                            Enum = new List<IOpenApiAny>
+                            {
+                                new OpenApiString("1"),
+                                new OpenApiString("2"),
+                                new OpenApiString("3"),
+                                new OpenApiString("4"),
+                            }
+                        },
+                        Default = new OpenApiArray() {
+                            new OpenApiString("1"),
+                            new OpenApiString("2")
+                        },
+                        Enum = new List<IOpenApiAny>
+                        {
+                            new OpenApiArray() { new OpenApiString("1"), new OpenApiString("2") },
+                            new OpenApiArray() { new OpenApiString("2"), new OpenApiString("3") },
+                            new OpenApiArray() { new OpenApiString("3"), new OpenApiString("4") }
                         }
                     }
                 });
@@ -249,6 +301,71 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Schema = new OpenApiSchema
                     {
                         Type = "string"
+                    }
+                });
+        }
+
+        [Fact]
+        public void ParseParameterWithDefaultShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithDefault.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = ParameterLocation.Path,
+                    Name = "username",
+                    Description = "username to fetch",
+                    Required = true,
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Default = new OpenApiFloat(5)
+                    }
+                });
+        }
+
+        [Fact]
+        public void ParseParameterWithEnumShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithEnum.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = ParameterLocation.Path,
+                    Name = "username",
+                    Description = "username to fetch",
+                    Required = true,
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "number",
+                        Format = "float",
+                        Enum =
+                        {
+                            new OpenApiFloat(7),
+                            new OpenApiFloat(8),
+                            new OpenApiFloat(9)
+                        }
                     }
                 });
         }

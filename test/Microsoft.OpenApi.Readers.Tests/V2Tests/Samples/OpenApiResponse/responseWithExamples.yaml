@@ -1,0 +1,11 @@
+﻿description: An array of float response
+schema:
+  type: array
+  items:
+    type: number
+    format: float
+examples:
+  application/json: 
+    - 5
+    - 6
+    - 7

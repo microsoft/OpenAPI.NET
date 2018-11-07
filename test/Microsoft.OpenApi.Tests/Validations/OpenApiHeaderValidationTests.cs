@@ -15,58 +15,15 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
-    public class OpenApiParameterValidationTests
+    public class OpenApiHeaderValidationTests
     {
-        [Fact]
-        public void ValidateFieldIsRequiredInParameter()
-        {
-            // Arrange
-            string nameError = String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
-            string inError = String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
-            var parameter = new OpenApiParameter();
-
-            // Act
-            var errors = parameter.Validate(ValidationRuleSet.GetDefaultRuleSet());
-
-            // Assert
-            errors.Should().NotBeEmpty();
-            errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                nameError,
-                inError
-            });
-        }
-
-        [Fact]
-        public void ValidateRequiredIsTrueWhenInIsPathInParameter()
-        {
-            // Arrange
-            var parameter = new OpenApiParameter()
-            {
-                Name = "name",
-                In = ParameterLocation.Path
-            };
-
-            // Act
-            var errors = parameter.Validate(ValidationRuleSet.GetDefaultRuleSet());
-
-            // Assert
-            errors.Should().NotBeEmpty();
-            errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
-            {
-                "\"required\" must be true when parameter location is \"path\""
-            });
-        }
-
         [Fact]
         public void ValidateExampleShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
-            var parameter = new OpenApiParameter()
+            var header = new OpenApiHeader()
             {
-                Name = "parameter1",
-                In = ParameterLocation.Path,
                 Required = true,
                 Example = new OpenApiInteger(55),
                 Schema = new OpenApiSchema()
@@ -78,7 +35,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
-            walker.Walk(parameter);
+            walker.Walk(header);
 
             errors = validator.Errors;
             bool result = !errors.Any();
@@ -101,10 +58,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             IEnumerable<OpenApiError> errors;
 
-            var parameter = new OpenApiParameter()
+            var header = new OpenApiHeader()
             {
-                Name = "parameter1",
-                In = ParameterLocation.Path,
                 Required = true,
                 Schema = new OpenApiSchema()
                 {
@@ -151,7 +106,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
-            walker.Walk(parameter);
+            walker.Walk(header);
 
             errors = validator.Errors;
             bool result = !errors.Any();
