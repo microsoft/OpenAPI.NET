@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public override string GetScalarValue()
         {
             return _node.Value;
-       }
+        }
 
         /// <summary>
         /// Create a <see cref="IOpenApiPrimitive"/>
@@ -36,45 +36,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public override IOpenApiAny CreateAny()
         {
             var value = GetScalarValue();
-
-            if (value == null || value == "null")
-            {
-                return new OpenApiNull();
-            }
-
-            if (value == "true")
-            {
-                return new OpenApiBoolean(true);
-            }
-
-            if (value == "false")
-            {
-                return new OpenApiBoolean(false);
-            }
-
-            // The NumberStyles below are the default ones based on 
-            // https://docs.microsoft.com/en-us/dotnet/api/?view=netframework-4.7.2
-            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
-            {
-                return new OpenApiInteger(intValue);
-            }
-
-            if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue))
-            {
-                return new OpenApiLong(longValue); 
-            }
-
-            if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
-            {
-                return new OpenApiDouble(doubleValue); 
-            }
-
-            if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
-            {
-                return new OpenApiDateTime(dateTimeValue);
-            }
-
-            // if we can't identify the type of value, return it as string.
             return new OpenApiString(value);
         }
     }

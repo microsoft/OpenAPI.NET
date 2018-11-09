@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Type = "integer",
                     Format = "int64",
-                    Default = new OpenApiInteger(88)
+                    Default = new OpenApiLong(88)
                 });
         }
 
@@ -120,8 +120,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     ["foo"] = new OpenApiString("bar"),
                     ["baz"] = new OpenApiArray() { 
-                    new OpenApiInteger(1),
-                    new OpenApiInteger(2)
+                        new OpenApiInteger(1),
+                        new OpenApiInteger(2)
                     }
                 });
         }
@@ -314,7 +314,7 @@ get:
                         Example = new OpenApiObject
                         {
                             ["name"] = new OpenApiString("Puma"),
-                            ["id"] = new OpenApiInteger(1)
+                            ["id"] = new OpenApiLong(1)
                         }
                     });
             }

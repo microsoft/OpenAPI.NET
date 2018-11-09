@@ -48,6 +48,18 @@ namespace Microsoft.OpenApi.Readers.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
+        private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
+            new AnyFieldMap<OpenApiMediaType>
+            {
+                {
+                    OpenApiConstants.Example,
+                    new AnyFieldMapParameter<OpenApiMediaType>(
+                        m => m.Example,
+                        (m, v) => m.Example = v,
+                        m => m.Schema)
+                }
+            };
+
         private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
         {
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
@@ -60,11 +72,17 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var produce in produces)
             {
-                if (!response.Content.ContainsKey(produce))
+                var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema);
+
+                if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
+                {
+                    response.Content[produce].Schema = schema;
+                }
+                else
                 {
                     var mediaType = new OpenApiMediaType
                     {
-                        Schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema)
+                        Schema = schema
                     };
 
                     response.Content.Add(produce, mediaType);
@@ -89,6 +107,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 response.Content = new Dictionary<string, OpenApiMediaType>();
             }
+
             OpenApiMediaType mediaTypeObject;
             if (response.Content.ContainsKey(mediaType))
             {
@@ -99,6 +118,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 mediaTypeObject = new OpenApiMediaType();
                 response.Content.Add(mediaType, mediaTypeObject);
             }
+
             mediaTypeObject.Example = exampleNode;
         }
 
@@ -121,6 +141,11 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             ProcessProduces(response, node.Context);
+
+            foreach (var mediaType in response.Content.Values)
+            {
+                ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+            }
 
             return response;
         }

@@ -19,7 +19,10 @@ namespace Microsoft.OpenApi.Tests
             // given that there are multiple types that can be used for the declared type OpenApiAny.
             // Without this option, properties specific to those types would not be compared.
             AssertionOptions.AssertEquivalencyUsing(
-                o => o.AllowingInfiniteRecursion().RespectingRuntimeTypes());
+                o => o
+                    .AllowingInfiniteRecursion()
+                    .RespectingRuntimeTypes()
+                    .WithStrictOrdering());
         }
     }
 }
