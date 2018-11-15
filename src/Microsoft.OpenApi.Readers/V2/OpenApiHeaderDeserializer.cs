@@ -3,7 +3,6 @@
 
 using System;
 using System.Globalization;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -134,6 +133,30 @@ namespace Microsoft.OpenApi.Readers.V2
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
+        private static readonly AnyFieldMap<OpenApiHeader> _headerAnyFields =
+            new AnyFieldMap<OpenApiHeader>
+            {
+                {
+                    OpenApiConstants.Default,
+                    new AnyFieldMapParameter<OpenApiHeader>(
+                        p => p.Schema.Default,
+                        (p, v) => p.Schema.Default = v,
+                        p => p.Schema)
+                }
+            };
+
+        private static readonly AnyListFieldMap<OpenApiHeader> _headerAnyListFields =
+            new AnyListFieldMap<OpenApiHeader>
+            {
+                {
+                    OpenApiConstants.Enum,
+                    new AnyListFieldMapParameter<OpenApiHeader>(
+                        p => p.Schema.Enum,
+                        (p, v) => p.Schema.Enum = v,
+                        p => p.Schema)
+                },
+            };
+
         public static OpenApiHeader LoadHeader(ParseNode node)
         {
             var mapNode = node.CheckMapNode("header");
@@ -149,6 +172,9 @@ namespace Microsoft.OpenApi.Readers.V2
                 header.Schema = schema;
                 node.Context.SetTempStorage("schema", null);
             }
+
+            ProcessAnyFields(mapNode, header, _headerAnyFields);
+            ProcessAnyListFields(mapNode, header, _headerAnyListFields);
 
             return header;
         }

@@ -95,16 +95,16 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             locator.Locations.ShouldBeEquivalentTo(new List<string> {
                 "#/servers",
-                "#/tags",
                 "#/paths",
                 "#/paths/~1test",
                 "#/paths/~1test/get",
-                "#/paths/~1test/get/tags",
                 "#/paths/~1test/get/responses",
                 "#/paths/~1test/get/responses/200",
                 "#/paths/~1test/get/responses/200/content",
                 "#/paths/~1test/get/responses/200/content/application~1json",
                 "#/paths/~1test/get/responses/200/content/application~1json/schema",
+                "#/paths/~1test/get/tags",
+                "#/tags",
 
             });
 
