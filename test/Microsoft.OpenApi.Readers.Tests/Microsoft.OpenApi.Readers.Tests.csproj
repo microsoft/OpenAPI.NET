@@ -103,8 +103,6 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDiscriminator\invalidAnyOfDiscriminator.yaml" />
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDiscriminator\invalidOneOfDiscriminator.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\basicDocumentWithMultipleServers.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

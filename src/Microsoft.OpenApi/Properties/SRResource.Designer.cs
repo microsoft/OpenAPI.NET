@@ -304,6 +304,25 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Composite Schema {0} must contain property specified in the discriminator {1}..
+        /// </summary>
+        internal static string Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator {
+            get {
+                return ResourceManager.GetString("Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Composite schema {0} must contain property specified in the discriminator {1} in the required field list..
+        /// </summary>
+        internal static string Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscriminator {
+            get {
+                return ResourceManager.GetString("Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscrim" +
+                        "inator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The extension name &apos;{0}&apos; in &apos;{1}&apos; object MUST begin with &apos;x-&apos;..
         /// </summary>
         internal static string Validation_ExtensionNameMustBeginWithXDash {
@@ -336,24 +355,6 @@ namespace Microsoft.OpenApi.Properties {
         internal static string Validation_RuleAddTwice {
             get {
                 return ResourceManager.GetString("Validation_RuleAddTwice", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Schema {0} doesn&apos;t contain discriminator property {1}..
-        /// </summary>
-        internal static string Validation_SchemaDoesntContainDiscriminatorProperty {
-            get {
-                return ResourceManager.GetString("Validation_SchemaDoesntContainDiscriminatorProperty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Schema {0} doesn&apos;t contain discriminator property {1} in the required field list..
-        /// </summary>
-        internal static string Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList {
-            get {
-                return ResourceManager.GetString("Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList", resourceCulture);
             }
         }
         

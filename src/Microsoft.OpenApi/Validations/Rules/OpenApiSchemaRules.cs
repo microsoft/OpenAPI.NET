@@ -101,26 +101,22 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Checks if the schemas in the list contain a property with the property name specified by the discriminator.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="ruleName"></param>
-        /// <param name="schemas">OneOf/AnyOf schemas</param>
-        /// <param name="discriminator">discriminator</param>
         private static void ValidateSchemaListDiscriminator(IValidationContext context, string ruleName,
                         IList<OpenApiSchema> schemas, OpenApiDiscriminator discriminator)
         {
             foreach (var schema in schemas)
             {
-                if (!schema.Properties.ContainsKey(discriminator.PropertyName))
+                if (schema.Reference != null && !schema.Properties.ContainsKey(discriminator.PropertyName))
                 {
-                    context.AddError(new OpenApiValidatorError(ruleName, context.PathString,
-                            string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorProperty,
-                                        schema.Reference.Id, discriminator.PropertyName)));
+                    context.CreateError(ruleName, 
+                        string.Format(SRResource.Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator,
+                                                        schema.Reference.Id, discriminator.PropertyName));
                 }
-                if (!schema.Required.Contains(discriminator.PropertyName))
+                if (schema.Reference != null && !schema.Required.Contains(discriminator.PropertyName))
                 {
-                    context.AddError(new OpenApiValidatorError(ruleName, context.PathString,
-                        string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList,
-                                        schema.Reference.Id, discriminator.PropertyName)));
+                    context.CreateError(ruleName,
+                        string.Format(SRResource.Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscriminator,
+                                                        schema.Reference.Id, discriminator.PropertyName));
                 }
             }
         }
