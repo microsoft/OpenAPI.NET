@@ -315,10 +315,9 @@ namespace Microsoft.OpenApi.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Composite schema {0} must contain property specified in the discriminator {1} in the required field list..
         /// </summary>
-        internal static string Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscriminator {
+        internal static string Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator {
             get {
-                return ResourceManager.GetString("Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscrim" +
-                        "inator", resourceCulture);
+                return ResourceManager.GetString("Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator", resourceCulture);
             }
         }
         

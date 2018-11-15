@@ -279,7 +279,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             errors.ShouldAllBeEquivalentTo(new List<OpenApiValidatorError>
                 {
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),"#/oneOf",
-                        string.Format(SRResource.Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscriminator, 
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator, 
                                     "schema1", "property2")),
 
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),"#/oneOf",
@@ -287,7 +287,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                      "schema2", "property2")),
 
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),"#/oneOf",
-                        string.Format(SRResource.Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscriminator, 
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator, 
                                     "schema2", "property2")),
 
                 });
@@ -339,7 +339,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             errors.ShouldAllBeEquivalentTo(new List<OpenApiValidatorError>
                 {
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
-                        string.Format(SRResource.Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscriminator,
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                     "schema1", "property2")),
 
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
@@ -347,7 +347,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                      "schema2", "property2")),
 
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
-                        string.Format(SRResource.Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscriminator,
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                     "schema2", "property2")),
 
                 });

@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 if (schema.Reference != null && !schema.Required.Contains(discriminator.PropertyName))
                 {
                     context.CreateError(ruleName,
-                        string.Format(SRResource.Validation_CompositeSchemaRequiedFieldMustContainThePropertySpecifiedInTheDiscriminator,
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                                         schema.Reference.Id, discriminator.PropertyName));
                 }
             }
