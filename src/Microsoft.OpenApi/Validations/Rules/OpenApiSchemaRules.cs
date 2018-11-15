@@ -3,6 +3,8 @@
 
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
+using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -55,6 +57,72 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Exit();
                 });
 
+        /// <summary>
+        /// Validates OneOf Discriminator
+        /// </summary>
+        public static ValidationRule<OpenApiSchema> ValidateOneOfDiscriminator =>
+            new ValidationRule<OpenApiSchema>(
+                (context, schema) =>
+                {
+                    // oneOf
+                    context.Enter("oneOf");
+
+                    if (schema.OneOf != null && schema.Discriminator != null)
+                    {
+                        ValidateSchemaListDiscriminator(context, nameof(ValidateOneOfDiscriminator),
+                            schema.OneOf, schema.Discriminator);
+                    }
+
+                    context.Exit();
+                });
+
+        // <summary>
+        /// Validates AnyOf Discriminator
+        /// </summary>
+        public static ValidationRule<OpenApiSchema> ValidateAnyOfDiscriminator =>
+            new ValidationRule<OpenApiSchema>(
+                (context, schema) =>
+                {
+                    // oneOf
+                    context.Enter("anyOf");
+
+                    if (schema.AnyOf != null && schema.Discriminator != null)
+                    {
+                        ValidateSchemaListDiscriminator(context, nameof(ValidateAnyOfDiscriminator),
+                            schema.AnyOf, schema.Discriminator);
+                    }
+
+                    context.Exit();
+                });
+
         // add more rule.
+
+        
+        /// <summary>
+        /// Checks if the schemas in the list contain a property with the property name specified by the discriminator.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="ruleName"></param>
+        /// <param name="schemas">OneOf/AnyOf schemas</param>
+        /// <param name="discriminator">discriminator</param>
+        private static void ValidateSchemaListDiscriminator(IValidationContext context, string ruleName,
+                        IList<OpenApiSchema> schemas, OpenApiDiscriminator discriminator)
+        {
+            foreach (var schema in schemas)
+            {
+                if (!schema.Properties.ContainsKey(discriminator.PropertyName))
+                {
+                    context.AddError(new OpenApiValidatorError(ruleName, context.PathString,
+                            string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorProperty,
+                                        schema.Reference.Id, discriminator.PropertyName)));
+                }
+                if (!schema.Required.Contains(discriminator.PropertyName))
+                {
+                    context.AddError(new OpenApiValidatorError(ruleName, context.PathString,
+                        string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList,
+                                        schema.Reference.Id, discriminator.PropertyName)));
+                }
+            }
+        }
     }
 }

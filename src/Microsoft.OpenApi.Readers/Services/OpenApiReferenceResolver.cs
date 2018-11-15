@@ -142,9 +142,9 @@ namespace Microsoft.OpenApi.Readers.Services
         public override void Visit(OpenApiSchema schema)
         {
             ResolveObject(schema.Items, r => schema.Items = r);
-            ResolveList(schema.OneOf, schema.Discriminator);
+            ResolveList(schema.OneOf);
             ResolveList(schema.AllOf);
-            ResolveList(schema.AnyOf, schema.Discriminator);
+            ResolveList(schema.AnyOf);
             ResolveMap(schema.Properties);
             ResolveObject(schema.AdditionalProperties, r => schema.AdditionalProperties = r);
         }
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Readers.Services
             }
         }
 
-        private void ResolveList<T>(IList<T> list, OpenApiDiscriminator discriminator = null) where T : class, IOpenApiReferenceable, new()
+        private void ResolveList<T>(IList<T> list) where T : class, IOpenApiReferenceable, new()
         {
             if (list == null) return;
 
@@ -194,11 +194,6 @@ namespace Microsoft.OpenApi.Readers.Services
                 if (IsUnresolvedReference(entity))
                 {
                     list[i] = ResolveReference<T>(entity.Reference);
-                }
-
-                if (list[i] is OpenApiSchema && discriminator != null)
-                {
-                    ValidateSchemaDiscriminator(list[i], discriminator);
                 }
             }
         }
@@ -254,20 +249,6 @@ namespace Microsoft.OpenApi.Readers.Services
         private bool IsUnresolvedReference(IOpenApiReferenceable possibleReference)
         {
             return (possibleReference != null && possibleReference.UnresolvedReference);
-        }
-
-        private void ValidateSchemaDiscriminator(IOpenApiReferenceable schema, OpenApiDiscriminator discriminator)
-        {
-            if (!((OpenApiSchema)schema).Properties.ContainsKey(discriminator.PropertyName))
-            {
-                _errors.Add(new OpenApiError(PathString, $"Schema {schema.Reference.Id} " +
-                        $"doesn't contain discriminator property {discriminator.PropertyName}."));
-            }
-            if (!((OpenApiSchema)schema).Required.Contains(discriminator.PropertyName))
-            {
-                _errors.Add(new OpenApiError(PathString, $"Schema {schema.Reference.Id} " +
-                    $"doesn't contain discriminator property {discriminator.PropertyName} in the required field list."));
-            }
         }
     }
 }

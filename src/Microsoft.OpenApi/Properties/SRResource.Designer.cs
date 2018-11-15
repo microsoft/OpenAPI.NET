@@ -340,6 +340,24 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schema {0} doesn&apos;t contain discriminator property {1}..
+        /// </summary>
+        internal static string Validation_SchemaDoesntContainDiscriminatorProperty {
+            get {
+                return ResourceManager.GetString("Validation_SchemaDoesntContainDiscriminatorProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schema {0} doesn&apos;t contain discriminator property {1} in the required field list..
+        /// </summary>
+        internal static string Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList {
+            get {
+                return ResourceManager.GetString("Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The string &apos;{0}&apos; MUST be in the format of an email address..
         /// </summary>
         internal static string Validation_StringMustBeEmailAddress {

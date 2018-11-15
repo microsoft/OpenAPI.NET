@@ -6,8 +6,11 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
+using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Validations.Rules;
 using SharpYaml.Serialization;
 using Xunit;
 
@@ -59,14 +62,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var doc = reader.Read(stream, out diagnostic);
                 diagnostic.Errors.ShouldAllBeEquivalentTo(new List<OpenApiError>
                 {
-                    new OpenApiError("#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema",
-                    "Schema pet1 doesn't contain discriminator property petType in the required field list."),
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),
+                        "#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema/oneOf",
+                        string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList, "pet1", "petType")),
 
-                    new OpenApiError("#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema",
-                    "Schema pet2 doesn't contain discriminator property petType."),
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),
+                        "#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema/oneOf",
+                        string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorProperty, "pet2", "petType")),
 
-                    new OpenApiError("#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema",
-                    "Schema pet2 doesn't contain discriminator property petType in the required field list.")
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator), 
+                        "#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema/oneOf",
+                        string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList, "pet2", "petType"))
                 });
             }
         }
@@ -81,11 +87,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var doc = reader.Read(stream, out diagnostic);
                 diagnostic.Errors.ShouldAllBeEquivalentTo(new List<OpenApiError>
                 {
-                    new OpenApiError("#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema",
-                    "Schema pet2 doesn't contain discriminator property petType."),
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),
+                        "#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema/anyOf",
+                        string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorProperty, "pet2", "petType")),
 
-                    new OpenApiError("#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema",
-                    "Schema pet2 doesn't contain discriminator property petType in the required field list.")
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator), 
+                        "#/paths/~1pets~1{id}/get/responses/200/content/application~1json/schema/anyOf",
+                        string.Format(SRResource.Validation_SchemaDoesntContainDiscriminatorPropertyInRequiredFieldList, "pet2", "petType"))
                 });
             }
         }
