@@ -1,0 +1,40 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: Header components
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: sample response
+          headers:
+            $ref: "#/components/headers/X-Request-ID"
+components:
+  headers:
+    example-header:
+      description: Test header with example
+      required: true
+      deprecated: false
+      allowEmptyValue: false
+      allowReserved: true
+      style: simple
+      explode: false
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+    examples-header:
+      description: Test header with example
+      required: true
+      deprecated: false
+      allowEmptyValue: false
+      allowReserved: true
+      style: simple
+      explode: false
+      examples:
+        uuid1: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+        uuid2: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid

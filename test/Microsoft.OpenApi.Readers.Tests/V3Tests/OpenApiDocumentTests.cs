@@ -1204,5 +1204,15 @@ paths: {}",
                 Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
             }
         }
+
+        [Fact]
+        public void HeaderParameterShouldAllowExample()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+                Assert.Equal(0, diagnostic.Errors.Count);
+            }
+        }
     }
 }
