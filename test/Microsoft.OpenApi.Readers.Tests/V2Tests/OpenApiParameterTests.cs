@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Description = "token to be passed as a header",
                     Required = true,
                     Style = ParameterStyle.Simple,
-                   
+
                     Schema = new OpenApiSchema
                     {
                         Type = "array",
@@ -226,7 +226,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -254,7 +254,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -278,11 +278,35 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
+        public void ParseParameterWithNoSchemaShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoSchema.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV2Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = null,
+                    Name = "username",
+                    Description = "username to fetch",
+                    Required = false
+                });
+        }
+
+        [Fact]
         public void ParseParameterWithUnknownLocationShouldSucceed()
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
