@@ -131,6 +131,11 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             }
 
+            foreach (var response in operation.Responses.Values)
+            {
+                ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
+            }
+
             return operation;
         }
 
