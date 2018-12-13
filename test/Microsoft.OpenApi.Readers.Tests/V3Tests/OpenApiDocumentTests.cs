@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
@@ -1211,7 +1212,68 @@ paths: {}",
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml")))
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
-                Assert.Equal(0, diagnostic.Errors.Count);
+
+                var exampleHeader = openApiDoc.Components?.Headers?["example-header"];
+                Assert.NotNull(exampleHeader);
+                exampleHeader.ShouldBeEquivalentTo(
+                    new OpenApiHeader()
+                    {
+                        Description = "Test header with example",
+                        Required = true,
+                        Deprecated = true,
+                        AllowEmptyValue = true,
+                        AllowReserved = true,
+                        Style = ParameterStyle.Simple,
+                        Explode = true,
+                        Example = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
+                        Schema = new OpenApiSchema()
+                        {
+                            Type = "string",
+                            Format = "uuid"
+                        },
+                        Reference = new OpenApiReference()
+                        {
+                            Type = ReferenceType.Header,
+                            Id = "example-header"
+                        }
+                    });
+
+                var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
+                Assert.NotNull(examplesHeader);
+                examplesHeader.ShouldBeEquivalentTo(
+                    new OpenApiHeader()
+                    {
+                        Description = "Test header with example",
+                        Required = true,
+                        Deprecated = true,
+                        AllowEmptyValue = true,
+                        AllowReserved = true,
+                        Style = ParameterStyle.Simple,
+                        Explode = true,
+                        Examples = new Dictionary<string, OpenApiExample>()
+                        {
+                            { "uuid1", new OpenApiExample()
+                                {
+                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                }
+                            },
+                            { "uuid2", new OpenApiExample()
+                                {
+                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                }
+                            }
+                        },
+                        Schema = new OpenApiSchema()
+                        {
+                            Type = "string",
+                            Format = "uuid"
+                        },
+                        Reference = new OpenApiReference()
+                        {
+                            Type = ReferenceType.Header,
+                            Id = "examples-header"
+                        }
+                    });
             }
         }
     }
