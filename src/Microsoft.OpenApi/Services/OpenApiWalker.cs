@@ -996,6 +996,14 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiSecurityScheme"/> and child objects
+        /// </summary>
+        internal void Walk(IOpenApiReferenceable referenceable)
+        {
+            _visitor.Visit(referenceable);
+        }
+
+        /// <summary>
         /// Dispatcher method that enables using a single method to walk the model
         /// starting from any <see cref="IOpenApiElement"/>
         /// </summary>
@@ -1057,7 +1065,12 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private bool IsReference(IOpenApiReferenceable referenceable)
         {
-            return referenceable.Reference != null && !_inComponents;
+            var isReference = referenceable.Reference != null && !_inComponents;
+            if (isReference)
+            {
+                Walk(referenceable);
+            }
+            return isReference;
         }
 
         private void EnterComponents()

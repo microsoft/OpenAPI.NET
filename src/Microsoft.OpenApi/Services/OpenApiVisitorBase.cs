@@ -277,6 +277,20 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiSecurityScheme"/>
+        /// </summary>
+        public virtual void Visit(OpenApiSecurityScheme securityScheme)
+        {
+        }
+
+        /// <summary>
+        /// Visits <see cref="OpenApiExample"/>
+        /// </summary>
+        public virtual void Visit(OpenApiExample example)
+        {
+        }
+
+        /// <summary>
         /// Visits list of <see cref="OpenApiTag"/>
         /// </summary>
         public virtual void Visit(IList<OpenApiTag> openApiTags)
@@ -323,6 +337,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="encodings"></param>
         public virtual void Visit(IDictionary<string, OpenApiEncoding> encodings)
+        {
+        }
+
+        /// <summary>
+        /// Visits IOpenApiReferenceable instances that are references and not in components
+        /// </summary>
+        /// <param name="referenceable">referenced object</param>
+        public virtual void Visit(IOpenApiReferenceable referenceable)
         {
         }
     }
