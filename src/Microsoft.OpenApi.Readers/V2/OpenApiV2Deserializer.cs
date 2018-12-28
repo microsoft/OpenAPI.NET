@@ -78,12 +78,16 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     mapNode.Context.StartObject(anyListFieldName);
 
-                    foreach (var propertyElement in anyListFieldMap[anyListFieldName].PropertyGetter(domainObject))
+                    var list = anyListFieldMap[anyListFieldName].PropertyGetter(domainObject);
+                    if (list != null)
                     {
-                        newProperty.Add(
-                            OpenApiAnyConverter.GetSpecificOpenApiAny(
-                                propertyElement,
-                                anyListFieldMap[anyListFieldName].SchemaGetter(domainObject)));
+                        foreach (var propertyElement in list)
+                        {
+                            newProperty.Add(
+                                OpenApiAnyConverter.GetSpecificOpenApiAny(
+                                    propertyElement,
+                                    anyListFieldMap[anyListFieldName].SchemaGetter(domainObject)));
+                        }
                     }
 
                     anyListFieldMap[anyListFieldName].PropertySetter(domainObject, newProperty);

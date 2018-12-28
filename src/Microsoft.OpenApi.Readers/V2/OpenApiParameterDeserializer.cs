@@ -149,8 +149,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     OpenApiConstants.Default,
                     new AnyFieldMapParameter<OpenApiParameter>(
-                        p => p.Schema.Default,
-                        (p, v) => p.Schema.Default = v,
+                        p => p.Schema?.Default,
+                        (p, v) => {
+                            if (p.Schema != null || v != null)
+                            {
+                                GetOrCreateSchema(p).Default = v;
+                            }
+                        },
                         p => p.Schema)
                 }
             };
@@ -161,8 +166,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     OpenApiConstants.Enum,
                     new AnyListFieldMapParameter<OpenApiParameter>(
-                        p => p.Schema.Enum,
-                        (p, v) => p.Schema.Enum = v,
+                        p => p.Schema?.Enum,
+                        (p, v) => {
+                            if (p.Schema != null || v != null && v.Count > 0)
+                            {
+                                GetOrCreateSchema(p).Enum = v;
+                            }
+                        },
                         p => p.Schema)
                 },
             };
@@ -285,7 +295,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 return null; // Don't include Form or Body parameters when normal parameters are loaded.
             }
 
-            if ( loadRequestBody && !_isBodyOrFormData )
+            if (loadRequestBody && !_isBodyOrFormData)
             {
                 return null; // Don't include non-Body or non-Form parameters when request bodies are loaded.
             }
