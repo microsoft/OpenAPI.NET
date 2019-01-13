@@ -368,7 +368,7 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Schema {0} must contain property specified in the required field {0}..
+        ///   Looks up a localized string similar to Schema {0} must contain property specified in the required field {1}..
         /// </summary>
         internal static string Validation_SchemaMustContainPropertySpecifiedInTheRequiredField {
             get {

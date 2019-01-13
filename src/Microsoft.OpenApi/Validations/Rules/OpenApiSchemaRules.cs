@@ -73,9 +73,9 @@ namespace Microsoft.OpenApi.Validations.Rules
                         {
                             if (!schema.Properties.ContainsKey(requiredField))
                             {
-                                context.CreateError(nameof(ValidateSchemaDiscriminator),
+                                context.CreateError(nameof(ValidateSchemaRequiredFields),
                                                     string.Format(SRResource.Validation_SchemaMustContainPropertySpecifiedInTheRequiredField,
-                                                                                    requiredField));
+                                                                                    schema.Reference.Id, requiredField));
                             }
                         }
                     }
