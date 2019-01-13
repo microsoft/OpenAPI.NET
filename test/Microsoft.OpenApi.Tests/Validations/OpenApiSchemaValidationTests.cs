@@ -7,6 +7,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
@@ -230,6 +231,126 @@ namespace Microsoft.OpenApi.Validations.Tests
                 "#/default/property2/1/z",
                 "#/default/property4",
             });
+        }
+
+        [Fact]
+        public void ValidateOneOfCompositeSchemaMustContainPropertySpecifiedInTheDiscriminator()
+        {
+            IEnumerable<OpenApiError> errors;
+            var schema = new OpenApiSchema
+            {
+                Type = "object",
+                OneOf = new List<OpenApiSchema>
+                {
+                   new OpenApiSchema
+                   {
+                       Type = "object",
+                       Properties = {
+                            ["property1"] = new OpenApiSchema() { Type = "integer", Format ="int64" },
+                            ["property2"] = new OpenApiSchema() { Type = "string" }
+                        },
+                       Reference = new OpenApiReference{ Id = "schema1" }
+                    },
+                   new OpenApiSchema
+                   {
+                       Type = "object",
+                       Properties = {
+                             ["property1"] = new OpenApiSchema() { Type = "integer", Format ="int64" },
+                        },
+                       Reference = new OpenApiReference{ Id = "schema2" }
+                    }
+                },
+                Discriminator = new OpenApiDiscriminator
+                {
+                    PropertyName = "property2"
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(schema);
+
+            errors = validator.Errors;
+            bool result = !errors.Any();
+
+            // Assert
+            result.Should().BeFalse();
+            errors.ShouldAllBeEquivalentTo(new List<OpenApiValidatorError>
+                {
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),"#/oneOf",
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator, 
+                                    "schema1", "property2")),
+
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),"#/oneOf",
+                        string.Format(SRResource.Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator, 
+                                     "schema2", "property2")),
+
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),"#/oneOf",
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator, 
+                                    "schema2", "property2")),
+
+                });
+        }
+
+        [Fact]
+        public void ValidateAnyOfCompositeSchemaMustContainPropertySpecifiedInTheDiscriminator()
+        {
+            IEnumerable<OpenApiError> errors;
+            var schema = new OpenApiSchema
+            {
+                Type = "object",
+                AnyOf = new List<OpenApiSchema>
+                {
+                   new OpenApiSchema
+                   {
+                       Type = "object",
+                       Properties = {
+                            ["property1"] = new OpenApiSchema() { Type = "integer", Format ="int64" },
+                            ["property2"] = new OpenApiSchema() { Type = "string" }
+                        },
+                       Reference = new OpenApiReference{ Id = "schema1" }
+                    },
+                   new OpenApiSchema
+                   {
+                       Type = "object",
+                       Properties = {
+                             ["property1"] = new OpenApiSchema() { Type = "integer", Format ="int64" },
+                        },
+                       Reference = new OpenApiReference{ Id = "schema2" }
+                    }
+                },
+                Discriminator = new OpenApiDiscriminator
+                {
+                    PropertyName = "property2"
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(schema);
+
+            errors = validator.Errors;
+            bool result = !errors.Any();
+
+            // Assert
+            result.Should().BeFalse();
+            errors.ShouldAllBeEquivalentTo(new List<OpenApiValidatorError>
+                {
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
+                                    "schema1", "property2")),
+
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
+                        string.Format(SRResource.Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator,
+                                     "schema2", "property2")),
+
+                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
+                        string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
+                                    "schema2", "property2")),
+
+                });
         }
     }
 }

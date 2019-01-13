@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "schema", (o, n) =>
                 {
-                    n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n));
+                    n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n), o);
                 }
             },
         };
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             };
 
-        private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
+        private static void ProcessProduces(MapNode mapNode, OpenApiResponse response, ParsingContext context)
         {
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces) ?? new List<string>();
@@ -72,11 +72,16 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var produce in produces)
             {
-                var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema);
+                var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+                context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
 
                 if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
                 {
-                    response.Content[produce].Schema = schema;
+                    if (schema != null)
+                    {
+                        response.Content[produce].Schema = schema;
+                        ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
+                    }
                 }
                 else
                 {
@@ -124,8 +129,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
         public static OpenApiResponse LoadResponse(ParseNode node)
         {
-            node.Context.SetTempStorage(TempStorageKeys.ResponseSchema, null);
-
             var mapNode = node.CheckMapNode("response");
 
             var pointer = mapNode.GetReferencePointer();
@@ -140,11 +143,12 @@ namespace Microsoft.OpenApi.Readers.V2
                 property.ParseField(response, _responseFixedFields, _responsePatternFields);
             }
 
-            ProcessProduces(response, node.Context);
-
             foreach (var mediaType in response.Content.Values)
             {
-                ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                if (mediaType.Schema != null)
+                {
+                    ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                }
             }
 
             return response;

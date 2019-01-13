@@ -198,6 +198,12 @@
   <data name="Validation_ComponentsKeyMustMatchRegularExpr" xml:space="preserve">
     <value>The key '{0}' in '{1}' of components MUST match the regular expression '{2}'.</value>
   </data>
+  <data name="Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator" xml:space="preserve">
+    <value>Composite Schema {0} must contain property specified in the discriminator {1}.</value>
+  </data>
+  <data name="Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator" xml:space="preserve">
+    <value>Composite schema {0} must contain property specified in the discriminator {1} in the required field list.</value>
+  </data>
   <data name="Validation_ExtensionNameMustBeginWithXDash" xml:space="preserve">
     <value>The extension name '{0}' in '{1}' object MUST begin with 'x-'.</value>
   </data>
