@@ -772,7 +772,7 @@ namespace Microsoft.OpenApi.Services
 
             if (schema.AnyOf != null)
             {
-                Walk("anyOf", () => Walk(schema.AllOf));
+                Walk("anyOf", () => Walk(schema.AnyOf));
             }
 
             if (schema.Properties != null) {
@@ -883,7 +883,7 @@ namespace Microsoft.OpenApi.Services
                 }
             }
         }
-
+        
         /// <summary>
         /// Visits <see cref="OpenApiOAuthFlows"/> and child objects
         /// </summary>
