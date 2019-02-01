@@ -58,12 +58,6 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "example", (o, n) =>
-                    {
-                        o.Example = n.CreateAny();
-                    }
-                },
-                {
                     "type", (o, n) =>
                     {
                         GetOrCreateSchema(o).Type = n.GetScalarValue();
@@ -147,6 +141,40 @@ namespace Microsoft.OpenApi.Readers.V2
             new PatternFieldMap<OpenApiParameter>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+            };
+
+        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields =
+            new AnyFieldMap<OpenApiParameter>
+            {
+                {
+                    OpenApiConstants.Default,
+                    new AnyFieldMapParameter<OpenApiParameter>(
+                        p => p.Schema?.Default,
+                        (p, v) => {
+                            if (p.Schema != null || v != null)
+                            {
+                                GetOrCreateSchema(p).Default = v;
+                            }
+                        },
+                        p => p.Schema)
+                }
+            };
+
+        private static readonly AnyListFieldMap<OpenApiParameter> _parameterAnyListFields =
+            new AnyListFieldMap<OpenApiParameter>
+            {
+                {
+                    OpenApiConstants.Enum,
+                    new AnyListFieldMapParameter<OpenApiParameter>(
+                        p => p.Schema?.Enum,
+                        (p, v) => {
+                            if (p.Schema != null || v != null && v.Count > 0)
+                            {
+                                GetOrCreateSchema(p).Enum = v;
+                            }
+                        },
+                        p => p.Schema)
+                },
             };
 
         private static void LoadStyle(OpenApiParameter p, string v)
@@ -247,10 +275,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
             }
-            
+
             var parameter = new OpenApiParameter();
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
+
+            ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
+            ProcessAnyListFields(mapNode, parameter, _parameterAnyListFields);
 
             var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
             if (schema != null)
@@ -264,7 +295,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 return null; // Don't include Form or Body parameters when normal parameters are loaded.
             }
 
-            if ( loadRequestBody && !_isBodyOrFormData )
+            if (loadRequestBody && !_isBodyOrFormData)
             {
                 return null; // Don't include non-Body or non-Form parameters when request bodies are loaded.
             }

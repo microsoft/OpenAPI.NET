@@ -1,0 +1,16 @@
+﻿# modified from https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject
+name: token
+in: header
+description: token to be passed as a header
+required: true
+type: array
+default: [1,2]
+items:
+  type: string
+  format: date-time
+  enum: [1,2,3,4]
+collectionFormat: csv
+enum: 
+  - [1,2]
+  - [2,3]
+  - [3,4]

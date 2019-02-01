@@ -1,0 +1,12 @@
+﻿name: username
+in: null
+description: username to fetch
+required: true
+examples: 
+  example1: 
+    value: 5
+  example2:
+    value: 7.5
+schema:
+  type: number
+  format: float
