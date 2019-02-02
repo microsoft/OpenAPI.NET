@@ -42,7 +42,8 @@ namespace Microsoft.OpenApi.Writers
         // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
         private static readonly string[] _yamlPlainStringForbiddenCombinations =
         {
-            ": ",
+            //": ",
+            ":",  // Even though colons can be allowed, this change prevents unquoted trailing colon which causes a problem
             " #",
 
             // These are technically forbidden only inside flow collections, but
