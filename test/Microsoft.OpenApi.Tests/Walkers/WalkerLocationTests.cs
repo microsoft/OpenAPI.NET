@@ -2,7 +2,9 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -16,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         public void LocateTopLevelObjects()
         {
             var doc = new OpenApiDocument();
-            
+
             var locator = new LocatorVisitor();
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
@@ -108,7 +110,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             });
 
-            locator.Keys.ShouldBeEquivalentTo(new List<string> { "/test","Get","200", "application/json" });
+            locator.Keys.ShouldBeEquivalentTo(new List<string> { "/test", "Get", "200", "application/json" });
         }
 
         [Fact]
@@ -117,7 +119,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var loopySchema = new OpenApiSchema()
             {
                 Type = "object",
-                Properties = new Dictionary<string,OpenApiSchema>()
+                Properties = new Dictionary<string, OpenApiSchema>()
                 {
                     ["name"] = new OpenApiSchema() { Type = "string" }
                 }
@@ -148,6 +150,96 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/components/schemas/loopy",
                 "#/components/schemas/loopy/properties/name",
                 "#/tags"
+            });
+        }
+
+        /// <summary>
+        /// Walk document and discover all references to components, including those inside components
+        /// </summary>
+        [Fact]
+        public void LocateReferences()
+        {
+
+            var baseSchema = new OpenApiSchema() {
+                Reference = new OpenApiReference() {
+                    Id = "base",
+                    Type = ReferenceType.Schema
+                },
+                UnresolvedReference = false
+            };
+
+            var derivedSchema = new OpenApiSchema
+            {
+                AnyOf = new List<OpenApiSchema>() { baseSchema },
+                Reference = new OpenApiReference()
+                 {
+                     Id = "derived",
+                     Type = ReferenceType.Schema
+                 },
+                UnresolvedReference = false
+            };
+
+            var testHeader = new OpenApiHeader() {
+                                Schema = derivedSchema,
+                                Reference = new OpenApiReference()
+                                {
+                                    Id = "test-header",
+                                    Type = ReferenceType.Header
+                                },
+                                UnresolvedReference = false
+            };
+
+            var doc = new OpenApiDocument
+            {
+                Paths = new OpenApiPaths() {
+                    { "/", new OpenApiPathItem() {
+                            Operations = new Dictionary<OperationType, OpenApiOperation>() {
+                                { OperationType.Get, new OpenApiOperation() {
+                                    Responses = new OpenApiResponses()
+                                    {
+                                        { "200",new OpenApiResponse() {
+                                            Content = new Dictionary<string, OpenApiMediaType>(){
+                                                { "application/json", new OpenApiMediaType() {
+                                                    Schema = derivedSchema
+                                                }
+                                              }
+                                          },
+                                        Headers = new Dictionary<string, OpenApiHeader>()
+                                        {
+                                            { "test-header",testHeader}
+                                        }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                            }
+                        }
+                    }
+                },
+                Components = new OpenApiComponents()
+                {
+                    Schemas = new Dictionary<string, OpenApiSchema>() {
+                        { "derived", derivedSchema },
+                        { "base", baseSchema },
+                    },
+                    Headers = new Dictionary<string, OpenApiHeader>()
+                    {
+                        { "test-header", testHeader }
+                    }
+
+                }
+            };
+
+            var locator = new LocatorVisitor();
+            var walker = new OpenApiWalker(locator);
+            walker.Walk(doc);
+
+            locator.Locations.Where(l=>l.StartsWith("referenceAt:")).ShouldBeEquivalentTo(new List<string> {
+                "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
+                "referenceAt: #/components/schemas/derived/anyOf/0",
+                "referenceAt: #/paths/~1/get/responses/200/headers/test-header",
+                "referenceAt: #/components/headers/test-header/schema"
             });
         }
     }
@@ -199,6 +291,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
+        public override void Visit(IOpenApiReferenceable referenceable)
+        {
+            Locations.Add("referenceAt: " + this.PathString);
+        }
         public override void Visit(IDictionary<string,OpenApiMediaType> content)
         {
             Locations.Add(this.PathString);

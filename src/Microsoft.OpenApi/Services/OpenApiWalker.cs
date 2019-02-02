@@ -339,6 +339,13 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            var isAComponent = false; // Handle $refs within component
+            if (_inComponents)
+            {
+                isAComponent = true;
+                ExitComponents();
+            }
+
             _visitor.Visit(callback);
 
             if (callback != null)
@@ -350,6 +357,11 @@ namespace Microsoft.OpenApi.Services
                     Walk(item.Key.ToString(), () => Walk(pathItem));
                     _visitor.CurrentKeys.Callback = null;
                 }
+            }
+
+            if (isAComponent)
+            {
+                EnterComponents();
             }
         }
 
@@ -548,12 +560,24 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            var isAComponent = false; // Handle $refs within component
+            if (_inComponents)
+            {
+                isAComponent = true;
+                ExitComponents();
+            }
+       
             _visitor.Visit(parameter);
             Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
             Walk(OpenApiConstants.Content, () => Walk(parameter.Content));
             Walk(OpenApiConstants.Examples, () => Walk(parameter.Examples));
 
             Walk(parameter as IOpenApiExtensible);
+
+            if (isAComponent)
+            {
+                EnterComponents();
+            }
         }
 
         /// <summary>
@@ -590,12 +614,23 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
+            var isAComponent = false; // Handle $refs within component
+            if (_inComponents)
+            {
+                isAComponent = true;
+                ExitComponents();
+            }
+
             _visitor.Visit(response);
             Walk(OpenApiConstants.Content, () => Walk(response.Content));
             Walk(OpenApiConstants.Links, () => Walk(response.Links));
             Walk(OpenApiConstants.Headers, () => Walk(response.Headers));
-
             Walk(response as IOpenApiExtensible);
+
+            if (isAComponent)
+            {
+                EnterComponents();
+            }
         }
 
         /// <summary>
@@ -606,6 +641,12 @@ namespace Microsoft.OpenApi.Services
             if (requestBody == null || IsReference(requestBody))
             {
                 return;
+            }
+            var isAComponent = false; // Handle $refs within component
+            if (_inComponents)
+            {
+                isAComponent = true;
+                ExitComponents();
             }
 
             _visitor.Visit(requestBody);
@@ -618,6 +659,11 @@ namespace Microsoft.OpenApi.Services
                 }
             }
             Walk(requestBody as IOpenApiExtensible);
+
+            if (isAComponent)
+            {
+                EnterComponents();
+            }
         }
 
         /// <summary>
@@ -750,6 +796,12 @@ namespace Microsoft.OpenApi.Services
             {
                 return;
             }
+            var isAComponent = false; // Handle $refs within component
+            if (_inComponents)
+            {
+                isAComponent = true;
+                ExitComponents();
+            }
 
             if (_schemaLoop.Contains(schema))
             {
@@ -772,7 +824,7 @@ namespace Microsoft.OpenApi.Services
 
             if (schema.AnyOf != null)
             {
-                Walk("anyOf", () => Walk(schema.AllOf));
+                Walk("anyOf", () => Walk(schema.AnyOf));
             }
 
             if (schema.Properties != null) {
@@ -790,6 +842,11 @@ namespace Microsoft.OpenApi.Services
             Walk(schema as IOpenApiExtensible);
 
             _schemaLoop.Pop();
+
+            if (isAComponent)
+            {
+                EnterComponents();
+            }
         }
 
         /// <summary>
@@ -958,6 +1015,12 @@ namespace Microsoft.OpenApi.Services
             {
                 return;
             }
+            var isAComponent = false; // Handle $refs within component
+            if (_inComponents)
+            {
+                isAComponent = true;
+                ExitComponents();
+            }
 
             _visitor.Visit(header);
             Walk(OpenApiConstants.Content, () => Walk(header.Content));
@@ -965,6 +1028,11 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Examples, () => Walk(header.Examples));
             Walk(OpenApiConstants.Schema, () => Walk(header.Schema));
             Walk(header as IOpenApiExtensible);
+
+            if (isAComponent)
+            {
+                EnterComponents();
+            }
         }
 
         /// <summary>
