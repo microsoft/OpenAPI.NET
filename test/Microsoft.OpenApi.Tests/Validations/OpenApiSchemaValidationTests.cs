@@ -354,43 +354,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
-        public void ValidateSchemaMustContainPropertySpecifiedInTheRequiredFieldList()
-        {
-            IEnumerable<OpenApiError> errors;
-            var components = new OpenApiComponents
-            {
-                Schemas = {
-                    {
-                        "schema1",
-                        new OpenApiSchema
-                        {
-                            Type = "object",
-                            Required = { "property1" },
-                            Reference = new OpenApiReference { Id = "schema1" }
-                        }
-                    }
-                }
-            };
-            // Act
-            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
-            var walker = new OpenApiWalker(validator);
-            walker.Walk(components);
-
-            errors = validator.Errors;
-            bool result = !errors.Any();
-
-            // Assert
-            result.Should().BeFalse();
-            errors.ShouldAllBeEquivalentTo(new List<OpenApiValidatorError>
-            {
-                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaRequiredFields),"#/schemas/schema1/required",
-                        string.Format(SRResource.Validation_SchemaMustContainPropertySpecifiedInTheRequiredField,
-                                    "schema1", "property1")),
-            });
-        }
-
-        [Fact]
-        public void ValidateSchemaMustContainPropertySpecifiedInTheDiscriminator()
+        public void ValidateSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator()
         {
             IEnumerable<OpenApiError> errors;
             var components = new OpenApiComponents
@@ -419,9 +383,6 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             errors.ShouldAllBeEquivalentTo(new List<OpenApiValidatorError>
             {
-                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
-                        string.Format(SRResource.Validation_SchemaMustContainPropertySpecifiedInTheDiscriminator,
-                                    "schema1", "property1")),
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
                         string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                     "schema1", "property1"))

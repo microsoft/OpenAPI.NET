@@ -359,24 +359,6 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Schema {0} must contain property specified in the discriminator {1}..
-        /// </summary>
-        internal static string Validation_SchemaMustContainPropertySpecifiedInTheDiscriminator {
-            get {
-                return ResourceManager.GetString("Validation_SchemaMustContainPropertySpecifiedInTheDiscriminator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Schema {0} must contain property specified in the required field {1}..
-        /// </summary>
-        internal static string Validation_SchemaMustContainPropertySpecifiedInTheRequiredField {
-            get {
-                return ResourceManager.GetString("Validation_SchemaMustContainPropertySpecifiedInTheRequiredField", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Schema {0} must contain property specified in the discriminator {1} in the required field list..
         /// </summary>
         internal static string Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator {

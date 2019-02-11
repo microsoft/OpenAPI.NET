@@ -58,32 +58,6 @@ namespace Microsoft.OpenApi.Validations.Rules
                 });
 
         /// <summary>
-        /// Validates Schema Required Fields
-        /// </summary>
-        public static ValidationRule<OpenApiSchema> ValidateSchemaRequiredFields =>
-            new ValidationRule<OpenApiSchema>(
-                (context, schema) =>
-                {
-                    // discriminator
-                    context.Enter("required");
-
-                    if (schema.Reference != null)
-                    {
-                        foreach (var requiredField in schema.Required)
-                        {
-                            if (!schema.Properties.ContainsKey(requiredField))
-                            {
-                                context.CreateError(nameof(ValidateSchemaRequiredFields),
-                                                    string.Format(SRResource.Validation_SchemaMustContainPropertySpecifiedInTheRequiredField,
-                                                                                    schema.Reference.Id, requiredField));
-                            }
-                        }
-                    }
-
-                    context.Exit();
-                });
-
-        /// <summary>
         /// Validates Schema Discriminator
         /// </summary>
         public static ValidationRule<OpenApiSchema> ValidateSchemaDiscriminator =>
@@ -95,13 +69,6 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if(schema.Reference != null && schema.Discriminator != null)
                     {
-                        if (!schema.Properties.ContainsKey(schema.Discriminator.PropertyName))
-                        {
-                            context.CreateError(nameof(ValidateSchemaDiscriminator),
-                                                string.Format(SRResource.Validation_SchemaMustContainPropertySpecifiedInTheDiscriminator,
-                                                                                schema.Reference.Id, schema.Discriminator.PropertyName));
-                        }
-
                         if (!schema.Required.Contains(schema.Discriminator?.PropertyName))
                         {
                             context.CreateError(nameof(ValidateSchemaDiscriminator),

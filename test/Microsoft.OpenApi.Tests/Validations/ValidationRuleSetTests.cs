@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.NotEmpty(rules);
 
             // Update the number if you add new default rule(s).
-            Assert.Equal(24, rules.Count);
+            Assert.Equal(23, rules.Count);
         }
     }
 }
