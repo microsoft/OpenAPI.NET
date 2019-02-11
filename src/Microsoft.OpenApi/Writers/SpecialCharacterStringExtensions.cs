@@ -42,8 +42,7 @@ namespace Microsoft.OpenApi.Writers
         // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
         private static readonly string[] _yamlPlainStringForbiddenCombinations =
         {
-            //": ",
-            ":",  // Even though colons can be allowed, this change prevents unquoted trailing colon which causes a problem
+            ": ",
             " #",
 
             // These are technically forbidden only inside flow collections, but
@@ -53,6 +52,13 @@ namespace Microsoft.OpenApi.Writers
             "{",
             "}",
             ","
+        };
+
+        // Plain style strings cannot end with these characters.
+        // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
+        private static readonly string[] _yamlPlainStringForbiddenTerminals =
+        {
+            ":"
         };
 
         // Double-quoted strings are needed for these non-printable control characters.
@@ -171,6 +177,7 @@ namespace Microsoft.OpenApi.Writers
             // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
             if (_yamlPlainStringForbiddenCombinations.Any(fc => input.Contains(fc)) ||
                 _yamlIndicators.Any(i => input.StartsWith(i.ToString())) ||
+                _yamlPlainStringForbiddenTerminals.Any(i => input.EndsWith(i.ToString())) ||
                 input.Trim() != input)
             {
                 // Escape single quotes with two single quotes.

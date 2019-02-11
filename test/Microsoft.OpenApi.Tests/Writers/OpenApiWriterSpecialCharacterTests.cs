@@ -60,6 +60,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [InlineData("true", " 'true'")]
         [InlineData("trailingspace ", " 'trailingspace '")]
         [InlineData("     trailingspace", " '     trailingspace'")]
+        [InlineData("terminal:", " 'terminal:'")]
         public void WriteStringWithSpecialCharactersAsYamlWorks(string input, string expected)
         {
             // Arrange
