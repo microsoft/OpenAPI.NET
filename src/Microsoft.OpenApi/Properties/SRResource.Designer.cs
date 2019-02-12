@@ -317,7 +317,8 @@ namespace Microsoft.OpenApi.Properties {
         /// </summary>
         internal static string Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator {
             get {
-                return ResourceManager.GetString("Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator", resourceCulture);
+                return ResourceManager.GetString("Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDi" +
+                        "scriminator", resourceCulture);
             }
         }
         
@@ -354,6 +355,16 @@ namespace Microsoft.OpenApi.Properties {
         internal static string Validation_RuleAddTwice {
             get {
                 return ResourceManager.GetString("Validation_RuleAddTwice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schema {0} must contain property specified in the discriminator {1} in the required field list..
+        /// </summary>
+        internal static string Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator {
+            get {
+                return ResourceManager.GetString("Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminat" +
+                        "or", resourceCulture);
             }
         }
         
