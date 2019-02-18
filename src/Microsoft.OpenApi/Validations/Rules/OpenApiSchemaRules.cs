@@ -58,6 +58,29 @@ namespace Microsoft.OpenApi.Validations.Rules
                 });
 
         /// <summary>
+        /// Validates Schema Discriminator
+        /// </summary>
+        public static ValidationRule<OpenApiSchema> ValidateSchemaDiscriminator =>
+            new ValidationRule<OpenApiSchema>(
+                (context, schema) =>
+                {
+                    // discriminator
+                    context.Enter("discriminator");
+
+                    if(schema.Reference != null && schema.Discriminator != null)
+                    {
+                        if (!schema.Required.Contains(schema.Discriminator?.PropertyName))
+                        {
+                            context.CreateError(nameof(ValidateSchemaDiscriminator),
+                                                string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
+                                                                                schema.Reference.Id, schema.Discriminator.PropertyName));
+                        }
+                    }
+
+                    context.Exit();
+                });
+
+        /// <summary>
         /// Validates OneOf Discriminator
         /// </summary>
         public static ValidationRule<OpenApiSchema> ValidateOneOfDiscriminator =>
@@ -97,7 +120,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
         // add more rule.
 
-        
+
         /// <summary>
         /// Checks if the schemas in the list contain a property with the property name specified by the discriminator.
         /// </summary>

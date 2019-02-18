@@ -216,6 +216,9 @@
   <data name="Validation_RuleAddTwice" xml:space="preserve">
     <value>The same rule cannot be in the same rule set twice.</value>
   </data>
+  <data name="Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator" xml:space="preserve">
+    <value>Schema {0} must contain property specified in the discriminator {1} in the required field list.</value>
+  </data>
   <data name="Validation_StringMustBeEmailAddress" xml:space="preserve">
     <value>The string '{0}' MUST be in the format of an email address.</value>
   </data>
