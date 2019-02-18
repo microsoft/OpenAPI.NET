@@ -122,19 +122,13 @@ namespace Microsoft.OpenApi.Validations.Rules
 
 
         /// <summary>
-        /// Checks if the schemas in the list contain a property with the property name specified by the discriminator.
+        /// Checks if the schemas in the list contain a required field with the property name specified by the discriminator.
         /// </summary>
         private static void ValidateSchemaListDiscriminator(IValidationContext context, string ruleName,
                         IList<OpenApiSchema> schemas, OpenApiDiscriminator discriminator)
         {
             foreach (var schema in schemas)
             {
-                if (schema.Reference != null && !schema.Properties.ContainsKey(discriminator.PropertyName))
-                {
-                    context.CreateError(ruleName, 
-                        string.Format(SRResource.Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator,
-                                                        schema.Reference.Id, discriminator.PropertyName));
-                }
                 if (schema.Reference != null && !schema.Required.Contains(discriminator.PropertyName))
                 {
                     context.CreateError(ruleName,

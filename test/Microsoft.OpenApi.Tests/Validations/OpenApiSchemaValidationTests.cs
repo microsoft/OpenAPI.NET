@@ -283,10 +283,6 @@ namespace Microsoft.OpenApi.Validations.Tests
                                     "schema1", "property2")),
 
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),"#/oneOf",
-                        string.Format(SRResource.Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator, 
-                                     "schema2", "property2")),
-
-                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateOneOfDiscriminator),"#/oneOf",
                         string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator, 
                                     "schema2", "property2")),
 
@@ -341,10 +337,6 @@ namespace Microsoft.OpenApi.Validations.Tests
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
                         string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                     "schema1", "property2")),
-
-                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
-                        string.Format(SRResource.Validation_CompositeSchemaMustContainPropertySpecifiedInTheDiscriminator,
-                                     "schema2", "property2")),
 
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateAnyOfDiscriminator),"#/anyOf",
                         string.Format(SRResource.Validation_CompositeSchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
