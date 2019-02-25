@@ -940,7 +940,7 @@ namespace Microsoft.OpenApi.Services
                 }
             }
         }
-
+        
         /// <summary>
         /// Visits <see cref="OpenApiOAuthFlows"/> and child objects
         /// </summary>
