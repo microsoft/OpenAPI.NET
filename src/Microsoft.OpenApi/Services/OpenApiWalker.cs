@@ -19,8 +19,6 @@ namespace Microsoft.OpenApi.Services
         private readonly Stack<OpenApiSchema> _schemaLoop = new Stack<OpenApiSchema>();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
 
-        private bool _inComponents = false;
-
         /// <summary>
         /// Initializes the <see cref="OpenApiWalker"/> class.
         /// </summary>
@@ -42,7 +40,6 @@ namespace Microsoft.OpenApi.Services
 
             _schemaLoop.Clear();
             _pathItemLoop.Clear();
-            _inComponents = false;
 
             _visitor.Visit(doc);
 
@@ -102,8 +99,6 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            EnterComponents();
-
             _visitor.Visit(components);
 
             if (components == null)
@@ -117,7 +112,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Schemas)
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value, true));
                     }
                 }
             });
@@ -128,7 +123,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Callbacks)
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value, true));
                     }
                 }
             });
@@ -139,7 +134,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Parameters)
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value, true));
                     }
                 }
             });
@@ -150,7 +145,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Examples)
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value, true));
                     }
                 }
             });
@@ -161,7 +156,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Headers)
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value, true));
                     }
                 }
             });
@@ -172,7 +167,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Links)
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value, true));
                     }
                 }
             });
@@ -183,7 +178,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.RequestBodies)
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value, true));
                     }
                 }
             });
@@ -194,13 +189,12 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Responses)
                     {
-                        Walk(item.Key, () => Walk(item.Value));
+                        Walk(item.Key, () => Walk(item.Value, true));
                     }
                 }
             });
 
             Walk(components as IOpenApiExtensible);
-            ExitComponents();
         }
 
         /// <summary>
@@ -332,18 +326,11 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiCallback"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiCallback callback)
+        internal void Walk(OpenApiCallback callback, bool isComponent = false)
         {
-            if (callback == null)
+            if (callback == null || IsReference(callback, isComponent))
             {
                 return;
-            }
-
-            var isAComponent = false; // Handle $refs within component
-            if (_inComponents)
-            {
-                isAComponent = true;
-                ExitComponents();
             }
 
             _visitor.Visit(callback);
@@ -357,11 +344,6 @@ namespace Microsoft.OpenApi.Services
                     Walk(item.Key.ToString(), () => Walk(pathItem));
                     _visitor.CurrentKeys.Callback = null;
                 }
-            }
-
-            if (isAComponent)
-            {
-                EnterComponents();
             }
         }
 
@@ -553,31 +535,19 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiParameter"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiParameter parameter)
+        internal void Walk(OpenApiParameter parameter, bool isComponent = false)
         {
-            if (parameter == null || IsReference(parameter))
+            if (parameter == null || IsReference(parameter, isComponent))
             {
                 return;
             }
 
-            var isAComponent = false; // Handle $refs within component
-            if (_inComponents)
-            {
-                isAComponent = true;
-                ExitComponents();
-            }
-       
             _visitor.Visit(parameter);
             Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
             Walk(OpenApiConstants.Content, () => Walk(parameter.Content));
             Walk(OpenApiConstants.Examples, () => Walk(parameter.Examples));
 
             Walk(parameter as IOpenApiExtensible);
-
-            if (isAComponent)
-            {
-                EnterComponents();
-            }
         }
 
         /// <summary>
@@ -607,18 +577,11 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiResponse"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiResponse response)
+        internal void Walk(OpenApiResponse response, bool isComponent = false)
         {
-            if (response == null || IsReference(response))
+            if (response == null || IsReference(response, isComponent))
             {
                 return;
-            }
-
-            var isAComponent = false; // Handle $refs within component
-            if (_inComponents)
-            {
-                isAComponent = true;
-                ExitComponents();
             }
 
             _visitor.Visit(response);
@@ -626,27 +589,16 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Links, () => Walk(response.Links));
             Walk(OpenApiConstants.Headers, () => Walk(response.Headers));
             Walk(response as IOpenApiExtensible);
-
-            if (isAComponent)
-            {
-                EnterComponents();
-            }
         }
 
         /// <summary>
         /// Visits <see cref="OpenApiRequestBody"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiRequestBody requestBody)
+        internal void Walk(OpenApiRequestBody requestBody, bool isComponent = false)
         {
-            if (requestBody == null || IsReference(requestBody))
+            if (requestBody == null || IsReference(requestBody, isComponent))
             {
                 return;
-            }
-            var isAComponent = false; // Handle $refs within component
-            if (_inComponents)
-            {
-                isAComponent = true;
-                ExitComponents();
             }
 
             _visitor.Visit(requestBody);
@@ -659,11 +611,6 @@ namespace Microsoft.OpenApi.Services
                 }
             }
             Walk(requestBody as IOpenApiExtensible);
-
-            if (isAComponent)
-            {
-                EnterComponents();
-            }
         }
 
         /// <summary>
@@ -790,17 +737,11 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiSchema"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiSchema schema)
+        internal void Walk(OpenApiSchema schema, bool isComponent = false)
         {
-            if (schema == null || IsReference(schema))
+            if (schema == null || IsReference(schema, isComponent))
             {
                 return;
-            }
-            var isAComponent = false; // Handle $refs within component
-            if (_inComponents)
-            {
-                isAComponent = true;
-                ExitComponents();
             }
 
             if (_schemaLoop.Contains(schema))
@@ -842,11 +783,6 @@ namespace Microsoft.OpenApi.Services
             Walk(schema as IOpenApiExtensible);
 
             _schemaLoop.Pop();
-
-            if (isAComponent)
-            {
-                EnterComponents();
-            }
         }
 
         /// <summary>
@@ -888,9 +824,9 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiExample"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiExample example)
+        internal void Walk(OpenApiExample example, bool isComponent = false)
         {
-            if (example == null || IsReference(example))
+            if (example == null || IsReference(example, isComponent))
             {
                 return;
             }
@@ -994,9 +930,9 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiLink"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiLink link)
+        internal void Walk(OpenApiLink link, bool isComponent = false)
         {
-            if (link == null || IsReference(link))
+            if (link == null || IsReference(link, isComponent))
             {
                 return;
             }
@@ -1009,17 +945,11 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiHeader"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiHeader header)
+        internal void Walk(OpenApiHeader header, bool isComponent = false)
         {
-            if (header == null || IsReference(header))
+            if (header == null || IsReference(header, isComponent))
             {
                 return;
-            }
-            var isAComponent = false; // Handle $refs within component
-            if (_inComponents)
-            {
-                isAComponent = true;
-                ExitComponents();
             }
 
             _visitor.Visit(header);
@@ -1028,11 +958,6 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Examples, () => Walk(header.Examples));
             Walk(OpenApiConstants.Schema, () => Walk(header.Schema));
             Walk(header as IOpenApiExtensible);
-
-            if (isAComponent)
-            {
-                EnterComponents();
-            }
         }
 
         /// <summary>
@@ -1131,24 +1056,14 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Identify if an element is just a reference to a component, or an actual component
         /// </summary>
-        private bool IsReference(IOpenApiReferenceable referenceable)
+        private bool IsReference(IOpenApiReferenceable referenceable, bool isComponent = false)
         {
-            var isReference = referenceable.Reference != null && !_inComponents;
+            var isReference = referenceable.Reference != null && !isComponent;
             if (isReference)
             {
                 Walk(referenceable);
             }
             return isReference;
-        }
-
-        private void EnterComponents()
-        {
-            _inComponents = true;
-        }
-
-        private void ExitComponents()
-        {
-            _inComponents = false;
         }
     }
 
