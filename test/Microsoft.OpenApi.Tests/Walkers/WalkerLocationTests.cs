@@ -237,8 +237,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             locator.Locations.Where(l=>l.StartsWith("referenceAt:")).ShouldBeEquivalentTo(new List<string> {
                 "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
-                "referenceAt: #/components/schemas/derived/anyOf/0",
                 "referenceAt: #/paths/~1/get/responses/200/headers/test-header",
+                "referenceAt: #/components/schemas/derived/anyOf/0",
                 "referenceAt: #/components/headers/test-header/schema"
             });
         }
