@@ -2428,7 +2428,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var expected = @"swagger: '2.0'
 info:
-  version: 1.0.0
+  version: '1.0.0'
 paths: { }
 definitions:
   schema1:
@@ -2454,7 +2454,7 @@ definitions:
             // Arrange
             var expected = @"swagger: '2.0'
 info:
-  version: 1.0.0
+  version: '1.0.0'
 paths: { }
 definitions:
   schema1: { }";
@@ -2474,7 +2474,7 @@ definitions:
             // Arrange
             var expected = @"swagger: '2.0'
 info:
-  version: 1.0.0
+  version: '1.0.0'
 paths: { }
 definitions:
   schema1:
