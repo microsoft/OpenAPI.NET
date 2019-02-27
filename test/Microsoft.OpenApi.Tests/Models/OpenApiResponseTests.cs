@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -265,7 +266,7 @@ headers:
         public void SerializeReferencedResponseAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -287,7 +288,7 @@ headers:
         public void SerializeReferencedResponseAsV3JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -333,7 +334,7 @@ headers:
         public void SerializeReferencedResponseAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -355,7 +356,7 @@ headers:
         public void SerializeReferencedResponseAsV2JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
