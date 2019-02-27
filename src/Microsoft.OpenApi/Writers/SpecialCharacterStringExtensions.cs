@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace Microsoft.OpenApi.Writers
@@ -188,7 +189,7 @@ namespace Microsoft.OpenApi.Writers
 
             // If string can be mistaken as a number, a boolean, or a timestamp,
             // wrap it in quote to indicate that this is indeed a string, not a number, a boolean, or a timestamp
-            if (decimal.TryParse(input, out var _) ||
+            if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out var _) ||
                 bool.TryParse(input, out var _) ||
                 DateTime.TryParse(input, out var _))
             {
