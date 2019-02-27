@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Exceptions;
@@ -170,7 +171,14 @@ namespace Microsoft.OpenApi.Writers
 
                 case PrimitiveType.Binary:
                     var binaryValue = (OpenApiBinary)primitive;
-                    writer.WriteValue(binaryValue.Value);
+                    if (binaryValue == null)
+                    {
+                        writer.WriteNull();
+                    }
+                    else
+                    {
+                        writer.WriteValue(Convert.ToBase64String(binaryValue.Value));
+                    }
                     break;
 
                 case PrimitiveType.Boolean:
