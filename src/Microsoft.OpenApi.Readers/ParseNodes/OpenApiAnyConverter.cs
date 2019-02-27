@@ -195,13 +195,17 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "string" && format == "byte")
             {
-                if ( byte.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var byteValue))
+                if (byte.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var byteValue))
                 {
                     return new OpenApiByte(byteValue);
                 }
             }
 
-            // TODO: Parse byte array to OpenApiBinary type.
+            // binary
+            if (type == "string" && format == "binary")
+            {
+                return new OpenApiBinary(Convert.FromBase64String(value));
+            }
 
             if (type == "string" && format == "date")
             {
