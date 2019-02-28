@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Schemas)
                     {
-                        Walk(item.Key, () => Walk(item.Value, true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Callbacks)
                     {
-                        Walk(item.Key, () => Walk(item.Value, true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Parameters)
                     {
-                        Walk(item.Key, () => Walk(item.Value, true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Examples)
                     {
-                        Walk(item.Key, () => Walk(item.Value, true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Headers)
                     {
-                        Walk(item.Key, () => Walk(item.Value, true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -167,7 +167,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Links)
                     {
-                        Walk(item.Key, () => Walk(item.Value, true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -178,7 +178,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.RequestBodies)
                     {
-                        Walk(item.Key, () => Walk(item.Value, true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var item in components.Responses)
                     {
-                        Walk(item.Key, () => Walk(item.Value, true));
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
                 }
             });

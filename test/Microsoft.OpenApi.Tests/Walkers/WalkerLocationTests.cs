@@ -62,31 +62,32 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocatePathOperationContentSchema()
         {
-            var doc = new OpenApiDocument();
-            doc.Paths = new OpenApiPaths();
+            var doc = new OpenApiDocument
+            {
+                Paths = new OpenApiPaths()
+            };
             doc.Paths.Add("/test", new OpenApiPathItem()
             {
                 Operations = new Dictionary<OperationType, OpenApiOperation>()
                 {
-                    { OperationType.Get, new OpenApiOperation()
+                    [OperationType.Get] = new OpenApiOperation()
                     {
                         Responses = new OpenApiResponses()
                         {
-                            { "200", new OpenApiResponse() {
-                                    Content = new Dictionary<string,OpenApiMediaType>
+                            ["200"] = new OpenApiResponse()
+                            {
+                                Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType
                                     {
-                                        { "application/json", new OpenApiMediaType {
-                                                Schema = new OpenApiSchema
-                                                {
-                                                    Type = "string"
-                                                }
-                                            }
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Type = "string"
                                         }
                                     }
                                 }
                             }
                         }
-                    }
                     }
                 }
             });
@@ -160,8 +161,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
         public void LocateReferences()
         {
 
-            var baseSchema = new OpenApiSchema() {
-                Reference = new OpenApiReference() {
+            var baseSchema = new OpenApiSchema()
+            {
+                Reference = new OpenApiReference()
+                {
                     Id = "base",
                     Type = ReferenceType.Schema
                 },
@@ -172,46 +175,50 @@ namespace Microsoft.OpenApi.Tests.Walkers
             {
                 AnyOf = new List<OpenApiSchema>() { baseSchema },
                 Reference = new OpenApiReference()
-                 {
-                     Id = "derived",
-                     Type = ReferenceType.Schema
-                 },
+                {
+                    Id = "derived",
+                    Type = ReferenceType.Schema
+                },
                 UnresolvedReference = false
             };
 
-            var testHeader = new OpenApiHeader() {
-                                Schema = derivedSchema,
-                                Reference = new OpenApiReference()
-                                {
-                                    Id = "test-header",
-                                    Type = ReferenceType.Header
-                                },
-                                UnresolvedReference = false
+            var testHeader = new OpenApiHeader()
+            {
+                Schema = derivedSchema,
+                Reference = new OpenApiReference()
+                {
+                    Id = "test-header",
+                    Type = ReferenceType.Header
+                },
+                UnresolvedReference = false
             };
 
             var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths() {
-                    { "/", new OpenApiPathItem() {
-                            Operations = new Dictionary<OperationType, OpenApiOperation>() {
-                                { OperationType.Get, new OpenApiOperation() {
-                                    Responses = new OpenApiResponses()
+                Paths = new OpenApiPaths()
+                {
+                    ["/"] = new OpenApiPathItem()
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>()
+                        {
+                            [OperationType.Get] = new OpenApiOperation()
+                            {
+                                Responses = new OpenApiResponses()
+                                {
+                                    ["200"] = new OpenApiResponse()
                                     {
-                                        { "200",new OpenApiResponse() {
-                                            Content = new Dictionary<string, OpenApiMediaType>(){
-                                                { "application/json", new OpenApiMediaType() {
+                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        {
+                                            ["application/json"] = new OpenApiMediaType()
+                                            {
                                                     Schema = derivedSchema
-                                                }
-                                              }
-                                          },
+                                            }
+                                        },
                                         Headers = new Dictionary<string, OpenApiHeader>()
                                         {
-                                            { "test-header",testHeader}
+                                            ["test-header"] = testHeader
                                         }
-                                        }
-                                      }
                                     }
-                                  }
                                 }
                             }
                         }
@@ -220,14 +227,13 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 Components = new OpenApiComponents()
                 {
                     Schemas = new Dictionary<string, OpenApiSchema>() {
-                        { "derived", derivedSchema },
-                        { "base", baseSchema },
+                        ["derived"] = derivedSchema,
+                        ["base"] = baseSchema,
                     },
                     Headers = new Dictionary<string, OpenApiHeader>()
                     {
-                        { "test-header", testHeader }
+                        ["test-header"] = testHeader 
                     }
-
                 }
             };
 
@@ -235,7 +241,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.Where(l=>l.StartsWith("referenceAt:")).ShouldBeEquivalentTo(new List<string> {
+            locator.Locations.Where(l => l.StartsWith("referenceAt:")).ShouldBeEquivalentTo(new List<string> {
                 "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
                 "referenceAt: #/paths/~1/get/responses/200/headers/test-header",
                 "referenceAt: #/components/schemas/derived/anyOf/0",
@@ -295,7 +301,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
         {
             Locations.Add("referenceAt: " + this.PathString);
         }
-        public override void Visit(IDictionary<string,OpenApiMediaType> content)
+        public override void Visit(IDictionary<string, OpenApiMediaType> content)
         {
             Locations.Add(this.PathString);
         }
