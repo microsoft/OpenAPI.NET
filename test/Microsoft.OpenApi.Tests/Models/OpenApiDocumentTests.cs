@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -895,7 +896,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedDocumentAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -1409,7 +1410,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedDocumentWithReferenceAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -1724,7 +1725,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedDocumentAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected = @"{
   ""swagger"": ""2.0"",
@@ -2158,7 +2159,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedDocumentWithReferenceAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Globalization;
 using System.IO;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
@@ -62,13 +63,14 @@ namespace Microsoft.OpenApi.Extensions
             }
 
             IOpenApiWriter writer;
+            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
             switch (format)
             {
                 case OpenApiFormat.Json:
-                    writer = new OpenApiJsonWriter(new StreamWriter(stream));
+                    writer = new OpenApiJsonWriter(streamWriter);
                     break;
                 case OpenApiFormat.Yaml:
-                    writer = new OpenApiYamlWriter(new StreamWriter(stream));
+                    writer = new OpenApiYamlWriter(streamWriter);
                     break;
                 default:
                     throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format));

@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Writers;
@@ -51,7 +52,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteStringListAsJsonShouldMatchExpected(string[] stringValues)
         {
             // Arrange
-            var outputString = new StringWriter();
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputString);
 
             // Act
@@ -235,7 +236,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteMapAsJsonShouldMatchExpected(IDictionary<string, object> inputMap)
         {
             // Arrange
-            var outputString = new StringWriter();
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputString);
 
             // Act
@@ -276,7 +277,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteDateTimeAsJsonShouldMatchExpected(DateTimeOffset dateTimeOffset)
         {
             // Arrange
-            var outputString = new StringWriter();
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputString);
 
             // Act
