@@ -200,7 +200,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiByte(Convert.FromBase64String(value));
                 }
-                catch(Exception)
+                catch(FormatException)
                 { }
             }
 
@@ -211,7 +211,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiBinary(Encoding.UTF8.GetBytes(value));
                 }
-                catch(Exception)
+                catch(EncoderFallbackException)
                 { }
             }
 
