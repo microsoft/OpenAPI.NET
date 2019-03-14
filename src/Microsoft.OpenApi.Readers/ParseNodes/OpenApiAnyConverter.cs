@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
@@ -195,16 +196,23 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
             if (type == "string" && format == "byte")
             {
-                if (byte.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var byteValue))
+                try
                 {
-                    return new OpenApiByte(byteValue);
+                    return new OpenApiByte(Convert.FromBase64String(value));
                 }
+                catch(Exception)
+                { }
             }
 
             // binary
             if (type == "string" && format == "binary")
             {
-                return new OpenApiBinary(Convert.FromBase64String(value));
+                try
+                {
+                    return new OpenApiBinary(Encoding.UTF8.GetBytes(value));
+                }
+                catch(Exception)
+                { }
             }
 
             if (type == "string" && format == "date")

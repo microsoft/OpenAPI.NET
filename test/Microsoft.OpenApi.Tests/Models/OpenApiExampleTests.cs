@@ -31,7 +31,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["href"] = new OpenApiString("http://example.com/1"),
                                 ["rel"] = new OpenApiString("sampleRel1"),
-                                ["binary"] = new OpenApiBinary(new byte[] { 1, 2, 3 })
+                                ["bytes"] = new OpenApiByte(new byte[] { 1, 2, 3 }),
+                                ["binary"] = new OpenApiBinary(new byte[] { 41, 42, 43 })
                             }
                         }
                     },
@@ -119,7 +120,8 @@ namespace Microsoft.OpenApi.Tests.Models
           {
             ""href"": ""http://example.com/1"",
             ""rel"": ""sampleRel1"",
-            ""binary"": ""AQID""
+            ""bytes"": ""AQID"",
+            ""binary"": "")*+""
           }
         ]
       },
