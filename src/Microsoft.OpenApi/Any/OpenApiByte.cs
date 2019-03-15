@@ -6,12 +6,20 @@ namespace Microsoft.OpenApi.Any
     /// <summary>
     /// Open API Byte
     /// </summary>
-    public class OpenApiByte : OpenApiPrimitive<byte>
+    public class OpenApiByte : OpenApiPrimitive<byte[]>
     {
         /// <summary>
         /// Initializes the <see cref="OpenApiByte"/> class.
         /// </summary>
         public OpenApiByte(byte value)
+            : this(new byte[] { value })
+        {
+        }
+
+        /// <summary>
+        /// Initializes the <see cref="OpenApiByte"/> class.
+        /// </summary>
+        public OpenApiByte(byte[] value)
             : base(value)
         {
         }
