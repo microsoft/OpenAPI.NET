@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -236,6 +237,31 @@ paths: {}",
                             }
                         });
                 }
+            }
+        }
+
+        [Fact]
+        public void ShouldAssignSchemaToAllResponses()
+        {
+            OpenApiDocument document;
+            OpenApiDiagnostic diagnostic;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json")))
+            {
+                document = new OpenApiStreamReader().Read(stream, out diagnostic);
+            }
+
+            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
+
+            var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
+            foreach (var content in responses.Values.Select(r => r.Content))
+            {
+                var json = content["application/json"];
+                Assert.NotNull(json);
+                Assert.NotNull(json.Schema);
+
+                var xml = content["application/xml"];
+                Assert.NotNull(xml);
+                Assert.NotNull(xml.Schema);
             }
         }
     }

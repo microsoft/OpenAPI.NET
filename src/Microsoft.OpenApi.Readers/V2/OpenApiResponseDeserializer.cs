@@ -63,35 +63,39 @@ namespace Microsoft.OpenApi.Readers.V2
         private static void ProcessProduces(MapNode mapNode, OpenApiResponse response, ParsingContext context)
         {
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
-                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces) ?? new List<string>();
+                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces);
 
             if (response.Content == null)
             {
                 response.Content = new Dictionary<string, OpenApiMediaType>();
             }
 
-            foreach (var produce in produces)
+            if (produces != null && produces.Count > 0)
             {
-                var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
-                context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
-
-                if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
+                foreach (var produce in produces)
                 {
-                    if (schema != null)
+                    var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+
+                    if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
                     {
-                        response.Content[produce].Schema = schema;
-                        ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
+                        if (schema != null)
+                        {
+                            response.Content[produce].Schema = schema;
+                            ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
+                        }
+                    }
+                    else
+                    {
+                        var mediaType = new OpenApiMediaType
+                        {
+                            Schema = schema
+                        };
+
+                        response.Content.Add(produce, mediaType);
                     }
                 }
-                else
-                {
-                    var mediaType = new OpenApiMediaType
-                    {
-                        Schema = schema
-                    };
 
-                    response.Content.Add(produce, mediaType);
-                }
+                context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
             }
         }
 

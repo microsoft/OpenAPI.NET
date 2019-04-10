@@ -13,6 +13,9 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="V2Tests\Samples\multipleProduces.json" />
+    </ItemGroup>
+    <ItemGroup>
       <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -96,6 +99,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\multipleProduces.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\twoResponses.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
