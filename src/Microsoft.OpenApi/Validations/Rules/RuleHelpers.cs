@@ -114,11 +114,6 @@ namespace Microsoft.OpenApi.Validations.Rules
                     return;
                 }
 
-                if (value is OpenApiNull)
-                {
-                    return;
-                }
-
                 // If value is not a string and also not an array, there is a data mismatch.
                 if (!(value is OpenApiArray))
                 {
