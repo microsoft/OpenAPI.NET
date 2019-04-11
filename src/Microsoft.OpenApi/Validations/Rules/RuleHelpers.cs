@@ -40,9 +40,9 @@ namespace Microsoft.OpenApi.Validations.Rules
         }
 
         public static void ValidateDataTypeMismatch(
-            IValidationContext context, 
-            string ruleName, 
-            IOpenApiAny value, 
+            IValidationContext context,
+            string ruleName,
+            IOpenApiAny value,
             OpenApiSchema schema)
         {
             if (schema == null)
@@ -52,6 +52,17 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             var type = schema.Type;
             var format = schema.Format;
+            var nullable = schema.Nullable;
+
+            // Before checking the type, check first if the schema allows null.
+            // If so and the data given is also null, this is allowed for any type.
+            if (nullable)
+            {
+                if (value is OpenApiNull)
+                {
+                    return;
+                }
+            }
 
             if (type == "object")
             {
@@ -99,6 +110,11 @@ namespace Microsoft.OpenApi.Validations.Rules
                 // To represent examples of media types that cannot naturally be represented in JSON or YAML,
                 // a string value can contain the example with escaping where necessary
                 if (value is OpenApiString)
+                {
+                    return;
+                }
+
+                if (value is OpenApiNull)
                 {
                     return;
                 }
