@@ -12,7 +12,8 @@
         "/items": {
             "get": {
                 "produces": [
-                    "application/json"
+                    "application/json",
+                    "application/xml"
                 ],
                 "responses": {
                     "200": {
@@ -70,13 +71,15 @@
                     }
                 },
                 "produces": [
-                    "application/json"
+                    "application/json",
+                    "application/xml"
                 ]
             }
         }
     },
     "produces": [
-        "application/json"
+        "application/json",
+        "application/xml"
     ],
     "definitions": {
         "Item": {

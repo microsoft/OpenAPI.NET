@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -159,25 +158,12 @@ paths: {}",
                 Assert.NotNull(doc.Paths["/items"]);
                 Assert.Equal(3, doc.Paths["/items"].Operations.Count);
 
-                foreach (var operation in doc.Paths["/items"].Operations)
+                var successSchema = new OpenApiSchema()
                 {
-                    Assert.Equal(2, operation.Value.Responses.Count);
-
-                    var okResponse = operation.Value.Responses["200"];
-                    okResponse.ShouldBeEquivalentTo(
-                        new OpenApiResponse()
-                        {
-                            Description = "An OK response",
-                            Content =
-                            {
-                                ["application/json"] = new OpenApiMediaType()
-                                {
-                                    Schema = new OpenApiSchema()
-                                    {
-                                        Type = "array",
-                                        Items = new OpenApiSchema()
-                                        {
-                                            Properties = new Dictionary<string, OpenApiSchema>()
+                    Type = "array",
+                    Items = new OpenApiSchema()
+                    {
+                        Properties = new Dictionary<string, OpenApiSchema>()
                                             {
                                                 { "id", new OpenApiSchema()
                                                     {
@@ -186,29 +172,16 @@ paths: {}",
                                                     }
                                                 }
                                             },
-                                            Reference = new OpenApiReference()
-                                            {
-                                                Type = ReferenceType.Schema,
-                                                Id = "Item"
-                                            }
-                                        }
-                                    },
-                                }
-                            }
-                        });
-
-                    var errorResponse = operation.Value.Responses["default"];
-                    errorResponse.ShouldBeEquivalentTo(
-                        new OpenApiResponse()
+                        Reference = new OpenApiReference()
                         {
-                            Description = "An error response",
-                            Content =
-                            {
-                                ["application/json"] = new OpenApiMediaType()
-                                {
-                                    Schema = new OpenApiSchema()
-                                    {
-                                        Properties = new Dictionary<string, OpenApiSchema>()
+                            Type = ReferenceType.Schema,
+                            Id = "Item"
+                        }
+                    }
+                };
+                var errorSchema = new OpenApiSchema()
+                {
+                    Properties = new Dictionary<string, OpenApiSchema>()
                                         {
                                             { "code", new OpenApiSchema()
                                                 {
@@ -227,12 +200,48 @@ paths: {}",
                                                 }
                                             }
                                         },
-                                        Reference = new OpenApiReference()
-                                        {
-                                            Type = ReferenceType.Schema,
-                                            Id = "Error"
-                                        }
-                                    },
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "Error"
+                    }
+                };
+                foreach (var operation in doc.Paths["/items"].Operations)
+                {
+                    Assert.Equal(2, operation.Value.Responses.Count);
+
+                    var okResponse = operation.Value.Responses["200"];
+                    okResponse.ShouldBeEquivalentTo(
+                        new OpenApiResponse()
+                        {
+                            Description = "An OK response",
+                            Content =
+                            {
+                                ["application/json"] = new OpenApiMediaType()
+                                {
+                                    Schema = successSchema,
+                                },
+                                ["application/xml"] = new OpenApiMediaType()
+                                {
+                                    Schema = successSchema,
+                                }
+                            }
+                        });
+
+                    var errorResponse = operation.Value.Responses["default"];
+                    errorResponse.ShouldBeEquivalentTo(
+                        new OpenApiResponse()
+                        {
+                            Description = "An error response",
+                            Content =
+                            {
+                                ["application/json"] = new OpenApiMediaType()
+                                {
+                                    Schema = errorSchema,
+                                },
+                                ["application/xml"] = new OpenApiMediaType()
+                                {
+                                    Schema = errorSchema,
                                 }
                             }
                         });
