@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 response.Content = new Dictionary<string, OpenApiMediaType>();
             }
 
-            if (produces != null && produces.Count > 0)
+            if (produces != null)
             {
                 foreach (var produce in produces)
                 {

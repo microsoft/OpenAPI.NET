@@ -252,16 +252,64 @@ paths: {}",
 
             Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
 
-            var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
-            foreach (var content in responses.Values.Select(r => r.Content))
+            var successSchema = new OpenApiSchema
             {
-                var json = content["application/json"];
-                Assert.NotNull(json);
-                Assert.NotNull(json.Schema);
+                Type = "array",
+                Items = new OpenApiSchema
+                {
+                    Properties = {
+                        { "id", new OpenApiSchema
+                            {
+                                Type = "string",
+                                Description = "Item identifier."
+                            }
+                        }
+                    },
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Item",
+                        Type = ReferenceType.Schema
+                    }
+                }
+            };
+            var errorSchema = new OpenApiSchema
+            {
+                Properties = {
+                    { "code", new OpenApiSchema
+                        {
+                            Type = "integer",
+                            Format = "int32"
+                        }
+                    },
+                    { "message", new OpenApiSchema
+                        {
+                            Type = "string"
+                        }
+                    },
+                    { "fields", new OpenApiSchema
+                        {
+                            Type = "string"
+                        }
+                    }
+                },
+                Reference = new OpenApiReference
+                {
+                    Id = "Error",
+                    Type = ReferenceType.Schema
+                }
+            };
+            var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
+            foreach (var response in responses)
+            {
+                var targetSchema = response.Key == "200" ? successSchema : errorSchema;
 
-                var xml = content["application/xml"];
+                var json = response.Value.Content["application/json"];
+                Assert.NotNull(json);
+                json.Schema.ShouldBeEquivalentTo(targetSchema);
+
+                var xml = response.Value.Content["application/xml"];
                 Assert.NotNull(xml);
-                Assert.NotNull(xml.Schema);
+                xml.Schema.ShouldBeEquivalentTo(targetSchema);
             }
         }
     }
