@@ -179,6 +179,7 @@ paths: {}",
                         }
                     }
                 };
+
                 var errorSchema = new OpenApiSchema()
                 {
                     Properties = new Dictionary<string, OpenApiSchema>()
@@ -206,6 +207,7 @@ paths: {}",
                         Id = "Error"
                     }
                 };
+
                 foreach (var operation in doc.Paths["/items"].Operations)
                 {
                     Assert.Equal(2, operation.Value.Responses.Count);
@@ -215,17 +217,7 @@ paths: {}",
                         new OpenApiResponse()
                         {
                             Description = "An OK response",
-                            Content =
-                            {
-                                ["application/json"] = new OpenApiMediaType()
-                                {
-                                    Schema = successSchema,
-                                },
-                                ["application/xml"] = new OpenApiMediaType()
-                                {
-                                    Schema = successSchema,
-                                }
-                            }
+                            Content = GetMediaTypes(successSchema, operation.Key != OperationType.Post)
                         });
 
                     var errorResponse = operation.Value.Responses["default"];
@@ -233,18 +225,21 @@ paths: {}",
                         new OpenApiResponse()
                         {
                             Description = "An error response",
-                            Content =
-                            {
-                                ["application/json"] = new OpenApiMediaType()
-                                {
-                                    Schema = errorSchema,
-                                },
-                                ["application/xml"] = new OpenApiMediaType()
-                                {
-                                    Schema = errorSchema,
-                                }
-                            }
+                            Content = GetMediaTypes(errorSchema, operation.Key != OperationType.Post)
                         });
+                }
+
+                IDictionary<string, OpenApiMediaType> GetMediaTypes(OpenApiSchema schema, bool includeXml)
+                {
+                    var mediaTypes = new Dictionary<string, OpenApiMediaType>
+                    {
+                        ["application/json"] = new OpenApiMediaType() { Schema = schema }
+                    };
+                    if (includeXml)
+                    {
+                        mediaTypes["application/xml"] = new OpenApiMediaType() { Schema = schema };
+                    }
+                    return mediaTypes;
                 }
             }
         }

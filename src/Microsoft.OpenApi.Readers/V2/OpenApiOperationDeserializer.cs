@@ -136,6 +136,9 @@ namespace Microsoft.OpenApi.Readers.V2
                 ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
             }
 
+            // Reset so that it's not picked up later
+            node.Context.SetTempStorage(TempStorageKeys.OperationProduces, null);
+
             return operation;
         }
 

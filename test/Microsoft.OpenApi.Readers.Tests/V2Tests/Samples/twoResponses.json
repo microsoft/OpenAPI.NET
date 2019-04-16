@@ -78,8 +78,7 @@
         }
     },
     "produces": [
-        "application/json",
-        "application/xml"
+        "application/json"
     ],
     "definitions": {
         "Item": {
