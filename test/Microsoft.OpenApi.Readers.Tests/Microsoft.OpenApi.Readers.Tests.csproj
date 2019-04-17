@@ -97,6 +97,9 @@
       <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\multipleProduces.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\twoResponses.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
