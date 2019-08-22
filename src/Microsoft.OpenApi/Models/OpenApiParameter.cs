@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
+            writer.WriteProperty(OpenApiConstants.Explode, Explode, Style.HasValue && Style.Value == ParameterStyle.Form);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
