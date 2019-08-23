@@ -1,6 +1,12 @@
 ![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
 
-# OpenAPI.NET [![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi/)
+# OpenAPI.NET 
+
+|Package|Nuget|
+|--|--|
+|Models and Writers|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi/) |
+|Readers | [![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.Readers.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.Readers/) |
+
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
