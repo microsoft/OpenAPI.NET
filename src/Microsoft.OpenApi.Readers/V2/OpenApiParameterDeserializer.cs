@@ -16,8 +16,6 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static bool _isBodyOrFormData;
-
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
             {
@@ -232,11 +230,11 @@ namespace Microsoft.OpenApi.Readers.V2
             switch (value)
             {
                 case "body":
-                    _isBodyOrFormData = true;
+                    n.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, true);
                     n.Context.SetTempStorage(TempStorageKeys.BodyParameter, o);
                     break;
                 case "formData":
-                    _isBodyOrFormData = true;
+                    n.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, true);
                     var formParameters = n.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                     if (formParameters == null)
                     {
@@ -265,7 +263,7 @@ namespace Microsoft.OpenApi.Readers.V2
         public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody)
         {
             // Reset the local variables every time this method is called.
-            _isBodyOrFormData = false;
+            node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
 
             var mapNode = node.CheckMapNode("parameter");
 
@@ -290,12 +288,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 node.Context.SetTempStorage("schema", null);
             }
 
-            if (_isBodyOrFormData && !loadRequestBody)
+            bool isBodyOrFormData = (bool)node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
+            if (isBodyOrFormData && !loadRequestBody)
             {
                 return null; // Don't include Form or Body parameters when normal parameters are loaded.
             }
 
-            if (loadRequestBody && !_isBodyOrFormData)
+            if (loadRequestBody && !isBodyOrFormData)
             {
                 return null; // Don't include non-Body or non-Form parameters when request bodies are loaded.
             }
