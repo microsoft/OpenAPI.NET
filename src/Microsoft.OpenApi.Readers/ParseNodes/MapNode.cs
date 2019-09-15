@@ -100,11 +100,15 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                      {
                          return null;  // Body Parameters shouldn't be converted to Parameters
                      }
-                     entry.value.Reference = new OpenApiReference()
+                     // If the component isn't a reference to another component, then point it to itself.
+                     if (entry.value.Reference == null)
                      {
-                         Type = referenceType,
-                         Id = entry.key
-                     };
+                         entry.value.Reference = new OpenApiReference()
+                         {
+                             Type = referenceType,
+                             Id = entry.key
+                         };
+                     }
                      return entry;
                  }
                  );

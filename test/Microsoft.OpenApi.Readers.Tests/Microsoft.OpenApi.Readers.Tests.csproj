@@ -13,6 +13,9 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="V2Tests\Samples\ComponentRootReference.json" />
+    </ItemGroup>
+    <ItemGroup>
       <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -24,6 +27,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\basic.v3.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\ComponentRootReference.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\minimal.v2.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
