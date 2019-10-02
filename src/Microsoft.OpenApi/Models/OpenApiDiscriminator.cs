@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -41,6 +42,35 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
 
             writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // propertyName
+            await writer.WritePropertyAsync(OpenApiConstants.PropertyName, PropertyName);
+
+            // mapping
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
+
+            await writer.WriteEndObjectAsync();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v2.0
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

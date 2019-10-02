@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -42,6 +43,14 @@ namespace Microsoft.OpenApi.Models
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            await WriteInternalAsync(writer, OpenApiSpecVersion.OpenApi3_0);
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v2.0
@@ -49,6 +58,14 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiContact"/> to Open Api v2.0
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            await WriteInternalAsync(writer, OpenApiSpecVersion.OpenApi2_0);
         }
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
@@ -73,6 +90,30 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, specVersion);
 
             writer.WriteEndObject();
+        }
+        
+        private async Task WriteInternalAsync(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // name
+            await writer.WritePropertyAsync(OpenApiConstants.Name, Name);
+
+            // url
+            await writer.WritePropertyAsync(OpenApiConstants.Url, Url?.OriginalString);
+
+            // email
+            await writer.WritePropertyAsync(OpenApiConstants.Email, Email);
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, specVersion);
+
+            await writer.WriteEndObjectAsync();
         }
     }
 }

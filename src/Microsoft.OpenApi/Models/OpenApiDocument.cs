@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
@@ -100,6 +101,51 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // openapi
+            await writer.WritePropertyAsync(OpenApiConstants.OpenApi, "3.0.1");
+
+            // info
+            await writer.WriteRequiredObjectAsync(OpenApiConstants.Info, Info, async (w, i) => await i.SerializeAsV3Async(w));
+
+            // servers
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Servers, Servers, async (w, s) => await s.SerializeAsV3Async(w));
+
+            // paths
+            await writer.WriteRequiredObjectAsync(OpenApiConstants.Paths, Paths, async (w, p) => await p.SerializeAsV3Async(w));
+
+            // components
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Components, Components, async (w, c) => await c.SerializeAsV3Async(w));
+
+            // security
+            await writer.WriteOptionalCollectionAsync(
+                OpenApiConstants.Security,
+                SecurityRequirements,
+                async (w, s) => await s.SerializeAsV3Async(w));
+
+            // tags
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Tags, Tags, async (w, t) => await t.SerializeAsV3WithoutReferenceAsync(w));
+
+            // external docs
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.ExternalDocs, ExternalDocs, async (w, e) => await e.SerializeAsV3Async(w));
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
         }
 
         /// <summary>
@@ -219,6 +265,123 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
+        /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/> to OpenAPI object V2.0.
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // swagger
+            await writer.WritePropertyAsync(OpenApiConstants.Swagger, "2.0");
+
+            // info
+            await writer.WriteRequiredObjectAsync(OpenApiConstants.Info, Info, async (w, i) => await i.SerializeAsV2Async(w));
+
+            // host, basePath, schemes, consumes, produces
+            await WriteHostInfoV2Async(writer, Servers);
+
+            // paths
+            await writer.WriteRequiredObjectAsync(OpenApiConstants.Paths, Paths, async (w, p) => await p.SerializeAsV2Async(w));
+
+            // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
+            // If the reference exists but points to other objects, the object is serialized to just that reference.
+
+            // definitions
+            await writer.WriteOptionalMapAsync(
+                OpenApiConstants.Definitions,
+                Components?.Schemas,
+                async (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Schema &&
+                        component.Reference.Id == key)
+                    {
+                        await component.SerializeAsV2WithoutReferenceAsync(w);
+                    }
+                    else
+                    {
+                        await component.SerializeAsV2Async(w);
+                    }
+                });
+
+            // parameters
+            await writer.WriteOptionalMapAsync(
+                OpenApiConstants.Parameters,
+                Components?.Parameters,
+                async (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Parameter &&
+                        component.Reference.Id == key)
+                    {
+                        await component.SerializeAsV2WithoutReferenceAsync(w);
+                    }
+                    else
+                    {
+                        await component.SerializeAsV2Async(w);
+                    }
+                });
+
+            // responses
+            await writer.WriteOptionalMapAsync(
+                OpenApiConstants.Responses,
+                Components?.Responses,
+                async (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Response &&
+                        component.Reference.Id == key)
+                    {
+                        await component.SerializeAsV2WithoutReferenceAsync(w);
+                    }
+                    else
+                    {
+                        await component.SerializeAsV2Async(w);
+                    }
+                });
+
+            // securityDefinitions
+            await writer.WriteOptionalMapAsync(
+                OpenApiConstants.SecurityDefinitions,
+                Components?.SecuritySchemes,
+                async (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                        component.Reference.Id == key)
+                    {
+                        await component.SerializeAsV2WithoutReferenceAsync(w);
+                    }
+                    else
+                    {
+                        await component.SerializeAsV2Async(w);
+                    }
+                });
+
+            // security
+            await writer.WriteOptionalCollectionAsync(
+                OpenApiConstants.Security,
+                SecurityRequirements,
+                async (w, s) => await s.SerializeAsV2Async(w));
+
+            // tags
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Tags, Tags, async (w, t) => await t.SerializeAsV2WithoutReferenceAsync(w));
+
+            // externalDocs
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.ExternalDocs, ExternalDocs, async (w, e) => await e.SerializeAsV2Async(w));
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+
         private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
         {
             if (servers == null || !servers.Any())
@@ -267,6 +430,56 @@ namespace Microsoft.OpenApi.Models
 
             // schemes
             writer.WriteOptionalCollection(OpenApiConstants.Schemes, schemes, (w, s) => w.WriteValue(s));
+        }
+        
+        private static async Task WriteHostInfoV2Async(IOpenApiWriter writer, IList<OpenApiServer> servers)
+        {
+            if (servers == null || !servers.Any())
+            {
+                return;
+            }
+
+            // Arbitrarily choose the first server given that V2 only allows 
+            // one host, port, and base path.
+            var firstServer = servers.First();
+
+            // Divide the URL in the Url property into host and basePath required in OpenAPI V2
+            // The Url property cannotcontain path templating to be valid for V2 serialization.
+            var firstServerUrl = new Uri(firstServer.Url);
+
+            // host
+            await writer.WritePropertyAsync(
+                OpenApiConstants.Host,
+                firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
+
+            // basePath
+            if (firstServerUrl.AbsolutePath != "/")
+            {
+                await writer.WritePropertyAsync(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            }
+
+            // Consider all schemes of the URLs in the server list that have the same
+            // host, port, and base path as the first server.
+            var schemes = servers.Select(
+                    s =>
+                    {
+                        Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
+                        return url;
+                    })
+                .Where(
+                    u => Uri.Compare(
+                            u,
+                            firstServerUrl,
+                            UriComponents.Host | UriComponents.Port | UriComponents.Path,
+                            UriFormat.SafeUnescaped,
+                            StringComparison.OrdinalIgnoreCase) ==
+                        0)
+                .Select(u => u.Scheme)
+                .Distinct()
+                .ToList();
+
+            // schemes
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Schemes, schemes, async (w, s) => await w.WriteValueAsync(s));
         }
 
         /// <summary>

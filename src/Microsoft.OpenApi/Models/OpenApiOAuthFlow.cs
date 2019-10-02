@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -72,11 +73,50 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // authorizationUrl
+            await writer.WritePropertyAsync(OpenApiConstants.AuthorizationUrl, AuthorizationUrl?.ToString());
+
+            // tokenUrl
+            await writer.WritePropertyAsync(OpenApiConstants.TokenUrl, TokenUrl?.ToString());
+
+            // refreshUrl
+            await writer.WritePropertyAsync(OpenApiConstants.RefreshUrl, RefreshUrl?.ToString());
+
+            // scopes
+            await writer.WriteRequiredMapAsync(OpenApiConstants.Scopes, Scopes, async (w, s) => await w.WriteValueAsync(s));
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+
+
+        /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // OAuthFlow object does not exist in V2.
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v2.0
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            return Task.CompletedTask;
         }
     }
 }

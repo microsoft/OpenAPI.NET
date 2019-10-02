@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -74,11 +75,49 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // schema
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Schema, Schema, async (w, s) => await s.SerializeAsV3Async(w));
+
+            // example
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Example, Example, async (w, e) => await w.WriteAnyAsync(e));
+
+            // examples
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Examples, Examples, async (w, e) => await e.SerializeAsV3Async(w));
+
+            // encoding
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Encoding, Encoding, async (w, e) => await e.SerializeAsV3Async(w));
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v2.0.
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Media type does not exist in V2.
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiMediaType"/> to Open Api v2.0.
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            return Task.CompletedTask;
         }
     }
 }

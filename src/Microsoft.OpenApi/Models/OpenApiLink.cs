@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -54,7 +55,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set;}
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference pointer.
@@ -79,6 +80,26 @@ namespace Microsoft.OpenApi.Models
 
             SerializeAsV3WithoutReference(writer);
         }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiLink"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV3Async(writer);
+                return;
+            }
+
+            await SerializeAsV3WithoutReferenceAsync(writer);
+        }
+
 
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
@@ -109,11 +130,48 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV3WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            await writer.WriteStartObjectAsync();
+
+            // operationRef
+            await writer.WritePropertyAsync(OpenApiConstants.OperationRef, OperationRef);
+
+            // operationId
+            await writer.WritePropertyAsync(OpenApiConstants.OperationId, OperationId);
+
+            // parameters
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Parameters, Parameters, async (w, p) => await p.WriteValueAsync(w));
+
+            // requestBody
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.RequestBody, RequestBody, async (w, r) => await r.WriteValueAsync(w));
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // server
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Server, Server, async (w, s) => await s.SerializeAsV3Async(w));
+
+            await writer.WriteEndObjectAsync();
+        }
+
+
+        /// <summary>
         /// Serialize <see cref="OpenApiLink"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Link object does not exist in V2.
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiLink"/> to Open Api v2.0
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

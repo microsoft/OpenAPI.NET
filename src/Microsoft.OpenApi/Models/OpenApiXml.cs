@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -53,6 +54,15 @@ namespace Microsoft.OpenApi.Models
         {
             Write(writer, OpenApiSpecVersion.OpenApi3_0);
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiXml"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            await WriteAsync(writer, OpenApiSpecVersion.OpenApi3_0);
+
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiXml"/> to Open Api v2.0
@@ -60,6 +70,14 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             Write(writer, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiXml"/> to Open Api v2.0
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            await WriteAsync(writer, OpenApiSpecVersion.OpenApi2_0);
         }
 
         private void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
@@ -90,6 +108,36 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, specVersion);
 
             writer.WriteEndObject();
+        }
+        
+        private async Task WriteAsync(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // name
+            await writer.WritePropertyAsync(OpenApiConstants.Name, Name);
+
+            // namespace
+            await writer.WritePropertyAsync(OpenApiConstants.Namespace, Namespace?.AbsoluteUri);
+
+            // prefix
+            await writer.WritePropertyAsync(OpenApiConstants.Prefix, Prefix);
+
+            // attribute
+            await writer.WritePropertyAsync(OpenApiConstants.Attribute, Attribute, false);
+
+            // wrapped
+            await writer.WritePropertyAsync(OpenApiConstants.Wrapped, Wrapped, false);
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, specVersion);
+
+            await writer.WriteEndObjectAsync();
         }
     }
 }

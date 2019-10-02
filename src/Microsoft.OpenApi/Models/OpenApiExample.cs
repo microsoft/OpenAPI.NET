@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -74,6 +75,25 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV3Async(writer);
+                return;
+            }
+
+            await SerializeAsV3WithoutReferenceAsync(writer);
+        }
+
+        /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
@@ -99,6 +119,32 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV3WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            await writer.WriteStartObjectAsync();
+
+            // summary
+            await writer.WritePropertyAsync(OpenApiConstants.Summary, Summary);
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // value
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));
+
+            // externalValue
+            await writer.WritePropertyAsync(OpenApiConstants.ExternalValue, ExternalValue);
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+
+
+        /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
@@ -106,6 +152,15 @@ namespace Microsoft.OpenApi.Models
             // Example object of this form does not exist in V2.
             // V2 Example object requires knowledge of media type and exists only
             // in Response object, so it will be serialized as a part of the Response object.
+        }
+
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiExample"/> to Open Api v2.0
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

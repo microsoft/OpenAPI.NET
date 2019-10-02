@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -67,6 +68,46 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            foreach (var securitySchemeAndScopesValuePair in this)
+            {
+                var securityScheme = securitySchemeAndScopesValuePair.Key;
+                var scopes = securitySchemeAndScopesValuePair.Value;
+
+                if (securityScheme.Reference == null)
+                {
+                    // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
+                    // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
+                    // string to output.
+                    continue;
+                }
+
+                await securityScheme.SerializeAsV3Async(writer);
+
+                await writer.WriteStartArrayAsync();
+
+                foreach (var scope in scopes)
+                {
+                    await writer.WriteValueAsync(scope);
+                }
+
+                await writer.WriteEndArrayAsync();
+            }
+
+            await writer.WriteEndObjectAsync();
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v2.0
@@ -106,6 +147,46 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v2.0
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            foreach (var securitySchemeAndScopesValuePair in this)
+            {
+                var securityScheme = securitySchemeAndScopesValuePair.Key;
+                var scopes = securitySchemeAndScopesValuePair.Value;
+
+                if (securityScheme.Reference == null)
+                {
+                    // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
+                    // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
+                    // string to output.
+                    continue;
+                }
+
+                await securityScheme.SerializeAsV2Async(writer);
+
+                await writer.WriteStartArrayAsync();
+
+                foreach (var scope in scopes)
+                {
+                    await writer.WriteValueAsync(scope);
+                }
+
+                await writer.WriteEndArrayAsync();
+            }
+
+            await writer.WriteEndObjectAsync();
         }
 
         /// <summary>

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -66,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set;}
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference object.
@@ -90,6 +91,25 @@ namespace Microsoft.OpenApi.Models
             }
 
             SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV3Async(writer);
+                return;
+            }
+
+            await SerializeAsV3WithoutReferenceAsync(writer);
         }
 
         /// <summary>
@@ -140,6 +160,53 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV3WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            await writer.WriteStartObjectAsync();
+
+            // type
+            await writer.WritePropertyAsync(OpenApiConstants.Type, Type.GetDisplayName());
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            switch (Type)
+            {
+                case SecuritySchemeType.ApiKey:
+                    // These properties apply to apiKey type only.
+                    // name
+                    // in
+                    await writer.WritePropertyAsync(OpenApiConstants.Name, Name);
+                    await writer.WritePropertyAsync(OpenApiConstants.In, In.GetDisplayName());
+                    break;
+                case SecuritySchemeType.Http:
+                    // These properties apply to http type only.
+                    // scheme
+                    // bearerFormat
+                    await writer.WritePropertyAsync(OpenApiConstants.Scheme, Scheme);
+                    await writer.WritePropertyAsync(OpenApiConstants.BearerFormat, BearerFormat);
+                    break;
+                case SecuritySchemeType.OAuth2:
+                    // This property apply to oauth2 type only.
+                    // flows
+                    await writer.WriteOptionalObjectAsync(OpenApiConstants.Flows, Flows, (w, o) => o.SerializeAsV3(w));
+                    break;
+                case SecuritySchemeType.OpenIdConnect:
+                    // This property apply to openIdConnect only.
+                    // openIdConnectUrl
+                    await writer.WritePropertyAsync(OpenApiConstants.OpenIdConnectUrl, OpenIdConnectUrl?.ToString());
+                    break;
+            }
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
@@ -156,6 +223,25 @@ namespace Microsoft.OpenApi.Models
             }
 
             SerializeAsV2WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v2.0
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV2Async(writer);
+                return;
+            }
+
+            await SerializeAsV2WithoutReferenceAsync(writer);
         }
 
         /// <summary>
@@ -216,6 +302,65 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
+        
+         /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV2WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            if (Type == SecuritySchemeType.Http && Scheme != OpenApiConstants.Basic)
+            {
+                // Bail because V2 does not support non-basic HTTP scheme
+                await writer.WriteStartObjectAsync();
+                await writer.WriteEndObjectAsync();
+                return;
+            }
+
+            if (Type == SecuritySchemeType.OpenIdConnect)
+            {
+                // Bail because V2 does not support OpenIdConnect
+                await writer.WriteStartObjectAsync();
+                await writer.WriteEndObjectAsync();
+                return;
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // type
+            switch (Type)
+            {
+                case SecuritySchemeType.Http:
+                    await writer.WritePropertyAsync(OpenApiConstants.Type, OpenApiConstants.Basic);
+                    break;
+
+                case SecuritySchemeType.OAuth2:
+                    // These properties apply to ouauth2 type only.
+                    // flow
+                    // authorizationUrl
+                    // tokenUrl
+                    // scopes
+                    await writer.WritePropertyAsync(OpenApiConstants.Type, Type.GetDisplayName());
+                    await WriteOAuthFlowForV2Async(writer, Flows);
+                    break;
+
+                case SecuritySchemeType.ApiKey:
+                    // These properties apply to apiKey type only.
+                    // name
+                    // in
+                    await writer.WritePropertyAsync(OpenApiConstants.Type, Type.GetDisplayName());
+                    await writer.WritePropertyAsync(OpenApiConstants.Name, Name);
+                    await writer.WritePropertyAsync(OpenApiConstants.In, In.GetDisplayName());
+                    break;
+            }
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+            await writer.WriteEndObjectAsync();
+        }
 
         /// <summary>
         /// Arbitrarily chooses one <see cref="OpenApiOAuthFlow"/> object from the <see cref="OpenApiOAuthFlows"/>
@@ -257,6 +402,48 @@ namespace Microsoft.OpenApi.Models
 
             // scopes
             writer.WriteOptionalMap(OpenApiConstants.Scopes, flow.Scopes, (w, s) => w.WriteValue(s));
+        }
+        
+        /// <summary>
+        /// Arbitrarily chooses one <see cref="OpenApiOAuthFlow"/> object from the <see cref="OpenApiOAuthFlows"/>
+        /// to populate in V2 security scheme.
+        /// </summary>
+        private static async Task WriteOAuthFlowForV2Async(IOpenApiWriter writer, OpenApiOAuthFlows flows)
+        {
+            if (flows != null)
+            {
+                if (flows.Implicit != null)
+                {
+                    await WriteOAuthFlowForV2Async(writer, OpenApiConstants.Implicit, flows.Implicit);
+                }
+                else if (flows.Password != null)
+                {
+                    await WriteOAuthFlowForV2Async(writer, OpenApiConstants.Password, flows.Password);
+                }
+                else if (flows.ClientCredentials != null)
+                {
+                    await WriteOAuthFlowForV2Async(writer, OpenApiConstants.Application, flows.ClientCredentials);
+                }
+                else if (flows.AuthorizationCode != null)
+                {
+                    await WriteOAuthFlowForV2Async(writer, OpenApiConstants.AccessCode, flows.AuthorizationCode);
+                }
+            }
+        }
+
+        private static async Task WriteOAuthFlowForV2Async(IOpenApiWriter writer, string flowValue, OpenApiOAuthFlow flow)
+        {
+            // flow
+            await writer.WritePropertyAsync(OpenApiConstants.Flow, flowValue);
+
+            // authorizationUrl
+            await writer.WritePropertyAsync(OpenApiConstants.AuthorizationUrl, flow.AuthorizationUrl?.ToString());
+
+            // tokenUrl
+            await writer.WritePropertyAsync(OpenApiConstants.TokenUrl, flow.TokenUrl?.ToString());
+
+            // scopes
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Scopes, flow.Scopes, (w, s) => w.WriteValue(s));
         }
     }
 }

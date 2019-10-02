@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -250,11 +251,204 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
+            // If the reference exists but points to other objects, the object is serialized to just that reference.
+
+            // schemas
+            await writer.WriteOptionalMapAsync(
+                OpenApiConstants.Schemas,
+                Schemas,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Schema &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // responses
+            writer.WriteOptionalMap(
+                OpenApiConstants.Responses,
+                Responses,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Response &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // parameters
+            writer.WriteOptionalMap(
+                OpenApiConstants.Parameters,
+                Parameters,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Parameter &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // examples
+            writer.WriteOptionalMap(
+                OpenApiConstants.Examples,
+                Examples,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Example &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // requestBodies
+            writer.WriteOptionalMap(
+                OpenApiConstants.RequestBodies,
+                RequestBodies,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.RequestBody &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // headers
+            writer.WriteOptionalMap(
+                OpenApiConstants.Headers,
+                Headers,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Header &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // securitySchemes
+            writer.WriteOptionalMap(
+                OpenApiConstants.SecuritySchemes,
+                SecuritySchemes,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // links
+            writer.WriteOptionalMap(
+                OpenApiConstants.Links,
+                Links,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Link &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // callbacks
+            writer.WriteOptionalMap(
+                OpenApiConstants.Callbacks,
+                Callbacks,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Callback &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
+            // extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            writer.WriteEndObject();
+        }
+
+
+        /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Components object does not exist in V2.
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            // Components object does not exist in V2.
+            return Task.CompletedTask;
         }
     }
 }

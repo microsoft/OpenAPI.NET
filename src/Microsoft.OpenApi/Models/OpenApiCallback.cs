@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
@@ -78,11 +79,29 @@ namespace Microsoft.OpenApi.Models
             
             SerializeAsV3WithoutReference(writer);
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiCallback"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV3Async(writer);
+                return;
+            }
+            
+            await SerializeAsV3WithoutReferenceAsync(writer);
+        }
 
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
             writer.WriteStartObject();
@@ -105,6 +124,36 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Callback object does not exist in V2.
+        }
+
+       
+        
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV3WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            await writer.WriteStartObjectAsync();
+
+            // path items
+            foreach (var item in PathItems)
+            {
+                await writer.WriteRequiredObjectAsync(item.Key.Expression, item.Value, (w, p) => p.SerializeAsV3(w));
+            }
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiCallback"/> to Open Api v2.0
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            // Callback object does not exist in V2.
+            return Task.CompletedTask;
         }
 
         /// <summary>

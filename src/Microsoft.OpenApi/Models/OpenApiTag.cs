@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -61,6 +62,25 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteValue(Name);
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV3Async(writer);
+                return;
+            }
+
+            await writer.WriteValueAsync(Name);
+        }
 
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
@@ -83,6 +103,28 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
+        
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV3WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            await writer.WriteStartObjectAsync();
+
+            // name
+            await writer.WritePropertyAsync(OpenApiConstants.Name, Name);
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // external docs
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.ExternalDocs, ExternalDocs, async (w, e) => await e.SerializeAsV3Async(w));
+
+            // extensions.
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
@@ -101,6 +143,25 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteValue(Name);
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV2Async(writer);
+                return;
+            }
+
+            await writer.WriteValueAsync(Name);
         }
 
         /// <summary>
@@ -123,6 +184,28 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV2WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            await writer.WriteStartObjectAsync();
+
+            // name
+            await writer.WritePropertyAsync(OpenApiConstants.Name, Name);
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // external docs
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.ExternalDocs, ExternalDocs, async (w, e) => await e.SerializeAsV2Async(w));
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+            await writer.WriteEndObjectAsync();
         }
     }
 }

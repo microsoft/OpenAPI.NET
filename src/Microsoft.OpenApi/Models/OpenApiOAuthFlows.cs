@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -75,11 +76,55 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // implicit
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Implicit, Implicit, async (w, o) => await o.SerializeAsV3Async(w));
+
+            // password
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Password, Password, async (w, o) => await o.SerializeAsV3Async(w));
+
+            // clientCredentials
+            await writer.WriteOptionalObjectAsync(
+                OpenApiConstants.ClientCredentials,
+                ClientCredentials,
+                async (w, o) => await o.SerializeAsV3Async(w));
+
+            // authorizationCode
+            await writer .WriteOptionalObjectAsync(
+                OpenApiConstants.AuthorizationCode,
+                AuthorizationCode,
+                async (w, o) => await o.SerializeAsV3Async(w));
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v2.0
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // OAuthFlows object does not exist in V2.
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v2.0
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            return Task.CompletedTask;
         }
     }
 }

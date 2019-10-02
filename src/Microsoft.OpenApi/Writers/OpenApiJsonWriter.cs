@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -52,6 +53,34 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write JSON start object.
+        /// </summary>
+        public override async Task WriteStartObjectAsync()
+        {
+            var previousScope = CurrentScope();
+
+            var currentScope = StartScope(ScopeType.Object);
+
+            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            {
+                currentScope.IsInArray = true;
+
+                if (previousScope.ObjectCount != 1)
+                {
+                    await Writer.WriteAsync(WriterConstants.ArrayElementSeparator);
+                }
+
+                await Writer.WriteLineAsync();
+                await WriteIndentationAsync();
+            }
+
+            await Writer.WriteAsync(WriterConstants.StartObjectScope);
+
+            IncreaseIndentation();
+        }
+
+
+        /// <summary>
         /// Write JSON end object.
         /// </summary>
         public override void WriteEndObject()
@@ -71,6 +100,28 @@ namespace Microsoft.OpenApi.Writers
 
             Writer.Write(WriterConstants.EndObjectScope);
         }
+
+        /// <summary>
+        /// Write JSON end object.
+        /// </summary>
+        public override async Task WriteEndObjectAsync()
+        {
+            var currentScope = EndScope(ScopeType.Object);
+            if (currentScope.ObjectCount != 0)
+            {
+                await Writer.WriteLineAsync();
+                DecreaseIndentation();
+                await WriteIndentationAsync();
+            }
+            else
+            {
+                await Writer.WriteAsync(WriterConstants.WhiteSpaceForEmptyObject);
+                DecreaseIndentation();
+            }
+
+            await Writer.WriteAsync(WriterConstants.EndObjectScope);
+        }
+
 
         /// <summary>
         /// Write JSON start array.
@@ -99,6 +150,32 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write JSON start array.
+        /// </summary>
+        public override async Task WriteStartArrayAsync()
+        {
+            var previousScope = CurrentScope();
+
+            var currentScope = StartScope(ScopeType.Array);
+
+            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            {
+                currentScope.IsInArray = true;
+
+                if (previousScope.ObjectCount != 1)
+                {
+                    await Writer.WriteAsync(WriterConstants.ArrayElementSeparator);
+                }
+
+                await Writer.WriteLineAsync();
+                await WriteIndentationAsync();
+            }
+
+            await Writer.WriteAsync(WriterConstants.StartArrayScope);
+            IncreaseIndentation();
+        }
+
+        /// <summary>
         /// Write JSON end array.
         /// </summary>
         public override void WriteEndArray()
@@ -117,6 +194,27 @@ namespace Microsoft.OpenApi.Writers
             }
 
             Writer.Write(WriterConstants.EndArrayScope);
+        }
+
+        /// <summary>
+        /// Write JSON end array.
+        /// </summary>
+        public override async Task WriteEndArrayAsync()
+        {
+            var current = EndScope(ScopeType.Array);
+            if (current.ObjectCount != 0)
+            {
+                await Writer.WriteLineAsync();
+                DecreaseIndentation();
+                await WriteIndentationAsync();
+            }
+            else
+            {
+                await Writer.WriteAsync(WriterConstants.WhiteSpaceForEmptyArray);
+                DecreaseIndentation();
+            }
+
+            await Writer.WriteAsync(WriterConstants.EndArrayScope);
         }
 
         /// <summary>
@@ -148,6 +246,34 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write property name.
+        /// </summary>
+        /// <param name="name">The property name.</param>
+        /// public override void WritePropertyName(string name)
+        public override async Task WritePropertyNameAsync(string name)
+        {
+            VerifyCanWritePropertyName(name);
+
+            var currentScope = CurrentScope();
+            if (currentScope.ObjectCount != 0)
+            {
+                await Writer.WriteAsync(WriterConstants.ObjectMemberSeparator);
+            }
+
+            await Writer.WriteLineAsync();
+
+            currentScope.ObjectCount++;
+
+            await WriteIndentationAsync();
+
+            name = name.GetJsonCompatibleString();
+
+            await Writer.WriteAsync(name);
+
+            await Writer.WriteAsync(WriterConstants.NameValueSeparator);
+        }
+
+        /// <summary>
         /// Write string value.
         /// </summary>
         /// <param name="value">The string value.</param>
@@ -161,6 +287,20 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write string value.
+        /// </summary>
+        /// <param name="value">The string value.</param>
+        public override async Task WriteValueAsync(string value)
+        {
+            await WriteValueSeparatorAsync();
+
+            value = value.GetJsonCompatibleString();
+
+            await Writer.WriteAsync(value);
+        }
+
+
+        /// <summary>
         /// Write null value.
         /// </summary>
         public override void WriteNull()
@@ -168,6 +308,16 @@ namespace Microsoft.OpenApi.Writers
             WriteValueSeparator();
 
             Writer.Write("null");
+        }
+
+        /// <summary>
+        /// Write null value.
+        /// </summary>
+        public override async Task WriteNullAsync()
+        {
+            await WriteValueSeparatorAsync();
+
+            await Writer.WriteAsync("null");
         }
 
         /// <summary>
@@ -196,12 +346,46 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Writes a separator of a value if it's needed for the next value to be written.
+        /// </summary>
+        protected override async Task WriteValueSeparatorAsync()
+        {
+            if (Scopes.Count == 0)
+            {
+                return;
+            }
+
+            var currentScope = Scopes.Peek();
+
+            if (currentScope.Type == ScopeType.Array)
+            {
+                if (currentScope.ObjectCount != 0)
+                {
+                    await Writer.WriteAsync(WriterConstants.ArrayElementSeparator);
+                }
+
+                await Writer.WriteLineAsync();
+                await WriteIndentationAsync();
+                currentScope.ObjectCount++;
+            }
+        }
+
+        /// <summary>
         /// Writes the content raw value.
         /// </summary>
         public override void WriteRaw(string value)
         {
             WriteValueSeparator();
             Writer.Write(value);
+        }
+
+        /// <summary>
+        /// Writes the content raw value.
+        /// </summary>
+        public override async Task WriteRawAsync(string value)
+        {
+            await WriteValueSeparatorAsync();
+            await Writer.WriteAsync(value);
         }
     }
 }

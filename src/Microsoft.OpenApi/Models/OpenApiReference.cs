@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -138,6 +139,38 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Type == ReferenceType.Tag)
+            {
+                // Write the string value only
+                await writer.WriteValueAsync(ReferenceV3);
+                return;
+            }
+
+            if (Type == ReferenceType.SecurityScheme)
+            {
+                // Write the string as property name
+                await writer.WritePropertyNameAsync(ReferenceV3);
+                return;
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // $ref
+            await writer.WritePropertyAsync(OpenApiConstants.DollarRef, ReferenceV3);
+
+            await writer.WriteEndObjectAsync();
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
@@ -169,6 +202,38 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV2);
 
             writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Type == ReferenceType.Tag)
+            {
+                // Write the string value only
+                await writer.WriteValueAsync(ReferenceV2);
+                return;
+            }
+
+            if (Type == ReferenceType.SecurityScheme)
+            {
+                // Write the string as property name
+                await writer.WritePropertyNameAsync(ReferenceV2);
+                return;
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // $ref
+            await writer.WritePropertyAsync(OpenApiConstants.DollarRef, ReferenceV2);
+
+            await writer.WriteEndObjectAsync();
         }
 
         private string GetExternalReference()

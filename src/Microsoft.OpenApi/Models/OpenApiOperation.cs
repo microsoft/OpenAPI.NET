@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -122,10 +123,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
                 Tags,
-                (w, t) =>
-                {
-                    t.SerializeAsV3(w);
-                });
+                (w, t) => { t.SerializeAsV3(w); });
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -167,6 +165,63 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // tags
+            await writer.WriteOptionalCollectionAsync(
+                OpenApiConstants.Tags,
+                Tags,
+                async (w, t) => { await t.SerializeAsV3Async(w); });
+
+            // summary
+            await writer.WritePropertyAsync(OpenApiConstants.Summary, Summary);
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // externalDocs
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.ExternalDocs, ExternalDocs, async (w, e) => await e.SerializeAsV3Async(w));
+
+            // operationId
+            await writer.WritePropertyAsync(OpenApiConstants.OperationId, OperationId);
+
+            // parameters
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Parameters, Parameters, async (w, p) => await p.SerializeAsV3Async(w));
+
+            // requestBody
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.RequestBody, RequestBody, async (w, r) => await r.SerializeAsV3Async(w));
+
+            // responses
+            await writer.WriteRequiredObjectAsync(OpenApiConstants.Responses, Responses, async (w, r) => await r.SerializeAsV3Async(w));
+
+            // callbacks
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Callbacks, Callbacks, async (w, c) => await c.SerializeAsV3Async(w));
+
+            // deprecated
+            await writer.WritePropertyAsync(OpenApiConstants.Deprecated, Deprecated, false);
+
+            // security
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Security, Security, async (w, s) => await s.SerializeAsV3Async(w));
+
+            // servers
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Servers, Servers, async (w, s) => await s.SerializeAsV3Async(w));
+
+            // specification extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v2.0.
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
@@ -182,10 +237,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
                 Tags,
-                (w, t) =>
-                {
-                    t.SerializeAsV2(w);
-                });
+                (w, t) => { t.SerializeAsV2(w); });
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -312,6 +364,152 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiOperation"/> to Open Api v2.0.
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // tags
+            await writer.WriteOptionalCollectionAsync(
+                OpenApiConstants.Tags,
+                Tags,
+                async (w, t) => { await t.SerializeAsV2Async(w); });
+
+            // summary
+            await writer.WritePropertyAsync(OpenApiConstants.Summary, Summary);
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // externalDocs
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.ExternalDocs, ExternalDocs, async (w, e) => await e.SerializeAsV2Async(w));
+
+            // operationId
+            await writer.WritePropertyAsync(OpenApiConstants.OperationId, OperationId);
+
+            IList<OpenApiParameter> parameters;
+            if (Parameters == null)
+            {
+                parameters = new List<OpenApiParameter>();
+            }
+            else
+            {
+                parameters = new List<OpenApiParameter>(Parameters);
+            }
+
+            if (RequestBody != null)
+            {
+                // consumes
+                await writer.WritePropertyNameAsync(OpenApiConstants.Consumes);
+                await writer.WriteStartArrayAsync();
+                var consumes = RequestBody.Content.Keys.Distinct().ToList();
+                foreach (var mediaType in consumes)
+                {
+                    await writer.WriteValueAsync(mediaType);
+                }
+
+                await writer.WriteEndArrayAsync();
+
+                // This is form data. We need to split the request body into multiple parameters.
+                if (consumes.Contains("application/x-www-form-urlencoded") ||
+                    consumes.Contains("multipart/form-data"))
+                {
+                    foreach (var property in RequestBody.Content.First().Value.Schema.Properties)
+                    {
+                        parameters.Add(
+                            new OpenApiFormDataParameter
+                            {
+                                Description = property.Value.Description,
+                                Name = property.Key,
+                                Schema = property.Value,
+                                Required = RequestBody.Content.First().Value.Schema.Required.Contains(property.Key)
+                            });
+                    }
+                }
+                else
+                {
+                    var content = RequestBody.Content.Values.FirstOrDefault();
+                    var bodyParameter = new OpenApiBodyParameter
+                    {
+                        Description = RequestBody.Description,
+                        // V2 spec actually allows the body to have custom name.
+                        // Our library does not support this at the moment.
+                        Name = "body",
+                        Schema = content?.Schema ?? new OpenApiSchema(),
+                        Required = RequestBody.Required
+                    };
+
+                    parameters.Add(bodyParameter);
+                }
+            }
+
+            if (Responses != null)
+            {
+                var produces = Responses.Where(r => r.Value.Content != null)
+                    .SelectMany(r => r.Value.Content?.Keys)
+                    .Distinct()
+                    .ToList();
+
+                if (produces.Any())
+                {
+                    // produces
+                    await writer.WritePropertyNameAsync(OpenApiConstants.Produces);
+                    await writer.WriteStartArrayAsync();
+                    foreach (var mediaType in produces)
+                    {
+                        await writer.WriteValueAsync(mediaType);
+                    }
+
+                    await writer.WriteEndArrayAsync();
+                }
+            }
+
+            // parameters
+            // Use the parameters created locally to include request body if exists.
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Parameters, parameters, async (w, p) => await p.SerializeAsV2Async(w));
+
+            // responses
+            await writer.WriteRequiredObjectAsync(OpenApiConstants.Responses, Responses, async (w, r) => await r.SerializeAsV2Async(w));
+
+            // schemes
+            // All schemes in the Servers are extracted, regardless of whether the host matches
+            // the host defined in the outermost Swagger object. This is due to the 
+            // inaccessibility of information for that host in the context of an inner object like this Operation.
+            if (Servers != null)
+            {
+                var schemes = Servers.Select(
+                        s =>
+                        {
+                            Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
+                            return url?.Scheme;
+                        })
+                    .Where(s => s != null)
+                    .Distinct()
+                    .ToList();
+
+                await writer.WriteOptionalCollectionAsync(OpenApiConstants.Schemes, schemes, async (w, s) => await w.WriteValueAsync(s));
+            }
+
+            // deprecated
+            await writer.WritePropertyAsync(OpenApiConstants.Deprecated, Deprecated, false);
+
+            // security
+            await writer.WriteOptionalCollectionAsync(OpenApiConstants.Security, Security, async (w, s) => await s.SerializeAsV2Async(w));
+
+            // specification extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+            await writer.WriteEndObjectAsync();
         }
     }
 }

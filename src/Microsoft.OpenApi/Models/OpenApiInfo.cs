@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -84,6 +85,42 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // title
+            await writer.WritePropertyAsync(OpenApiConstants.Title, Title);
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // termsOfService
+            await writer.WritePropertyAsync(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
+
+            // contact object
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Contact, Contact, async (w, c) => await c.SerializeAsV3Async(w));
+
+            // license object
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.License, License, async (w, l) => await l.SerializeAsV3Async(w));
+
+            // version
+            await writer.WritePropertyAsync(OpenApiConstants.Version, Version);
+
+            // specification extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v2.0
@@ -119,6 +156,42 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v2.0
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // title
+            await writer.WritePropertyAsync(OpenApiConstants.Title, Title);
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // termsOfService
+            await writer.WritePropertyAsync(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
+
+            // contact object
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Contact, Contact, async (w, c) => await c.SerializeAsV2Async(w));
+
+            // license object
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.License, License, async (w, l) => await l.SerializeAsV2Async(w));
+
+            // version
+            await writer.WritePropertyAsync(OpenApiConstants.Version, Version);
+
+            // specification extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+            await writer.WriteEndObjectAsync();
         }
     }
 }

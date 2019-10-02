@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -87,11 +88,52 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull("writer");
+            }
+
+            await writer.WriteStartObjectAsync();
+
+            // contentType
+            await writer.WritePropertyAsync(OpenApiConstants.ContentType, ContentType);
+
+            // headers
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Headers, Headers, async (w, h) => await h.SerializeAsV3Async(w));
+
+            // style
+            await writer.WritePropertyAsync(OpenApiConstants.Style, Style?.GetDisplayName());
+
+            // explode
+            await writer.WritePropertyAsync(OpenApiConstants.Explode, Explode, false);
+
+            // allowReserved
+            await writer.WritePropertyAsync(OpenApiConstants.AllowReserved, AllowReserved, false);
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
+        
+        /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // nothing here
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
+        /// </summary>
+        public Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            return Task.CompletedTask;
         }
     }
 }

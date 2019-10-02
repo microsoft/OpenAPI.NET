@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
@@ -65,6 +66,26 @@ namespace Microsoft.OpenApi.Models
             else if (_expression != null)
             {
                 writer.WriteValue(_expression.Expression);
+            }
+        }
+        
+        /// <summary>
+        /// Write <see cref="RuntimeExpressionAnyWrapper"/>
+        /// </summary>
+        public async Task WriteValueAsync(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (_any != null)
+            {
+                await writer.WriteAnyAsync(_any);
+            }
+            else if (_expression != null)
+            {
+                await writer.WriteValueAsync(_expression.Expression);
             }
         }
     }

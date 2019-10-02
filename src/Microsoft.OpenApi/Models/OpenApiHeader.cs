@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -104,6 +105,25 @@ namespace Microsoft.OpenApi.Models
 
             SerializeAsV3WithoutReference(writer);
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.0
+        /// </summary>
+        public async Task SerializeAsV3Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV3Async(writer);
+                return;
+            }
+
+            await SerializeAsV3WithoutReferenceAsync(writer);
+        }
 
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
@@ -150,6 +170,52 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
+        
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV3WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            await writer.WriteStartObjectAsync();
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // required
+            await writer.WritePropertyAsync(OpenApiConstants.Required, Required, false);
+
+            // deprecated
+            await writer.WritePropertyAsync(OpenApiConstants.Deprecated, Deprecated, false);
+
+            // allowEmptyValue
+            await writer.WritePropertyAsync(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
+
+            // style
+            await writer.WritePropertyAsync(OpenApiConstants.Style, Style?.GetDisplayName());
+
+            // explode
+            await writer.WritePropertyAsync(OpenApiConstants.Explode, Explode, false);
+
+            // allowReserved
+            await writer.WritePropertyAsync(OpenApiConstants.AllowReserved, AllowReserved, false);
+
+            // schema
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV3(w));
+
+            // example
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
+
+            // examples
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
+
+            // content
+            await writer.WriteOptionalMapAsync(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi3_0);
+
+            await writer.WriteEndObjectAsync();
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v2.0
@@ -168,6 +234,25 @@ namespace Microsoft.OpenApi.Models
             }
 
             SerializeAsV2WithoutReference(writer);
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiHeader"/> to Open Api v2.0
+        /// </summary>
+        public async Task SerializeAsV2Async(IOpenApiWriter writer)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (Reference != null)
+            {
+                await Reference.SerializeAsV2Async(writer);
+                return;
+            }
+
+            await SerializeAsV2WithoutReferenceAsync(writer);
         }
 
         /// <summary>
@@ -208,6 +293,46 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize to OpenAPI V2 document without using reference.
+        /// </summary>
+        public async Task SerializeAsV2WithoutReferenceAsync(IOpenApiWriter writer)
+        {
+            await writer.WriteStartObjectAsync();
+
+            // description
+            await writer.WritePropertyAsync(OpenApiConstants.Description, Description);
+
+            // required
+            await writer.WritePropertyAsync(OpenApiConstants.Required, Required, false);
+
+            // deprecated
+            await writer.WritePropertyAsync(OpenApiConstants.Deprecated, Deprecated, false);
+
+            // allowEmptyValue
+            await writer.WritePropertyAsync(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
+
+            // style
+            await writer.WritePropertyAsync(OpenApiConstants.Style, Style?.GetDisplayName());
+
+            // explode
+            await writer.WritePropertyAsync(OpenApiConstants.Explode, Explode, false);
+
+            // allowReserved
+            await writer.WritePropertyAsync(OpenApiConstants.AllowReserved, AllowReserved, false);
+
+            // schema
+            await Schema?.WriteAsItemsPropertiesAsync(writer);
+
+            // example
+            await writer.WriteOptionalObjectAsync(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
+
+            // extensions
+            await writer.WriteExtensionsAsync(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+            await writer.WriteEndObjectAsync();
         }
     }
 }
