@@ -161,6 +161,30 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static OpenApiSchema NestedReferenceSchema = new OpenApiSchema
+        {
+            Title = "title1",
+            Type = "object",
+            Properties = new Dictionary<string, OpenApiSchema>
+            {
+                ["property1"] = new OpenApiSchema
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "schemaObject1"
+                    },
+                    Properties = new Dictionary<string, OpenApiSchema>
+                    {
+                        ["nestedProperty1"] = new OpenApiSchema
+                        {
+                            Type = "integer"
+                        }
+                    }
+                }
+            }
+        };
+
         public static OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new OpenApiSchema
         {
             Title = "title1",
@@ -398,6 +422,101 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public void SerializeReferencedSchemaAsV2WithoutReferenceJsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var expected = @"{
+  ""title"": ""title1"",
+  ""default"": 15,
+  ""multipleOf"": 3,
+  ""maximum"": 42,
+  ""minimum"": 10,
+  ""exclusiveMinimum"": true,
+  ""type"": ""integer"",
+  ""externalDocs"": {
+    ""url"": ""http://example.com/externalDocs""
+  }
+}";
+
+            // Act
+            ReferencedSchema.SerializeAsV2WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeNestedReferencedSchemaAsV3WithoutReferenceJsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var expected = @"{
+  ""title"": ""title1"",
+  ""type"": ""object"",
+  ""properties"": {
+    ""property1"": {
+      ""properties"": {
+        ""nestedProperty1"": {
+          ""type"": ""integer""
+        }
+      }
+    }
+  }
+}";
+
+            // Act
+            NestedReferenceSchema.SerializeAsV3WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeNestedReferencedSchemaAsV2WithoutReferenceJsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var expected = @"{
+  ""title"": ""title1"",
+  ""type"": ""object"",
+  ""properties"": {
+    ""property1"": {
+      ""properties"": {
+        ""nestedProperty1"": {
+          ""type"": ""integer""
+        }
+      }
+    }
+  }
+}";
+
+            // Act
+            NestedReferenceSchema.SerializeAsV2WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
         public void SerializeReferencedSchemaAsV3JsonWorks()
         {
             // Arrange
@@ -410,6 +529,84 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedSchema.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeReferencedSchemaAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var expected = @"{
+  ""$ref"": ""#/definitions/schemaObject1""
+}";
+
+            // Act
+            ReferencedSchema.SerializeAsV2(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeNestedReferencedSchemaAsV3JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var expected = @"{
+  ""title"": ""title1"",
+  ""type"": ""object"",
+  ""properties"": {
+    ""property1"": {
+      ""$ref"": ""#/components/schemas/schemaObject1""
+    }
+  }
+}";
+
+            // Act
+            NestedReferenceSchema.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeNestedReferencedSchemaAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var expected = @"{
+  ""title"": ""title1"",
+  ""type"": ""object"",
+  ""properties"": {
+    ""property1"": {
+      ""$ref"": ""#/definitions/schemaObject1""
+    }
+  }
+}";
+
+            // Act
+            NestedReferenceSchema.SerializeAsV2(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 

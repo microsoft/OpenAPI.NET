@@ -81,6 +81,13 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 Type = ReferenceType.Schema,
                                 Id = "schema2"
+                            },
+                            Properties = new Dictionary<string, OpenApiSchema>
+                            {
+                                ["property2"] = new OpenApiSchema
+                                {
+                                    Type = "integer"
+                                }
                             }
                         }
                     },
@@ -99,7 +106,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             Type = "integer"
                         }
                     }
-                },
+                }
             },
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
@@ -343,7 +350,11 @@ namespace Microsoft.OpenApi.Tests.Models
           ""type"": ""integer""
         },
         ""property3"": {
-          ""$ref"": ""#/components/schemas/schema2""
+          ""properties"": {
+            ""property2"": {
+              ""type"": ""integer""
+            }
+          }
         }
       }
     },
@@ -432,7 +443,9 @@ securitySchemes:
       property2:
         type: integer
       property3:
-        $ref: '#/components/schemas/schema2'
+        properties:
+          property2:
+            type: integer
   schema2:
     properties:
       property2:
