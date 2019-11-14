@@ -260,9 +260,7 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
 
-            WriteSchemaPropertiesAsV3(
-                writer,
-                (w, s) => s.SerializeAsV3(w));
+            WriteSchemaPropertiesAsV3(writer, (w, s) => s.SerializeAsV3(w));
 
             writer.WriteEndObject();
         }
@@ -272,13 +270,22 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
+            SerializeAsV3WithoutReference(writer, new OpenApiSchemaVisitor());
+        }
+
+        private void SerializeAsV3WithoutReference(
+            IOpenApiWriter writer,
+            OpenApiSchemaVisitor visitor)
+        {
+            visitor.Enter(this);
+
             writer.WriteStartObject();
 
-            WriteSchemaPropertiesAsV3(
-                writer,
-                (w, s) => s.SerializeAsV3WithoutReference(w));
+            WriteSchemaPropertiesAsV3(writer, (w, s) => s.SerializeAsV3WithoutReference(w, visitor));
 
             writer.WriteEndObject();
+
+            visitor.Exit();
         }
 
         private void WriteSchemaPropertiesAsV3(
@@ -419,6 +426,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeAsV2WithoutReference(
                 writer: writer,
+                visitor: new OpenApiSchemaVisitor(),
                 parentRequiredProperties: new HashSet<string>(),
                 propertyName: null);
         }
@@ -463,28 +471,40 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference and handles not marking the provided property 
-        /// as readonly if its included in the provided list of required properties of parent schema.
-        /// </summary>
-        /// <param name="writer">The open api writer.</param>
-        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
-        /// <param name="propertyName">The property name that will be serialized.</param>
-        internal void SerializeAsV2WithoutReference(
+        private void SerializeAsV2WithoutReference(
             IOpenApiWriter writer,
+            OpenApiSchemaVisitor visitor,
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
+            visitor.Enter(this);
+
             writer.WriteStartObject();
+
+            Action<IOpenApiWriter, OpenApiSchema> serializeSchema = (w, s) =>
+                s.SerializeAsV2WithoutReference(
+                    w,
+                    visitor,
+                    parentRequiredProperties: null,
+                    propertyName: null);
+
+            Action<IOpenApiWriter, string, OpenApiSchema> serializeSchemaProperty = (w, key, s) =>
+                s.SerializeAsV2WithoutReference(
+                    w,
+                    visitor,
+                    Required,
+                    key);
 
             WriteSchemaPropertiesAsV2(
                 writer,
                 parentRequiredProperties,
                 propertyName,
-                (w, s) => s.SerializeAsV2WithoutReference(w),
-                (w, key, s) => s.SerializeAsV2WithoutReference(w, Required, key));
+                serializeSchema,
+                serializeSchemaProperty);
 
             writer.WriteEndObject();
+
+            visitor.Exit();
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
@@ -660,6 +680,26 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        private class OpenApiSchemaVisitor
+        {
+            private readonly Stack<OpenApiSchema> _visitedSchemas = new Stack<OpenApiSchema>();
+
+            public void Enter(OpenApiSchema schema)
+            {
+                if (_visitedSchemas.Contains(schema))
+                {
+                    throw new NotSupportedException("Serializing circular references in schemas is not yet supported");
+                }
+
+                _visitedSchemas.Push(schema);
+            }
+
+            public void Exit()
+            {
+                _visitedSchemas.Pop();
+            }
         }
     }
 }

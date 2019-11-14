@@ -617,6 +617,76 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
+        public void SeralizeSchemaWCircularReferencesAsV3Throws()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var circularlyReferencedSchema1 = new OpenApiSchema
+            {
+                Title = "title1",
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>()
+            };
+
+            var circularlyReferencedSchema2 = new OpenApiSchema
+            {
+                Title = "title2",
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["property2"] = circularlyReferencedSchema1
+                }
+            };
+
+            circularlyReferencedSchema1.Properties["property1"] = circularlyReferencedSchema2;
+
+            // Act
+            Action action = () => circularlyReferencedSchema1.SerializeAsV3WithoutReference(writer);
+
+            // Assert
+            action
+                .ShouldThrow<NotSupportedException>()
+                .WithMessage("Serializing circular references in schemas is not yet supported");
+        }
+
+        [Fact]
+        public void SeralizeSchemaWCircularReferencesAsV2Throws()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+
+            var circularlyReferencedSchema1 = new OpenApiSchema
+            {
+                Title = "title1",
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>()
+            };
+
+            var circularlyReferencedSchema2 = new OpenApiSchema
+            {
+                Title = "title2",
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["property2"] = circularlyReferencedSchema1
+                }
+            };
+
+            circularlyReferencedSchema1.Properties["property1"] = circularlyReferencedSchema2;
+
+            // Act
+            Action action = () => circularlyReferencedSchema1.SerializeAsV2WithoutReference(writer);
+
+            // Assert
+            action
+                .ShouldThrow<NotSupportedException>()
+                .WithMessage("Serializing circular references in schemas is not yet supported");
+        }
+
+        [Fact]
         public void SerializeSchemaWRequiredPropertiesAsV2JsonWorks()
         {
             // Arrange
