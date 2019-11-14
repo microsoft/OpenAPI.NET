@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -257,7 +258,11 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            SerializeAsV3WithoutReference(writer);
+            writer.WriteStartObject();
+
+            WriteSchemaPropertiesAsV3(writer, (w, s) => s.SerializeAsV3(w));
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -265,8 +270,28 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
+            SerializeAsV3WithoutReference(writer, new OpenApiSchemaVisitor());
+        }
+
+        private void SerializeAsV3WithoutReference(
+            IOpenApiWriter writer,
+            OpenApiSchemaVisitor visitor)
+        {
+            visitor.Enter(this);
+
             writer.WriteStartObject();
 
+            WriteSchemaPropertiesAsV3(writer, (w, s) => s.SerializeAsV3WithoutReference(w, visitor));
+
+            writer.WriteEndObject();
+
+            visitor.Exit();
+        }
+
+        private void WriteSchemaPropertiesAsV3(
+            IOpenApiWriter writer,
+            Action<IOpenApiWriter, OpenApiSchema> serializeSchema)
+        {
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
 
@@ -319,22 +344,22 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, serializeSchema);
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, serializeSchema);
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, serializeSchema);
 
             // not
-            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Not, Not, serializeSchema);
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, serializeSchema);
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, serializeSchema);
 
             // additionalProperties
             if (AdditionalPropertiesAllowed)
@@ -342,7 +367,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(
                     OpenApiConstants.AdditionalProperties,
                     AdditionalProperties,
-                    (w, s) => s.SerializeAsV3(w));
+                    serializeSchema);
             }
             else
             {
@@ -362,7 +387,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
 
             // discriminator
-            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, d) => d.SerializeAsV3(w));
 
             // readOnly
             writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
@@ -371,10 +396,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.WriteOnly, WriteOnly, false);
 
             // xml
-            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, x) => x.SerializeAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, ed) => ed.SerializeAsV3(w));
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
@@ -384,8 +409,6 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -403,6 +426,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeAsV2WithoutReference(
                 writer: writer,
+                visitor: new OpenApiSchemaVisitor(),
                 parentRequiredProperties: new HashSet<string>(),
                 propertyName: null);
         }
@@ -435,24 +459,52 @@ namespace Microsoft.OpenApi.Models
                 parentRequiredProperties = new HashSet<string>();
             }
 
-            SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
+            writer.WriteStartObject();
+
+            WriteSchemaPropertiesAsV2(
+                writer,
+                parentRequiredProperties,
+                propertyName,
+                (w, s) => s.SerializeAsV2(w),
+                (w, key, s) => s.SerializeAsV2(w, Required, key));
+
+            writer.WriteEndObject();
         }
 
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference and handles not marking the provided property 
-        /// as readonly if its included in the provided list of required properties of parent schema.
-        /// </summary>
-        /// <param name="writer">The open api writer.</param>
-        /// <param name="parentRequiredProperties">The list of required properties in parent schema.</param>
-        /// <param name="propertyName">The property name that will be serialized.</param>
-        internal void SerializeAsV2WithoutReference(
+        private void SerializeAsV2WithoutReference(
             IOpenApiWriter writer,
+            OpenApiSchemaVisitor visitor,
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
+            visitor.Enter(this);
+
             writer.WriteStartObject();
-            WriteAsSchemaProperties(writer, parentRequiredProperties, propertyName);
+
+            Action<IOpenApiWriter, OpenApiSchema> serializeSchema = (w, s) =>
+                s.SerializeAsV2WithoutReference(
+                    w,
+                    visitor,
+                    parentRequiredProperties: null,
+                    propertyName: null);
+
+            Action<IOpenApiWriter, string, OpenApiSchema> serializeSchemaProperty = (w, key, s) =>
+                s.SerializeAsV2WithoutReference(
+                    w,
+                    visitor,
+                    Required,
+                    key);
+
+            WriteSchemaPropertiesAsV2(
+                writer,
+                parentRequiredProperties,
+                propertyName,
+                serializeSchema,
+                serializeSchemaProperty);
+
             writer.WriteEndObject();
+
+            visitor.Exit();
         }
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
@@ -519,10 +571,12 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
 
-        internal void WriteAsSchemaProperties(
+        private void WriteSchemaPropertiesAsV2(
             IOpenApiWriter writer,
             ISet<string> parentRequiredProperties,
-            string propertyName)
+            string propertyName,
+            Action<IOpenApiWriter, OpenApiSchema> serializeSchema,
+            Action<IOpenApiWriter, string, OpenApiSchema> serializeSchemaProperty)
         {
             if (writer == null)
             {
@@ -590,20 +644,19 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, serializeSchema);
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, serializeSchema);
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, key, s) =>
-                s.SerializeAsV2(w, Required, key));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, serializeSchemaProperty);
 
             // additionalProperties
             writer.WriteOptionalObject(
                 OpenApiConstants.AdditionalProperties,
                 AdditionalProperties,
-                (w, s) => s.SerializeAsV2(w));
+                serializeSchema);
 
             // discriminator
             writer.WriteProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);
@@ -617,16 +670,36 @@ namespace Microsoft.OpenApi.Models
             }
 
             // xml
-            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, x) => x.SerializeAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV2(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, ed) => ed.SerializeAsV2(w));
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        private class OpenApiSchemaVisitor
+        {
+            private readonly Stack<OpenApiSchema> _visitedSchemas = new Stack<OpenApiSchema>();
+
+            public void Enter(OpenApiSchema schema)
+            {
+                if (_visitedSchemas.Contains(schema))
+                {
+                    throw new NotSupportedException("Serializing circular references in schemas is not yet supported");
+                }
+
+                _visitedSchemas.Push(schema);
+            }
+
+            public void Exit()
+            {
+                _visitedSchemas.Pop();
+            }
         }
     }
 }
