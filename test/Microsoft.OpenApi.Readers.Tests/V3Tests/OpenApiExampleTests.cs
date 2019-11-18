@@ -75,5 +75,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     });
             }
         }
+
+        [Fact]
+        public void ParseExampleForcedStringSucceed()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "explicitString.yaml")))
+            {
+                new OpenApiStreamReader().Read(stream, out var diagnostic);
+                diagnostic.Errors.Should().BeEmpty();
+            }
+        }
     }
 }

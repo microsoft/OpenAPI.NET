@@ -1,0 +1,33 @@
+﻿openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Test API
+paths:
+  /test-path:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/test-schema'
+      responses:
+        default:
+          description: ''
+components:
+  schemas:
+    test-schema:
+      type: object
+      properties:
+        sub:
+          $ref: '#/components/schemas/test-sub-schema'
+      required:
+        - origin
+      example:
+        sub:
+          test-property: "12345"
+    test-sub-schema:
+      type: object
+      properties:
+        test-property:
+          type: string
+          example: "12345"
