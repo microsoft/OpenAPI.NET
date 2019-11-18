@@ -27,10 +27,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
@@ -54,10 +54,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
@@ -82,10 +82,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
@@ -110,10 +110,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
@@ -148,10 +148,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);

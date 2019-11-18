@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers
                 return new OpenApiDocument();
             }
 
-            context = new ParsingContext
+            context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers,
                 BaseUrl = _settings.BaseUrl
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers
             try
             {
                 // Parse the OpenAPI Document
-                document = context.Parse(yamlDocument, diagnostic);
+                document = context.Parse(yamlDocument);
 
                 // Resolve References if requested
                 switch (_settings.ReferenceResolution)
@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Readers
                 return default(T);
             }
 
-            context = new ParsingContext
+            context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers
             };
@@ -138,7 +138,7 @@ namespace Microsoft.OpenApi.Readers
             try
             {
                 // Parse the OpenAPI element
-                element = context.ParseFragment<T>(yamlDocument, version, diagnostic);
+                element = context.ParseFragment<T>(yamlDocument, version);
             }
             catch (OpenApiException ex)
             {

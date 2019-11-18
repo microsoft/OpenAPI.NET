@@ -24,12 +24,18 @@ namespace Microsoft.OpenApi.Readers
         private readonly Stack<string> _currentLocation = new Stack<string>();
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new Dictionary<object, Dictionary<string, object>>();
-        private IOpenApiVersionService _versionService;
         private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
         internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
         internal Uri BaseUrl { get; set; }
+
+        public OpenApiDiagnostic Diagnostic { get; }
+
+        public ParsingContext(OpenApiDiagnostic diagnostic)
+        {
+            Diagnostic = diagnostic;
+        }
 
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
@@ -37,9 +43,9 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="yamlDocument">Yaml document to parse.</param>
         /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        internal OpenApiDocument Parse(YamlDocument yamlDocument, OpenApiDiagnostic diagnostic)
+        internal OpenApiDocument Parse(YamlDocument yamlDocument)
         {
-            RootNode = new RootNode(this, diagnostic, yamlDocument);
+            RootNode = new RootNode(this, yamlDocument);
 
             var inputVersion = GetVersion(RootNode);
 
@@ -50,13 +56,13 @@ namespace Microsoft.OpenApi.Readers
                 case string version when version == "2.0":
                     VersionService = new OpenApiV2VersionService();
                     doc = VersionService.LoadDocument(RootNode);
-                    diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
+                    this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     break;
 
                 case string version when version.StartsWith("3.0"):
                     VersionService = new OpenApiV3VersionService();
                     doc = VersionService.LoadDocument(RootNode);
-                    diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
+                    this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
                     break;
 
                 default:
@@ -73,9 +79,9 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="version">OpenAPI version of the fragment</param>
         /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version, OpenApiDiagnostic diagnostic) where T : IOpenApiElement
+        internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version) where T : IOpenApiElement
         {
-            var node = ParseNode.Create(this, diagnostic, yamlDocument.RootNode);
+            var node = ParseNode.Create(this, yamlDocument.RootNode);
 
             T element = default(T);
 
@@ -115,17 +121,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Service providing all Version specific conversion functions
         /// </summary>
-        internal IOpenApiVersionService VersionService
-        {
-            get
-            {
-                return _versionService;
-            }
-            set
-            {
-                _versionService = value;
-            }
-        }
+        internal IOpenApiVersionService VersionService { get; set; }
 
         /// <summary>
         /// End the current object.

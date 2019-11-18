@@ -14,8 +14,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public RootNode(
             ParsingContext context,
-            OpenApiDiagnostic diagnostic,
-            YamlDocument yamlDocument) : base(context, diagnostic)
+            YamlDocument yamlDocument) : base(context)
         {
             _yamlDocument = yamlDocument;
         }
@@ -28,12 +27,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return null;
             }
 
-            return Create(Context, Diagnostic, yamlNode);
+            return Create(Context, yamlNode);
         }
 
         public MapNode GetMap()
         {
-            return new MapNode(Context, Diagnostic, (YamlMappingNode)_yamlDocument.RootNode);
+            return new MapNode(Context, (YamlMappingNode)_yamlDocument.RootNode);
         }
     }
 }
