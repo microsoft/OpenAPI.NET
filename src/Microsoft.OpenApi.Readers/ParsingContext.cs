@@ -24,7 +24,6 @@ namespace Microsoft.OpenApi.Readers
         private readonly Stack<string> _currentLocation = new Stack<string>();
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new Dictionary<object, Dictionary<string, object>>();
-        private IOpenApiVersionService _versionService;
         private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
         internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
         internal RootNode RootNode { get; set; }
@@ -115,17 +114,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Service providing all Version specific conversion functions
         /// </summary>
-        internal IOpenApiVersionService VersionService
-        {
-            get
-            {
-                return _versionService;
-            }
-            set
-            {
-                _versionService = value;
-            }
-        }
+        internal IOpenApiVersionService VersionService { get; set; }
 
         /// <summary>
         /// End the current object.
@@ -141,6 +130,27 @@ namespace Microsoft.OpenApi.Readers
         public string GetLocation()
         {
             return "#/" + string.Join("/", _currentLocation.Reverse().ToArray());
+        }
+
+        /// <summary>
+        /// Serializes current location
+        /// </summary>
+        public string[] CaptureLocation()
+        {
+            return this._currentLocation.Reverse().ToArray();
+        }
+
+
+        /// <summary>
+        /// Serializes current location
+        /// </summary>
+        public void SetLocation(string[] location)
+        {
+            this._currentLocation.Clear();
+            foreach (var part in location)
+            {
+                this._currentLocation.Push(part);
+            }
         }
 
         /// <summary>

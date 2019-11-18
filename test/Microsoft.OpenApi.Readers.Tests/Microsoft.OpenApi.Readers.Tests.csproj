@@ -143,6 +143,7 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\advancedExample.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\integerTypes.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

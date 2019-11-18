@@ -1,0 +1,26 @@
+﻿openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /test-path:
+    post:
+      summary: Adds a new user
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/test-schema'
+            example:
+              test-property: 10
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    test-schema:
+      type: object
+      properties:
+        test-property:
+          type: integer
+          format: int64

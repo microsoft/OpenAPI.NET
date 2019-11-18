@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
@@ -47,10 +48,18 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     mapNode.Context.StartObject(anyFieldName);
 
-                    var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
-                        anyFieldMap[anyFieldName].PropertyGetter(domainObject),
-                        anyFieldMap[anyFieldName].SchemaGetter(domainObject));
+                    var value = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
+                    var schema = anyFieldMap[anyFieldName].SchemaGetter(domainObject);
+                    if (schema?.Reference != null)
+                    {
+                        ScheduleAnyFieldConversion(
+                            mapNode,
+                            value,
+                            schema,
+                            v => anyFieldMap[anyFieldName].PropertySetter(domainObject, v));
+                    }
 
+                    var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(value, schema);
                     anyFieldMap[anyFieldName].PropertySetter(domainObject, convertedOpenApiAny);
                 }
                 catch (OpenApiException exception)
@@ -80,10 +89,18 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     foreach (var propertyElement in anyListFieldMap[anyListFieldName].PropertyGetter(domainObject))
                     {
-                        newProperty.Add(
-                            OpenApiAnyConverter.GetSpecificOpenApiAny(
+                        var schema = anyListFieldMap[anyListFieldName].SchemaGetter(domainObject);
+                        if (schema?.Reference != null)
+                        {
+                            var index = newProperty.Count;
+                            ScheduleAnyFieldConversion(
+                                mapNode,
                                 propertyElement,
-                                anyListFieldMap[anyListFieldName].SchemaGetter(domainObject)));
+                                schema,
+                                v => newProperty[index] = v);
+                        }
+
+                        newProperty.Add(OpenApiAnyConverter.GetSpecificOpenApiAny(propertyElement, schema));
                     }
 
                     anyListFieldMap[anyListFieldName].PropertySetter(domainObject, newProperty);
@@ -110,21 +127,27 @@ namespace Microsoft.OpenApi.Readers.V3
                 try
                 {
                     var newProperty = new List<IOpenApiAny>();
+                    var schema = anyMapFieldMap[anyMapFieldName].SchemaGetter(domainObject);
 
                     mapNode.Context.StartObject(anyMapFieldName);
 
                     foreach (var propertyMapElement in anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject))
                     {
-                        mapNode.Context.StartObject(propertyMapElement.Key);
-
                         if (propertyMapElement.Value != null)
                         {
+                            mapNode.Context.StartObject(propertyMapElement.Key);
+
                             var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
-
-                            var newAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
+                            if (schema?.Reference != null)
+                            {
+                                ScheduleAnyFieldConversion(
+                                    mapNode,
                                     any,
-                                    anyMapFieldMap[anyMapFieldName].SchemaGetter(domainObject));
+                                    schema,
+                                    v => anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, v));
+                            }
 
+                            var newAny = OpenApiAnyConverter.GetSpecificOpenApiAny(any, schema);
                             anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, newAny);
                         }
                     }
@@ -137,6 +160,58 @@ namespace Microsoft.OpenApi.Readers.V3
                 finally
                 {
                     mapNode.Context.EndObject();
+                }
+            }
+        }
+
+        private static void SetupDelayedAnyFieldConversion(ParsingContext context)
+        {
+            context.SetTempStorage("anyFieldConversion", new List<Tuple<ParsingContext, OpenApiDiagnostic, string[], IOpenApiAny, OpenApiSchema, Action<IOpenApiAny>>>());
+        }
+
+        private static void ScheduleAnyFieldConversion(MapNode mapNode, IOpenApiAny value, OpenApiSchema schema, Action<IOpenApiAny> setter)
+        {
+            var schedule = mapNode.Context.GetFromTempStorage<List<Tuple<ParsingContext, OpenApiDiagnostic, string[], IOpenApiAny, OpenApiSchema, Action<IOpenApiAny>>>>("anyFieldConversion");
+            if (schedule != null)
+            {
+                schedule.Add(Tuple.Create(mapNode.Context, mapNode.Diagnostic, mapNode.Context.CaptureLocation(), value, schema, setter));
+            }
+        }
+
+        private static void ProcessAnyFieldConversion(ParsingContext context, OpenApiDocument document)
+        {
+            var schedule = context.GetFromTempStorage<List<Tuple<ParsingContext, OpenApiDiagnostic, string[], IOpenApiAny, OpenApiSchema, Action<IOpenApiAny>>>>("anyFieldConversion");
+            if (schedule == null)
+            {
+                return;
+            }
+            context.SetTempStorage("anyFieldConversion", null);
+
+            foreach (var item in schedule)
+            {
+                if (item.Item5.Reference == null)
+                {
+                    continue;
+                }
+
+                if (document.ResolveReference(item.Item5.Reference) is OpenApiSchema schema)
+                {
+                    var oldLocation = context.CaptureLocation();
+                    try
+                    {
+                        context.SetLocation(item.Item3);
+                        var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(item.Item4, schema);
+                        item.Item6(convertedOpenApiAny);
+                    }
+                    catch (OpenApiException exception)
+                    {
+                        exception.Pointer = context.GetLocation();
+                        item.Item2.Errors.Add(new OpenApiError(exception));
+                    }
+                    finally
+                    {
+                        context.SetLocation(oldLocation);
+                    }
                 }
             }
         }

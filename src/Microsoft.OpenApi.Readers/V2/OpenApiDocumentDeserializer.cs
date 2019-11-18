@@ -221,9 +221,9 @@ namespace Microsoft.OpenApi.Readers.V2
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
         {
             var openApidoc = new OpenApiDocument();
-
             var openApiNode = rootNode.GetMap();
 
+            SetupDelayedAnyFieldConversion(rootNode.Context);
             ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
 
             if (openApidoc.Paths != null)
@@ -237,6 +237,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             ProcessResponsesMediaTypes(rootNode.GetMap(), openApidoc.Components?.Responses?.Values, openApiNode.Context);
+            ProcessAnyFieldConversion(rootNode.Context, openApidoc);
 
             // Post Process OpenApi Object
             if (openApidoc.Servers == null)
@@ -257,14 +258,6 @@ namespace Microsoft.OpenApi.Readers.V2
                 foreach (var response in responses)
                 {
                     ProcessProduces(mapNode, response, context);
-
-                    if (response.Content != null)
-                    {
-                        foreach (var mediaType in response.Content.Values)
-                        {
-                            ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
-                        }
-                    }
                 }
             }
         }

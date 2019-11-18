@@ -75,5 +75,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     });
             }
         }
+
+        [Fact]
+        public void ParseExampleIntegerFormatSucceed()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "integerTypes.yaml")))
+            {
+                new OpenApiStreamReader().Read(stream, out var diagnostic);
+                diagnostic.Errors.Should().BeEmpty();
+            }
+        }
     }
 }
