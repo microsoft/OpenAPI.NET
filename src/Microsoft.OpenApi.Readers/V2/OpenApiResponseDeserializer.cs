@@ -62,14 +62,18 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void ProcessProduces(MapNode mapNode, OpenApiResponse response, ParsingContext context)
         {
-            var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
-                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces);
-
             if (response.Content == null)
             {
                 response.Content = new Dictionary<string, OpenApiMediaType>();
             }
+            else if (context.GetFromTempStorage<bool>(TempStorageKeys.ResponseProducesSet, response))
+            {
+                // Process "produces" only once since once specified at operation level it cannot be overriden.
+                return;
+            }
 
+            var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces)
+                ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces);
             if (produces != null)
             {
                 foreach (var produce in produces)
@@ -96,6 +100,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
 
                 context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
+                context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
             }
         }
 
@@ -124,7 +129,10 @@ namespace Microsoft.OpenApi.Readers.V2
             }
             else
             {
-                mediaTypeObject = new OpenApiMediaType();
+                mediaTypeObject = new OpenApiMediaType
+                {
+                    Schema = node.Context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response)
+                };
                 response.Content.Add(mediaType, mediaTypeObject);
             }
 
