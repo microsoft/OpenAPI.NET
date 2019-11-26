@@ -2,8 +2,6 @@
 // Licensed under the MIT license. 
 
 using System;
-using System.IO;
-using System.Linq;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -124,18 +122,6 @@ namespace Microsoft.OpenApi.Readers
             }
 
             return (T)element;
-        }
-
-        /// <summary>
-        /// Helper method to turn streams into YamlDocument
-        /// </summary>
-        /// <param name="input">Stream containing YAML formatted text</param>
-        /// <returns>Instance of a YamlDocument</returns>
-        static YamlDocument LoadYamlDocument(TextReader input)
-        {
-            var yamlStream = new YamlStream();
-            yamlStream.Load(input);
-            return yamlStream.Documents.First();
         }
     }
 }
