@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -45,7 +44,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set;}
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference pointer.
@@ -79,7 +78,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
+            writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
             // headers
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
@@ -123,7 +122,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
+            writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
             if (Content != null)
             {
                 var mediatype = Content.FirstOrDefault();

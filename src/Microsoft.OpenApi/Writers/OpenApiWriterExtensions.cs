@@ -33,6 +33,19 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
+        /// Write required string property.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">The property value.</param>
+        public static void WriteRequiredProperty(this IOpenApiWriter writer, string name, string value)
+        {
+            CheckArguments(writer, name);
+            writer.WritePropertyName(name);
+            writer.WriteValue(value);
+        }
+
+        /// <summary>
         /// Write a boolean property.
         /// </summary>
         /// <param name="writer">The writer.</param>
