@@ -78,7 +78,14 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // description
-            writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
+            if (this.Reference == null)
+            {
+                writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.Description, Description);
+            }
 
             // headers
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
@@ -122,7 +129,15 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // description
-            writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
+            if (this.Reference == null)
+            {
+                writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.Description, Description);
+            }
+
             if (Content != null)
             {
                 var mediatype = Content.FirstOrDefault();

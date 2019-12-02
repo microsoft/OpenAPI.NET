@@ -42,7 +42,14 @@ namespace Microsoft.OpenApi.Writers
         {
             CheckArguments(writer, name);
             writer.WritePropertyName(name);
-            writer.WriteValue(value);
+            if (value == null)
+            {
+                writer.WriteNull();
+            }
+            else
+            {
+                writer.WriteValue(value);
+            }
         }
 
         /// <summary>
