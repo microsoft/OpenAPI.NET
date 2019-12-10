@@ -50,12 +50,24 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return newObject;
             }
 
-            if (!(openApiAny is OpenApiString) || ((OpenApiString)openApiAny).IsExplicit())
+            if (!(openApiAny is OpenApiString))
             {
                 return openApiAny;
             }
 
             var value = ((OpenApiString)openApiAny).Value;
+
+            // For explicit strings only try to guess if it's a DateTimeOffset
+            if (((OpenApiString)openApiAny).IsExplicit())
+            {
+                if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
+                {
+                    return new OpenApiDateTime(dateTimeValue);
+                }
+
+                return openApiAny;
+            }
+
             if (value == null || value == "null")
             {
                 return new OpenApiNull();

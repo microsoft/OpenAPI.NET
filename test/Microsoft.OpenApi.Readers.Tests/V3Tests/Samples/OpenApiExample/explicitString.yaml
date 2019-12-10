@@ -20,14 +20,17 @@ components:
       properties:
         sub:
           $ref: '#/components/schemas/test-sub-schema'
-      required:
-        - origin
       example:
         sub:
-          test-property: "12345"
+          test-property1: "12345"
+          test-property2: "1970-01-01T00:00:00Z"
     test-sub-schema:
       type: object
       properties:
-        test-property:
+        test-property1:
           type: string
           example: "12345"
+        test-property2:
+          type: string
+          format: date-time
+          example: "1970-01-01T00:00:00Z"
