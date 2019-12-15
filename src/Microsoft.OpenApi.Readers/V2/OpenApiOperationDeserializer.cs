@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
@@ -134,8 +133,11 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var response in operation.Responses.Values)
             {
-                ProcessProduces(response, node.Context);
+                ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
             }
+
+            // Reset so that it's not picked up later
+            node.Context.SetTempStorage(TempStorageKeys.OperationProduces, null);
 
             return operation;
         }
@@ -168,10 +170,10 @@ namespace Microsoft.OpenApi.Readers.V2
                     Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
                 }
             };
-            
+
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
-                new List<string> {"application/x-www-form-urlencoded"};
+                new List<string> { "application/x-www-form-urlencoded" };
 
             var formBody = new OpenApiRequestBody
             {
@@ -189,7 +191,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
-                new List<string> {"application/json"};
+                new List<string> { "application/json" };
 
             var requestBody = new OpenApiRequestBody
             {

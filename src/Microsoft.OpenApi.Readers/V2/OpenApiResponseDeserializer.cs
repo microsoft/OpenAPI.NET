@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "schema", (o, n) =>
                 {
-                    n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n));
+                    n.Context.SetTempStorage(TempStorageKeys.ResponseSchema, LoadSchema(n), o);
                 }
             },
         };
@@ -48,27 +48,54 @@ namespace Microsoft.OpenApi.Readers.V2
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        private static void ProcessProduces(OpenApiResponse response, ParsingContext context)
+        private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
+            new AnyFieldMap<OpenApiMediaType>
+            {
+                {
+                    OpenApiConstants.Example,
+                    new AnyFieldMapParameter<OpenApiMediaType>(
+                        m => m.Example,
+                        (m, v) => m.Example = v,
+                        m => m.Schema)
+                }
+            };
+
+        private static void ProcessProduces(MapNode mapNode, OpenApiResponse response, ParsingContext context)
         {
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces) ??
-                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces) ?? new List<string>();
+                context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces);
 
             if (response.Content == null)
             {
                 response.Content = new Dictionary<string, OpenApiMediaType>();
             }
 
-            foreach (var produce in produces)
+            if (produces != null)
             {
-                if (!response.Content.ContainsKey(produce))
+                foreach (var produce in produces)
                 {
-                    var mediaType = new OpenApiMediaType
-                    {
-                        Schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema)
-                    };
+                    var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
 
-                    response.Content.Add(produce, mediaType);
+                    if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
+                    {
+                        if (schema != null)
+                        {
+                            response.Content[produce].Schema = schema;
+                            ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
+                        }
+                    }
+                    else
+                    {
+                        var mediaType = new OpenApiMediaType
+                        {
+                            Schema = schema
+                        };
+
+                        response.Content.Add(produce, mediaType);
+                    }
                 }
+
+                context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
             }
         }
 
@@ -89,6 +116,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 response.Content = new Dictionary<string, OpenApiMediaType>();
             }
+
             OpenApiMediaType mediaTypeObject;
             if (response.Content.ContainsKey(mediaType))
             {
@@ -99,13 +127,12 @@ namespace Microsoft.OpenApi.Readers.V2
                 mediaTypeObject = new OpenApiMediaType();
                 response.Content.Add(mediaType, mediaTypeObject);
             }
+
             mediaTypeObject.Example = exampleNode;
         }
 
         public static OpenApiResponse LoadResponse(ParseNode node)
         {
-            node.Context.SetTempStorage(TempStorageKeys.ResponseSchema, null);
-
             var mapNode = node.CheckMapNode("response");
 
             var pointer = mapNode.GetReferencePointer();
@@ -120,7 +147,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 property.ParseField(response, _responseFixedFields, _responsePatternFields);
             }
 
-            ProcessProduces(response, node.Context);
+            foreach (var mediaType in response.Content.Values)
+            {
+                if (mediaType.Schema != null)
+                {
+                    ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                }
+            }
 
             return response;
         }

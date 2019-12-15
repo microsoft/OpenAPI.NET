@@ -3,6 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -271,6 +272,76 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Schema = new OpenApiSchema
                     {
                         Type = "string"
+                    }
+                });
+        }
+
+        [Fact]
+        public void ParseParameterWithExampleShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithExample.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = null,
+                    Name = "username",
+                    Description = "username to fetch",
+                    Required = true,
+                    Example = new OpenApiFloat(5),
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "number",
+                        Format = "float"
+                    }
+                });
+        }
+
+        [Fact]
+        public void ParseParameterWithExamplesShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithExamples.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var parameter = OpenApiV3Deserializer.LoadParameter(node);
+
+            // Assert
+            parameter.ShouldBeEquivalentTo(
+                new OpenApiParameter
+                {
+                    In = null,
+                    Name = "username",
+                    Description = "username to fetch",
+                    Required = true,
+                    Examples =
+                    {
+                        ["example1"] = new OpenApiExample()
+                        {
+                            Value = new OpenApiFloat(5),
+                        },
+                        ["example2"] = new OpenApiExample()
+                        {
+                            Value = new OpenApiFloat((float)7.5),
+                        }
+                    },
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "number",
+                        Format = "float"
                     }
                 });
         }

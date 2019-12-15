@@ -2,8 +2,10 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -55,6 +57,50 @@ namespace Microsoft.OpenApi.Tests.Models
                     Description = "description3"
                 }
             }
+        };
+
+        public static OpenApiParameter ParameterWithFormStyleAndExplodeFalse = new OpenApiParameter
+        {
+            Name = "name1",
+            In = ParameterLocation.Query,
+            Description = "description1",
+            Style = ParameterStyle.Form,
+            Explode = false,
+            Schema = new OpenApiSchema
+            {
+                Type = "array",
+                Items = new OpenApiSchema
+                {
+                    Enum = new List<IOpenApiAny>
+                    {
+                        new OpenApiString("value1"),
+                        new OpenApiString("value2")
+                    }
+                }
+            }
+
+        };
+
+        public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
+        {
+            Name = "name1",
+            In = ParameterLocation.Query,
+            Description = "description1",
+            Style = ParameterStyle.Form,
+            Explode = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "array",
+                Items = new OpenApiSchema
+                {
+                    Enum = new List<IOpenApiAny>
+                    {
+                        new OpenApiString("value1"),
+                        new OpenApiString("value2")
+                    }
+                }
+            }
+
         };
 
         public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter
@@ -171,7 +217,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedParameterAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -193,7 +239,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedParameterAsV3JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -216,7 +262,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedParameterAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -238,7 +284,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedParameterAsV2JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -261,7 +307,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeParameterWithSchemaReferenceAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -287,7 +333,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeParameterWithSchemaTypeObjectAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -300,6 +346,75 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedHeaderParameterWithSchemaTypeObject.SerializeAsV2(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeParameterWithFormStyleAndExplodeFalseWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""name"": ""name1"",
+  ""in"": ""query"",
+  ""description"": ""description1"",
+  ""style"": ""form"",
+  ""explode"": false,
+  ""schema"": {
+    ""type"": ""array"",
+    ""items"": {
+      ""enum"": [
+        ""value1"",
+        ""value2""
+      ]
+    }
+  }
+}";
+
+            // Act
+            ParameterWithFormStyleAndExplodeFalse.SerializeAsV3WithoutReference(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeParameterWithFormStyleAndExplodeTrueWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected =
+                @"{
+  ""name"": ""name1"",
+  ""in"": ""query"",
+  ""description"": ""description1"",
+  ""style"": ""form"",
+  ""schema"": {
+    ""type"": ""array"",
+    ""items"": {
+      ""enum"": [
+        ""value1"",
+        ""value2""
+      ]
+    }
+  }
+}";
+
+            // Act
+            ParameterWithFormStyleAndExplodeTrue.SerializeAsV3WithoutReference(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 

@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace Microsoft.OpenApi.Writers
@@ -52,6 +53,13 @@ namespace Microsoft.OpenApi.Writers
             "{",
             "}",
             ","
+        };
+
+        // Plain style strings cannot end with these characters.
+        // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
+        private static readonly string[] _yamlPlainStringForbiddenTerminals =
+        {
+            ":"
         };
 
         // Double-quoted strings are needed for these non-printable control characters.
@@ -170,6 +178,7 @@ namespace Microsoft.OpenApi.Writers
             // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain
             if (_yamlPlainStringForbiddenCombinations.Any(fc => input.Contains(fc)) ||
                 _yamlIndicators.Any(i => input.StartsWith(i.ToString())) ||
+                _yamlPlainStringForbiddenTerminals.Any(i => input.EndsWith(i.ToString())) ||
                 input.Trim() != input)
             {
                 // Escape single quotes with two single quotes.
@@ -180,7 +189,7 @@ namespace Microsoft.OpenApi.Writers
 
             // If string can be mistaken as a number, a boolean, or a timestamp,
             // wrap it in quote to indicate that this is indeed a string, not a number, a boolean, or a timestamp
-            if (decimal.TryParse(input, out var _) ||
+            if (decimal.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out var _) ||
                 bool.TryParse(input, out var _) ||
                 DateTime.TryParse(input, out var _))
             {

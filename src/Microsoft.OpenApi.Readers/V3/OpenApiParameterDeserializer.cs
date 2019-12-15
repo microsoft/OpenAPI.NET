@@ -115,6 +115,30 @@ namespace Microsoft.OpenApi.Readers.V3
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
+        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new AnyFieldMap<OpenApiParameter>
+        {
+            {
+                OpenApiConstants.Example,
+                new AnyFieldMapParameter<OpenApiParameter>(
+                    s => s.Example,
+                    (s, v) => s.Example = v,
+                    s => s.Schema)
+            }
+        };
+
+        private static readonly AnyMapFieldMap<OpenApiParameter, OpenApiExample> _parameterAnyMapOpenApiExampleFields =
+            new AnyMapFieldMap<OpenApiParameter, OpenApiExample>
+        {
+            {
+                OpenApiConstants.Examples,
+                new AnyMapFieldMapParameter<OpenApiParameter, OpenApiExample>(
+                    m => m.Examples,
+                    e => e.Value,
+                    (e, v) => e.Value = v,
+                    m => m.Schema)
+            }
+        };
+
         public static OpenApiParameter LoadParameter(ParseNode node)
         {
             var mapNode = node.CheckMapNode("parameter");
@@ -128,6 +152,8 @@ namespace Microsoft.OpenApi.Readers.V3
             var parameter = new OpenApiParameter();
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
+            ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
+            ProcessAnyMapFields(mapNode, parameter, _parameterAnyMapOpenApiExampleFields);
 
             return parameter;
         }
