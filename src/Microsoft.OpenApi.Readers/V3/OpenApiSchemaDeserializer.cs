@@ -243,6 +243,35 @@ namespace Microsoft.OpenApi.Readers.V3
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
+        private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new AnyFieldMap<OpenApiSchema>
+        {
+            {
+                OpenApiConstants.Default,
+                new AnyFieldMapParameter<OpenApiSchema>(
+                    s => s.Default,
+                    (s, v) => s.Default = v,
+                    s => s)
+            },
+            {
+                 OpenApiConstants.Example,
+                new AnyFieldMapParameter<OpenApiSchema>(
+                    s => s.Example, 
+                    (s, v) => s.Example = v, 
+                    s => s)
+            }
+        };
+
+        private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new AnyListFieldMap<OpenApiSchema>
+        {
+            {
+                OpenApiConstants.Enum,
+                new AnyListFieldMapParameter<OpenApiSchema>(
+                    s => s.Enum, 
+                    (s, v) => s.Enum = v,
+                    s => s)
+            }
+        };
+
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
@@ -258,14 +287,17 @@ namespace Microsoft.OpenApi.Readers.V3
                     };
             }
 
-            var domainObject = new OpenApiSchema();
+            var schema = new OpenApiSchema();
 
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(domainObject, _schemaFixedFields, _schemaPatternFields);
+                propertyNode.ParseField(schema, _schemaFixedFields, _schemaPatternFields);
             }
 
-            return domainObject;
+            ProcessAnyFields(mapNode, schema, _schemaAnyFields);
+            ProcessAnyListFields(mapNode, schema, _schemaAnyListFields);
+
+            return schema;
         }
     }
 }

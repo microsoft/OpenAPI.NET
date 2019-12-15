@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Writers;
@@ -62,7 +63,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteStringListAsYamlShouldMatchExpected(string[] stringValues, string expectedYaml)
         {
             // Arrange
-            var outputString = new StringWriter();
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString);
 
             // Act
@@ -292,7 +293,7 @@ property4: value4"
         public void WriteMapAsYamlShouldMatchExpected(IDictionary<string, object> inputMap, string expectedYaml)
         {
             // Arrange
-            var outputString = new StringWriter();
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString);
 
             // Act
@@ -333,7 +334,7 @@ property4: value4"
         public void WriteDateTimeAsJsonShouldMatchExpected(DateTimeOffset dateTimeOffset)
         {
             // Arrange
-            var outputString = new StringWriter();
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString);
 
             // Act

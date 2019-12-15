@@ -1,0 +1,10 @@
+﻿name: username
+in: path
+description: username to fetch
+required: true
+enum: 
+  - 7
+  - 8
+  - 9
+type: number
+format: float

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -14,6 +15,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
     public class OpenApiDocumentTests
     {
+        private const string SampleFolderPath = "V2Tests/Samples/";
+
         [Fact]
         public void ShouldThrowWhenReferenceTypeIsInvalid()
         {
@@ -39,7 +42,6 @@ paths:
                 new OpenApiError( new OpenApiException("Unknown reference type 'defi888nition'")) });
             doc.Should().NotBeNull();
         }
-
 
         [Fact]
         public void ShouldThrowWhenReferenceDoesNotExist()
@@ -143,6 +145,176 @@ paths: {}",
 
             context.ShouldBeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
+        }
+
+        [Fact]
+        public void ShouldParseProducesInAnyOrder()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "twoResponses.json")))
+            {
+                var reader = new OpenApiStreamReader();
+                var doc = reader.Read(stream, out var diagnostic);
+
+                Assert.NotNull(doc.Paths["/items"]);
+                Assert.Equal(3, doc.Paths["/items"].Operations.Count);
+
+                var successSchema = new OpenApiSchema()
+                {
+                    Type = "array",
+                    Items = new OpenApiSchema()
+                    {
+                        Properties = new Dictionary<string, OpenApiSchema>()
+                                            {
+                                                { "id", new OpenApiSchema()
+                                                    {
+                                                        Type = "string",
+                                                        Description = "Item identifier."
+                                                    }
+                                                }
+                                            },
+                        Reference = new OpenApiReference()
+                        {
+                            Type = ReferenceType.Schema,
+                            Id = "Item"
+                        }
+                    }
+                };
+
+                var errorSchema = new OpenApiSchema()
+                {
+                    Properties = new Dictionary<string, OpenApiSchema>()
+                                        {
+                                            { "code", new OpenApiSchema()
+                                                {
+                                                    Type = "integer",
+                                                    Format = "int32"
+                                                }
+                                            },
+                                            { "message", new OpenApiSchema()
+                                                {
+                                                    Type = "string"
+                                                }
+                                            },
+                                            { "fields", new OpenApiSchema()
+                                                {
+                                                    Type = "string"
+                                                }
+                                            }
+                                        },
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "Error"
+                    }
+                };
+
+                foreach (var operation in doc.Paths["/items"].Operations)
+                {
+                    Assert.Equal(2, operation.Value.Responses.Count);
+
+                    var okResponse = operation.Value.Responses["200"];
+                    okResponse.ShouldBeEquivalentTo(
+                        new OpenApiResponse()
+                        {
+                            Description = "An OK response",
+                            Content = GetMediaTypes(successSchema, operation.Key != OperationType.Post)
+                        });
+
+                    var errorResponse = operation.Value.Responses["default"];
+                    errorResponse.ShouldBeEquivalentTo(
+                        new OpenApiResponse()
+                        {
+                            Description = "An error response",
+                            Content = GetMediaTypes(errorSchema, operation.Key != OperationType.Post)
+                        });
+                }
+
+                IDictionary<string, OpenApiMediaType> GetMediaTypes(OpenApiSchema schema, bool includeXml)
+                {
+                    var mediaTypes = new Dictionary<string, OpenApiMediaType>
+                    {
+                        ["application/json"] = new OpenApiMediaType() { Schema = schema }
+                    };
+                    if (includeXml)
+                    {
+                        mediaTypes["application/xml"] = new OpenApiMediaType() { Schema = schema };
+                    }
+                    return mediaTypes;
+                }
+            }
+        }
+
+        [Fact]
+        public void ShouldAssignSchemaToAllResponses()
+        {
+            OpenApiDocument document;
+            OpenApiDiagnostic diagnostic;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleProduces.json")))
+            {
+                document = new OpenApiStreamReader().Read(stream, out diagnostic);
+            }
+
+            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
+
+            var successSchema = new OpenApiSchema
+            {
+                Type = "array",
+                Items = new OpenApiSchema
+                {
+                    Properties = {
+                        { "id", new OpenApiSchema
+                            {
+                                Type = "string",
+                                Description = "Item identifier."
+                            }
+                        }
+                    },
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Item",
+                        Type = ReferenceType.Schema
+                    }
+                }
+            };
+            var errorSchema = new OpenApiSchema
+            {
+                Properties = {
+                    { "code", new OpenApiSchema
+                        {
+                            Type = "integer",
+                            Format = "int32"
+                        }
+                    },
+                    { "message", new OpenApiSchema
+                        {
+                            Type = "string"
+                        }
+                    },
+                    { "fields", new OpenApiSchema
+                        {
+                            Type = "string"
+                        }
+                    }
+                },
+                Reference = new OpenApiReference
+                {
+                    Id = "Error",
+                    Type = ReferenceType.Schema
+                }
+            };
+            var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
+            foreach (var response in responses)
+            {
+                var targetSchema = response.Key == "200" ? successSchema : errorSchema;
+
+                var json = response.Value.Content["application/json"];
+                Assert.NotNull(json);
+                json.Schema.ShouldBeEquivalentTo(targetSchema);
+
+                var xml = response.Value.Content["application/xml"];
+                Assert.NotNull(xml);
+                xml.Schema.ShouldBeEquivalentTo(targetSchema);
+            }
         }
     }
 }
