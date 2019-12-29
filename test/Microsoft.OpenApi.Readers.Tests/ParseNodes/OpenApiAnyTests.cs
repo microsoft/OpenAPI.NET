@@ -27,10 +27,10 @@ aDateTime: 2017-01-01
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             var anyMap = node.CreateAny();
 
@@ -59,10 +59,10 @@ aDateTime: 2017-01-01
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new ListNode(context, diagnostic, (YamlSequenceNode)yamlNode);
+            var node = new ListNode(context, (YamlSequenceNode)yamlNode);
 
             var any = node.CreateAny();
 
@@ -88,10 +88,10 @@ aDateTime: 2017-01-01
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new ValueNode(context, diagnostic, (YamlScalarNode)yamlNode);
+            var node = new ValueNode(context, (YamlScalarNode)yamlNode);
 
             var any = node.CreateAny();
 
@@ -112,10 +112,10 @@ aDateTime: 2017-01-01
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new ValueNode(context, diagnostic, (YamlScalarNode)yamlNode);
+            var node = new ValueNode(context, (YamlScalarNode)yamlNode);
 
             var any = node.CreateAny();
 
