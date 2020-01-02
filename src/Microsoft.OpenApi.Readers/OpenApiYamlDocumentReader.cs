@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers
     /// <summary>
     /// Service class for converting contents of TextReader into OpenApiDocument instances
     /// </summary>
-    public class OpenApiYamlDocumentReader : IOpenApiReader<YamlDocument, OpenApiDiagnostic>
+    internal class OpenApiYamlDocumentReader : IOpenApiReader<YamlDocument, OpenApiDiagnostic>
     {
         private readonly OpenApiReaderSettings _settings;
 
