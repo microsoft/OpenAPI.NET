@@ -116,11 +116,18 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenApiSpecVersion version,
             OpenApiFormat format)
         {
-            // Arrange & Act
+            // Arrange
+            var expected = format == OpenApiFormat.Json ? @"{
+  ""description"": null
+}" : @"description: ";
+
+            // Act
             var actual = BasicResponse.Serialize(version, format);
 
             // Assert
-            actual.Should().Be("{ }");
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
 
         [Fact]
