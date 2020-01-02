@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSecurityScheme.yaml")))
             {
-                var document = OpenApiStreamReader.LoadYamlDocument(stream);
+                var document = LoadYamlDocument(stream);
 
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         {
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2AccessCodeSecurityScheme.yaml")))
             {
-                var document = OpenApiStreamReader.LoadYamlDocument(stream);
+                var document = LoadYamlDocument(stream);
 
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
@@ -205,6 +205,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     });
+            }
+        }
+
+        static YamlDocument LoadYamlDocument(Stream input)
+        {
+            using (var reader = new StreamReader(input))
+            {
+                var yamlStream = new YamlStream();
+                yamlStream.Load(reader);
+                return yamlStream.Documents.First();
             }
         }
     }
