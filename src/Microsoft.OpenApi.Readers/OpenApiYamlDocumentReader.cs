@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers
         public OpenApiDocument Read(YamlDocument input, out OpenApiDiagnostic diagnostic)
         {
             diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext
+            var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers,
                 BaseUrl = _settings.BaseUrl
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers
             try
             {
                 // Parse the OpenAPI Document
-                document = context.Parse(input, diagnostic);
+                document = context.Parse(input);
 
                 // Resolve References if requested
                 switch (_settings.ReferenceResolution)
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Readers
         public T ReadFragment<T>(YamlDocument input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
         {
             diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext
+            var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers
             };
@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Readers
             try
             {
                 // Parse the OpenAPI element
-                element = context.ParseFragment<T>(input, version, diagnostic);
+                element = context.ParseFragment<T>(input, version);
             }
             catch (OpenApiException ex)
             {
