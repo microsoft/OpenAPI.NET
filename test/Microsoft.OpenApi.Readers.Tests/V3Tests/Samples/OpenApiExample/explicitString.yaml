@@ -1,0 +1,36 @@
+﻿openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Test API
+paths:
+  /test-path:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/test-schema'
+      responses:
+        default:
+          description: ''
+components:
+  schemas:
+    test-schema:
+      type: object
+      properties:
+        sub:
+          $ref: '#/components/schemas/test-sub-schema'
+      example:
+        sub:
+          test-property1: "12345"
+          test-property2: "1970-01-01T00:00:00Z"
+    test-sub-schema:
+      type: object
+      properties:
+        test-property1:
+          type: string
+          example: "12345"
+        test-property2:
+          type: string
+          format: date-time
+          example: "1970-01-01T00:00:00Z"

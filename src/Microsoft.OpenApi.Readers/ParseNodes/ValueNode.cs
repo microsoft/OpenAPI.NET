@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
-using System.Globalization;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Readers.Exceptions;
+using SharpYaml;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -35,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public override IOpenApiAny CreateAny()
         {
             var value = GetScalarValue();
-            return new OpenApiString(value);
+            return new OpenApiString(value, this._node.Style == ScalarStyle.SingleQuoted || this._node.Style == ScalarStyle.DoubleQuoted || this._node.Style == ScalarStyle.Literal || this._node.Style == ScalarStyle.Folded);
         }
     }
 }
