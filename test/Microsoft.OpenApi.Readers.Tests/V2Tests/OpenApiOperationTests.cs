@@ -352,6 +352,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                         new OpenApiFloat(6),
                                         new OpenApiFloat(7),
                                     }
+                                },
+                                ["application/xml"] = new OpenApiMediaType()
+                                {
+                                    Schema = new OpenApiSchema()
+                                    {
+                                        Type = "array",
+                                        Items = new OpenApiSchema()
+                                        {
+                                            Type = "number",
+                                            Format = "float"
+                                        }
+                                    }
                                 }
                             }
                         }}

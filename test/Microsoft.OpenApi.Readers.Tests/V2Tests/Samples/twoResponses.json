@@ -78,7 +78,7 @@
         }
     },
     "produces": [
-        "application/json"
+        "html/text"
     ],
     "definitions": {
         "Item": {

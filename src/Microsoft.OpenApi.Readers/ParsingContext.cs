@@ -142,7 +142,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Gets the value from the temporary storage matching the given key.
         /// </summary>
-        public T GetFromTempStorage<T>(string key, object scope = null) where T : class
+        public T GetFromTempStorage<T>(string key, object scope = null)
         {
             Dictionary<string, object> storage;
 
@@ -152,10 +152,10 @@ namespace Microsoft.OpenApi.Readers
             }
             else if (!_scopedTempStorage.TryGetValue(scope, out storage))
             {
-                return null;
+                return default(T);
             }
 
-            return storage.TryGetValue(key, out var value) ? (T)value : null;
+            return storage.TryGetValue(key, out var value) ? (T)value : default(T);
         }
 
         /// <summary>
