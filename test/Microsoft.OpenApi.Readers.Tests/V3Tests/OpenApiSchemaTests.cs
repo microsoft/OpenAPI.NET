@@ -28,10 +28,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiObject
                 {
                     ["foo"] = new OpenApiString("bar"),
-                    ["baz"] = new OpenApiArray() { 
+                    ["baz"] = new OpenApiArray() {
                         new OpenApiInteger(1),
                         new OpenApiInteger(2)
                     }
@@ -160,10 +160,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 Minimum = 0
                             }
                         },
-                        AdditionalPropertiesAllowed = false  
+                        AdditionalPropertiesAllowed = false
                     });
             }
         }
@@ -230,8 +230,9 @@ get:
                         {
                             Responses = new OpenApiResponses
                             {
-                                ["200"] = new OpenApiResponse {
-                                   Description = "Ok"
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "Ok"
                                 }
                             }
                         }
@@ -248,10 +249,10 @@ get:
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
@@ -280,10 +281,10 @@ get:
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
@@ -464,7 +465,7 @@ get:
                                 {
                                     "name",
                                     "petType"
-                                }, 
+                                },
                                 Reference = new OpenApiReference()
                                 {
                                     Id= "Pet",

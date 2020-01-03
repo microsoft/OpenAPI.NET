@@ -28,10 +28,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         },
                         License = new OpenApiLicense
                         {
-                            Extensions = {["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer")},
+                            Extensions = { ["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer") },
                             Name = "licenseName",
                             Url = new Uri("http://www.example.com/url2")
                         },
@@ -88,10 +88,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
@@ -128,10 +128,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);

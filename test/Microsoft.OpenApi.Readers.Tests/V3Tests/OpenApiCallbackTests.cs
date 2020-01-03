@@ -28,10 +28,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var callback = OpenApiV3Deserializer.LoadCallback(node);
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 callback.ShouldBeEquivalentTo(
                     new OpenApiCallback
                     {
-                        PathItems = 
+                        PathItems =
                         {
                             [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                                 Operations = {
@@ -135,17 +135,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseMultipleCallbacksWithReferenceShouldSucceed()
         {
-            using ( var stream = Resources.GetStream( Path.Combine( SampleFolderPath, "multipleCallbacksWithReference.yaml" ) ) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml")))
             {
                 // Act
-                var openApiDoc = new OpenApiStreamReader().Read( stream, out var diagnostic );
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 // Assert
                 var path = openApiDoc.Paths.First().Value;
                 var subscribeOperation = path.Operations[OperationType.Post];
 
                 diagnostic.ShouldBeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 } );
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 var callback1 = subscribeOperation.Callbacks["simpleHook"];
 
@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Type = ReferenceType.Callback,
                             Id = "simpleHook",
                         }
-                    } );
+                    });
 
                 var callback2 = subscribeOperation.Callbacks["callback2"];
                 callback2.ShouldBeEquivalentTo(
@@ -222,7 +222,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 },
                             }
                         }
-                    } );
+                    });
 
                 var callback3 = subscribeOperation.Callbacks["callback3"];
                 callback3.ShouldBeEquivalentTo(
@@ -265,7 +265,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 }
                             }
                         }
-                    } );
+                    });
             }
         }
     }

@@ -12,9 +12,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     {
         private readonly YamlScalarNode _node;
 
-        public ValueNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlNode node) : base(
-            context,
-            diagnostic)
+        public ValueNode(ParsingContext context, YamlNode node) : base(
+            context)
         {
             if (!(node is YamlScalarNode scalarNode))
             {

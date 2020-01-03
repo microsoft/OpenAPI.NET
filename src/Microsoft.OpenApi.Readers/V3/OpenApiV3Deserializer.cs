@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
                 }
                 finally
                 {
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
                 }
                 finally
                 {
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
                 }
                 finally
                 {

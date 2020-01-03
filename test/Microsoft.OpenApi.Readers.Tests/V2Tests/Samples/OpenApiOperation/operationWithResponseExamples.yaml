@@ -1,5 +1,6 @@
 ﻿produces:
     - application/json
+    - application/xml
 responses:
     200:
         description: An array of float response
