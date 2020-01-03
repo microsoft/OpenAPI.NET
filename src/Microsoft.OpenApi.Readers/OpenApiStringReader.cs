@@ -29,14 +29,9 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public OpenApiDocument Read(string input, out OpenApiDiagnostic diagnostic)
         {
-            using (var memoryStream = new MemoryStream())
+            using (var reader = new StringReader(input))
             {
-                var writer = new StreamWriter(memoryStream);
-                writer.Write(input);
-                writer.Flush();
-                memoryStream.Position = 0;
-
-                return new OpenApiStreamReader(_settings).Read(memoryStream, out diagnostic);
+                return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
             }
         }
 
@@ -45,14 +40,9 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public T ReadFragment<T>(string input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
         {
-            using (var memoryStream = new MemoryStream())
+            using (var reader = new StringReader(input))
             {
-                var writer = new StreamWriter(memoryStream);
-                writer.Write(input);
-                writer.Flush();
-                memoryStream.Position = 0;
-
-                return new OpenApiStreamReader(_settings).ReadFragment<T>(memoryStream, version, out diagnostic);
+                return new OpenApiTextReaderReader(_settings).ReadFragment<T>(reader, version, out diagnostic);
             }
         }
     }

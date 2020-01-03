@@ -22,7 +22,6 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 var scheme = LoadSecuritySchemeByReference(
                     mapNode.Context,
-                    mapNode.Diagnostic,
                     property.Name);
 
                 var scopes = property.Value.CreateSimpleList(value => value.GetScalarValue());
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
                 else
                 {
-                    node.Diagnostic.Errors.Add(
+                    mapNode.Context.Diagnostic.Errors.Add(
                         new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
                 }
             }
@@ -43,7 +42,6 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
             ParsingContext context,
-            OpenApiDiagnostic diagnostic,
             string schemeName)
         {
             var securitySchemeObject = new OpenApiSecurityScheme()
