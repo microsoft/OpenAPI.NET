@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Readers.V2
             //Validate host
             if (host != null && !IsHostValid(host))
             {
-                rootNode.Diagnostic.Errors.Add(new OpenApiError(rootNode.Context.GetLocation(), "Invalid host"));
+                rootNode.Context.Diagnostic.Errors.Add(new OpenApiError(rootNode.Context.GetLocation(), "Invalid host"));
                 return;
             }
 

@@ -23,14 +23,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         private readonly YamlMappingNode _node;
         private readonly List<PropertyNode> _nodes;
 
-        public MapNode(ParsingContext context, OpenApiDiagnostic diagnostic, string yamlString) :
-            this(context, diagnostic, (YamlMappingNode)YamlHelper.ParseYamlString(yamlString))
+        public MapNode(ParsingContext context, string yamlString) :
+            this(context, (YamlMappingNode)YamlHelper.ParseYamlString(yamlString))
         {
         }
 
-        public MapNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlNode node) : base(
-            context,
-            diagnostic)
+        public MapNode(ParsingContext context, YamlNode node) : base(
+            context)
         {
             if (!(node is YamlMappingNode mapNode))
             {
@@ -40,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             this._node = mapNode;
 
             _nodes = this._node.Children
-                .Select(kvp => new PropertyNode(Context, Diagnostic, kvp.Key.GetScalarValue(), kvp.Value))
+                .Select(kvp => new PropertyNode(Context, kvp.Key.GetScalarValue(), kvp.Value))
                 .Cast<PropertyNode>()
                 .ToList();
         }
@@ -52,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 YamlNode node = null;
                 if (this._node.Children.TryGetValue(new YamlScalarNode(key), out node))
                 {
-                    return new PropertyNode(Context, Diagnostic, key, this._node.Children[new YamlScalarNode(key)]);
+                    return new PropertyNode(Context, key, this._node.Children[new YamlScalarNode(key)]);
                 }
 
                 return null;
@@ -73,47 +72,48 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     key = n.Key.GetScalarValue(),
                     value = n.Value as YamlMappingNode == null
                         ? default(T)
-                        : map(new MapNode(Context, Diagnostic, n.Value as YamlMappingNode))
+                        : map(new MapNode(Context, n.Value as YamlMappingNode))
                 });
 
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
-         public override Dictionary<string, T> CreateMapWithReference<T>(
-             ReferenceType referenceType,
-             Func<MapNode, T> map)
-         {
-             var yamlMap = _node;
-             if (yamlMap == null)
-             {
-                 throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
-             }
+        public override Dictionary<string, T> CreateMapWithReference<T>(
+            ReferenceType referenceType,
+            Func<MapNode, T> map)
+        {
+            var yamlMap = _node;
+            if (yamlMap == null)
+            {
+                throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
+            }
 
-             var nodes = yamlMap.Select(
-                 n => {
-                     var entry = new
-                     {
-                         key = n.Key.GetScalarValue(),
-                         value = map(new MapNode(Context, Diagnostic, (YamlMappingNode)n.Value))
-                     };
-                     if (entry.value == null)
-                     {
-                         return null;  // Body Parameters shouldn't be converted to Parameters
-                     }
-                     // If the component isn't a reference to another component, then point it to itself.
-                     if (entry.value.Reference == null)
-                     {
-                         entry.value.Reference = new OpenApiReference()
-                         {
-                             Type = referenceType,
-                             Id = entry.key
-                         };
-                     }
-                     return entry;
-                 }
-                 );
-             return nodes.Where(n => n!= null).ToDictionary(k => k.key, v => v.value);
-         }
+            var nodes = yamlMap.Select(
+                n =>
+                {
+                    var entry = new
+                    {
+                        key = n.Key.GetScalarValue(),
+                        value = map(new MapNode(Context, (YamlMappingNode)n.Value))
+                    };
+                    if (entry.value == null)
+                    {
+                        return null;  // Body Parameters shouldn't be converted to Parameters
+                    }
+                    // If the component isn't a reference to another component, then point it to itself.
+                    if (entry.value.Reference == null)
+                    {
+                        entry.value.Reference = new OpenApiReference()
+                        {
+                            Type = referenceType,
+                            Id = entry.key
+                        };
+                    }
+                    return entry;
+                }
+                );
+            return nodes.Where(n => n != null).ToDictionary(k => k.key, v => v.value);
+        }
 
         public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 n => new
                 {
                     key = n.Key.GetScalarValue(),
-                    value = map(new ValueNode(Context, Diagnostic, (YamlScalarNode)n.Value))
+                    value = map(new ValueNode(Context, (YamlScalarNode)n.Value))
                 });
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override string GetRaw()
         {
-            var x = new Serializer(new SerializerSettings(new JsonSchema()) {EmitJsonComptible = true});
+            var x = new Serializer(new SerializerSettings(new JsonSchema()) { EmitJsonComptible = true });
             return x.Serialize(_node);
         }
 
@@ -152,10 +152,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             where T : IOpenApiReferenceable, new()
         {
             return new T()
-                    {
-                        UnresolvedReference = true,
-                        Reference = Context.VersionService.ConvertToOpenApiReference(referenceId,referenceType)  
-                    };
+            {
+                UnresolvedReference = true,
+                Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType)
+            };
         }
 
         public string GetReferencePointer()
