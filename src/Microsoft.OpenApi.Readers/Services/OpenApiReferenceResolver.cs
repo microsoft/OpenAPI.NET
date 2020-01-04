@@ -129,6 +129,16 @@ namespace Microsoft.OpenApi.Readers.Services
         }
 
         /// <summary>
+        /// Resolve all references used in a parameter
+        /// </summary>
+        public override void Visit(OpenApiParameter parameter)
+        {
+            ResolveObject(parameter.Schema, r => parameter.Schema = r);
+            ResolveMap(parameter.Examples);
+        }
+
+
+        /// <summary>
         /// Resolve all references to links
         /// </summary>
         public override void Visit(IDictionary<string, OpenApiLink> links)
