@@ -419,5 +419,24 @@ paths: {}",
                 xml.Schema.ShouldBeEquivalentTo(targetSchema);
             }
         }
+
+
+        [Fact]
+        public void ShouldAllowComponentsThatJustContainAReference()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "ComponentRootReference.json")))
+            {
+                OpenApiStreamReader reader = new OpenApiStreamReader();
+                OpenApiDocument doc = reader.Read(stream, out OpenApiDiagnostic diags);
+                OpenApiSchema schema1 = doc.Components.Schemas["AllPets"];
+                Assert.False(schema1.UnresolvedReference);
+                OpenApiSchema schema2 = (OpenApiSchema)doc.ResolveReference(schema1.Reference);
+                if (schema2.UnresolvedReference && schema1.Reference.Id == schema2.Reference.Id)
+                {
+                    // detected a cycle - this code gets triggered
+                    Assert.True(false, "A cycle should not be detected");
+                }
+            }
+        }
     }
 }
