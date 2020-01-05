@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Validations
     /// <summary>
     /// Class containing dispatchers to execute validation rules on for Open API document.
     /// </summary>
-    public class OpenApiValidator : OpenApiVisitorBase, IValidationContext 
+    public class OpenApiValidator : OpenApiVisitorBase, IValidationContext
     {
         private readonly ValidationRuleSet _ruleSet;
         private readonly IList<OpenApiValidatorError> _errors = new List<OpenApiValidatorError>();
@@ -22,11 +22,11 @@ namespace Microsoft.OpenApi.Validations
         /// Create a vistor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
-        public OpenApiValidator(ValidationRuleSet ruleSet) 
+        public OpenApiValidator(ValidationRuleSet ruleSet)
         {
             _ruleSet = ruleSet;
         }
-        
+
         /// <summary>
         /// Gets the validation errors.
         /// </summary>
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Validations
             var potentialReference = item as IOpenApiReferenceable;
             if (potentialReference != null && potentialReference.UnresolvedReference)
             {
-                type = typeof(IOpenApiReferenceable);  
+                type = typeof(IOpenApiReferenceable);
             }
 
             var rules = _ruleSet.FindRules(type);

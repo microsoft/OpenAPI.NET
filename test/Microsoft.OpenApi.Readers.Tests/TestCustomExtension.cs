@@ -36,7 +36,7 @@ paths: {}
             };
 
             var reader = new OpenApiStringReader(settings);
-        
+
             var diag = new OpenApiDiagnostic();
             var doc = reader.Read(description, out diag);
 

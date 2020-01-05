@@ -22,7 +22,8 @@ info:
   version: 1.0.0
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings() {
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            {
             });
 
             var doc = reader.Read(input, out var diagnostic);
@@ -274,7 +275,7 @@ paths: {}
 ";
             var reader = new OpenApiStringReader(new OpenApiReaderSettings()
             {
-BaseUrl = new Uri("https://bing.com")
+                BaseUrl = new Uri("https://bing.com")
             });
 
             var doc = reader.Read(input, out var diagnostic);

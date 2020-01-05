@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Services
 
             if (_typeToComparerMap.TryGetValue(requestedComparerType, out object comparerInstance))
             {
-                return (OpenApiComparerBase<T>) comparerInstance;
+                return (OpenApiComparerBase<T>)comparerInstance;
             }
 
             if (!TypeToDefaultComparerMap.TryGetValue(requestedComparerType, out comparerInstance))
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Services
                     $"No comparer is registered for type {requestedComparerType.Name}.");
             }
 
-            return (OpenApiComparerBase<T>) comparerInstance;
+            return (OpenApiComparerBase<T>)comparerInstance;
         }
     }
 }

@@ -196,10 +196,10 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         private void WriteValueRecursive(OpenApiJsonWriter writer, object value)
         {
-            if (value == null 
-                || value.GetType().IsPrimitive 
-                || value is decimal 
-                || value is string 
+            if (value == null
+                || value.GetType().IsPrimitive
+                || value is decimal
+                || value is string
                 || value is DateTimeOffset
                 || value is DateTime)
             {

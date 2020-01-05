@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme1"}
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
                     }
                 ] = new List<string>
                 {
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme2"}
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme2" }
                     }
                 ] = new List<string>
                 {
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme3"}
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme3" }
                     }
                 ] = new List<string>()
             };
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme1"}
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme1" }
                     }
                 ] = new List<string>
                 {
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 [
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "scheme3"}
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "scheme3" }
                     }
                 ] = new List<string>()
             };
@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             securityRequirement.Add(securityScheme1, new List<string>());
-            securityRequirement.Add(securityScheme2, new List<string> {"scope1", "scope2"});
+            securityRequirement.Add(securityScheme2, new List<string> { "scope1", "scope2" });
 
             Action addSecurityScheme1Duplicate = () =>
                 securityRequirement.Add(securityScheme1Duplicate, new List<string>());
@@ -276,7 +276,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     // This should work with any security scheme object
                     // as long as Reference.Id os securityScheme1
                     [securityScheme1WithDifferentProperties] = new List<string>(),
-                    [securityScheme2] = new List<string> {"scope1", "scope2"},
+                    [securityScheme2] = new List<string> { "scope1", "scope2" },
                 });
         }
     }

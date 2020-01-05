@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             const string testEmail = "support/example.com";
-           
+
             OpenApiContact contact = new OpenApiContact()
             {
                 Email = testEmail

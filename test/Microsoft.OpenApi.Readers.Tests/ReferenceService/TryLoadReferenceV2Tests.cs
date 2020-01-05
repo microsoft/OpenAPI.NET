@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                         Type = ReferenceType.Response,
                         Id = "NotFound"
                     },
-                    Content = new Dictionary<string,OpenApiMediaType>
+                    Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new OpenApiMediaType()
                     }

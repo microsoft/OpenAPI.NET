@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 var id = localReference.Substring(
                     segments[0].Length + "/".Length + segments[1].Length + "/".Length);
 
-                return new OpenApiReference {Type = referenceType, Id = id};
+                return new OpenApiReference { Type = referenceType, Id = id };
             }
 
             throw new OpenApiException(

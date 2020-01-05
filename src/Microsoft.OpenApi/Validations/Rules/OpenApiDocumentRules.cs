@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("paths");
                     if (item.Paths == null)
                     {
-                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing), 
+                        context.CreateError(nameof(OpenApiDocumentFieldIsMissing),
                             String.Format(SRResource.Validation_FieldIsRequired, "paths", "document"));
                     }
                     context.Exit();

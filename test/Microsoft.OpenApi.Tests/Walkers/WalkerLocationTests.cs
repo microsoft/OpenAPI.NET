@@ -211,7 +211,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
-                                                    Schema = derivedSchema
+                                                Schema = derivedSchema
                                             }
                                         },
                                         Headers = new Dictionary<string, OpenApiHeader>()
@@ -226,13 +226,14 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 },
                 Components = new OpenApiComponents()
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>() {
+                    Schemas = new Dictionary<string, OpenApiSchema>()
+                    {
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
                     },
                     Headers = new Dictionary<string, OpenApiHeader>()
                     {
-                        ["test-header"] = testHeader 
+                        ["test-header"] = testHeader
                     }
                 }
             };
