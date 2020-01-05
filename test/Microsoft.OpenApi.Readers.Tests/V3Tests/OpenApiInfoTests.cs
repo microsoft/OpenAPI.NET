@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
                 // Assert
-                openApiInfo.ShouldBeEquivalentTo(
+                openApiInfo.Should().BeEquivalentTo(
                     new OpenApiInfo
                     {
                         Title = "Advanced Info",
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
                 // Assert
-                openApiInfo.ShouldBeEquivalentTo(
+                openApiInfo.Should().BeEquivalentTo(
                     new OpenApiInfo
                     {
                         Title = "Basic Info",
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
                 // Assert
-                openApiInfo.ShouldBeEquivalentTo(
+                openApiInfo.Should().BeEquivalentTo(
                     new OpenApiInfo
                     {
                         Title = "Minimal Info",

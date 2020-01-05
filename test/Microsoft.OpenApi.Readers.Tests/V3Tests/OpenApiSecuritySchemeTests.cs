@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.Http,
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.ApiKey,
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.Http,
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.OAuth2,
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.OpenIdConnect,

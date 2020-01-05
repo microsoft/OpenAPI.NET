@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.ShouldBeEquivalentTo(new List<string> {
+            locator.Locations.Should().BeEquivalentTo(new List<string> {
                 "#/servers",
                 "#/tags"
             });
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.ShouldBeEquivalentTo(new List<string> {
+            locator.Locations.Should().BeEquivalentTo(new List<string> {
                 "#/servers",
                 "#/servers/0",
                 "#/servers/1",
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.ShouldBeEquivalentTo(new List<string> {
+            locator.Locations.Should().BeEquivalentTo(new List<string> {
                 "#/servers",
                 "#/paths",
                 "#/paths/~1test",
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             });
 
-            locator.Keys.ShouldBeEquivalentTo(new List<string> { "/test", "Get", "200", "application/json" });
+            locator.Keys.Should().BeEquivalentTo(new List<string> { "/test", "Get", "200", "application/json" });
         }
 
         [Fact]
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.ShouldBeEquivalentTo(new List<string> {
+            locator.Locations.Should().BeEquivalentTo(new List<string> {
                 "#/servers",
                 "#/paths",
                 "#/components",
@@ -241,7 +241,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var walker = new OpenApiWalker(locator);
             walker.Walk(doc);
 
-            locator.Locations.Where(l => l.StartsWith("referenceAt:")).ShouldBeEquivalentTo(new List<string> {
+            locator.Locations.Where(l => l.StartsWith("referenceAt:")).Should().BeEquivalentTo(new List<string> {
                 "referenceAt: #/paths/~1/get/responses/200/content/application~1json/schema",
                 "referenceAt: #/paths/~1/get/responses/200/headers/test-header",
                 "referenceAt: #/components/schemas/derived/anyOf/0",

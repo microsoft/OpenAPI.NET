@@ -74,7 +74,7 @@ aDate: 2017-01-02
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),
@@ -214,7 +214,7 @@ aDate: 2017-01-02
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),
@@ -370,7 +370,7 @@ aDate: 2017-01-02
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),
@@ -463,7 +463,7 @@ aDate: 2017-01-02
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),

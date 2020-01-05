@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_basicOperation);
+            operation.Should().BeEquivalentTo(_basicOperation);
         }
 
         [Fact]
@@ -238,7 +238,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_basicOperation);
+            operation.Should().BeEquivalentTo(_basicOperation);
         }
 
         [Fact]
@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_operationWithFormData);
+            operation.Should().BeEquivalentTo(_operationWithFormData);
         }
 
         [Fact]
@@ -273,7 +273,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_operationWithFormData);
+            operation.Should().BeEquivalentTo(_operationWithFormData);
         }
 
         [Fact]
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody);
         }
 
         [Fact]
@@ -308,7 +308,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody);
         }
 
         [Fact]
@@ -325,7 +325,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(
+            operation.Should().BeEquivalentTo(
                 new OpenApiOperation()
                 {
                     Responses = new OpenApiResponses()
