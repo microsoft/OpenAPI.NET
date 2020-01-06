@@ -25,7 +25,7 @@ paths: { }";
             var reader = new OpenApiStringReader();
             reader.Read(input, out var diagnostic);
 
-            diagnostic.Errors.ShouldBeEquivalentTo(new List<OpenApiError>() {
+            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
                 new OpenApiError(new OpenApiReaderException("Expected a value.") {
                     Pointer = "#line=4"
                 })

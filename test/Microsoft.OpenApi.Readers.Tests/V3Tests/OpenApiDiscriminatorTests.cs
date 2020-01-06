@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var discriminator = OpenApiV3Deserializer.LoadDiscriminator(node);
 
                 // Assert
-                discriminator.ShouldBeEquivalentTo(
+                discriminator.Should().BeEquivalentTo(
                     new OpenApiDiscriminator
                     {
                         PropertyName = "pet_type",

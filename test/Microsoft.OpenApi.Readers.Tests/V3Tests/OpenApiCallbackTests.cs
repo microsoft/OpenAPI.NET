@@ -37,9 +37,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var callback = OpenApiV3Deserializer.LoadCallback(node);
 
                 // Assert
-                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-                callback.ShouldBeEquivalentTo(
+                callback.Should().BeEquivalentTo(
                     new OpenApiCallback
                     {
                         PathItems =
@@ -88,10 +88,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 var callback = subscribeOperation.Callbacks["simpleHook"];
 
-                diagnostic.ShouldBeEquivalentTo(
+                diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-                callback.ShouldBeEquivalentTo(
+                callback.Should().BeEquivalentTo(
                     new OpenApiCallback
                     {
                         PathItems =
@@ -144,12 +144,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var path = openApiDoc.Paths.First().Value;
                 var subscribeOperation = path.Operations[OperationType.Post];
 
-                diagnostic.ShouldBeEquivalentTo(
+                diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 var callback1 = subscribeOperation.Callbacks["simpleHook"];
 
-                callback1.ShouldBeEquivalentTo(
+                callback1.Should().BeEquivalentTo(
                     new OpenApiCallback
                     {
                         PathItems =
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     });
 
                 var callback2 = subscribeOperation.Callbacks["callback2"];
-                callback2.ShouldBeEquivalentTo(
+                callback2.Should().BeEquivalentTo(
                     new OpenApiCallback
                     {
                         PathItems =
@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     });
 
                 var callback3 = subscribeOperation.Callbacks["callback3"];
-                callback3.ShouldBeEquivalentTo(
+                callback3.Should().BeEquivalentTo(
                     new OpenApiCallback
                     {
                         PathItems =

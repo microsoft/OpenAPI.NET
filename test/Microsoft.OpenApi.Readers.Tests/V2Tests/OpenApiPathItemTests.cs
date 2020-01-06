@@ -256,7 +256,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadPathItem(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_basicPathItemWithFormData);
+            operation.Should().BeEquivalentTo(_basicPathItemWithFormData);
         }
     }
 }

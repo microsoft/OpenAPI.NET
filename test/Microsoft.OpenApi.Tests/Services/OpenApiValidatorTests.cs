@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.ShouldBeEquivalentTo(
+            validator.Errors.Should().BeEquivalentTo(
                     new List<OpenApiError>
                     {
                         new OpenApiValidatorError(nameof(OpenApiResponseRules.ResponseRequiredFields),"#/paths/~1test/get/responses/200/description",
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.ShouldBeEquivalentTo(
+            validator.Errors.Should().BeEquivalentTo(
                     new List<OpenApiError>
                     {
                         new OpenApiValidatorError(nameof(OpenApiServerRules.ServerRequiredFields), "#/servers/1/url",
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.ShouldBeEquivalentTo(
+            validator.Errors.Should().BeEquivalentTo(
                    new List<OpenApiError>
                    {
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")

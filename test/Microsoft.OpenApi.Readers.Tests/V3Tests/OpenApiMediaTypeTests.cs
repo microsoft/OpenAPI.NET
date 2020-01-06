@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var mediaType = OpenApiV3Deserializer.LoadMediaType(node);
 
             // Assert
-            mediaType.ShouldBeEquivalentTo(
+            mediaType.Should().BeEquivalentTo(
                 new OpenApiMediaType
                 {
                     Example = new OpenApiFloat(5),
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var mediaType = OpenApiV3Deserializer.LoadMediaType(node);
 
             // Assert
-            mediaType.ShouldBeEquivalentTo(
+            mediaType.Should().BeEquivalentTo(
                 new OpenApiMediaType
                 {
                     Examples =

@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var encoding = OpenApiV3Deserializer.LoadEncoding(node);
 
                 // Assert
-                encoding.ShouldBeEquivalentTo(
+                encoding.Should().BeEquivalentTo(
                     new OpenApiEncoding
                     {
                         ContentType = "application/xml; charset=utf-8"
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var encoding = OpenApiV3Deserializer.LoadEncoding(node);
 
                 // Assert
-                encoding.ShouldBeEquivalentTo(
+                encoding.Should().BeEquivalentTo(
                     new OpenApiEncoding
                     {
                         ContentType = "image/png, image/jpeg",
