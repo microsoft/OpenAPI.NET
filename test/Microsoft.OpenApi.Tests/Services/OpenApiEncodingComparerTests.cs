@@ -335,8 +335,8 @@ namespace Microsoft.OpenApi.Tests.Services
             };
         }
 
-        
-        [Theory(Skip="Need to fix")] 
+
+        [Theory(Skip = "Need to fix")]
         [MemberData(nameof(GetTestCasesForOpenApiEncodingComparerShouldSucceed))]
         public void OpenApiEncodingComparerShouldSucceed(
             string testCaseName,
@@ -352,9 +352,9 @@ namespace Microsoft.OpenApi.Tests.Services
             comparer.Compare(source, target, comparisonContext);
 
             var differences = comparisonContext.OpenApiDifferences.ToList();
-            differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
+            differences.Count().Should().Be(expectedDifferences.Count);
 
-            differences.ShouldBeEquivalentTo(expectedDifferences);
+            differences.Should().BeEquivalentTo(expectedDifferences);
         }
     }
 }

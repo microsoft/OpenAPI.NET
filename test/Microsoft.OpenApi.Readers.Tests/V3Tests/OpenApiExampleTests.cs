@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 diagnostic.Errors.Should().BeEmpty();
 
-                example.ShouldBeEquivalentTo(
+                example.Should().BeEquivalentTo(
                     new OpenApiExample
                     {
                         Value = new OpenApiObject

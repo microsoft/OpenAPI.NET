@@ -167,7 +167,7 @@ namespace Microsoft.OpenApi.Validations
             Type validationRuleType = typeof(ValidationRule);
 
             IEnumerable<PropertyInfo> rules = typeof(ValidationRuleSet).Assembly.GetTypes()
-                .Where(t => t.IsClass 
+                .Where(t => t.IsClass
                             && t != typeof(object)
                             && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())
                 .SelectMany(t2 => t2.GetProperties(BindingFlags.Static | BindingFlags.Public)
@@ -175,12 +175,12 @@ namespace Microsoft.OpenApi.Validations
 
             foreach (var property in rules)
             {
-                    var propertyValue = property.GetValue(null); // static property
-                    ValidationRule rule = propertyValue as ValidationRule;
-                    if (rule != null)
-                    {
-                        ruleSet.Add(rule);
-                    }
+                var propertyValue = property.GetValue(null); // static property
+                ValidationRule rule = propertyValue as ValidationRule;
+                if (rule != null)
+                {
+                    ruleSet.Add(rule);
+                }
             }
 
             return ruleSet;

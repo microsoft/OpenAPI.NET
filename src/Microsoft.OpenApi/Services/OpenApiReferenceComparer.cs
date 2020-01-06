@@ -58,10 +58,10 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            var source = (T) comparisonContext.SourceDocument.ResolveReference(
+            var source = (T)comparisonContext.SourceDocument.ResolveReference(
                 sourceReference);
 
-            var target = (T) comparisonContext.TargetDocument.ResolveReference(
+            var target = (T)comparisonContext.TargetDocument.ResolveReference(
                 targetReference);
 
             comparisonContext

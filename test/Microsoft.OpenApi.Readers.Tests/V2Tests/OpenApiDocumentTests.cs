@@ -38,7 +38,7 @@ paths:
             var reader = new OpenApiStringReader();
             var doc = reader.Read(input, out var diagnostic);
 
-            diagnostic.Errors.ShouldBeEquivalentTo(new List<OpenApiError> {
+            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
                 new OpenApiError( new OpenApiException("Unknown reference type 'defi888nition'")) });
             doc.Should().NotBeNull();
         }
@@ -66,7 +66,7 @@ paths:
 
             var doc = reader.Read(input, out var diagnostic);
 
-            diagnostic.Errors.ShouldBeEquivalentTo(new List<OpenApiError> {
+            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
                 new OpenApiError( new OpenApiException("Invalid Reference identifier 'doesnotexist'.")) });
             doc.Should().NotBeNull();
         }
@@ -102,7 +102,7 @@ definitions:
 paths: {}",
                 out var context);
 
-            openApiDoc.ShouldBeEquivalentTo(
+            openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -143,7 +143,7 @@ paths: {}",
                     Paths = new OpenApiPaths()
                 });
 
-            context.ShouldBeEquivalentTo(
+            context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
         }
 
@@ -242,7 +242,7 @@ paths: {}",
                     Schema = errorSchema
                 };
 
-                doc.ShouldBeEquivalentTo(new OpenApiDocument
+                doc.Should().BeEquivalentTo(new OpenApiDocument
                 {
                     Info = new OpenApiInfo
                     {
@@ -412,11 +412,11 @@ paths: {}",
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
-                json.Schema.ShouldBeEquivalentTo(targetSchema);
+                json.Schema.Should().BeEquivalentTo(targetSchema);
 
                 var xml = response.Value.Content["application/xml"];
                 Assert.NotNull(xml);
-                xml.Schema.ShouldBeEquivalentTo(targetSchema);
+                xml.Schema.Should().BeEquivalentTo(targetSchema);
             }
         }
 

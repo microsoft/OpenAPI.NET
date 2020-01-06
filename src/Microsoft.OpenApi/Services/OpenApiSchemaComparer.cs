@@ -72,13 +72,13 @@ namespace Microsoft.OpenApi.Services
 
             if (sourceSchema.Reference != null)
             {
-                sourceSchema = (OpenApiSchema) comparisonContext.SourceDocument.ResolveReference(
+                sourceSchema = (OpenApiSchema)comparisonContext.SourceDocument.ResolveReference(
                     sourceSchema.Reference);
             }
 
             if (targetSchema.Reference != null)
             {
-                targetSchema = (OpenApiSchema) comparisonContext.TargetDocument.ResolveReference(
+                targetSchema = (OpenApiSchema)comparisonContext.TargetDocument.ResolveReference(
                     targetSchema.Reference);
             }
 

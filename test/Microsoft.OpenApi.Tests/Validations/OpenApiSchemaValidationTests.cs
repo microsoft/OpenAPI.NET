@@ -261,7 +261,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
             result.Should().BeFalse();
-            errors.ShouldAllBeEquivalentTo(new List<OpenApiValidatorError>
+            errors.Should().BeEquivalentTo(new List<OpenApiValidatorError>
             {
                     new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
                         string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,

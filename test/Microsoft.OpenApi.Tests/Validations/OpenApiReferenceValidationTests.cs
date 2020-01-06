@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             {
                 ["/"] = new OpenApiPathItem()
                 {
-                    Operations = new Dictionary<OperationType,OpenApiOperation>
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
                         [OperationType.Get] = new OpenApiOperation()
                         {
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                             {
                                 ["200"] = new OpenApiResponse()
                                 {
-                                    Content = new Dictionary<string,OpenApiMediaType>()
+                                    Content = new Dictionary<string, OpenApiMediaType>()
                                     {
                                         ["application/json"] = new OpenApiMediaType()
                                         {
@@ -67,11 +67,11 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>()});
+            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
 
 
             // Assert
-            Assert.True(errors.Count() == 1);            
+            Assert.True(errors.Count() == 1);
         }
 
         [Fact]
@@ -154,11 +154,11 @@ namespace Microsoft.OpenApi.Tests.Validations
         }
     }
 
-    public class AlwaysFailRule<T> : ValidationRule<T> where T: IOpenApiElement
+    public class AlwaysFailRule<T> : ValidationRule<T> where T : IOpenApiElement
     {
-        public AlwaysFailRule() : base( (c,t) =>  c.CreateError("x","y"))
+        public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
         {
-            
+
         }
     }
 }

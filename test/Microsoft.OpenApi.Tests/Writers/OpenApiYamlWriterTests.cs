@@ -264,7 +264,7 @@ property4: value4"
             }
             else if (value.GetType().IsGenericType &&
                 (typeof(IDictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ||
-                    typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition()) ) )
+                    typeof(Dictionary<,>).IsAssignableFrom(value.GetType().GetGenericTypeDefinition())))
             {
                 writer.WriteStartObject();
                 foreach (var elementValue in (dynamic)(value))

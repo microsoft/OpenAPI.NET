@@ -810,9 +810,9 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var differences = comparisonContext.OpenApiDifferences.ToList();
 
-            differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
+            differences.Count().Should().Be(expectedDifferences.Count);
 
-            differences.ShouldBeEquivalentTo(expectedDifferences);
+            differences.Should().BeEquivalentTo(expectedDifferences);
         }
     }
 }
