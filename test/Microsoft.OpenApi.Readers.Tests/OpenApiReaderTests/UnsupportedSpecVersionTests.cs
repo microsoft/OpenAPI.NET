@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
                 catch (OpenApiUnsupportedSpecVersionException exception)
                 {
                     exception.SpecificationVersion.Should().Be("1.0.0");
-                }                
+                }
             }
         }
     }

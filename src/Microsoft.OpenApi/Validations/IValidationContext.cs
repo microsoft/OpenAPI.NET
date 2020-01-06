@@ -6,7 +6,7 @@ namespace Microsoft.OpenApi.Validations
     /// <summary>
     /// Constrained interface used to provide context to rule implementation
     /// </summary>
-    public interface IValidationContext 
+    public interface IValidationContext
     {
         /// <summary>
         /// Register an error with the validation context.

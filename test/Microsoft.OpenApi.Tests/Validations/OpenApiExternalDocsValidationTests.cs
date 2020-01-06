@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var errors = externalDocs.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-          
+
             bool result = !errors.Any();
 
             Assert.False(result);

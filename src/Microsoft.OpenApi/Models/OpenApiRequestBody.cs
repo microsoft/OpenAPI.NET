@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set;}
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference object.
