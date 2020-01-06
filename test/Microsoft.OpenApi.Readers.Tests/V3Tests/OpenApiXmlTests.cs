@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var xml = OpenApiV3Deserializer.LoadXml(node);
 
                 // Assert
-                xml.ShouldBeEquivalentTo(
+                xml.Should().BeEquivalentTo(
                     new OpenApiXml
                     {
                         Name = "name1",

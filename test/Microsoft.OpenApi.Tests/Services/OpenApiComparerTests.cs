@@ -74,9 +74,9 @@ namespace Microsoft.OpenApi.Tests.Services
             new OpenApiExampleComparer().Compare(AdvancedExample, AdvancedExample,
                 new ComparisonContext(new OpenApiComparerFactory(), new OpenApiDocument(), new OpenApiDocument()));
             var differences = OpenApiComparer.Compare(source, target).ToList();
-            differences.Count().ShouldBeEquivalentTo(expectedDifferences.Count);
+            differences.Count().Should().Be(expectedDifferences.Count);
 
-            differences.ShouldBeEquivalentTo(expectedDifferences);
+            differences.Should().BeEquivalentTo(expectedDifferences);
         }
     }
 }

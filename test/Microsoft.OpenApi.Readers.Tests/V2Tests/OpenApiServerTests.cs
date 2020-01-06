@@ -279,7 +279,7 @@ BaseUrl = new Uri("https://bing.com")
 
             var doc = reader.Read(input, out var diagnostic);
             doc.Servers.Count.Should().Be(0);
-            diagnostic.ShouldBeEquivalentTo(
+            diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic
                 {
                     Errors =

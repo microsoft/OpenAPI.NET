@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var operation = OpenApiV3Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(new OpenApiOperation()
+            operation.Should().BeEquivalentTo(new OpenApiOperation()
             {
                 Tags =
                 {

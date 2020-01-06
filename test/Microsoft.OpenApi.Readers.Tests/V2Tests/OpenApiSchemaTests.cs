@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            schema.ShouldBeEquivalentTo(
+            schema.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
                     Type = "number",
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            schema.ShouldBeEquivalentTo(
+            schema.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
                     Type = "number",
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var schema = OpenApiV2Deserializer.LoadSchema(node);
 
             // Assert
-            schema.ShouldBeEquivalentTo(
+            schema.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
                     Type = "number",

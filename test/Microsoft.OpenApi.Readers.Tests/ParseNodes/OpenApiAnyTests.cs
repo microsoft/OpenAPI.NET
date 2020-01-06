@@ -36,7 +36,7 @@ aDateTime: 2017-01-01
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),
@@ -68,7 +68,7 @@ aDateTime: 2017-01-01
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.ShouldBeEquivalentTo(
+            any.Should().BeEquivalentTo(
                 new OpenApiArray
                 {
                     new OpenApiString("fooBar"),
@@ -97,7 +97,7 @@ aDateTime: 2017-01-01
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.ShouldBeEquivalentTo(
+            any.Should().BeEquivalentTo(
                 new OpenApiString("10")
             );
         }
@@ -121,7 +121,7 @@ aDateTime: 2017-01-01
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.ShouldBeEquivalentTo(
+            any.Should().BeEquivalentTo(
                 new OpenApiString("2012-07-23T12:33:00")
             );
         }
