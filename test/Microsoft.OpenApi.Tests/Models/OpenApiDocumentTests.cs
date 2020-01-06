@@ -2552,5 +2552,97 @@ definitions:
             // Assert
             Assert.NotEmpty(actual);
         }
+
+        [Fact]
+        public void SerializeRelativePathAsV2JsonWorks()
+        {
+            // Arrange
+            var expected =
+                @"swagger: '2.0'
+info:
+  version: 1.0.0
+basePath: /server1
+paths: { }";
+            var doc = new OpenApiDocument()
+            {
+                Info = new OpenApiInfo() { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>() {
+                    new OpenApiServer()
+                    {
+                        Url = "/server1"
+                    }
+                }
+            };
+
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeRelativePathWithHostAsV2JsonWorks()
+        {
+            // Arrange
+            var expected =
+                @"swagger: '2.0'
+info:
+  version: 1.0.0
+host: //example.org
+basePath: /server1
+paths: { }";
+            var doc = new OpenApiDocument()
+            {
+                Info = new OpenApiInfo() { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>() {
+                    new OpenApiServer()
+                    {
+                        Url = "//example.org/server1"
+                    }
+                }
+            };
+
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeRelativeRootPathWithHostAsV2JsonWorks()
+        {
+            // Arrange
+            var expected =
+                @"swagger: '2.0'
+info:
+  version: 1.0.0
+host: //example.org
+paths: { }";
+            var doc = new OpenApiDocument()
+            {
+                Info = new OpenApiInfo() { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>() {
+                    new OpenApiServer()
+                    {
+                        Url = "//example.org/"
+                    }
+                }
+            };
+
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
     }
 }
