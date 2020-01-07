@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Writers
@@ -14,6 +15,7 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public abstract class OpenApiWriterBase : IOpenApiWriter
     {
+        
         /// <summary>
         /// Settings for controlling how the OpenAPI document will be written out.
         /// </summary>
