@@ -79,6 +79,8 @@ namespace Microsoft.OpenApi.Models
             // If references have been inlined we don't need the to render the components section
             if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
             {
+                writer.WriteStartObject();
+                writer.WriteEndObject();
                 return;  
             }
 
