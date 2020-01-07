@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="value">The string value.</param>
         public abstract void WriteValue(string value);
-        
+
         /// <summary>
         /// Write float value.
         /// </summary>
@@ -247,7 +247,7 @@ namespace Microsoft.OpenApi.Writers
             {
                 WriteValue((decimal)value);
             }
-            else if ( type == typeof(DateTime) || type == typeof(DateTime?) )
+            else if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
                 WriteValue((DateTime)value);
             }

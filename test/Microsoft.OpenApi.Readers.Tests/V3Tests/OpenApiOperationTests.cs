@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }

@@ -193,16 +193,16 @@ namespace Microsoft.OpenApi.Workbench
                 {
                     stream = CreateStream(_input);
                 }
-                
+
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
                 var document = new OpenApiStreamReader(new OpenApiReaderSettings
-                    {
-                        ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences,
-                        RuleSet = ValidationRuleSet.GetDefaultRuleSet()
-                    }
+                {
+                    ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences,
+                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                }
                 ).Read(stream, out var context);
                 stopwatch.Stop();
                 ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Workbench
                 var walker = new OpenApiWalker(statsVisitor);
                 walker.Walk(document);
 
-                Errors += Environment.NewLine + "Statistics:" + Environment.NewLine + statsVisitor.GetStatisticsReport();    
+                Errors += Environment.NewLine + "Statistics:" + Environment.NewLine + statsVisitor.GetStatisticsReport();
             }
             catch (Exception ex)
             {

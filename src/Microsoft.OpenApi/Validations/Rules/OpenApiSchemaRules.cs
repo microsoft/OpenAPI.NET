@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     // discriminator
                     context.Enter("discriminator");
 
-                    if(schema.Reference != null && schema.Discriminator != null)
+                    if (schema.Reference != null && schema.Discriminator != null)
                     {
                         if (!schema.Required.Contains(schema.Discriminator?.PropertyName))
                         {

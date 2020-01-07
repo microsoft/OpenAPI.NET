@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Equal(expression, response.Expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
-            Assert.Equal(2,compositeExpression.ContainedExpressions.Count);
+            Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
 
             compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
             {

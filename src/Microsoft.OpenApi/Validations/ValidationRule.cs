@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Validations
     /// Class containing validation rule logic for <see cref="IOpenApiElement"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ValidationRule<T> : ValidationRule where T: IOpenApiElement
+    public class ValidationRule<T> : ValidationRule where T : IOpenApiElement
     {
         private readonly Action<IValidationContext, T> _validate;
 

@@ -303,7 +303,7 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(IList<OpenApiSecurityRequirement> openApiSecurityRequirements)
         {
         }
-        
+
         /// <summary>
         /// Visits <see cref="IOpenApiExtensible"/>
         /// </summary>

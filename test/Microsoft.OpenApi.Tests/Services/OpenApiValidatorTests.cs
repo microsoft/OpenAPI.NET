@@ -104,7 +104,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ValidateCustomExtension()
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
-            
+
             ruleset.Add(
              new ValidationRule<FooExtension>(
                  (context, item) =>
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 Baz = "baz"
             };
 
-            openApiDocument.Info.Extensions.Add("x-foo",fooExtension);
+            openApiDocument.Info.Extensions.Add("x-foo", fooExtension);
 
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);

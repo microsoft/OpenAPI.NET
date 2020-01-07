@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Services
         private bool _resolveRemoteReferences;
         private List<OpenApiError> _errors = new List<OpenApiError>();
 
-        public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true) 
+        public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true)
         {
             _currentDocument = currentDocument;
             _resolveRemoteReferences = resolveRemoteReferences;
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Readers.Services
         {
             ResolveObject(operation.RequestBody, r => operation.RequestBody = r);
             ResolveList(operation.Parameters);
-   
+
             if (operation.Tags != null)
             {
                 ResolveTags(operation.Tags);

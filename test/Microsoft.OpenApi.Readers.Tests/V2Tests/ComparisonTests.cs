@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             using (var streamV3 = Resources.GetStream(Path.Combine(SampleFolderPath, $"{fileName}.v3.yaml")))
             {
                 var openApiDocV2 = new OpenApiStreamReader().Read(streamV2, out var diagnosticV2);
-                var openApiDocV3 = new OpenApiStreamReader().Read(streamV3, out var diagnosticV3 );
+                var openApiDocV3 = new OpenApiStreamReader().Read(streamV3, out var diagnosticV3);
 
                 openApiDocV3.Should().BeEquivalentTo(openApiDocV2);
 

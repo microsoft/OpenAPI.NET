@@ -255,8 +255,8 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                  OpenApiConstants.Example,
                 new AnyFieldMapParameter<OpenApiSchema>(
-                    s => s.Example, 
-                    (s, v) => s.Example = v, 
+                    s => s.Example,
+                    (s, v) => s.Example = v,
                     s => s)
             }
         };
@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 OpenApiConstants.Enum,
                 new AnyListFieldMapParameter<OpenApiSchema>(
-                    s => s.Enum, 
+                    s => s.Enum,
                     (s, v) => s.Enum = v,
                     s => s)
             }
@@ -280,11 +280,11 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (pointer != null)
             {
-                    return new OpenApiSchema()
-                    {
-                        UnresolvedReference = true,
-                        Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer,ReferenceType.Schema)  
-                    };
+                return new OpenApiSchema()
+                {
+                    UnresolvedReference = true,
+                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema)
+                };
             }
 
             var schema = new OpenApiSchema();

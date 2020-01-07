@@ -63,13 +63,13 @@ namespace Microsoft.OpenApi.Services
 
             if (sourceHeader.Reference != null)
             {
-                sourceHeader = (OpenApiHeader) comparisonContext.SourceDocument.ResolveReference(
+                sourceHeader = (OpenApiHeader)comparisonContext.SourceDocument.ResolveReference(
                     sourceHeader.Reference);
             }
 
             if (targetHeader.Reference != null)
             {
-                targetHeader = (OpenApiHeader) comparisonContext.TargetDocument.ResolveReference(
+                targetHeader = (OpenApiHeader)comparisonContext.TargetDocument.ResolveReference(
                     targetHeader.Reference);
             }
 

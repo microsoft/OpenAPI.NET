@@ -19,7 +19,8 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal class OpenApiV3VersionService : IOpenApiVersionService
     {
-        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>> {
+        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        {
             [typeof(IOpenApiAny)] = OpenApiV3Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV3Deserializer.LoadComponents,
@@ -48,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.V3
             [typeof(OpenApiTag)] = OpenApiV3Deserializer.LoadTag,
             [typeof(OpenApiXml)] = OpenApiV3Deserializer.LoadXml
         };
-            
+
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
@@ -108,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
         public T LoadElement<T>(ParseNode node) where T : IOpenApiElement
         {
-            return (T)_loaders[typeof(T)](node); 
+            return (T)_loaders[typeof(T)](node);
         }
 
         private OpenApiReference ParseLocalReference(string localReference)
@@ -125,7 +126,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 if (segments[1] == "components")
                 {
                     var referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
-                    return new OpenApiReference {Type = referenceType, Id = segments[3]};
+                    return new OpenApiReference { Type = referenceType, Id = segments[3] };
                 }
             }
 

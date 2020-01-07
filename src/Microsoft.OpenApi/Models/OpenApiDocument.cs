@@ -232,17 +232,33 @@ namespace Microsoft.OpenApi.Models
 
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
             // The Url property cannotcontain path templating to be valid for V2 serialization.
-            var firstServerUrl = new Uri(firstServer.Url);
+            var firstServerUrl = new Uri(firstServer.Url, UriKind.RelativeOrAbsolute);
 
             // host
-            writer.WriteProperty(
-                OpenApiConstants.Host,
-                firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
-
-            // basePath
-            if (firstServerUrl.AbsolutePath != "/")
+            if (firstServerUrl.IsAbsoluteUri)
             {
-                writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+                writer.WriteProperty(
+                    OpenApiConstants.Host,
+                    firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
+                
+                // basePath
+                if (firstServerUrl.AbsolutePath != "/")
+                {
+                    writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+                }
+            } else
+            {
+                var relativeUrl = firstServerUrl.OriginalString;
+                if (relativeUrl.StartsWith("//"))
+                {
+                    var pathPosition = relativeUrl.IndexOf('/', 3);
+                    writer.WriteProperty(OpenApiConstants.Host, relativeUrl.Substring(0, pathPosition));
+                    relativeUrl = relativeUrl.Substring(pathPosition);
+                }
+                if (!String.IsNullOrEmpty(relativeUrl) && relativeUrl != "/")
+                {
+                    writer.WriteProperty(OpenApiConstants.BasePath, relativeUrl);
+                }
             }
 
             // Consider all schemes of the URLs in the server list that have the same
@@ -260,7 +276,7 @@ namespace Microsoft.OpenApi.Models
                             UriComponents.Host | UriComponents.Port | UriComponents.Path,
                             UriFormat.SafeUnescaped,
                             StringComparison.OrdinalIgnoreCase) ==
-                        0)
+                        0 && u.IsAbsoluteUri)
                 .Select(u => u.Scheme)
                 .Distinct()
                 .ToList();
@@ -282,7 +298,7 @@ namespace Microsoft.OpenApi.Models
             if (reference.IsExternal)
             {
                 // Should not attempt to resolve external references against a single document.
-                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported); 
+                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported);
             }
 
             if (!reference.Type.HasValue)
@@ -305,7 +321,8 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            if (this.Components == null) {
+            if (this.Components == null)
+            {
                 throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
 
@@ -343,9 +360,10 @@ namespace Microsoft.OpenApi.Models
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
                 }
-            } catch(KeyNotFoundException)
+            }
+            catch (KeyNotFoundException)
             {
-                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId,reference.Id));
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
         }
     }

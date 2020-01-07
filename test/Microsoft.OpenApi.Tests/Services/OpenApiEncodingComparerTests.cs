@@ -335,8 +335,8 @@ namespace Microsoft.OpenApi.Tests.Services
             };
         }
 
-        
-        [Theory(Skip="Need to fix")] 
+
+        [Theory(Skip = "Need to fix")]
         [MemberData(nameof(GetTestCasesForOpenApiEncodingComparerShouldSucceed))]
         public void OpenApiEncodingComparerShouldSucceed(
             string testCaseName,

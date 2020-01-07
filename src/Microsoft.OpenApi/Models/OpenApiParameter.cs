@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set;}
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference object.
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Models
         /// Furthermore, if referencing a schema which contains an example,
         /// the examples value SHALL override the example provided by the schema.
         /// </summary>
-        public IDictionary<string,OpenApiExample> Examples { get; set; } = new Dictionary<string,OpenApiExample>();
+        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// Example of the media type. The example SHOULD match the specified schema and encoding properties
@@ -259,7 +259,7 @@ namespace Microsoft.OpenApi.Models
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
-            else 
+            else
             if (Schema?.UnresolvedReference == true || Schema?.Type == "object")
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
@@ -288,7 +288,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query )
+                if (this.In == ParameterLocation.Query)
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {
