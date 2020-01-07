@@ -42,6 +42,7 @@
                         <RadioButton GroupName="Format" Content="V3.0.1" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV3_0}" />
                         <RadioButton GroupName="Format" Content="V2.0" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV2_0}" />
                     </StackPanel>
+                    <CheckBox Name="Inline" Content="Inline" IsChecked="{Binding Inline}" />
                 </StackPanel>
             </StackPanel>
             <TextBox x:Name="txtErrors"  Margin="10,10,10,10" TextWrapping="Wrap" Text="{Binding Errors}"  Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" DockPanel.Dock="Top" MaxHeight="100" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" />

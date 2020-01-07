@@ -76,6 +76,12 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
+            // If references have been inlined we don't need the to render the components section
+            if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
+            {
+                return;  
+            }
+
             writer.WriteStartObject();
 
             // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
