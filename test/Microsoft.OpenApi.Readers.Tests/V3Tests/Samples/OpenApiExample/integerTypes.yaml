@@ -13,6 +13,14 @@ paths:
               $ref: '#/components/schemas/test-schema'
             example:
               test-property: 10
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/test-schema'
+            example:
+            - test-property: 11
+            - test-property-string: 12
       responses:
         '200':
           description: OK
@@ -24,3 +32,5 @@ components:
         test-property:
           type: integer
           format: int64
+        test-property-string:
+          type: string

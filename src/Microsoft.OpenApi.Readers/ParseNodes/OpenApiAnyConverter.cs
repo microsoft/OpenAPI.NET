@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return newObject;
             }
 
-            if ( !(openApiAny is OpenApiString))
+            if (!(openApiAny is OpenApiString))
             {
                 return openApiAny;
             }
@@ -94,14 +94,19 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// For those strings that the schema does not specify the type for, convert them into
         /// the most specific type based on the value.
         /// </summary>
-        public static IOpenApiAny GetSpecificOpenApiAny(IOpenApiAny openApiAny, OpenApiSchema schema)
+        public static IOpenApiAny GetSpecificOpenApiAny(IOpenApiAny openApiAny, OpenApiSchema schema, IOpenApiReferenceResolver referenceResolver = null)
         {
+            if (schema != null && referenceResolver != null && schema.Reference != null && schema.UnresolvedReference)
+            {
+                schema = referenceResolver.ResolveReference(schema.Reference) as OpenApiSchema;
+            }
+
             if (openApiAny is OpenApiArray openApiArray)
             {
                 var newArray = new OpenApiArray();
                 foreach (var element in openApiArray)
                 {
-                    newArray.Add(GetSpecificOpenApiAny(element, schema?.Items));
+                    newArray.Add(GetSpecificOpenApiAny(element, schema?.Items, referenceResolver));
                 }
 
                 return newArray;
@@ -113,13 +118,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
                 foreach (var key in openApiObject.Keys.ToList())
                 {
-                    if ( schema != null && schema.Properties != null && schema.Properties.ContainsKey(key) )
+                    if (schema != null && schema.Properties != null && schema.Properties.ContainsKey(key))
                     {
-                        newObject[key] = GetSpecificOpenApiAny(openApiObject[key], schema.Properties[key]);
+                        newObject[key] = GetSpecificOpenApiAny(openApiObject[key], schema.Properties[key], referenceResolver);
                     }
                     else
                     {
-                        newObject[key] = GetSpecificOpenApiAny(openApiObject[key], schema?.AdditionalProperties);
+                        newObject[key] = GetSpecificOpenApiAny(openApiObject[key], schema?.AdditionalProperties, referenceResolver);
                     }
                 }
 
@@ -178,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 }
             }
 
-            if (type == "number" && format == "double" )
+            if (type == "number" && format == "double")
             {
                 if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
                 {
@@ -200,7 +205,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiByte(Convert.FromBase64String(value));
                 }
-                catch(FormatException)
+                catch (FormatException)
                 { }
             }
 
@@ -211,7 +216,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     return new OpenApiBinary(Encoding.UTF8.GetBytes(value));
                 }
-                catch(EncoderFallbackException)
+                catch (EncoderFallbackException)
                 { }
             }
 

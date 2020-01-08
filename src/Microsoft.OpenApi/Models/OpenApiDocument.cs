@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -14,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IOpenApiReferenceResolver
     {
         /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
@@ -282,7 +281,7 @@ namespace Microsoft.OpenApi.Models
             if (reference.IsExternal)
             {
                 // Should not attempt to resolve external references against a single document.
-                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported); 
+                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported);
             }
 
             if (!reference.Type.HasValue)
@@ -305,7 +304,8 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            if (this.Components == null) {
+            if (this.Components == null)
+            {
                 throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
 
@@ -343,9 +343,10 @@ namespace Microsoft.OpenApi.Models
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
                 }
-            } catch(KeyNotFoundException)
+            }
+            catch (KeyNotFoundException)
             {
-                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId,reference.Id));
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
         }
     }

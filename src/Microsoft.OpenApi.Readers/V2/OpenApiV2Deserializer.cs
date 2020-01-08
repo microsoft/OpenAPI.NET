@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     var value = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
                     var schema = anyFieldMap[anyFieldName].SchemaGetter(domainObject);
-                    if (schema?.Reference != null)
+                    if (HasReference(schema))
                     {
                         ScheduleAnyFieldConversion(
                             mapNode,
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         foreach (var propertyElement in list)
                         {
                             var schema = anyListFieldMap[anyListFieldName].SchemaGetter(domainObject);
-                            if (schema?.Reference != null)
+                            if (HasReference(schema))
                             {
                                 var index = newProperty.Count;
                                 ScheduleAnyFieldConversion(
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Readers.V2
                             mapNode.Context.StartObject(propertyMapElement.Key);
 
                             var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
-                            if (schema?.Reference != null)
+                            if (HasReference(schema))
                             {
                                 ScheduleAnyFieldConversion(
                                     mapNode,
@@ -195,29 +195,21 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var item in schedule)
             {
-                if (item.Item5.Reference == null)
+                var oldLocation = context.CaptureLocation();
+                try
                 {
-                    continue;
+                    context.SetLocation(item.Item3);
+                    var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(item.Item4, item.Item5);
+                    item.Item6(convertedOpenApiAny);
                 }
-
-                if (document.ResolveReference(item.Item5.Reference) is OpenApiSchema schema)
+                catch (OpenApiException exception)
                 {
-                    var oldLocation = context.CaptureLocation();
-                    try
-                    {
-                        context.SetLocation(item.Item3);
-                        var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(item.Item4, schema);
-                        item.Item6(convertedOpenApiAny);
-                    }
-                    catch (OpenApiException exception)
-                    {
-                        exception.Pointer = context.GetLocation();
-                        item.Item2.Errors.Add(new OpenApiError(exception));
-                    }
-                    finally
-                    {
-                        context.SetLocation(oldLocation);
-                    }
+                    exception.Pointer = context.GetLocation();
+                    item.Item2.Errors.Add(new OpenApiError(exception));
+                }
+                finally
+                {
+                    context.SetLocation(oldLocation);
                 }
             }
         }
@@ -244,6 +236,53 @@ namespace Microsoft.OpenApi.Readers.V2
         private static string LoadString(ParseNode node)
         {
             return node.GetScalarValue();
+        }
+
+        private static bool HasReference(OpenApiSchema schema)
+        {
+            if (schema == null)
+            {
+                return false;
+            }
+
+            if (schema.Reference != null)
+            {
+                return true;
+            }
+
+            var nested = Enumerable.Empty<OpenApiSchema>();
+
+            if (schema.AllOf != null)
+            {
+                nested = nested.Concat(schema.AllOf);
+            }
+
+            if (schema.OneOf != null)
+            {
+                nested = nested.Concat(schema.OneOf);
+            }
+
+            if (schema.AnyOf != null)
+            {
+                nested = nested.Concat(schema.AnyOf);
+            }
+
+            if (schema.Properties != null)
+            {
+                nested = nested.Concat(schema.Properties.Values);
+            }
+
+            foreach (var nestedSchema in nested)
+            {
+                if (HasReference(nestedSchema))
+                {
+                    return true;
+                }
+            }
+
+            return HasReference(schema.AdditionalProperties)
+                || HasReference(schema.Not)
+                || HasReference(schema.Items);
         }
     }
 }
