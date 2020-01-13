@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Writers
@@ -14,6 +15,12 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public abstract class OpenApiWriterBase : IOpenApiWriter
     {
+        
+        /// <summary>
+        /// Settings for controlling how the OpenAPI document will be written out.
+        /// </summary>
+        public OpenApiWriterSettings Settings { get; set; }
+
         /// <summary>
         /// The indentation string to prepand to each line for each indentation level.
         /// </summary>
@@ -39,6 +46,20 @@ namespace Microsoft.OpenApi.Writers
             Writer.NewLine = "\n";
 
             Scopes = new Stack<Scope>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="textWriter"></param>
+        /// <param name="settings"></param>
+        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings = null) : this(textWriter)
+        {
+            if (settings == null)
+            {
+                settings = new OpenApiWriterSettings();
+            }
+            Settings = settings;
         }
 
         /// <summary>

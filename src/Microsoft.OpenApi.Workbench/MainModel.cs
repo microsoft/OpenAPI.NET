@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Microsoft.OpenApi.Extensions;
@@ -11,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Workbench
 {
@@ -30,6 +32,11 @@ namespace Microsoft.OpenApi.Workbench
         private string _parseTime;
 
         private string _renderTime;
+
+        /// <summary>
+        /// Default format.
+        /// </summary>
+        private bool _Inline = false;
 
         /// <summary>
         /// Default format.
@@ -109,6 +116,16 @@ namespace Microsoft.OpenApi.Workbench
                 _format = value;
                 OnPropertyChanged(nameof(IsYaml));
                 OnPropertyChanged(nameof(IsJson));
+            }
+        }
+
+        public bool Inline
+        {
+            get => _Inline;
+            set
+            {
+                _Inline = value;
+                OnPropertyChanged(nameof(Inline));
             }
         }
 
@@ -232,11 +249,15 @@ namespace Microsoft.OpenApi.Workbench
         private string WriteContents(OpenApiDocument document)
         {
             var outputStream = new MemoryStream();
+            
             document.Serialize(
                 outputStream,
                 Version,
-                Format);
-
+                Format,
+                new OpenApiWriterSettings() {
+                    ReferenceInline = this.Inline == true ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
+                });
+            
             outputStream.Position = 0;
 
             return new StreamReader(outputStream).ReadToEnd();
