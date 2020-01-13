@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -77,9 +79,23 @@ namespace Microsoft.OpenApi.Models
             }
 
             // If references have been inlined we don't need the to render the components section
+            // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
             {
+                var loops = writer.GetSettings().LoopDetector.Loops;
                 writer.WriteStartObject();
+                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                {
+                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
+                        .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
+
+                    writer.WriteOptionalMap(
+                       OpenApiConstants.Schemas,
+                       Schemas,
+                       (w, key, component) => {
+                           component.SerializeAsV3WithoutReference(w);
+                           });
+                }
                 writer.WriteEndObject();
                 return;  
             }

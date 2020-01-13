@@ -126,27 +126,50 @@ namespace Microsoft.OpenApi.Models
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV2(w));
 
-            // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
-            // If the reference exists but points to other objects, the object is serialized to just that reference.
-
-            // definitions
-            writer.WriteOptionalMap(
-                OpenApiConstants.Definitions,
-                Components?.Schemas,
-                (w, key, component) =>
+            // If references have been inlined we don't need the to render the components section
+            // however if they have cycles, then we will need a component rendered
+            if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
+            {
+                var loops = writer.GetSettings().LoopDetector.Loops;
+                writer.WriteStartObject();
+                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV2WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV2(w);
-                    }
-                });
+                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
+                        .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
 
+                    writer.WriteOptionalMap(
+                       OpenApiConstants.Definitions,
+                       openApiSchemas,
+                       (w, key, component) =>
+                       {
+                           component.SerializeAsV2WithoutReference(w);
+                       });
+                }
+                writer.WriteEndObject();
+                return;
+            }
+            else
+            {
+                // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
+                // If the reference exists but points to other objects, the object is serialized to just that reference.
+                // definitions
+                writer.WriteOptionalMap(
+                    OpenApiConstants.Definitions,
+                    Components?.Schemas,
+                    (w, key, component) =>
+                    {
+                        if (component.Reference != null &&
+                            component.Reference.Type == ReferenceType.Schema &&
+                            component.Reference.Id == key)
+                        {
+                            component.SerializeAsV2WithoutReference(w);
+                        }
+                        else
+                        {
+                            component.SerializeAsV2(w);
+                        }
+                    });
+            }
             // parameters
             writer.WriteOptionalMap(
                 OpenApiConstants.Parameters,

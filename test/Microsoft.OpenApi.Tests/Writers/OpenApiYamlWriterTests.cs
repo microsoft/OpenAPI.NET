@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
@@ -346,5 +347,172 @@ property4: value4"
             // Assert
             writtenString.Should().Be(expectedString);
         }
+
+        [Fact]
+
+        public void WriteInlineSchema()
+        {
+            // Arrange
+            var thingSchema = new OpenApiSchema()
+            {
+                Type = "object",
+                UnresolvedReference = false,
+                Reference = new OpenApiReference
+                {
+                    Id = "thing",
+                    Type = ReferenceType.Schema
+                }
+            };
+
+            var doc = new OpenApiDocument()
+            {
+                Info = new OpenApiInfo()
+                {
+                    Title = "Demo",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths()
+                {
+                    ["/"] = new OpenApiPathItem
+                    {
+                        Operations = {
+                            [OperationType.Get] = new OpenApiOperation() {
+                                Responses = {
+                                    ["200"] = new OpenApiResponse {
+                                        Description = "OK",
+                                        Content = {
+                                             ["application/json"] = new OpenApiMediaType() {
+                                                     Schema = thingSchema
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                Components = new OpenApiComponents
+                {
+                    Schemas = {
+                        ["thing"] = thingSchema}
+                }
+            };
+
+            var expected =
+@"openapi: 3.0.1
+info:
+  title: Demo
+  version: 1.0.0
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+components: { }";
+
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences});
+
+            // Act
+            doc.SerializeAsV3(writer);
+            var actual = outputString.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+
+        [Fact]
+
+        public void WriteInlineRecursiveSchema()
+        {
+            // Arrange
+            var thingSchema = new OpenApiSchema() {
+                Type = "object",
+                UnresolvedReference = false,
+                Reference = new OpenApiReference { 
+                    Id = "thing", 
+                    Type = ReferenceType.Schema
+                }
+            };
+            thingSchema.Properties["children"] = thingSchema;
+            
+            var doc = new OpenApiDocument() {
+                Info = new OpenApiInfo() { Title = "Demo", 
+                         Version = "1.0.0" },
+                Paths =  new OpenApiPaths() {
+                    ["/"] =  new OpenApiPathItem {
+                        Operations = {
+                            [OperationType.Get] = new OpenApiOperation() {
+                                Responses = {
+                                    ["200"] = new OpenApiResponse {
+                                        Description = "OK",
+                                        Content = {
+                                             ["application/json"] = new OpenApiMediaType() {
+                                                     Schema = thingSchema
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        } 
+                    }
+                },
+                Components = new OpenApiComponents { 
+                    Schemas = {
+                        ["thing"] = thingSchema} 
+                }
+            };
+            
+            var expected =
+@"openapi: 3.0.1
+info:
+  title: Demo
+  version: 1.0.0
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  children:
+                    $ref: '#/components/schemas/thing'
+components:
+  schemas:
+    thing:
+      type: object
+      properties:
+        children:
+          type: object
+          properties:
+            children:
+              $ref: '#/components/schemas/thing'";
+            // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
+
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+
+            // Act
+            doc.SerializeAsV3(writer);
+            var actual = outputString.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
     }
 }

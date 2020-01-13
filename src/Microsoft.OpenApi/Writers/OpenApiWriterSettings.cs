@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.OpenApi.Services;
+
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
@@ -25,6 +27,7 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public class OpenApiWriterSettings
     {
+        internal LoopDetector LoopDetector { get; } = new LoopDetector();
         /// <summary>
         /// Indicates how references in the source document should be handled.
         /// </summary>
