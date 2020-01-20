@@ -442,12 +442,24 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+            if (Reference != null)
             {
-                Reference.SerializeAsV2(writer);
-                return;
+                var settings = writer.GetSettings();
+                if (settings.ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+                {
+                    Reference.SerializeAsV2(writer);
+                    return;
+                }
+
+                // If Loop is detected then just Serialize as a reference.
+                if (!settings.LoopDetector.PushLoop<OpenApiSchema>(this))
+                {
+                    settings.LoopDetector.SaveLoop(this);
+                    Reference.SerializeAsV3(writer);
+                    return;
+                }
             }
+
 
             if (parentRequiredProperties == null)
             {
