@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
@@ -13,21 +14,22 @@ namespace Microsoft.OpenApi.Tool
     static class OpenApiService
     {
         public static void ProcessOpenApiDocument(
-            FileInfo fileOption,
-            string outputPath,
+            FileInfo input,
+            FileInfo output,
             OpenApiSpecVersion version,
             OpenApiFormat format,
-            bool inline = false)
+            bool inline)
         {
-                Stream stream = fileOption.OpenRead();
+            OpenApiDocument document;
+            using (Stream stream = input.OpenRead())
+            {
 
-                var document = new OpenApiStreamReader(new OpenApiReaderSettings
+                document = new OpenApiStreamReader(new OpenApiReaderSettings
                 {
                     ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences,
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 }
                 ).Read(stream, out var context);
-
                 if (context.Errors.Count != 0)
                 {
                     var errorReport = new StringBuilder();
@@ -38,21 +40,41 @@ namespace Microsoft.OpenApi.Tool
                     }
 
                     throw new ArgumentException(String.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
+                }
             }
 
-            using (var outputStream = new FileStream(outputPath, FileMode.Create))
+            using (var outputStream = output?.Create())
             {
-                document.Serialize(
-                   outputStream,
-                   version,
-                   format,
-                   new OpenApiWriterSettings()
-                   {
-                       ReferenceInline = inline == true ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
-                   });
+                TextWriter textWriter;
 
-                outputStream.Position = 0;
-                outputStream.Flush();
+                if (outputStream!=null)
+                {
+                    textWriter = new StreamWriter(outputStream);
+                } else
+                {
+                    textWriter = Console.Out;
+                }
+                
+                var settings = new OpenApiWriterSettings()
+                {
+                    ReferenceInline = inline == true ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
+                };
+                IOpenApiWriter writer;
+                switch (format)
+                {
+                    case OpenApiFormat.Json:
+                        writer = new OpenApiJsonWriter(textWriter, settings);
+                        break;
+                    case OpenApiFormat.Yaml:
+                        writer = new OpenApiYamlWriter(textWriter, settings);
+                        break;
+                    default:
+                        throw new ArgumentException("Unknown format");
+                }
+                
+                document.Serialize(writer,version );
+
+                textWriter.Flush();
             }
         }
 }

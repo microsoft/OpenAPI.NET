@@ -6,6 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>openapi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
+    <Version>0.5.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
