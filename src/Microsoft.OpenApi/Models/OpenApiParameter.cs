@@ -252,6 +252,8 @@ namespace Microsoft.OpenApi.Models
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
+            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+
             // schema
             if (this is OpenApiBodyParameter)
             {
@@ -283,7 +285,20 @@ namespace Microsoft.OpenApi.Models
                 // uniqueItems
                 // enum
                 // multipleOf
-                Schema?.WriteAsItemsProperties(writer);
+                if (Schema != null)
+                {
+                    Schema.WriteAsItemsProperties(writer);
+
+                    if (Schema.Extensions != null)
+                    {
+                        foreach (var key in Schema.Extensions.Keys)
+                        {
+                            // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
+                            // so remove it from the cloned collection so we don't write it again.
+                            extensionsClone.Remove(key);
+                        }
+                    }
+                }
 
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
@@ -307,7 +322,7 @@ namespace Microsoft.OpenApi.Models
 
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+            writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }
