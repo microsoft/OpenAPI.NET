@@ -19,6 +19,11 @@ Project Objectives
 - Provide OpenAPI description writers for both V2 and V3 specification formats.
 - Enable developers to create Readers that translate different data formats into OpenAPI descriptions. 
 
+# Installation
+
+- Install core Nuget package `Microsoft.OpenApi`
+- Install readers Nuget package `Microsoft.OpenApi.Readers`
+
 # Processors
 The OpenAPI.NET project holds the base object model for representing OpenAPI documents as .NET objects. Some developers have found the need to write processors that convert other data formats into this OpenAPI.NET object model. We'd like to curate that list of processors in this section of the readme. 
 
