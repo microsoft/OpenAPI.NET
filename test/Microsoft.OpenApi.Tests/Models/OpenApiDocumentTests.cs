@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -883,6 +884,95 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             },
             Components = AdvancedComponents
+        };
+
+        public static OpenApiDocument DuplicateExtensions = new OpenApiDocument
+        {
+            Info = new OpenApiInfo
+            {
+                Version = "1.0.0",
+                Title = "Swagger Petstore (Simple)",
+                Description = "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
+            },
+            Servers = new List<OpenApiServer>
+            {
+                new OpenApiServer
+                {
+                    Url = "http://petstore.swagger.io/api"
+                }
+            },
+            Paths = new OpenApiPaths
+            {
+                ["/add/{operand1}/{operand2}"] = new OpenApiPathItem
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Get] = new OpenApiOperation
+                        {
+                            OperationId = "addByOperand1AndByOperand2",
+                            Parameters = new List<OpenApiParameter>
+                            {
+                                new OpenApiParameter
+                                {
+                                    Name = "operand1",
+                                    In = ParameterLocation.Path,
+                                    Description = "The first operand",
+                                    Required = true,
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "integer",
+                                        Extensions = new Dictionary<string, IOpenApiExtension>
+                                        {
+                                            ["my-extension"] = new Any.OpenApiInteger(4),
+                                        }
+                                    },
+                                    Extensions = new Dictionary<string, IOpenApiExtension>
+                                    {
+                                        ["my-extension"] = new Any.OpenApiInteger(4),
+                                    }
+                                },
+                                new OpenApiParameter
+                                {
+                                    Name = "operand2",
+                                    In = ParameterLocation.Path,
+                                    Description = "The second operand",
+                                    Required = true,
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "integer",
+                                        Extensions = new Dictionary<string, IOpenApiExtension>
+                                        {
+                                            ["my-extension"] = new Any.OpenApiInteger(4),
+                                        }
+                                    },
+                                    Extensions = new Dictionary<string, IOpenApiExtension>
+                                    {
+                                        ["my-extension"] = new Any.OpenApiInteger(4),
+                                    }
+                                },
+                            },
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "pet response",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["application/json"] = new OpenApiMediaType
+                                        {
+                                            Schema = new OpenApiSchema
+                                            {
+                                                Type = "array",
+                                                Items = PetSchema
+                                            }
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         };
 
         private readonly ITestOutputHelper _output;
@@ -2146,6 +2236,185 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocument.SerializeAsV2(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeDuplicateExtensionsAsV3JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected = @"{
+  ""openapi"": ""3.0.1"",
+  ""info"": {
+    ""title"": ""Swagger Petstore (Simple)"",
+    ""description"": ""A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification"",
+    ""version"": ""1.0.0""
+  },
+  ""servers"": [
+    {
+      ""url"": ""http://petstore.swagger.io/api""
+    }
+  ],
+  ""paths"": {
+    ""/add/{operand1}/{operand2}"": {
+      ""get"": {
+        ""operationId"": ""addByOperand1AndByOperand2"",
+        ""parameters"": [
+          {
+            ""name"": ""operand1"",
+            ""in"": ""path"",
+            ""description"": ""The first operand"",
+            ""required"": true,
+            ""schema"": {
+              ""type"": ""integer"",
+              ""my-extension"": 4
+            },
+            ""my-extension"": 4
+          },
+          {
+            ""name"": ""operand2"",
+            ""in"": ""path"",
+            ""description"": ""The second operand"",
+            ""required"": true,
+            ""schema"": {
+              ""type"": ""integer"",
+              ""my-extension"": 4
+            },
+            ""my-extension"": 4
+          }
+        ],
+        ""responses"": {
+          ""200"": {
+            ""description"": ""pet response"",
+            ""content"": {
+              ""application/json"": {
+                ""schema"": {
+                  ""type"": ""array"",
+                  ""items"": {
+                    ""required"": [
+                      ""id"",
+                      ""name""
+                    ],
+                    ""type"": ""object"",
+                    ""properties"": {
+                      ""id"": {
+                        ""type"": ""integer"",
+                        ""format"": ""int64""
+                      },
+                      ""name"": {
+                        ""type"": ""string""
+                      },
+                      ""tag"": {
+                        ""type"": ""string""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}";
+
+            // Act
+            DuplicateExtensions.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeDuplicateExtensionsAsV2JsonWorks()
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var expected = @"{
+  ""swagger"": ""2.0"",
+  ""info"": {
+    ""title"": ""Swagger Petstore (Simple)"",
+    ""description"": ""A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification"",
+    ""version"": ""1.0.0""
+  },
+  ""host"": ""petstore.swagger.io"",
+  ""basePath"": ""/api"",
+  ""schemes"": [
+    ""http""
+  ],
+  ""paths"": {
+    ""/add/{operand1}/{operand2}"": {
+      ""get"": {
+        ""operationId"": ""addByOperand1AndByOperand2"",
+        ""produces"": [
+          ""application/json""
+        ],
+        ""parameters"": [
+          {
+            ""in"": ""path"",
+            ""name"": ""operand1"",
+            ""description"": ""The first operand"",
+            ""required"": true,
+            ""type"": ""integer"",
+            ""my-extension"": 4
+          },
+          {
+            ""in"": ""path"",
+            ""name"": ""operand2"",
+            ""description"": ""The second operand"",
+            ""required"": true,
+            ""type"": ""integer"",
+            ""my-extension"": 4
+          }
+        ],
+        ""responses"": {
+          ""200"": {
+            ""description"": ""pet response"",
+            ""schema"": {
+              ""type"": ""array"",
+              ""items"": {
+                ""required"": [
+                  ""id"",
+                  ""name""
+                ],
+                ""type"": ""object"",
+                ""properties"": {
+                  ""id"": {
+                    ""format"": ""int64"",
+                    ""type"": ""integer""
+                  },
+                  ""name"": {
+                    ""type"": ""string""
+                  },
+                  ""tag"": {
+                    ""type"": ""string""
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}";
+
+            // Act
+            DuplicateExtensions.SerializeAsV2(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
