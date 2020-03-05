@@ -56,13 +56,61 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             var value = ((OpenApiString)openApiAny).Value;
+            var type = schema?.Type;
+            var format = schema?.Format;
 
-            // For explicit strings only try to guess if it's a DateTimeOffset
             if (((OpenApiString)openApiAny).IsExplicit())
             {
-                if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
+                // More narrow type detection for explicit strings, only check types that are passed as strings
+                if (schema == null)
                 {
-                    return new OpenApiDateTime(dateTimeValue);
+                    if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
+                    {
+                        return new OpenApiDateTime(dateTimeValue);
+                    }
+                }
+                else if (type == "string")
+                {
+                    if (format == "byte")
+                    {
+                        try
+                        {
+                            return new OpenApiByte(Convert.FromBase64String(value));
+                        }
+                        catch (FormatException)
+                        { }
+                    }
+
+                    if (format == "binary")
+                    {
+                        try
+                        {
+                            return new OpenApiBinary(Encoding.UTF8.GetBytes(value));
+                        }
+                        catch (EncoderFallbackException)
+                        { }
+                    }
+
+                    if (format == "date")
+                    {
+                        if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateValue))
+                        {
+                            return new OpenApiDate(dateValue.Date);
+                        }
+                    }
+
+                    if (format == "date-time")
+                    {
+                        if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
+                        {
+                            return new OpenApiDateTime(dateTimeValue);
+                        }
+                    }
+
+                    if (format == "password")
+                    {
+                        return new OpenApiPassword(value);
+                    }
                 }
 
                 return openApiAny;
@@ -107,9 +155,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
             else
             {
-                var type = schema.Type;
-                var format = schema.Format;
-
                 if (type == "integer" && format == "int32")
                 {
                     if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
@@ -202,7 +247,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
                 if (type == "string")
                 {
-                    return new OpenApiString(value);
+                    return openApiAny;
                 }
 
                 if (type == "boolean")
