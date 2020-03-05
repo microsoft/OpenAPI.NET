@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -33,7 +35,11 @@ namespace Microsoft.OpenApi.Tests.Models
                             Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
                         }
                     },
-                    Example = new OpenApiString("Blabla")
+                    Example = new OpenApiString("Blabla"),
+                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    {
+                        ["myextension"] = new OpenApiString("myextensionvalue"),
+                    },
                 }
             },
             Headers =
@@ -158,7 +164,8 @@ namespace Microsoft.OpenApi.Tests.Models
           ""$ref"": ""#/components/schemas/customType""
         }
       },
-      ""example"": ""Blabla""
+      ""example"": ""Blabla"",
+      ""myextension"": ""myextensionvalue""
     }
   }
 }";
@@ -193,7 +200,8 @@ content:
       type: array
       items:
         $ref: '#/components/schemas/customType'
-    example: Blabla";
+    example: Blabla
+    myextension: myextensionvalue";
 
             // Act
             var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -219,6 +227,7 @@ content:
   ""examples"": {
     ""text/plain"": ""Blabla""
   },
+  ""myextension"": ""myextensionvalue"",
   ""headers"": {
     ""X-Rate-Limit-Limit"": {
       ""description"": ""The number of allowed requests in the current period"",
@@ -252,6 +261,7 @@ schema:
     $ref: '#/definitions/customType'
 examples:
   text/plain: Blabla
+myextension: myextensionvalue
 headers:
   X-Rate-Limit-Limit:
     description: The number of allowed requests in the current period

@@ -124,6 +124,8 @@ namespace Microsoft.OpenApi.Models
             // description
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
+            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+
             if (Content != null)
             {
                 var mediatype = Content.FirstOrDefault();
@@ -152,6 +154,15 @@ namespace Microsoft.OpenApi.Models
 
                         writer.WriteEndObject();
                     }
+
+                    writer.WriteExtensions(mediatype.Value.Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+                    foreach (var key in mediatype.Value.Extensions.Keys)
+                    {
+                        // The extension will already have been serialized as part of the call above,
+                        // so remove it from the cloned collection so we don't write it again.
+                        extensionsClone.Remove(key);
+                    }
                 }
             }
 
@@ -159,7 +170,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV2(w));
 
             // extension
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+            writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }
