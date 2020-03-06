@@ -14,6 +14,7 @@ namespace Microsoft.OpenApi.Any
         /// Initializes the <see cref="OpenApiString"/> class.
         /// </summary>
         /// <param name="value"></param>
+        /// <param name="isExplicit">Used to indicate if a string is quoted.</param>
         public OpenApiString(string value, bool isExplicit = false)
             : base(value)
         {

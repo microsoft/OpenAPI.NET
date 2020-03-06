@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.SmokeTests
         }
 
         // Disable as some APIs are currently invalid [Theory(DisplayName = "APIs.guru")]
-        [MemberData(nameof(GetSchemas))]
+        // [MemberData(nameof(GetSchemas))]
         public async Task EnsureThatICouldParse(string url)
         {
             var response = await _httpClient.GetAsync(url);

@@ -30,8 +30,15 @@ namespace Microsoft.OpenApi.Readers
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
         internal Uri BaseUrl { get; set; }
 
+        /// <summary>
+        /// Diagnostic object that returns metadata about the parsing process.
+        /// </summary>
         public OpenApiDiagnostic Diagnostic { get; }
 
+        /// <summary>
+        /// Create Parsing Context
+        /// </summary>
+        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
         public ParsingContext(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;
@@ -41,7 +48,6 @@ namespace Microsoft.OpenApi.Readers
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
         /// <param name="yamlDocument">Yaml document to parse.</param>
-        /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal OpenApiDocument Parse(YamlDocument yamlDocument)
         {
@@ -77,7 +83,6 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         /// <param name="yamlDocument"></param>
         /// <param name="version">OpenAPI version of the fragment</param>
-        /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version) where T : IOpenApiElement
         {
