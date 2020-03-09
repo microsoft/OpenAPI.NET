@@ -4,9 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
@@ -131,11 +133,16 @@ namespace Microsoft.OpenApi.Models
             if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
-                writer.WriteStartObject();
+
                 if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                         .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
+
+                    foreach (var schema in openApiSchemas.Values.ToList())
+                    {
+                        FindSchemaReferences.ResolveSchemas(Components, openApiSchemas);
+                    }
 
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
@@ -145,8 +152,6 @@ namespace Microsoft.OpenApi.Models
                            component.SerializeAsV2WithoutReference(w);
                        });
                 }
-                writer.WriteEndObject();
-                return;
             }
             else
             {
@@ -388,6 +393,49 @@ namespace Microsoft.OpenApi.Models
             {
                 throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
+        }
+    }
+
+    internal class FindSchemaReferences : OpenApiVisitorBase
+    {
+        private Dictionary<string, OpenApiSchema> Schemas;
+
+        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, OpenApiSchema> schemas )
+        {
+            var visitor = new FindSchemaReferences();
+            visitor.Schemas = schemas;
+            var walker = new OpenApiWalker(visitor);
+            walker.Walk(components);
+        }
+
+        public override void Visit(IOpenApiReferenceable referenceable)
+        {
+            switch (referenceable)
+            {
+                case OpenApiSchema schema:
+                    if (!Schemas.ContainsKey(schema.Reference.Id))
+                    {
+                        Schemas.Add(schema.Reference.Id, schema);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            base.Visit(referenceable);
+        }
+
+        public override void Visit(OpenApiSchema schema)
+        {
+            // This is needed to handle schemas used in Responses in components
+            if (schema.Reference != null)
+            {
+                if (!Schemas.ContainsKey(schema.Reference.Id))
+                {
+                    Schemas.Add(schema.Reference.Id, schema);
+                }
+            }
+            base.Visit(schema);
         }
     }
 }
