@@ -1,5 +1,5 @@
 @echo off
-Echo Building Microsoft.OpenApi
+Echo Building Microsoft.OpenApi 
 
 SET PROJ=%~dp0src\Microsoft.OpenApi\Microsoft.OpenApi.csproj 
 dotnet build %PROJ% /t:restore /p:Configuration=Release

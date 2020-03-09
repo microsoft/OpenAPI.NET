@@ -13,7 +13,6 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Maintain history of traversals to avoid stack overflows from cycles
         /// </summary>
-        /// <param name="loopId">Any unique identifier for a stack.</param>
         /// <param name="key">Identifier used for current context.</param>
         /// <returns>If method returns false a loop was detected and the key is not added.</returns>
         public bool PushLoop<T>(T key)
@@ -39,7 +38,6 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Exit from the context in cycle detection
         /// </summary>
-        /// <param name="loopid">Identifier of loop</param>
         public void PopLoop<T>()
         {
             if (_loopStacks[typeof(T)].Count > 0)
@@ -65,7 +63,6 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Reset loop tracking stack
         /// </summary>
-        /// <param name="loopid">Identifier of loop to clear</param>
         internal void ClearLoop<T>()
         {
             _loopStacks[typeof(T)].Clear();

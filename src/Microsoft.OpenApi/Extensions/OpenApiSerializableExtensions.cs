@@ -50,6 +50,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="stream">The given stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
+        /// <param name="settings">Provide configuration settings for controlling writing output</param>
         public static void Serialize<T>(
             this T element,
             Stream stream,
