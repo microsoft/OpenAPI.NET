@@ -455,7 +455,7 @@ namespace Microsoft.OpenApi.Models
                 if (!settings.LoopDetector.PushLoop<OpenApiSchema>(this))
                 {
                     settings.LoopDetector.SaveLoop(this);
-                    Reference.SerializeAsV3(writer);
+                    Reference.SerializeAsV2(writer);
                     return;
                 }
             }
