@@ -771,6 +771,11 @@ namespace Microsoft.OpenApi.Services
                 Walk("anyOf", () => Walk(schema.AnyOf));
             }
 
+            if (schema.OneOf != null)
+            {
+                Walk("oneOf", () => Walk(schema.OneOf));
+            }
+
             if (schema.Properties != null)
             {
                 Walk("properties", () =>
