@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.SmokeTests
 
         }
 
-        [Fact]
+        //[Fact(Skip="Run manually")]
         public void LoadOpen()
         {
             var operations = new[] { "foo","bar" };
@@ -62,7 +62,6 @@ namespace Microsoft.OpenApi.SmokeTests
             workspace.AddDocument(graphOpenApiUrl, _graphOpenApi);
             var subset = new OpenApiDocument();
             workspace.AddDocument("subset", subset);
-            subset.
 
             Assert.NotNull(_graphOpenApi);
         }

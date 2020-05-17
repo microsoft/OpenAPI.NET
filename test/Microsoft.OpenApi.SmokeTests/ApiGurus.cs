@@ -70,8 +70,8 @@ namespace Microsoft.OpenApi.SmokeTests
             }
         }
 
-        [Theory(DisplayName = "APIs.guru")]
-        [MemberData(nameof(GetSchemas))]
+     //   [Theory(DisplayName = "APIs.guru")]
+     //   [MemberData(nameof(GetSchemas))]
         public async Task EnsureThatICouldParse(string url)
         {  
             var response = await _httpClient.GetAsync(url);
