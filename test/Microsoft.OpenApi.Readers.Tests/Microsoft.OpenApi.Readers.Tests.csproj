@@ -13,8 +13,7 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
-      <None Remove="V3Tests\Samples\OpenApiDocument\securedApi.yaml" />
-      <None Remove="V3Tests\Samples\OpenApiOperation\securedOperation.yaml" />
+      <None Remove="V2Tests\Samples\ComponentRootReference.json" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
@@ -28,6 +27,9 @@
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\basic.v3.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\ComponentRootReference.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\minimal.v2.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -44,10 +46,32 @@
         <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithFormData.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
+        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithResponseExamples.yaml" />
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\formDataParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\headerParameterWithIncorrectDataType.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithDefault.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithEnum.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNoSchema.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNoLocation.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithUnknownLocation.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\parameterWithNullLocation.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\headerParameter.yaml">
@@ -62,6 +86,11 @@
       <EmbeddedResource Include="V2Tests\Samples\OpenApiPathItem\basicPathItemWithFormData.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiHeader\headerWithDefault.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiHeader\headerWithEnum.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithDefault.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithEnum.yaml" />
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiSchema\schemaWithExample.yaml" />
       <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\apiKeySecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -73,6 +102,15 @@
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2PasswordSecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\multipleProduces.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\twoResponses.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\multipleCallbacksWithReference.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\basicCallback.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -87,6 +125,9 @@
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\apiWithFullHeaderComponent.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStore.yaml">
@@ -108,13 +149,55 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\advancedExample.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\explicitString.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiOperation\securedOperation.yaml" />
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiOperation\operationWithParameterWithNoLocation.json">
+       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiOperation\securedOperation.yaml">
+       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiMediaType\mediaTypeWithExample.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiMediaType\mediaTypeWithExamples.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\headerParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithExamples.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithNoLocation.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithExample.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithUnknownLocation.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\parameterWithNullLocation.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\pathParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\queryParameterWithObjectTypeAndContent.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\queryParameterWithObjectType.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiParameter\queryParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\advancedSchemaWithReference.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -154,16 +237,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-        <PackageReference Include="FluentAssertions" Version="4.19.4">
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+        <PackageReference Include="FluentAssertions" Version="5.10.0">
         </PackageReference>
-        <PackageReference Include="Newtonsoft.Json" Version="10.0.3">
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3">
         </PackageReference>
-        <PackageReference Include="SharpYaml" Version="1.6.1">
+        <PackageReference Include="SharpYaml" Version="1.6.5">
         </PackageReference>
-        <PackageReference Include="xunit" Version="2.3.0">
+        <PackageReference Include="xunit" Version="2.4.1">
         </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0">
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
@@ -205,7 +290,7 @@
         <EmbeddedResource Include="V2Tests\Samples\OpenApiSecurityScheme\oauth2ImplicitSecurityScheme.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\advancedCallbackWithReference.yaml">
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiCallback\callbackWithReference.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\advancedInfo.yaml">

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
@@ -24,7 +23,6 @@ namespace Microsoft.OpenApi.Readers.V2
                         valueNode =>
                             LoadTagByReference(
                                 valueNode.Context,
-                                valueNode.Diagnostic,
                                 valueNode.GetScalarValue()))
                 },
                 {
@@ -90,7 +88,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new PatternFieldMap<OpenApiOperation>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields =
@@ -100,7 +98,7 @@ namespace Microsoft.OpenApi.Readers.V2
             new PatternFieldMap<OpenApiResponses>
             {
                 {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         internal static OpenApiOperation LoadOperation(ParseNode node)
@@ -131,7 +129,15 @@ namespace Microsoft.OpenApi.Readers.V2
                     operation.RequestBody = CreateFormBody(node.Context, formParameters);
                 }
             }
-            
+
+            foreach (var response in operation.Responses.Values)
+            {
+                ProcessProduces(node.CheckMapNode("responses"), response, node.Context);
+            }
+
+            // Reset so that it's not picked up later
+            node.Context.SetTempStorage(TempStorageKeys.OperationProduces, null);
+
             return operation;
         }
 
@@ -163,10 +169,10 @@ namespace Microsoft.OpenApi.Readers.V2
                     Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
                 }
             };
-            
+
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
-                new List<string> {"application/x-www-form-urlencoded"};
+                new List<string> { "application/x-www-form-urlencoded" };
 
             var formBody = new OpenApiRequestBody
             {
@@ -184,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
                 context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalConsumes) ??
-                new List<string> {"application/json"};
+                new List<string> { "application/json" };
 
             var requestBody = new OpenApiRequestBody
             {
@@ -203,7 +209,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
-            OpenApiDiagnostic diagnostic,
             string tagName)
         {
             var tagObject = new OpenApiTag()

@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
@@ -61,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteStringListAsYamlShouldMatchExpected(string[] stringValues, string expectedYaml)
         {
             // Arrange
-            var outputString = new StringWriter();
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString);
 
             // Act
@@ -171,6 +174,20 @@ property10: 'null'
 property11: ''"
             };
 
+            // DateTime
+            yield return new object[]
+            {
+                new Dictionary<string, object>
+                {
+                    ["property1"] = new DateTime(1970, 01, 01),
+                    ["property2"] = new DateTimeOffset(new DateTime(1970, 01, 01), TimeSpan.FromHours(3)),
+                    ["property3"] = new DateTime(2018, 04, 03),
+                },
+                @"property1: '1970-01-01T00:00:00.0000000'
+property2: '1970-01-01T00:00:00.0000000+03:00'
+property3: '2018-04-03T00:00:00.0000000'"
+            };
+
             // Nested map
             yield return new object[]
             {
@@ -237,7 +254,12 @@ property4: value4"
 
         private void WriteValueRecursive(OpenApiYamlWriter writer, object value)
         {
-            if (value == null || value.GetType().IsPrimitive || value is decimal || value is string)
+            if (value == null
+                || value.GetType().IsPrimitive
+                || value is decimal
+                || value is string
+                || value is DateTimeOffset
+                || value is DateTime)
             {
                 writer.WriteValue(value);
             }
@@ -272,7 +294,7 @@ property4: value4"
         public void WriteMapAsYamlShouldMatchExpected(IDictionary<string, object> inputMap, string expectedYaml)
         {
             // Arrange
-            var outputString = new StringWriter();
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString);
 
             // Act
@@ -284,5 +306,340 @@ property4: value4"
             expectedYaml = expectedYaml.MakeLineBreaksEnvironmentNeutral();
             actualYaml.Should().Be(expectedYaml);
         }
+
+        public static IEnumerable<object[]> WriteDateTimeAsJsonTestCases()
+        {
+            yield return new object[]
+            {
+                new DateTimeOffset(2018, 1, 1, 10, 20, 30, TimeSpan.Zero)
+            };
+
+            yield return new object[]
+            {
+                new DateTimeOffset(2018, 1, 1, 10, 20, 30, 100, TimeSpan.FromHours(14))
+            };
+
+            yield return new object[]
+            {
+                DateTimeOffset.UtcNow + TimeSpan.FromDays(4)
+            };
+
+            yield return new object[]
+            {
+                DateTime.UtcNow + TimeSpan.FromDays(4)
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(WriteDateTimeAsJsonTestCases))]
+        public void WriteDateTimeAsJsonShouldMatchExpected(DateTimeOffset dateTimeOffset)
+        {
+            // Arrange
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputString);
+
+            // Act
+            writer.WriteValue(dateTimeOffset);
+
+            var writtenString = outputString.GetStringBuilder().ToString();
+            var expectedString = " '" + dateTimeOffset.ToString("o") + "'";
+
+            // Assert
+            writtenString.Should().Be(expectedString);
+        }
+
+        [Fact]
+
+        public void WriteInlineSchema()
+        {
+            // Arrange
+            var doc = CreateDocWithSimpleSchemaToInline();
+
+            var expected =
+@"openapi: 3.0.1
+info:
+  title: Demo
+  version: 1.0.0
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+components: { }";
+
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences});
+
+            // Act
+            doc.SerializeAsV3(writer);
+            var actual = outputString.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+
+
+        [Fact]
+        public void WriteInlineSchemaV2()
+        {
+            var doc = CreateDocWithSimpleSchemaToInline();
+
+            var expected =
+@"swagger: '2.0'
+info:
+  title: Demo
+  version: 1.0.0
+paths:
+  /:
+    get:
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object";
+
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+
+            // Act
+            doc.SerializeAsV2(writer);
+            var actual = outputString.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
+        {
+            // Arrange
+            var thingSchema = new OpenApiSchema()
+            {
+                Type = "object",
+                UnresolvedReference = false,
+                Reference = new OpenApiReference
+                {
+                    Id = "thing",
+                    Type = ReferenceType.Schema
+                }
+            };
+
+            var doc = new OpenApiDocument()
+            {
+                Info = new OpenApiInfo()
+                {
+                    Title = "Demo",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths()
+                {
+                    ["/"] = new OpenApiPathItem
+                    {
+                        Operations = {
+                            [OperationType.Get] = new OpenApiOperation() {
+                                Responses = {
+                                    ["200"] = new OpenApiResponse {
+                                        Description = "OK",
+                                        Content = {
+                                             ["application/json"] = new OpenApiMediaType() {
+                                                     Schema = thingSchema
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                Components = new OpenApiComponents
+                {
+                    Schemas = {
+                        ["thing"] = thingSchema}
+                }
+            };
+            return doc;
+        }
+
+        [Fact]
+
+        public void WriteInlineRecursiveSchema()
+        {
+            // Arrange
+            var doc = CreateDocWithRecursiveSchemaReference();
+
+            var expected =
+@"openapi: 3.0.1
+info:
+  title: Demo
+  version: 1.0.0
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  children:
+                    $ref: '#/components/schemas/thing'
+                  related:
+                    type: integer
+components:
+  schemas:
+    thing:
+      type: object
+      properties:
+        children:
+          type: object
+          properties:
+            children:
+              $ref: '#/components/schemas/thing'
+            related:
+              type: integer
+        related:
+          type: integer";
+            // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
+
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+
+            // Act
+            doc.SerializeAsV3(writer);
+            var actual = outputString.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
+        private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
+        {
+            var thingSchema = new OpenApiSchema()
+            {
+                Type = "object",
+                UnresolvedReference = false,
+                Reference = new OpenApiReference
+                {
+                    Id = "thing",
+                    Type = ReferenceType.Schema
+                }
+            };
+            thingSchema.Properties["children"] = thingSchema;
+
+            var relatedSchema = new OpenApiSchema()
+            {
+                Type = "integer",
+                UnresolvedReference = false,
+                Reference = new OpenApiReference
+                {
+                    Id = "related",
+                    Type = ReferenceType.Schema
+                }
+            };
+
+            thingSchema.Properties["related"] = relatedSchema;
+
+            var doc = new OpenApiDocument()
+            {
+                Info = new OpenApiInfo()
+                {
+                    Title = "Demo",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths()
+                {
+                    ["/"] = new OpenApiPathItem
+                    {
+                        Operations = {
+                            [OperationType.Get] = new OpenApiOperation() {
+                                Responses = {
+                                    ["200"] = new OpenApiResponse {
+                                        Description = "OK",
+                                        Content = {
+                                             ["application/json"] = new OpenApiMediaType() {
+                                                     Schema = thingSchema
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                Components = new OpenApiComponents
+                {
+                    Schemas = {
+                        ["thing"] = thingSchema}
+                }
+            };
+            return doc;
+        }
+
+        [Fact]
+        public void WriteInlineRecursiveSchemav2()
+        {
+            // Arrange
+            var doc = CreateDocWithRecursiveSchemaReference();
+
+            var expected =
+@"swagger: '2.0'
+info:
+  title: Demo
+  version: 1.0.0
+paths:
+  /:
+    get:
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+            properties:
+              children:
+                $ref: '#/definitions/thing'
+              related:
+                type: integer
+definitions:
+  thing:
+    type: object
+    properties:
+      children:
+        $ref: '#/definitions/thing'
+      related:
+        $ref: '#/definitions/related'
+  related:
+    type: integer";
+            // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
+
+            var outputString = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+
+            // Act
+            doc.SerializeAsV2(writer);
+            var actual = outputString.GetStringBuilder().ToString();
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
+        }
+
     }
 }

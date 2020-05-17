@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -28,22 +27,22 @@ aDateTime: 2017-01-01
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             var anyMap = node.CreateAny();
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),
-                    ["aInteger"] = new OpenApiInteger(10),
-                    ["aDouble"] = new OpenApiDouble(2.34),
-                    ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01"))
+                    ["aInteger"] = new OpenApiString("10"),
+                    ["aDouble"] = new OpenApiString("2.34"),
+                    ["aDateTime"] = new OpenApiString("2017-01-01")
                 });
         }
 
@@ -60,22 +59,22 @@ aDateTime: 2017-01-01
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new ListNode(context, diagnostic, (YamlSequenceNode)yamlNode);
+            var node = new ListNode(context, (YamlSequenceNode)yamlNode);
 
             var any = node.CreateAny();
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.ShouldBeEquivalentTo(
+            any.Should().BeEquivalentTo(
                 new OpenApiArray
                 {
                     new OpenApiString("fooBar"),
-                    new OpenApiInteger(10),
-                    new OpenApiDouble(2.34),
-                    new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01"))
+                    new OpenApiString("10"),
+                    new OpenApiString("2.34"),
+                    new OpenApiString("2017-01-01")
                 });
         }
 
@@ -89,17 +88,17 @@ aDateTime: 2017-01-01
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new ValueNode(context, diagnostic, (YamlScalarNode)yamlNode);
+            var node = new ValueNode(context, (YamlScalarNode)yamlNode);
 
             var any = node.CreateAny();
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.ShouldBeEquivalentTo(
-                new OpenApiInteger(10)
+            any.Should().BeEquivalentTo(
+                new OpenApiString("10")
             );
         }
 
@@ -113,17 +112,17 @@ aDateTime: 2017-01-01
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new ValueNode(context, diagnostic, (YamlScalarNode)yamlNode);
+            var node = new ValueNode(context, (YamlScalarNode)yamlNode);
 
             var any = node.CreateAny();
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.ShouldBeEquivalentTo(
-                new OpenApiDateTime(DateTimeOffset.Parse("2012-07-23T12:33:00"))
+            any.Should().BeEquivalentTo(
+                new OpenApiString("2012-07-23T12:33:00")
             );
         }
     }

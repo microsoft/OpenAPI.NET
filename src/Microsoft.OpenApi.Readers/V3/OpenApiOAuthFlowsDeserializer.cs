@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiOAuthFlows> _oAuthFlowsPatternFields =
             new PatternFieldMap<OpenApiOAuthFlows>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiOAuthFlows LoadOAuthFlows(ParseNode node)

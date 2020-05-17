@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
+using System.Text;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
@@ -41,7 +43,8 @@ namespace Microsoft.OpenApi.Any
         /// Write out content of primitive element
         /// </summary>
         /// <param name="writer"></param>
-        public void Write(IOpenApiWriter writer)
+        /// <param name="specVersion"></param>
+        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             switch (this.PrimitiveType)
             {
@@ -72,12 +75,28 @@ namespace Microsoft.OpenApi.Any
 
                 case PrimitiveType.Byte:
                     var byteValue = (OpenApiByte)(IOpenApiPrimitive)this;
-                    writer.WriteValue(byteValue.Value);
+                    if (byteValue.Value == null)
+                    {
+                        writer.WriteNull();
+                    }
+                    else
+                    {
+                        writer.WriteValue(Convert.ToBase64String(byteValue.Value));
+                    }
+
                     break;
 
                 case PrimitiveType.Binary:
                     var binaryValue = (OpenApiBinary)(IOpenApiPrimitive)this;
-                    writer.WriteValue(binaryValue.Value);
+                    if (binaryValue.Value == null)
+                    {
+                        writer.WriteNull();
+                    }
+                    else
+                    {
+                        writer.WriteValue(Encoding.UTF8.GetString(binaryValue.Value));
+                    }
+
                     break;
 
                 case PrimitiveType.Boolean:

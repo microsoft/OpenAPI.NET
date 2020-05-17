@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static readonly PatternFieldMap<OpenApiTag> _tagPatternFields = new PatternFieldMap<OpenApiTag>
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         public static OpenApiTag LoadTag(ParseNode n)

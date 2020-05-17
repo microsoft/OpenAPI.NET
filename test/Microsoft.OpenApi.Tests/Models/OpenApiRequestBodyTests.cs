@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
@@ -61,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedRequestBodyAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -91,7 +92,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedRequestBodyAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -113,7 +114,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedRequestBodyAsV3JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{

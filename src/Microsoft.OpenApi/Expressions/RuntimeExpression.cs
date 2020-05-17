@@ -36,25 +36,25 @@ namespace Microsoft.OpenApi.Expressions
 
             if (!expression.StartsWith(Prefix))
             {
-                throw new OpenApiException(string.Format(SRResource.RuntimeExpressionMustBeginWithDollar, expression));
+                return new CompositeExpression(expression);
             }
 
             // $url
             if (expression == UrlExpression.Url)
             {
-                return UrlExpression.Instance;
+                return new UrlExpression();
             }
 
             // $method
             if (expression == MethodExpression.Method)
             {
-                return MethodExpression.Instance;
+                return new MethodExpression();
             }
 
             // $statusCode
             if (expression == StatusCodeExpression.StatusCode)
             {
-                return StatusCodeExpression.Instance;
+                return new StatusCodeExpression();
             }
 
             // $request.

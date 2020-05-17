@@ -1,0 +1,34 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: Header components
+components:
+  headers:
+    example-header:
+      description: Test header with example
+      required: true
+      deprecated: true
+      allowEmptyValue: true
+      allowReserved: true
+      style: simple
+      explode: true
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+    examples-header:
+      description: Test header with example
+      required: true
+      deprecated: true
+      allowEmptyValue: true
+      allowReserved: true
+      style: simple
+      explode: true
+      examples:
+        uuid1: 
+            value: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+        uuid2:
+            value: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid

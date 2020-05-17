@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Globalization;
 using System.IO;
+using System.Text;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -29,7 +31,9 @@ namespace Microsoft.OpenApi.Tests.Models
                             new OpenApiObject
                             {
                                 ["href"] = new OpenApiString("http://example.com/1"),
-                                ["rel"] = new OpenApiString("sampleRel1")
+                                ["rel"] = new OpenApiString("sampleRel1"),
+                                ["bytes"] = new OpenApiByte(new byte[] { 1, 2, 3 }),
+                                ["binary"] = new OpenApiBinary(Encoding.UTF8.GetBytes("Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ"))
                             }
                         }
                     },
@@ -104,7 +108,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedExampleAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -116,7 +120,9 @@ namespace Microsoft.OpenApi.Tests.Models
         ""links"": [
           {
             ""href"": ""http://example.com/1"",
-            ""rel"": ""sampleRel1""
+            ""rel"": ""sampleRel1"",
+            ""bytes"": ""AQID"",
+            ""binary"": ""Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ""
           }
         ]
       },
@@ -149,7 +155,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedExampleAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -171,7 +177,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedExampleAsV3JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{

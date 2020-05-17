@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -93,13 +94,14 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteOpenApiDateTimeAsJsonWorks(string inputString)
         {
             // Arrange
-            var input = DateTimeOffset.Parse(inputString);
+            var input = DateTimeOffset.Parse(inputString, CultureInfo.InvariantCulture);
             var dateTimeValue = new OpenApiDateTime(input);
 
             var json = WriteAsJson(dateTimeValue);
+            var expectedJson = "\"" + input.ToString("o") + "\"";
 
             // Assert
-            json.Should().Be(input.ToString("o"));
+            json.Should().Be(expectedJson);
         }
 
         [Theory]

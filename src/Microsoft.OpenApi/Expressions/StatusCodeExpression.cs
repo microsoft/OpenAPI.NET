@@ -19,14 +19,9 @@ namespace Microsoft.OpenApi.Expressions
         public override string Expression { get; } = StatusCode;
 
         /// <summary>
-        /// Gets the singleton.
-        /// </summary>
-        public static StatusCodeExpression Instance = new StatusCodeExpression();
-
-        /// <summary>
         /// Private constructor.
         /// </summary>
-        private StatusCodeExpression()
+        public StatusCodeExpression()
         {
         }
     }

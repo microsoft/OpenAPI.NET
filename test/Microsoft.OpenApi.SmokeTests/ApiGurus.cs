@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.SmokeTests
     {
         private static HttpClient _httpClient;
         private readonly ITestOutputHelper _output;
-    
+
         public ApisGuruTests(ITestOutputHelper output)
         {
             _output = output;
@@ -42,22 +42,22 @@ namespace Microsoft.OpenApi.SmokeTests
                     .GetStringAsync("https://api.apis.guru/v2/list.json")
                     .GetAwaiter().GetResult();
 
-                var json = JObject.Parse(listJsonStr);
-                foreach (var item in json.Properties())
+            var json = JObject.Parse(listJsonStr);
+            foreach (var item in json.Properties())
+            {
+                var versions = GetProp(item.Value, "versions") as JObject;
+                if (versions == null)
+                    continue;
+                foreach (var prop in versions.Properties())
                 {
-                    var versions = GetProp(item.Value, "versions") as JObject;
-                    if (versions == null)
-                        continue;
-                    foreach (var prop in versions.Properties())
-                    {
-                        var urlToJson = GetProp(prop.Value, "swaggerUrl")?.ToObject<string>();
-                        if (urlToJson != null)
-                            yield return new object[] { urlToJson };
+                    var urlToJson = GetProp(prop.Value, "swaggerUrl")?.ToObject<string>();
+                    if (urlToJson != null)
+                        yield return new object[] { urlToJson };
 
-                        var utlToYaml = GetProp(prop.Value, "swaggerYamlUrl")?.ToObject<string>();
-                        if (utlToYaml != null)
-                            yield return new object[] { utlToYaml };
-                    }
+                    var utlToYaml = GetProp(prop.Value, "swaggerYamlUrl")?.ToObject<string>();
+                    if (utlToYaml != null)
+                        yield return new object[] { utlToYaml };
+                }
             }
 
             JToken GetProp(JToken obj, string prop)
@@ -70,10 +70,10 @@ namespace Microsoft.OpenApi.SmokeTests
             }
         }
 
-     //   [Theory(DisplayName = "APIs.guru")]
-     //   [MemberData(nameof(GetSchemas))]
+        // Disable as some APIs are currently invalid [Theory(DisplayName = "APIs.guru")]
+        // [MemberData(nameof(GetSchemas))]
         public async Task EnsureThatICouldParse(string url)
-        {  
+        {
             var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)
             {
@@ -94,12 +94,12 @@ namespace Microsoft.OpenApi.SmokeTests
             {
                 _output.WriteLine($"Errors parsing {url}");
                 _output.WriteLine(String.Join("\n", diagnostic.Errors));
- //               Assert.True(false);  // Uncomment to identify descriptions with errors.
+                //               Assert.True(false);  // Uncomment to identify descriptions with errors.
             }
 
             Assert.NotNull(openApiDocument);
             stopwatch.Stop();
-                _output.WriteLine($"Parsing {url} took {stopwatch.ElapsedMilliseconds} ms.");
+            _output.WriteLine($"Parsing {url} took {stopwatch.ElapsedMilliseconds} ms.");
         }
     }
 }

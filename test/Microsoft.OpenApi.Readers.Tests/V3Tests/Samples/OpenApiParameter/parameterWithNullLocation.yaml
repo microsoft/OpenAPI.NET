@@ -1,0 +1,6 @@
+﻿name: username
+in: null
+description: username to fetch
+required: true
+schema:
+  type: string

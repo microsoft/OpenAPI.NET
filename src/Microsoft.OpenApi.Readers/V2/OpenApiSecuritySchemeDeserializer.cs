@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
             new PatternFieldMap<OpenApiSecurityScheme>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)

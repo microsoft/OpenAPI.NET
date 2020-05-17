@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
+using System.Globalization;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -16,8 +16,6 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static ParameterLocation? _in;
-
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
             {
@@ -58,12 +56,6 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "example", (o, n) =>
-                    {
-                        o.Example = n.CreateAny();
-                    }
-                },
-                {
                     "type", (o, n) =>
                     {
                         GetOrCreateSchema(o).Type = n.GetScalarValue();
@@ -90,25 +82,25 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "minimum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
                     "maximum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
                     "maxLength", (o, n) =>
                     {
-                        GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
                     "minLength", (o, n) =>
                     {
-                        GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
@@ -146,7 +138,41 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new PatternFieldMap<OpenApiParameter>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+            };
+
+        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields =
+            new AnyFieldMap<OpenApiParameter>
+            {
+                {
+                    OpenApiConstants.Default,
+                    new AnyFieldMapParameter<OpenApiParameter>(
+                        p => p.Schema?.Default,
+                        (p, v) => {
+                            if (p.Schema != null || v != null)
+                            {
+                                GetOrCreateSchema(p).Default = v;
+                            }
+                        },
+                        p => p.Schema)
+                }
+            };
+
+        private static readonly AnyListFieldMap<OpenApiParameter> _parameterAnyListFields =
+            new AnyListFieldMap<OpenApiParameter>
+            {
+                {
+                    OpenApiConstants.Enum,
+                    new AnyListFieldMapParameter<OpenApiParameter>(
+                        p => p.Schema?.Enum,
+                        (p, v) => {
+                            if (p.Schema != null || v != null && v.Count > 0)
+                            {
+                                GetOrCreateSchema(p).Enum = v;
+                            }
+                        },
+                        p => p.Schema)
+                },
             };
 
         private static void LoadStyle(OpenApiParameter p, string v)
@@ -204,9 +230,11 @@ namespace Microsoft.OpenApi.Readers.V2
             switch (value)
             {
                 case "body":
+                    n.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, true);
                     n.Context.SetTempStorage(TempStorageKeys.BodyParameter, o);
                     break;
                 case "formData":
+                    n.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, true);
                     var formParameters = n.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                     if (formParameters == null)
                     {
@@ -216,9 +244,13 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     formParameters.Add(o);
                     break;
+                case "query":
+                case "header":
+                case "path":
+                    o.In = value.GetEnumFromDisplayName<ParameterLocation>();
+                    break;
                 default:
-                    _in = value.GetEnumFromDisplayName<ParameterLocation>();
-                    o.In = _in;
+                    o.In = null;
                     break;
             }
         }
@@ -228,10 +260,10 @@ namespace Microsoft.OpenApi.Readers.V2
             return LoadParameter(node, false);
         }
 
-        public static OpenApiParameter LoadParameter(ParseNode node, bool evenBody)
+        public static OpenApiParameter LoadParameter(ParseNode node, bool loadRequestBody)
         {
             // Reset the local variables every time this method is called.
-            _in = null;
+            node.Context.SetTempStorage(TempStorageKeys.ParameterIsBodyOrFormData, false);
 
             var mapNode = node.CheckMapNode("parameter");
 
@@ -241,10 +273,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
             }
-            
+
             var parameter = new OpenApiParameter();
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
+
+            ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
+            ProcessAnyListFields(mapNode, parameter, _parameterAnyListFields);
 
             var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
             if (schema != null)
@@ -253,9 +288,15 @@ namespace Microsoft.OpenApi.Readers.V2
                 node.Context.SetTempStorage("schema", null);
             }
 
-            if (_in == null && !evenBody)
+            bool isBodyOrFormData = (bool)node.Context.GetFromTempStorage<object>(TempStorageKeys.ParameterIsBodyOrFormData);
+            if (isBodyOrFormData && !loadRequestBody)
             {
-                return null; // Don't include Form or Body parameters in OpenApiOperation.Parameters list
+                return null; // Don't include Form or Body parameters when normal parameters are loaded.
+            }
+
+            if (loadRequestBody && !isBodyOrFormData)
+            {
+                return null; // Don't include non-Body or non-Form parameters when request bodies are loaded.
             }
 
             return parameter;

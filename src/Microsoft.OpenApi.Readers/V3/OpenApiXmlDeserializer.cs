@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =
             new PatternFieldMap<OpenApiXml>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiXml LoadXml(ParseNode node)

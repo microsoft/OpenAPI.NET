@@ -126,7 +126,8 @@ namespace Microsoft.OpenApi.Tests
 
             workspace.AddDocument("root", doc);
             workspace.AddDocument("common", CreateCommonDocument());
-            doc.ResolveReferences(true);
+            var errors = doc.ResolveReferences(true);
+            Assert.Empty(errors);
 
             var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             Assert.False(schema.UnresolvedReference);
@@ -180,6 +181,7 @@ namespace Microsoft.OpenApi.Tests
     {
         var pathItem = new OpenApiPathItem();
         config(pathItem);
+        document.Paths = new OpenApiPaths();
         document.Paths.Add(path, pathItem);
         return document;
     }

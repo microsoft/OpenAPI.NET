@@ -1,6 +1,12 @@
 ![Category overview screenshot](docs/images/oainet.png "Microsoft + OpenAPI = Love")
 
-# OpenAPI.NET
+# OpenAPI.NET 
+
+|Package|Nuget|
+|--|--|
+|Models and Writers|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi/) |
+|Readers | [![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.Readers.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.Readers/) |
+
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
@@ -13,12 +19,19 @@ Project Objectives
 - Provide OpenAPI description writers for both V2 and V3 specification formats.
 - Enable developers to create Readers that translate different data formats into OpenAPI descriptions. 
 
+# Installation
+
+- Install core Nuget package `Microsoft.OpenApi`
+- Install readers Nuget package `Microsoft.OpenApi.Readers`
+
 # Processors
 The OpenAPI.NET project holds the base object model for representing OpenAPI documents as .NET objects. Some developers have found the need to write processors that convert other data formats into this OpenAPI.NET object model. We'd like to curate that list of processors in this section of the readme. 
 
 The base JSON and YAML processors are built into this project. Below is the list of the other supported processor projects.
 
 - [**C# Comment / Annotation Processor**](https://github.com/Microsoft/OpenAPI.NET.CSharpAnnotations) : Converts standard .NET annotations ( /// comments ) emitted from your build (MSBuild.exe) into OpenAPI.NET document object. 
+
+- [**OData CSDL Processor**](https://github.com/Microsoft/OpenAPI.NET.OData) : Converts the XML representation of the Entity Data Model (EDM) describing an OData Service into OpenAPI.NET document object. 
 
 # Example Usage
 

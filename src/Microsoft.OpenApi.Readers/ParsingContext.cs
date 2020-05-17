@@ -23,21 +23,35 @@ namespace Microsoft.OpenApi.Readers
     {
         private readonly Stack<string> _currentLocation = new Stack<string>();
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
-        private IOpenApiVersionService _versionService;
-        private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();        
-        internal Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>> ExtensionParsers { get; set; }  = new Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>>();
+        private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new Dictionary<object, Dictionary<string, object>>();
+        private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
+        internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
+        internal Uri BaseUrl { get; set; }
+
+        /// <summary>
+        /// Diagnostic object that returns metadata about the parsing process.
+        /// </summary>
+        public OpenApiDiagnostic Diagnostic { get; }
+
+        /// <summary>
+        /// Create Parsing Context
+        /// </summary>
+        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        public ParsingContext(OpenApiDiagnostic diagnostic)
+        {
+            Diagnostic = diagnostic;
+        }
 
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
         /// <param name="yamlDocument">Yaml document to parse.</param>
-        /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        internal OpenApiDocument Parse(YamlDocument yamlDocument, OpenApiDiagnostic diagnostic)
+        internal OpenApiDocument Parse(YamlDocument yamlDocument)
         {
-            RootNode = new RootNode(this, diagnostic, yamlDocument);
+            RootNode = new RootNode(this, yamlDocument);
 
             var inputVersion = GetVersion(RootNode);
 
@@ -48,13 +62,13 @@ namespace Microsoft.OpenApi.Readers
                 case string version when version == "2.0":
                     VersionService = new OpenApiV2VersionService();
                     doc = VersionService.LoadDocument(RootNode);
-                    diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
+                    this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     break;
 
                 case string version when version.StartsWith("3.0"):
                     VersionService = new OpenApiV3VersionService();
                     doc = VersionService.LoadDocument(RootNode);
-                    diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
+                    this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
                     break;
 
                 default:
@@ -69,11 +83,10 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         /// <param name="yamlDocument"></param>
         /// <param name="version">OpenAPI version of the fragment</param>
-        /// <param name="diagnostic">Diagnostic object which will return diagnostic results of the operation.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version, OpenApiDiagnostic diagnostic) where T: IOpenApiElement
+        internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version) where T : IOpenApiElement
         {
-            var node = ParseNode.Create(this, diagnostic, yamlDocument.RootNode);
+            var node = ParseNode.Create(this, yamlDocument.RootNode);
 
             T element = default(T);
 
@@ -113,17 +126,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Service providing all Version specific conversion functions
         /// </summary>
-        internal IOpenApiVersionService VersionService
-        {
-            get
-            {
-                return _versionService;
-            }
-            set
-            {
-                _versionService = value;
-            }
-        }
+        internal IOpenApiVersionService VersionService { get; set; }
 
         /// <summary>
         /// End the current object.
@@ -144,22 +147,46 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Gets the value from the temporary storage matching the given key.
         /// </summary>
-        public T GetFromTempStorage<T>(string key) where T : class
+        public T GetFromTempStorage<T>(string key, object scope = null)
         {
-            if (_tempStorage.TryGetValue(key, out var value))
+            Dictionary<string, object> storage;
+
+            if (scope == null)
             {
-                return (T)value;
+                storage = _tempStorage;
+            }
+            else if (!_scopedTempStorage.TryGetValue(scope, out storage))
+            {
+                return default(T);
             }
 
-            return null;
+            return storage.TryGetValue(key, out var value) ? (T)value : default(T);
         }
 
         /// <summary>
         /// Sets the temporary storge for this key and value.
         /// </summary>
-        public void SetTempStorage(string key, object value)
+        public void SetTempStorage(string key, object value, object scope = null)
         {
-            _tempStorage[key] = value;
+            Dictionary<string, object> storage;
+
+            if (scope == null)
+            {
+                storage = _tempStorage;
+            }
+            else if (!_scopedTempStorage.TryGetValue(scope, out storage))
+            {
+                storage = _scopedTempStorage[scope] = new Dictionary<string, object>();
+            }
+
+            if (value == null)
+            {
+                storage.Remove(key);
+            }
+            else
+            {
+                storage[key] = value;
+            }
         }
 
         /// <summary>
@@ -189,7 +216,8 @@ namespace Microsoft.OpenApi.Readers
             {
                 stack.Push(key);
                 return true;
-            } else
+            }
+            else
             {
                 return false;  // Loop detected
             }

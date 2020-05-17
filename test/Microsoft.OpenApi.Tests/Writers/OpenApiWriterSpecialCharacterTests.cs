@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Writers;
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteStringWithSpecialCharactersAsJsonWorks(string input, string expected)
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
 
             // Act
@@ -60,10 +61,11 @@ namespace Microsoft.OpenApi.Tests.Writers
         [InlineData("true", " 'true'")]
         [InlineData("trailingspace ", " 'trailingspace '")]
         [InlineData("     trailingspace", " '     trailingspace'")]
+        [InlineData("terminal:", " 'terminal:'")]
         public void WriteStringWithSpecialCharactersAsYamlWorks(string input, string expected)
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
 
             // Act

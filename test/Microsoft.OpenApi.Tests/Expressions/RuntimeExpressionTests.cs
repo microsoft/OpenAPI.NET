@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Properties;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Writers
@@ -25,20 +28,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Throws<ArgumentException>("expression", test);
         }
 
-        [Theory]
-        [InlineData("method")]
-        [InlineData("abc")]
-        [InlineData("request")]
-        [InlineData("response")]
-        public void BuildRuntimeExpressionThrowsWithDollarPrefix(string expression)
-        {
-            // Arrange & Act
-            Action test = () => RuntimeExpression.Build(expression);
 
-            // Assert
-            OpenApiException exception = Assert.Throws<OpenApiException>(test);
-            Assert.Equal(String.Format(SRResource.RuntimeExpressionMustBeginWithDollar, expression), exception.Message);
-        }
 
         [Theory]
         [InlineData("$unknown")]
@@ -145,23 +135,12 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Theory]
+        [InlineData("$response.body#/status")]
+        [InlineData("$request.header.accept")]
         [InlineData("$method")]
         [InlineData("$statusCode")]
         [InlineData("$url")]
-        public void CompareStaticRuntimeExpressionWorks(string expression)
-        {
-            // Arrange & Act
-            var runtimeExpression1 = RuntimeExpression.Build(expression);
-            var runtimeExpression2 = RuntimeExpression.Build(expression);
-
-            // Assert
-            Assert.Same(runtimeExpression1, runtimeExpression2);
-        }
-
-        [Theory]
-        [InlineData("$response.body#/status")]
-        [InlineData("$request.header.accept")]
-        public void CompareRuntimeExpressionWorks(string expression)
+        public void BuildRuntimeExpressionTwiceCreatesNewEquivalentInstances(string expression)
         {
             // Arrange & Act
             var runtimeExpression1 = RuntimeExpression.Build(expression);
@@ -170,6 +149,132 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             Assert.NotSame(runtimeExpression1, runtimeExpression2);
             Assert.Equal(runtimeExpression1, runtimeExpression2);
+        }
+
+
+        [Fact]
+        public void CompositeRuntimeExpressionContainsExpression()
+        {
+            // Arrange
+            string expression = "This is a composite expression {$url} yay";
+
+            // Act
+            var runtimeExpression = RuntimeExpression.Build(expression);
+
+            // Assert
+            Assert.NotNull(runtimeExpression);
+            var response = Assert.IsType<CompositeExpression>(runtimeExpression);
+            Assert.Equal(expression, response.Expression);
+
+            var compositeExpression = runtimeExpression as CompositeExpression;
+            Assert.Single(compositeExpression.ContainedExpressions);
+
+        }
+
+        [Fact]
+        public void CompositeRuntimeExpressionContainsMultipleExpressions()
+        {
+            // Arrange
+            string expression = "This is a composite expression {$url} yay and {$request.header.foo}";
+
+            // Act
+            var runtimeExpression = RuntimeExpression.Build(expression);
+
+            // Assert
+            Assert.NotNull(runtimeExpression);
+            var response = Assert.IsType<CompositeExpression>(runtimeExpression);
+            Assert.Equal(expression, response.Expression);
+
+            var compositeExpression = runtimeExpression as CompositeExpression;
+            Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
+
+            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
+            {
+                new UrlExpression(),
+                new RequestExpression(new HeaderExpression("foo"))
+            });
+        }
+
+        [Fact]
+        public void CompositeRuntimeExpressionForWebHook()
+        {
+            // Arrange
+            string expression = "http://notificationServer.com?transactionId={$request.body#/id}&email={$request.body#/email}";
+
+            // Act
+            var runtimeExpression = RuntimeExpression.Build(expression);
+
+            // Assert
+            Assert.NotNull(runtimeExpression);
+            var response = Assert.IsType<CompositeExpression>(runtimeExpression);
+            Assert.Equal(expression, response.Expression);
+
+            var compositeExpression = runtimeExpression as CompositeExpression;
+            Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
+
+            Assert.IsType<RequestExpression>(compositeExpression.ContainedExpressions.First());
+            Assert.IsType<RequestExpression>(compositeExpression.ContainedExpressions.Last());
+        }
+
+        [Fact]
+        public void CompositeRuntimeExpressionWithMultipleRuntimeExpressionsAndFakeBraces()
+        {
+            // Arrange
+            string expression = "This is a composite expression {url} {test} and {} {$url} and {$request.header.foo}";
+
+            // Act
+            var runtimeExpression = RuntimeExpression.Build(expression);
+
+            // Assert
+            runtimeExpression.Should().NotBeNull();
+            runtimeExpression.Should().BeOfType(typeof(CompositeExpression));
+            var response = (CompositeExpression)runtimeExpression;
+            response.Expression.Should().Be(expression);
+
+            var compositeExpression = runtimeExpression as CompositeExpression;
+            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
+            {
+                new UrlExpression(),
+                new RequestExpression(new HeaderExpression("foo"))
+            });
+        }
+
+        [Theory]
+        [InlineData("This is a composite expression {url} {test} and {$fakeRuntime} {$url} and {$request.header.foo}", "$fakeRuntime")]
+        [InlineData("This is a composite expression {url} {test} and {$} {$url} and {$request.header.foo}", "$")]
+        public void CompositeRuntimeExpressionWithInvalidRuntimeExpressions(string expression, string invalidExpression)
+        {
+            // Arrange & Act
+            Action test = () => RuntimeExpression.Build(expression);
+
+            // Assert
+            test.Should().Throw<OpenApiException>().WithMessage(String.Format(SRResource.RuntimeExpressionHasInvalidFormat, invalidExpression));
+        }
+
+        [Theory]
+        [InlineData("/simplePath")]
+        [InlineData("random string")]
+        [InlineData("method")]
+        [InlineData("/abc")]
+        [InlineData("request    {}")]
+        [InlineData("response{}")]
+        public void CompositeRuntimeExpressionWithoutRecognizedRuntimeExpressions(string expression)
+        {
+            // Arrange
+
+            // Act
+            var runtimeExpression = RuntimeExpression.Build(expression);
+
+            // Assert
+            runtimeExpression.Should().NotBeNull();
+            runtimeExpression.Should().BeOfType(typeof(CompositeExpression));
+            var response = (CompositeExpression)runtimeExpression;
+            response.Expression.Should().Be(expression);
+
+            var compositeExpression = runtimeExpression as CompositeExpression;
+
+            // The whole string is treated as the template without any contained expressions.
+            compositeExpression.ContainedExpressions.Should().BeEmpty();
         }
     }
 }

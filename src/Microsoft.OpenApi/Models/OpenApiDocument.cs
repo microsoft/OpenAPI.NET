@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -34,7 +36,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
-        public OpenApiPaths Paths { get; set; } = new OpenApiPaths();
+        public OpenApiPaths Paths { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -102,7 +104,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -131,27 +133,53 @@ namespace Microsoft.OpenApi.Models
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV2(w));
 
-            // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
-            // If the reference exists but points to other objects, the object is serialized to just that reference.
+            // If references have been inlined we don't need the to render the components section
+            // however if they have cycles, then we will need a component rendered
+            if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
+            {
+                var loops = writer.GetSettings().LoopDetector.Loops;
 
-            // definitions
-            writer.WriteOptionalMap(
-                OpenApiConstants.Definitions,
-                Components?.Schemas,
-                (w, key, component) =>
+                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV2WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV2(w);
-                    }
-                });
+                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
+                        .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
 
+                    foreach (var schema in openApiSchemas.Values.ToList())
+                    {
+                        FindSchemaReferences.ResolveSchemas(Components, openApiSchemas);
+                    }
+
+                    writer.WriteOptionalMap(
+                       OpenApiConstants.Definitions,
+                       openApiSchemas,
+                       (w, key, component) =>
+                       {
+                           component.SerializeAsV2WithoutReference(w);
+                       });
+                }
+            }
+            else
+            {
+                // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
+                // If the reference exists but points to other objects, the object is serialized to just that reference.
+                // definitions
+                writer.WriteOptionalMap(
+                    OpenApiConstants.Definitions,
+                    Components?.Schemas,
+                    (w, key, component) =>
+                    {
+                        if (component.Reference != null &&
+                            component.Reference.Type == ReferenceType.Schema &&
+                            component.Reference.Id == key)
+                        {
+                            component.SerializeAsV2WithoutReference(w);
+                        }
+                        else
+                        {
+                            component.SerializeAsV2(w);
+                        }
+                    });
+            }
             // parameters
             writer.WriteOptionalMap(
                 OpenApiConstants.Parameters,
@@ -219,7 +247,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }
@@ -237,15 +265,34 @@ namespace Microsoft.OpenApi.Models
 
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
             // The Url property cannotcontain path templating to be valid for V2 serialization.
-            var firstServerUrl = new Uri(firstServer.Url);
+            var firstServerUrl = new Uri(firstServer.Url, UriKind.RelativeOrAbsolute);
 
             // host
-            writer.WriteProperty(
-                OpenApiConstants.Host,
-                firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
-
-            // basePath
-            writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+            if (firstServerUrl.IsAbsoluteUri)
+            {
+                writer.WriteProperty(
+                    OpenApiConstants.Host,
+                    firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
+                
+                // basePath
+                if (firstServerUrl.AbsolutePath != "/")
+                {
+                    writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
+                }
+            } else
+            {
+                var relativeUrl = firstServerUrl.OriginalString;
+                if (relativeUrl.StartsWith("//"))
+                {
+                    var pathPosition = relativeUrl.IndexOf('/', 3);
+                    writer.WriteProperty(OpenApiConstants.Host, relativeUrl.Substring(0, pathPosition));
+                    relativeUrl = relativeUrl.Substring(pathPosition);
+                }
+                if (!String.IsNullOrEmpty(relativeUrl) && relativeUrl != "/")
+                {
+                    writer.WriteProperty(OpenApiConstants.BasePath, relativeUrl);
+                }
+            }
 
             // Consider all schemes of the URLs in the server list that have the same
             // host, port, and base path as the first server.
@@ -262,7 +309,7 @@ namespace Microsoft.OpenApi.Models
                             UriComponents.Host | UriComponents.Port | UriComponents.Path,
                             UriFormat.SafeUnescaped,
                             StringComparison.OrdinalIgnoreCase) ==
-                        0)
+                        0 && u.IsAbsoluteUri)
                 .Select(u => u.Scheme)
                 .Distinct()
                 .ToList();
@@ -275,11 +322,12 @@ namespace Microsoft.OpenApi.Models
         /// Walk the OpenApiDocument and resolve unresolved references
         /// </summary>
         /// <param name="useExternal">Indicates if external references should be resolved.  Document needs to reference a workspace for this to be possible.</param>
-        public void ResolveReferences(bool useExternal = false)
+        public IEnumerable<OpenApiError> ResolveReferences(bool useExternal = false)
         {
             var resolver = new OpenApiReferenceResolver(this, useExternal);
             var walker = new OpenApiWalker(resolver);
             walker.Walk(this);
+            return resolver.Errors;
         }
 
         /// <summary>
@@ -295,7 +343,7 @@ namespace Microsoft.OpenApi.Models
             if (reference.IsExternal && !useExternal)
             {
                 // Should not attempt to resolve external references against a single document.
-                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported); 
+                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported);
             }
 
             if (!reference.Type.HasValue)
@@ -316,6 +364,11 @@ namespace Microsoft.OpenApi.Models
                 }
 
                 return null;
+            }
+
+            if (this.Components == null)
+            {
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
 
             try
@@ -352,10 +405,54 @@ namespace Microsoft.OpenApi.Models
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
                 }
-            } catch(KeyNotFoundException)
-            {
-                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId,reference.Id));
             }
+            catch (KeyNotFoundException)
+            {
+                throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
+            }
+        }
+    }
+
+    internal class FindSchemaReferences : OpenApiVisitorBase
+    {
+        private Dictionary<string, OpenApiSchema> Schemas;
+
+        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, OpenApiSchema> schemas )
+        {
+            var visitor = new FindSchemaReferences();
+            visitor.Schemas = schemas;
+            var walker = new OpenApiWalker(visitor);
+            walker.Walk(components);
+        }
+
+        public override void Visit(IOpenApiReferenceable referenceable)
+        {
+            switch (referenceable)
+            {
+                case OpenApiSchema schema:
+                    if (!Schemas.ContainsKey(schema.Reference.Id))
+                    {
+                        Schemas.Add(schema.Reference.Id, schema);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            base.Visit(referenceable);
+        }
+
+        public override void Visit(OpenApiSchema schema)
+        {
+            // This is needed to handle schemas used in Responses in components
+            if (schema.Reference != null)
+            {
+                if (!Schemas.ContainsKey(schema.Reference.Id))
+                {
+                    Schemas.Add(schema.Reference.Id, schema);
+                }
+            }
+            base.Visit(schema);
         }
     }
 }

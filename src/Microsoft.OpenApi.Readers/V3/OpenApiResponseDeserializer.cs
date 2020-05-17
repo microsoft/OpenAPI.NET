@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
             new PatternFieldMap<OpenApiResponse>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiResponse LoadResponse(ParseNode node)
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 return mapNode.GetReferencedObject<OpenApiResponse>(ReferenceType.Response, pointer);
             }
 
-            var requiredFields = new List<string> {"description"};
+            var requiredFields = new List<string> { "description" };
             var response = new OpenApiResponse();
             ParseMap(mapNode, response, _responseFixedFields, _responsePatternFields);
 

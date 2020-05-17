@@ -3,6 +3,10 @@
 
 using System.IO;
 using System.Linq;
+using FluentAssertions;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.ParseNodes;
+using Microsoft.OpenApi.Readers.V3;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
@@ -24,6 +28,62 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             }
         }
 
-     
+        [Fact]
+        public void ParseOperationWithParameterWithNoLocationShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithParameterWithNoLocation.json")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV3Deserializer.LoadOperation(node);
+
+            // Assert
+            operation.Should().BeEquivalentTo(new OpenApiOperation()
+            {
+                Tags =
+                {
+                    new OpenApiTag
+                    {
+                        UnresolvedReference = true,
+                        Reference = new OpenApiReference()
+                        {
+                            Id = "user",
+                            Type = ReferenceType.Tag
+                        }
+                    }
+                },
+                Summary = "Logs user into the system",
+                Description = "",
+                OperationId = "loginUser",
+                Parameters =
+                {
+                    new OpenApiParameter
+                    {
+                        Name = "username",
+                        Description = "The user name for login",
+                        Required = true,
+                        Schema = new OpenApiSchema
+                        {
+                            Type = "string"
+                        }
+                    },
+                    new OpenApiParameter
+                    {
+                        Name = "password",
+                        Description = "The password for login in clear text",
+                        In = ParameterLocation.Query,
+                        Required = true,
+                        Schema = new OpenApiSchema
+                        {
+                            Type = "string"
+                        }
+                    }
+                }
+            });
+        }
     }
 }

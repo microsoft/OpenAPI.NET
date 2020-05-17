@@ -28,18 +28,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
                 // Assert
-                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-                schema.ShouldBeEquivalentTo(
+                schema.Should().BeEquivalentTo(
                     new OpenApiSchema
                     {
                         Type = "string",
@@ -60,9 +60,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var schema = reader.ReadFragment<OpenApiSchema>(stream, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
                 // Assert
-                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-                schema.ShouldBeEquivalentTo(
+                schema.Should().BeEquivalentTo(
                     new OpenApiSchema
                     {
                         Type = "string",
@@ -87,14 +87,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var schema = reader.ReadFragment<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
-            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            schema.ShouldBeEquivalentTo(
+            schema.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
                     Type = "integer",
                     Format = "int64",
-                    Default = new OpenApiInteger(88)
+                    Default = new OpenApiLong(88)
                 });
         }
 
@@ -113,15 +113,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
-            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.ShouldBeEquivalentTo(
+            openApiAny.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["foo"] = new OpenApiString("bar"),
-                    ["baz"] = new OpenApiArray() { 
-                    new OpenApiInteger(1),
-                    new OpenApiInteger(2)
+                    ["baz"] = new OpenApiArray() {
+                        new OpenApiInteger(1),
+                        new OpenApiInteger(2)
                     }
                 });
         }
@@ -141,9 +141,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
-            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.ShouldBeEquivalentTo(
+            openApiAny.Should().BeEquivalentTo(
                 new OpenApiArray
                 {
                     new OpenApiString("foo"),
@@ -160,18 +160,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
                 // Assert
-                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-                schema.ShouldBeEquivalentTo(
+                schema.Should().BeEquivalentTo(
                     new OpenApiSchema
                     {
                         Type = "object",
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 Minimum = 0
                             }
                         },
-                        AdditionalPropertiesAllowed = false  
+                        AdditionalPropertiesAllowed = false
                     });
             }
         }
@@ -218,9 +218,9 @@ get:
             var openApiAny = reader.ReadFragment<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
-            diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.ShouldBeEquivalentTo(
+            openApiAny.Should().BeEquivalentTo(
                 new OpenApiPathItem
                 {
                     Summary = "externally referenced path item",
@@ -230,8 +230,9 @@ get:
                         {
                             Responses = new OpenApiResponses
                             {
-                                ["200"] = new OpenApiResponse {
-                                   Description = "Ok"
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "Ok"
                                 }
                             }
                         }
@@ -248,18 +249,18 @@ get:
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
                 // Assert
-                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-                schema.ShouldBeEquivalentTo(
+                schema.Should().BeEquivalentTo(
                     new OpenApiSchema
                     {
                         Type = "object",
@@ -280,18 +281,18 @@ get:
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
                 // Assert
-                diagnostic.ShouldBeEquivalentTo(new OpenApiDiagnostic());
+                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-                schema.ShouldBeEquivalentTo(
+                schema.Should().BeEquivalentTo(
                     new OpenApiSchema
                     {
                         Type = "object",
@@ -314,7 +315,7 @@ get:
                         Example = new OpenApiObject
                         {
                             ["name"] = new OpenApiString("Puma"),
-                            ["id"] = new OpenApiInteger(1)
+                            ["id"] = new OpenApiLong(1)
                         }
                     });
             }
@@ -331,10 +332,10 @@ get:
                 // Assert
                 var components = openApiDoc.Components;
 
-                diagnostic.ShouldBeEquivalentTo(
+                diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-                components.ShouldBeEquivalentTo(
+                components.Should().BeEquivalentTo(
                     new OpenApiComponents
                     {
                         Schemas =
@@ -434,10 +435,10 @@ get:
                 // Assert
                 var components = openApiDoc.Components;
 
-                diagnostic.ShouldBeEquivalentTo(
+                diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-                components.ShouldBeEquivalentTo(
+                components.Should().BeEquivalentTo(
                     new OpenApiComponents
                     {
                         Schemas =
@@ -464,7 +465,7 @@ get:
                                 {
                                     "name",
                                     "petType"
-                                }, 
+                                },
                                 Reference = new OpenApiReference()
                                 {
                                     Id= "Pet",
@@ -610,7 +611,7 @@ get:
                 // Assert
                 var components = openApiDoc.Components;
 
-                diagnostic.ShouldBeEquivalentTo(
+                diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 var schemaExtension = new OpenApiSchema()
@@ -642,7 +643,7 @@ get:
 
                 schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
 
-                components.Schemas["microsoft.graph.schemaExtension"].ShouldBeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].AllOf[0].Properties["child"]);
+                components.Schemas["microsoft.graph.schemaExtension"].Should().BeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].AllOf[0].Properties["child"]);
             }
         }
     }

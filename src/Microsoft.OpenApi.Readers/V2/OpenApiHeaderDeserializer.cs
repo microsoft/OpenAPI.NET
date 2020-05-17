@@ -2,7 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
-using Microsoft.OpenApi.Any;
+using System.Globalization;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -54,10 +54,10 @@ namespace Microsoft.OpenApi.Readers.V2
                     GetOrCreateSchema(o).Default = n.CreateAny();
                 }
             },
-                        {
+            {
                 "maximum", (o, n) =>
                 {
-                    GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "minimum", (o, n) =>
                 {
-                    GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -81,13 +81,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "maxLength", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
                 "minLength", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -99,13 +99,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "maxItems", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MaxItems = int.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MaxItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
                 "minItems", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MinItems = int.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MinItems = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "multipleOf", (o, n) =>
                 {
-                    GetOrCreateSchema(o).MultipleOf = decimal.Parse(n.GetScalarValue());
+                    GetOrCreateSchema(o).MultipleOf = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -130,8 +130,32 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new PatternFieldMap<OpenApiHeader>
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
+
+        private static readonly AnyFieldMap<OpenApiHeader> _headerAnyFields =
+            new AnyFieldMap<OpenApiHeader>
+            {
+                {
+                    OpenApiConstants.Default,
+                    new AnyFieldMapParameter<OpenApiHeader>(
+                        p => p.Schema.Default,
+                        (p, v) => p.Schema.Default = v,
+                        p => p.Schema)
+                }
+            };
+
+        private static readonly AnyListFieldMap<OpenApiHeader> _headerAnyListFields =
+            new AnyListFieldMap<OpenApiHeader>
+            {
+                {
+                    OpenApiConstants.Enum,
+                    new AnyListFieldMapParameter<OpenApiHeader>(
+                        p => p.Schema.Enum,
+                        (p, v) => p.Schema.Enum = v,
+                        p => p.Schema)
+                },
+            };
 
         public static OpenApiHeader LoadHeader(ParseNode node)
         {
@@ -148,6 +172,9 @@ namespace Microsoft.OpenApi.Readers.V2
                 header.Schema = schema;
                 node.Context.SetTempStorage("schema", null);
             }
+
+            ProcessAnyFields(mapNode, header, _headerAnyFields);
+            ProcessAnyListFields(mapNode, header, _headerAnyListFields);
 
             return header;
         }

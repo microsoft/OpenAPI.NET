@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -42,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 ["200"] = new OpenApiResponse
                 {
                     Description = "Pet updated.",
-                    Content = new Dictionary<string,OpenApiMediaType>
+                    Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new OpenApiMediaType(),
                         ["application/xml"] = new OpenApiMediaType()
@@ -219,7 +220,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_basicOperation);
+            operation.Should().BeEquivalentTo(_basicOperation);
         }
 
         [Fact]
@@ -237,7 +238,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_basicOperation);
+            operation.Should().BeEquivalentTo(_basicOperation);
         }
 
         [Fact]
@@ -254,7 +255,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_operationWithFormData);
+            operation.Should().BeEquivalentTo(_operationWithFormData);
         }
 
         [Fact]
@@ -272,7 +273,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_operationWithFormData);
+            operation.Should().BeEquivalentTo(_operationWithFormData);
         }
 
         [Fact]
@@ -289,7 +290,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody);
         }
 
         [Fact]
@@ -307,7 +308,68 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.ShouldBeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody);
+        }
+
+        [Fact]
+        public void ParseOperationWithResponseExamplesShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithResponseExamples.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+
+            // Assert
+            operation.Should().BeEquivalentTo(
+                new OpenApiOperation()
+                {
+                    Responses = new OpenApiResponses()
+                    {
+                        { "200", new OpenApiResponse()
+                        {
+                            Description = "An array of float response",
+                            Content =
+                            {
+                                ["application/json"] = new OpenApiMediaType()
+                                {
+                                    Schema = new OpenApiSchema()
+                                    {
+                                        Type = "array",
+                                        Items = new OpenApiSchema()
+                                        {
+                                            Type = "number",
+                                            Format = "float"
+                                        }
+                                    },
+                                    Example = new OpenApiArray()
+                                    {
+                                        new OpenApiFloat(5),
+                                        new OpenApiFloat(6),
+                                        new OpenApiFloat(7),
+                                    }
+                                },
+                                ["application/xml"] = new OpenApiMediaType()
+                                {
+                                    Schema = new OpenApiSchema()
+                                    {
+                                        Type = "array",
+                                        Items = new OpenApiSchema()
+                                        {
+                                            Type = "number",
+                                            Format = "float"
+                                        }
+                                    }
+                                }
+                            }
+                        }}
+                    }
+                }
+            );
         }
     }
 }

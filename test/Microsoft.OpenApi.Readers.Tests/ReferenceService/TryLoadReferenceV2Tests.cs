@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var referencedObject = document.ResolveReference(reference);
 
             // Assert
-            referencedObject.ShouldBeEquivalentTo(
+            referencedObject.Should().BeEquivalentTo(
                 new OpenApiSchema
                 {
                     Required =
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var referencedObject = document.ResolveReference(reference);
 
             // Assert
-            referencedObject.ShouldBeEquivalentTo(
+            referencedObject.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     Name = "skip",
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var referencedObject = document.ResolveReference(reference);
 
             // Assert
-            referencedObject.ShouldBeEquivalentTo(
+            referencedObject.Should().BeEquivalentTo(
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.ApiKey,
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var referencedObject = document.ResolveReference(reference);
 
             // Assert
-            referencedObject.ShouldBeEquivalentTo(
+            referencedObject.Should().BeEquivalentTo(
                 new OpenApiResponse
                 {
                     Description = "Entity not found.",
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                         Type = ReferenceType.Response,
                         Id = "NotFound"
                     },
-                    Content = new Dictionary<string,OpenApiMediaType>
+                    Content = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new OpenApiMediaType()
                     }
@@ -215,7 +215,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             var referencedObject = document.ResolveReference(reference);
 
             // Assert
-            referencedObject.ShouldBeEquivalentTo(
+            referencedObject.Should().BeEquivalentTo(
                 new OpenApiResponse
                 {
                     Description = "General Error",

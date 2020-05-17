@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             const string key = "%@abc";
-            
+
             OpenApiComponents components = new OpenApiComponents()
             {
                 Responses = new Dictionary<string, OpenApiResponse>
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             bool result = !errors.Any();
-            
+
 
             // Assert
             Assert.False(result);

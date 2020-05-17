@@ -35,6 +35,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 Title = "foo",
                 Version = "1.2.2"
             };
+            openApiDocument.Paths = new OpenApiPaths();
             openApiDocument.Paths.Add(
                 "/test",
                 new OpenApiPathItem
@@ -55,7 +56,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.ShouldBeEquivalentTo(
+            validator.Errors.Should().BeEquivalentTo(
                     new List<OpenApiError>
                     {
                         new OpenApiValidatorError(nameof(OpenApiResponseRules.ResponseRequiredFields),"#/paths/~1test/get/responses/200/description",
@@ -66,13 +67,14 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void ServersShouldBeReferencedByIndex()
         {
-            var openApiDocument = new OpenApiDocument();
-            openApiDocument.Info = new OpenApiInfo()
+            var openApiDocument = new OpenApiDocument
             {
-                Title = "foo",
-                Version = "1.2.2"
-            };
-            openApiDocument.Servers = new List<OpenApiServer> {
+                Info = new OpenApiInfo()
+                {
+                    Title = "foo",
+                    Version = "1.2.2"
+                },
+                Servers = new List<OpenApiServer> {
                 new OpenApiServer
                 {
                     Url = "http://example.org"
@@ -80,14 +82,16 @@ namespace Microsoft.OpenApi.Tests.Services
                 new OpenApiServer
                 {
 
-                }
+                },
+            },
+                Paths = new OpenApiPaths()
             };
-            
+
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.ShouldBeEquivalentTo(
+            validator.Errors.Should().BeEquivalentTo(
                     new List<OpenApiError>
                     {
                         new OpenApiValidatorError(nameof(OpenApiServerRules.ServerRequiredFields), "#/servers/1/url",
@@ -100,7 +104,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ValidateCustomExtension()
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
-            
+
             ruleset.Add(
              new ValidationRule<FooExtension>(
                  (context, item) =>
@@ -111,11 +115,14 @@ namespace Microsoft.OpenApi.Tests.Services
                      }
                  }));
 
-            var openApiDocument = new OpenApiDocument();
-            openApiDocument.Info = new OpenApiInfo()
+            var openApiDocument = new OpenApiDocument
             {
-                Title = "foo",
-                Version = "1.2.2"
+                Info = new OpenApiInfo()
+                {
+                    Title = "foo",
+                    Version = "1.2.2"
+                },
+                Paths = new OpenApiPaths()
             };
 
             var fooExtension = new FooExtension()
@@ -124,13 +131,13 @@ namespace Microsoft.OpenApi.Tests.Services
                 Baz = "baz"
             };
 
-            openApiDocument.Info.Extensions.Add("x-foo",fooExtension);
+            openApiDocument.Info.Extensions.Add("x-foo", fooExtension);
 
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
             walker.Walk(openApiDocument);
 
-            validator.Errors.ShouldBeEquivalentTo(
+            validator.Errors.Should().BeEquivalentTo(
                    new List<OpenApiError>
                    {
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
@@ -145,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
         public string Bar { get; set; }
 
-        public void Write(IOpenApiWriter writer)
+        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             writer.WriteStartObject();
             writer.WriteProperty("baz", Baz);

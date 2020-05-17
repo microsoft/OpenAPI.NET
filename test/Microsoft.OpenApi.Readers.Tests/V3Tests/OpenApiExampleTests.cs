@@ -27,16 +27,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 var example = OpenApiV3Deserializer.LoadExample(node);
 
                 diagnostic.Errors.Should().BeEmpty();
 
-                example.ShouldBeEquivalentTo(
+                example.Should().BeEquivalentTo(
                     new OpenApiExample
                     {
                         Value = new OpenApiObject
@@ -73,6 +73,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     });
+            }
+        }
+
+        [Fact]
+        public void ParseExampleForcedStringSucceed()
+        {
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "explicitString.yaml")))
+            {
+                new OpenApiStreamReader().Read(stream, out var diagnostic);
+                diagnostic.Errors.Should().BeEmpty();
             }
         }
     }

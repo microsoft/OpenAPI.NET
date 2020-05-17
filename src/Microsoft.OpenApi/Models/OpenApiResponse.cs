@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -45,7 +44,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set;}
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference pointer.
@@ -62,7 +61,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null)
+            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
             {
                 Reference.SerializeAsV3(writer);
                 return;
@@ -79,7 +78,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
+            writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
             // headers
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
@@ -91,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, l) => l.SerializeAsV3(w));
 
             // extension
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -106,7 +105,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null)
+            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
             {
                 Reference.SerializeAsV2(writer);
                 return;
@@ -123,7 +122,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
+            writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
+
+            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+
             if (Content != null)
             {
                 var mediatype = Content.FirstOrDefault();
@@ -136,13 +138,30 @@ namespace Microsoft.OpenApi.Models
                         (w, s) => s.SerializeAsV2(w));
 
                     // examples
-                    if (mediatype.Value.Example != null)
+                    if (Content.Values.Any(m => m.Example != null))
                     {
                         writer.WritePropertyName(OpenApiConstants.Examples);
                         writer.WriteStartObject();
-                        writer.WritePropertyName(mediatype.Key);
-                        writer.WriteAny(mediatype.Value.Example);
+
+                        foreach (var mediaTypePair in Content)
+                        {
+                            if (mediaTypePair.Value.Example != null)
+                            {
+                                writer.WritePropertyName(mediaTypePair.Key);
+                                writer.WriteAny(mediaTypePair.Value.Example);
+                            }
+                        }
+
                         writer.WriteEndObject();
+                    }
+
+                    writer.WriteExtensions(mediatype.Value.Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+                    foreach (var key in mediatype.Value.Extensions.Keys)
+                    {
+                        // The extension will already have been serialized as part of the call above,
+                        // so remove it from the cloned collection so we don't write it again.
+                        extensionsClone.Remove(key);
                     }
                 }
             }
@@ -151,7 +170,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV2(w));
 
             // extension
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }

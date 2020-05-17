@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         context.Enter(pathName);
 
-                         if (pathName == null || !pathName.StartsWith("/"))
+                        if (pathName == null || !pathName.StartsWith("/"))
                         {
                             context.CreateError(nameof(PathNameMustBeginWithSlash),
                                 string.Format(SRResource.Validation_PathItemMustBeginWithSlash, pathName));

@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -48,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicTagAsV3JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected = "{ }";
 
@@ -67,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicTagAsV2JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected = "{ }";
 
@@ -86,7 +87,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicTagAsV3YamlWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
             var expected = "{ }";
 
@@ -104,7 +105,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicTagAsV2YamlWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
             var expected = "{ }";
 
@@ -123,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedTagAsV3JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -151,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedTagAsV2JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -179,7 +180,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedTagAsV3YamlWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
             var expected =
                 @"name: pet
@@ -204,7 +205,7 @@ x-tag-extension: ";
         public void SerializeAdvancedTagAsV2YamlWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
             var expected =
                 @"name: pet
@@ -229,7 +230,7 @@ x-tag-extension: ";
         public void SerializeAdvancedTagAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
 
             var expected = @"""pet""";
@@ -249,7 +250,7 @@ x-tag-extension: ";
         public void SerializeAdvancedTagAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
 
             var expected = @"""pet""";
@@ -269,7 +270,7 @@ x-tag-extension: ";
         public void SerializeAdvancedTagAsV3YamlWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
 
             var expected = @" pet";
@@ -289,7 +290,7 @@ x-tag-extension: ";
         public void SerializeAdvancedTagAsV2YamlWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
 
             var expected = @" pet";
@@ -309,7 +310,7 @@ x-tag-extension: ";
         public void SerializeReferencedTagAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
 
             var expected = @"""pet""";
@@ -329,7 +330,7 @@ x-tag-extension: ";
         public void SerializeReferencedTagAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
 
             var expected = @"""pet""";
@@ -349,7 +350,7 @@ x-tag-extension: ";
         public void SerializeReferencedTagAsV3YamlWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
 
             var expected = @" pet";
@@ -369,7 +370,7 @@ x-tag-extension: ";
         public void SerializeReferencedTagAsV2YamlWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
 
             var expected = @" pet";

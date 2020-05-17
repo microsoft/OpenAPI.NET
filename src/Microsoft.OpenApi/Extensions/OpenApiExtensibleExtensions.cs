@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">The extensible Open API element. </param>
         /// <param name="name">The extension name.</param>
         /// <param name="any">The extension value.</param>
-        public static void AddExtension<T>(this T element, string name, IOpenApiAny any)
+        public static void AddExtension<T>(this T element, string name, IOpenApiExtension any)
             where T : IOpenApiExtensible
         {
             if (element == null)
@@ -41,6 +41,5 @@ namespace Microsoft.OpenApi.Extensions
 
             element.Extensions[name] = any ?? throw Error.ArgumentNull(nameof(any));
         }
-
     }
 }

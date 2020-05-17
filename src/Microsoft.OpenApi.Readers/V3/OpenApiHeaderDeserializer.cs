@@ -34,6 +34,12 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             },
             {
+                "allowEmptyValue", (o, n) =>
+                {
+                    o.AllowEmptyValue = bool.Parse(n.GetScalarValue());
+                }
+            },
+            {
                 "allowReserved", (o, n) =>
                 {
                     o.AllowReserved = bool.Parse(n.GetScalarValue());
@@ -46,16 +52,34 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             },
             {
+                "explode", (o, n) =>
+                {
+                    o.Explode = bool.Parse(n.GetScalarValue());
+                }
+            },
+            {
                 "schema", (o, n) =>
                 {
                     o.Schema = LoadSchema(n);
                 }
-            }
+            },
+            {
+                "examples", (o, n) =>
+                {
+                    o.Examples = n.CreateMap(LoadExample);
+                }
+            },
+            {
+                "example", (o, n) =>
+                {
+                    o.Example = n.CreateAny();
+                }
+            },
         };
 
         private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new PatternFieldMap<OpenApiHeader>
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static OpenApiHeader LoadHeader(ParseNode node)

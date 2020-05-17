@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -32,7 +35,11 @@ namespace Microsoft.OpenApi.Tests.Models
                             Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
                         }
                     },
-                    Example = new OpenApiString("Blabla")
+                    Example = new OpenApiString("Blabla"),
+                    Extensions = new Dictionary<string, IOpenApiExtension>
+                    {
+                        ["myextension"] = new OpenApiString("myextensionvalue"),
+                    },
                 }
             },
             Headers =
@@ -115,11 +122,18 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenApiSpecVersion version,
             OpenApiFormat format)
         {
-            // Arrange & Act
+            // Arrange
+            var expected = format == OpenApiFormat.Json ? @"{
+  ""description"": null
+}" : @"description: ";
+
+            // Act
             var actual = BasicResponse.Serialize(version, format);
 
             // Assert
-            actual.Should().Be("{ }");
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
 
         [Fact]
@@ -150,7 +164,8 @@ namespace Microsoft.OpenApi.Tests.Models
           ""$ref"": ""#/components/schemas/customType""
         }
       },
-      ""example"": ""Blabla""
+      ""example"": ""Blabla"",
+      ""myextension"": ""myextensionvalue""
     }
   }
 }";
@@ -185,7 +200,8 @@ content:
       type: array
       items:
         $ref: '#/components/schemas/customType'
-    example: Blabla";
+    example: Blabla
+    myextension: myextensionvalue";
 
             // Act
             var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -211,6 +227,7 @@ content:
   ""examples"": {
     ""text/plain"": ""Blabla""
   },
+  ""myextension"": ""myextensionvalue"",
   ""headers"": {
     ""X-Rate-Limit-Limit"": {
       ""description"": ""The number of allowed requests in the current period"",
@@ -244,6 +261,7 @@ schema:
     $ref: '#/definitions/customType'
 examples:
   text/plain: Blabla
+myextension: myextensionvalue
 headers:
   X-Rate-Limit-Limit:
     description: The number of allowed requests in the current period
@@ -265,7 +283,7 @@ headers:
         public void SerializeReferencedResponseAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -287,7 +305,7 @@ headers:
         public void SerializeReferencedResponseAsV3JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -333,7 +351,7 @@ headers:
         public void SerializeReferencedResponseAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{
@@ -355,7 +373,7 @@ headers:
         public void SerializeReferencedResponseAsV2JsonWithoutReferenceWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected =
                 @"{

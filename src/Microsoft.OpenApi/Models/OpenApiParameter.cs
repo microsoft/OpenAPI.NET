@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set;}
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference object.
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Models
         /// Furthermore, if referencing a schema which contains an example,
         /// the examples value SHALL override the example provided by the schema.
         /// </summary>
-        public IDictionary<string,OpenApiExample> Examples { get; set; } = new Dictionary<string,OpenApiExample>();
+        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// Example of the media type. The example SHOULD match the specified schema and encoding properties
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null)
+            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
             {
                 Reference.SerializeAsV3(writer);
                 return;
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Name, Name);
 
             // in
-            writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
+            writer.WriteProperty(OpenApiConstants.In, In?.GetDisplayName());
 
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
+            writer.WriteProperty(OpenApiConstants.Explode, Explode, Style.HasValue && Style.Value == ParameterStyle.Form);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -210,7 +210,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null)
+            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
             {
                 Reference.SerializeAsV2(writer);
                 return;
@@ -237,7 +237,7 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                writer.WriteProperty(OpenApiConstants.In, In.GetDisplayName());
+                writer.WriteProperty(OpenApiConstants.In, In?.GetDisplayName());
             }
 
             // name
@@ -252,6 +252,8 @@ namespace Microsoft.OpenApi.Models
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
+            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+
             // schema
             if (this is OpenApiBodyParameter)
             {
@@ -259,7 +261,7 @@ namespace Microsoft.OpenApi.Models
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
-            else 
+            else
             if (Schema?.UnresolvedReference == true || Schema?.Type == "object")
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
@@ -283,12 +285,25 @@ namespace Microsoft.OpenApi.Models
                 // uniqueItems
                 // enum
                 // multipleOf
-                Schema?.WriteAsItemsProperties(writer);
+                if (Schema != null)
+                {
+                    Schema.WriteAsItemsProperties(writer);
+
+                    if (Schema.Extensions != null)
+                    {
+                        foreach (var key in Schema.Extensions.Keys)
+                        {
+                            // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
+                            // so remove it from the cloned collection so we don't write it again.
+                            extensionsClone.Remove(key);
+                        }
+                    }
+                }
 
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query )
+                if (this.In == ParameterLocation.Query)
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {
@@ -307,7 +322,7 @@ namespace Microsoft.OpenApi.Models
 
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
         }

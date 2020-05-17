@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
                 (w, o) => o.SerializeAsV3(w));
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }

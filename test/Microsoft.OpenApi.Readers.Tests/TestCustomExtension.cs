@@ -26,7 +26,7 @@ paths: {}
 ";
             var settings = new OpenApiReaderSettings()
             {
-                ExtensionParsers = { { "x-foo", (a) => {
+                ExtensionParsers = { { "x-foo", (a,v) => {
                         var fooNode = (OpenApiObject)a;
                         return new FooExtension() {
                               Bar = (fooNode["bar"] as OpenApiString)?.Value,
@@ -36,7 +36,7 @@ paths: {}
             };
 
             var reader = new OpenApiStringReader(settings);
-        
+
             var diag = new OpenApiDiagnostic();
             var doc = reader.Read(description, out diag);
 
@@ -54,7 +54,7 @@ paths: {}
 
         public string Bar { get; set; }
 
-        public void Write(IOpenApiWriter writer)
+        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
             writer.WriteStartObject();
             writer.WriteProperty("baz", Baz);

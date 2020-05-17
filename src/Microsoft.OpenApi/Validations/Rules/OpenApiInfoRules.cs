@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("version");
                     if (item.Version == null)
                     {
-                        context.CreateError(nameof(InfoRequiredFields), 
+                        context.CreateError(nameof(InfoRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "version", "info"));
                     }
                     context.Exit();

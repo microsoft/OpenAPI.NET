@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiServerVariable> _serverVariablePatternFields =
             new PatternFieldMap<OpenApiServerVariable>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
         public static OpenApiServerVariable LoadServerVariable(ParseNode node)

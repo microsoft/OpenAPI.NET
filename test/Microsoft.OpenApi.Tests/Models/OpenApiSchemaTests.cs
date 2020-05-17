@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -163,7 +164,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new OpenApiSchema
         {
             Title = "title1",
-            Required = new HashSet<string>(){ "property1" },
+            Required = new HashSet<string>() { "property1" },
             Properties = new Dictionary<string, OpenApiSchema>
             {
                 ["property1"] = new OpenApiSchema
@@ -368,7 +369,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedSchemaAsV3WithoutReferenceJsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
 
             var expected = @"{
@@ -400,7 +401,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeReferencedSchemaAsV3JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
 
             var expected = @"{
@@ -422,7 +423,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeSchemaWRequiredPropertiesAsV2JsonWorks()
         {
             // Arrange
-            var outputStringWriter = new StringWriter();
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter);
             var expected = @"{
   ""title"": ""title1"",

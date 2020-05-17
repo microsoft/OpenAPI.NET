@@ -15,7 +15,12 @@ namespace Microsoft.OpenApi.Services
     public abstract class OpenApiVisitorBase
     {
         private readonly Stack<string> _path = new Stack<string>();
-       
+
+        /// <summary>
+        /// Properties available to identify context of where an object is within OpenAPI Document
+        /// </summary>
+        public CurrentKeys CurrentKeys { get; } = new CurrentKeys();
+
         /// <summary>
         /// Allow Rule to indicate validation error occured at a deeper context level.  
         /// </summary>
@@ -43,8 +48,6 @@ namespace Microsoft.OpenApi.Services
                 return "#/" + String.Join("/", _path.Reverse());
             }
         }
-
-    
 
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>
@@ -274,6 +277,20 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiSecurityScheme"/>
+        /// </summary>
+        public virtual void Visit(OpenApiSecurityScheme securityScheme)
+        {
+        }
+
+        /// <summary>
+        /// Visits <see cref="OpenApiExample"/>
+        /// </summary>
+        public virtual void Visit(OpenApiExample example)
+        {
+        }
+
+        /// <summary>
         /// Visits list of <see cref="OpenApiTag"/>
         /// </summary>
         public virtual void Visit(IList<OpenApiTag> openApiTags)
@@ -286,7 +303,7 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(IList<OpenApiSecurityRequirement> openApiSecurityRequirements)
         {
         }
-        
+
         /// <summary>
         /// Visits <see cref="IOpenApiExtensible"/>
         /// </summary>
@@ -320,6 +337,14 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="encodings"></param>
         public virtual void Visit(IDictionary<string, OpenApiEncoding> encodings)
+        {
+        }
+
+        /// <summary>
+        /// Visits IOpenApiReferenceable instances that are references and not in components
+        /// </summary>
+        /// <param name="referenceable">referenced object</param>
+        public virtual void Visit(IOpenApiReferenceable referenceable)
         {
         }
     }

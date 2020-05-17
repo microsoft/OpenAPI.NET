@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -69,13 +70,14 @@ namespace Microsoft.OpenApi.Readers.V2
                         ReferenceType.Parameter,
                         LoadParameter);
 
-                    o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, p => 
+                    o.Components.RequestBodies = n.CreateMapWithReference(ReferenceType.RequestBody, p =>
                             {
-                                var parameter = LoadParameter(p, evenBody: true);
-                                if (parameter.In == null)
+                                var parameter = LoadParameter(p, loadRequestBody: true);
+                                if (parameter != null)
                                 {
-                                    return CreateRequestBody(n.Context,parameter); 
+                                    return CreateRequestBody(n.Context, parameter);
                                 }
+
                                 return null;
                             }
                       );
@@ -116,24 +118,104 @@ namespace Microsoft.OpenApi.Readers.V2
         private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context)
+        private static void MakeServers(IList<OpenApiServer> servers, ParsingContext context, RootNode rootNode)
         {
             var host = context.GetFromTempStorage<string>("host");
             var basePath = context.GetFromTempStorage<string>("basePath");
             var schemes = context.GetFromTempStorage<List<string>>("schemes");
+            Uri defaultUrl = rootNode.Context.BaseUrl;
 
-            if (schemes != null)
+            // If nothing is provided, don't create a server
+            if (host == null && basePath == null && schemes == null)
+            {
+                return;
+            }
+
+            //Validate host
+            if (host != null && !IsHostValid(host))
+            {
+                rootNode.Context.Diagnostic.Errors.Add(new OpenApiError(rootNode.Context.GetLocation(), "Invalid host"));
+                return;
+            }
+
+            // Fill in missing information based on the defaultUrl
+            if (defaultUrl != null)
+            {
+                host = host ?? defaultUrl.GetComponents(UriComponents.NormalizedHost, UriFormat.SafeUnescaped);
+                basePath = basePath ?? defaultUrl.GetComponents(UriComponents.Path, UriFormat.SafeUnescaped);
+                schemes = schemes ?? new List<string> { defaultUrl.GetComponents(UriComponents.Scheme, UriFormat.SafeUnescaped) };
+            }
+            else if (String.IsNullOrEmpty(host) && String.IsNullOrEmpty(basePath))
+            {
+                return;  // Can't make a server object out of just a Scheme
+            }
+
+            // Create the Server objects
+            if (schemes != null && schemes.Count > 0)
             {
                 foreach (var scheme in schemes)
                 {
-                    var server = new OpenApiServer();
-                    server.Url = scheme + "://" + (host ?? "example.org/") + (basePath ?? "/");
+                    var server = new OpenApiServer
+                    {
+                        Url = BuildUrl(scheme, host, basePath)
+                    };
+
                     servers.Add(server);
                 }
             }
+            else
+            {
+                var server = new OpenApiServer
+                {
+                    Url = BuildUrl(null, host, basePath)
+                };
+
+                servers.Add(server);
+            }
+
+            foreach (var server in servers)
+            {
+                // Server Urls are always appended to Paths and Paths must start with /
+                // so removing the slash prevents a double slash.
+                if (server.Url.EndsWith("/"))
+                {
+                    server.Url = server.Url.Substring(0, server.Url.Length - 1);
+                }
+            }
+        }
+
+        private static string BuildUrl(string scheme, string host, string basePath)
+        {
+            if (String.IsNullOrEmpty(scheme) && !String.IsNullOrEmpty(host))
+            {
+                host = "//" + host;  // The double slash prefix creates a relative url where the scheme is defined by the BaseUrl
+            }
+
+            int? port = null;
+
+            if (!String.IsNullOrEmpty(host) && host.Contains(":"))
+            {
+                var pieces = host.Split(':');
+                host = pieces.First();
+                port = int.Parse(pieces.Last(), CultureInfo.InvariantCulture);
+            }
+
+            var uriBuilder = new UriBuilder()
+            {
+                Scheme = scheme,
+                Host = host,
+                Path = basePath
+            };
+
+            if (port != null)
+            {
+                uriBuilder.Port = port.Value;
+            }
+
+            return uriBuilder.ToString();
         }
 
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
@@ -144,6 +226,17 @@ namespace Microsoft.OpenApi.Readers.V2
 
             ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
 
+            if (openApidoc.Paths != null)
+            {
+                ProcessResponsesMediaTypes(
+                    rootNode.GetMap(),
+                    openApidoc.Paths.Values
+                        .SelectMany(path => path.Operations?.Values ?? Enumerable.Empty<OpenApiOperation>())
+                        .SelectMany(operation => operation.Responses?.Values ?? Enumerable.Empty<OpenApiResponse>()),
+                    openApiNode.Context);
+            }
+
+            ProcessResponsesMediaTypes(rootNode.GetMap(), openApidoc.Components?.Responses?.Values, openApiNode.Context);
 
             // Post Process OpenApi Object
             if (openApidoc.Servers == null)
@@ -151,10 +244,29 @@ namespace Microsoft.OpenApi.Readers.V2
                 openApidoc.Servers = new List<OpenApiServer>();
             }
 
-            MakeServers(openApidoc.Servers, openApiNode.Context);
+            MakeServers(openApidoc.Servers, openApiNode.Context, rootNode);
 
             FixRequestBodyReferences(openApidoc);
             return openApidoc;
+        }
+
+        private static void ProcessResponsesMediaTypes(MapNode mapNode, IEnumerable<OpenApiResponse> responses, ParsingContext context)
+        {
+            if (responses != null)
+            {
+                foreach (var response in responses)
+                {
+                    ProcessProduces(mapNode, response, context);
+
+                    if (response.Content != null)
+                    {
+                        foreach (var mediaType in response.Content.Values)
+                        {
+                            ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
+                        }
+                    }
+                }
+            }
         }
 
         private static void FixRequestBodyReferences(OpenApiDocument doc)
@@ -167,7 +279,19 @@ namespace Microsoft.OpenApi.Readers.V2
                 var walker = new OpenApiWalker(fixer);
                 walker.Walk(doc);
             }
+        }
 
+        private static bool IsHostValid(string host)
+        {
+            //Check if the host contains :// 
+            if (host.Contains(Uri.SchemeDelimiter))
+            {
+                return false;
+            }
+
+            //Check if the host (excluding port number) is a valid dns/ip address.
+            var hostPart = host.Split(':').First();
+            return Uri.CheckHostName(hostPart) != UriHostNameType.Unknown;
         }
     }
 
@@ -197,5 +321,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 };
             }
         }
+
+
     }
 }

@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                         if (key != "default" && !Regex.IsMatch(key, "^[1-5](?>[0-9]{2}|XX)$"))
                         {
-                            context.CreateError(nameof(ResponsesMustBeIdentifiedByDefaultOrStatusCode), 
+                            context.CreateError(nameof(ResponsesMustBeIdentifiedByDefaultOrStatusCode),
                                     "Responses key must be 'default', an HTTP status code, " +
                                     "or one of the following strings representing a range of HTTP status codes: " +
                                     "'1XX', '2XX', '3XX', '4XX', '5XX'");

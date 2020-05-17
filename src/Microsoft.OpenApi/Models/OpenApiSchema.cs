@@ -251,13 +251,31 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
+            var settings = writer.GetSettings();
+
             if (Reference != null)
             {
-                Reference.SerializeAsV3(writer);
-                return;
+                if (settings.ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+                {
+                    Reference.SerializeAsV3(writer);
+                    return;
+                }
+
+                // If Loop is detected then just Serialize as a reference.
+                if (!settings.LoopDetector.PushLoop<OpenApiSchema>(this))
+                {
+                    settings.LoopDetector.SaveLoop(this);
+                    Reference.SerializeAsV3(writer);
+                    return;
+                }
             }
 
             SerializeAsV3WithoutReference(writer);
+
+            if (Reference != null)
+            {
+                settings.LoopDetector.PopLoop<OpenApiSchema>();
+            }
         }
 
         /// <summary>
@@ -383,7 +401,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
@@ -426,9 +444,22 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                Reference.SerializeAsV2(writer);
-                return;
+                var settings = writer.GetSettings();
+                if (settings.ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+                {
+                    Reference.SerializeAsV2(writer);
+                    return;
+                }
+
+                // If Loop is detected then just Serialize as a reference.
+                if (!settings.LoopDetector.PushLoop<OpenApiSchema>(this))
+                {
+                    settings.LoopDetector.SaveLoop(this);
+                    Reference.SerializeAsV2(writer);
+                    return;
+                }
             }
+
 
             if (parentRequiredProperties == null)
             {
@@ -516,7 +547,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
 
         internal void WriteAsSchemaProperties(
@@ -626,7 +657,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // extensions
-            writer.WriteExtensions(Extensions);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
     }
 }

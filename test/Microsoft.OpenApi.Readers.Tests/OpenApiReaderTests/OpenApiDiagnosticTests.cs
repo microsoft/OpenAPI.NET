@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
                 new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 diagnostic.Should().NotBeNull();
-                diagnostic.SpecificationVersion.Should().Be( OpenApiSpecVersion.OpenApi3_0);
+                diagnostic.SpecificationVersion.Should().Be(OpenApiSpecVersion.OpenApi3_0);
             }
         }
     }

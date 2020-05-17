@@ -7,18 +7,18 @@ using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal class PropertyNode : ParseNode
     {
-        public PropertyNode(ParsingContext context, OpenApiDiagnostic diagnostic, string name, YamlNode node) : base(
-            context,
-            diagnostic)
+        public PropertyNode(ParsingContext context, string name, YamlNode node) : base(
+            context)
         {
             Name = name;
-            Value = Create(context, diagnostic, node);
+            Value = Create(context, node);
         }
 
         public string Name { get; set; }
@@ -40,10 +40,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     Context.StartObject(Name);
                     fixedFieldMap(parentInstance, Value);
                 }
+                catch (OpenApiReaderException ex)
+                {
+                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                }
                 catch (OpenApiException ex)
                 {
                     ex.Pointer = Context.GetLocation();
-                    Diagnostic.Errors.Add(new OpenApiReaderError(ex));
+                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
                 }
                 finally
                 {
@@ -60,10 +64,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         Context.StartObject(Name);
                         map(parentInstance, Name, Value);
                     }
+                    catch (OpenApiReaderException ex)
+                    {
+                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                    }
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = Context.GetLocation();
-                        Diagnostic.Errors.Add(new OpenApiReaderError(ex));
+                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
                     }
                     finally
                     {
@@ -72,8 +80,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 }
                 else
                 {
-                    Diagnostic.Errors.Add(
-                        new OpenApiReaderError(Context, $"{Name} is not a valid property"));
+                    Context.Diagnostic.Errors.Add(
+                        new OpenApiError("", $"{Name} is not a valid property at {Context.GetLocation()}"));
                 }
             }
         }

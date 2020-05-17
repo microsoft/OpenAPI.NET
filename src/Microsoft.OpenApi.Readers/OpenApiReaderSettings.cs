@@ -1,4 +1,7 @@
-﻿using Microsoft.OpenApi.Any;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Validations;
@@ -42,12 +45,16 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Dictionary of parsers for converting extensions into strongly typed classes
         /// </summary>
-        public Dictionary<string, Func<IOpenApiAny , IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, IOpenApiExtension>>();
+        public Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
 
         /// <summary>
         /// Rules to use for validating OpenAPI specification.  If none are provided a default set of rules are applied.
         /// </summary>
         public ValidationRuleSet RuleSet { get; set; } = ValidationRuleSet.GetDefaultRuleSet();
 
+        /// <summary>
+        /// URL where relative references should be resolved from if the description does not contain Server definitions
+        /// </summary>
+        public Uri BaseUrl { get; set; }
     }
 }

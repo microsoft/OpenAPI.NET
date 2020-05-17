@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -27,7 +27,18 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "in", (o, n) =>
                     {
-                        o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
+                        var inString = n.GetScalarValue();
+
+                        if ( Enum.GetValues(typeof(ParameterLocation)).Cast<ParameterLocation>()
+                            .Select( e => e.GetDisplayName() )
+                            .Contains(inString) )
+                        {
+                            o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
+                        }
+                        else
+                        {
+                            o.In = null;
+                        }
                     }
                 },
                 {
@@ -101,8 +112,32 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
             new PatternFieldMap<OpenApiParameter>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())}
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
+
+        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new AnyFieldMap<OpenApiParameter>
+        {
+            {
+                OpenApiConstants.Example,
+                new AnyFieldMapParameter<OpenApiParameter>(
+                    s => s.Example,
+                    (s, v) => s.Example = v,
+                    s => s.Schema)
+            }
+        };
+
+        private static readonly AnyMapFieldMap<OpenApiParameter, OpenApiExample> _parameterAnyMapOpenApiExampleFields =
+            new AnyMapFieldMap<OpenApiParameter, OpenApiExample>
+        {
+            {
+                OpenApiConstants.Examples,
+                new AnyMapFieldMapParameter<OpenApiParameter, OpenApiExample>(
+                    m => m.Examples,
+                    e => e.Value,
+                    (e, v) => e.Value = v,
+                    m => m.Schema)
+            }
+        };
 
         public static OpenApiParameter LoadParameter(ParseNode node)
         {
@@ -115,9 +150,10 @@ namespace Microsoft.OpenApi.Readers.V3
             }
 
             var parameter = new OpenApiParameter();
-            var required = new List<string> {"name", "in"};
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
+            ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
+            ProcessAnyMapFields(mapNode, parameter, _parameterAnyMapOpenApiExampleFields);
 
             return parameter;
         }

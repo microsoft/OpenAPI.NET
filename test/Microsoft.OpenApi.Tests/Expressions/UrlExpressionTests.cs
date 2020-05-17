@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void UrlExpressionReturnsCorrectExpression()
         {
             // Arrange & Act
-            var url = UrlExpression.Instance;
+            var url = new UrlExpression();
 
             // Assert
             Assert.Equal("$url", url.Expression);

@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Validations
     /// <summary>
     /// Class containing dispatchers to execute validation rules on for Open API document.
     /// </summary>
-    public class OpenApiValidator : OpenApiVisitorBase, IValidationContext 
+    public class OpenApiValidator : OpenApiVisitorBase, IValidationContext
     {
         private readonly ValidationRuleSet _ruleSet;
         private readonly IList<OpenApiValidatorError> _errors = new List<OpenApiValidatorError>();
@@ -22,11 +22,11 @@ namespace Microsoft.OpenApi.Validations
         /// Create a vistor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
-        public OpenApiValidator(ValidationRuleSet ruleSet) 
+        public OpenApiValidator(ValidationRuleSet ruleSet)
         {
             _ruleSet = ruleSet;
         }
-        
+
         /// <summary>
         /// Gets the validation errors.
         /// </summary>
@@ -78,10 +78,22 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiComponents item) => Validate(item);
 
         /// <summary>
+        /// Execute validation rules against an <see cref="OpenApiHeader"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiHeader item) => Validate(item);
+
+        /// <summary>
         /// Execute validation rules against an <see cref="OpenApiResponse"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
         public override void Visit(OpenApiResponse item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against an <see cref="OpenApiMediaType"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiMediaType item) => Validate(item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiResponses"/>
@@ -112,6 +124,12 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         /// <param name="item">The object to be validated</param>
         public override void Visit(OpenApiTag item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against an <see cref="OpenApiParameter"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiParameter item) => Validate(item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiSchema"/>
@@ -177,7 +195,7 @@ namespace Microsoft.OpenApi.Validations
             var potentialReference = item as IOpenApiReferenceable;
             if (potentialReference != null && potentialReference.UnresolvedReference)
             {
-                type = typeof(IOpenApiReferenceable);  
+                type = typeof(IOpenApiReferenceable);
             }
 
             var rules = _ruleSet.FindRules(type);

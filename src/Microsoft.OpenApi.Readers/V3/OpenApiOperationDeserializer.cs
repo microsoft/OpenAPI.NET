@@ -21,7 +21,6 @@ namespace Microsoft.OpenApi.Readers.V3
                         valueNode =>
                             LoadTagByReference(
                                 valueNode.Context,
-                                valueNode.Diagnostic,
                                 valueNode.GetScalarValue()))
                 },
                 {
@@ -95,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
             new PatternFieldMap<OpenApiOperation>
             {
-                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, n.CreateAny())},
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
         internal static OpenApiOperation LoadOperation(ParseNode node)
@@ -111,7 +110,6 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
-            OpenApiDiagnostic diagnostic,
             string tagName)
         {
             var tagObject = new OpenApiTag()
@@ -123,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     Id = tagName
                 }
             };
-            
+
             return tagObject;
         }
     }

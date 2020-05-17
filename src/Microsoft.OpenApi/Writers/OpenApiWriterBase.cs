@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Writers
@@ -14,6 +15,12 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public abstract class OpenApiWriterBase : IOpenApiWriter
     {
+        
+        /// <summary>
+        /// Settings for controlling how the OpenAPI document will be written out.
+        /// </summary>
+        public OpenApiWriterSettings Settings { get; set; }
+
         /// <summary>
         /// The indentation string to prepand to each line for each indentation level.
         /// </summary>
@@ -30,22 +37,29 @@ namespace Microsoft.OpenApi.Writers
         private int _indentLevel;
 
         /// <summary>
-        /// Settings controlling the format and the version of the serialization.
-        /// </summary>
-        private OpenApiSerializerSettings _settings;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        /// <param name="settings">The writer settings.</param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiSerializerSettings settings)
+        public OpenApiWriterBase(TextWriter textWriter)
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
 
             Scopes = new Stack<Scope>();
-            this._settings = settings;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="textWriter"></param>
+        /// <param name="settings"></param>
+        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings = null) : this(textWriter)
+        {
+            if (settings == null)
+            {
+                settings = new OpenApiWriterSettings();
+            }
+            Settings = settings;
         }
 
         /// <summary>
@@ -112,7 +126,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="value">The string value.</param>
         public abstract void WriteValue(string value);
-        
+
         /// <summary>
         /// Write float value.
         /// </summary>
@@ -164,13 +178,21 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write dateTimeOffset value.
+        /// Write DateTime value.
         /// </summary>
-        /// <param name="value">The decimal value.</param>
+        /// <param name="value">The DateTime value.</param>
+        public virtual void WriteValue(DateTime value)
+        {
+            this.WriteValue(value.ToString("o"));
+        }
+
+        /// <summary>
+        /// Write DateTimeOffset value.
+        /// </summary>
+        /// <param name="value">The DateTimeOffset value.</param>
         public virtual void WriteValue(DateTimeOffset value)
         {
-            WriteValueSeparator();
-            Writer.Write(value.ToString("o"));
+            this.WriteValue(value.ToString("o"));
         }
 
         /// <summary>
@@ -224,6 +246,10 @@ namespace Microsoft.OpenApi.Writers
             else if (type == typeof(decimal) || type == typeof(decimal?))
             {
                 WriteValue((decimal)value);
+            }
+            else if (type == typeof(DateTime) || type == typeof(DateTime?))
+            {
+                WriteValue((DateTime)value);
             }
             else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
             {
