@@ -20,6 +20,8 @@ namespace Microsoft.OpenApi.Writers
            
         }
 
+        public bool UseLiteralStyle { get; set; }
+
         /// <summary>
         /// Base Indentation Level.
         /// This denotes how many indentations are needed for the property in the base object.
@@ -156,11 +158,76 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The string value.</param>
         public override void WriteValue(string value)
         {
-            WriteValueSeparator();
+            if (!UseLiteralStyle || value.IndexOfAny(new [] { '\n', '\r' }) == -1)
+            {
+                WriteValueSeparator();
 
-            value = value.GetYamlCompatibleString();
+                value = value.GetYamlCompatibleString();
 
-            Writer.Write(value);
+                Writer.Write(value);
+            }
+            else
+            {
+                if (CurrentScope() != null)
+                {
+                    WriteValueSeparator();
+                }
+
+                Writer.Write("|");
+                
+                // Write chomping indicator when it ends with line break.
+                if (value.LastIndexOfAny(new []{'\n', '\r'}) == value.Length - 1)
+                {
+                    Writer.Write("+");
+                }
+                
+                // Write indentation indicator when it starts with spaces
+                if (value.StartsWith(" "))
+                {
+                    Writer.Write(IndentationString.Length);
+                }
+                
+                Writer.WriteLine();
+
+                IncreaseIndentation();
+
+                var start = 0;
+                while (start < value.Length && value.IndexOfAny(new [] {'\n', '\r'}, start) is var lineBreak)
+                {
+                    if (lineBreak == -1)
+                    {
+                        break;
+                    }
+
+                    // To preserves line break characters.
+                    var end = lineBreak;
+                    if (lineBreak + 1 < value.Length && value[lineBreak] == '\r' && value[lineBreak + 1] == '\n')
+                    { 
+                        // The line ends with "\r\n". YAML 1.2 specifies only three line breaks. "\r\n" | "\r" | "\n"
+                        end++;
+                    }
+                    
+                    if (lineBreak - start != 0)
+                    {
+                        // Indentation for empty lines aren't needed.
+                        WriteIndentation();
+                    }
+
+                    var line = value.Substring(start, end - start + 1);
+                    Writer.Write(line);
+
+                    start = end + 1;
+                }
+
+                // Last line
+                if (start < value.Length)
+                {
+                    WriteIndentation(); 
+                    Writer.Write(value.Substring(start));
+                }
+
+                DecreaseIndentation();
+            }
         }
 
         /// <summary>
