@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
         /// </summary>
         /// <param name="textWriter"></param>
         /// <param name="settings"></param>
