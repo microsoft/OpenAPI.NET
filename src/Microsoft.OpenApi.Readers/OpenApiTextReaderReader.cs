@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers
         {
             YamlDocument yamlDocument;
 
-            // Parse the YAML/JSON
+            // Parse the YAML/JSON text in the TextReader into the YamlDocument
             try
             {
                 yamlDocument = LoadYamlDocument(input);
