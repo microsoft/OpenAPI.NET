@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 JsonConvert.DeserializeObject(JsonConvert.SerializeObject(new List<string>(stringValues)));
 
             // Assert
-            parsedObject.ShouldBeEquivalentTo(expectedObject);
+            parsedObject.Should().BeEquivalentTo(expectedObject);
         }
 
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesSimple()
@@ -196,10 +196,10 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         private void WriteValueRecursive(OpenApiJsonWriter writer, object value)
         {
-            if (value == null 
-                || value.GetType().IsPrimitive 
-                || value is decimal 
-                || value is string 
+            if (value == null
+                || value.GetType().IsPrimitive
+                || value is decimal
+                || value is string
                 || value is DateTimeOffset
                 || value is DateTime)
             {
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var expectedObject = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(inputMap));
 
             // Assert
-            parsedObject.ShouldBeEquivalentTo(expectedObject);
+            parsedObject.Should().BeEquivalentTo(expectedObject);
         }
 
         public static IEnumerable<object[]> WriteDateTimeAsJsonTestCases()

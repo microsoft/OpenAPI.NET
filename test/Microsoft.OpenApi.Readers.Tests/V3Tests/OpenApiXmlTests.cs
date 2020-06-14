@@ -27,16 +27,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var xml = OpenApiV3Deserializer.LoadXml(node);
 
                 // Assert
-                xml.ShouldBeEquivalentTo(
+                xml.Should().BeEquivalentTo(
                     new OpenApiXml
                     {
                         Name = "name1",

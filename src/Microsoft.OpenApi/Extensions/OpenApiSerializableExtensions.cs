@@ -50,11 +50,13 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="stream">The given stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
+        /// <param name="settings">Provide configuration settings for controlling writing output</param>
         public static void Serialize<T>(
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format)
+            OpenApiFormat format, 
+            OpenApiWriterSettings settings = null)
             where T : IOpenApiSerializable
         {
             if (stream == null)
@@ -67,10 +69,10 @@ namespace Microsoft.OpenApi.Extensions
             switch (format)
             {
                 case OpenApiFormat.Json:
-                    writer = new OpenApiJsonWriter(streamWriter);
+                    writer = new OpenApiJsonWriter(streamWriter,settings);
                     break;
                 case OpenApiFormat.Yaml:
-                    writer = new OpenApiYamlWriter(streamWriter);
+                    writer = new OpenApiYamlWriter(streamWriter, settings);
                     break;
                 default:
                     throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format));
@@ -86,6 +88,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">The Open API element.</param>
         /// <param name="writer">The output writer.</param>
         /// <param name="specVersion">Version of the specification the output should conform to</param>
+
         public static void Serialize<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion)
             where T : IOpenApiSerializable
         {
@@ -115,6 +118,7 @@ namespace Microsoft.OpenApi.Extensions
 
             writer.Flush();
         }
+
 
         /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in JSON format.

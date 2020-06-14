@@ -17,9 +17,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     {
         private readonly YamlSequenceNode _nodeList;
 
-        public ListNode(ParsingContext context, OpenApiDiagnostic diagnostic, YamlSequenceNode sequenceNode) : base(
-            context,
-            diagnostic)
+        public ListNode(ParsingContext context, YamlSequenceNode sequenceNode) : base(
+            context)
         {
             _nodeList = sequenceNode;
         }
@@ -32,14 +31,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
             }
 
-            return _nodeList.Select(n => map(new MapNode(Context, Diagnostic, n as YamlMappingNode)))
+            return _nodeList.Select(n => map(new MapNode(Context, n as YamlMappingNode)))
                 .Where(i => i != null)
                 .ToList();
         }
 
         public override List<IOpenApiAny> CreateListOfAny()
         {
-            return _nodeList.Select(n => ParseNode.Create(Context, Diagnostic,n).CreateAny())
+            return _nodeList.Select(n => ParseNode.Create(Context, n).CreateAny())
                 .Where(i => i != null)
                 .ToList();
         }
@@ -52,12 +51,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
             }
 
-            return _nodeList.Select(n => map(new ValueNode(Context, Diagnostic, n))).ToList();
+            return _nodeList.Select(n => map(new ValueNode(Context, n))).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()
         {
-            return _nodeList.Select(n => Create(Context, Diagnostic, n)).ToList().GetEnumerator();
+            return _nodeList.Select(n => Create(Context, n)).ToList().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -15,15 +15,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal abstract class ParseNode
     {
-        protected ParseNode(ParsingContext parsingContext, OpenApiDiagnostic diagnostic)
+        protected ParseNode(ParsingContext parsingContext)
         {
             Context = parsingContext;
-            Diagnostic = diagnostic;
         }
 
         public ParsingContext Context { get; }
-
-        public OpenApiDiagnostic Diagnostic { get; }
 
         public MapNode CheckMapNode(string nodeName)
         {
@@ -35,20 +32,20 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return mapNode;
         }
 
-        public static ParseNode Create(ParsingContext context, OpenApiDiagnostic diagnostic, YamlNode node)
+        public static ParseNode Create(ParsingContext context, YamlNode node)
         {
 
             if (node is YamlSequenceNode listNode)
             {
-                return new ListNode(context, diagnostic, listNode);
+                return new ListNode(context, listNode);
             }
 
             if (node is YamlMappingNode mapNode)
             {
-                return new MapNode(context, diagnostic, mapNode);
+                return new MapNode(context, mapNode);
             }
 
-            return new ValueNode(context, diagnostic, node as YamlScalarNode);
+            return new ValueNode(context, node as YamlScalarNode);
         }
 
         public virtual List<T> CreateList<T>(Func<MapNode, T> map)

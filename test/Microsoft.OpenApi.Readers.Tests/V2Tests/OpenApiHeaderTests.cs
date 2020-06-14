@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var header = OpenApiV2Deserializer.LoadHeader(node);
 
             // Assert
-            header.ShouldBeEquivalentTo(
+            header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
                     Schema = new OpenApiSchema()
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var header = OpenApiV2Deserializer.LoadHeader(node);
 
             // Assert
-            header.ShouldBeEquivalentTo(
+            header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
                     Schema = new OpenApiSchema()

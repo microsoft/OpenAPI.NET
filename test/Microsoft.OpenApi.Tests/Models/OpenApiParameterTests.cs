@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Title = "title2",
                 Description = "description2"
             },
-            Examples = new Dictionary<string,OpenApiExample>
+            Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
                 {

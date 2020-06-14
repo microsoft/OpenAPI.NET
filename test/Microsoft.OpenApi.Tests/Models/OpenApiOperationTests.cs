@@ -359,6 +359,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""$ref"": ""#/components/responses/response1""
     },
     ""400"": {
+      ""description"": null,
       ""content"": {
         ""application/json"": {
           ""schema"": {
@@ -431,6 +432,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""$ref"": ""#/components/responses/response1""
     },
     ""400"": {
+      ""description"": null,
       ""content"": {
         ""application/json"": {
           ""schema"": {
@@ -554,7 +556,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = _operationWithFormData.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
-            
+
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -607,7 +609,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = _operationWithFormData.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
-            
+
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -658,6 +660,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""$ref"": ""#/responses/response1""
     },
     ""400"": {
+      ""description"": null,
       ""schema"": {
         ""maximum"": 10,
         ""minimum"": 5,
@@ -672,7 +675,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = _operationWithBody.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
-            
+
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
@@ -727,6 +730,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""$ref"": ""#/responses/response1""
     },
     ""400"": {
+      ""description"": null,
       ""schema"": {
         ""maximum"": 10,
         ""minimum"": 5,

@@ -34,9 +34,9 @@ namespace Microsoft.OpenApi.Expressions
                 throw Error.ArgumentNullOrWhiteSpace(nameof(expression));
             }
 
-            if ( !expression.StartsWith( Prefix ) )
+            if (!expression.StartsWith(Prefix))
             {
-                return new CompositeExpression( expression );
+                return new CompositeExpression(expression);
             }
 
             // $url
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Expressions
                 return new ResponseExpression(source);
             }
 
-            throw new OpenApiException( string.Format( SRResource.RuntimeExpressionHasInvalidFormat, expression ) );
+            throw new OpenApiException(string.Format(SRResource.RuntimeExpressionHasInvalidFormat, expression));
         }
 
         /// <summary>

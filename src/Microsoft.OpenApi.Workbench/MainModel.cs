@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Microsoft.OpenApi.Extensions;
@@ -11,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
+using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Workbench
 {
@@ -30,6 +32,11 @@ namespace Microsoft.OpenApi.Workbench
         private string _parseTime;
 
         private string _renderTime;
+
+        /// <summary>
+        /// Default format.
+        /// </summary>
+        private bool _Inline = false;
 
         /// <summary>
         /// Default format.
@@ -112,6 +119,16 @@ namespace Microsoft.OpenApi.Workbench
             }
         }
 
+        public bool Inline
+        {
+            get => _Inline;
+            set
+            {
+                _Inline = value;
+                OnPropertyChanged(nameof(Inline));
+            }
+        }
+
         public OpenApiSpecVersion Version
         {
             get => _version;
@@ -176,16 +193,16 @@ namespace Microsoft.OpenApi.Workbench
                 {
                     stream = CreateStream(_input);
                 }
-                
+
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
                 var document = new OpenApiStreamReader(new OpenApiReaderSettings
-                    {
-                        ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences,
-                        RuleSet = ValidationRuleSet.GetDefaultRuleSet()
-                    }
+                {
+                    ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences,
+                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                }
                 ).Read(stream, out var context);
                 stopwatch.Stop();
                 ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
@@ -217,7 +234,7 @@ namespace Microsoft.OpenApi.Workbench
                 var walker = new OpenApiWalker(statsVisitor);
                 walker.Walk(document);
 
-                Errors += Environment.NewLine + "Statistics:" + Environment.NewLine + statsVisitor.GetStatisticsReport();    
+                Errors += Environment.NewLine + "Statistics:" + Environment.NewLine + statsVisitor.GetStatisticsReport();
             }
             catch (Exception ex)
             {
@@ -232,10 +249,14 @@ namespace Microsoft.OpenApi.Workbench
         private string WriteContents(OpenApiDocument document)
         {
             var outputStream = new MemoryStream();
+            
             document.Serialize(
                 outputStream,
                 Version,
-                Format);
+                Format,
+                new OpenApiWriterSettings() {
+                    ReferenceInline = this.Inline == true ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
+                });
             
             outputStream.Position = 0;
 

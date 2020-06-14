@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Visit(tag as IOpenApiExtensible);
             errors = validator.Errors;
-            bool result = !errors.Any(); 
+            bool result = !errors.Any();
 
             // Assert
             Assert.False(result);

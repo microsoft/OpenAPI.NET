@@ -31,10 +31,10 @@ aDate: 2017-01-02
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             var anyMap = node.CreateAny();
 
@@ -74,7 +74,7 @@ aDate: 2017-01-02
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),
@@ -84,7 +84,7 @@ aDate: 2017-01-02
                     ["aDate"] = new OpenApiDate(DateTimeOffset.Parse("2017-01-02", CultureInfo.InvariantCulture).Date),
                 });
         }
-    
+
 
         [Fact]
         public void ParseNestedObjectAsAnyShouldSucceed()
@@ -117,10 +117,10 @@ aDate: 2017-01-02
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             var anyMap = node.CreateAny();
 
@@ -214,7 +214,7 @@ aDate: 2017-01-02
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),
@@ -264,7 +264,7 @@ aDate: 2017-01-02
                     ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))
                 });
         }
-    
+
 
         [Fact]
         public void ParseNestedObjectAsAnyWithPartialSchemaShouldSucceed()
@@ -297,10 +297,10 @@ aDate: 2017-01-02
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             var anyMap = node.CreateAny();
 
@@ -370,7 +370,7 @@ aDate: 2017-01-02
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),
@@ -452,10 +452,10 @@ aDate: 2017-01-02
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext();
             var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             var anyMap = node.CreateAny();
 
@@ -463,7 +463,7 @@ aDate: 2017-01-02
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.ShouldBeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(
                 new OpenApiObject
                 {
                     ["aString"] = new OpenApiString("fooBar"),

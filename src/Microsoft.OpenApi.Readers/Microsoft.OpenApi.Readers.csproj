@@ -10,7 +10,7 @@
         <Company>Microsoft</Company>
         <Title>Microsoft.OpenApi.Readers</Title>
         <PackageId>Microsoft.OpenApi.Readers</PackageId>
-        <Version>1.1.4</Version>
+        <Version>1.2.0</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <PackageTags>OpenAPI .NET</PackageTags>
@@ -26,7 +26,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="SharpYaml" Version="1.6.1" />
+        <PackageReference Include="SharpYaml" Version="1.6.5" />
     </ItemGroup>
 
     <ItemGroup>

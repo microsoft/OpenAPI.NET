@@ -14,7 +14,8 @@ namespace Microsoft.OpenApi.Writers
         /// Initializes a new instance of the <see cref="OpenApiJsonWriter"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        public OpenApiJsonWriter(TextWriter textWriter) : base(textWriter)
+        /// <param name="settings">Settings for controlling how the OpenAPI document will be written out.</param>
+        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings settings = null) : base(textWriter, settings)
         {
         }
 

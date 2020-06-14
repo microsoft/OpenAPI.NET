@@ -23,7 +23,6 @@ namespace Microsoft.OpenApi.Readers.V2
                         valueNode =>
                             LoadTagByReference(
                                 valueNode.Context,
-                                valueNode.Diagnostic,
                                 valueNode.GetScalarValue()))
                 },
                 {
@@ -210,7 +209,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
-            OpenApiDiagnostic diagnostic,
             string tagName)
         {
             var tagObject = new OpenApiTag()

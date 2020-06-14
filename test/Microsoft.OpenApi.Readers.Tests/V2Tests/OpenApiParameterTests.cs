@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Path,
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Query,
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Header,
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Header,
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,
@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,
@@ -291,7 +291,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,
@@ -315,7 +315,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,
@@ -343,7 +343,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Path,
@@ -373,7 +373,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Path,

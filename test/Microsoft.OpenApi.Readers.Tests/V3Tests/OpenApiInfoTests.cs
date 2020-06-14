@@ -28,16 +28,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
                 // Assert
-                openApiInfo.ShouldBeEquivalentTo(
+                openApiInfo.Should().BeEquivalentTo(
                     new OpenApiInfo
                     {
                         Title = "Advanced Info",
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         },
                         License = new OpenApiLicense
                         {
-                            Extensions = {["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer")},
+                            Extensions = { ["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer") },
                             Name = "licenseName",
                             Url = new Uri("http://www.example.com/url2")
                         },
@@ -71,8 +71,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             },
                             ["x-list"] = new OpenApiArray
                             {
-                                new OpenApiInteger(1),
-                                new OpenApiInteger(2)
+                                new OpenApiString("1"),
+                                new OpenApiString("2")
                             }
                         }
                     });
@@ -88,16 +88,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
                 // Assert
-                openApiInfo.ShouldBeEquivalentTo(
+                openApiInfo.Should().BeEquivalentTo(
                     new OpenApiInfo
                     {
                         Title = "Basic Info",
@@ -128,16 +128,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
                 // Assert
-                openApiInfo.ShouldBeEquivalentTo(
+                openApiInfo.Should().BeEquivalentTo(
                     new OpenApiInfo
                     {
                         Title = "Minimal Info",

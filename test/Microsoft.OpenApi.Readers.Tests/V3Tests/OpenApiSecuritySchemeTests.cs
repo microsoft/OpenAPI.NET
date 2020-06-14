@@ -27,16 +27,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.Http,
@@ -54,16 +54,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.ApiKey,
@@ -82,16 +82,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.Http,
@@ -110,16 +110,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.OAuth2,
@@ -148,16 +148,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
                 // Assert
-                securityScheme.ShouldBeEquivalentTo(
+                securityScheme.Should().BeEquivalentTo(
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.OpenIdConnect,

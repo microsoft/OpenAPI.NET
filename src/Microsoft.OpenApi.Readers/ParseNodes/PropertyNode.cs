@@ -14,12 +14,11 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal class PropertyNode : ParseNode
     {
-        public PropertyNode(ParsingContext context, OpenApiDiagnostic diagnostic, string name, YamlNode node) : base(
-            context,
-            diagnostic)
+        public PropertyNode(ParsingContext context, string name, YamlNode node) : base(
+            context)
         {
             Name = name;
-            Value = Create(context, diagnostic, node);
+            Value = Create(context, node);
         }
 
         public string Name { get; set; }
@@ -43,12 +42,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 }
                 catch (OpenApiReaderException ex)
                 {
-                    Diagnostic.Errors.Add(new OpenApiError(ex));
+                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
                 }
                 catch (OpenApiException ex)
                 {
                     ex.Pointer = Context.GetLocation();
-                    Diagnostic.Errors.Add(new OpenApiError(ex));
+                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
                 }
                 finally
                 {
@@ -67,12 +66,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     }
                     catch (OpenApiReaderException ex)
                     {
-                        Diagnostic.Errors.Add(new OpenApiError(ex));
+                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
                     }
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = Context.GetLocation();
-                        Diagnostic.Errors.Add(new OpenApiError(ex));
+                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
                     }
                     finally
                     {
@@ -81,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 }
                 else
                 {
-                    Diagnostic.Errors.Add(
+                    Context.Diagnostic.Errors.Add(
                         new OpenApiError("", $"{Name} is not a valid property at {Context.GetLocation()}"));
                 }
             }

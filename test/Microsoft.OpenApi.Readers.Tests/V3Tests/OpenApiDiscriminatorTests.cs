@@ -26,16 +26,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 yamlStream.Load(new StreamReader(stream));
                 var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var context = new ParsingContext();
                 var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, diagnostic, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
                 // Act
                 var discriminator = OpenApiV3Deserializer.LoadDiscriminator(node);
 
                 // Assert
-                discriminator.ShouldBeEquivalentTo(
+                discriminator.Should().BeEquivalentTo(
                     new OpenApiDiscriminator
                     {
                         PropertyName = "pet_type",

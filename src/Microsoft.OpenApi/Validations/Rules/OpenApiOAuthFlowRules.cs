@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("tokenUrl");
                     if (flow.TokenUrl == null)
                     {
-                        context.CreateError(nameof(OAuthFlowRequiredFields), 
+                        context.CreateError(nameof(OAuthFlowRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow"));
                     }
                     context.Exit();
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("scopes");
                     if (flow.Scopes == null)
                     {
-                        context.CreateError(nameof(OAuthFlowRequiredFields), 
+                        context.CreateError(nameof(OAuthFlowRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "scopes", "OAuth Flow"));
                     }
                     context.Exit();

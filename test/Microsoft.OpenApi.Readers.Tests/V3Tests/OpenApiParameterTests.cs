@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Path,
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Query,
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectType.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Query,
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "queryParameterWithObjectTypeAndContent.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Query,
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = ParameterLocation.Header,
@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "token to be passed as a header",
                     Required = true,
                     Style = ParameterStyle.Simple,
-                   
+
                     Schema = new OpenApiSchema
                     {
                         Type = "array",
@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNullLocation.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,
@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithNoLocation.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,
@@ -253,7 +253,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange
             MapNode node;
-            using ( var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml")) )
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "parameterWithUnknownLocation.yaml")))
             {
                 node = TestHelper.CreateYamlMapNode(stream);
             }
@@ -262,7 +262,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,
@@ -320,7 +320,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var parameter = OpenApiV3Deserializer.LoadParameter(node);
 
             // Assert
-            parameter.ShouldBeEquivalentTo(
+            parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
                 {
                     In = null,

@@ -42,7 +42,7 @@ info:
 paths: {}",
                 out var context);
 
-            openApiDoc.ShouldBeEquivalentTo(
+            openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -53,7 +53,7 @@ paths: {}",
                     Paths = new OpenApiPaths()
                 });
 
-            context.ShouldBeEquivalentTo(
+            context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
@@ -88,7 +88,7 @@ components:
 paths: {}",
                 out var context);
 
-            openApiDoc.ShouldBeEquivalentTo(
+            openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
                     Info = new OpenApiInfo
@@ -125,7 +125,7 @@ paths: {}",
                     Paths = new OpenApiPaths()
                 });
 
-            context.ShouldBeEquivalentTo(
+            context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
@@ -136,10 +136,10 @@ paths: {}",
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                diagnostic.ShouldBeEquivalentTo(
+                diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-                openApiDoc.ShouldBeEquivalentTo(
+                openApiDoc.Should().BeEquivalentTo(
                     new OpenApiDocument
                     {
                         Info = new OpenApiInfo
@@ -172,7 +172,7 @@ paths: {}",
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                openApiDoc.ShouldBeEquivalentTo(
+                openApiDoc.Should().BeEquivalentTo(
                     new OpenApiDocument
                     {
                         Info = new OpenApiInfo
@@ -182,7 +182,7 @@ paths: {}",
                         Paths = new OpenApiPaths()
                     });
 
-                diagnostic.ShouldBeEquivalentTo(
+                diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic
                     {
                         Errors =
@@ -201,7 +201,7 @@ paths: {}",
             {
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                openApiDoc.ShouldBeEquivalentTo(
+                openApiDoc.Should().BeEquivalentTo(
                     new OpenApiDocument
                     {
                         Info = new OpenApiInfo
@@ -212,7 +212,7 @@ paths: {}",
                         Paths = new OpenApiPaths()
                     });
 
-                diagnostic.ShouldBeEquivalentTo(
+                diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
             }
         }
@@ -637,10 +637,10 @@ paths: {}",
                     Components = components
                 };
 
-                actual.ShouldBeEquivalentTo(expected);
+                actual.Should().BeEquivalentTo(expected);
             }
 
-            context.ShouldBeEquivalentTo(
+            context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
@@ -1170,10 +1170,10 @@ paths: {}",
                     }
                 };
 
-                actual.ShouldBeEquivalentTo(expected);
+                actual.Should().BeEquivalentTo(expected);
             }
 
-            context.ShouldBeEquivalentTo(
+            context.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
@@ -1189,7 +1189,7 @@ paths: {}",
                 // TODO: Create the object in memory and compare with the one read from YAML file.
             }
 
-            context.ShouldBeEquivalentTo(
+            context.Should().BeEquivalentTo(
                     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
@@ -1215,7 +1215,7 @@ paths: {}",
 
                 var exampleHeader = openApiDoc.Components?.Headers?["example-header"];
                 Assert.NotNull(exampleHeader);
-                exampleHeader.ShouldBeEquivalentTo(
+                exampleHeader.Should().BeEquivalentTo(
                     new OpenApiHeader()
                     {
                         Description = "Test header with example",
@@ -1240,7 +1240,7 @@ paths: {}",
 
                 var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
                 Assert.NotNull(examplesHeader);
-                examplesHeader.ShouldBeEquivalentTo(
+                examplesHeader.Should().BeEquivalentTo(
                     new OpenApiHeader()
                     {
                         Description = "Test header with example",

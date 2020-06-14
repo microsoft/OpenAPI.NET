@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(doc);
 
-            Walk(OpenApiConstants.Info,() => Walk(doc.Info));
+            Walk(OpenApiConstants.Info, () => Walk(doc.Info));
             Walk(OpenApiConstants.Servers, () => Walk(doc.Servers));
             Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
             Walk(OpenApiConstants.Components, () => Walk(doc.Components));
@@ -238,7 +238,7 @@ namespace Microsoft.OpenApi.Services
             {
                 for (int i = 0; i < servers.Count; i++)
                 {
-                    Walk(i.ToString(),() => Walk(servers[i]));
+                    Walk(i.ToString(), () => Walk(servers[i]));
                 }
             }
         }
@@ -254,7 +254,8 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(info);
-            if (info != null) {
+            if (info != null)
+            {
                 Walk(OpenApiConstants.Contact, () => Walk(info.Contact));
                 Walk(OpenApiConstants.License, () => Walk(info.License));
             }
@@ -380,7 +381,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiServerVariable"/>
         /// </summary>
-        internal void Walk(IDictionary<string,OpenApiServerVariable> serverVariables)
+        internal void Walk(IDictionary<string, OpenApiServerVariable> serverVariables)
         {
             if (serverVariables == null)
             {
@@ -684,13 +685,13 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(OpenApiMediaType mediaType)
         {
-            if (mediaType == null) 
+            if (mediaType == null)
             {
                 return;
             }
 
             _visitor.Visit(mediaType);
-            
+
             Walk(OpenApiConstants.Example, () => Walk(mediaType.Examples));
             Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
             Walk(OpenApiConstants.Encoding, () => Walk(mediaType.Encoding));
@@ -747,14 +748,16 @@ namespace Microsoft.OpenApi.Services
             if (_schemaLoop.Contains(schema))
             {
                 return;  // Loop detected, this schema has already been walked.
-            } else
+            }
+            else
             {
                 _schemaLoop.Push(schema);
             }
 
             _visitor.Visit(schema);
 
-            if (schema.Items != null) {
+            if (schema.Items != null)
+            {
                 Walk("items", () => Walk(schema.Items));
             }
 
@@ -768,7 +771,13 @@ namespace Microsoft.OpenApi.Services
                 Walk("anyOf", () => Walk(schema.AnyOf));
             }
 
-            if (schema.Properties != null) {
+            if (schema.OneOf != null)
+            {
+                Walk("oneOf", () => Walk(schema.OneOf));
+            }
+
+            if (schema.Properties != null)
+            {
                 Walk("properties", () =>
                 {
                     foreach (var item in schema.Properties)
@@ -788,7 +797,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiExample"/>
         /// </summary>
-        internal void Walk(IDictionary<string,OpenApiExample> examples)
+        internal void Walk(IDictionary<string, OpenApiExample> examples)
         {
             if (examples == null)
             {
@@ -876,7 +885,7 @@ namespace Microsoft.OpenApi.Services
                 }
             }
         }
-        
+
         /// <summary>
         /// Visits <see cref="OpenApiOAuthFlows"/> and child objects
         /// </summary>
@@ -907,7 +916,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiLink"/> and child objects
         /// </summary>
-        internal void Walk(IDictionary<string,OpenApiLink> links)
+        internal void Walk(IDictionary<string, OpenApiLink> links)
         {
             if (links == null)
             {

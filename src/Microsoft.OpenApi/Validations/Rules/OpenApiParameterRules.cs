@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Enter("in");
                     if (item.In == null)
                     {
-                        context.CreateError(nameof(ParameterRequiredFields), 
+                        context.CreateError(nameof(ParameterRequiredFields),
                             String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter"));
                     }
                     context.Exit();
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 {
                     // required
                     context.Enter("required");
-                    if ( item.In == ParameterLocation.Path && !item.Required )
+                    if (item.In == ParameterLocation.Path && !item.Required)
                     {
                         context.CreateError(
                             nameof(RequiredMustBeTrueWhenInIsPath),
