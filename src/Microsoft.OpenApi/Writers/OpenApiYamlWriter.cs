@@ -14,10 +14,17 @@ namespace Microsoft.OpenApi.Writers
         /// Initializes a new instance of the <see cref="OpenApiYamlWriter"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        /// <param name="settings"></param>
-        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings = null) : base(textWriter, settings)
+        public OpenApiYamlWriter(TextWriter textWriter) : this(textWriter, null)
         {
-           
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenApiYamlWriter"/> class.
+        /// </summary>
+        /// <param name="textWriter">The text writer.</param>
+        /// <param name="settings"></param>
+        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
+        {
         }
 
         /// <summary>
