@@ -39,12 +39,8 @@ namespace Microsoft.OpenApi.Writers
         /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        public OpenApiWriterBase(TextWriter textWriter)
+        public OpenApiWriterBase(TextWriter textWriter) : this(textWriter, null)
         {
-            Writer = textWriter;
-            Writer.NewLine = "\n";
-
-            Scopes = new Stack<Scope>();
         }
 
         /// <summary>
@@ -52,12 +48,18 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter"></param>
         /// <param name="settings"></param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings = null) : this(textWriter)
+        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings = null) 
         {
+            Writer = textWriter;
+            Writer.NewLine = "\n";
+
+            Scopes = new Stack<Scope>();
+
             if (settings == null)
             {
                 settings = new OpenApiWriterSettings();
             }
+
             Settings = settings;
         }
 
