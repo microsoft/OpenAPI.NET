@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter"></param>
         /// <param name="settings"></param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings = null) 
+        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings) 
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
