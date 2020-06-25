@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Writers
@@ -40,25 +39,27 @@ namespace Microsoft.OpenApi.Writers
         /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        public OpenApiWriterBase(TextWriter textWriter)
+        public OpenApiWriterBase(TextWriter textWriter) : this(textWriter, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenApiWriterBase"/> class.
+        /// </summary>
+        /// <param name="textWriter"></param>
+        /// <param name="settings"></param>
+        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings) 
         {
             Writer = textWriter;
             Writer.NewLine = "\n";
 
             Scopes = new Stack<Scope>();
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="textWriter"></param>
-        /// <param name="settings"></param>
-        public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings = null) : this(textWriter)
-        {
             if (settings == null)
             {
                 settings = new OpenApiWriterSettings();
             }
+
             Settings = settings;
         }
 

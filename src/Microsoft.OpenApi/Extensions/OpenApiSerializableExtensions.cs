@@ -50,13 +50,32 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="stream">The given stream.</param>
         /// <param name="specVersion">The Open API specification version.</param>
         /// <param name="format">The output format (JSON or YAML).</param>
+        public static void Serialize<T>(
+            this T element,
+            Stream stream,
+            OpenApiSpecVersion specVersion,
+            OpenApiFormat format)
+            where T : IOpenApiSerializable
+        {
+            element.Serialize(stream, specVersion, format, null);
+        }
+
+        /// <summary>
+        /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document using
+        /// the given stream, specification version and the format.
+        /// </summary>
+        /// <typeparam name="T">the <see cref="IOpenApiSerializable"/></typeparam>
+        /// <param name="element">The Open API element.</param>
+        /// <param name="stream">The given stream.</param>
+        /// <param name="specVersion">The Open API specification version.</param>
+        /// <param name="format">The output format (JSON or YAML).</param>
         /// <param name="settings">Provide configuration settings for controlling writing output</param>
         public static void Serialize<T>(
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
             OpenApiFormat format, 
-            OpenApiWriterSettings settings = null)
+            OpenApiWriterSettings settings)
             where T : IOpenApiSerializable
         {
             if (stream == null)
