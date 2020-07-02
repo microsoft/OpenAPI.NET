@@ -198,39 +198,24 @@ namespace Microsoft.OpenApi.Writers
 
                 IncreaseIndentation();
 
-                var start = 0;
-                while (start < value.Length && value.IndexOfAny(new [] {'\n', '\r'}, start) is var lineBreak)
+                using (var reader = new StringReader(value))
                 {
-                    if (lineBreak == -1)
+                    bool firstLine = true;
+                    while (reader.ReadLine() is var line && line != null)
                     {
-                        break;
+                        if (firstLine)
+                            firstLine = false;
+                        else
+                            Writer.WriteLine();
+                        
+                        // Indentations for empty lines aren't needed.
+                        if (line.Length > 0)
+                        {
+                            WriteIndentation();
+                        }
+
+                        Writer.Write(line);
                     }
-
-                    // To preserves line break characters.
-                    var end = lineBreak;
-                    if (lineBreak + 1 < value.Length && value[lineBreak] == '\r' && value[lineBreak + 1] == '\n')
-                    { 
-                        // The line ends with "\r\n". YAML 1.2 specifies only three line breaks. "\r\n" | "\r" | "\n"
-                        end++;
-                    }
-                    
-                    if (lineBreak - start != 0)
-                    {
-                        // Indentation for empty lines aren't needed.
-                        WriteIndentation();
-                    }
-
-                    var line = value.Substring(start, end - start + 1);
-                    Writer.Write(line);
-
-                    start = end + 1;
-                }
-
-                // Last line
-                if (start < value.Length)
-                {
-                    WriteIndentation(); 
-                    Writer.Write(value.Substring(start));
                 }
 
                 DecreaseIndentation();
