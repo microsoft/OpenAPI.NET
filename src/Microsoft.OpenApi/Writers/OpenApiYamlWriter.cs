@@ -182,12 +182,8 @@ namespace Microsoft.OpenApi.Writers
 
                 Writer.Write("|");
                 
-                // Write chomping indicator when it ends with line break.
-                if (value.LastIndexOfAny(new []{'\n', '\r'}) == value.Length - 1)
-                {
-                    Writer.Write("+");
-                }
-                
+                WriteChompingIndicator(value);
+
                 // Write indentation indicator when it starts with spaces
                 if (value.StartsWith(" "))
                 {
@@ -219,6 +215,54 @@ namespace Microsoft.OpenApi.Writers
                 }
 
                 DecreaseIndentation();
+            }
+        }
+
+        private void WriteChompingIndicator(string value)
+        {
+            var trailingNewlines = 0;
+            var end = value.Length - 1;
+            // We only need to know whether there are 0, 1, or more trailing newlines
+            while (end >= 0 && trailingNewlines < 2)
+            {
+                var found = value.LastIndexOfAny(new[] { '\n', '\r' }, end, 2);
+                if (found == -1 || found != end)
+                {
+                    // does not ends with newline
+                    break;
+                }
+
+                if (value[end] == '\r')
+                {
+                    // ends with \r
+                    end--;
+                }
+                else if (end > 0 && value[end - 1] == '\r')
+                {
+                    // ends with \r\n
+                    end -= 2;
+                }
+                else
+                {
+                    // ends with \n
+                    end -= 1;
+                }
+                trailingNewlines++;
+            }
+
+            switch (trailingNewlines)
+            {
+                case 0:
+                    // "strip" chomping indicator
+                    Writer.Write("-");
+                    break;
+                case 1:
+                    // "clip"
+                    break;
+                default:
+                    // "keep" chomping indicator
+                    Writer.Write("+");
+                    break;
             }
         }
 
