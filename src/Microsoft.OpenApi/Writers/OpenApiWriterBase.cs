@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// The indentation string to prepand to each line for each indentation level.
         /// </summary>
-        private const string IndentationString = "  ";
+        protected const string IndentationString = "  ";
 
         /// <summary>
         /// Scope of the Open API element - object, array, property.
