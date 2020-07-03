@@ -14,11 +14,20 @@ namespace Microsoft.OpenApi.Writers
         /// Initializes a new instance of the <see cref="OpenApiYamlWriter"/> class.
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
-        /// <param name="settings"></param>
-        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings = null) : base(textWriter, settings)
+        public OpenApiYamlWriter(TextWriter textWriter) : this(textWriter, null)
         {
-           
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenApiYamlWriter"/> class.
+        /// </summary>
+        /// <param name="textWriter">The text writer.</param>
+        /// <param name="settings"></param>
+        public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
+        {
+        }
+
+        public bool UseLiteralStyle { get; set; }
 
         /// <summary>
         /// Base Indentation Level.
@@ -156,11 +165,105 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="value">The string value.</param>
         public override void WriteValue(string value)
         {
-            WriteValueSeparator();
+            if (!UseLiteralStyle || value.IndexOfAny(new [] { '\n', '\r' }) == -1)
+            {
+                WriteValueSeparator();
 
-            value = value.GetYamlCompatibleString();
+                value = value.GetYamlCompatibleString();
 
-            Writer.Write(value);
+                Writer.Write(value);
+            }
+            else
+            {
+                if (CurrentScope() != null)
+                {
+                    WriteValueSeparator();
+                }
+
+                Writer.Write("|");
+                
+                WriteChompingIndicator(value);
+
+                // Write indentation indicator when it starts with spaces
+                if (value.StartsWith(" "))
+                {
+                    Writer.Write(IndentationString.Length);
+                }
+                
+                Writer.WriteLine();
+
+                IncreaseIndentation();
+
+                using (var reader = new StringReader(value))
+                {
+                    bool firstLine = true;
+                    while (reader.ReadLine() is var line && line != null)
+                    {
+                        if (firstLine)
+                            firstLine = false;
+                        else
+                            Writer.WriteLine();
+                        
+                        // Indentations for empty lines aren't needed.
+                        if (line.Length > 0)
+                        {
+                            WriteIndentation();
+                        }
+
+                        Writer.Write(line);
+                    }
+                }
+
+                DecreaseIndentation();
+            }
+        }
+
+        private void WriteChompingIndicator(string value)
+        {
+            var trailingNewlines = 0;
+            var end = value.Length - 1;
+            // We only need to know whether there are 0, 1, or more trailing newlines
+            while (end >= 0 && trailingNewlines < 2)
+            {
+                var found = value.LastIndexOfAny(new[] { '\n', '\r' }, end, 2);
+                if (found == -1 || found != end)
+                {
+                    // does not ends with newline
+                    break;
+                }
+
+                if (value[end] == '\r')
+                {
+                    // ends with \r
+                    end--;
+                }
+                else if (end > 0 && value[end - 1] == '\r')
+                {
+                    // ends with \r\n
+                    end -= 2;
+                }
+                else
+                {
+                    // ends with \n
+                    end -= 1;
+                }
+                trailingNewlines++;
+            }
+
+            switch (trailingNewlines)
+            {
+                case 0:
+                    // "strip" chomping indicator
+                    Writer.Write("-");
+                    break;
+                case 1:
+                    // "clip"
+                    break;
+                default:
+                    // "keep" chomping indicator
+                    Writer.Write("+");
+                    break;
+            }
         }
 
         /// <summary>

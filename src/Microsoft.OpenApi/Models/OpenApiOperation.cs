@@ -248,7 +248,8 @@ namespace Microsoft.OpenApi.Models
                         // Our library does not support this at the moment.
                         Name = "body",
                         Schema = content?.Schema ?? new OpenApiSchema(),
-                        Required = RequestBody.Required
+                        Required = RequestBody.Required,
+                        Extensions = RequestBody.Extensions
                     };
 
                     parameters.Add(bodyParameter);
