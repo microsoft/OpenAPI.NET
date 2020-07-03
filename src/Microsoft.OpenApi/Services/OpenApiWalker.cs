@@ -732,6 +732,11 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(encoding);
+
+            if (encoding.Headers != null)
+            {
+                Walk(encoding.Headers);
+            }
             Walk(encoding as IOpenApiExtensible);
         }
 
