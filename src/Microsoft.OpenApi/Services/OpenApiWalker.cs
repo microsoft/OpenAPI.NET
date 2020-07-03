@@ -787,6 +787,11 @@ namespace Microsoft.OpenApi.Services
                 });
             }
 
+            if (schema.AdditionalProperties != null)
+            {
+                Walk("additionalProperties", () => Walk(schema.AdditionalProperties));
+            }
+
             Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.ExternalDocs));
 
             Walk(schema as IOpenApiExtensible);
