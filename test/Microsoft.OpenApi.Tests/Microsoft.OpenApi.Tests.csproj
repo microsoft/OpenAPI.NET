@@ -1,39 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFrameworks>net46;net461</TargetFrameworks>
-        <Authors></Authors>
-        <Company>Microsoft</Company>
-        <Product>Microsoft.OpenApi.Tests</Product>
-        <PackageId>Microsoft.OpenApi.Tests</PackageId>
-        <Description>Tests for Microsoft.OpenApi</Description>
-        <AssemblyName>Microsoft.OpenApi.Tests</AssemblyName>
-        <RootNamespace>Microsoft.OpenApi.Tests</RootNamespace>
-        <SignAssembly>true</SignAssembly>
-        <OutputType>Library</OutputType>
-        <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net46;net461</TargetFrameworks>
+    <Authors></Authors>
+    <Company>Microsoft</Company>
+    <Product>Microsoft.OpenApi.Tests</Product>
+    <PackageId>Microsoft.OpenApi.Tests</PackageId>
+    <Description>Tests for Microsoft.OpenApi</Description>
+    <AssemblyName>Microsoft.OpenApi.Tests</AssemblyName>
+    <RootNamespace>Microsoft.OpenApi.Tests</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <OutputType>Library</OutputType>
+    <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-        <PackageReference Include="FluentAssertions" Version="5.10.0">
-        </PackageReference>
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3">
-        </PackageReference>
-        <PackageReference Include="SharpYaml" Version="1.6.5">
-        </PackageReference>
-        <PackageReference Include="xunit" Version="2.4.1">
-        </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="SharpYaml" Version="1.6.5" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="PublicApiGenerator" Version="9.3.0" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <Reference Include="Microsoft.CSharp" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />
+  </ItemGroup>
 </Project>
