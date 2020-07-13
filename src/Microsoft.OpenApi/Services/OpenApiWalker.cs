@@ -732,6 +732,11 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(encoding);
+
+            if (encoding.Headers != null)
+            {
+                Walk(encoding.Headers);
+            }
             Walk(encoding as IOpenApiExtensible);
         }
 
@@ -785,6 +790,11 @@ namespace Microsoft.OpenApi.Services
                         Walk(item.Key, () => Walk(item.Value));
                     }
                 });
+            }
+
+            if (schema.AdditionalProperties != null)
+            {
+                Walk("additionalProperties", () => Walk(schema.AdditionalProperties));
             }
 
             Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.ExternalDocs));
