@@ -2251,7 +2251,12 @@ namespace Microsoft.OpenApi.Tests.Services
                         TargetValue = new OpenApiSecurityScheme
                         {
                             Description = "Test",
-                            Name = "Test"
+                            Name = "Test",
+                            Reference = new OpenApiReference()
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "scheme4"
+                            }
                         }
                     },
                     new OpenApiDifference
@@ -2294,7 +2299,12 @@ namespace Microsoft.OpenApi.Tests.Services
                         SourceValue = new OpenApiSecurityScheme
                         {
                             Description = "Test",
-                            Name = "Test"
+                            Name = "Test",
+                            Reference = new OpenApiReference()
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "scheme3"
+                            }
                         },
                         TargetValue = null
                     },
