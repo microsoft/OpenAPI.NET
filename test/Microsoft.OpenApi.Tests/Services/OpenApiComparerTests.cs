@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Tests.Services
             _output = output;
         }
 
-        [Theory(Skip = "Need to fix")]
+        [Theory]
         [MemberData(
             nameof(OpenApiComparerTestCases.GetTestCasesForOpenApiComparerShouldSucceed),
             MemberType = typeof(OpenApiComparerTestCases))]

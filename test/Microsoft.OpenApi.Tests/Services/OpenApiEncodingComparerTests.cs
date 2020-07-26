@@ -247,14 +247,6 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/style",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(ParameterStyle),
-                        TargetValue = ParameterStyle.Form,
-                        SourceValue = ParameterStyle.Simple
-                    },
-                    new OpenApiDifference
-                    {
                         Pointer = "#/explode",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(bool?),
@@ -268,6 +260,14 @@ namespace Microsoft.OpenApi.Tests.Services
                         OpenApiComparedElementType = typeof(bool?),
                         TargetValue = false,
                         SourceValue = true
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/style",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(ParameterStyle),
+                        TargetValue = ParameterStyle.Form,
+                        SourceValue = ParameterStyle.Simple
                     }
                 }
             };
@@ -336,7 +336,7 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
 
-        [Theory(Skip = "Need to fix")]
+        [Theory]
         [MemberData(nameof(GetTestCasesForOpenApiEncodingComparerShouldSucceed))]
         public void OpenApiEncodingComparerShouldSucceed(
             string testCaseName,
