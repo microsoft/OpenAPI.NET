@@ -208,7 +208,7 @@
     <value>The path item name '{0}' MUST begin with a slash.</value>
   </data>
   <data name="Validation_PathSignatureMustBeUnique" xml:space="preserve">
-    <value>The path signature '{0}' MUST begin be unique.</value>
+    <value>The path signature '{0}' MUST be unique.</value>
   </data>
   <data name="Validation_RuleAddTwice" xml:space="preserve">
     <value>The same rule cannot be in the same rule set twice.</value>
