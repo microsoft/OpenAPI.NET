@@ -228,6 +228,12 @@ namespace Microsoft.OpenApi.Models
                 {
                     foreach (var property in RequestBody.Content.First().Value.Schema.Properties)
                     {
+                        var paramName = property.Key;
+                        var paramSchema = property.Value;
+                        if (paramSchema.Type == "string" && paramSchema.Format == "binary") {
+                            paramSchema.Type = "file";
+                            paramSchema.Format = null;
+                        }
                         parameters.Add(
                             new OpenApiFormDataParameter
                             {
