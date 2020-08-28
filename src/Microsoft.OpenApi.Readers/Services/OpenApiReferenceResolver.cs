@@ -52,6 +52,7 @@ namespace Microsoft.OpenApi.Readers.Services
             ResolveMap(components.Examples);
             ResolveMap(components.Schemas);
             ResolveMap(components.SecuritySchemes);
+            ResolveMap(components.Headers);
         }
 
         public override void Visit(IDictionary<string, OpenApiCallback> callbacks)
@@ -97,6 +98,14 @@ namespace Microsoft.OpenApi.Readers.Services
         public override void Visit(OpenApiResponses responses)
         {
             ResolveMap(responses);
+        }
+
+        /// <summary>
+        /// Resolve all references to headers
+        /// </summary>
+        public override void Visit(OpenApiResponse response)
+        {
+            ResolveMap(response.Headers);
         }
 
         /// <summary>
