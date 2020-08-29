@@ -801,146 +801,6 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/components/schemas/schemaObject1/properties/property5",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiSchema),
-                        SourceValue = null,
-                        TargetValue = new OpenApiSchema
-                        {
-                            Type = "string",
-                            MaxLength = 15
-                        }
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/components/schemas/schemaObject1/properties/property7",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiSchema),
-                        SourceValue = new OpenApiSchema
-                        {
-                            Type = "string",
-                            MaxLength = 15
-                        },
-                        TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer =
-                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/properties/property5",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiSchema),
-                        SourceValue = null,
-                        TargetValue = new OpenApiSchema
-                        {
-                            Type = "string",
-                            MaxLength = 15
-                        }
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer =
-                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/properties/property7",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiSchema),
-                        SourceValue = new OpenApiSchema
-                        {
-                            Type = "string",
-                            MaxLength = 15
-                        },
-                        TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer =
-                            "#/components/schemas/schemaObject2/properties/property6/properties/property5",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiSchema),
-                        SourceValue = null,
-                        TargetValue = new OpenApiSchema
-                        {
-                            Type = "string",
-                            MaxLength = 15
-                        }
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer =
-                            "#/components/schemas/schemaObject2/properties/property6/properties/property7",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiSchema),
-                        SourceValue = new OpenApiSchema
-                        {
-                            Type = "string",
-                            MaxLength = 15
-                        },
-                        TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/components/schemas/schemaObject1/example",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(IOpenApiAny),
-                        SourceValue = new OpenApiObject
-                        {
-                            ["status"] = new OpenApiString("Status1"),
-                            ["id"] = new OpenApiString("v1"),
-                            ["links"] = new OpenApiArray
-                            {
-                                new OpenApiObject
-                                {
-                                    ["href"] = new OpenApiString("http://example.com/1"),
-                                    ["rel"] = new OpenApiString("sampleRel1")
-                                }
-                            }
-                        },
-                        TargetValue = new OpenApiObject
-                        {
-                            ["status"] = new OpenApiString("Status1"),
-                            ["id"] = new OpenApiString("v1"),
-                            ["links"] = new OpenApiArray
-                            {
-                                new OpenApiObject
-                                {
-                                    ["href"] = new OpenApiString("http://example.com/1"),
-                                    ["relupdate"] = new OpenApiString("sampleRel1")
-                                }
-                            }
-                        }
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/components/schemas/schemaObject2/properties/property6/example",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(IOpenApiAny),
-                        SourceValue = new OpenApiObject
-                        {
-                            ["status"] = new OpenApiString("Status1"),
-                            ["id"] = new OpenApiString("v1"),
-                            ["links"] = new OpenApiArray
-                            {
-                                new OpenApiObject
-                                {
-                                    ["href"] = new OpenApiString("http://example.com/1"),
-                                    ["rel"] = new OpenApiString("sampleRel1")
-                                }
-                            }
-                        },
-                        TargetValue = new OpenApiObject
-                        {
-                            ["status"] = new OpenApiString("Status1"),
-                            ["id"] = new OpenApiString("v1"),
-                            ["links"] = new OpenApiArray
-                            {
-                                new OpenApiObject
-                                {
-                                    ["href"] = new OpenApiString("http://example.com/1"),
-                                    ["relupdate"] = new OpenApiString("sampleRel1")
-                                }
-                            }
-                        }
-                    },
-                    new OpenApiDifference
-                    {
                         Pointer =
                             "#/paths/~1test/get/parameters/0/schema/properties/property6/properties/property6/example",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
@@ -1006,8 +866,148 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
+                        Pointer = "#/components/schemas/schemaObject1/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(OpenApiSchema),
+                        SourceValue = null,
+                        TargetValue = new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject1/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(OpenApiSchema),
+                        SourceValue = new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(OpenApiSchema),
+                        SourceValue = null,
+                        TargetValue = new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject1/properties/property6/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(OpenApiSchema),
+                        SourceValue = new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
                         Pointer =
                             "#/components/schemas/schemaObject1/properties/property6/properties/property6/example",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["rel"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["relupdate"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject1/example",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["rel"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["status"] = new OpenApiString("Status1"),
+                            ["id"] = new OpenApiString("v1"),
+                            ["links"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["href"] = new OpenApiString("http://example.com/1"),
+                                    ["relupdate"] = new OpenApiString("sampleRel1")
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject2/properties/property6/properties/property5",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(OpenApiSchema),
+                        SourceValue = null,
+                        TargetValue = new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/components/schemas/schemaObject2/properties/property6/properties/property7",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(OpenApiSchema),
+                        SourceValue = new OpenApiSchema
+                        {
+                            Type = "string",
+                            MaxLength = 15
+                        },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/components/schemas/schemaObject2/properties/property6/example",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(IOpenApiAny),
                         SourceValue = new OpenApiObject
@@ -1469,6 +1469,50 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
+                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/examples/example1/value",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(IOpenApiAny),
+                        SourceValue = new OpenApiObject
+                        {
+                            ["versions"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["rel"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        TargetValue = new OpenApiObject
+                        {
+                            ["versions"] = new OpenApiArray
+                            {
+                                new OpenApiObject
+                                {
+                                    ["status"] = new OpenApiString("Status1"),
+                                    ["id"] = new OpenApiString("v1"),
+                                    ["links"] = new OpenApiArray
+                                    {
+                                        new OpenApiObject
+                                        {
+                                            ["href"] = new OpenApiString("http://example.com/1"),
+                                            ["relupdate"] = new OpenApiString("sampleRel1")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
                         Pointer = "#/paths/~1test/get/responses/400",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
                         OpenApiComparedElementType = typeof(OpenApiResponse),
@@ -1615,50 +1659,6 @@ namespace Microsoft.OpenApi.Tests.Services
                             MaxLength = 15
                         },
                         TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/paths/~1test/get/requestBody/content/application~1xml/examples/example1/value",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(IOpenApiAny),
-                        SourceValue = new OpenApiObject
-                        {
-                            ["versions"] = new OpenApiArray
-                            {
-                                new OpenApiObject
-                                {
-                                    ["status"] = new OpenApiString("Status1"),
-                                    ["id"] = new OpenApiString("v1"),
-                                    ["links"] = new OpenApiArray
-                                    {
-                                        new OpenApiObject
-                                        {
-                                            ["href"] = new OpenApiString("http://example.com/1"),
-                                            ["rel"] = new OpenApiString("sampleRel1")
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        TargetValue = new OpenApiObject
-                        {
-                            ["versions"] = new OpenApiArray
-                            {
-                                new OpenApiObject
-                                {
-                                    ["status"] = new OpenApiString("Status1"),
-                                    ["id"] = new OpenApiString("v1"),
-                                    ["links"] = new OpenApiArray
-                                    {
-                                        new OpenApiObject
-                                        {
-                                            ["href"] = new OpenApiString("http://example.com/1"),
-                                            ["relupdate"] = new OpenApiString("sampleRel1")
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     },
                     new OpenApiDifference
                     {
@@ -2190,32 +2190,34 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     new OpenApiDifference
                     {
-                        Pointer = "#/security/0/scheme2",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(IList<string>),
-                        SourceValue = null,
-                        TargetValue = new List<string>()
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/security/1/scheme4",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(IList<string>),
-                        SourceValue = null,
-                        TargetValue = new List<string>()
+                        Pointer = "#/paths/~1test/get/security/0/scheme1/flows/implicit/authorizationUrl",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(Uri),
+                        SourceValue = new Uri("http://localhost/1"),
+                        TargetValue = new Uri("http://localhost/3")
                     },
                     new OpenApiDifference
                     {
                         Pointer =
-                            "#/components/securitySchemes/scheme4",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
-                        OpenApiComparedElementType = typeof(OpenApiSecurityScheme),
+                            "#/paths/~1test/get/security/0/scheme1/flows/clientCredentials",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
                         SourceValue = null,
-                        TargetValue = new OpenApiSecurityScheme
+                        TargetValue = new OpenApiOAuthFlow
                         {
-                            Description = "Test",
-                            Name = "Test"
+                            AuthorizationUrl = new Uri("http://localhost/2")
                         }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/paths/~1test/get/security/0/scheme1/flows/authorizationCode",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        },
+                        TargetValue = null
                     },
                     new OpenApiDifference
                     {
@@ -2241,35 +2243,24 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/tags/0/description",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string),
-                        SourceValue = "test description",
-                        TargetValue = "test description updated"
+                        Pointer =
+                            "#/components/securitySchemes/scheme4",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(OpenApiSecurityScheme),
+                        SourceValue = null,
+                        TargetValue = new OpenApiSecurityScheme
+                        {
+                            Description = "Test",
+                            Name = "Test"
+                        }
                     },
                     new OpenApiDifference
                     {
                         Pointer = "#/components/securitySchemes/scheme1/flows/implicit/authorizationUrl",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(Uri),
-                        SourceValue = "http://localhost/1",
-                        TargetValue = "http://localhost/3"
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/paths/~1test/get/security/0/scheme1/flows/implicit/authorizationUrl",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(Uri),
-                        SourceValue = "http://localhost/1",
-                        TargetValue = "http://localhost/3"
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/security/0/scheme1/flows/implicit/authorizationUrl",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(Uri),
-                        SourceValue = "http://localhost/1",
-                        TargetValue = "http://localhost/3"
+                        SourceValue = new Uri("http://localhost/1"),
+                        TargetValue = new Uri("http://localhost/3")
                     },
                     new OpenApiDifference
                     {
@@ -2285,53 +2276,7 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer =
-                            "#/paths/~1test/get/security/0/scheme1/flows/clientCredentials",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
-                        SourceValue = null,
-                        TargetValue = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("http://localhost/2")
-                        }
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer =
-                            "#/security/0/scheme1/flows/clientCredentials",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
-                        SourceValue = null,
-                        TargetValue = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("http://localhost/2")
-                        }
-                    },
-                    new OpenApiDifference
-                    {
                         Pointer = "#/components/securitySchemes/scheme1/flows/authorizationCode",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
-                        SourceValue = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("http://localhost/2")
-                        },
-                        TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/paths/~1test/get/security/0/scheme1/flows/authorizationCode",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
-                        SourceValue = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("http://localhost/2")
-                        },
-                        TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/security/0/scheme1/flows/authorizationCode",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
                         SourceValue = new OpenApiOAuthFlow
@@ -2355,19 +2300,58 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/tags/1",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiTag),
-                        SourceValue = new OpenApiTag
+                        Pointer = "#/security/0/scheme2",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(IList<string>),
+                        SourceValue = null,
+                        TargetValue = new List<string>()
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/security/0/scheme1/flows/implicit/authorizationUrl",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(Uri),
+                        SourceValue = new Uri("http://localhost/1"),
+                        TargetValue = new Uri("http://localhost/3")
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/security/0/scheme1/flows/clientCredentials",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = null,
+                        TargetValue = new OpenApiOAuthFlow
                         {
-                            Description = "test description",
-                            Name = "Tag2",
-                            ExternalDocs = new OpenApiExternalDocs
-                            {
-                                Description = "test description",
-                                Url = new Uri("http://localhost/doc")
-                            }
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/security/0/scheme1/flows/authorizationCode",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
                         },
+                        TargetValue = null
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/security/1/scheme4",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
+                        OpenApiComparedElementType = typeof(IList<string>),
+                        SourceValue = null,
+                        TargetValue = new List<string>()
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer =
+                            "#/security/1/scheme2",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(IList<string>),
+                        SourceValue = new List<string>(),
                         TargetValue = null
                     },
                     new OpenApiDifference
@@ -2393,11 +2377,27 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer =
-                            "#/security/1/scheme2",
+                        Pointer = "#/tags/0/description",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "test description",
+                        TargetValue = "test description updated"
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/tags/1",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(IList<string>),
-                        SourceValue = new List<string>(),
+                        OpenApiComparedElementType = typeof(OpenApiTag),
+                        SourceValue = new OpenApiTag
+                        {
+                            Description = "test description",
+                            Name = "Tag2",
+                            ExternalDocs = new OpenApiExternalDocs
+                            {
+                                Description = "test description",
+                                Url = new Uri("http://localhost/doc")
+                            }
+                        },
                         TargetValue = null
                     }
                 }
