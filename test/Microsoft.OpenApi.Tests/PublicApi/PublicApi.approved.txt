@@ -1114,7 +1114,7 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiSecuritySchemeComparer : Microsoft.OpenApi.Services.OpenApiComparerBase<Microsoft.OpenApi.Models.OpenApiSecurityScheme>
     {
         public OpenApiSecuritySchemeComparer() { }
-        public override void Compare(Microsoft.OpenApi.Models.OpenApiSecurityScheme sourcecSecurityScheme, Microsoft.OpenApi.Models.OpenApiSecurityScheme targetSecurityScheme, Microsoft.OpenApi.Services.ComparisonContext comparisonContext) { }
+        public override void Compare(Microsoft.OpenApi.Models.OpenApiSecurityScheme sourceSecurityScheme, Microsoft.OpenApi.Models.OpenApiSecurityScheme targetSecurityScheme, Microsoft.OpenApi.Services.ComparisonContext comparisonContext) { }
     }
     public class OpenApiServerComparer : Microsoft.OpenApi.Services.OpenApiComparerBase<Microsoft.OpenApi.Models.OpenApiServer>
     {

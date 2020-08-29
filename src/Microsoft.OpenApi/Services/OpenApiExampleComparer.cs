@@ -42,8 +42,35 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            new OpenApiReferenceComparer<OpenApiExample>()
-                .Compare(sourceExample.Reference, targetExample.Reference, comparisonContext);
+            if (sourceExample.Reference != null
+                && targetExample.Reference != null
+                && sourceExample.Reference.Id != targetExample.Reference.Id)
+            {
+                WalkAndAddOpenApiDifference(
+                    comparisonContext,
+                    OpenApiConstants.DollarRef,
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        SourceValue = sourceExample.Reference,
+                        TargetValue = targetExample.Reference,
+                        OpenApiComparedElementType = typeof(OpenApiReference)
+                    });
+
+                return;
+            }
+
+            if (sourceExample.Reference != null)
+            {
+                sourceExample = (OpenApiExample)comparisonContext.SourceDocument.ResolveReference(
+                    sourceExample.Reference);
+            }
+
+            if (targetExample.Reference != null)
+            {
+                targetExample = (OpenApiExample)comparisonContext.TargetDocument.ResolveReference(
+                    targetExample.Reference);
+            }
 
             WalkAndCompare(comparisonContext, OpenApiConstants.Description,
                 () => Compare(sourceExample.Description, targetExample.Description, comparisonContext));
