@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers
             catch (YamlException ex)
             {
                 diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#char={ex.Start.Line}", ex.Message));
+                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
                 return new OpenApiDocument();
             }
 

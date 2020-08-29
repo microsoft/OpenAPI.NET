@@ -228,6 +228,12 @@ namespace Microsoft.OpenApi.Models
                 {
                     foreach (var property in RequestBody.Content.First().Value.Schema.Properties)
                     {
+                        var paramName = property.Key;
+                        var paramSchema = property.Value;
+                        if (paramSchema.Type == "string" && paramSchema.Format == "binary") {
+                            paramSchema.Type = "file";
+                            paramSchema.Format = null;
+                        }
                         parameters.Add(
                             new OpenApiFormDataParameter
                             {
@@ -235,23 +241,31 @@ namespace Microsoft.OpenApi.Models
                                 Name = property.Key,
                                 Schema = property.Value,
                                 Required = RequestBody.Content.First().Value.Schema.Required.Contains(property.Key)
+
                             });
                     }
                 }
                 else
                 {
                     var content = RequestBody.Content.Values.FirstOrDefault();
+
                     var bodyParameter = new OpenApiBodyParameter
                     {
                         Description = RequestBody.Description,
                         // V2 spec actually allows the body to have custom name.
-                        // Our library does not support this at the moment.
+                        // To allow round-tripping we use an extension to hold the name
                         Name = "body",
                         Schema = content?.Schema ?? new OpenApiSchema(),
                         Required = RequestBody.Required,
-                        Extensions = RequestBody.Extensions
+                        Extensions = RequestBody.Extensions.ToDictionary(k => k.Key, v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
                     };
 
+                    if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
+                    {
+                        bodyParameter.Name = (RequestBody.Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
+                        bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
+                    }
+                    
                     parameters.Add(bodyParameter);
                 }
             }
