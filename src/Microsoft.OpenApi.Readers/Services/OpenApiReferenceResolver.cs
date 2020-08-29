@@ -103,9 +103,10 @@ namespace Microsoft.OpenApi.Readers.Services
         /// <summary>
         /// Resolve all references to headers
         /// </summary>
-        public override void Visit(OpenApiResponse response)
+        /// <param name="headers"></param>
+        public override void Visit(IDictionary<string, OpenApiHeader> headers)
         {
-            ResolveMap(response.Headers);
+            ResolveMap(headers);
         }
 
         /// <summary>
