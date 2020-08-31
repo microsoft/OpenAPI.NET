@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -164,6 +165,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         {
                             var schema = v.Schema;
                             schema.Description = v.Description;
+                            schema.Extensions = v.Extensions;
                             return schema;
                         }),
                     Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
@@ -201,9 +203,11 @@ namespace Microsoft.OpenApi.Readers.V2
                     v => new OpenApiMediaType
                     {
                         Schema = bodyParameter.Schema
-                    })
+                    }),
+                Extensions = bodyParameter.Extensions
             };
 
+            requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiString(bodyParameter.Name);
             return requestBody;
         }
 
