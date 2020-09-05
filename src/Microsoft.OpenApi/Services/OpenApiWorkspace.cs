@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiWorkspace
     {
         private Dictionary<Uri, OpenApiDocument> _documents = new Dictionary<Uri, OpenApiDocument>();
-        private Dictionary<Uri, IOpenApiElement> _fragments = new Dictionary<Uri, IOpenApiElement>();
+        private Dictionary<Uri, IOpenApiReferenceable> _fragments = new Dictionary<Uri, IOpenApiReferenceable>();
         private Dictionary<Uri, Stream> _artifacts = new Dictionary<Uri, Stream>();
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace Microsoft.OpenApi.Services
         /// <remarks>Not sure how this is going to work.  Does the reference just point to the fragment as a whole, or do we need to 
         /// to be able to point into the fragment.  Keeping it private until we figure it out.
         /// </remarks>
-        private void AddFragment(string location, IOpenApiElement fragment)
+        public void AddFragment(string location, IOpenApiReferenceable fragment)
         {
             _fragments.Add(ToLocationUrl(location), fragment);
         }
@@ -114,21 +115,14 @@ namespace Microsoft.OpenApi.Services
         /// <returns></returns>
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
-            if (_documents.TryGetValue(new Uri(BaseUrl,reference.ExternalResource),out var doc))
+            if (_documents.TryGetValue(new Uri(BaseUrl, reference.ExternalResource), out var doc))
             {
-                return doc.ResolveReference(reference, true); 
+                return doc.ResolveReference(reference, true);
             }
             else if (_fragments.TryGetValue(new Uri(BaseUrl, reference.ExternalResource), out var fragment))
             {
-                var frag = fragment as IOpenApiReferenceable;
-                if (frag != null)
-                {
-                    return null; // frag.ResolveReference(reference, true); // IOpenApiElement needs to implement ResolveReference
-                }
-                else
-                {
-                    return null;
-                }
+                var jsonPointer = $"/{reference.Id ?? string.Empty}";
+                return fragment.ResolveReference(jsonPointer);
             }
             return null;
         }

@@ -155,6 +155,50 @@ namespace Microsoft.OpenApi.Tests
             Assert.True(false);
         }
 
+        [Fact]
+        public void OpenApiWorkspacesCanResolveReferencesToDocumentFragments()
+        {
+            // Arrange
+            var workspace = new OpenApiWorkspace();
+            var schemaFragment = new OpenApiSchema { Type = "string", Description = "Schema from a fragment" };
+            workspace.AddFragment("fragment", schemaFragment);
+
+            // Act
+            var schema = workspace.ResolveReference(new OpenApiReference()
+            {
+                ExternalResource = "fragment"
+            }) as OpenApiSchema;
+
+            // Assert
+            Assert.NotNull(schema);
+            Assert.Equal("Schema from a fragment", schema.Description);
+        }
+
+        [Fact]
+        public void OpenApiWorkspacesCanResolveReferencesToDocumentFragmentsWithJsonPointers()
+        {
+            // Arrange
+            var workspace = new OpenApiWorkspace();
+            var responseFragment = new OpenApiResponse()
+            {
+                Headers = new Dictionary<string, OpenApiHeader>
+                {
+                    { "header1", new OpenApiHeader() }
+                }
+            };
+            workspace.AddFragment("fragment", responseFragment);
+
+            // Act
+            var resolvedElement = workspace.ResolveReference(new OpenApiReference()
+            {
+                Id = "headers/header1",
+                ExternalResource = "fragment"
+            });
+
+            // Assert
+            Assert.Same(responseFragment.Headers["header1"], resolvedElement);
+        }
+
 
         // Test artifacts
 
