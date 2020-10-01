@@ -173,5 +173,79 @@ namespace Microsoft.OpenApi.Validations.Tests
                 "#/examples/example2/value"
             });
         }
+
+        [Fact]
+        public void PathParameterNotInThePathShouldReturnAnError()
+        {
+            // Arrange
+            IEnumerable<OpenApiError> errors;
+
+            var parameter = new OpenApiParameter()
+            {
+                Name = "parameter1",
+                In = ParameterLocation.Path,
+                Required = true,
+                Schema = new OpenApiSchema()
+                {
+                    Type = "string",
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("1");
+
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(parameter);
+
+            errors = validator.Errors;
+            bool result = errors.Any();
+
+            // Assert
+            result.Should().BeTrue();
+            errors.OfType<OpenApiValidatorError>().Select(e => e.RuleName).Should().BeEquivalentTo(new[]
+            {
+                "PathParameterShouldBeInThePath"
+            });
+            errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
+            {
+                "#/1/in"
+            });
+        }
+
+        [Fact]
+        public void PathParameterInThePastShouldBeOk()
+        {
+            // Arrange
+            IEnumerable<OpenApiError> errors;
+
+            var parameter = new OpenApiParameter()
+            {
+                Name = "parameter1",
+                In = ParameterLocation.Path,
+                Required = true,
+                Schema = new OpenApiSchema()
+                {
+                    Type = "string",
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("paths");
+            validator.Enter("/{parameter1}");
+            validator.Enter("get");
+            validator.Enter("parameters");
+            validator.Enter("1");
+
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(parameter);
+
+            errors = validator.Errors;
+            bool result = errors.Any();
+
+            // Assert
+            result.Should().BeFalse();
+        }
     }
 }
