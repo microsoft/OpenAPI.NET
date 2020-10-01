@@ -48,8 +48,11 @@ namespace Microsoft.OpenApi.Validations.Tests
             };
 
             // Act
-            var errors = parameter.Validate(ValidationRuleSet.GetDefaultRuleSet());
-
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("{name}");
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(parameter);
+            var errors = validator.Errors;
             // Assert
             errors.Should().NotBeEmpty();
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
@@ -77,6 +80,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("{parameter1}");
             var walker = new OpenApiWalker(validator);
             walker.Walk(parameter);
 
@@ -91,7 +95,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             });
             errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/example",
+                "#/{parameter1}/example",
             });
         }
 
@@ -150,6 +154,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("{parameter1}");
             var walker = new OpenApiWalker(validator);
             walker.Walk(parameter);
 
@@ -168,9 +173,9 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 // #enum/0 is not an error since the spec allows
                 // representing an object using a string.
-                "#/examples/example1/value/y",
-                "#/examples/example1/value/z",
-                "#/examples/example2/value"
+                "#/{parameter1}/examples/example1/value/y",
+                "#/{parameter1}/examples/example1/value/z",
+                "#/{parameter1}/examples/example2/value"
             });
         }
 
@@ -193,7 +198,6 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
-            validator.Enter("1");
 
             var walker = new OpenApiWalker(validator);
             walker.Walk(parameter);
@@ -209,7 +213,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             });
             errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/1/in"
+                "#/in"
             });
         }
 
