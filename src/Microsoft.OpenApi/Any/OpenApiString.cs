@@ -9,6 +9,7 @@ namespace Microsoft.OpenApi.Any
     public class OpenApiString : OpenApiPrimitive<string>
     {
         private bool isExplicit;
+        private bool isRawString;
 
         /// <summary>
         /// Initializes the <see cref="OpenApiString"/> class.
@@ -31,6 +32,19 @@ namespace Microsoft.OpenApi.Any
         }
 
         /// <summary>
+        /// Initializes the <see cref="OpenApiString"/> class.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="isExplicit">Used to indicate if a string is quoted.</param>
+        /// <param name="isRawString">Used to indicate to the writer that the value should be written without encoding.</param>
+        public OpenApiString(string value, bool isExplicit, bool isRawString)
+            : base(value)
+        {
+            this.isExplicit = isExplicit;
+            this.isRawString = isRawString;
+        }
+
+        /// <summary>
         /// The primitive class this object represents.
         /// </summary>
         public override PrimitiveType PrimitiveType { get; } = PrimitiveType.String;
@@ -41,6 +55,14 @@ namespace Microsoft.OpenApi.Any
         public bool IsExplicit()
         {
             return this.isExplicit;
+        }
+
+        /// <summary>
+        /// True if the writer should process the value as supplied without encoding.
+        /// </summary>
+        public bool IsRawString()
+        {
+            return this.isRawString;
         }
     }
 }
