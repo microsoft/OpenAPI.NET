@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns>An IEnumerable of errors.  This function will never return null.</returns>
         public static IOpenApiReferenceable ResolveReference(this IOpenApiReferenceable element, string jsonPointer)
         {
-            throw new NotImplementedException();
+            return element;
         }
     }
 }
