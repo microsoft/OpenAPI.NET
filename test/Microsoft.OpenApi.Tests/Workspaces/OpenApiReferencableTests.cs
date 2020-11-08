@@ -40,5 +40,40 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             // Assert
             Assert.Same(referencableElement, resolvedReference);
         }
+
+        [Fact]
+        public void ParameterElementCanResolveReferenceToSchemaProperty()
+        {
+            // Arrange
+            var parameterElement = new OpenApiParameter
+            {
+                Schema = new OpenApiSchema()
+            };
+
+            // Act
+            var resolvedReference = parameterElement.ResolveReference("schema");
+
+            // Assert
+            Assert.Same(parameterElement.Schema, resolvedReference);
+        }
+
+        [Fact]
+        public void ParameterElementCanResolveReferenceToExampleTmpDbgImproveMyName()
+        {
+            // Arrange
+            var parameterElement = new OpenApiParameter
+            {
+                Examples = new Dictionary<string, OpenApiExample>()
+            {
+                { "example1", new OpenApiExample() }
+            },
+            };
+
+            // Act
+            var resolvedReference = parameterElement.ResolveReference("examples/example1");
+
+            // Assert
+            Assert.Same(parameterElement.Examples["example1"], resolvedReference);
+        }
     }
 }

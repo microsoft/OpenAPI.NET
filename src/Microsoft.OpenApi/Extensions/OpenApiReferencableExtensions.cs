@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -23,7 +24,30 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns>An IEnumerable of errors.  This function will never return null.</returns>
         public static IOpenApiReferenceable ResolveReference(this IOpenApiReferenceable element, string jsonPointer)
         {
-            return element;
+            if (jsonPointer == string.Empty)
+                return element;
+            if (element.GetType() == typeof(OpenApiParameter))
+            {
+                return ResolveReferenceOnParameterElement((OpenApiParameter)element, jsonPointer);
+            }
+            throw new NotImplementedException();
+        }
+
+        private static IOpenApiReferenceable ResolveReferenceOnParameterElement(OpenApiParameter parameterElement, string jsonPointer)
+        {
+            var jsonPointerTokens = jsonPointer.Split('/');
+            switch (jsonPointerTokens.First())
+            {
+                case OpenApiConstants.Schema:
+                    return parameterElement.Schema;
+                case OpenApiConstants.Examples:
+                    {
+                        var mapKey = jsonPointerTokens.ElementAt(1);
+                        return parameterElement.Examples[mapKey];
+                    }
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }
