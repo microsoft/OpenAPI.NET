@@ -4,8 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 
@@ -26,9 +28,16 @@ namespace Microsoft.OpenApi.Extensions
         {
             if (jsonPointer == string.Empty)
                 return element;
-            if (element.GetType() == typeof(OpenApiParameter))
+            try
             {
-                return ResolveReferenceOnParameterElement((OpenApiParameter)element, jsonPointer);
+                if (element.GetType() == typeof(OpenApiParameter))
+                {
+                    return ResolveReferenceOnParameterElement((OpenApiParameter)element, jsonPointer);
+                }
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
             }
             throw new NotImplementedException();
         }
@@ -36,17 +45,20 @@ namespace Microsoft.OpenApi.Extensions
         private static IOpenApiReferenceable ResolveReferenceOnParameterElement(OpenApiParameter parameterElement, string jsonPointer)
         {
             var jsonPointerTokens = jsonPointer.Split('/');
-            switch (jsonPointerTokens.First())
+            var propertyName = jsonPointerTokens.First();
+            switch (propertyName)
             {
                 case OpenApiConstants.Schema:
                     return parameterElement.Schema;
                 case OpenApiConstants.Examples:
                     {
-                        var mapKey = jsonPointerTokens.ElementAt(1);
+                        var mapKey = jsonPointerTokens.ElementAtOrDefault(1);
+                        if (!(jsonPointerTokens.Length >= 2 && parameterElement.Examples.ContainsKey(mapKey)))
+                            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
                         return parameterElement.Examples[mapKey];
                     }
                 default:
-                    throw new NotImplementedException();
+                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
             }
         }
     }
