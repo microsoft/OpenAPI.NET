@@ -43,11 +43,15 @@ namespace Microsoft.OpenApi.Extensions
             {
                 throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
             }
-            throw new NotImplementedException();
+            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
         }
 
         private static IOpenApiReferenceable ResolveReferenceOnHeaderElement(OpenApiHeader headerElement, string jsonPointer)
         {
+            if (string.IsNullOrEmpty(jsonPointer))
+            {
+                throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+            }
             var jsonPointerTokens = jsonPointer.Split('/');
             var propertyName = jsonPointerTokens.ElementAtOrDefault(1);
             switch (propertyName)
@@ -56,6 +60,8 @@ namespace Microsoft.OpenApi.Extensions
                     return headerElement.Schema;
                 case OpenApiConstants.Examples:
                     {
+                        if (jsonPointerTokens.Length < 3)
+                            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
                         var mapKey = jsonPointerTokens.ElementAtOrDefault(2);
                         return headerElement.Examples[mapKey];
                     }
@@ -66,6 +72,10 @@ namespace Microsoft.OpenApi.Extensions
 
         private static IOpenApiReferenceable ResolveReferenceOnParameterElement(OpenApiParameter parameterElement, string jsonPointer)
         {
+            if (string.IsNullOrEmpty(jsonPointer))
+            {
+                throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+            }
             var jsonPointerTokens = jsonPointer.Split('/');
             var propertyName = jsonPointerTokens.ElementAtOrDefault(1);
             switch (propertyName)
@@ -74,6 +84,8 @@ namespace Microsoft.OpenApi.Extensions
                     return parameterElement.Schema;
                 case OpenApiConstants.Examples:
                     {
+                        if (jsonPointerTokens.Length < 3)
+                            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
                         var mapKey = jsonPointerTokens.ElementAtOrDefault(2);
                         return parameterElement.Examples[mapKey];
                     }

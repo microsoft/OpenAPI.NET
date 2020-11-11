@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiSecurityScheme _securitySchemeFragment = new OpenApiSecurityScheme();
         private static readonly OpenApiTag _tagFragment = new OpenApiTag();
 
-        public static IEnumerable<object[]> ReferencableElementsCanResolveReferencesTestData =>
+        public static IEnumerable<object[]> ResolveReferenceCanResolveValidJsonPointersTestData =>
         new List<object[]>
         {
             new object[] { _callbackFragment, "/", _callbackFragment },
@@ -60,36 +60,46 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         };
 
         [Theory]
-        [MemberData(nameof(ReferencableElementsCanResolveReferencesTestData))]
-        public void ReferencableElementsCanResolveReferences(
+        [MemberData(nameof(ResolveReferenceCanResolveValidJsonPointersTestData))]
+        public void ResolveReferenceCanResolveValidJsonPointers(
             IOpenApiReferenceable element,
-            string pointer,
+            string jsonPointer,
             IOpenApiElement expectedResolvedElement)
         {
             // Act
-            var actualResolvedElement = element.ResolveReference(pointer);
+            var actualResolvedElement = element.ResolveReference(jsonPointer);
 
             // Assert
             Assert.Same(expectedResolvedElement, actualResolvedElement);
         }
 
-        public static IEnumerable<object[]> ParameterElementShouldThrowOnInvalidReferenceIdTestData =>
+        public static IEnumerable<object[]> ResolveReferenceShouldThrowOnInvalidReferenceIdTestData =>
         new List<object[]>
         {
-            new object[] { "" },
-            new object[] { "a" },
-            new object[] { "examples" },
-            new object[] { "examples/" },
-            new object[] { "examples/a" },
+            new object[] { _callbackFragment, null },
+            new object[] { _callbackFragment, "" },
+            new object[] { _callbackFragment, "/a" },
+            new object[] { _headerFragment, null },
+            new object[] { _headerFragment, "" },
+            new object[] { _headerFragment, "/a" },
+            new object[] { _headerFragment, "/examples" },
+            new object[] { _headerFragment, "/examples/" },
+            new object[] { _headerFragment, "/examples/a" },
+            new object[] { _parameterFragment, null },
+            new object[] { _parameterFragment, "" },
+            new object[] { _parameterFragment, "/a" },
+            new object[] { _parameterFragment, "/examples" },
+            new object[] { _parameterFragment, "/examples/" },
+            new object[] { _parameterFragment, "/examples/a" }
 
         };
 
         [Theory]
-        [MemberData(nameof(ParameterElementShouldThrowOnInvalidReferenceIdTestData))]
-        public void ParameterElementShouldThrowOnInvalidReferenceId(string jsonPointer)
+        [MemberData(nameof(ResolveReferenceShouldThrowOnInvalidReferenceIdTestData))]
+        public void ResolveReferenceShouldThrowOnInvalidReferenceId(IOpenApiReferenceable element, string jsonPointer)
         {
             // Act
-            Action resolveReference = () => _parameterFragment.ResolveReference(jsonPointer);
+            Action resolveReference = () => element.ResolveReference(jsonPointer);
 
             // Assert
             var exception = Assert.Throws<OpenApiException>(resolveReference);
