@@ -8,22 +8,20 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
-using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
 
 namespace Microsoft.OpenApi.Extensions
 {
     /// <summary>
-    /// TODO: tmpDbg comment
+    /// Extension methods for resolving references on <see cref="IOpenApiReferenceable"/> elements.
     /// </summary>
     public static class OpenApiReferencableExtensions
     {
         /// <summary>
         /// TODO: tmpDbg comment
         /// </summary>
-        /// <param name="element">Element to validate</param>
-        /// <param name="ruleSet">Optional set of rules to use for validation</param>
-        /// <returns>An IEnumerable of errors.  This function will never return null.</returns>
+        /// <param name="element">The referencable Open API element on which to apply the JSON pointer</param>
+        /// <param name="jsonPointer">a JSON Pointer [RFC 6901](https://tools.ietf.org/html/rfc6901).</param>
+        /// <returns>The element pointed to by the JSON pointer.</returns>
         public static IOpenApiReferenceable ResolveReference(this IOpenApiReferenceable element, string jsonPointer)
         {
             if (jsonPointer == "/")
