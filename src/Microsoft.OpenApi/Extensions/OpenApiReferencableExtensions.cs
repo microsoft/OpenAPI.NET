@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns>An IEnumerable of errors.  This function will never return null.</returns>
         public static IOpenApiReferenceable ResolveReference(this IOpenApiReferenceable element, string jsonPointer)
         {
-            if (jsonPointer == string.Empty)
+            if (jsonPointer == "/")
                 return element;
             try
             {
@@ -45,16 +45,14 @@ namespace Microsoft.OpenApi.Extensions
         private static IOpenApiReferenceable ResolveReferenceOnParameterElement(OpenApiParameter parameterElement, string jsonPointer)
         {
             var jsonPointerTokens = jsonPointer.Split('/');
-            var propertyName = jsonPointerTokens.First();
+            var propertyName = jsonPointerTokens.ElementAtOrDefault(1);
             switch (propertyName)
             {
                 case OpenApiConstants.Schema:
                     return parameterElement.Schema;
                 case OpenApiConstants.Examples:
                     {
-                        var mapKey = jsonPointerTokens.ElementAtOrDefault(1);
-                        if (!(jsonPointerTokens.Length >= 2 && parameterElement.Examples.ContainsKey(mapKey)))
-                            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+                        var mapKey = jsonPointerTokens.ElementAtOrDefault(2);
                         return parameterElement.Examples[mapKey];
                     }
                 default:

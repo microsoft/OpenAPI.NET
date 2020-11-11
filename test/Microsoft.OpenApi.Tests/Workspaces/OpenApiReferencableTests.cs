@@ -15,76 +15,62 @@ namespace Microsoft.OpenApi.Tests.Workspaces
 
     public class OpenApiReferencableTests
     {
-        public static IEnumerable<object[]> ReferencableElementResolvesEmptyJsonPointerToItselfTestData =>
+        private static readonly OpenApiCallback _callbackFragment = new OpenApiCallback();
+        private static readonly OpenApiExample _exampleFragment = new OpenApiExample();
+        private static readonly OpenApiLink _linkFragment = new OpenApiLink();
+        private static readonly OpenApiHeader _headerFragment = new OpenApiHeader();
+        private static readonly OpenApiParameter _parameterFragment = new OpenApiParameter
+        {
+            Schema = new OpenApiSchema(),
+            Examples = new Dictionary<string, OpenApiExample>
+            {
+                { "example1", new OpenApiExample() }
+            }
+        };
+        private static readonly OpenApiRequestBody _requestBodyFragment = new OpenApiRequestBody();
+        private static readonly OpenApiResponse _responseFragment = new OpenApiResponse();
+        private static readonly OpenApiSchema _schemaFragment = new OpenApiSchema();
+        private static readonly OpenApiSecurityScheme _securitySchemeFragment = new OpenApiSecurityScheme();
+        private static readonly OpenApiTag _tagFragment = new OpenApiTag();
+
+        public static IEnumerable<object[]> ReferencableElementsCanResolveReferencesTestData =>
         new List<object[]>
         {
-            new object[] { new OpenApiCallback() },
-            new object[] { new OpenApiExample() },
-            new object[] { new OpenApiHeader() },
-            new object[] { new OpenApiLink() },
-            new object[] { new OpenApiParameter() },
-            new object[] { new OpenApiRequestBody() },
-            new object[] { new OpenApiResponse() },
-            new object[] { new OpenApiSchema() },
-            new object[] { new OpenApiSecurityScheme() },
-            new object[] { new OpenApiTag() }
-
+            new object[] { _callbackFragment, "/", _callbackFragment },
+            new object[] { _exampleFragment, "/", _exampleFragment },
+            new object[] { _linkFragment, "/", _linkFragment },
+            new object[] { _headerFragment, "/", _headerFragment },
+            new object[] { _parameterFragment, "/", _parameterFragment },
+            new object[] { _parameterFragment, "/schema", _parameterFragment.Schema },
+            new object[] { _parameterFragment, "/examples/example1", _parameterFragment.Examples["example1"] },
+            new object[] { _requestBodyFragment, "/", _requestBodyFragment },
+            new object[] { _responseFragment, "/", _responseFragment },
+            new object[] { _schemaFragment, "/", _schemaFragment},
+            new object[] { _securitySchemeFragment, "/", _securitySchemeFragment},
+            new object[] { _tagFragment, "/", _tagFragment},
         };
 
         [Theory]
-        [MemberData(nameof(ReferencableElementResolvesEmptyJsonPointerToItselfTestData))]
-        public void ReferencableElementResolvesEmptyJsonPointerToItself(IOpenApiReferenceable referencableElement)
+        [MemberData(nameof(ReferencableElementsCanResolveReferencesTestData))]
+        public void ReferencableElementsCanResolveReferences(
+            IOpenApiReferenceable element,
+            string pointer,
+            IOpenApiElement expectedResolvedElement)
         {
-            // Arrange - above
-
             // Act
-            var resolvedReference = referencableElement.ResolveReference(string.Empty);
+            var actualResolvedElement = element.ResolveReference(pointer);
 
             // Assert
-            Assert.Same(referencableElement, resolvedReference);
-        }
-
-        [Fact]
-        public void ParameterElementCanResolveReferenceToSchemaProperty()
-        {
-            // Arrange
-            var parameterElement = new OpenApiParameter
-            {
-                Schema = new OpenApiSchema()
-            };
-
-            // Act
-            var resolvedReference = parameterElement.ResolveReference("schema");
-
-            // Assert
-            Assert.Same(parameterElement.Schema, resolvedReference);
-        }
-
-        [Fact]
-        public void ParameterElementCanResolveReferenceToExampleTmpDbgImproveMyName()
-        {
-            // Arrange
-            var parameterElement = new OpenApiParameter
-            {
-                Examples = new Dictionary<string, OpenApiExample>()
-            {
-                { "example1", new OpenApiExample() }
-            },
-            };
-
-            // Act
-            var resolvedReference = parameterElement.ResolveReference("examples/example1");
-
-            // Assert
-            Assert.Same(parameterElement.Examples["example1"], resolvedReference);
+            Assert.Same(expectedResolvedElement, actualResolvedElement);
         }
 
         public static IEnumerable<object[]> ParameterElementShouldThrowOnInvalidReferenceIdTestData =>
         new List<object[]>
         {
-            new object[] { "/" },
+            new object[] { "" },
             new object[] { "a" },
             new object[] { "examples" },
+            new object[] { "examples/" },
             new object[] { "examples/a" },
 
         };
@@ -93,21 +79,12 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         [MemberData(nameof(ParameterElementShouldThrowOnInvalidReferenceIdTestData))]
         public void ParameterElementShouldThrowOnInvalidReferenceId(string jsonPointer)
         {
-            // Arrange
-            var parameterElement = new OpenApiParameter
-            {
-                Examples = new Dictionary<string, OpenApiExample>()
-            {
-                { "example1", new OpenApiExample() }
-            },
-            };
-
             // Act
-            Action resolveReference = () => parameterElement.ResolveReference(jsonPointer);
+            Action resolveReference = () => _parameterFragment.ResolveReference(jsonPointer);
 
             // Assert
             var exception = Assert.Throws<OpenApiException>(resolveReference);
-            Assert.Equal(String.Format(SRResource.InvalidReferenceId, jsonPointer), exception.Message);
+            Assert.Equal(string.Format(SRResource.InvalidReferenceId, jsonPointer), exception.Message);
         }
     }
 }
