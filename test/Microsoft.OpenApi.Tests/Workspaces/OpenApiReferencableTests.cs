@@ -35,7 +35,17 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             }
         };
         private static readonly OpenApiRequestBody _requestBodyFragment = new OpenApiRequestBody();
-        private static readonly OpenApiResponse _responseFragment = new OpenApiResponse();
+        private static readonly OpenApiResponse _responseFragment = new OpenApiResponse()
+        {
+            Headers = new Dictionary<string, OpenApiHeader>
+            {
+                { "header1", new OpenApiHeader() }
+            },
+            Links = new Dictionary<string, OpenApiLink>
+            {
+                { "link1", new OpenApiLink() }
+            }
+        };
         private static readonly OpenApiSchema _schemaFragment = new OpenApiSchema();
         private static readonly OpenApiSecurityScheme _securitySchemeFragment = new OpenApiSecurityScheme();
         private static readonly OpenApiTag _tagFragment = new OpenApiTag();
@@ -54,6 +64,8 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _parameterFragment, "/examples/example1", _parameterFragment.Examples["example1"] },
             new object[] { _requestBodyFragment, "/", _requestBodyFragment },
             new object[] { _responseFragment, "/", _responseFragment },
+            new object[] { _responseFragment, "/headers/header1", _responseFragment.Headers["header1"] },
+            new object[] { _responseFragment, "/links/link1", _responseFragment.Links["link1"] },
             new object[] { _schemaFragment, "/", _schemaFragment},
             new object[] { _securitySchemeFragment, "/", _securitySchemeFragment},
             new object[] { _tagFragment, "/", _tagFragment},
@@ -90,7 +102,16 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _parameterFragment, "/a" },
             new object[] { _parameterFragment, "/examples" },
             new object[] { _parameterFragment, "/examples/" },
-            new object[] { _parameterFragment, "/examples/a" }
+            new object[] { _parameterFragment, "/examples/a" },
+            new object[] { _responseFragment, null },
+            new object[] { _responseFragment, "" },
+            new object[] { _responseFragment, "/a" },
+            new object[] { _responseFragment, "/headers" },
+            new object[] { _responseFragment, "/headers/" },
+            new object[] { _responseFragment, "/headers/a" },
+            new object[] { _responseFragment, "/content" },
+            new object[] { _responseFragment, "/content/" },
+            new object[] { _responseFragment, "/content/a" },
 
         };
 
