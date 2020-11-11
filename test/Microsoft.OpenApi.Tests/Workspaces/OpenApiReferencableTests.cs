@@ -18,7 +18,14 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiCallback _callbackFragment = new OpenApiCallback();
         private static readonly OpenApiExample _exampleFragment = new OpenApiExample();
         private static readonly OpenApiLink _linkFragment = new OpenApiLink();
-        private static readonly OpenApiHeader _headerFragment = new OpenApiHeader();
+        private static readonly OpenApiHeader _headerFragment = new OpenApiHeader()
+        {
+            Schema = new OpenApiSchema(),
+            Examples = new Dictionary<string, OpenApiExample>
+            {
+                { "example1", new OpenApiExample() }
+            }
+        };
         private static readonly OpenApiParameter _parameterFragment = new OpenApiParameter
         {
             Schema = new OpenApiSchema(),
@@ -40,6 +47,8 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _exampleFragment, "/", _exampleFragment },
             new object[] { _linkFragment, "/", _linkFragment },
             new object[] { _headerFragment, "/", _headerFragment },
+            new object[] { _headerFragment, "/schema", _headerFragment.Schema },
+            new object[] { _headerFragment, "/examples/example1", _headerFragment.Examples["example1"] },
             new object[] { _parameterFragment, "/", _parameterFragment },
             new object[] { _parameterFragment, "/schema", _parameterFragment.Schema },
             new object[] { _parameterFragment, "/examples/example1", _parameterFragment.Examples["example1"] },

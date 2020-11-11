@@ -30,6 +30,10 @@ namespace Microsoft.OpenApi.Extensions
                 return element;
             try
             {
+                if (element.GetType() == typeof(OpenApiHeader))
+                {
+                    return ResolveReferenceOnHeaderElement((OpenApiHeader)element, jsonPointer);
+                }
                 if (element.GetType() == typeof(OpenApiParameter))
                 {
                     return ResolveReferenceOnParameterElement((OpenApiParameter)element, jsonPointer);
@@ -40,6 +44,24 @@ namespace Microsoft.OpenApi.Extensions
                 throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
             }
             throw new NotImplementedException();
+        }
+
+        private static IOpenApiReferenceable ResolveReferenceOnHeaderElement(OpenApiHeader headerElement, string jsonPointer)
+        {
+            var jsonPointerTokens = jsonPointer.Split('/');
+            var propertyName = jsonPointerTokens.ElementAtOrDefault(1);
+            switch (propertyName)
+            {
+                case OpenApiConstants.Schema:
+                    return headerElement.Schema;
+                case OpenApiConstants.Examples:
+                    {
+                        var mapKey = jsonPointerTokens.ElementAtOrDefault(2);
+                        return headerElement.Examples[mapKey];
+                    }
+                default:
+                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+            }
         }
 
         private static IOpenApiReferenceable ResolveReferenceOnParameterElement(OpenApiParameter parameterElement, string jsonPointer)
