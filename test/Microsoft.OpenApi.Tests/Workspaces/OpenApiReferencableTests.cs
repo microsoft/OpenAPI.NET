@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _responseFragment, "/links/link1", _responseFragment.Links["link1"] },
             new object[] { _schemaFragment, "/", _schemaFragment},
             new object[] { _securitySchemeFragment, "/", _securitySchemeFragment},
-            new object[] { _tagFragment, "/", _tagFragment},
+            new object[] { _tagFragment, "/", _tagFragment}
         };
 
         [Theory]
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             IOpenApiElement expectedResolvedElement)
         {
             // Act
-            var actualResolvedElement = element.ResolveReference(jsonPointer);
+            var actualResolvedElement = element.ResolveReference(new JsonPointer(jsonPointer));
 
             // Assert
             Assert.Same(expectedResolvedElement, actualResolvedElement);
@@ -88,30 +88,22 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         public static IEnumerable<object[]> ResolveReferenceShouldThrowOnInvalidReferenceIdTestData =>
         new List<object[]>
         {
-            new object[] { _callbackFragment, null },
-            new object[] { _callbackFragment, "" },
             new object[] { _callbackFragment, "/a" },
-            new object[] { _headerFragment, null },
-            new object[] { _headerFragment, "" },
             new object[] { _headerFragment, "/a" },
             new object[] { _headerFragment, "/examples" },
             new object[] { _headerFragment, "/examples/" },
             new object[] { _headerFragment, "/examples/a" },
-            new object[] { _parameterFragment, null },
-            new object[] { _parameterFragment, "" },
             new object[] { _parameterFragment, "/a" },
             new object[] { _parameterFragment, "/examples" },
             new object[] { _parameterFragment, "/examples/" },
             new object[] { _parameterFragment, "/examples/a" },
-            new object[] { _responseFragment, null },
-            new object[] { _responseFragment, "" },
             new object[] { _responseFragment, "/a" },
             new object[] { _responseFragment, "/headers" },
             new object[] { _responseFragment, "/headers/" },
             new object[] { _responseFragment, "/headers/a" },
             new object[] { _responseFragment, "/content" },
             new object[] { _responseFragment, "/content/" },
-            new object[] { _responseFragment, "/content/a" },
+            new object[] { _responseFragment, "/content/a" }
 
         };
 
@@ -120,7 +112,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         public void ResolveReferenceShouldThrowOnInvalidReferenceId(IOpenApiReferenceable element, string jsonPointer)
         {
             // Act
-            Action resolveReference = () => element.ResolveReference(jsonPointer);
+            Action resolveReference = () => element.ResolveReference(new JsonPointer(jsonPointer));
 
             // Assert
             var exception = Assert.Throws<OpenApiException>(resolveReference);

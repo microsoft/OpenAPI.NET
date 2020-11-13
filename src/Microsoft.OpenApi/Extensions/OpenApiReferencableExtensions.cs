@@ -16,51 +16,46 @@ namespace Microsoft.OpenApi.Extensions
     public static class OpenApiReferencableExtensions
     {
         /// <summary>
-        /// TODO: tmpDbg comment
+        /// Resolves a JSON Pointer with respect to an element, returning the referenced element.
         /// </summary>
         /// <param name="element">The referencable Open API element on which to apply the JSON pointer</param>
-        /// <param name="jsonPointer">a JSON Pointer [RFC 6901](https://tools.ietf.org/html/rfc6901).</param>
+        /// <param name="pointer">a JSON Pointer [RFC 6901](https://tools.ietf.org/html/rfc6901).</param>
         /// <returns>The element pointed to by the JSON pointer.</returns>
-        public static IOpenApiReferenceable ResolveReference(this IOpenApiReferenceable element, string jsonPointer)
+        public static IOpenApiReferenceable ResolveReference(this IOpenApiReferenceable element, JsonPointer pointer)
         {
-            if (jsonPointer == "/")
+            if (!pointer.Tokens.Any())
             {
                 return element;
             }
-            if (string.IsNullOrEmpty(jsonPointer))
-            {
-                throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
-            }
-            var jsonPointerTokens = jsonPointer.Split('/');
-            var propertyName = jsonPointerTokens.ElementAtOrDefault(1);
-            var mapKey = jsonPointerTokens.ElementAtOrDefault(2);
+            var propertyName = pointer.Tokens.FirstOrDefault();
+            var mapKey = pointer.Tokens.ElementAtOrDefault(1);
             try
             {
                 if (element.GetType() == typeof(OpenApiHeader))
                 {
-                    return ResolveReferenceOnHeaderElement((OpenApiHeader)element, propertyName, mapKey, jsonPointer);
+                    return ResolveReferenceOnHeaderElement((OpenApiHeader)element, propertyName, mapKey, pointer);
                 }
                 if (element.GetType() == typeof(OpenApiParameter))
                 {
-                    return ResolveReferenceOnParameterElement((OpenApiParameter)element, propertyName, mapKey, jsonPointer);
+                    return ResolveReferenceOnParameterElement((OpenApiParameter)element, propertyName, mapKey, pointer);
                 }
                 if (element.GetType() == typeof(OpenApiResponse))
                 {
-                    return ResolveReferenceOnResponseElement((OpenApiResponse)element, propertyName, mapKey, jsonPointer);
+                    return ResolveReferenceOnResponseElement((OpenApiResponse)element, propertyName, mapKey, pointer);
                 }
             }
             catch (KeyNotFoundException)
             {
-                throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+                throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
             }
-            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+            throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
         }
 
         private static IOpenApiReferenceable ResolveReferenceOnHeaderElement(
             OpenApiHeader headerElement,
             string propertyName,
             string mapKey,
-            string jsonPointer)
+            JsonPointer pointer)
         {
             switch (propertyName)
             {
@@ -69,7 +64,7 @@ namespace Microsoft.OpenApi.Extensions
                 case OpenApiConstants.Examples when mapKey != null:
                     return headerElement.Examples[mapKey];
                 default:
-                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
             }
         }
 
@@ -77,7 +72,7 @@ namespace Microsoft.OpenApi.Extensions
             OpenApiParameter parameterElement,
             string propertyName,
             string mapKey,
-            string jsonPointer)
+            JsonPointer pointer)
         {
             switch (propertyName)
             {
@@ -86,7 +81,7 @@ namespace Microsoft.OpenApi.Extensions
                 case OpenApiConstants.Examples when mapKey != null:
                     return parameterElement.Examples[mapKey];
                 default:
-                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
             }
         }
 
@@ -94,7 +89,7 @@ namespace Microsoft.OpenApi.Extensions
             OpenApiResponse responseElement,
             string propertyName,
             string mapKey,
-            string jsonPointer)
+            JsonPointer pointer)
         {
             switch (propertyName)
             {
@@ -103,7 +98,7 @@ namespace Microsoft.OpenApi.Extensions
                 case OpenApiConstants.Links when mapKey != null:
                     return responseElement.Links[mapKey];
                 default:
-                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, jsonPointer));
+                    throw new OpenApiException(string.Format(SRResource.InvalidReferenceId, pointer));
             }
         }
     }

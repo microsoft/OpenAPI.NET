@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Services
             }
             else if (_fragments.TryGetValue(new Uri(BaseUrl, reference.ExternalResource), out var fragment))
             {
-                var jsonPointer = $"/{reference.Id ?? string.Empty}";
+                var jsonPointer = new JsonPointer($"/{reference.Id ?? string.Empty}");
                 return fragment.ResolveReference(jsonPointer);
             }
             return null;
