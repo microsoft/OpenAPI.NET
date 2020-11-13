@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
         /// <returns>Instance of newly created OpenApiDocument</returns>
-        public T ReadFragment<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
+        public T ReadFragment<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiReferenceable
         {
             using (var reader = new StreamReader(input))
             {
