@@ -1,0 +1,16 @@
+﻿openapi: 3.0.0
+info:
+  title: Example of response referencing a header
+  version: 1.0.0
+components:
+  headers:
+    X-Test:
+      description: Test
+      schema:
+        type: string
+  responses:
+    Test:
+      description: Test Repsonse
+      headers:
+        X-Test:
+          $ref: '#/components/headers/X-Test'

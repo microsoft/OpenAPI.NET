@@ -150,6 +150,7 @@
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\explicitString.yaml" />
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiResponse\responseWithHeaderReference.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
