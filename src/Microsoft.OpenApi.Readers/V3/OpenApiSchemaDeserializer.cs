@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.MultipleOf = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
+                    o.MultipleOf = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture);
                 }
             },
             {
