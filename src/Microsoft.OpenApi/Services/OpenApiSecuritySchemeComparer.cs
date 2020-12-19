@@ -13,26 +13,26 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Executes comparision against source and target <see cref="OpenApiSecurityScheme"/>.
         /// </summary>
-        /// <param name="sourcecSecurityScheme">The source.</param>
+        /// <param name="sourceSecurityScheme">The source.</param>
         /// <param name="targetSecurityScheme">The target.</param>
         /// <param name="comparisonContext">Context under which to compare the source and target.</param>
         public override void Compare(
-            OpenApiSecurityScheme sourcecSecurityScheme,
+            OpenApiSecurityScheme sourceSecurityScheme,
             OpenApiSecurityScheme targetSecurityScheme,
             ComparisonContext comparisonContext)
         {
-            if (sourcecSecurityScheme == null && targetSecurityScheme == null)
+            if (sourceSecurityScheme == null && targetSecurityScheme == null)
             {
                 return;
             }
 
-            if (sourcecSecurityScheme == null || targetSecurityScheme == null)
+            if (sourceSecurityScheme == null || targetSecurityScheme == null)
             {
                 comparisonContext.AddOpenApiDifference(
                     new OpenApiDifference
                     {
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        SourceValue = sourcecSecurityScheme,
+                        SourceValue = sourceSecurityScheme,
                         TargetValue = targetSecurityScheme,
                         OpenApiComparedElementType = typeof(OpenApiSecurityScheme),
                         Pointer = comparisonContext.PathString
@@ -41,32 +41,58 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            new OpenApiReferenceComparer<OpenApiSecurityScheme>()
-                .Compare(sourcecSecurityScheme.Reference, targetSecurityScheme.Reference,
-                    comparisonContext);
+            if (sourceSecurityScheme.Reference != null
+                && targetSecurityScheme.Reference != null
+                && sourceSecurityScheme.Reference.Id != targetSecurityScheme.Reference.Id)
+            {
+                WalkAndAddOpenApiDifference(
+                    comparisonContext,
+                    OpenApiConstants.DollarRef,
+                    new OpenApiDifference
+                    {
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        SourceValue = sourceSecurityScheme.Reference,
+                        TargetValue = targetSecurityScheme.Reference,
+                        OpenApiComparedElementType = typeof(OpenApiReference)
+                    });
+
+                return;
+            }
+
+            if (sourceSecurityScheme.Reference != null)
+            {
+                sourceSecurityScheme = (OpenApiSecurityScheme)comparisonContext.SourceDocument.ResolveReference(
+                    sourceSecurityScheme.Reference);
+            }
+
+            if (targetSecurityScheme.Reference != null)
+            {
+                targetSecurityScheme = (OpenApiSecurityScheme)comparisonContext.TargetDocument.ResolveReference(
+                    targetSecurityScheme.Reference);
+            }
 
             WalkAndCompare(comparisonContext, OpenApiConstants.Description,
-                () => Compare(sourcecSecurityScheme.Description, targetSecurityScheme.Description, comparisonContext));
+                () => Compare(sourceSecurityScheme.Description, targetSecurityScheme.Description, comparisonContext));
 
             WalkAndCompare(comparisonContext, OpenApiConstants.Type,
-                () => Compare<SecuritySchemeType>(sourcecSecurityScheme.Type, targetSecurityScheme.Type,
+                () => Compare<SecuritySchemeType>(sourceSecurityScheme.Type, targetSecurityScheme.Type,
                     comparisonContext));
 
             WalkAndCompare(comparisonContext, OpenApiConstants.Name,
-                () => Compare(sourcecSecurityScheme.Name, targetSecurityScheme.Name, comparisonContext));
+                () => Compare(sourceSecurityScheme.Name, targetSecurityScheme.Name, comparisonContext));
 
             WalkAndCompare(comparisonContext, OpenApiConstants.In,
-                () => Compare<ParameterLocation>(sourcecSecurityScheme.In, targetSecurityScheme.In, comparisonContext));
+                () => Compare<ParameterLocation>(sourceSecurityScheme.In, targetSecurityScheme.In, comparisonContext));
 
             WalkAndCompare(comparisonContext, OpenApiConstants.Scheme,
-                () => Compare(sourcecSecurityScheme.Scheme, targetSecurityScheme.Scheme, comparisonContext));
+                () => Compare(sourceSecurityScheme.Scheme, targetSecurityScheme.Scheme, comparisonContext));
 
             WalkAndCompare(comparisonContext, OpenApiConstants.BearerFormat,
-                () => Compare(sourcecSecurityScheme.BearerFormat, targetSecurityScheme.BearerFormat,
+                () => Compare(sourceSecurityScheme.BearerFormat, targetSecurityScheme.BearerFormat,
                     comparisonContext));
 
             WalkAndCompare(comparisonContext, OpenApiConstants.OpenIdConnectUrl,
-                () => Compare(sourcecSecurityScheme.OpenIdConnectUrl, targetSecurityScheme.OpenIdConnectUrl,
+                () => Compare(sourceSecurityScheme.OpenIdConnectUrl, targetSecurityScheme.OpenIdConnectUrl,
                     comparisonContext));
 
             WalkAndCompare(
@@ -74,7 +100,7 @@ namespace Microsoft.OpenApi.Services
                 OpenApiConstants.Flows,
                 () => comparisonContext
                     .GetComparer<OpenApiOAuthFlows>()
-                    .Compare(sourcecSecurityScheme.Flows, targetSecurityScheme.Flows, comparisonContext));
+                    .Compare(sourceSecurityScheme.Flows, targetSecurityScheme.Flows, comparisonContext));
         }
     }
 }

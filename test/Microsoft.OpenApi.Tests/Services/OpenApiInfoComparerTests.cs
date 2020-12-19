@@ -255,25 +255,25 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/version",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string),
-                        TargetValue = "Test version updated",
-                        SourceValue = "Test version"
-                    },
-                    new OpenApiDifference
-                    {
                         Pointer = "#/termsOfService",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(Uri),
                         TargetValue = new Uri("http://localhost/2"),
                         SourceValue = new Uri("http://localhost/1")
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/version",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(string),
+                        TargetValue = "Test version updated",
+                        SourceValue = "Test version"
                     }
                 }
             };
         }
 
-        [Theory(Skip = "Need to fix")]
+        [Theory]
         [MemberData(nameof(GetTestCasesForOpenApiInfoComparerShouldSucceed))]
         public void OpenApiInfoComparerShouldSucceed(
             string testCaseName,

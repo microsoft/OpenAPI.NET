@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -15,43 +15,6 @@ namespace Microsoft.OpenApi.Tests.Services
     [Collection("DefaultSettings")]
     public class OpenApiComparerTests
     {
-        public static OpenApiExample AdvancedExample = new OpenApiExample
-        {
-            Value = new OpenApiObject
-            {
-                ["versions"] = new OpenApiArray
-                {
-                    new OpenApiObject
-                    {
-                        ["status"] = new OpenApiString("Status1"),
-                        ["id"] = new OpenApiString("v1"),
-                        ["links"] = new OpenApiArray
-                        {
-                            new OpenApiObject
-                            {
-                                ["href"] = new OpenApiString("http://example.com/1"),
-                                ["rel"] = new OpenApiString("sampleRel1")
-                            }
-                        }
-                    },
-
-                    new OpenApiObject
-                    {
-                        ["status"] = new OpenApiString("Status2"),
-                        ["id"] = new OpenApiString("v2"),
-                        ["links"] = new OpenApiArray
-                        {
-                            new OpenApiObject
-                            {
-                                ["href"] = new OpenApiString("http://example.com/2"),
-                                ["rel"] = new OpenApiString("sampleRel2")
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
         private readonly ITestOutputHelper _output;
 
         public OpenApiComparerTests(ITestOutputHelper output)
@@ -59,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Services
             _output = output;
         }
 
-        [Theory(Skip = "Need to fix")]
+        [Theory]
         [MemberData(
             nameof(OpenApiComparerTestCases.GetTestCasesForOpenApiComparerShouldSucceed),
             MemberType = typeof(OpenApiComparerTestCases))]
@@ -71,12 +34,56 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             _output.WriteLine(testCaseName);
 
-            new OpenApiExampleComparer().Compare(AdvancedExample, AdvancedExample,
-                new ComparisonContext(new OpenApiComparerFactory(), new OpenApiDocument(), new OpenApiDocument()));
+            // Ensure that all references are corrected to mirror what happens in the MapNode.
+            new OpenApiWalker(new SelfReferenceFixer()).Walk(source);
+            new OpenApiWalker(new SelfReferenceFixer()).Walk(target);
+
             var differences = OpenApiComparer.Compare(source, target).ToList();
+
+            var actualPaths = differences.Select(x => x.Pointer).ToList();
+            var expectedPaths = expectedDifferences.Select(x => x.Pointer).ToList();
+
             differences.Count().Should().Be(expectedDifferences.Count);
 
             differences.Should().BeEquivalentTo(expectedDifferences);
+        }
+
+        /// <summary>
+        /// MapNode adds a self-reference for all IOpenApiReferenceable instances.
+        /// This visitor mimics that behavior for C# created objects.
+        /// </summary>
+        internal class SelfReferenceFixer : OpenApiVisitorBase
+        {
+            public override void Visit(OpenApiComponents components)
+            {
+                UpdateNullReferences(components.Schemas, ReferenceType.Schema);
+                UpdateNullReferences(components.Responses, ReferenceType.Response);
+                UpdateNullReferences(components.Parameters, ReferenceType.Parameter);
+                UpdateNullReferences(components.Examples, ReferenceType.Example);
+                UpdateNullReferences(components.RequestBodies, ReferenceType.RequestBody);
+                UpdateNullReferences(components.Headers, ReferenceType.Header);
+                UpdateNullReferences(components.SecuritySchemes, ReferenceType.SecurityScheme);
+                UpdateNullReferences(components.Links, ReferenceType.Link);
+                UpdateNullReferences(components.Callbacks, ReferenceType.Callback);
+            }
+
+            private void UpdateNullReferences<T>(IDictionary<string, T> mapping, ReferenceType referenceType)
+                where T : IOpenApiReferenceable
+            {
+                foreach (var kvp in mapping)
+                {
+                    var element = kvp.Value;
+
+                    if (!element.UnresolvedReference && (element.Reference == null))
+                    {
+                        element.Reference = new OpenApiReference()
+                        {
+                            Id = kvp.Key,
+                            Type = referenceType,
+                        };
+                    }
+                }
+            }
         }
     }
 }

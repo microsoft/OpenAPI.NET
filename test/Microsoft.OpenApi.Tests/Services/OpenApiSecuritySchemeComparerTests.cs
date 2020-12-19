@@ -131,19 +131,19 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     new OpenApiDifference
                     {
-                        Pointer = "#/type",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(SecuritySchemeType),
-                        SourceValue = SecuritySchemeType.ApiKey,
-                        TargetValue = SecuritySchemeType.Http
-                    },
-                    new OpenApiDifference
-                    {
                         Pointer = "#/description",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(string),
                         SourceValue = "Test Description",
                         TargetValue = "Test Description Updated"
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/type",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(SecuritySchemeType),
+                        SourceValue = SecuritySchemeType.ApiKey,
+                        TargetValue = SecuritySchemeType.Http
                     },
                     new OpenApiDifference
                     {
@@ -163,6 +163,14 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
+                        Pointer = "#/scheme",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = null,
+                        TargetValue = "basic"
+                    },
+                    new OpenApiDifference
+                    {
                         Pointer = "#/bearerFormat",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(string),
@@ -176,14 +184,6 @@ namespace Microsoft.OpenApi.Tests.Services
                         OpenApiComparedElementType = typeof(Uri),
                         SourceValue = new Uri("http://localhost:1"),
                         TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/scheme",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string),
-                        SourceValue = null,
-                        TargetValue = "basic"
                     }
                 }
             };
@@ -259,17 +259,6 @@ namespace Microsoft.OpenApi.Tests.Services
                     },
                     new OpenApiDifference
                     {
-                        Pointer = "#/flows/authorizationCode",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
-                        SourceValue = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl = new Uri("http://localhost/2")
-                        },
-                        TargetValue = null
-                    },
-                    new OpenApiDifference
-                    {
                         Pointer = "#/flows/clientCredentials",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
@@ -278,12 +267,23 @@ namespace Microsoft.OpenApi.Tests.Services
                         {
                             AuthorizationUrl = new Uri("http://localhost/2")
                         }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/flows/authorizationCode",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(OpenApiOAuthFlow),
+                        SourceValue = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost/2")
+                        },
+                        TargetValue = null
                     }
                 }
             };
         }
 
-        [Theory(Skip = "Need to fix")]
+        [Theory]
         [MemberData(nameof(GetTestCasesForOpenApiSecuritySchemeComparerShouldSucceed))]
         public void OpenApiSecuritySchemeComparerShouldSucceed(
             string testCaseName,
