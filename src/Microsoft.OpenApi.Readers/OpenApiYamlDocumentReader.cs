@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.IO;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -54,6 +55,14 @@ namespace Microsoft.OpenApi.Readers
                 switch (_settings.ReferenceResolution)
                 {
                     case ReferenceResolutionSetting.ResolveAllReferences:
+                        var openApiWorkSpace = new OpenApiWorkspace();
+                        document.Workspace = openApiWorkSpace;
+                        var streamLoader = new DefaultStreamLoader();
+                        
+                        var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader.LoadAsync, _settings);
+                        workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource="/" }, document);
+
+                        // TODO:  Need to add ReadAsync for resolving all references.
                         throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
                     case ReferenceResolutionSetting.ResolveLocalReferences:
                         var errors = document.ResolveReferences(false);
