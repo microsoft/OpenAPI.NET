@@ -51,30 +51,7 @@ namespace Microsoft.OpenApi.Readers
                 // Parse the OpenAPI Document
                 document = context.Parse(input);
 
-                // Resolve References if requested
-                switch (_settings.ReferenceResolution)
-                {
-                    case ReferenceResolutionSetting.ResolveAllReferences:
-                        var openApiWorkSpace = new OpenApiWorkspace();
-                        document.Workspace = openApiWorkSpace;
-                        var streamLoader = new DefaultStreamLoader();
-                        
-                        var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader.LoadAsync, _settings);
-                        workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource="/" }, document);
-
-                        // TODO:  Need to add ReadAsync for resolving all references.
-                        throw new ArgumentException(Properties.SRResource.CannotResolveRemoteReferencesSynchronously);
-                    case ReferenceResolutionSetting.ResolveLocalReferences:
-                        var errors = document.ResolveReferences(false);
-
-                        foreach (var item in errors)
-                        {
-                            diagnostic.Errors.Add(item);
-                        }
-                        break;
-                    case ReferenceResolutionSetting.DoNotResolveReferences:
-                        break;
-                }
+                ResolveReferences(diagnostic, document);
             }
             catch (OpenApiException ex)
             {
@@ -93,6 +70,33 @@ namespace Microsoft.OpenApi.Readers
 
             return document;
         }
+
+        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
+        {
+            // Resolve References if requested
+            switch (_settings.ReferenceResolution)
+            {
+                case ReferenceResolutionSetting.ResolveAllReferences:
+                    var openApiWorkSpace = new OpenApiWorkspace();
+                    document.Workspace = openApiWorkSpace;
+                    var streamLoader = new DefaultStreamLoader();
+
+                    var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader.Load, _settings);
+                    workspaceLoader.Load(new OpenApiReference() { ExternalResource = "/" }, document);
+                    break;
+                case ReferenceResolutionSetting.ResolveLocalReferences:
+                    var errors = document.ResolveReferences(false);
+
+                    foreach (var item in errors)
+                    {
+                        diagnostic.Errors.Add(item);
+                    }
+                    break;
+                case ReferenceResolutionSetting.DoNotResolveReferences:
+                    break;
+            }
+        }
+
         /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>

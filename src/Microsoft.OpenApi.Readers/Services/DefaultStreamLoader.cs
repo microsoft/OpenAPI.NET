@@ -19,6 +19,21 @@ namespace Microsoft.OpenApi.Readers.Services
     {
         private HttpClient _httpClient = new HttpClient();
 
+        public Stream Load(Uri uri)
+        {
+            switch (uri.Scheme)
+            {
+                case "file":
+                    return File.OpenRead(uri.AbsolutePath);
+                case "http":
+                case "https":
+                    return _httpClient.GetStreamAsync(uri).GetAwaiter().GetResult();
+
+                default:
+                    throw new ArgumentException("Unsupported scheme");
+            }
+        }
+
         public async Task<Stream> LoadAsync(Uri uri)
         {
             switch (uri.Scheme)
@@ -28,7 +43,6 @@ namespace Microsoft.OpenApi.Readers.Services
                 case "http":
                 case "https":
                     return await _httpClient.GetStreamAsync(uri);
-
                 default:
                     throw new ArgumentException("Unsupported scheme");
             }

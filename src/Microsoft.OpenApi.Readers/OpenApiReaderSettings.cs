@@ -66,6 +66,6 @@ namespace Microsoft.OpenApi.Readers
         /// <remarks>
         /// Default loader will attempt to dereference http(s) urls and file urls.
         /// </remarks>
-        public Func<Uri, Task<Stream>> CustomExternalLoader { get; set; }
+        public Func<Uri, Stream> CustomExternalLoader { get; set; }
     }
 }

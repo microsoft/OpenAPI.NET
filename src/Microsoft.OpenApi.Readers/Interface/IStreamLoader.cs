@@ -19,5 +19,12 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// <param name="uri">Identifier of some source of an OpenAPI Description</param>
         /// <returns>A data objext that can be processed by a reader to generate an <see cref="OpenApiDocument"/></returns>
         Task<TInput> LoadAsync(Uri uri);
+
+        /// <summary>
+        /// Use Uri to locate data and convert into an input object.
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        TInput Load(Uri uri);
     }
 }
