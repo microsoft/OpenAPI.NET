@@ -1,0 +1,19 @@
+﻿@model List<Microsoft.OpenApi.Diff.Output.ChangedEndpointViewModel>
+
+<table class="table table-borderless table-sm">
+    <tbody>
+        @foreach (var endpoint in Model)
+        {
+            <tr>
+                <td>
+                    <a href="#@(endpoint.Method)@(endpoint.PathUrl)">
+                        <h7 class="m-0">
+                            <span class="badge badge-@(endpoint.Method) mr-2">@endpoint.Method</span><small>@endpoint.PathUrl</small>
+                            <small><span class="badge badge-@(endpoint.ChangeType.DiffResult)">@endpoint.ChangeType.DiffResult</span></small>
+                        </h7>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

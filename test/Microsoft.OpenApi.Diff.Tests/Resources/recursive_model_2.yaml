@@ -1,0 +1,28 @@
+openapi: 3.0.1
+info:
+  title: recursive test
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8000/'
+paths:
+  /ping:
+    get:
+      operationId: ping
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/B'
+components:
+  schemas:
+    B:
+      type: object
+      properties:
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/B'
