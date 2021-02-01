@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Services
             }
 
             if (comparisonContext.SourceSchemaLoop.Contains(sourceSchema)
-                || comparisonContext.SourceSchemaLoop.Contains(targetSchema))
+                || comparisonContext.TargetSchemaLoop.Contains(targetSchema))
             {
                 return; // Loop detected, this schema has already been walked.
             }
