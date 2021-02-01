@@ -1,0 +1,185 @@
+﻿@using Microsoft.OpenApi.Diff.Extensions
+@using RazorLight
+@inherits TemplatePage<Microsoft.OpenApi.Diff.Output.RenderViewModel>
+@model Microsoft.OpenApi.Diff.Output.RenderViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@Model.PageTitle</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="@Model.Author">
+    <meta name="description" content="@Model.Description">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+        body {
+            padding-top: 3.5rem;
+        }
+
+        main {
+            padding-top: 0.8rem!important;
+        }
+
+        footer {
+            padding: 0.2375rem 0;
+            background-color: #343a40!important;
+            color: #ffffff;
+        }
+
+        dd > dl > dd, dd > dl > dt {
+            margin-left: 20px;
+        }
+
+        *[id]::before {
+            content: "";
+            display: block;
+            height: 50px; /* fixed header height*/
+            margin: -50px 0 0; /* negative fixed header height */
+        }
+
+        code.badge{
+            color: #e83e8c;
+            background-color: #efefef;
+        }
+
+        .bd-toc {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 3.5rem;
+            height: calc(100vh - 5.5rem);
+            overflow-y: auto;
+        }
+
+        .badge-Incompatible {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .badge-Compatible {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .badge-Metadata {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .badge-NoChanges {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .badge-Unknown {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .badge-Get {
+            background-color: #009688;
+            color: #fff;
+        }
+
+        .badge-Post {
+            background-color: #0B7CAF;
+            color: #fff;
+        }
+
+        .badge-Put {
+            background-color: #c5862b;
+            color: #fff;
+        }
+
+        .badge-Delete {
+            background-color: #F44336;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="fixed-top">
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container-fluid d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    @if (!Model.LogoUrl.IsNullOrEmpty())
+                    {
+                        <img class="mr-2" src="@Model.LogoUrl" alt="logo">
+                    }
+                    <span>@Model.Name</span>
+                </a>
+                <h3 class="m-0"><span class="badge badge-@(Model.ChangeType.DiffResult)">@Model.ChangeType.DiffResult</span></h3>
+                <span class="text-white">@Model.OldSpecIdentifier --> @Model.NewSpecIdentifier</span>
+            </div>
+        </div><!--//container-->
+    </header><!--//header-->
+    <div class="container-fluid">
+        <div class="row row flex-xl-nowrap">
+            <nav class="d-none d-xl-block col-xl-3 pt-2 bd-toc" aria-label="Primary Navigation">
+                <h5>Summary</h5>
+                <h6>Added Endpoints</h6>
+                <hr class="m-0" />
+                @{ await IncludeAsync("Views.OperationOverview", Model.NewEndpoints); }
+                <h6>Removed Endpoints</h6>
+                <hr class="m-0" />
+                @{ await IncludeAsync("Views.OperationOverview", Model.MissingEndpoints); }
+                <h6>Deprecated Endpoints</h6>
+                <hr class="m-0" />
+                @{ await IncludeAsync("Views.OperationOverview", Model.DeprecatedEndpoints); }
+                <h6>Changed Endpoints</h6>
+                <hr class="m-0" />
+                @{ await IncludeAsync("Views.ChangedOperationOverview", Model.ChangedEndpoints); }
+            </nav>
+            <main class="col" role="main">
+                <h2>Changed Endpoints Details</h2>
+                <hr />
+                @foreach (var changedOperation in Model.ChangedEndpoints)
+                {
+                    <p id="@(changedOperation.Method)@(changedOperation.PathUrl)">
+                        <h3 class="d-block p-2 bg-secondary text-white">
+                            <span class="badge badge-@(changedOperation.Method) mr-2">@changedOperation.Method</span><small>@changedOperation.PathUrl</small>
+                            <small><span class="badge badge-@(changedOperation.ChangeType.DiffResult)">@changedOperation.ChangeType.DiffResult</span></small>
+                        </h3>
+                    </p>
+
+                    <p>@changedOperation.Summary</p>
+
+
+                    @if (changedOperation.ChangeType.IsIncompatible())
+                    {
+                        <h4>Breaking Changes</h4>
+                        <hr class="m-0" />
+                        <dl>
+                            @{ await IncludeAsync("Views.ChangeDetail", changedOperation.ChangesByType.Where(x => x.ChangeType.IsIncompatible()).ToList()); }
+                        </dl>
+                    }
+
+                    @if (changedOperation.ChangesByType.Any(x => x.ChangeType.IsCompatible()))
+                    {
+                        <h4>Compatible Changes</h4>
+                        <hr class="m-0" />
+                        <dl>
+                            @{ await IncludeAsync("Views.ChangeDetail", changedOperation.ChangesByType.Where(x => x.ChangeType.IsCompatible()).ToList()); }
+                        </dl>
+                    }
+                }
+            </main>
+        </div>
+
+    </div>
+    <footer class="bd-footer fixed-bottom">
+        <div class="container-fluid d-flex justify-content-between">
+            <span><small>Created: @Model.CreatedDate</small></span>
+            <a href="https://github.com/microsoft/OpenAPI.NET">
+                <img src="https://img.shields.io/static/v1?label=GitHub&message=OpenAPI%20Diff&color=green&logo=github" alt="GitHub OpenAPI Diff" />
+            </a>
+        </div>
+    </footer>
+</body>
+</html>
+

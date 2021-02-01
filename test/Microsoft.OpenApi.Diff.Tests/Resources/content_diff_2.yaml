@@ -1,0 +1,47 @@
+---
+openapi: "3.0.1"
+info:
+  title: "Test title"
+  description: "This is a test metadata"
+  termsOfService: "http://test.com"
+  contact:
+    name: "Mark Snijder"
+    url: "marksnijder.nl"
+    email: "snijderd@gmail.com"
+  license:
+    name: "To be decided"
+    url: "http://test.com"
+  version: "version 1.0"
+paths:
+  /pets/{id}:
+    get:
+      description: Returns a user based on a single ID, if the user does not have access to the pet
+      operationId: find pet by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to fetch
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+components:
+  schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        salary:
+          type: "integer"
+          format: "int32"
+        name:
+          type: "string"
