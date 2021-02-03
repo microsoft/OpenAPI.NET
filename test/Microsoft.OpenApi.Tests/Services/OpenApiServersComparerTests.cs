@@ -390,6 +390,40 @@ namespace Microsoft.OpenApi.Tests.Services
                     new OpenApiDifference
                     {
                         Pointer = "#/0",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
+                        OpenApiComparedElementType = typeof(OpenApiServer),
+                        TargetValue = null,
+                        SourceValue = new OpenApiServer
+                        {
+                            Description = "description1",
+                            Url = "https://{username}.example.com:{port}/{basePath}",
+                            Variables = new Dictionary<string, OpenApiServerVariable>
+                            {
+                                ["username"] = new OpenApiServerVariable
+                                {
+                                    Default = "unknown",
+                                    Description = "variableDescription1"
+                                },
+                                ["port"] = new OpenApiServerVariable
+                                {
+                                    Default = "8443",
+                                    Description = "variableDescription2",
+                                    Enum = new List<string>
+                                    {
+                                        "443",
+                                        "8443"
+                                    }
+                                },
+                                ["basePath"] = new OpenApiServerVariable
+                                {
+                                    Default = "v1"
+                                }
+                            }
+                        }
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/0",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Add,
                         OpenApiComparedElementType = typeof(OpenApiServer),
                         SourceValue = null,
@@ -454,46 +488,12 @@ namespace Microsoft.OpenApi.Tests.Services
                                 }
                             }
                         }
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/0",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Remove,
-                        OpenApiComparedElementType = typeof(OpenApiServer),
-                        TargetValue = null,
-                        SourceValue = new OpenApiServer
-                        {
-                            Description = "description1",
-                            Url = "https://{username}.example.com:{port}/{basePath}",
-                            Variables = new Dictionary<string, OpenApiServerVariable>
-                            {
-                                ["username"] = new OpenApiServerVariable
-                                {
-                                    Default = "unknown",
-                                    Description = "variableDescription1"
-                                },
-                                ["port"] = new OpenApiServerVariable
-                                {
-                                    Default = "8443",
-                                    Description = "variableDescription2",
-                                    Enum = new List<string>
-                                    {
-                                        "443",
-                                        "8443"
-                                    }
-                                },
-                                ["basePath"] = new OpenApiServerVariable
-                                {
-                                    Default = "v1"
-                                }
-                            }
-                        }
                     }
                 }
             };
         }
 
-        [Theory(Skip = "Need to fix")]
+        [Theory]
         [MemberData(nameof(GetTestCasesForOpenApiServersComparerShouldSucceed))]
         public void OpenApiServersComparerShouldSucceed(
             string testCaseName,

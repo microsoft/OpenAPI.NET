@@ -246,22 +246,6 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     new OpenApiDifference
                     {
-                        Pointer = "#/description",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string),
-                        SourceValue = "test description",
-                        TargetValue = "test description updated"
-                    },
-                    new OpenApiDifference
-                    {
-                        Pointer = "#/name",
-                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
-                        OpenApiComparedElementType = typeof(string),
-                        SourceValue = "test name",
-                        TargetValue = "test name updated"
-                    },
-                    new OpenApiDifference
-                    {
                         Pointer = "#/externalDocs/description",
                         OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
                         OpenApiComparedElementType = typeof(string),
@@ -275,12 +259,28 @@ namespace Microsoft.OpenApi.Tests.Services
                         OpenApiComparedElementType = typeof(Uri),
                         SourceValue = new Uri("http://localhost/doc"),
                         TargetValue = new Uri("http://localhost/updated")
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/description",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "test description",
+                        TargetValue = "test description updated"
+                    },
+                    new OpenApiDifference
+                    {
+                        Pointer = "#/name",
+                        OpenApiDifferenceOperation = OpenApiDifferenceOperation.Update,
+                        OpenApiComparedElementType = typeof(string),
+                        SourceValue = "test name",
+                        TargetValue = "test name updated"
                     }
                 }
             };
         }
 
-        [Theory(Skip = "Need to fix")]
+        [Theory]
         [MemberData(nameof(GetTestCasesForOpenApiTagComparerShouldSucceed))]
         public void OpenApiTagServerVariableComparerShouldSucceed(
             string testCaseName,
