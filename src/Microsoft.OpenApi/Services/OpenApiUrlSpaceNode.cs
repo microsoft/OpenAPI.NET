@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Services
             var paths = doc?.Paths;
             if (paths != null)
             {
-                root = new OpenApiUrlSpaceNode("");
+                root = new OpenApiUrlSpaceNode(string.Empty);
 
                 foreach (var path in paths)
                 {
