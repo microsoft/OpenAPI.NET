@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using System.Reflection;
 using Microsoft.OpenApi.Attributes;
 
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Extensions
             var type = typeof(T);
             if (!type.IsEnum)
             {
-                return default(T);
+                return default;
             }
 
             foreach (var value in Enum.GetValues(type))
@@ -35,7 +36,23 @@ namespace Microsoft.OpenApi.Extensions
                 }
             }
 
-            return default(T);
+            return default;
         }
+
+        /// <summary>
+        /// Capitalizes each letter of a word in a string.
+        /// </summary>
+        /// <param name="input">String containing the words to be capitalized, delimited by the '-' character.</param>
+        /// <returns>String value with each word capitalized and concatenated.</returns>
+        public static string ToPascalCase(this string input)
+            => string.IsNullOrEmpty(input) ? input : string.Join(null, input.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                            .Select(s => ToFirstCharacterUpperCase(s)));
+        /// <summary>
+        /// Capitalizes the first letter of an input string.
+        /// </summary>
+        /// <param name="input">String with first letter to be capitalized. </param>
+        /// <returns>The string value with the first letter capitalized.</returns>
+        public static string ToFirstCharacterUpperCase(this string input)
+           => string.IsNullOrEmpty(input) ? input : char.ToUpperInvariant(input.FirstOrDefault()) + input.Substring(1);
     }
 }
