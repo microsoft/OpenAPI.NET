@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>true or false.</returns>
         public bool HasOperations()
         {
-            return PathItem != null && PathItem.Operations != null && PathItem.Operations.Count > 0;
+            return PathItem?.Operations != null && PathItem.Operations.Count > 0;
         }
 
         /// <summary>
