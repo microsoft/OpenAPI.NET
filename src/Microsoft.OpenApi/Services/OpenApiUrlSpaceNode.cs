@@ -18,12 +18,12 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// All the subdirectories of a node.
         /// </summary>
-        public IDictionary<string, OpenApiUrlSpaceNode> Children { get; set; } = new Dictionary<string, OpenApiUrlSpaceNode>();
+        public IDictionary<string, OpenApiUrlSpaceNode> Children { get; } = new Dictionary<string, OpenApiUrlSpaceNode>();
 
         /// <summary>
         /// The name tag for a group of nodes.
         /// </summary>
-        public string Label { get; set; }
+        public string Label { get; private set; }
 
         /// <summary>
         /// Path Item object that describes the operations available on a node.
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// The relative directory path of the current node from the root node.
         /// </summary>
-        public string Path { get; set; } = "";
+        public string Path { get; private set; } = "";
 
         /// <summary>
         /// Flag indicating whether a node segment is a path parameter.
