@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>true or false.</returns>
         public bool HasOperations()
         {
-            return PathItem != null && PathItem.Operations != null && PathItem.Operations.Count > 0;
+            return PathItem?.Operations != null && PathItem.Operations.Count > 0;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Services
             var paths = doc?.Paths;
             if (paths != null)
             {
-                root = new OpenApiUrlSpaceNode("");
+                root = new OpenApiUrlSpaceNode(string.Empty);
 
                 foreach (var path in paths)
                 {
