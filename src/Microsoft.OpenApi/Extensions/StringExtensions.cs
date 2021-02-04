@@ -45,8 +45,11 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="input">String containing the words to be capitalized, delimited by the '-' character.</param>
         /// <returns>String value with each word capitalized and concatenated.</returns>
         public static string ToPascalCase(this string input)
-            => string.IsNullOrEmpty(input) ? input : string.Join(null, input.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries)
-                                                                            .Select(s => ToFirstCharacterUpperCase(s)));
+            => string.IsNullOrEmpty(input) ? input : string.Join(
+                                                        null, input.Split(
+                                                            new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                            .Select(ToFirstCharacterUpperCase));
+
         /// <summary>
         /// Capitalizes the first letter of an input string.
         /// </summary>
