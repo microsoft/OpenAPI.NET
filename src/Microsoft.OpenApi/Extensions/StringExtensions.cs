@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <returns>String value with each word capitalized and concatenated.</returns>
         public static string ToPascalCase(this string input)
             => string.IsNullOrEmpty(input) ? input : string.Join(null, input.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries)
-                                                                            .Select(s => ToFirstCharacterUpperCase(s)));
+                                                                            .Select(ToFirstCharacterUpperCase));
         /// <summary>
         /// Capitalizes the first letter of an input string.
         /// </summary>
