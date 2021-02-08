@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -132,11 +132,12 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Creates a structured directory of nodes from the paths of an OpenAPI document.
+        /// Creates a structured directory of <see cref="OpenApiUrlSpaceNode"/> nodes from the paths of an OpenAPI document.
         /// </summary>
         /// <param name="doc">The OpenAPI document.</param>
-        /// <param name="label">Name tag for labelling the nodes in the directory structure.</param>
-        /// <returns>The root node of the created directory structure.</returns>
+        /// <param name="label">Name tag for labelling the <see cref="OpenApiUrlSpaceNode"/> nodes
+        /// in the directory structure.</param>
+        /// <returns>The root node of the created <see cref="OpenApiUrlSpaceNode"/> directory structure.</returns>
         public static OpenApiUrlSpaceNode Create(OpenApiDocument doc, string label = "")
         {
             OpenApiUrlSpaceNode root = null;
@@ -155,10 +156,11 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Retrieves the paths from an OpenAPI document and appends the items to a node.
+        /// Retrieves the paths from an OpenAPI document and appends the items to an <see cref="OpenApiUrlSpaceNode"/> node.
         /// </summary>
         /// <param name="doc">The OpenAPI document.</param>
-        /// <param name="label">Name tag for labelling the nodes in the directory structure.</param>
+        /// <param name="label">Name tag for labelling related <see cref="OpenApiUrlSpaceNode"/>
+        /// nodes in the directory structure.</param>
         public void Attach(OpenApiDocument doc, string label)
         {
             var paths = doc?.Paths;
@@ -172,12 +174,12 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Appends an OpenAPI path and the PathItems to a node.
+        /// Appends an OpenAPI path and the PathItems to an <see cref="OpenApiUrlSpaceNode"/> node.
         /// </summary>
         /// <param name="path">An OpenAPI path.</param>
         /// <param name="pathItem">Path Item object that describes the operations available on an OpenAPI path.</param>
-        /// <param name="label">A name tag for labelling the node.</param>
-        /// <returns>A node describing an OpenAPI path.</returns>
+        /// <param name="label">A name tag for labelling the <see cref="OpenApiUrlSpaceNode"/> node.</param>
+        /// <returns>An <see cref="OpenApiUrlSpaceNode"/> node describing an OpenAPI path.</returns>
         public OpenApiUrlSpaceNode Attach(string path, OpenApiPathItem pathItem, string label)
         {
             if (path.StartsWith("/"))
@@ -190,13 +192,13 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Assembles the constituent properties of a node.
+        /// Assembles the constituent properties of an <see cref="OpenApiUrlSpaceNode"/> node.
         /// </summary>
         /// <param name="segments">IEnumerable subdirectories of a relative path.</param>
         /// <param name="pathItem">Path Item object that describes the operations available on an OpenAPI path.</param>
-        /// <param name="label">A name tag for labelling the node.</param>
+        /// <param name="label">A name tag for labelling the <see cref="OpenApiUrlSpaceNode"/> node.</param>
         /// <param name="currentPath">The relative path of a node.</param>
-        /// <returns>A node with all constituent properties assembled.</returns>
+        /// <returns>An <see cref="OpenApiUrlSpaceNode"/> node with all constituent properties assembled.</returns>
         private OpenApiUrlSpaceNode Attach(IEnumerable<string> segments, OpenApiPathItem pathItem, string label, string currentPath)
         {
             var segment = segments.FirstOrDefault();
