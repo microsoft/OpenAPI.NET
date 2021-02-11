@@ -8,16 +8,18 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
-    public class OpenApiUrlSpaceTests
+    public class OpenApiUrlTreeNodeTests
     {
         [Fact]
-        public void CreateEmptyUrlSpace()
+        public void CreateEmptyUrlTreeNode()
         {
             var doc = new OpenApiDocument() { };
 
-            var rootNode = OpenApiUrlSpaceNode.Create(doc);
+            var rootNode = OpenApiUrlTreeNode.Create(doc);
+            var rootNode1 = OpenApiUrlTreeNode.Create(null);
 
-            Assert.Null(rootNode);
+            Assert.NotNull(rootNode);
+            Assert.NotNull(rootNode1);
         }
 
         [Fact]
@@ -31,7 +33,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var rootNode = OpenApiUrlSpaceNode.Create(doc);
+            var rootNode = OpenApiUrlTreeNode.Create(doc);
 
             Assert.NotNull(rootNode);
             Assert.NotNull(rootNode.PathItem);
@@ -49,7 +51,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var rootNode = OpenApiUrlSpaceNode.Create(doc);
+            var rootNode = OpenApiUrlTreeNode.Create(doc);
 
             Assert.NotNull(rootNode);
             Assert.Null(rootNode.PathItem);
@@ -71,7 +73,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var rootNode = OpenApiUrlSpaceNode.Create(doc, "Ensuite");
+            var rootNode = OpenApiUrlTreeNode.Create(doc, "Ensuite");
 
             Assert.NotNull(rootNode);
             Assert.Equal(2, rootNode.Children.Count);
@@ -105,7 +107,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var rootNode = OpenApiUrlSpaceNode.Create(doc1, "Penthouse");
+            var rootNode = OpenApiUrlTreeNode.Create(doc1, "Penthouse");
             rootNode.Attach(doc2, "Five-star");
 
             Assert.NotNull(rootNode);
@@ -127,7 +129,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var rootNode = OpenApiUrlSpaceNode.Create(doc);
+            var rootNode = OpenApiUrlTreeNode.Create(doc);
 
             Assert.NotNull(rootNode);
             Assert.Equal(2, rootNode.Children.Count);
@@ -168,32 +170,10 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var rootNode = OpenApiUrlSpaceNode.Create(doc);
+            var rootNode = OpenApiUrlTreeNode.Create(doc);
             Assert.NotNull(rootNode);
             Assert.False(rootNode.Children["home"].HasOperations());
             Assert.True(rootNode.Children["car"].HasOperations());
-        }
-
-        [Fact]
-        public void SegmentIsFunctionWorks()
-        {
-            var doc = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/home/gate/open()"] = new OpenApiPathItem()
-                }
-            };
-
-            var rootNode = OpenApiUrlSpaceNode.Create(doc);
-
-            Assert.NotNull(rootNode);
-            Assert.Equal(1, rootNode.Children.Count);
-            Assert.NotNull(rootNode.Children["home"].Children["gate"].Children["open()"].PathItem);
-            Assert.True(rootNode.Children["home"].Children["gate"].Children["open()"].IsFunction);
-            Assert.Equal("Open", rootNode.Children["home"].Children["gate"].Children["open()"].Identifier);
-            Assert.Equal("open()", rootNode.Children["home"].Children["gate"].Children["open()"].Segment);
         }
 
         [Fact]
@@ -208,13 +188,12 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var rootNode = OpenApiUrlSpaceNode.Create(doc);
+            var rootNode = OpenApiUrlTreeNode.Create(doc);
 
             Assert.NotNull(rootNode);
             Assert.Equal(1, rootNode.Children.Count);
             Assert.NotNull(rootNode.Children["home"].Children["bedroom"].Children["{bedroom-id}"].PathItem);
             Assert.True(rootNode.Children["home"].Children["bedroom"].Children["{bedroom-id}"].IsParameter);
-            Assert.Equal("BedroomId", rootNode.Children["home"].Children["bedroom"].Children["{bedroom-id}"].Identifier);
             Assert.Equal("{bedroom-id}", rootNode.Children["home"].Children["bedroom"].Children["{bedroom-id}"].Segment);
         }
     }
