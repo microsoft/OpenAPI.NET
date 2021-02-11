@@ -38,24 +38,5 @@ namespace Microsoft.OpenApi.Extensions
 
             return default;
         }
-
-        /// <summary>
-        /// Capitalizes each letter of a word in a string.
-        /// </summary>
-        /// <param name="input">String containing the words to be capitalized, delimited by the '-' character.</param>
-        /// <returns>String value with each word capitalized and concatenated.</returns>
-        public static string ToPascalCase(this string input)
-            => string.IsNullOrEmpty(input) ? input : string.Join(
-                                                        null, input.Split(
-                                                            new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries)
-                                                                            .Select(ToFirstCharacterUpperCase));
-
-        /// <summary>
-        /// Capitalizes the first letter of an input string.
-        /// </summary>
-        /// <param name="input">String with first letter to be capitalized. </param>
-        /// <returns>The string value with the first letter capitalized.</returns>
-        public static string ToFirstCharacterUpperCase(this string input)
-           => string.IsNullOrEmpty(input) ? input : char.ToUpperInvariant(input.FirstOrDefault()) + input.Substring(1);
     }
 }
