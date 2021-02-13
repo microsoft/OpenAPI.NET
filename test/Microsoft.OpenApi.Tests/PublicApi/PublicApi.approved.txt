@@ -99,8 +99,10 @@ namespace Microsoft.OpenApi.Any
     {
         public OpenApiString(string value) { }
         public OpenApiString(string value, bool isExplicit) { }
+        public OpenApiString(string value, bool isExplicit, bool isRawString) { }
         public override Microsoft.OpenApi.Any.PrimitiveType PrimitiveType { get; }
         public bool IsExplicit() { }
+        public bool IsRawString() { }
     }
     public enum PrimitiveType
     {
