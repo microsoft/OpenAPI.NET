@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Server Object: an object representing a Server.
     /// </summary>
-    public class OpenApiServer : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiServer : IOpenApiExtensible
     {
         /// <summary>
         /// An optional string describing the host designated by the URL. CommonMark syntax MAY be used for rich text representation.
@@ -35,40 +35,5 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiServer"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // url
-            writer.WriteProperty(OpenApiConstants.Url, Url);
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // variables
-            writer.WriteOptionalMap(OpenApiConstants.Variables, Variables, (w, v) => v.SerializeAsV3(w));
-
-            // specification extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiServer"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            // Server object does not exist in V2.
-        }
     }
 }

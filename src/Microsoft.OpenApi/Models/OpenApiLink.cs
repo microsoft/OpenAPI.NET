@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// A relative or absolute reference to an OAS operation.
@@ -60,68 +60,5 @@ namespace Microsoft.OpenApi.Models
         /// Reference pointer.
         /// </summary>
         public OpenApiReference Reference { get; set; }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiLink"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
-
-            SerializeAsV3WithoutReference(writer);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            writer.WriteStartObject();
-
-            // operationRef
-            writer.WriteProperty(OpenApiConstants.OperationRef, OperationRef);
-
-            // operationId
-            writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
-
-            // parameters
-            writer.WriteOptionalMap(OpenApiConstants.Parameters, Parameters, (w, p) => p.WriteValue(w));
-
-            // requestBody
-            writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, (w, r) => r.WriteValue(w));
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // server
-            writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.SerializeAsV3(w));
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiLink"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            // Link object does not exist in V2.
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
-            // Link object does not exist in V2.
-        }
     }
 }

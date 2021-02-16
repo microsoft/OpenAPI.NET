@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// XML Object.
     /// </summary>
-    public class OpenApiXml : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiXml : IOpenApiExtensible
     {
         /// <summary>
         /// Replaces the name of the element/attribute used for the described schema property.
@@ -45,51 +45,5 @@ namespace Microsoft.OpenApi.Models
         /// Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiXml"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            Write(writer, OpenApiSpecVersion.OpenApi3_0);
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiXml"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            Write(writer, OpenApiSpecVersion.OpenApi2_0);
-        }
-
-        private void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // name
-            writer.WriteProperty(OpenApiConstants.Name, Name);
-
-            // namespace
-            writer.WriteProperty(OpenApiConstants.Namespace, Namespace?.AbsoluteUri);
-
-            // prefix
-            writer.WriteProperty(OpenApiConstants.Prefix, Prefix);
-
-            // attribute
-            writer.WriteProperty(OpenApiConstants.Attribute, Attribute, false);
-
-            // wrapped
-            writer.WriteProperty(OpenApiConstants.Wrapped, Wrapped, false);
-
-            // extensions
-            writer.WriteExtensions(Extensions, specVersion);
-
-            writer.WriteEndObject();
-        }
     }
 }

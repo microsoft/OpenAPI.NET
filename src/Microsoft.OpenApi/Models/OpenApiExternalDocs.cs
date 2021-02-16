@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// ExternalDocs object.
     /// </summary>
-    public class OpenApiExternalDocs : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiExternalDocs : IOpenApiExtensible
     {
         /// <summary>
         /// A short description of the target documentation.
@@ -28,42 +28,5 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi2_0);
-        }
-
-        private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // url
-            writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);
-
-            // extensions
-            writer.WriteExtensions(Extensions, specVersion);
-
-            writer.WriteEndObject();
-        }
     }
 }

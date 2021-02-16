@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiPathItem : IOpenApiExtensible
     {
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
@@ -54,86 +54,6 @@ namespace Microsoft.OpenApi.Models
         public void AddOperation(OperationType operationType, OpenApiOperation operation)
         {
             Operations[operationType] = operation;
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // summary
-            writer.WriteProperty(OpenApiConstants.Summary, Summary);
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // operations
-            foreach (var operation in Operations)
-            {
-                writer.WriteOptionalObject(
-                    operation.Key.GetDisplayName(),
-                    operation.Value,
-                    (w, o) => o.SerializeAsV3(w));
-            }
-
-            // servers
-            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
-
-            // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV3(w));
-
-            // specification extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiPathItem"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // operations except "trace"
-            foreach (var operation in Operations)
-            {
-                if (operation.Key != OperationType.Trace)
-                {
-                    writer.WriteOptionalObject(
-                        operation.Key.GetDisplayName(),
-                        operation.Value,
-                        (w, o) => o.SerializeAsV2(w));
-                }
-            }
-
-            // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV2(w));
-
-            // write "summary" as extensions
-            writer.WriteProperty(OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Summary, Summary);
-
-            // write "description" as extensions
-            writer.WriteProperty(
-                OpenApiConstants.ExtensionFieldNamePrefix + OpenApiConstants.Description,
-                Description);
-
-            // specification extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
-
-            writer.WriteEndObject();
         }
     }
 }

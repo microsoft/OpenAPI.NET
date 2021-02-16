@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Short description for the example.
@@ -53,69 +53,5 @@ namespace Microsoft.OpenApi.Models
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
         /// </summary>
         public bool UnresolvedReference { get; set; } = false;
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
-
-            SerializeAsV3WithoutReference(writer);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            writer.WriteStartObject();
-
-            // summary
-            writer.WriteProperty(OpenApiConstants.Summary, Summary);
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // value
-            writer.WriteOptionalObject(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));
-
-            // externalValue
-            writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiExample"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            // Example object of this form does not exist in V2.
-            // V2 Example object requires knowledge of media type and exists only
-            // in Response object, so it will be serialized as a part of the Response object.
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
-            // Example object of this form does not exist in V2.
-            // V2 Example object requires knowledge of media type and exists only
-            // in Response object, so it will be serialized as a part of the Response object.
-        }
     }
 }

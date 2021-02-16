@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// ExternalDocs object.
     /// </summary>
-    public class OpenApiEncoding : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiEncoding : IOpenApiExtensible
     {
         /// <summary>
         /// The Content-Type for encoding a specific property.
@@ -52,46 +52,5 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull("writer");
-            }
-
-            writer.WriteStartObject();
-
-            // contentType
-            writer.WriteProperty(OpenApiConstants.ContentType, ContentType);
-
-            // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
-
-            // style
-            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
-
-            // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
-
-            // allowReserved
-            writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            // nothing here
-        }
     }
 }

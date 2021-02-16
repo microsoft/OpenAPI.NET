@@ -15,8 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// then the value is a list of scope names required for the execution.
     /// For other security scheme types, the array MUST be empty.
     /// </summary>
-    public class OpenApiSecurityRequirement : Dictionary<OpenApiSecurityScheme, IList<string>>,
-        IOpenApiSerializable
+    public class OpenApiSecurityRequirement : Dictionary<OpenApiSecurityScheme, IList<string>>, IOpenApiElement
     {
         /// <summary>
         /// Initializes the <see cref="OpenApiSecurityRequirement"/> class.
@@ -26,86 +25,6 @@ namespace Microsoft.OpenApi.Models
         public OpenApiSecurityRequirement()
             : base(new OpenApiSecuritySchemeReferenceEqualityComparer())
         {
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            foreach (var securitySchemeAndScopesValuePair in this)
-            {
-                var securityScheme = securitySchemeAndScopesValuePair.Key;
-                var scopes = securitySchemeAndScopesValuePair.Value;
-
-                if (securityScheme.Reference == null)
-                {
-                    // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
-                    // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
-                    // string to output.
-                    continue;
-                }
-
-                securityScheme.SerializeAsV3(writer);
-
-                writer.WriteStartArray();
-
-                foreach (var scope in scopes)
-                {
-                    writer.WriteValue(scope);
-                }
-
-                writer.WriteEndArray();
-            }
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiSecurityRequirement"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            foreach (var securitySchemeAndScopesValuePair in this)
-            {
-                var securityScheme = securitySchemeAndScopesValuePair.Key;
-                var scopes = securitySchemeAndScopesValuePair.Value;
-
-                if (securityScheme.Reference == null)
-                {
-                    // Reaching this point means the reference to a specific OpenApiSecurityScheme fails.
-                    // We are not able to serialize this SecurityScheme/Scopes key value pair since we do not know what
-                    // string to output.
-                    continue;
-                }
-
-                securityScheme.SerializeAsV2(writer);
-
-                writer.WriteStartArray();
-
-                foreach (var scope in scopes)
-                {
-                    writer.WriteValue(scope);
-                }
-
-                writer.WriteEndArray();
-            }
-
-            writer.WriteEndObject();
         }
 
         /// <summary>

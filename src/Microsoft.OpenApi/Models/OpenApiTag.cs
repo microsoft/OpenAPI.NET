@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Tag Object.
     /// </summary>
-    public class OpenApiTag : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiTag : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// The name of the tag.
@@ -42,87 +42,5 @@ namespace Microsoft.OpenApi.Models
         /// Reference.
         /// </summary>
         public OpenApiReference Reference { get; set; }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Reference != null)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
-
-            writer.WriteValue(Name);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            writer.WriteStartObject();
-
-            // name
-            writer.WriteProperty(OpenApiConstants.Name, Name);
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // external docs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
-
-            // extensions.
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiTag"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Reference != null)
-            {
-                Reference.SerializeAsV2(writer);
-                return;
-            }
-
-            writer.WriteValue(Name);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
-            writer.WriteStartObject();
-
-            // name
-            writer.WriteProperty(OpenApiConstants.Name, Name);
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // external docs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
-
-            writer.WriteEndObject();
-        }
     }
 }

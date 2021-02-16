@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net46;net461</TargetFrameworks>
+    <TargetFrameworks>net461</TargetFrameworks>
     <Authors></Authors>
     <Company>Microsoft</Company>
     <Product>Microsoft.OpenApi.Tests</Product>
