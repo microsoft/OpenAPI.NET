@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Callback Object: A map of possible out-of band callbacks related to the parent operation.
     /// </summary>
-    public class OpenApiCallback : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiCallback : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// A Path Item Object used to define a callback request and expected responses.
@@ -58,62 +58,6 @@ namespace Microsoft.OpenApi.Models
             }
 
             PathItems.Add(expression, pathItem);
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiCallback"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
-
-            SerializeAsV3WithoutReference(writer);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            writer.WriteStartObject();
-
-            // path items
-            foreach (var item in PathItems)
-            {
-                writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => p.SerializeAsV3(w));
-            }
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiCallback"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            // Callback object does not exist in V2.
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
-            // Callback object does not exist in V2.
         }
     }
 }

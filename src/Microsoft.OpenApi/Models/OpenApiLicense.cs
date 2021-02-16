@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// License Object.
     /// </summary>
-    public class OpenApiLicense : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiLicense : IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The license name used for the API.
@@ -28,42 +28,5 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiLicense"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi2_0);
-        }
-
-        private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // name
-            writer.WriteProperty(OpenApiConstants.Name, Name);
-
-            // url
-            writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);
-
-            // specification extensions
-            writer.WriteExtensions(Extensions, specVersion);
-
-            writer.WriteEndObject();
-        }
     }
 }

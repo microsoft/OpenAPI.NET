@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiHeader : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -85,129 +85,5 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
-
-            SerializeAsV3WithoutReference(writer);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            writer.WriteStartObject();
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // required
-            writer.WriteProperty(OpenApiConstants.Required, Required, false);
-
-            // deprecated
-            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
-
-            // allowEmptyValue
-            writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
-
-            // style
-            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
-
-            // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
-
-            // allowReserved
-            writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
-
-            // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV3(w));
-
-            // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
-
-            // examples
-            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => e.SerializeAsV3(w));
-
-            // content
-            writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiHeader"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV2(writer);
-                return;
-            }
-
-            SerializeAsV2WithoutReference(writer);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
-            writer.WriteStartObject();
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // required
-            writer.WriteProperty(OpenApiConstants.Required, Required, false);
-
-            // deprecated
-            writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
-
-            // allowEmptyValue
-            writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
-
-            // style
-            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
-
-            // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, false);
-
-            // allowReserved
-            writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
-
-            // schema
-            Schema?.WriteAsItemsProperties(writer);
-
-            // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
-
-            writer.WriteEndObject();
-        }
     }
 }

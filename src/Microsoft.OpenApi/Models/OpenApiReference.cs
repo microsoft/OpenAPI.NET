@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// A simple object to allow referencing other components in the specification, internally and externally.
     /// </summary>
-    public class OpenApiReference : IOpenApiSerializable
+    public class OpenApiReference : IOpenApiElement
     {
         /// <summary>
         /// External resource in the reference.
@@ -45,133 +45,8 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public bool IsLocal => ExternalResource == null;
 
-        /// <summary>
-        /// Gets the full reference string for v3.0.
-        /// </summary>
-        public string ReferenceV3
-        {
-            get
-            {
-                if (IsExternal)
-                {
-                    return GetExternalReference();
-                }
 
-                if (!Type.HasValue)
-                {
-                    throw Error.ArgumentNull(nameof(Type));
-                }
-
-                if (Type == ReferenceType.Tag)
-                {
-                    return Id;
-                }
-
-                if (Type == ReferenceType.SecurityScheme)
-                {
-                    return Id;
-                }
-
-                return "#/components/" + Type.GetDisplayName() + "/" + Id;
-            }
-        }
-
-        /// <summary>
-        /// Gets the full reference string for V2.0
-        /// </summary>
-        public string ReferenceV2
-        {
-            get
-            {
-                if (IsExternal)
-                {
-                    return GetExternalReference();
-                }
-
-                if (!Type.HasValue)
-                {
-                    throw Error.ArgumentNull(nameof(Type));
-                }
-
-                if (Type == ReferenceType.Tag)
-                {
-                    return Id;
-                }
-
-                if (Type == ReferenceType.SecurityScheme)
-                {
-                    return Id;
-                }
-
-                return "#/" + GetReferenceTypeNameAsV2(Type.Value) + "/" + Id;
-            }
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Type == ReferenceType.Tag)
-            {
-                // Write the string value only
-                writer.WriteValue(ReferenceV3);
-                return;
-            }
-
-            if (Type == ReferenceType.SecurityScheme)
-            {
-                // Write the string as property name
-                writer.WritePropertyName(ReferenceV3);
-                return;
-            }
-
-            writer.WriteStartObject();
-
-            // $ref
-            writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Type == ReferenceType.Tag)
-            {
-                // Write the string value only
-                writer.WriteValue(ReferenceV2);
-                return;
-            }
-
-            if (Type == ReferenceType.SecurityScheme)
-            {
-                // Write the string as property name
-                writer.WritePropertyName(ReferenceV2);
-                return;
-            }
-
-            writer.WriteStartObject();
-
-            // $ref
-            writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV2);
-
-            writer.WriteEndObject();
-        }
-
-        private string GetExternalReference()
+        internal string GetExternalReference()
         {
             if (Id != null)
             {
@@ -179,35 +54,6 @@ namespace Microsoft.OpenApi.Models
             }
 
             return ExternalResource;
-        }
-
-        private string GetReferenceTypeNameAsV2(ReferenceType type)
-        {
-            switch (type)
-            {
-                case ReferenceType.Schema:
-                    return OpenApiConstants.Definitions;
-
-                case ReferenceType.Parameter:
-                    return OpenApiConstants.Parameters;
-
-                case ReferenceType.Response:
-                    return OpenApiConstants.Responses;
-
-                case ReferenceType.Header:
-                    return OpenApiConstants.Headers;
-
-                case ReferenceType.Tag:
-                    return OpenApiConstants.Tags;
-
-                case ReferenceType.SecurityScheme:
-                    return OpenApiConstants.SecurityDefinitions;
-
-                default:
-                    // If the reference type is not supported in V2, simply return null
-                    // to indicate that the reference is not pointing to any object.
-                    return null;
-            }
         }
     }
 }

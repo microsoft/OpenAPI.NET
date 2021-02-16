@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// OAuth Flows Object.
     /// </summary>
-    public class OpenApiOAuthFlows : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiOAuthFlows : IOpenApiExtensible
     {
         /// <summary>
         /// Configuration for the OAuth Implicit flow
@@ -37,49 +37,5 @@ namespace Microsoft.OpenApi.Models
         /// Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // implicit
-            writer.WriteOptionalObject(OpenApiConstants.Implicit, Implicit, (w, o) => o.SerializeAsV3(w));
-
-            // password
-            writer.WriteOptionalObject(OpenApiConstants.Password, Password, (w, o) => o.SerializeAsV3(w));
-
-            // clientCredentials
-            writer.WriteOptionalObject(
-                OpenApiConstants.ClientCredentials,
-                ClientCredentials,
-                (w, o) => o.SerializeAsV3(w));
-
-            // authorizationCode
-            writer.WriteOptionalObject(
-                OpenApiConstants.AuthorizationCode,
-                AuthorizationCode,
-                (w, o) => o.SerializeAsV3(w));
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            // OAuthFlows object does not exist in V2.
-        }
     }
 }

@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// OAuth Flow Object.
     /// </summary>
-    public class OpenApiOAuthFlow : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiOAuthFlow : IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The authorization URL to be used for this flow.
@@ -40,43 +40,5 @@ namespace Microsoft.OpenApi.Models
         /// Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // authorizationUrl
-            writer.WriteProperty(OpenApiConstants.AuthorizationUrl, AuthorizationUrl?.ToString());
-
-            // tokenUrl
-            writer.WriteProperty(OpenApiConstants.TokenUrl, TokenUrl?.ToString());
-
-            // refreshUrl
-            writer.WriteProperty(OpenApiConstants.RefreshUrl, RefreshUrl?.ToString());
-
-            // scopes
-            writer.WriteRequiredMap(OpenApiConstants.Scopes, Scopes, (w, s) => w.WriteValue(s));
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            // OAuthFlow object does not exist in V2.
-        }
     }
 }

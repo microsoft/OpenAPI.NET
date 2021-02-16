@@ -9,14 +9,14 @@ namespace Microsoft.OpenApi.Services
 {
     /// <summary>
     /// Defines behavior for comparing <see cref="IDictionary{TKey,TValue}"/> where TKey is <see cref="string"/>
-    /// and TValue is <see cref="IOpenApiSerializable"/>.
+    /// and TValue is <see cref="IOpenApiElement"/>.
     /// </summary>
     public class OpenApiDictionaryComparer<T> : OpenApiComparerBase<IDictionary<string, T>>
-        where T : IOpenApiSerializable
+        where T : IOpenApiElement
     {
         /// <summary>
         /// Executes comparision against source and target <see cref="IDictionary{TKey, TValue}"/>
-        /// where TKey is <see cref="string"/> and TValue is <see cref="IOpenApiSerializable"/>.
+        /// where TKey is <see cref="string"/> and TValue is <see cref="IOpenApiElement"/>.
         /// </summary>
         /// <param name="sourceFragment">The source.</param>
         /// <param name="targetFragment">The target.</param>

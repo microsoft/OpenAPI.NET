@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Request Body Object
     /// </summary>
-    public class OpenApiRequestBody : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiRequestBody : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -44,62 +44,5 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (Reference != null)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
-
-            SerializeAsV3WithoutReference(writer);
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            writer.WriteStartObject();
-
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
-
-            // content
-            writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
-
-            // required
-            writer.WriteProperty(OpenApiConstants.Required, Required, false);
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            // RequestBody object does not exist in V2.
-        }
-
-        /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference.
-        /// </summary>
-        public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
-        {
-            // RequestBody object does not exist in V2.
-        }
     }
 }

@@ -4,6 +4,8 @@
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Serializers.V2;
+using Microsoft.OpenApi.Serializers.V3;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
@@ -32,8 +34,10 @@ namespace Microsoft.OpenApi.Tests.Models
             reference.Type.Should().Be(type);
             reference.Id.Should().Be(id);
 
-            reference.ReferenceV3.Should().Be(input);
-            reference.ReferenceV2.Should().Be(input.Replace("schemas", "definitions").Replace("/components", ""));
+            var v3Serializer = new V3OpenApiReferenceSerializer();
+            var v2Serializer = new V2OpenApiReferenceSerializer();
+            v3Serializer.ReferenceV3(reference).Should().Be(input);
+            v2Serializer.ReferenceV2(reference).Should().Be(input.Replace("schemas", "definitions").Replace("/components", ""));
         }
 
         [Theory]
@@ -57,8 +61,10 @@ namespace Microsoft.OpenApi.Tests.Models
             reference.Type.Should().BeNull();
             reference.Id.Should().Be(id);
 
-            reference.ReferenceV3.Should().Be(expected);
-            reference.ReferenceV2.Should().Be(expected);
+            var v3Serializer = new V3OpenApiReferenceSerializer();
+            var v2Serializer = new V2OpenApiReferenceSerializer();
+            v3Serializer.ReferenceV3(reference).Should().Be(expected);
+            v2Serializer.ReferenceV2(reference).Should().Be(expected);
         }
 
         [Fact]

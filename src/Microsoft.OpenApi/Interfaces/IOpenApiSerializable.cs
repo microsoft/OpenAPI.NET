@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Writers;
 namespace Microsoft.OpenApi.Interfaces
 {
     /// <summary>
-    /// Represents an Open API element that comes with serialzation functionality.
+    /// Represents an Open API element that comes with serialization functionality.
     /// </summary>
     public interface IOpenApiSerializable : IOpenApiElement
     {

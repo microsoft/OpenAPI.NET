@@ -3,16 +3,14 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Contact Object.
     /// </summary>
-    public class OpenApiContact : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiContact : IOpenApiExtensible
     {
         /// <summary>
         /// The identifying name of the contact person/organization.
@@ -34,45 +32,5 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
-        /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
-        }
-
-        /// <summary>
-        /// Serialize <see cref="OpenApiContact"/> to Open Api v2.0
-        /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
-        {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi2_0);
-        }
-
-        private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
-        {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            writer.WriteStartObject();
-
-            // name
-            writer.WriteProperty(OpenApiConstants.Name, Name);
-
-            // url
-            writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);
-
-            // email
-            writer.WriteProperty(OpenApiConstants.Email, Email);
-
-            // extensions
-            writer.WriteExtensions(Extensions, specVersion);
-
-            writer.WriteEndObject();
-        }
     }
 }

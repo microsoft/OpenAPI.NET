@@ -7,13 +7,13 @@ using Microsoft.OpenApi.Interfaces;
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    /// Defines behavior for comparing <see cref="IList{T}"/> where T is <see cref="IOpenApiSerializable"/>.
+    /// Defines behavior for comparing <see cref="IList{T}"/> where T is <see cref="IOpenApiElement"/>.
     /// </summary>
-    public class OpenApiOrderedListComparer<T> : OpenApiComparerBase<IList<T>> where T : IOpenApiSerializable
+    public class OpenApiOrderedListComparer<T> : OpenApiComparerBase<IList<T>> where T : IOpenApiElement
     {
         /// <summary>
         /// Executes comparision against based on the order of the list for source and target <see cref="IList{T}"/>
-        /// where T is <see cref="IOpenApiSerializable"/>.
+        /// where T is <see cref="IOpenApiElement"/>.
         /// </summary>
         /// <param name="sourceFragment">The source.</param>
         /// <param name="targetFragment">The target.</param>
