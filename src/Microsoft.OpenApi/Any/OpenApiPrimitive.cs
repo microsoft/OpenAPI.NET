@@ -70,7 +70,10 @@ namespace Microsoft.OpenApi.Any
 
                 case PrimitiveType.String:
                     var stringValue = (OpenApiString)(IOpenApiPrimitive)this;
-                    writer.WriteValue(stringValue.Value);
+                    if (stringValue.IsRawString())
+                        writer.WriteRaw(stringValue.Value);
+                    else
+                        writer.WriteValue(stringValue.Value);
                     break;
 
                 case PrimitiveType.Byte:
