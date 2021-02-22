@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Services
     /// <summary>
     /// Implementation of IInputLoader that loads streams from URIs
     /// </summary>
-    internal class DefaultStreamLoader : IInputLoader<Stream>
+    internal class DefaultStreamLoader : IStreamLoader
     {
         private HttpClient _httpClient = new HttpClient();
 

@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
@@ -36,6 +37,31 @@ namespace Microsoft.OpenApi.Readers
             {
                 return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
             }
+        }
+
+        /// <summary>
+        /// Reads the stream input and parses it into an Open API document.
+        /// </summary>
+        /// <param name="input">Stream containing OpenAPI description to parse.</param>
+        /// <returns>Instance result containing newly created OpenApiDocument and diagnostics object from the process</returns>
+        public async Task<ReadResult> ReadAsync(Stream input)
+        {
+            MemoryStream bufferedStream;
+            if (input is MemoryStream)
+            {
+                bufferedStream = (MemoryStream)input;
+            } 
+            else 
+            {
+                // Buffer stream so that OpenApiTextReaderReader can process it synchronously
+                // YamlDocument doesn't support async reading.
+                bufferedStream = new MemoryStream();
+                await input.CopyToAsync(bufferedStream);
+            }
+
+            var reader = new StreamReader(bufferedStream);
+
+            return await new OpenApiTextReaderReader(_settings).ReadAsync(reader);
         }
 
         /// <summary>

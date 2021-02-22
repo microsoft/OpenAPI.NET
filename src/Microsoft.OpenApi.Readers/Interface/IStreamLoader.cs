@@ -2,29 +2,29 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.Interface
 {
     /// <summary>
-    /// Interface for service that translates a URI into an object that can be loaded by a Reader
+    /// Interface for service that translates a URI into a stream that can be loaded by a Reader
     /// </summary>
-    /// <typeparam name="TInput"></typeparam>
-    public interface IInputLoader<TInput>
+    public interface IStreamLoader
     {
         /// <summary>
         /// Use Uri to locate data and convert into an input object.
         /// </summary>
         /// <param name="uri">Identifier of some source of an OpenAPI Description</param>
         /// <returns>A data objext that can be processed by a reader to generate an <see cref="OpenApiDocument"/></returns>
-        Task<TInput> LoadAsync(Uri uri);
+        Task<Stream> LoadAsync(Uri uri);
 
         /// <summary>
         /// Use Uri to locate data and convert into an input object.
         /// </summary>
         /// <param name="uri"></param>
         /// <returns></returns>
-        TInput Load(Uri uri);
+        Stream Load(Uri uri);
     }
 }

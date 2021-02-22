@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -71,7 +72,67 @@ namespace Microsoft.OpenApi.Readers
             return document;
         }
 
+        public async Task<ReadResult> ReadAsync(YamlDocument input)
+        {
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic)
+            {
+                ExtensionParsers = _settings.ExtensionParsers,
+                BaseUrl = _settings.BaseUrl
+            };
+
+            OpenApiDocument document = null;
+            try
+            {
+                // Parse the OpenAPI Document
+                document = context.Parse(input);
+
+                await ResolveReferencesAsync(diagnostic, document);
+            }
+            catch (OpenApiException ex)
+            {
+                diagnostic.Errors.Add(new OpenApiError(ex));
+            }
+
+            // Validate the document
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
+            {
+                var errors = document.Validate(_settings.RuleSet);
+                foreach (var item in errors)
+                {
+                    diagnostic.Errors.Add(item);
+                }
+            }
+
+            return new ReadResult()
+            {
+                OpenApiDocument = document,
+                OpenApiDiagnostic = diagnostic
+            };
+        }
+
+
         private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
+        {
+            // Resolve References if requested
+            switch (_settings.ReferenceResolution)
+            {
+                case ReferenceResolutionSetting.ResolveAllReferences:
+                    throw new ArgumentException("Cannot resolve all references via a synchronous call. Use ReadAsync.");
+                case ReferenceResolutionSetting.ResolveLocalReferences:
+                    var errors = document.ResolveReferences(false);
+
+                    foreach (var item in errors)
+                    {
+                        diagnostic.Errors.Add(item);
+                    }
+                    break;
+                case ReferenceResolutionSetting.DoNotResolveReferences:
+                    break;
+            }
+        }
+
+        private async Task ResolveReferencesAsync(OpenApiDiagnostic diagnostic, OpenApiDocument document)
         {
             // Resolve References if requested
             switch (_settings.ReferenceResolution)
@@ -81,8 +142,8 @@ namespace Microsoft.OpenApi.Readers
                     document.Workspace = openApiWorkSpace;
                     var streamLoader = new DefaultStreamLoader();
 
-                    var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader.Load, _settings);
-                    workspaceLoader.Load(new OpenApiReference() { ExternalResource = "/" }, document);
+                    var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
+                    await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document);
                     break;
                 case ReferenceResolutionSetting.ResolveLocalReferences:
                     var errors = document.ResolveReferences(false);
@@ -96,6 +157,7 @@ namespace Microsoft.OpenApi.Readers
                     break;
             }
         }
+
 
         /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.

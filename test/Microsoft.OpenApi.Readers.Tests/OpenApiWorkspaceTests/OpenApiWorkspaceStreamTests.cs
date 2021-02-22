@@ -18,20 +18,45 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 
         // Use OpenApiWorkspace to load a document and a referenced document
 
-        //[Fact]
-        public void LoadDocumentIntoWorkspace()
+        [Fact]
+        public async Task LoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings() {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences, 
-                CustomExternalLoader = (url) => { return null; }
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            {
+                ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences,
+                CustomExternalLoader = new MockLoader()
             });
 
             // Todo: this should be ReadAsync
-            var doc = reader.Read("", out OpenApiDiagnostic diagnostic);
+            var stream = new MemoryStream();
+            var doc = @"openapi: 3.0.0
+info:
+  title: foo
+  version: 1.0.0
+paths: {}";
+            var wr = new StreamWriter(stream);
+            wr.Write(doc);
+            wr.Flush();
+            stream.Position = 0;
 
-            Assert.NotNull(doc.Workspace);
+            var result = await reader.ReadAsync(stream);
 
+            Assert.NotNull(result.OpenApiDocument.Workspace);
+
+        }
+    }
+
+    public class MockLoader : IStreamLoader
+    {
+        public Stream Load(Uri uri)
+        {
+            return null;
+        }
+
+        public async Task<Stream> LoadAsync(Uri uri)
+        {
+            return null;
         }
     }
 }

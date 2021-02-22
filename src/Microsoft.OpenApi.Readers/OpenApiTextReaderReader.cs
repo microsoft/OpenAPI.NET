@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
@@ -51,6 +52,31 @@ namespace Microsoft.OpenApi.Readers
 
             return new OpenApiYamlDocumentReader(this._settings).Read(yamlDocument, out diagnostic);
         }
+
+        public async Task<ReadResult> ReadAsync(TextReader input)
+        {
+            YamlDocument yamlDocument;
+
+            // Parse the YAML/JSON text in the TextReader into the YamlDocument
+            try
+            {
+                yamlDocument = LoadYamlDocument(input);
+            }
+            catch (YamlException ex)
+            {
+                var diagnostic = new OpenApiDiagnostic();
+                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
+                return new ReadResult
+                {
+                    OpenApiDocument = null,
+                    OpenApiDiagnostic = diagnostic
+                };
+            }
+
+            return await new OpenApiYamlDocumentReader(this._settings).ReadAsync(yamlDocument);
+        }
+
+
         /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
