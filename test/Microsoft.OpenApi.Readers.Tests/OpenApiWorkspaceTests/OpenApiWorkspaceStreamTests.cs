@@ -83,6 +83,8 @@ paths: {}";
             Assert.Equal("string", referencedParameter.Schema.Type);
 
         }
+
+
     }
 
     public class MockLoader : IStreamLoader
