@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 {
     public class OpenApiWorkspaceStreamTests
     {
-
+        private const string SampleFolderPath = "V3Tests/Samples/OpenApiWorkspace/";
 
         // Use OpenApiWorkspace to load a document and a referenced document
 
@@ -45,6 +45,44 @@ paths: {}";
             Assert.NotNull(result.OpenApiDocument.Workspace);
 
         }
+
+
+        [Fact]
+        public async Task LoadTodoDocumentIntoWorkspace()
+        {
+            // Create a reader that will resolve all references
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            {
+                ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences,
+                CustomExternalLoader = new ResourceLoader()
+            });
+
+            ReadResult result;
+            using (var stream = Resources.GetStream("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml"))
+            {
+                result = await reader.ReadAsync(stream);
+            }
+
+            Assert.NotNull(result.OpenApiDocument.Workspace);
+            Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));
+            var referencedSchema = result.OpenApiDocument
+                                            .Paths["/todos"]
+                                            .Operations[OperationType.Get]
+                                            .Responses["200"]
+                                            .Content["application/json"]
+                                                .Schema;
+            Assert.Equal("object", referencedSchema.Type);
+            Assert.Equal("string", referencedSchema.Properties["subject"].Type);
+            Assert.False(referencedSchema.UnresolvedReference);
+
+            var referencedParameter = result.OpenApiDocument
+                                            .Paths["/todos"]
+                                            .Operations[OperationType.Get]
+                                            .Parameters
+                                            .Where(p => p.Name == "filter").FirstOrDefault();
+            Assert.Equal("string", referencedParameter.Schema.Type);
+
+        }
     }
 
     public class MockLoader : IStreamLoader
@@ -57,6 +95,22 @@ paths: {}";
         public async Task<Stream> LoadAsync(Uri uri)
         {
             return null;
+        }
+    }
+    
+
+    public class ResourceLoader : IStreamLoader
+    {
+        public Stream Load(Uri uri)
+        {
+            return null;
+        }
+
+        public async Task<Stream> LoadAsync(Uri uri)
+        {
+            var path = new Uri(new Uri("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
+            path = path.Substring(1); // remove leading slash
+            return Resources.GetStream(path);
         }
     }
 }

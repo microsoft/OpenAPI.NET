@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
@@ -19,9 +20,6 @@ namespace Microsoft.OpenApi.Readers.Services
             _document = document;
         }
 
-        // TODO PathItem
-        // TODO Example
-
         /// <summary>
         /// List of external references collected from OpenApiDocument
         /// </summary>
@@ -33,60 +31,12 @@ namespace Microsoft.OpenApi.Readers.Services
         }
 
         /// <summary>
-        /// Collect external reference
+        /// Collect reference for each reference 
         /// </summary>
-        public override void Visit(OpenApiParameter parameter)
+        /// <param name="referenceable"></param>
+        public override void Visit(IOpenApiReferenceable referenceable)
         {
-            AddReference(parameter.Reference);
-        }
-
-        /// <summary>
-        /// Collect external reference
-        /// </summary>
-        public override void Visit(OpenApiCallback callback)
-        {
-            AddReference(callback.Reference);
-
-        }
-
-        /// <summary>
-        /// Collect external reference
-        /// </summary>
-        public override void Visit(OpenApiLink link)
-        {
-            AddReference(link.Reference);
-        }
-
-        /// <summary>
-        /// Collect external reference
-        /// </summary>
-        public override void Visit(OpenApiRequestBody requestBody)
-        {
-            AddReference(requestBody.Reference);
-        }
-
-        /// <summary>
-        /// Collect external reference
-        /// </summary>
-        public override void Visit(OpenApiResponse header)
-        {
-            AddReference(header.Reference);
-        }
-
-        /// <summary>
-        /// Collect external reference
-        /// </summary>
-        public override void Visit(OpenApiHeader header)
-        {
-            AddReference(header.Reference);
-        }
-
-        /// <summary>
-        /// Collect external reference
-        /// </summary>
-        public override void Visit(OpenApiSchema schema)
-        {
-             AddReference(schema.Reference);
+            AddReference(referenceable.Reference);
         }
 
         /// <summary>
@@ -104,7 +54,6 @@ namespace Microsoft.OpenApi.Readers.Services
                     }
                 }
             }
-        }
-    
+        }    
     }
 }

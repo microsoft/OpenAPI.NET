@@ -57,6 +57,7 @@ namespace Microsoft.OpenApi.Readers
                 // YamlDocument doesn't support async reading.
                 bufferedStream = new MemoryStream();
                 await input.CopyToAsync(bufferedStream);
+                bufferedStream.Position = 0;
             }
 
             var reader = new StreamReader(bufferedStream);

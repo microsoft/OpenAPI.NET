@@ -348,11 +348,15 @@ namespace Microsoft.OpenApi.Models
                 return null;
             }
 
-            if (reference.IsExternal && !useExternal)
+            // Todo: Verify if we need to check to see if this external reference is actually targeted at this document.
+            if (useExternal)
             {
-                // Should not attempt to resolve external references against a single document.
-                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported);
-            }
+                if (this.Workspace == null)
+                {
+                    throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
+                }
+                return this.Workspace.ResolveReference(reference);
+            } 
 
             if (!reference.Type.HasValue)
             {

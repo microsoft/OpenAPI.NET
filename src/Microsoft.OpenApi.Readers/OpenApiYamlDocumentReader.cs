@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
@@ -134,27 +135,37 @@ namespace Microsoft.OpenApi.Readers
 
         private async Task ResolveReferencesAsync(OpenApiDiagnostic diagnostic, OpenApiDocument document)
         {
+            List<OpenApiError> errors = new List<OpenApiError>();
+
             // Resolve References if requested
             switch (_settings.ReferenceResolution)
             {
                 case ReferenceResolutionSetting.ResolveAllReferences:
-                    var openApiWorkSpace = new OpenApiWorkspace();
-                    document.Workspace = openApiWorkSpace;
-                    var streamLoader = new DefaultStreamLoader();
 
+                    // Create workspace for all documents to live in.
+                    var openApiWorkSpace = new OpenApiWorkspace();
+
+                    // Load this root document into the workspace
+                    var streamLoader = new DefaultStreamLoader();
                     var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
                     await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document);
+
+                    // Resolve all references in all the documents loaded into the OpenApiWorkspace
+                    foreach (var doc in openApiWorkSpace.Documents)
+                    {
+                        errors.AddRange(doc.ResolveReferences(true));
+                    }
                     break;
                 case ReferenceResolutionSetting.ResolveLocalReferences:
-                    var errors = document.ResolveReferences(false);
-
-                    foreach (var item in errors)
-                    {
-                        diagnostic.Errors.Add(item);
-                    }
+                    errors.AddRange(document.ResolveReferences(false));
                     break;
                 case ReferenceResolutionSetting.DoNotResolveReferences:
                     break;
+            }
+
+            foreach (var item in errors)
+            {
+                diagnostic.Errors.Add(item);
             }
         }
 

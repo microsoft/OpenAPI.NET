@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (_documents.TryGetValue(new Uri(BaseUrl, reference.ExternalResource), out var doc))
             {
-                return doc.ResolveReference(reference, true);
+                return doc.ResolveReference(reference, false);
             }
             else if (_fragments.TryGetValue(new Uri(BaseUrl, reference.ExternalResource), out var fragment))
             {

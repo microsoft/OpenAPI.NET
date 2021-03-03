@@ -14,6 +14,8 @@
     </PropertyGroup>
     <ItemGroup>
       <None Remove="V2Tests\Samples\ComponentRootReference.json" />
+      <None Remove="V3Tests\Samples\OpenApiWorkspace\TodoComponents.yaml" />
+      <None Remove="V3Tests\Samples\OpenApiWorkspace\TodoMain.yaml" />
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
@@ -232,6 +234,8 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiWorkspace\TodoComponents.yaml" />
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiWorkspace\TodoMain.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiXml\basicXml.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

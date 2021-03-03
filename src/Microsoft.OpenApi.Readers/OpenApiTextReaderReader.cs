@@ -53,6 +53,11 @@ namespace Microsoft.OpenApi.Readers
             return new OpenApiYamlDocumentReader(this._settings).Read(yamlDocument, out diagnostic);
         }
 
+        /// <summary>
+        /// Reads the content of the TextReader.  If there are references to external documents then they will be read asynchronously.
+        /// </summary>
+        /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <returns>A ReadResult instance that contains the resulting OpenApiDocument and a diagnostics instance.</returns>
         public async Task<ReadResult> ReadAsync(TextReader input)
         {
             YamlDocument yamlDocument;

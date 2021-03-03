@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Services
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
-                    var input = _loader.Load(new Uri(item.ExternalResource));
+                    var input = await _loader.LoadAsync(new Uri(item.ExternalResource, UriKind.RelativeOrAbsolute));
                     var result = await reader.ReadAsync(input); // TODO merge _diagnositics
                     await LoadAsync(item, result.OpenApiDocument);
                 }
