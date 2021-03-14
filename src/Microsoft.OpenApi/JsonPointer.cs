@@ -17,7 +17,9 @@ namespace Microsoft.OpenApi
         /// <param name="pointer">Pointer as string.</param>
         public JsonPointer(string pointer)
         {
-            Tokens = pointer.Split('/').Skip(1).Select(Decode).ToArray();
+            Tokens = string.IsNullOrEmpty(pointer) || pointer == "/"
+                ? new string[0]
+                : pointer.Split('/').Skip(1).Select(Decode).ToArray();
         }
 
         /// <summary>
