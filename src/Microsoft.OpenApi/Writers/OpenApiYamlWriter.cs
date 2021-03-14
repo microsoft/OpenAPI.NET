@@ -25,8 +25,12 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="settings"></param>
         public OpenApiYamlWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
         {
+           
         }
 
+        /// <summary>
+        /// Allow rendering of multi-line strings using YAML | syntax
+        /// </summary>
         public bool UseLiteralStyle { get; set; }
 
         /// <summary>
