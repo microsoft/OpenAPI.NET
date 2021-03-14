@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net462</TargetFrameworks>
+        <TargetFrameworks>net462;net50</TargetFrameworks>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <Authors></Authors>
         <Company>Microsoft</Company>
