@@ -14,6 +14,8 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
     {
+        private bool? _explode;
+
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
@@ -79,7 +81,11 @@ namespace Microsoft.OpenApi.Models
         /// When style is form, the default value is true.
         /// For all other styles, the default value is false.
         /// </summary>
-        public bool Explode { get; set; }
+        public bool Explode
+        {
+            get => _explode ?? Style == ParameterStyle.Form;
+            set => _explode = value;
+        }
 
         /// <summary>
         /// Determines whether the parameter value SHOULD allow reserved characters,
