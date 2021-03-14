@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.PublicApi
             // It takes a human to read the change, determine if it is breaking and update the PublicApi.approved.txt with the new approved API surface
 
             // Arrange
-            var publicApi = ApiGenerator.GeneratePublicApi(typeof(OpenApiSpecVersion).Assembly, whitelistedNamespacePrefixes: new[] { "Microsoft.OpenApi" });
+            var publicApi = typeof(OpenApiSpecVersion).Assembly.GeneratePublicApi(new ApiGeneratorOptions() { WhitelistedNamespacePrefixes = new[] { "Microsoft.OpenApi" } } );
             
             // Act
             var approvedFilePath = Path.Combine("PublicApi", "PublicApi.approved.txt");

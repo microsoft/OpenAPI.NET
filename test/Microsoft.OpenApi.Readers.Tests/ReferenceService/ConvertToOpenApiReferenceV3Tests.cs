@@ -17,8 +17,8 @@ namespace Microsoft.OpenApi.Readers.Tests
             // Arrange
             var versionService = new OpenApiV3VersionService();
             var externalResource = "externalSchema.json";
-            var id = "externalPathSegment1/externalPathSegment2/externalPathSegment3";
-            var input = $"{externalResource}#/{id}";
+            var id = "/externalPathSegment1/externalPathSegment2/externalPathSegment3";
+            var input = $"{externalResource}#{id}";
 
             // Act
             var reference = versionService.ConvertToOpenApiReference(input, null);

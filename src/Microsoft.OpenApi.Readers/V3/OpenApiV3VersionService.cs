@@ -69,6 +69,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         // "$ref": "Pet.json"
                         return new OpenApiReference
                         {
+                            Type = type,
                             ExternalResource = segments[0]
                         };
                     }
@@ -89,12 +90,18 @@ namespace Microsoft.OpenApi.Readers.V3
                         // "$ref": "#/components/schemas/Pet"
                         return ParseLocalReference(segments[1]);
                     }
-
+                    // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
+                    string id = segments[1];
                     // $ref: externalSource.yaml#/Pet
+                    if (id.StartsWith("/components/"))
+                    {
+                        id = segments[1].Split('/')[3];
+                    } 
                     return new OpenApiReference
                     {
                         ExternalResource = segments[0],
-                        Id = segments[1].Substring(1)
+                        Type = type,
+                        Id = id
                     };
                 }
             }
