@@ -94,7 +94,7 @@ paths: {}";
             return null;
         }
 
-        public async Task<Stream> LoadAsync(Uri uri)
+        public Task<Stream> LoadAsync(Uri uri)
         {
             return null;
         }
@@ -108,11 +108,11 @@ paths: {}";
             return null;
         }
 
-        public async Task<Stream> LoadAsync(Uri uri)
+        public Task<Stream> LoadAsync(Uri uri)
         {
             var path = new Uri(new Uri("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
             path = path.Substring(1); // remove leading slash
-            return Resources.GetStream(path);
+            return Task.FromResult(Resources.GetStream(path));
         }
     }
 }

@@ -15,8 +15,7 @@ namespace Microsoft.OpenApi.Readers.Services
     {
         private OpenApiWorkspace _workspace;
         private IStreamLoader _loader;
-        private OpenApiDiagnostic _diagnostics;
-        private OpenApiReaderSettings _readerSettings;
+        private readonly OpenApiReaderSettings _readerSettings;
 
         public OpenApiWorkspaceLoader(OpenApiWorkspace workspace, IStreamLoader loader, OpenApiReaderSettings readerSettings)
         {

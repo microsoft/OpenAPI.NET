@@ -28,6 +28,9 @@ namespace Microsoft.OpenApi.Writers
            
         }
 
+        /// <summary>
+        /// Allow rendering of multi-line strings using YAML | syntax
+        /// </summary>
         public bool UseLiteralStyle { get; set; }
 
         /// <summary>

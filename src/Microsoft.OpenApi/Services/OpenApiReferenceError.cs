@@ -11,6 +11,9 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class OpenApiReferenceError : OpenApiError
     {
         private OpenApiReference _reference;
@@ -21,6 +24,11 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="message"></param>
         public OpenApiReferenceError(OpenApiReference reference, string message) : base("", message)
         {
             _reference = reference;
