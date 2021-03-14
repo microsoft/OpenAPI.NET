@@ -161,6 +161,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     return new OpenApiReference
                     {
                         ExternalResource = segments[0],
+                        Type = type,
                         Id = segments[1].Substring(1)
                     };
                 }

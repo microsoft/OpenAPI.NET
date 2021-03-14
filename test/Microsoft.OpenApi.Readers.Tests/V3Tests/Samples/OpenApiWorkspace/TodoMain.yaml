@@ -1,0 +1,16 @@
+﻿openapi: 3.0.0
+info:
+  title: Example using a remote reference
+  version: 1.0.0
+paths:
+    "/todos":
+      get:
+        parameters:
+          - $ref: ./TodoComponents.yaml#/components/parameters/filter
+        responses:
+          200:
+            description: Ok
+            content:
+              application/json:
+                schema:
+                  $ref: ./TodoComponents.yaml#/components/schemas/todo

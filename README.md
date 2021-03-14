@@ -10,7 +10,7 @@
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
 
-**See more information on the OpenAPI specification and its history here: <a href="https://www.openapis.org">Open API Initiative</a>**
+**See more information on the OpenAPI specification and its history here: <a href="https://www.openapis.org">OpenAPI Initiative</a>**
 
 Project Objectives 
 

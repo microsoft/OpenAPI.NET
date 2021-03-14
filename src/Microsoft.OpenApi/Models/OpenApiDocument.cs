@@ -19,6 +19,11 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
+        /// Related workspace containing OpenApiDocuments that are referenced in this document
+        /// </summary>
+        public OpenApiWorkspace Workspace { get; set; }
+
+        /// <summary>
         /// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
         /// </summary>
         public OpenApiInfo Info { get; set; }
@@ -314,20 +319,44 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// Walk the OpenApiDocument and resolve unresolved references
         /// </summary>
-        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        /// <param name="useExternal">Indicates if external references should be resolved.  Document needs to reference a workspace for this to be possible.</param>
+        public IEnumerable<OpenApiError> ResolveReferences(bool useExternal = false)
+        {
+            var resolver = new OpenApiReferenceResolver(this, useExternal);
+            var walker = new OpenApiWalker(resolver);
+            walker.Walk(this);
+            return resolver.Errors;
+        }
+
+            /// <summary>
+            /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+            /// </summary>
+            public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+            {
+                return ResolveReference(reference, false);
+            }
+
+            /// <summary>
+            /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+            /// </summary>
+            public IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
         {
             if (reference == null)
             {
                 return null;
             }
 
-            if (reference.IsExternal)
+            // Todo: Verify if we need to check to see if this external reference is actually targeted at this document.
+            if (useExternal)
             {
-                // Should not attempt to resolve external references against a single document.
-                throw new ArgumentException(Properties.SRResource.RemoteReferenceNotSupported);
-            }
+                if (this.Workspace == null)
+                {
+                    throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
+                }
+                return this.Workspace.ResolveReference(reference);
+            } 
 
             if (!reference.Type.HasValue)
             {
