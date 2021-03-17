@@ -63,11 +63,11 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Creates a structured directory of <see cref="OpenApiUrlTreeNode"/> nodes from the paths of an OpenAPI document.
         /// </summary>
-        /// <param name="doc">The OpenAPI document.</param>
-        /// <param name="label">Name tag for labelling the <see cref="OpenApiUrlTreeNode"/> nodes
+        /// <param name="doc">Optional. The OpenAPI document.</param>
+        /// <param name="label">Optional. Name tag for labelling the <see cref="OpenApiUrlTreeNode"/> nodes
         /// in the directory structure.</param>
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
-        public static OpenApiUrlTreeNode Create(OpenApiDocument doc, string label = "")
+        public static OpenApiUrlTreeNode Create(OpenApiDocument doc = null, string label = "")
         {
             OpenApiUrlTreeNode root = new OpenApiUrlTreeNode(string.Empty);
 
@@ -144,7 +144,7 @@ namespace Microsoft.OpenApi.Services
             // If the child segment has already been defined, then insert into it
             if (Children.ContainsKey(segment))
             {
-                return Children[segment].Attach(segments.Skip(1), pathItem, label, currentPath + "\\" + segment );
+                return Children[segment].Attach(segments.Skip(1), pathItem, label, currentPath + "\\" + segment);
             }
             else
             {

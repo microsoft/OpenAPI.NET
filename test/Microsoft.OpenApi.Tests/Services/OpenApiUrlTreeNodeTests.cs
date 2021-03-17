@@ -1,22 +1,17 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
-
-using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Services;
-using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
     public class OpenApiUrlTreeNodeTests
     {
         [Fact]
-        public void CreateEmptyUrlTreeNode()
+        public void CreateUrlSpaceWithEmptyAndNullOpenApiDocument()
         {
             var doc = new OpenApiDocument() { };
 
             var rootNode = OpenApiUrlTreeNode.Create(doc);
-            var rootNode1 = OpenApiUrlTreeNode.Create(null);
+            var rootNode1 = OpenApiUrlTreeNode.Create();
 
             Assert.NotNull(rootNode);
             Assert.NotNull(rootNode1);
