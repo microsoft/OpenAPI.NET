@@ -10,7 +10,7 @@
         <Company>Microsoft</Company>
         <Title>Microsoft.OpenApi</Title>
         <PackageId>Microsoft.OpenApi</PackageId>
-        <Version>1.2.3</Version>
+        <Version>1.3.0-preview</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <PackageTags>OpenAPI .NET</PackageTags>
