@@ -245,7 +245,7 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
         <PackageReference Include="FluentAssertions" Version="5.10.3">
         </PackageReference>
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3">
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
         </PackageReference>
         <PackageReference Include="SharpYaml" Version="1.6.6">
         </PackageReference>
