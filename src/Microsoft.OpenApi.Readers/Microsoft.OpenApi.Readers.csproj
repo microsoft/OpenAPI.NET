@@ -10,7 +10,7 @@
         <Company>Microsoft</Company>
         <Title>Microsoft.OpenApi.Readers</Title>
         <PackageId>Microsoft.OpenApi.Readers</PackageId>
-        <Version>1.2.3</Version>
+        <Version>1.3.0-preview</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <PackageTags>OpenAPI .NET</PackageTags>
