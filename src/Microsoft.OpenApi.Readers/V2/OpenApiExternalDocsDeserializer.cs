@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -31,7 +32,10 @@ namespace Microsoft.OpenApi.Readers.V2
             };
 
         private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
-            new PatternFieldMap<OpenApiExternalDocs>();
+                new PatternFieldMap<OpenApiExternalDocs> {
+
+                    {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+                    };
 
         public static OpenApiExternalDocs LoadExternalDocs(ParseNode node)
         {
