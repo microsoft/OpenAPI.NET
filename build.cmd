@@ -13,8 +13,11 @@ dotnet msbuild %PROJ% /t:restore /p:Configuration=Release
 dotnet msbuild %PROJ% /t:build /p:Configuration=Release
 dotnet msbuild %PROJ% /t:pack /p:Configuration=Release;PackageOutputPath=%~dp0artifacts
 
-goto :end
-:error
-echo Version parameter missing e.g. build.cmd 1.0.0-beta0008
+Echo Building Microsoft.OpenApi.Tool
+
+SET PROJ=%~dp0src\Microsoft.OpenApi.Tool\Microsoft.OpenApi.Tool.csproj 
+dotnet msbuild %PROJ% /t:restore /p:Configuration=Release
+dotnet msbuild %PROJ% /t:build /p:Configuration=Release
+dotnet msbuild %PROJ% /t:pack /p:Configuration=Release;PackageOutputPath=%~dp0artifacts
 
 :end
