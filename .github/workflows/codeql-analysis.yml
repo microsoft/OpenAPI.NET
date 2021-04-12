@@ -9,7 +9,7 @@ on:
 jobs:
   analyze:
     name: CodeQL Analysis
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         id: checkout_repo
@@ -30,19 +30,9 @@ jobs:
             '.\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj',
             '.\src\Microsoft.OpenApi.Tool\Microsoft.OpenApi.Tool.csproj'
           )
-          $targetsArray = @(
-            'restore',
-            'build'
-          )
 
           $projectsArray | ForEach-Object {
-            $project = $PSItem
-            
-            $targetsArray | ForEach-Object {
-              dotnet msbuild $project `
-              /t:$PSItem `
-              /p:Configuration=Release
-            }
+            dotnet build $PSItem -c Release
           }
 
       - name: Perform CodeQL Analysis
