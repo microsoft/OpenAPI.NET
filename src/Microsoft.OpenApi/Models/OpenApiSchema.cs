@@ -631,10 +631,17 @@ namespace Microsoft.OpenApi.Models
                 s.SerializeAsV2(w, Required, key));
 
             // additionalProperties
-            writer.WriteOptionalObject(
-                OpenApiConstants.AdditionalProperties,
-                AdditionalProperties,
-                (w, s) => s.SerializeAsV2(w));
+            if (AdditionalPropertiesAllowed)
+            {
+                writer.WriteOptionalObject(
+                    OpenApiConstants.AdditionalProperties,
+                    AdditionalProperties,
+                    (w, s) => s.SerializeAsV2(w));
+            }
+            else
+            {
+                writer.WriteProperty(OpenApiConstants.AdditionalProperties, AdditionalPropertiesAllowed);
+            }
 
             // discriminator
             writer.WriteProperty(OpenApiConstants.Discriminator, Discriminator?.PropertyName);

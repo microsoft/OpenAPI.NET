@@ -18,7 +18,8 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "$ref", (o, n) =>
                 {
-                    /* Not supported yet */
+                    o.Reference = new OpenApiReference() { ExternalResource = n.GetScalarValue() };
+                    o.UnresolvedReference =true;
                 }
             },
             {"get", (o, n) => o.AddOperation(OperationType.Get, LoadOperation(n))},

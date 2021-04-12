@@ -17,10 +17,11 @@ namespace Microsoft.OpenApi.Tool
                 new Option("--output") { Argument = new Argument<FileInfo>() },
                 new Option("--version") { Argument = new Argument<OpenApiSpecVersion>() },
                 new Option("--format") { Argument = new Argument<OpenApiFormat>() },
-                new Option("--inline") { Argument = new Argument<bool>() }
+                new Option("--inline") { Argument = new Argument<bool>() },
+                new Option("--resolveExternal") { Argument = new Argument<bool>() }
             };
 
-            command.Handler = CommandHandler.Create<FileInfo,FileInfo,OpenApiSpecVersion,OpenApiFormat,bool>(
+            command.Handler = CommandHandler.Create<FileInfo,FileInfo,OpenApiSpecVersion,OpenApiFormat,bool, bool>(
                 OpenApiService.ProcessOpenApiDocument);
 
             // Parse the incoming args and invoke the handler

@@ -18,7 +18,8 @@ namespace Microsoft.OpenApi.Tool
             FileInfo output,
             OpenApiSpecVersion version,
             OpenApiFormat format,
-            bool inline)
+            bool inline,
+            bool resolveExternal)
         {
             OpenApiDocument document;
             using (Stream stream = input.OpenRead())
@@ -26,7 +27,7 @@ namespace Microsoft.OpenApi.Tool
 
                 document = new OpenApiStreamReader(new OpenApiReaderSettings
                 {
-                    ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences,
+                    ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 }
                 ).Read(stream, out var context);
