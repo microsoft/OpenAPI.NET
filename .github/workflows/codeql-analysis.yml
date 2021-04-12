@@ -30,16 +30,19 @@ jobs:
             '.\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj',
             '.\src\Microsoft.OpenApi.Tool\Microsoft.OpenApi.Tool.csproj'
           )
+          $targetsArray = @(
+            'restore',
+            'build'
+          )
 
           $projectsArray | ForEach-Object {
-            dotnet msbuild $PSItem `
-            /t:restore `
-            /p:Configuration=Release
-
-            dotnet msbuild $PSItem `
-            /t:build `
-            /p:Configuration=Release
-          }
+            $project = $PSItem
+            
+            $targetsArray | ForEach-Object {
+              dotnet msbuild $project `
+              /t:$PSItem `
+              /p:Configuration=Release
+            }
 
       - name: Perform CodeQL Analysis
         id: analyze_codeql
