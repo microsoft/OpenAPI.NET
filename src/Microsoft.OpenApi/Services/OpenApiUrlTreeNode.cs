@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -18,19 +19,19 @@ namespace Microsoft.OpenApi.Services
         public IDictionary<string, OpenApiUrlTreeNode> Children { get; } = new Dictionary<string, OpenApiUrlTreeNode>();
 
         /// <summary>
-        /// The name tag for a group of nodes.
-        /// </summary>
-        public string Label { get; private set; }
-
-        /// <summary>
-        /// Path Item object that describes the operations available on a node.
-        /// </summary>
-        public OpenApiPathItem PathItem { get; private set; }
-
-        /// <summary>
         /// The relative directory path of the current node from the root node.
         /// </summary>
         public string Path { get; private set; } = "";
+
+        /// <summary>
+        /// Dictionary of labels and Path Item objects that describe the operations available on a node.
+        /// </summary>
+        public IDictionary<string, OpenApiPathItem> PathItems { get; private set; }
+
+        /// <summary>
+        /// A container to hold key value pairs of additional data describing a node.
+        /// </summary>
+        public IDictionary<string, string> AdditionalData { get; set; }
 
         /// <summary>
         /// Flag indicating whether a node segment is a path parameter.
@@ -43,12 +44,17 @@ namespace Microsoft.OpenApi.Services
         public string Segment { get; private set; }
 
         /// <summary>
-        /// Flag indicating whether a PathItem has operations.
+        /// Flag indicating whether the node's PathItems has operations.
         /// </summary>
         /// <returns>true or false.</returns>
-        public bool HasOperations()
+        public bool HasOperations(string label)
         {
-            return PathItem?.Operations != null && PathItem.Operations.Count > 0;
+            if ((bool)!PathItems?.ContainsKey(label))
+            {
+                return false;
+            }
+
+            return PathItems[label].Operations != null && PathItems[label].Operations.Count > 0;
         }
 
         /// <summary>
@@ -61,17 +67,28 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Creates an empty structured directory of <see cref="OpenApiUrlTreeNode"/> node.
+        /// </summary>
+        /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
+        public static OpenApiUrlTreeNode Create()
+        {
+            return new OpenApiUrlTreeNode(string.Empty);
+        }
+
+        /// <summary>
         /// Creates a structured directory of <see cref="OpenApiUrlTreeNode"/> nodes from the paths of an OpenAPI document.
         /// </summary>
-        /// <param name="doc">Optional. The OpenAPI document.</param>
-        /// <param name="label">Optional. Name tag for labelling the <see cref="OpenApiUrlTreeNode"/> nodes
-        /// in the directory structure.</param>
+        /// <param name="doc">The OpenAPI document.</param>
+        /// <param name="label">Name tag for labelling the <see cref="OpenApiUrlTreeNode"/> nodes in the directory structure.</param>
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
-        public static OpenApiUrlTreeNode Create(OpenApiDocument doc = null, string label = "")
+        public static OpenApiUrlTreeNode Create(OpenApiDocument doc, string label)
         {
+            Utils.CheckArgumentNull(doc, nameof(doc));
+            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+
             OpenApiUrlTreeNode root = new OpenApiUrlTreeNode(string.Empty);
 
-            var paths = doc?.Paths;
+            var paths = doc.Paths;
             if (paths != null)
             {
                 foreach (var path in paths)
@@ -87,10 +104,12 @@ namespace Microsoft.OpenApi.Services
         /// Retrieves the paths from an OpenAPI document and appends the items to an <see cref="OpenApiUrlTreeNode"/> node.
         /// </summary>
         /// <param name="doc">The OpenAPI document.</param>
-        /// <param name="label">Name tag for labelling related <see cref="OpenApiUrlTreeNode"/>
-        /// nodes in the directory structure.</param>
+        /// <param name="label">Name tag for labelling related <see cref="OpenApiUrlTreeNode"/> nodes in the directory structure.</param>
         public void Attach(OpenApiDocument doc, string label)
         {
+            Utils.CheckArgumentNull(doc, nameof(doc));
+            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+
             var paths = doc?.Paths;
             if (paths != null)
             {
@@ -129,15 +148,22 @@ namespace Microsoft.OpenApi.Services
         /// <returns>An <see cref="OpenApiUrlTreeNode"/> node with all constituent properties assembled.</returns>
         private OpenApiUrlTreeNode Attach(IEnumerable<string> segments, OpenApiPathItem pathItem, string label, string currentPath)
         {
+            if (PathItems.ContainsKey(label))
+            {
+                throw new ArgumentException("A duplicate label already exists for this node.", nameof(label));
+            }
+
             var segment = segments.FirstOrDefault();
             if (string.IsNullOrEmpty(segment))
             {
-                if (PathItem == null)
+                PathItems = new Dictionary<string, OpenApiPathItem>
                 {
-                    PathItem = pathItem;
-                    Path = currentPath;
-                    Label = label;
-                }
+                    {
+                        label, pathItem
+                    }
+                };
+                Path = currentPath;
+
                 return this;
             }
 
