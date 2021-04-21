@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>true or false.</returns>
         public bool HasOperations(string label)
         {
-            if ((bool)!PathItems?.ContainsKey(label))
+            if (!(PathItems?.ContainsKey(label) ?? false))
             {
                 return false;
             }
