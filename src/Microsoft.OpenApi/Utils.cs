@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi
     /// <summary>
     /// Utilities methods
     /// </summary>
-    public static class Utils
+    internal static class Utils
     {
         /// <summary>
         /// Check whether the input argument value is null or not.
