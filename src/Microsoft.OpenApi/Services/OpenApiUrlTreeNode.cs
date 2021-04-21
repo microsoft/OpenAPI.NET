@@ -26,12 +26,12 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Dictionary of labels and Path Item objects that describe the operations available on a node.
         /// </summary>
-        public IDictionary<string, OpenApiPathItem> PathItems { get; private set; }
+        public IDictionary<string, OpenApiPathItem> PathItems { get; } = new Dictionary<string, OpenApiPathItem>();
 
         /// <summary>
-        /// A container to hold key value pairs of additional data describing a node.
+        /// A dictionary of key value pairs that contain information about a node.
         /// </summary>
-        public IDictionary<string, string> AdditionalData { get; set; }
+        public IDictionary<string, List<string>> AdditionalData { get; set; } = new Dictionary<string, List<string>>();
 
         /// <summary>
         /// Flag indicating whether a node segment is a path parameter.
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
         public static OpenApiUrlTreeNode Create()
         {
-            return new OpenApiUrlTreeNode(string.Empty);
+            return new OpenApiUrlTreeNode("/");
         }
 
         /// <summary>
@@ -86,14 +86,16 @@ namespace Microsoft.OpenApi.Services
             Utils.CheckArgumentNull(doc, nameof(doc));
             Utils.CheckArgumentNullOrEmpty(label, nameof(label));
 
-            OpenApiUrlTreeNode root = new OpenApiUrlTreeNode(string.Empty);
+            OpenApiUrlTreeNode root = new OpenApiUrlTreeNode("/");
 
             var paths = doc.Paths;
             if (paths != null)
             {
                 foreach (var path in paths)
                 {
-                    root.Attach(path.Key, path.Value, label);
+                    root.Attach(path: path.Key,
+                                pathItem: path.Value,
+                                label: label);
                 }
             }
 
@@ -115,27 +117,38 @@ namespace Microsoft.OpenApi.Services
             {
                 foreach (var path in paths)
                 {
-                    Attach(path.Key, path.Value, label);
+                    Attach(path: path.Key,
+                           pathItem: path.Value,
+                           label: label);
                 }
             }
         }
 
         /// <summary>
-        /// Appends an OpenAPI path and the PathItems to an <see cref="OpenApiUrlTreeNode"/> node.
+        /// Appends a path and the PathItem to an <see cref="OpenApiUrlTreeNode"/> node.
         /// </summary>
         /// <param name="path">An OpenAPI path.</param>
         /// <param name="pathItem">Path Item object that describes the operations available on an OpenAPI path.</param>
         /// <param name="label">A name tag for labelling the <see cref="OpenApiUrlTreeNode"/> node.</param>
         /// <returns>An <see cref="OpenApiUrlTreeNode"/> node describing an OpenAPI path.</returns>
-        public OpenApiUrlTreeNode Attach(string path, OpenApiPathItem pathItem, string label)
+        public OpenApiUrlTreeNode Attach(string path,
+                                         OpenApiPathItem pathItem,
+                                         string label)
         {
+            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+
             if (path.StartsWith("/"))
             {
                 // Remove leading slash
                 path = path.Substring(1);
             }
+
             var segments = path.Split('/');
-            return Attach(segments, pathItem, label, "");
+
+            return Attach(segments: segments,
+                          pathItem: pathItem,
+                          label: label,
+                          currentPath: "");
         }
 
         /// <summary>
@@ -146,31 +159,31 @@ namespace Microsoft.OpenApi.Services
         /// <param name="label">A name tag for labelling the <see cref="OpenApiUrlTreeNode"/> node.</param>
         /// <param name="currentPath">The relative path of a node.</param>
         /// <returns>An <see cref="OpenApiUrlTreeNode"/> node with all constituent properties assembled.</returns>
-        private OpenApiUrlTreeNode Attach(IEnumerable<string> segments, OpenApiPathItem pathItem, string label, string currentPath)
+        private OpenApiUrlTreeNode Attach(IEnumerable<string> segments,
+                                          OpenApiPathItem pathItem,
+                                          string label,
+                                          string currentPath)
         {
-            if (PathItems.ContainsKey(label))
-            {
-                throw new ArgumentException("A duplicate label already exists for this node.", nameof(label));
-            }
-
             var segment = segments.FirstOrDefault();
             if (string.IsNullOrEmpty(segment))
             {
-                PathItems = new Dictionary<string, OpenApiPathItem>
+                if (PathItems.ContainsKey(label))
                 {
-                    {
-                        label, pathItem
-                    }
-                };
-                Path = currentPath;
+                    throw new ArgumentException("A duplicate label already exists for this node.", nameof(label));
+                }
 
+                Path = currentPath;
+                PathItems.Add(label, pathItem);
                 return this;
             }
 
             // If the child segment has already been defined, then insert into it
             if (Children.ContainsKey(segment))
             {
-                return Children[segment].Attach(segments.Skip(1), pathItem, label, currentPath + "\\" + segment);
+                return Children[segment].Attach(segments: segments.Skip(1),
+                                                pathItem: pathItem,
+                                                label: label,
+                                                currentPath: currentPath + "\\" + segment);
             }
             else
             {
@@ -180,7 +193,32 @@ namespace Microsoft.OpenApi.Services
                 };
 
                 Children[segment] = node;
-                return node.Attach(segments.Skip(1), pathItem, label, currentPath + "\\" + segment);
+
+                return node.Attach(segments: segments.Skip(1),
+                                   pathItem: pathItem,
+                                   label: label,
+                                   currentPath: currentPath + "\\" + segment);
+            }
+        }
+
+        /// <summary>
+        /// Adds additional data information to the AdditionalData property of the node.
+        /// </summary>
+        /// <param name="additionalData">A dictionary of key value pairs that contain information about a node.</param>
+        public void AddAdditionalData(Dictionary<string, List<string>> additionalData)
+        {
+            Utils.CheckArgumentNull(additionalData, nameof(additionalData));
+
+            foreach (var item in additionalData)
+            {
+                if (AdditionalData.ContainsKey(item.Key))
+                {
+                    AdditionalData[item.Key] = item.Value;
+                }
+                else
+                {
+                    AdditionalData.Add(item.Key, item.Value);
+                }
             }
         }
     }
