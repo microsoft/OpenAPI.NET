@@ -13,6 +13,9 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiUrlTreeNode
     {
+        private const string RootPathSegment = "/";
+        private const string PathSeparator = "\\";
+
         /// <summary>
         /// All the subdirectories of a node.
         /// </summary>
@@ -72,7 +75,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
         public static OpenApiUrlTreeNode Create()
         {
-            return new OpenApiUrlTreeNode("/");
+            return new OpenApiUrlTreeNode(RootPathSegment);
         }
 
         /// <summary>
@@ -86,7 +89,7 @@ namespace Microsoft.OpenApi.Services
             Utils.CheckArgumentNull(doc, nameof(doc));
             Utils.CheckArgumentNullOrEmpty(label, nameof(label));
 
-            OpenApiUrlTreeNode root = new OpenApiUrlTreeNode("/");
+            var root = Create();
 
             var paths = doc.Paths;
             if (paths != null)
@@ -112,7 +115,7 @@ namespace Microsoft.OpenApi.Services
             Utils.CheckArgumentNull(doc, nameof(doc));
             Utils.CheckArgumentNullOrEmpty(label, nameof(label));
 
-            var paths = doc?.Paths;
+            var paths = doc.Paths;
             if (paths != null)
             {
                 foreach (var path in paths)
@@ -137,7 +140,7 @@ namespace Microsoft.OpenApi.Services
         {
             Utils.CheckArgumentNullOrEmpty(label, nameof(label));
 
-            if (path.StartsWith("/"))
+            if (path.StartsWith(RootPathSegment))
             {
                 // Remove leading slash
                 path = path.Substring(1);
@@ -180,16 +183,20 @@ namespace Microsoft.OpenApi.Services
             // If the child segment has already been defined, then insert into it
             if (Children.ContainsKey(segment))
             {
+                var newPath = currentPath + PathSeparator + segment;
+
                 return Children[segment].Attach(segments: segments.Skip(1),
                                                 pathItem: pathItem,
                                                 label: label,
-                                                currentPath: currentPath + "\\" + segment);
+                                                currentPath: newPath);
             }
             else
             {
+                var newPath = currentPath + PathSeparator + segment;
+
                 var node = new OpenApiUrlTreeNode(segment)
                 {
-                    Path = currentPath + "\\" + segment
+                    Path = newPath
                 };
 
                 Children[segment] = node;
@@ -197,7 +204,7 @@ namespace Microsoft.OpenApi.Services
                 return node.Attach(segments: segments.Skip(1),
                                    pathItem: pathItem,
                                    label: label,
-                                   currentPath: currentPath + "\\" + segment);
+                                   currentPath: newPath);
             }
         }
 
