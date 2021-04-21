@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Services
                 return false;
             }
 
-            return PathItems[label].Operations != null && PathItems[label].Operations.Count > 0;
+            return PathItems[label].Operations?.Any() ?? false;
         }
 
         /// <summary>
