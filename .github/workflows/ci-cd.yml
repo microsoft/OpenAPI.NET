@@ -70,14 +70,14 @@ jobs:
 
           $projectsArray | ForEach-Object {
             dotnet build $PSItem `
-            -c Release `
-            -o $env:ARTIFACTS_FOLDER `
-            /p:Version=$projectNewVersion 
+            -c Release # `
+            # -o $env:ARTIFACTS_FOLDER `
+            # /p:Version=$projectNewVersion 
           }
 
           # Move NuGet packages to separate folder for pipeline convenience
-          New-Item Artifacts/NuGet -ItemType Directory
-          Get-ChildItem Artifacts/*.nupkg | Move-Item -Destination "Artifacts/NuGet"
+          # New-Item Artifacts/NuGet -ItemType Directory
+          # Get-ChildItem Artifacts/*.nupkg | Move-Item -Destination "Artifacts/NuGet"
 
       - name: Run unit tests
         id: run_unit_tests
@@ -94,13 +94,13 @@ jobs:
             -c Release
           }
 
-      - if: steps.tag_generator.outputs.new_version != ''
-        name: Upload NuGet packages as artifacts
-        id: ul_packages_artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: NuGet packages
-          path: Artifacts/NuGet/
+      # - if: steps.tag_generator.outputs.new_version != ''
+      #   name: Upload NuGet packages as artifacts
+      #   id: ul_packages_artifact
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: NuGet packages
+      #     path: Artifacts/NuGet/
 
   cd:
     if: needs.ci.outputs.is_default_branch == 'true' && needs.ci.outputs.latest_version != ''
@@ -108,54 +108,35 @@ jobs:
     needs: ci
     runs-on: ubuntu-latest
     steps:
-      - name: Download and extract NuGet packages
-        id: dl_packages_artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: NuGet packages
-          path: NuGet/
+      # - name: Download and extract NuGet packages
+      #   id: dl_packages_artifact
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: NuGet packages
+      #     path: NuGet/
 
-      - name: Push NuGet packages to NuGet.org
-        id: push_nuget_packages
-        continue-on-error: true
-        shell: pwsh
-        run: |
-          Get-ChildItem NuGet/*.nupkg | ForEach-Object {
-            nuget push $PSItem `
-            -ApiKey $env:NUGET_API_KEY `
-            -Source https://api.nuget.org/v3/index.json
-          }
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      # - name: Push NuGet packages to NuGet.org
+      #   id: push_nuget_packages
+      #   continue-on-error: true
+      #   shell: pwsh
+      #   run: |
+      #     Get-ChildItem NuGet/*.nupkg | ForEach-Object {
+      #       nuget push $PSItem `
+      #       -ApiKey $env:NUGET_API_KEY `
+      #       -Source https://api.nuget.org/v3/index.json
+      #     }
+      #   env:
+      #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
       - name: Create and publish release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         with:
+          name: OpenApi v${{ needs.ci.outputs.latest_version }}
           tag_name: v${{ needs.ci.outputs.latest_version }}
-          release_name: OpenApi v${{ needs.ci.outputs.latest_version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload OpenAPI package as release asset
-        id: upload_openapi_pckg
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: NuGet/Microsoft.OpenApi.${{ needs.ci.outputs.latest_version }}.nupkg
-          asset_name: Microsoft.OpenApi.${{ needs.ci.outputs.latest_version }}.nupkg
-          asset_content_type: application/zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload OpenAPI.Readers package as release asset
-        id: upload_openapi_readers_pckg
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: NuGet/Microsoft.OpenApi.Readers.${{ needs.ci.outputs.latest_version }}.nupkg
-          asset_name: Microsoft.OpenApi.Readers.${{ needs.ci.outputs.latest_version }}.nupkg
-          asset_content_type: application/zip
+          # files: |
+          #   NuGet/Microsoft.OpenApi.${{ needs.ci.outputs.latest_version }}.nupkg
+          #   NuGet/Microsoft.OpenApi.Readers.${{ needs.ci.outputs.latest_version }}.nupkg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
