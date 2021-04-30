@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public string GetLocation()
         {
-            return "#/" + string.Join("/", _currentLocation.Reverse().ToArray());
+            return "#/" + string.Join("/", _currentLocation.Reverse().Select(s=> s.Replace("~","~0").Replace("/","~1")).ToArray());
         }
 
         /// <summary>
