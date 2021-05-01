@@ -96,7 +96,7 @@ definitions:
       sampleProperty:
         type: double
         minimum: 100.54
-        maximum: 60,000,000.35
+        maximum: 60000000.35
         exclusiveMaximum: true
         exclusiveMinimum: false
 paths: {}",
