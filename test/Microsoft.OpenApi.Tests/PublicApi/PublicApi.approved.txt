@@ -958,6 +958,21 @@ namespace Microsoft.OpenApi.Services
         public OpenApiReferenceError(Microsoft.OpenApi.Exceptions.OpenApiException exception) { }
         public OpenApiReferenceError(Microsoft.OpenApi.Models.OpenApiReference reference, string message) { }
     }
+    public class OpenApiUrlTreeNode
+    {
+        public System.Collections.Generic.IDictionary<string, System.Collections.Generic.List<string>> AdditionalData { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Services.OpenApiUrlTreeNode> Children { get; }
+        public bool IsParameter { get; }
+        public string Path { get; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiPathItem> PathItems { get; }
+        public string Segment { get; }
+        public void AddAdditionalData(System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> additionalData) { }
+        public void Attach(Microsoft.OpenApi.Models.OpenApiDocument doc, string label) { }
+        public Microsoft.OpenApi.Services.OpenApiUrlTreeNode Attach(string path, Microsoft.OpenApi.Models.OpenApiPathItem pathItem, string label) { }
+        public bool HasOperations(string label) { }
+        public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create() { }
+        public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create(Microsoft.OpenApi.Models.OpenApiDocument doc, string label) { }
+    }
     public abstract class OpenApiVisitorBase
     {
         protected OpenApiVisitorBase() { }
