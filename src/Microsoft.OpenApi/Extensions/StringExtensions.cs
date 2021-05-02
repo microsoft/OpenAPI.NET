@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Reflection;
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Extensions
             var type = typeof(T);
             if (!type.IsEnum)
             {
-                return default(T);
+                return default;
             }
 
             foreach (var value in Enum.GetValues(type))
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Extensions
                 }
             }
 
-            return default(T);
+            return default;
         }
     }
 }
