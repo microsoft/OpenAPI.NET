@@ -51,5 +51,6 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         /// <param name="message">Plain text error message for this exception.</param>
         /// <param name="innerException">Inner exception that caused this exception to be thrown.</param>
         public OpenApiReaderException(string message, Exception innerException) : base(message, innerException) { }
+
     }
 }

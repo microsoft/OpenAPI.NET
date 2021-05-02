@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -27,8 +28,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (_nodeList == null)
             {
-                throw new OpenApiException(
-                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
+                throw new OpenApiReaderException(
+                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
             }
 
             return _nodeList.Select(n => map(new MapNode(Context, n as YamlMappingNode)))
@@ -47,8 +48,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (_nodeList == null)
             {
-                throw new OpenApiException(
-                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
+                throw new OpenApiReaderException(
+                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
             }
 
             return _nodeList.Select(n => map(new ValueNode(Context, n))).ToList();
