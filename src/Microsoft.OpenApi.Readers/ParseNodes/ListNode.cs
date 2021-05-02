@@ -6,9 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Serialization;
 

@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (!(node is YamlMappingNode mapNode))
             {
-                throw new OpenApiReaderException("Expected map.", node);
+                throw new OpenApiReaderException("Expected map.", Context);
             }
 
             this._node = mapNode;
@@ -48,10 +47,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             get
             {
-                YamlNode node = null;
+                YamlNode node;
                 if (this._node.Children.TryGetValue(new YamlScalarNode(key), out node))
                 {
-                    return new PropertyNode(Context, key, this._node.Children[new YamlScalarNode(key)]);
+                    return new PropertyNode(Context, key, node);
                 }
 
                 return null;
@@ -63,7 +62,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var yamlMap = _node;
             if (yamlMap == null)
             {
-                throw new OpenApiReaderException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}", yamlMap);
+                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             }
 
             var nodes = yamlMap.Select(
@@ -99,7 +98,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var yamlMap = _node;
             if (yamlMap == null)
             {
-                throw new OpenApiReaderException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}", yamlMap);
+                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             }
 
             var nodes = yamlMap.Select(
@@ -133,8 +132,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             var yamlMap = _node;
             if (yamlMap == null)
-            {
-                throw new OpenApiReaderException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}", yamlMap);
+            { 
+                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             }
 
             var nodes = yamlMap.Select(
@@ -189,7 +188,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var scalarNode = _node.Children[new YamlScalarNode(key.GetScalarValue())] as YamlScalarNode;
             if (scalarNode == null)
             {
-                throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", _node);
+                throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
             }
 
             return scalarNode.Value;
