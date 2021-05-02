@@ -67,12 +67,26 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             var nodes = yamlMap.Select(
-                n => new
-                {
-                    key = n.Key.GetScalarValue(),
-                    value = n.Value as YamlMappingNode == null
-                        ? default(T)
-                        : map(new MapNode(Context, n.Value as YamlMappingNode))
+                n => {
+                    
+                    var key = n.Key.GetScalarValue();
+                    T value;
+                    try
+                    {
+                        Context.StartObject(key);
+                        value = n.Value as YamlMappingNode == null
+                          ? default(T)
+                          : map(new MapNode(Context, n.Value as YamlMappingNode));
+                    } 
+                    finally
+                    {
+                        Context.EndObject();
+                    }
+                    return new
+                    {
+                        key = key,
+                        value = value
+                    };
                 });
 
             return nodes.ToDictionary(k => k.key, v => v.value);

@@ -54,8 +54,8 @@ paths:
             reader.Read(input, out var diagnostic);
 
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
-                new OpenApiError(new OpenApiReaderException("Expected a value.") {
-                    Pointer = "#/~1foo/get/responses/200/content/application~1json/schema"
+                new OpenApiError(new OpenApiReaderException("schema must be a map/object") {
+                    Pointer = "#/paths/~1foo/get/responses/200/content/application~1json/schema"
                 })
             });
         }
