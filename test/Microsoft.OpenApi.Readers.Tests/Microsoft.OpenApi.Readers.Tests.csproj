@@ -261,12 +261,7 @@
         <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
         <ProjectReference Include="..\..\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="Microsoft.CSharp" />
-        <Reference Include="System.Net.Http" />
-    </ItemGroup>
-
+  
     <ItemGroup>
         <None Update="V2Tests\Samples\definitions.v3.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
