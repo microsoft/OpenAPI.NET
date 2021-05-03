@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Exceptions
         /// JSON Pointer as per https://tools.ietf.org/html/rfc6901
         /// If the document fails to parse as JSON/YAML then the fragment will be based on
         /// a text/plain pointer as defined in https://tools.ietf.org/html/rfc5147 
-        /// Currently only line= is provided because using char= causes tests to break due to CR/LF & LF differences
+        /// Currently only line= is provided because using char= causes tests to break due to CR/LF and LF differences
         /// </summary>
         public string Pointer { get; set; }
 
