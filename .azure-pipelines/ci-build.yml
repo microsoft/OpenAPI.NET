@@ -85,14 +85,14 @@ steps:
   inputs:
     solution: src/Microsoft.OpenApi/Microsoft.OpenApi.csproj
     configuration: Release
-    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:SymbolPackageFormat=snupkg'
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
 
 - task: MSBuild@1
   displayName: 'Pack OpenAPI Readers'
   inputs:
     solution: src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj
     configuration: Release
-    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:SymbolPackageFormat=snupkg'
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning Nuget Packages'
