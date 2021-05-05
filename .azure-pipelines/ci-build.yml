@@ -11,6 +11,7 @@ pr: none
 
 pool:
   name: Azure Pipelines
+  vmImage: windows-latest
   demands:
   - msbuild
   - vstest
