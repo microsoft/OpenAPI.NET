@@ -21,6 +21,8 @@
         <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
         <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
         <SignAssembly>true</SignAssembly>
+        <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
 
     <PropertyGroup>
