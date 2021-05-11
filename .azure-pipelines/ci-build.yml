@@ -1,0 +1,126 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# Licensed under the MIT License.
+
+name: $(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+      - master
+pr: none
+
+pool:
+  name: Azure Pipelines
+  vmImage: windows-latest
+  demands:
+  - msbuild
+  - vstest
+
+steps:
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+
+- task: MSBuild@1
+  displayName: 'Build solution **/*.sln'
+  inputs:
+    configuration: Release
+
+- task: VSTest@2
+  displayName: 'XUnit Tests'
+  inputs:
+    testAssemblyVer2: |
+     **\*.Tests.dll
+     
+    vsTestVersion: 16.0
+    codeCoverageEnabled: true
+
+- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  displayName: 'ESRP CodeSigning'
+  inputs:
+    ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
+    FolderPath: src
+    signConfigType: inlineSignParams
+    inlineOperation: |
+     [
+         {
+             "keyCode": "CP-230012",
+             "operationSetCode": "SigntoolSign",
+             "parameters": [
+             {
+                 "parameterName": "OpusName",
+                 "parameterValue": "Microsoft"
+             },
+             {
+                 "parameterName": "OpusInfo",
+                 "parameterValue": "http://www.microsoft.com"
+             },
+             {
+                 "parameterName": "FileDigest",
+                 "parameterValue": "/fd \"SHA256\""
+             },
+             {
+                 "parameterName": "PageHash",
+                 "parameterValue": "/NPH"
+             },
+             {
+                 "parameterName": "TimeStamp",
+                 "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+             }
+             ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         },
+         {
+             "keyCode": "CP-230012",
+             "operationSetCode": "SigntoolVerify",
+             "parameters": [ ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         }
+     ]
+    SessionTimeout: 20
+
+- task: MSBuild@1
+  displayName: 'Pack OpenAPI'
+  inputs:
+    solution: src/Microsoft.OpenApi/Microsoft.OpenApi.csproj
+    configuration: Release
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+
+- task: MSBuild@1
+  displayName: 'Pack OpenAPI Readers'
+  inputs:
+    solution: src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj
+    configuration: Release
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+
+- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  displayName: 'ESRP CodeSigning Nuget Packages'
+  inputs:
+    ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
+    FolderPath: '$(Build.ArtifactStagingDirectory)'
+    Pattern: '*.nupkg'
+    signConfigType: inlineSignParams
+    inlineOperation: |
+     [
+         {
+             "keyCode": "CP-401405",
+             "operationSetCode": "NuGetSign",
+             "parameters": [ ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         },
+         {
+             "keyCode": "CP-401405",
+             "operationSetCode": "NuGetVerify",
+             "parameters": [ ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         }
+     ]
+    SessionTimeout: 20
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Nugets'
+  inputs:
+    ArtifactName: Nugets
