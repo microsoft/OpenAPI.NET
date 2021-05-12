@@ -14,17 +14,31 @@
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <PackageTags>OpenAPI .NET</PackageTags>
-        
+        <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
+        <PackageReleaseNotes>
+- Publish symbols.
+        </PackageReleaseNotes>
         <AssemblyName>Microsoft.OpenApi</AssemblyName>
         <RootNamespace>Microsoft.OpenApi</RootNamespace>
         <SignAssembly>true</SignAssembly>
+        <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
 
     <PropertyGroup>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
         <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
-    
+
+    <!-- https://github.com/clairernovotny/DeterministicBuilds#deterministic-builds -->
+    <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    </ItemGroup>
+
     <ItemGroup>
         <Compile Update="Properties\SRResource.Designer.cs">
             <DesignTime>True</DesignTime>
