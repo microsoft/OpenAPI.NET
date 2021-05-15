@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 using Xunit;
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.PublicApi
 
             // Arrange
             var publicApi = typeof(OpenApiSpecVersion).Assembly.GeneratePublicApi(new ApiGeneratorOptions() { WhitelistedNamespacePrefixes = new[] { "Microsoft.OpenApi" } } );
-            
+
             // Act
             var approvedFilePath = Path.Combine("PublicApi", "PublicApi.approved.txt");
 

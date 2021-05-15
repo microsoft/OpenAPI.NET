@@ -31,5 +31,34 @@ paths: { }";
                 })
             });
         }
+
+        [Fact]
+        public void BadSchema()
+        {
+            var input = @"openapi: 3.0.0
+info:
+  title: foo
+  version: bar
+paths:
+  '/foo':
+    get:
+      responses:
+        200: 
+          description: ok
+          content:
+            application/json:  
+              schema: asdasd
+";
+
+            var reader = new OpenApiStringReader();
+            reader.Read(input, out var diagnostic);
+
+            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
+                new OpenApiError(new OpenApiReaderException("schema must be a map/object") {
+                    Pointer = "#/paths/~1foo/get/responses/200/content/application~1json/schema"
+                })
+            });
+        }
     }
 }
+
