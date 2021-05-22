@@ -1154,7 +1154,6 @@ namespace Microsoft.OpenApi.Validations.Rules
     {
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiLicense> LicenseRequiredFields { get; }
     }
-    [Microsoft.OpenApi.Validations.Rules.OpenApiRule]
     public static class OpenApiMediaTypeRules
     {
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiMediaType> MediaTypeMismatchedDataType { get; }

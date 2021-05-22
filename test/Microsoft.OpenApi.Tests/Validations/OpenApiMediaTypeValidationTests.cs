@@ -32,7 +32,9 @@ namespace Microsoft.OpenApi.Validations.Tests
             };
 
             // Act
-            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            ruleset.Add(OpenApiMediaTypeRules.MediaTypeMismatchedDataType);
+            var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
             walker.Walk(mediaType);
 
@@ -102,7 +104,9 @@ namespace Microsoft.OpenApi.Validations.Tests
             };
 
             // Act
-            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var ruleset = ValidationRuleSet.GetDefaultRuleSet();
+            ruleset.Add(OpenApiMediaTypeRules.MediaTypeMismatchedDataType);
+            var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
             walker.Walk(mediaType);
 
