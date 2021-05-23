@@ -33,12 +33,15 @@ namespace Microsoft.OpenApi.Tool
 
             OpenApiDocument document;
 
-            document = new OpenApiStreamReader(new OpenApiReaderSettings
+            var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet()
             }
-            ).Read(stream, out var context);
+            ).ReadAsync(stream).GetAwaiter().GetResult();
+
+            document = result.OpenApiDocument;
+            var context = result.OpenApiDiagnostic;
 
             if (context.Errors.Count != 0)
             {
