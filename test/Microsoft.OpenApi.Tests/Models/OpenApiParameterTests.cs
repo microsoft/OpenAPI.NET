@@ -163,6 +163,24 @@ namespace Microsoft.OpenApi.Tests.Models
             _output = output;
         }
 
+        [Theory]
+        [InlineData(ParameterStyle.Form, true)]
+        [InlineData(ParameterStyle.SpaceDelimited, false)]
+        [InlineData(null, false)]
+        public void WhenStyleIsFormTheDefaultValueOfExplodeShouldBeTrueOtherwiseFalse(ParameterStyle? style, bool expectedExplode)
+        {
+            // Arrange
+            var parameter = new OpenApiParameter
+            {
+                Name = "name1",
+                In = ParameterLocation.Query,
+                Style = style
+            };
+
+            // Act & Assert
+            parameter.Explode.Should().Be(expectedExplode);
+        }
+
         [Fact]
         public void SerializeBasicParameterAsV3JsonWorks()
         {

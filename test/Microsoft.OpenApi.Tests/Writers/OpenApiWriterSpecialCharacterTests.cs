@@ -75,5 +75,59 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             actual.Should().Be(expected);
         }
+        
+        [Theory]
+        [InlineData("multiline\r\nstring", "test: |-\n  multiline\n  string")]
+        [InlineData("ends with\r\nline break\r\n", "test: |\n  ends with\n  line break")]
+        [InlineData("ends with\r\n2 line breaks\r\n\r\n", "test: |+\n  ends with\n  2 line breaks\n")]
+        [InlineData("ends with\r\n3 line breaks\r\n\r\n\r\n", "test: |+\n  ends with\n  3 line breaks\n\n")]
+        [InlineData("  starts with\nspaces", "test: |-2\n    starts with\n  spaces")]
+        [InlineData("  starts with\nspaces, and ends with line break\n", "test: |2\n    starts with\n  spaces, and ends with line break")]
+        [InlineData("contains\n\n\nempty lines", "test: |-\n  contains\n\n\n  empty lines")]
+        [InlineData("no line breaks fallback ", "test: 'no line breaks fallback '")]
+        public void WriteStringWithNewlineCharactersInObjectAsYamlWorks(string input, string expected)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputStringWriter) { UseLiteralStyle = true, };
+
+            // Act
+            writer.WriteStartObject();
+            writer.WritePropertyName("test");
+            writer.WriteValue(input);
+            writer.WriteEndObject();
+            var actual = outputStringWriter.GetStringBuilder().ToString()
+                // Normalize newline for cross platform
+                .Replace("\r", "");
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+        
+        [Theory]
+        [InlineData("multiline\r\nstring", "- |-\n  multiline\n  string")]
+        [InlineData("ends with\r\nline break\r\n", "- |\n  ends with\n  line break")]
+        [InlineData("ends with\r\n2 line breaks\r\n\r\n", "- |+\n  ends with\n  2 line breaks\n")]
+        [InlineData("ends with\r\n3 line breaks\r\n\r\n\r\n", "- |+\n  ends with\n  3 line breaks\n\n")]
+        [InlineData("  starts with\nspaces", "- |-2\n    starts with\n  spaces")]
+        [InlineData("  starts with\nspaces, and ends with line break\n", "- |2\n    starts with\n  spaces, and ends with line break")]
+        [InlineData("contains\n\n\nempty lines", "- |-\n  contains\n\n\n  empty lines")]
+        [InlineData("no line breaks fallback ", "- 'no line breaks fallback '")]
+        public void WriteStringWithNewlineCharactersInArrayAsYamlWorks(string input, string expected)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputStringWriter) { UseLiteralStyle = true, };
+
+            // Act
+            writer.WriteStartArray();
+            writer.WriteValue(input);
+            var actual = outputStringWriter.GetStringBuilder().ToString()
+                // Normalize newline for cross platform
+                .Replace("\r", "");
+
+            // Assert
+            actual.Should().Be(expected);
+        }
     }
 }
