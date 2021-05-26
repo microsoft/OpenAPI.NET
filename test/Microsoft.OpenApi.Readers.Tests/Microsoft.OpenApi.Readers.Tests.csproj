@@ -242,7 +242,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
         <PackageReference Include="FluentAssertions" Version="5.10.3">
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
