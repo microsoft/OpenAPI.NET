@@ -96,6 +96,22 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Exit();
                 });
 
+        /// <summary>
+        /// Validate that a path parameter should always appear in the path 
+        /// </summary>
+        public static ValidationRule<OpenApiParameter> PathParameterShouldBeInThePath =>
+            new ValidationRule<OpenApiParameter>(
+                (context, parameter) =>
+                {
+                    if (parameter.In == ParameterLocation.Path && !context.PathString.Contains("{" + parameter.Name + "}"))
+                    {
+                        context.Enter("in");
+                        context.CreateError(
+                            nameof(PathParameterShouldBeInThePath),
+                            $"Declared path parameter \"{parameter.Name}\" needs to be defined as a path parameter at either the path or operation level");
+                        context.Exit();
+                    }
+                });
         // add more rule.
     }
 }
