@@ -25,6 +25,15 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         public OpenApiReaderException(string message) : base(message) { }
 
         /// <summary>
+        /// Initializes the <see cref="OpenApiReaderException"/> class with a custom message.
+        /// </summary>
+        /// <param name="message">Plain text error message for this exception.</param>
+        /// <param name="context">Context of current parsing process.</param>
+        public OpenApiReaderException(string message, ParsingContext context) : base(message) {
+            Pointer = context.GetLocation();
+        }
+
+        /// <summary>
         /// Initializes the <see cref="OpenApiReaderException"/> class with a message and line, column location of error.
         /// </summary>
         /// <param name="message">Plain text error message for this exception.</param>
@@ -42,5 +51,6 @@ namespace Microsoft.OpenApi.Readers.Exceptions
         /// <param name="message">Plain text error message for this exception.</param>
         /// <param name="innerException">Inner exception that caused this exception to be thrown.</param>
         public OpenApiReaderException(string message, Exception innerException) : base(message, innerException) { }
+
     }
 }

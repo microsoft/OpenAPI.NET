@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (!(node is YamlMappingNode mapNode))
             {
-                throw new OpenApiReaderException("Expected map.", node);
+                throw new OpenApiReaderException("Expected map.", Context);
             }
 
             this._node = mapNode;
@@ -48,10 +47,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             get
             {
-                YamlNode node = null;
+                YamlNode node;
                 if (this._node.Children.TryGetValue(new YamlScalarNode(key), out node))
                 {
-                    return new PropertyNode(Context, key, this._node.Children[new YamlScalarNode(key)]);
+                    return new PropertyNode(Context, key, node);
                 }
 
                 return null;
@@ -63,16 +62,30 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var yamlMap = _node;
             if (yamlMap == null)
             {
-                throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
+                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             }
 
             var nodes = yamlMap.Select(
-                n => new
-                {
-                    key = n.Key.GetScalarValue(),
-                    value = n.Value as YamlMappingNode == null
-                        ? default(T)
-                        : map(new MapNode(Context, n.Value as YamlMappingNode))
+                n => {
+                    
+                    var key = n.Key.GetScalarValue();
+                    T value;
+                    try
+                    {
+                        Context.StartObject(key);
+                        value = n.Value as YamlMappingNode == null
+                          ? default(T)
+                          : map(new MapNode(Context, n.Value as YamlMappingNode));
+                    } 
+                    finally
+                    {
+                        Context.EndObject();
+                    }
+                    return new
+                    {
+                        key = key,
+                        value = value
+                    };
                 });
 
             return nodes.ToDictionary(k => k.key, v => v.value);
@@ -80,54 +93,74 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override Dictionary<string, T> CreateMapWithReference<T>(
             ReferenceType referenceType,
-            Func<MapNode, T> map)
+            Func<MapNode, T> map) 
         {
             var yamlMap = _node;
             if (yamlMap == null)
             {
-                throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
+                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             }
 
             var nodes = yamlMap.Select(
                 n =>
                 {
-                    var entry = new
+                    var key = n.Key.GetScalarValue();
+                    (string key, T value) entry;
+                    try
                     {
-                        key = n.Key.GetScalarValue(),
-                        value = map(new MapNode(Context, (YamlMappingNode)n.Value))
-                    };
-                    if (entry.value == null)
-                    {
-                        return null;  // Body Parameters shouldn't be converted to Parameters
-                    }
-                    // If the component isn't a reference to another component, then point it to itself.
-                    if (entry.value.Reference == null)
-                    {
-                        entry.value.Reference = new OpenApiReference()
+                        Context.StartObject(key);
+                        entry = (
+                            key: key,
+                            value: map(new MapNode(Context, (YamlMappingNode)n.Value))
+                        );
+                        if (entry.value == null)
                         {
-                            Type = referenceType,
-                            Id = entry.key
-                        };
+                            return default;  // Body Parameters shouldn't be converted to Parameters
+                        }
+                        // If the component isn't a reference to another component, then point it to itself.
+                        if (entry.value.Reference == null)
+                        {
+                            entry.value.Reference = new OpenApiReference()
+                            {
+                                Type = referenceType,
+                                Id = entry.key
+                            };
+                        }
+                     }
+                    finally
+                    {
+                        Context.EndObject();
                     }
                     return entry;
                 }
                 );
-            return nodes.Where(n => n != null).ToDictionary(k => k.key, v => v.value);
+            return nodes.Where(n => n != default).ToDictionary(k => k.key, v => v.value);
         }
 
         public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
             var yamlMap = _node;
             if (yamlMap == null)
-            {
-                throw new OpenApiException($"Expected map at line {yamlMap.Start.Line} while parsing {typeof(T).Name}");
+            { 
+                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             }
 
             var nodes = yamlMap.Select(
-                n => new
+                n =>
                 {
-                    key = n.Key.GetScalarValue(),
-                    value = map(new ValueNode(Context, (YamlScalarNode)n.Value))
+                    var key = n.Key.GetScalarValue();
+                    try
+                    {
+                        Context.StartObject(key);
+                        YamlScalarNode scalarNode = n.Value as YamlScalarNode;
+                        if (scalarNode == null)
+                        {
+                            throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);
+                        }
+                        return (key, value: map(new ValueNode(Context, (YamlScalarNode)n.Value)));
+                    } finally {
+                        Context.EndObject();
+                    }
                 });
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
@@ -175,7 +208,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var scalarNode = _node.Children[new YamlScalarNode(key.GetScalarValue())] as YamlScalarNode;
             if (scalarNode == null)
             {
-                throw new OpenApiException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}");
+                throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
             }
 
             return scalarNode.Value;
