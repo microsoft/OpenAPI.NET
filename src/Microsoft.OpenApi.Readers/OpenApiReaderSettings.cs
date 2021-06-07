@@ -72,6 +72,6 @@ namespace Microsoft.OpenApi.Readers
         /// Whether to leave the <see cref="Stream"/> object open after reading
         /// from an <see cref="OpenApiStreamReader"/> object.
         /// </summary>
-        public bool LeaveStreamOpen { get; set; } = false;
+        public bool LeaveStreamOpen { get; set; }
     }
 }

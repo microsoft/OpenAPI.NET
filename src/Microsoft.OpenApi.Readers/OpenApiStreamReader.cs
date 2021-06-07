@@ -33,17 +33,14 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument.</returns>
         public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
-            if (_settings.LeaveStreamOpen)
+            var reader = new StreamReader(input);
+            var result = new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
+            if (!_settings.LeaveStreamOpen)
             {
-                return new OpenApiTextReaderReader(_settings).Read(new StreamReader(input), out diagnostic);
+                reader.Dispose();
             }
-            else
-            {
-                using (var reader = new StreamReader(input))
-                {
-                    return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
-                }
-            }
+
+            return result;
         }
 
         /// <summary>
