@@ -393,17 +393,19 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
-        public void ThrowsArgumentNullExceptionForNullArgumentsInCreateMethod()
+        public void ThrowsArgumentNullExceptionForNullOrEmptyArgumentsInCreateMethod()
         {
             var doc = OpenApiDocumentSample_1;
 
             Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(doc, ""));
             Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(doc, null));
             Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(null, "beta"));
+            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(null, null));
+            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(null, ""));
         }
 
         [Fact]
-        public void ThrowsArgumentNullExceptionForNullArgumentsInAttachMethod()
+        public void ThrowsArgumentNullExceptionForNullOrEmptyArgumentsInAttachMethod()
         {
             var doc1 = OpenApiDocumentSample_1;
 
@@ -415,6 +417,8 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.Throws<ArgumentNullException>(() => rootNode.Attach(doc2, ""));
             Assert.Throws<ArgumentNullException>(() => rootNode.Attach(doc2, null));
             Assert.Throws<ArgumentNullException>(() => rootNode.Attach(null, "beta"));
+            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(null, null));
+            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(null, ""));
         }
 
         [Fact]
