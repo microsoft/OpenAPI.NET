@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 using System.Threading.Tasks;
@@ -29,13 +29,20 @@ namespace Microsoft.OpenApi.Readers
         /// Reads the stream input and parses it into an Open API document.
         /// </summary>
         /// <param name="input">Stream containing OpenAPI description to parse.</param>
-        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
-        /// <returns>Instance of newly created OpenApiDocument</returns>
+        /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing.</param>
+        /// <returns>Instance of newly created OpenApiDocument.</returns>
         public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)
         {
-            using (var reader = new StreamReader(input))
+            if (_settings.LeaveStreamOpen)
             {
-                return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
+                return new OpenApiTextReaderReader(_settings).Read(new StreamReader(input), out diagnostic);
+            }
+            else
+            {
+                using (var reader = new StreamReader(input))
+                {
+                    return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
+                }
             }
         }
 
@@ -50,8 +57,8 @@ namespace Microsoft.OpenApi.Readers
             if (input is MemoryStream)
             {
                 bufferedStream = (MemoryStream)input;
-            } 
-            else 
+            }
+            else
             {
                 // Buffer stream so that OpenApiTextReaderReader can process it synchronously
                 // YamlDocument doesn't support async reading.
