@@ -11,6 +11,26 @@ namespace Microsoft.OpenApi.Tests.Services
 {
     public class OpenApiUrlTreeNodeTests
     {
+        private OpenApiDocument OpenApiDocumentSample_1 => new OpenApiDocument()
+        {
+            Paths = new OpenApiPaths()
+            {
+                ["/"] = new OpenApiPathItem(),
+                ["/houses"] = new OpenApiPathItem(),
+                ["/cars"] = new OpenApiPathItem()
+            }
+        };
+
+        private OpenApiDocument OpenApiDocumentSample_2 => new OpenApiDocument()
+        {
+            Paths = new OpenApiPaths()
+            {
+                ["/"] = new OpenApiPathItem(),
+                ["/hotels"] = new OpenApiPathItem(),
+                ["/offices"] = new OpenApiPathItem()
+            }
+        };
+
         [Fact]
         public void CreateUrlSpaceWithoutOpenApiDocument()
         {
@@ -64,15 +84,7 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void CreateMultiplePathsWorks()
         {
-            var doc = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses"] = new OpenApiPathItem(),
-                    ["/cars"] = new OpenApiPathItem()
-                }
-            };
+            var doc = OpenApiDocumentSample_1;
 
             string label = "assets";
             var rootNode = OpenApiUrlTreeNode.Create(doc, label);
@@ -89,25 +101,9 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void AttachDocumentWorks()
         {
-            var doc1 = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses"] = new OpenApiPathItem(),
-                    ["/cars"] = new OpenApiPathItem()
-                }
-            };
+            var doc1 = OpenApiDocumentSample_1;
 
-            var doc2 = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/hotels"] = new OpenApiPathItem(),
-                    ["/offices"] = new OpenApiPathItem()
-                }
-            };
+            var doc2 = OpenApiDocumentSample_2;
 
             var label1 = "personal";
             var label2 = "business";
@@ -123,15 +119,7 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void AttachPathWorks()
         {
-            var doc = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses"] = new OpenApiPathItem(),
-                    ["/cars"] = new OpenApiPathItem()
-                }
-            };
+            var doc = OpenApiDocumentSample_1;
 
             var label1 = "personal";
             var rootNode = OpenApiUrlTreeNode.Create(doc, label1);
@@ -336,95 +324,9 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
-        public void ThrowsArgumentExceptionForDuplicateLabels()
-        {
-            var doc1 = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses"] = new OpenApiPathItem(),
-                    ["/cars"] = new OpenApiPathItem()
-                }
-            };
-
-            var doc2 = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/hotels"] = new OpenApiPathItem(),
-                    ["/offices"] = new OpenApiPathItem()
-                }
-            };
-
-            var label1 = "personal";
-            var rootNode = OpenApiUrlTreeNode.Create(doc1, label1);
-
-            Assert.Throws<ArgumentException>(() => rootNode.Attach(doc2, label1));
-        }
-
-        [Fact]
-        public void ThrowsArgumentNullExceptionForNullArgumentsInCreateMethod()
-        {
-            var doc = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses"] = new OpenApiPathItem(),
-                    ["/cars"] = new OpenApiPathItem()
-                }
-            };
-
-            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(doc, ""));
-            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(doc, null));
-            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(null, "beta"));
-        }
-
-        [Fact]
-        public void ThrowsArgumentNullExceptionForNullArgumentsInAttachMethod()
-        {
-            var doc1 = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses"] = new OpenApiPathItem(),
-                    ["/cars"] = new OpenApiPathItem()
-                }
-            };
-
-            var doc2 = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/hotels"] = new OpenApiPathItem(),
-                    ["/offices"] = new OpenApiPathItem()
-                }
-            };
-
-            var label1 = "personal";
-            var rootNode = OpenApiUrlTreeNode.Create(doc1, label1);
-
-            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(doc2, ""));
-            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(doc2, null));
-            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(null, "beta"));
-        }
-
-        [Fact]
         public void AdditionalDataWorks()
         {
-            var doc = new OpenApiDocument()
-            {
-                Paths = new OpenApiPaths()
-                {
-                    ["/"] = new OpenApiPathItem(),
-                    ["/houses"] = new OpenApiPathItem(),
-                    ["/cars"] = new OpenApiPathItem()
-                }
-            };
+            var doc = OpenApiDocumentSample_1;
 
             var label = "personal";
             var rootNode = OpenApiUrlTreeNode.Create(doc, label);
@@ -475,6 +377,71 @@ namespace Microsoft.OpenApi.Tests.Services
                 {
                     Assert.Equal("Convertible", item);
                 });
+        }
+
+        [Fact]
+        public void ThrowsArgumentExceptionForDuplicateLabels()
+        {
+            var doc1 = OpenApiDocumentSample_1;
+
+            var doc2 = OpenApiDocumentSample_2;
+
+            var label1 = "personal";
+            var rootNode = OpenApiUrlTreeNode.Create(doc1, label1);
+
+            Assert.Throws<ArgumentException>(() => rootNode.Attach(doc2, label1));
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionForNullOrEmptyArgumentsInCreateMethod()
+        {
+            var doc = OpenApiDocumentSample_1;
+
+            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(doc, ""));
+            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(doc, null));
+            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(null, "beta"));
+            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(null, null));
+            Assert.Throws<ArgumentNullException>(() => OpenApiUrlTreeNode.Create(null, ""));
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionForNullOrEmptyArgumentsInAttachMethod()
+        {
+            var doc1 = OpenApiDocumentSample_1;
+
+            var doc2 = OpenApiDocumentSample_2;
+
+            var label1 = "personal";
+            var rootNode = OpenApiUrlTreeNode.Create(doc1, label1);
+
+            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(doc2, ""));
+            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(doc2, null));
+            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(null, "beta"));
+            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(null, null));
+            Assert.Throws<ArgumentNullException>(() => rootNode.Attach(null, ""));
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionForNullOrEmptyArgumentInHasOperationsMethod()
+        {
+            var doc = OpenApiDocumentSample_1;
+
+            var label = "personal";
+            var rootNode = OpenApiUrlTreeNode.Create(doc, label);
+
+            Assert.Throws<ArgumentNullException>(() => rootNode.HasOperations(null));
+            Assert.Throws<ArgumentNullException>(() => rootNode.HasOperations(""));
+        }
+
+        [Fact]
+        public void ThrowsArgumentNullExceptionForNullArgumentInAddAdditionalDataMethod()
+        {
+            var doc = OpenApiDocumentSample_1;
+
+            var label = "personal";
+            var rootNode = OpenApiUrlTreeNode.Create(doc, label);
+
+            Assert.Throws<ArgumentNullException>(() => rootNode.AddAdditionalData(null));
         }
     }
 }
