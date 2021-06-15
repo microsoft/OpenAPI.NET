@@ -1,0 +1,31 @@
+﻿@using Microsoft.OpenApi.Diff.Enums
+@using Microsoft.OpenApi.Diff.Extensions
+@using RazorLight
+@inherits TemplatePage<System.Collections.Generic.List<Microsoft.OpenApi.Diff.Output.ChangeViewModel>>
+@model List<Microsoft.OpenApi.Diff.Output.ChangeViewModel>
+
+    @foreach (var changeViewModel in Model)
+    {
+        <dt>@string.Join(" -> ", changeViewModel.Path)</dt>
+        <dd>
+            <dl>
+                @foreach (var singleChange in changeViewModel.Changes)
+                {
+                    <dt>@singleChange.ElementType Modification</dt>
+                    if (singleChange.ChangeType == TypeEnum.Changed)
+                    {
+                        <dd>
+                            <code class="badge">@singleChange.FieldName</code> changed from
+                            <code class="badge"><text>@(!singleChange.OldValue.IsNullOrEmpty() ? singleChange.OldValue : " ")</text></code> to
+                            <code class="badge"><text>@(!singleChange.NewValue.IsNullOrEmpty() ? singleChange.NewValue : " ")</text></code>
+                        </dd>
+                    }
+                    else
+                    {
+                        <dd>@singleChange.ChangeType <code class="badge">@singleChange.FieldName</code></dd>
+                    }
+                }
+            </dl>
+        </dd>
+    }
+
