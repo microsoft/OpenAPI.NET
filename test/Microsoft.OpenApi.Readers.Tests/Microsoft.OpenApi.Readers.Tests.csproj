@@ -13,6 +13,9 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
+      <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="15.0.0" Condition="$(TargetFramework.StartsWith('net4')) AND '$(OS)' == 'Unix'" />
+    </ItemGroup>
+    <ItemGroup>
       <None Remove="V2Tests\Samples\ComponentRootReference.json" />
       <None Remove="V3Tests\Samples\OpenApiWorkspace\TodoComponents.yaml" />
       <None Remove="V3Tests\Samples\OpenApiWorkspace\TodoMain.yaml" />
