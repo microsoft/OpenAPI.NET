@@ -17,38 +17,6 @@ jobs:
         with:
           dotnet-version: 5.0.x
 
-      - name: Data gatherer
-        id: data_gatherer
-        shell: pwsh
-        run: |
-          # Get default branch
-          $repo = "${{ github.repository }}"
-          $defaultBranch = Invoke-RestMethod -Method GET -Uri https://api.github.com/repos/$repo | Select-Object -ExpandProperty default_branch
-          Write-Output "::set-output name=default_branch::$(echo $defaultBranch)"
-
-      - name: Conditionals handler
-        id: conditionals_handler
-        shell: pwsh
-        run: |
-          $defaultBranch = "${{ steps.data_gatherer.outputs.default_branch }}"
-          $githubRef = "${{ github.ref }}"
-          $githubEventName = "${{ github.event_name }}"
-          $isDefaultBranch = 'false'
-          $isPush = 'false'
-          $isPushToDefaultBranch = 'false'
-          if ( $githubRef -like "*$defaultBranch*" ) {
-            $isDefaultBranch = 'true'
-          }
-          if ( $githubEventName -eq 'push' ) {
-            $isPush = 'true'
-          }
-          if ( $githubRef -like "*$defaultBranch*" -and $githubEventName -eq 'push' ) {
-            $isPushToDefaultBranch = 'true'
-          }
-          Write-Output "::set-output name=is_default_branch::$(echo $isDefaultBranch)"
-          Write-Output "::set-output name=is_push::$(echo $isPush)"
-          Write-Output "::set-output name=is_push_to_default_branch::$(echo $isPushToDefaultBranch)"
-
       - name: Checkout repository
         id: checkout_repo
         uses: actions/checkout@v2
@@ -56,14 +24,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - if: steps.conditionals_handler.outputs.is_push_to_default_branch == 'true'
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         name: Bump GH tag
         id: tag_generator
         uses: mathieudutour/github-tag-action@v5.4
         with: 
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
-          release_branches: ${{ steps.data_gatherer.outputs.default_branch }}
+          release_branches: master
 
       - name: Build projects
         id: build_projects
