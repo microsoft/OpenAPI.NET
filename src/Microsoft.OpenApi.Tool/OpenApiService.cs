@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -29,14 +30,16 @@ namespace Microsoft.OpenApi.Tool
                 throw new ArgumentNullException("input");
             }
 
-            var stream = GetStream(input);
+            var inputUrl = GetInputUrl(input);
+            var stream = GetStream(inputUrl);
 
             OpenApiDocument document;
 
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
-                RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
+                BaseUrl = new Uri(inputUrl.AbsoluteUri)
             }
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
@@ -91,10 +94,22 @@ namespace Microsoft.OpenApi.Tool
             }
         }
 
-        private static Stream GetStream(string input)
+        private static Uri GetInputUrl(string input)
+        {
+            if (input.StartsWith("http"))
+            {
+                return new Uri(input);
+            } 
+            else
+            {
+                return new Uri("file://" + Path.GetFullPath(input));
+            }
+        }
+
+        private static Stream GetStream(Uri input)
         {
             Stream stream;
-            if (input.StartsWith("http"))
+            if (input.Scheme == "http" || input.Scheme == "https")
             {
                 var httpClient = new HttpClient(new HttpClientHandler()
                 {
@@ -105,32 +120,40 @@ namespace Microsoft.OpenApi.Tool
                 };
                 stream = httpClient.GetStreamAsync(input).Result;
             }
+            else if (input.Scheme == "file")
+            {
+                var fileInput = new FileInfo(input.AbsolutePath);
+                stream = fileInput.OpenRead();
+            } 
             else
             {
-                var fileInput = new FileInfo(input);
-                stream = fileInput.OpenRead();
+                throw new ArgumentException("Unrecognized exception");
             }
 
             return stream;
         }
 
-        internal static void ValidateOpenApiDocument(string input)
+        internal static async Task ValidateOpenApiDocument(string input, bool resolveExternal)
         {
             if (input == null)
             {
                 throw new ArgumentNullException("input");
             }
-
-            var stream = GetStream(input);
+            var inputUrl = GetInputUrl(input);
+            var stream = GetStream(GetInputUrl(input));
 
             OpenApiDocument document;
 
-            document = new OpenApiStreamReader(new OpenApiReaderSettings
+            var result = await new OpenApiStreamReader(new OpenApiReaderSettings
             {
-                //ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
-                RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
+                BaseUrl = new Uri(inputUrl.AbsoluteUri)
             }
-            ).Read(stream, out var context);
+            ).ReadAsync(stream);
+
+            document = result.OpenApiDocument;
+            var context = result.OpenApiDiagnostic;
 
             if (context.Errors.Count != 0)
             {
@@ -140,11 +163,25 @@ namespace Microsoft.OpenApi.Tool
                 }
             }
 
-            var statsVisitor = new StatsVisitor();
-            var walker = new OpenApiWalker(statsVisitor);
-            walker.Walk(document);
+            if (document.Workspace == null) { 
+                var statsVisitor = new StatsVisitor();
+                var walker = new OpenApiWalker(statsVisitor);
+                walker.Walk(document);
+                Console.WriteLine(statsVisitor.GetStatisticsReport());
+            } 
+            else
+            {
+                foreach (var memberDocument in document.Workspace.Documents)
+                {
+                    Console.WriteLine("Stats for " + memberDocument.Info.Title);
+                    var statsVisitor = new StatsVisitor();
+                    var walker = new OpenApiWalker(statsVisitor);
+                    walker.Walk(memberDocument);
+                    Console.WriteLine(statsVisitor.GetStatisticsReport());
+                }
+            }
 
-            Console.WriteLine(statsVisitor.GetStatisticsReport());
+            
         }
     }
 }

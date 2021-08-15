@@ -36,9 +36,10 @@ namespace Microsoft.OpenApi.Tool
 
             var validateCommand = new Command("validate")
             {
-                new Option("--input", "Input OpenAPI description file path or URL", typeof(string) )
+                new Option("--input", "Input OpenAPI description file path or URL", typeof(string) ),
+                new Option("--resolveExternal","Resolve external $refs", typeof(bool))
             };
-            validateCommand.Handler = CommandHandler.Create<string>(OpenApiService.ValidateOpenApiDocument);
+            validateCommand.Handler = CommandHandler.Create<string,bool>(OpenApiService.ValidateOpenApiDocument);
 
             var transformCommand = new Command("transform")
             {

@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Readers
                 // Parse the OpenAPI Document
                 document = context.Parse(input);
 
-                await ResolveReferencesAsync(diagnostic, document);
+                await ResolveReferencesAsync(diagnostic, document, _settings.BaseUrl);
             }
             catch (OpenApiException ex)
             {
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Readers
             }
         }
 
-        private async Task ResolveReferencesAsync(OpenApiDiagnostic diagnostic, OpenApiDocument document)
+        private async Task ResolveReferencesAsync(OpenApiDiagnostic diagnostic, OpenApiDocument document, Uri baseUrl)
         {
             List<OpenApiError> errors = new List<OpenApiError>();
 
@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Readers
                     var openApiWorkSpace = new OpenApiWorkspace();
 
                     // Load this root document into the workspace
-                    var streamLoader = new DefaultStreamLoader();
+                    var streamLoader = new DefaultStreamLoader(baseUrl);
                     var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
                     await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document);
 
