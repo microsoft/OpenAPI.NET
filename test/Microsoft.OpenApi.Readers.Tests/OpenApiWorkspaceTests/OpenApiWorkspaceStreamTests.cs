@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         // Use OpenApiWorkspace to load a document and a referenced document
 
         [Fact]
-        public async Task LoadDocumentIntoWorkspace()
+        public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
             var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
@@ -48,7 +48,7 @@ paths: {}";
 
 
         [Fact]
-        public async Task LoadTodoDocumentIntoWorkspace()
+        public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
             var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
@@ -65,6 +65,7 @@ paths: {}";
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));
+
             var referencedSchema = result.OpenApiDocument
                                             .Paths["/todos"]
                                             .Operations[OperationType.Get]
