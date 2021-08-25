@@ -39,7 +39,16 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.ExclusiveMaximum = bool.Parse(n.GetScalarValue());
+                    var strValue = n.GetScalarValue();
+                    if (bool.TryParse(strValue, out var boolValue))
+                    {
+                        o.ExclusiveMaximum = boolValue;
+                    }
+                    else if (decimal.TryParse(strValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleValue))
+                    {
+                        o.Maximum = doubleValue;
+                        o.ExclusiveMaximum = true;
+                    }
                 }
             },
             {
@@ -51,7 +60,16 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.ExclusiveMinimum = bool.Parse(n.GetScalarValue());
+                    var strValue = n.GetScalarValue();
+                    if (bool.TryParse(strValue, out var boolValue))
+                    {
+                        o.ExclusiveMinimum = boolValue;
+                    }
+                    else if (decimal.TryParse(strValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleValue))
+                    {
+                        o.Minimum = doubleValue;
+                        o.ExclusiveMinimum = true;
+                    }
                 }
             },
             {
