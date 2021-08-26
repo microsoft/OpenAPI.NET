@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -39,7 +40,20 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.ExclusiveMaximum = bool.Parse(n.GetScalarValue());
+                    var strValue = n.GetScalarValue();
+                    if (bool.TryParse(strValue, out var boolValue))
+                    {
+                        o.ExclusiveMaximum = boolValue;
+                    }
+                    else if (decimal.TryParse(strValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleValue))
+                    {
+                        o.Maximum = doubleValue;
+                        o.ExclusiveMaximum = true;
+                    }
+                    else
+                    {
+                        throw new FormatException($"String '{strValue}' was not recognized as a valid boolean or decimal");
+                    }
                 }
             },
             {
@@ -51,7 +65,20 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.ExclusiveMinimum = bool.Parse(n.GetScalarValue());
+                    var strValue = n.GetScalarValue();
+                    if (bool.TryParse(strValue, out var boolValue))
+                    {
+                        o.ExclusiveMinimum = boolValue;
+                    }
+                    else if (decimal.TryParse(strValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var doubleValue))
+                    {
+                        o.Minimum = doubleValue;
+                        o.ExclusiveMinimum = true;
+                    }
+                    else
+                    {
+                        throw new FormatException($"String '{strValue}' was not recognized as a valid boolean or decimal");
+                    }
                 }
             },
             {
