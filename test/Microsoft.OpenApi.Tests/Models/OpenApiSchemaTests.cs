@@ -8,6 +8,7 @@ using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -158,6 +159,11 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Type = ReferenceType.Schema,
                 Id = "schemaObject1"
+            },
+
+            Extensions = new Dictionary<string, IOpenApiExtension>
+            {
+                ["extension1"] = new OpenApiString("value1")
             }
         };
 
@@ -383,7 +389,8 @@ namespace Microsoft.OpenApi.Tests.Models
   ""nullable"": true,
   ""externalDocs"": {
     ""url"": ""http://example.com/externalDocs""
-  }
+  },
+  ""extension1"": ""value1""
 }";
 
             // Act
@@ -405,7 +412,8 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter);
 
             var expected = @"{
-  ""$ref"": ""#/components/schemas/schemaObject1""
+  ""$ref"": ""#/components/schemas/schemaObject1"",
+  ""extension1"": ""value1""
 }";
 
             // Act

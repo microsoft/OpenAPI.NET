@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -108,9 +109,9 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0 with extensions if they are exists.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions)
         {
             if (writer == null)
             {
@@ -136,13 +137,26 @@ namespace Microsoft.OpenApi.Models
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
 
+            if (extensions != null)
+            {
+                writer.WriteExtensions(extensions, OpenApiSpecVersion.OpenApi3_0);
+            }
+
             writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
+        /// </summary>
+        public void SerializeAsV3(IOpenApiWriter writer)
+        {
+            SerializeAsV3(writer, null);
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0 with extensions if they are exists.
         /// </summary>
-        public void SerializeAsV2(IOpenApiWriter writer)
+        public void SerializeAsV2(IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions)
         {
             if (writer == null)
             {
@@ -168,7 +182,20 @@ namespace Microsoft.OpenApi.Models
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV2);
 
+            if (extensions != null)
+            {
+                writer.WriteExtensions(extensions, OpenApiSpecVersion.OpenApi2_0);
+            }
+
             writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v2.0.
+        /// </summary>
+        public void SerializeAsV2(IOpenApiWriter writer)
+        {
+            SerializeAsV2(writer, null);
         }
 
         private string GetExternalReference()
