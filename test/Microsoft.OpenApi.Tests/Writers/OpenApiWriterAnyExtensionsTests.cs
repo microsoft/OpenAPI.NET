@@ -7,6 +7,7 @@ using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Writers
@@ -152,6 +153,33 @@ namespace Microsoft.OpenApi.Tests.Writers
         }
 
         [Fact]
+        public void WriteOpenApiObjectCustomAsJsonWorks()
+        {
+            // Arrange
+            var testObj = new TestOpenApiObject() { StringProperty = "stringValue1" };
+            var openApiObject = new OpenApiObject
+            {
+                ["objProp"] = new OpenApiObject
+                {
+                    ["customObjectProp"] = testObj
+                }
+            };
+
+            var actualJson = WriteAsJson(openApiObject);
+
+            // Assert
+            var expectedJson = @"{
+  ""objProp"": {
+    ""customObjectProp"": {
+      ""StringProperty"": ""stringValue1""
+    }
+  }
+}";
+            expectedJson = expectedJson.MakeLineBreaksEnvironmentNeutral();
+            actualJson.Should().Be(expectedJson);
+        }
+
+        [Fact]
         public void WriteOpenApiArrayAsJsonWorks()
         {
             // Arrange
@@ -215,6 +243,21 @@ namespace Microsoft.OpenApi.Tests.Writers
             }
 
             return value.MakeLineBreaksEnvironmentNeutral();
+        }
+    }
+
+    public class TestOpenApiObject : IOpenApiAny
+    {
+        public string StringProperty { get; set; }
+
+        [JsonIgnore]
+        public AnyType AnyType => AnyType.Object;
+
+        public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
+        {
+            writer.WriteStartObject();
+            writer.WriteProperty("StringProperty", StringProperty);
+            writer.WriteEndObject();
         }
     }
 }
