@@ -61,7 +61,16 @@ namespace Microsoft.OpenApi.Writers
                     break;
 
                 case AnyType.Object: // Object
-                    writer.WriteObject(any as OpenApiObject);
+                    var obj = any as OpenApiObject;
+
+                    if (obj != null)
+                    {
+                        writer.WriteObject(any as OpenApiObject);
+                    }
+                    else
+                    {
+                        writer.WriteObject(any);
+                    }
                     break;
 
                 case AnyType.Primitive: // Primitive
@@ -120,6 +129,22 @@ namespace Microsoft.OpenApi.Writers
             }
 
             writer.WriteEndObject();
+        }
+
+        private static void WriteObject(this IOpenApiWriter writer, IOpenApiAny entity)
+        {
+            if (writer == null)
+            {
+                throw Error.ArgumentNull(nameof(writer));
+            }
+
+            if (entity == null)
+            {
+                throw Error.ArgumentNull(nameof(entity));
+            }
+
+            // The Spec version is meaning for the Any type, so it's ok to use the latest one.
+            entity.Write(writer, OpenApiSpecVersion.OpenApi3_0);
         }
 
         private static void WritePrimitive(this IOpenApiWriter writer, IOpenApiPrimitive primitive)
