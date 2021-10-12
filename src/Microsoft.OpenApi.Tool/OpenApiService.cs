@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,43 +52,26 @@ namespace Microsoft.OpenApi.Tool
                     errorReport.AppendLine(error.ToString());
                 }
 
-                throw new ArgumentException(String.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
+                throw new ArgumentException(string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
             }
 
-            using (var outputStream = output?.Create())
+            using var outputStream = output?.Create();
+
+            var textWriter = outputStream != null ? new StreamWriter(outputStream) : Console.Out;
+
+            var settings = new OpenApiWriterSettings()
             {
-                TextWriter textWriter;
+                ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
+            };
+            IOpenApiWriter writer = format switch
+            {
+                OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
+                OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
+                _ => throw new ArgumentException("Unknown format"),
+            };
+            document.Serialize(writer, version);
 
-                if (outputStream != null)
-                {
-                    textWriter = new StreamWriter(outputStream);
-                }
-                else
-                {
-                    textWriter = Console.Out;
-                }
-
-                var settings = new OpenApiWriterSettings()
-                {
-                    ReferenceInline = inline == true ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
-                };
-                IOpenApiWriter writer;
-                switch (format)
-                {
-                    case OpenApiFormat.Json:
-                        writer = new OpenApiJsonWriter(textWriter, settings);
-                        break;
-                    case OpenApiFormat.Yaml:
-                        writer = new OpenApiYamlWriter(textWriter, settings);
-                        break;
-                    default:
-                        throw new ArgumentException("Unknown format");
-                }
-
-                document.Serialize(writer, version);
-
-                textWriter.Flush();
-            }
+            textWriter.Flush();
         }
 
         private static Stream GetStream(string input)
