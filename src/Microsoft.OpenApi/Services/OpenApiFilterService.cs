@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="graphVersion"></param>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public OpenApiDocument CreateFilteredDocument(OpenApiDocument source, string title, string graphVersion, Func<OpenApiOperation, bool> predicate)
+        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, string title, string graphVersion, Func<OpenApiOperation, bool> predicate)
         {
             var subset = new OpenApiDocument
             {
