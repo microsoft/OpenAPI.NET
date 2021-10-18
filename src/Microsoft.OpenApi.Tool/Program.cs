@@ -1,34 +1,12 @@
-﻿using System;
-using System.CommandLine;
+﻿using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.OpenApi;
 
 namespace Microsoft.OpenApi.Tool
 {
-    class Program
+    static class Program
     {
-        static async Task<int> OldMain(string[] args)
-        {
-
-            var command = new RootCommand
-            {
-               new Option("--input", "Input OpenAPI description file path or URL", typeof(string) ),
-                new Option("--output","Output OpenAPI description file", typeof(FileInfo), arity: ArgumentArity.ZeroOrOne),
-                new Option("--version", "OpenAPI specification version", typeof(OpenApiSpecVersion)),
-                new Option("--format", "File format",typeof(OpenApiFormat) ),
-                new Option("--inline", "Inline $ref instances", typeof(bool) ),
-                new Option("--resolveExternal","Resolve external $refs", typeof(bool)) 
-            };
-
-            command.Handler = CommandHandler.Create<string,FileInfo,OpenApiSpecVersion,OpenApiFormat,bool, bool>(
-                OpenApiService.ProcessOpenApiDocument);
-
-            // Parse the incoming args and invoke the handler
-            return await command.InvokeAsync(args);
-        }
-
         static async Task<int> Main(string[] args)
         {
             var rootCommand = new RootCommand() {
@@ -47,9 +25,10 @@ namespace Microsoft.OpenApi.Tool
                 new Option("--version", "OpenAPI specification version", typeof(OpenApiSpecVersion)),
                 new Option("--format", "File format",typeof(OpenApiFormat) ),
                 new Option("--inline", "Inline $ref instances", typeof(bool) ),
-                new Option("--resolveExternal","Resolve external $refs", typeof(bool))
+                new Option("--resolveExternal","Resolve external $refs", typeof(bool)),
+                new Option("--filterByOperationId", "Filters by OperationId provided", typeof(string))
             };
-            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion, OpenApiFormat, bool, bool>(
+            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion, OpenApiFormat, string, bool, bool>(
                 OpenApiService.ProcessOpenApiDocument);
 
             rootCommand.Add(transformCommand);
