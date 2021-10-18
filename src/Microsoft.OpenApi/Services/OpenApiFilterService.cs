@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -9,26 +9,21 @@ using Microsoft.OpenApi.Models;
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
-    ///
+    /// A service that slices an OpenApiDocument into a subset document
     /// </summary>
-    public class OpenApiFilterService
+    public static class OpenApiFilterService
     {
         public static readonly string GraphAuthorizationUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
         public static readonly string GraphTokenUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
         public static readonly string GraphUrl = "https://graph.microsoft.com/{0}/";
         public const string GraphVersion_V1 = "v1.0";
 
-
-        public OpenApiDocument CreateSubsetOpenApiDocument(string operationIds, OpenApiDocument source, string title)
-        {
-            var predicate = CreatePredicate(operationIds);
-
-            var subsetOpenApiDocument = CreateFilteredDocument(source, title, GraphVersion_V1, predicate);
-
-            return subsetOpenApiDocument;
-        }
-
-        public Func<OpenApiOperation, bool> CreatePredicate(string operationIds)
+        /// <summary>
+        /// Create predicate function based on passed query parameters
+        /// </summary>
+        /// <param name="operationIds">Comma delimited list of operationIds or * for all operations.</param>
+        /// <returns>A predicate.</returns>
+        public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds)
         {
             string predicateSource = null;
 
@@ -55,14 +50,15 @@ namespace Microsoft.OpenApi.Services
 
             return predicate;
         }
+
         /// <summary>
-        ///
+        /// Create partial OpenAPI document based on the provided predicate.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="title"></param>
-        /// <param name="graphVersion"></param>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
+        /// <param name="source">The target <see cref="OpenApiDocument"/>.</param>
+        /// <param name="title">The OpenAPI document title.</param>
+        /// <param name="graphVersion">Version of the target Microsoft Graph API.</param>
+        /// <param name="predicate">A predicate function.</param>
+        /// <returns>A partial OpenAPI document.</returns>
         public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, string title, string graphVersion, Func<OpenApiOperation, bool> predicate)
         {
             var subset = new OpenApiDocument
