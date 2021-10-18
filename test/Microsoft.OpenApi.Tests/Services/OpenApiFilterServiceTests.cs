@@ -13,12 +13,10 @@ namespace Microsoft.OpenApi.Tests.Services
     {
         private const string Title = "Partial Graph API";
         private const string GraphVersion = "mock";
-        private readonly OpenApiFilterService _openApiFilterService;
         private readonly OpenApiDocument _openApiDocumentMock;
 
         public OpenApiFilterServiceTests()
         {
-            _openApiFilterService = new OpenApiFilterService();
             _openApiDocumentMock = OpenApiDocumentMock.CreateOpenApiDocument();
         }
 
@@ -30,8 +28,8 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ReturnFilteredOpenApiDocumentBasedOnOperationIds(string operationId)
         {
             // Act
-            var predicate = _openApiFilterService.CreatePredicate(operationId);
-            var subsetOpenApiDocument = _openApiFilterService.CreateFilteredDocument(_openApiDocumentMock, Title, GraphVersion, predicate);
+            var predicate = OpenApiFilterService.CreatePredicate(operationId);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, Title, GraphVersion, predicate);
 
             // Assert
             Assert.NotNull(subsetOpenApiDocument);
@@ -42,7 +40,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ThrowsInvalidOperationExceptionInCreatePredicateWhenInvalidOperationIdIsSpecified()
         {
             // Act and Assert
-            var message = Assert.Throws<InvalidOperationException>(() =>_openApiFilterService.CreatePredicate(null)).Message;
+            var message = Assert.Throws<InvalidOperationException>(() =>OpenApiFilterService.CreatePredicate(null)).Message;
             Assert.Equal("OperationId needs to be specified.", message);
         }
     }
