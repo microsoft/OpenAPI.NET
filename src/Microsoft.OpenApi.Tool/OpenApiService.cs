@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,11 +16,15 @@ namespace Microsoft.OpenApi.Tool
 {
     static class OpenApiService
     {
+        public const string GraphVersion_V1 = "v1.0";
+        public const string Title = "Partial Graph API";
+
         public static void ProcessOpenApiDocument(
             string input,
             FileInfo output,
             OpenApiSpecVersion version,
             OpenApiFormat format,
+            string filterbyOperationId,
             bool inline,
             bool resolveExternal)
         {
@@ -35,12 +39,20 @@ namespace Microsoft.OpenApi.Tool
 
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
-                ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet()
             }
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
             document = result.OpenApiDocument;
+
+            // Check if filter options are provided, then execute
+            if (!string.IsNullOrEmpty(filterbyOperationId))
+            {
+                var predicate = OpenApiFilterService.CreatePredicate(filterbyOperationId);
+                document = OpenApiFilterService.CreateFilteredDocument(document, Title, GraphVersion_V1, predicate);
+            }
+
             var context = result.OpenApiDiagnostic;
 
             if (context.Errors.Count != 0)
