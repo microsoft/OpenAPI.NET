@@ -23,6 +23,11 @@ namespace OpenAPIService.Test
 
             var document = new OpenApiDocument()
             {
+                Info = new OpenApiInfo()
+                {
+                    Title = "People",
+                    Version = "v1.0"
+                },
                 Paths = new OpenApiPaths()
                 {
                     ["/"] = new OpenApiPathItem() // root path
