@@ -13,11 +13,6 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public static class OpenApiFilterService
     {
-        public static readonly string GraphAuthorizationUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
-        public static readonly string GraphTokenUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/token";
-        public static readonly string GraphUrl = "https://graph.microsoft.com/{0}/";
-        public const string GraphVersion_V1 = "v1.0";
-
         /// <summary>
         /// Create predicate function based on passed query parameters
         /// </summary>
@@ -55,41 +50,25 @@ namespace Microsoft.OpenApi.Services
         /// Create partial OpenAPI document based on the provided predicate.
         /// </summary>
         /// <param name="source">The target <see cref="OpenApiDocument"/>.</param>
-        /// <param name="title">The OpenAPI document title.</param>
-        /// <param name="graphVersion">Version of the target Microsoft Graph API.</param>
         /// <param name="predicate">A predicate function.</param>
         /// <returns>A partial OpenAPI document.</returns>
-        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, string title, string graphVersion, Func<OpenApiOperation, bool> predicate)
+        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, Func<OpenApiOperation, bool> predicate)
         {
+            // Fetch and copy title, graphVersion and server info from OpenApiDoc
             var subset = new OpenApiDocument
             {
                 Info = new OpenApiInfo()
                 {
-                    Title = title,
-                    Version = graphVersion
+                    Title = source.Info.Title,
+                    Version = source.Info.Version
                 },
 
                 Components = new OpenApiComponents()
             };
-            var aadv2Scheme = new OpenApiSecurityScheme()
-            {
-                Type = SecuritySchemeType.OAuth2,
-                Flows = new OpenApiOAuthFlows()
-                {
-                    AuthorizationCode = new OpenApiOAuthFlow()
-                    {
-                        AuthorizationUrl = new Uri(GraphAuthorizationUrl),
-                        TokenUrl = new Uri(GraphTokenUrl)
-                    }
-                },
-                Reference = new OpenApiReference() { Id = "azureaadv2", Type = ReferenceType.SecurityScheme },
-                UnresolvedReference = false
-            };
-            subset.Components.SecuritySchemes.Add("azureaadv2", aadv2Scheme);
 
-            subset.SecurityRequirements.Add(new OpenApiSecurityRequirement() { { aadv2Scheme, Array.Empty<string>() } });
-
-            subset.Servers.Add(new OpenApiServer() { Description = "Core", Url = string.Format(GraphUrl, graphVersion) });
+            subset.Components.SecuritySchemes = source.Components.SecuritySchemes;
+            subset.SecurityRequirements = source.SecurityRequirements;
+            subset.Servers = source.Servers;
 
             var results = FindOperations(source, predicate);
             foreach (var result in results)
