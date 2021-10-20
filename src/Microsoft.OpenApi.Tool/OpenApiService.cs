@@ -16,9 +16,6 @@ namespace Microsoft.OpenApi.Tool
 {
     static class OpenApiService
     {
-        public const string GraphVersion_V1 = "v1.0";
-        public const string Title = "Partial Graph API";
-
         public static void ProcessOpenApiDocument(
             string input,
             FileInfo output,
@@ -50,7 +47,7 @@ namespace Microsoft.OpenApi.Tool
             if (!string.IsNullOrEmpty(filterbyOperationId))
             {
                 var predicate = OpenApiFilterService.CreatePredicate(filterbyOperationId);
-                document = OpenApiFilterService.CreateFilteredDocument(document, Title, GraphVersion_V1, predicate);
+                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 
             var context = result.OpenApiDiagnostic;
