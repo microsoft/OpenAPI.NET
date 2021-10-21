@@ -11,8 +11,6 @@ namespace Microsoft.OpenApi.Tests.Services
 {
     public class OpenApiFilterServiceTests
     {
-        private const string Title = "Partial Graph API";
-        private const string GraphVersion = "mock";
         private readonly OpenApiDocument _openApiDocumentMock;
 
         public OpenApiFilterServiceTests()
@@ -29,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             // Act
             var predicate = OpenApiFilterService.CreatePredicate(operationId);
-            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, Title, GraphVersion, predicate);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
 
             // Assert
             Assert.NotNull(subsetOpenApiDocument);
