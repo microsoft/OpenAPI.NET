@@ -19,19 +19,28 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Theory]
-        [InlineData("users.user.ListUser")]
-        [InlineData("users.user.GetUser")]
-        [InlineData("administrativeUnits.restore")]
-        [InlineData("graphService.GetGraphService")]
-        public void ReturnFilteredOpenApiDocumentBasedOnOperationIds(string operationId)
+        [InlineData("users.user.ListUser", null)]
+        [InlineData("users.user.GetUser", null)]
+        [InlineData("administrativeUnits.restore", null)]
+        [InlineData("graphService.GetGraphService", null)]
+        [InlineData(null, "users.user")]
+        [InlineData(null, "applications.application")]
+        public void ReturnFilteredOpenApiDocumentBasedOnOperationIds(string operationIds, string tags)
         {
             // Act
-            var predicate = OpenApiFilterService.CreatePredicate(operationId);
+            var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
 
             // Assert
             Assert.NotNull(subsetOpenApiDocument);
-            Assert.Single(subsetOpenApiDocument.Paths);
+            if (!string.IsNullOrEmpty(operationIds))
+            {
+                Assert.Single(subsetOpenApiDocument.Paths);
+            }
+            else if (!string.IsNullOrEmpty(tags))
+            {
+                Assert.NotEmpty(subsetOpenApiDocument.Paths);
+            }
         }
 
         [Fact]
