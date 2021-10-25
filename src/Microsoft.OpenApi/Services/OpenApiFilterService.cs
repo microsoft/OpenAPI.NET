@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -17,8 +18,9 @@ namespace Microsoft.OpenApi.Services
         /// Create predicate function based on passed query parameters
         /// </summary>
         /// <param name="operationIds">Comma delimited list of operationIds or * for all operations.</param>
+        /// <param name="tags">Comma delimited list of tags or a single regex.</param>
         /// <returns>A predicate.</returns>
-        public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds)
+        public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null)
         {
             string predicateSource = null;
 
@@ -37,10 +39,26 @@ namespace Microsoft.OpenApi.Services
 
                 predicateSource = $"operationIds: {operationIds}";
             }
+            else if (tags != null)
+            {
+                var tagsArray = tags.Split(',');
+                if (tagsArray.Length == 1)
+                {
+                    var regex = new Regex(tagsArray[0]);
+
+                    predicate = (o) => o.Tags.Any(t => regex.IsMatch(t.Name));
+                }
+                else
+                {
+                    predicate = (o) => o.Tags.Any(t => tagsArray.Contains(t.Name));
+                }
+
+                predicateSource = $"tags: {tags}";
+            }
 
             else
             {
-                throw new InvalidOperationException("OperationId needs to be specified.");
+                throw new InvalidOperationException("Either operationId(s) or tag(s) need to be specified.");
             }
 
             return predicate;
