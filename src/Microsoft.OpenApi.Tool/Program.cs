@@ -26,9 +26,10 @@ namespace Microsoft.OpenApi.Tool
                 new Option("--format", "File format",typeof(OpenApiFormat) ),
                 new Option("--inline", "Inline $ref instances", typeof(bool) ),
                 new Option("--resolveExternal","Resolve external $refs", typeof(bool)),
-                new Option("--filterByOperationId", "Filters by OperationId provided", typeof(string))
+                new Option("--filterByOperationId", "Filters OpenApiDocument by OperationId provided", typeof(string)),
+                new Option("--filterByTag", "Filters OpenApiDocument by Tag(s) provided", typeof(string))
             };
-            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion, OpenApiFormat, string, bool, bool>(
+            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion, OpenApiFormat, string, string, bool, bool>(
                 OpenApiService.ProcessOpenApiDocument);
 
             rootCommand.Add(transformCommand);
