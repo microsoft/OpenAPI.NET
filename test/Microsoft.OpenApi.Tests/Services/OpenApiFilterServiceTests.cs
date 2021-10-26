@@ -25,6 +25,7 @@ namespace Microsoft.OpenApi.Tests.Services
         [InlineData("graphService.GetGraphService", null)]
         [InlineData(null, "users.user")]
         [InlineData(null, "applications.application")]
+        [InlineData(null, "reports.Functions")]
         public void ReturnFilteredOpenApiDocumentBasedOnOperationIds(string operationIds, string tags)
         {
             // Act
@@ -47,8 +48,8 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ThrowsInvalidOperationExceptionInCreatePredicateWhenInvalidOperationIdIsSpecified()
         {
             // Act and Assert
-            var message = Assert.Throws<InvalidOperationException>(() =>OpenApiFilterService.CreatePredicate(null)).Message;
-            Assert.Equal("OperationId needs to be specified.", message);
+            var message = Assert.Throws<InvalidOperationException>(() =>OpenApiFilterService.CreatePredicate(null, null)).Message;
+            Assert.Equal("Either operationId(s) or tag(s) need to be specified.", message);
         }
     }
 }

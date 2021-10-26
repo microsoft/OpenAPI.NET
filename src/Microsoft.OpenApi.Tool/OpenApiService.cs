@@ -45,9 +45,14 @@ namespace Microsoft.OpenApi.Tool
             document = result.OpenApiDocument;
 
             // Check if filter options are provided, then execute
-            if (!string.IsNullOrEmpty(filterbyOperationIds) || !string.IsNullOrEmpty(filterByTags))
+            if (!string.IsNullOrEmpty(filterbyOperationIds))
             {
-                var predicate = OpenApiFilterService.CreatePredicate(filterbyOperationIds, filterByTags);
+                var predicate = OpenApiFilterService.CreatePredicate(operationIds: filterbyOperationIds);
+                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
+            }
+            if (!string.IsNullOrEmpty(filterByTags))
+            {
+                var predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 
