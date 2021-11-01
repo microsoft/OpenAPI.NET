@@ -1323,6 +1323,9 @@ namespace Microsoft.OpenApi.Writers
     public class OpenApiWriterSettings
     {
         public OpenApiWriterSettings() { }
+        public bool InlineExternalReferences { get; set; }
+        public bool InlineLocalReferences { get; set; }
+        [System.Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
         public Microsoft.OpenApi.Writers.ReferenceInlineSetting ReferenceInline { get; set; }
     }
     public class OpenApiYamlWriter : Microsoft.OpenApi.Writers.OpenApiWriterBase
@@ -1341,6 +1344,7 @@ namespace Microsoft.OpenApi.Writers
         public override void WriteValue(string value) { }
         protected override void WriteValueSeparator() { }
     }
+    [System.Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
     public enum ReferenceInlineSetting
     {
         DoNotInlineReferences = 0,

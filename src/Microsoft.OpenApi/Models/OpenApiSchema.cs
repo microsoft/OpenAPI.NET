@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Models
 
             if (Reference != null)
             {
-                if (settings.ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+                if (!settings.ShouldInlineReference(Reference))
                 {
                     Reference.SerializeAsV3(writer);
                     return;
@@ -445,7 +445,7 @@ namespace Microsoft.OpenApi.Models
             if (Reference != null)
             {
                 var settings = writer.GetSettings();
-                if (settings.ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+                if (!settings.ShouldInlineReference(Reference))
                 {
                     Reference.SerializeAsV2(writer);
                     return;

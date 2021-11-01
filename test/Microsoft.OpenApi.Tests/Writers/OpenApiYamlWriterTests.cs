@@ -373,7 +373,7 @@ paths:
 components: { }";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences});
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true } );
 
             // Act
             doc.SerializeAsV3(writer);
@@ -409,7 +409,7 @@ paths:
             type: object";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV2(writer);
@@ -515,7 +515,7 @@ components:
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV3(writer);
@@ -629,7 +629,7 @@ definitions:
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV2(writer);

@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+            if (Reference != null && !writer.GetSettings().ShouldInlineReference(Reference))
             {
                 Reference.SerializeAsV3(writer);
                 return;
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+            if (Reference != null && !writer.GetSettings().ShouldInlineReference(Reference))
             {
                 Reference.SerializeAsV2(writer);
                 return;

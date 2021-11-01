@@ -25,7 +25,8 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
             {
                 ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences,
-                CustomExternalLoader = new MockLoader()
+                CustomExternalLoader = new MockLoader(),
+                BaseUrl = new Uri("file://c:\\")
             });
 
             // Todo: this should be ReadAsync
@@ -54,7 +55,8 @@ paths: {}";
             var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
             {
                 ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences,
-                CustomExternalLoader = new ResourceLoader()
+                CustomExternalLoader = new ResourceLoader(),
+                BaseUrl = new Uri("fie://c:\\")
             });
 
             ReadResult result;

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -6,7 +6,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -23,6 +25,11 @@ namespace Microsoft.OpenApi.Workbench
     {
         private string _input;
 
+        private bool _inlineLocal = false;
+        private bool _inlineExternal = false;
+
+        private bool _resolveExternal = false;
+
         private string _inputFile;
 
         private string _output;
@@ -33,11 +40,7 @@ namespace Microsoft.OpenApi.Workbench
 
         private string _renderTime;
 
-        /// <summary>
-        /// Default format.
-        /// </summary>
-        private bool _Inline = false;
-
+                
         /// <summary>
         /// Default format.
         /// </summary>
@@ -48,6 +51,9 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_0;
 
+
+        private HttpClient _httpClient = new HttpClient();
+
         public string Input
         {
             get => _input;
@@ -55,6 +61,16 @@ namespace Microsoft.OpenApi.Workbench
             {
                 _input = value;
                 OnPropertyChanged(nameof(Input));
+            }
+        }
+
+        public bool ResolveExternal
+        {
+            get => _resolveExternal;
+            set
+            {
+                _resolveExternal = value;
+                OnPropertyChanged(nameof(ResolveExternal));
             }
         }
 
@@ -67,7 +83,6 @@ namespace Microsoft.OpenApi.Workbench
                 OnPropertyChanged(nameof(InputFile));
             }
         }
-
         public string Output
         {
             get => _output;
@@ -119,13 +134,23 @@ namespace Microsoft.OpenApi.Workbench
             }
         }
 
-        public bool Inline
+        public bool InlineLocal
         {
-            get => _Inline;
+            get => _inlineLocal;
             set
             {
-                _Inline = value;
-                OnPropertyChanged(nameof(Inline));
+                _inlineLocal = value;
+                OnPropertyChanged(nameof(InlineLocal));
+            }
+        }
+
+        public bool InlineExternal
+        {
+            get => _inlineExternal;
+            set
+            {
+                _inlineExternal = value;
+                OnPropertyChanged(nameof(InlineExternal));
             }
         }
 
@@ -180,17 +205,28 @@ namespace Microsoft.OpenApi.Workbench
         /// The core method of the class.
         /// Runs the parsing and serializing.
         /// </summary>
-        internal void ParseDocument()
+        internal async Task ParseDocument()
         {
+            Stream stream = null;
             try
             {
-                Stream stream;
-                if (!String.IsNullOrWhiteSpace(_inputFile))
+                if (!string.IsNullOrWhiteSpace(_inputFile))
                 {
-                    stream = new FileStream(_inputFile, FileMode.Open);
+                    if (_inputFile.StartsWith("http"))
+                    {
+                        stream = await _httpClient.GetStreamAsync(_inputFile);
+                    } 
+                    else
+                    {
+                        stream = new FileStream(_inputFile, FileMode.Open);
+                    }
                 }
                 else
                 {
+                    if (ResolveExternal)
+                    {
+                        throw new ArgumentException("Input file must be used to resolve external references");
+                    }
                     stream = CreateStream(_input);
                 }
 
@@ -198,12 +234,27 @@ namespace Microsoft.OpenApi.Workbench
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                var document = new OpenApiStreamReader(new OpenApiReaderSettings
+                var settings = new OpenApiReaderSettings
                 {
-                    ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences,
+                    ReferenceResolution = ResolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                };
+                if (ResolveExternal)
+                {
+                    if (_inputFile.StartsWith("http"))
+                    {
+                        settings.BaseUrl = new Uri(_inputFile);
+                    }
+                    else
+                    {
+                        settings.BaseUrl = new Uri("file://" + Path.GetDirectoryName(_inputFile) + "/");
+                    }
                 }
-                ).Read(stream, out var context);
+                var readResult = await new OpenApiStreamReader(settings
+                ).ReadAsync(stream);
+                var document = readResult.OpenApiDocument;
+                var context = readResult.OpenApiDiagnostic;
+
                 stopwatch.Stop();
                 ParseTime = $"{stopwatch.ElapsedMilliseconds} ms";
 
@@ -241,6 +292,14 @@ namespace Microsoft.OpenApi.Workbench
                 Output = string.Empty;
                 Errors = "Failed to parse input: " + ex.Message;
             }
+            finally {
+                if (stream != null)
+                {
+                    stream.Close();
+                    stream.Dispose();
+                }
+
+            }
         }
 
         /// <summary>
@@ -255,7 +314,8 @@ namespace Microsoft.OpenApi.Workbench
                 Version,
                 Format,
                 new OpenApiWriterSettings() {
-                    ReferenceInline = this.Inline == true ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
+                    InlineLocalReferences = InlineLocal,
+                    InlineExternalReferences = InlineExternal
                 });
             
             outputStream.Position = 0;
