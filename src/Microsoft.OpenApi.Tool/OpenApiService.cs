@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tool
             FileInfo output,
             OpenApiSpecVersion version,
             OpenApiFormat format,
-            string filterbyOperationIds,
+            string filterByOperationIds,
             string filterByTags,
             bool inline,
             bool resolveExternal)
@@ -44,9 +44,14 @@ namespace Microsoft.OpenApi.Tool
             document = result.OpenApiDocument;
 
             // Check if filter options are provided, then execute
-            if (!string.IsNullOrEmpty(filterbyOperationIds))
+            if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
             {
-                var predicate = OpenApiFilterService.CreatePredicate(operationIds: filterbyOperationIds);
+                throw new InvalidOperationException("Cannot filter by operationIds and tags at the same time.");
+            }
+
+            if (!string.IsNullOrEmpty(filterByOperationIds))
+            {
+                var predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
             if (!string.IsNullOrEmpty(filterByTags))
