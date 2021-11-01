@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -68,6 +67,11 @@ namespace Microsoft.OpenApi.Tool
                 }
 
                 throw new ArgumentException(string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
+            }
+
+            if (output.Exists)
+            {
+                throw new IOException("The file you're writing to already exists.Please input a new output path.");
             }
 
             using var outputStream = output?.Create();
