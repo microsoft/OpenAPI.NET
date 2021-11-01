@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -21,7 +20,7 @@ namespace Microsoft.OpenApi.Tool
             FileInfo output,
             OpenApiSpecVersion version,
             OpenApiFormat format,
-            string filterbyOperationId,
+            string filterByOperationIds,
             bool inline,
             bool resolveExternal)
         {
@@ -44,9 +43,9 @@ namespace Microsoft.OpenApi.Tool
             document = result.OpenApiDocument;
 
             // Check if filter options are provided, then execute
-            if (!string.IsNullOrEmpty(filterbyOperationId))
+            if (!string.IsNullOrEmpty(filterByOperationIds))
             {
-                var predicate = OpenApiFilterService.CreatePredicate(filterbyOperationId);
+                var predicate = OpenApiFilterService.CreatePredicate(filterByOperationIds);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 

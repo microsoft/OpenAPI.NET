@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Tool
                 new Option("--format", "File format",typeof(OpenApiFormat) ),
                 new Option("--inline", "Inline $ref instances", typeof(bool) ),
                 new Option("--resolveExternal","Resolve external $refs", typeof(bool)),
-                new Option("--filterByOperationId", "Filters by OperationId provided", typeof(string))
+                new Option("--filterByOperationIds", "Filters by OperationId provided", typeof(string))
             };
             transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion, OpenApiFormat, string, bool, bool>(
                 OpenApiService.ProcessOpenApiDocument);
