@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -24,9 +27,13 @@ namespace Microsoft.OpenApi.Tool
             bool inline,
             bool resolveExternal)
         {
-            if (input == null)
+            if (string.IsNullOrEmpty(input))
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
+            }
+            if (output.Exists)
+            {
+                throw new IOException("The file you're writing to already exists. Please input a new output path.");
             }
 
             var stream = GetStream(input);
@@ -51,7 +58,7 @@ namespace Microsoft.OpenApi.Tool
 
             var context = result.OpenApiDiagnostic;
 
-            if (context.Errors.Count != 0)
+            if (context.Errors.Count > 0)
             {
                 var errorReport = new StringBuilder();
 
@@ -61,11 +68,6 @@ namespace Microsoft.OpenApi.Tool
                 }
 
                 throw new ArgumentException(string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
-            }
-
-            if (output.Exists)
-            {
-                throw new IOException("The file you're writing to already exists.Please input a new output path.");
             }
 
             using var outputStream = output?.Create();

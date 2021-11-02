@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
@@ -9,14 +9,18 @@ namespace Microsoft.OpenApi.Services
 {
     internal class CopyReferences : OpenApiVisitorBase
     {
-        private readonly OpenApiDocument target;
-        public OpenApiComponents Components = new OpenApiComponents();
+        private readonly OpenApiDocument _target;
+        public OpenApiComponents Components = new();
 
         public CopyReferences(OpenApiDocument target)
         {
-            this.target = target;
+            _target = target;
         }
 
+        /// <summary>
+        /// Visits IOpenApiReferenceable instances that are references and not in components.
+        /// </summary>
+        /// <param name="referenceable"> An IOpenApiReferenceable object.</param>
         public override void Visit(IOpenApiReferenceable referenceable)
         {
             switch (referenceable)
@@ -54,6 +58,10 @@ namespace Microsoft.OpenApi.Services
             base.Visit(referenceable);
         }
 
+        /// <summary>
+        /// Visits <see cref="OpenApiSchema"/>
+        /// </summary>
+        /// <param name="schema">The OpenApiSchema to be visited.</param>
         public override void Visit(OpenApiSchema schema)
         {
             // This is needed to handle schemas used in Responses in components
@@ -71,33 +79,33 @@ namespace Microsoft.OpenApi.Services
 
         private void EnsureComponentsExists()
         {
-            if (target.Components == null)
+            if (_target.Components == null)
             {
-                target.Components = new OpenApiComponents();
+                _target.Components = new OpenApiComponents();
             }
         }
 
         private void EnsureSchemasExists()
         {
-            if (target.Components.Schemas == null)
+            if (_target.Components.Schemas == null)
             {
-                target.Components.Schemas = new Dictionary<string, OpenApiSchema>();
+                _target.Components.Schemas = new Dictionary<string, OpenApiSchema>();
             }
         }
 
         private void EnsureParametersExists()
         {
-            if (target.Components.Parameters == null)
+            if (_target.Components.Parameters == null)
             {
-                target.Components.Parameters = new Dictionary<string, OpenApiParameter>();
+                _target.Components.Parameters = new Dictionary<string, OpenApiParameter>();
             }
         }
 
         private void EnsureResponsesExists()
         {
-            if (target.Components.Responses == null)
+            if (_target.Components.Responses == null)
             {
-                target.Components.Responses = new Dictionary<string, OpenApiResponse>();
+                _target.Components.Responses = new Dictionary<string, OpenApiResponse>();
             }
         }
     }

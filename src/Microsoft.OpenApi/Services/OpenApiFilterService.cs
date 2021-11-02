@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -20,8 +20,6 @@ namespace Microsoft.OpenApi.Services
         /// <returns>A predicate.</returns>
         public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds)
         {
-            string predicateSource = null;
-
             Func<OpenApiOperation, bool> predicate;
             if (operationIds != null)
             {
@@ -34,8 +32,6 @@ namespace Microsoft.OpenApi.Services
                     var operationIdsArray = operationIds.Split(',');
                     predicate = (o) => operationIdsArray.Contains(o.OperationId);
                 }
-
-                predicateSource = $"operationIds: {operationIds}";
             }
 
             else
