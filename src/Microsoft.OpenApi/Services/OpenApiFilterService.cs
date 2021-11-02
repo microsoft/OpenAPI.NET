@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -60,7 +60,8 @@ namespace Microsoft.OpenApi.Services
                     TermsOfService = source.Info.TermsOfService,
                     Contact = source.Info.Contact,
                     License = source.Info.License,
-                    Version = source.Info.Version
+                    Version = source.Info.Version,
+                    Extensions = source.Info.Extensions
                 },
 
                 Components = new OpenApiComponents()
