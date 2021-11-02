@@ -59,7 +59,11 @@ namespace Microsoft.OpenApi.Services
             {
                 Info = new OpenApiInfo()
                 {
-                    Title = source.Info.Title + " - subset",
+                    Title = source.Info.Title + " - Subset",
+                    Description = source.Info.Description,
+                    TermsOfService = source.Info.TermsOfService,
+                    Contact = source.Info.Contact,
+                    License = source.Info.License,
                     Version = source.Info.Version
                 },
 
