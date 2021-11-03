@@ -37,9 +37,6 @@ namespace Microsoft.OpenApi.Tool
             }
 
             var stream = GetStream(input);
-
-            OpenApiDocument document;
-
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
@@ -47,6 +44,7 @@ namespace Microsoft.OpenApi.Tool
             }
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
+            OpenApiDocument document;
             document = result.OpenApiDocument;
 
             // Check if filter options are provided, then execute
