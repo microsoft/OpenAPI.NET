@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Services
             foreach (var result in results)
             {
                 OpenApiPathItem pathItem;
-                string pathKey = result.CurrentKeys.Path;
+                var pathKey = result.CurrentKeys.Path;
 
                 if (subset.Paths == null)
                 {

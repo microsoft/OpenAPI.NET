@@ -31,6 +31,10 @@ namespace Microsoft.OpenApi.Tool
             {
                 throw new ArgumentNullException(nameof(input));
             }
+            if(output == null)
+            {
+                throw new ArgumentException(nameof(output));
+            }
             if (output.Exists)
             {
                 throw new IOException("The file you're writing to already exists. Please input a new output path.");
@@ -123,7 +127,6 @@ namespace Microsoft.OpenApi.Tool
 
             document = new OpenApiStreamReader(new OpenApiReaderSettings
             {
-                //ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet()
             }
             ).Read(stream, out var context);
