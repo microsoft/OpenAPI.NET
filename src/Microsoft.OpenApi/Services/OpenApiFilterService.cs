@@ -48,8 +48,6 @@ namespace Microsoft.OpenApi.Services
                 {
                     predicate = (o) => o.Tags.Any(t => tagsArray.Contains(t.Name));
                 }
-
-                predicateSource = $"tags: {tags}";
             }
 
             else
