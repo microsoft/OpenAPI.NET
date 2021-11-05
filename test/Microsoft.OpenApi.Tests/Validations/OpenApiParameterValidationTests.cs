@@ -218,7 +218,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         }
 
         [Fact]
-        public void PathParameterInThePastShouldBeOk()
+        public void PathParameterInThePathShouldBeOk()
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
