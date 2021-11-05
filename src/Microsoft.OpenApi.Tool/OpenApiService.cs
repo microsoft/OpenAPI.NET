@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -28,15 +28,20 @@ namespace Microsoft.OpenApi.Tool
             bool inline,
             bool resolveExternal)
         {
-            if (input == null)
+            if (string.IsNullOrEmpty(input))
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
+            }
+            if(output == null)
+            {
+                throw new ArgumentException(nameof(output));
+            }
+            if (output.Exists)
+            {
+                throw new IOException("The file you're writing to already exists. Please input a new output path.");
             }
 
             var stream = GetStream(input);
-
-            OpenApiDocument document;
-
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
@@ -44,6 +49,7 @@ namespace Microsoft.OpenApi.Tool
             }
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
+            OpenApiDocument document;
             document = result.OpenApiDocument;
 
             // Check if filter options are provided, then execute
@@ -65,7 +71,7 @@ namespace Microsoft.OpenApi.Tool
 
             var context = result.OpenApiDiagnostic;
 
-            if (context.Errors.Count != 0)
+            if (context.Errors.Count > 0)
             {
                 var errorReport = new StringBuilder();
 
@@ -75,11 +81,6 @@ namespace Microsoft.OpenApi.Tool
                 }
 
                 throw new ArgumentException(string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
-            }
-
-            if (output.Exists)
-            {
-                throw new IOException("The file you're writing to already exists.Please input a new output path.");
             }
 
             using var outputStream = output?.Create();
@@ -137,7 +138,6 @@ namespace Microsoft.OpenApi.Tool
 
             document = new OpenApiStreamReader(new OpenApiReaderSettings
             {
-                //ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet()
             }
             ).Read(stream, out var context);

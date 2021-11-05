@@ -8,13 +8,23 @@ using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
+    /// <summary>
+    /// Visits OpenApi operations and parameters.
+    /// </summary>
     public class OperationSearch : OpenApiVisitorBase
     {
         private readonly Func<OpenApiOperation, bool> _predicate;
         private readonly List<SearchResult> _searchResults = new();
 
+        /// <summary>
+        /// A list of operations from the operation search.
+        /// </summary>
         public IList<SearchResult> SearchResults => _searchResults;
 
+        /// <summary>
+        /// The OperationSearch constructor.
+        /// </summary>
+        /// <param name="predicate">A predicate function.</param>
         public OperationSearch(Func<OpenApiOperation, bool> predicate)
         {
             _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));

@@ -22,8 +22,6 @@ namespace Microsoft.OpenApi.Services
         /// <returns>A predicate.</returns>
         public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null)
         {
-            string predicateSource = null;
-
             Func<OpenApiOperation, bool> predicate;
             if (operationIds != null)
             {
@@ -36,8 +34,6 @@ namespace Microsoft.OpenApi.Services
                     var operationIdsArray = operationIds.Split(',');
                     predicate = (o) => operationIdsArray.Contains(o.OperationId);
                 }
-
-                predicateSource = $"operationIds: {operationIds}";
             }
             else if (tags != null)
             {
@@ -77,8 +73,13 @@ namespace Microsoft.OpenApi.Services
             {
                 Info = new OpenApiInfo()
                 {
-                    Title = source.Info.Title + " - subset",
-                    Version = source.Info.Version
+                    Title = source.Info.Title + " - Subset",
+                    Description = source.Info.Description,
+                    TermsOfService = source.Info.TermsOfService,
+                    Contact = source.Info.Contact,
+                    License = source.Info.License,
+                    Version = source.Info.Version,
+                    Extensions = source.Info.Extensions
                 },
 
                 Components = new OpenApiComponents()
@@ -92,7 +93,7 @@ namespace Microsoft.OpenApi.Services
             foreach (var result in results)
             {
                 OpenApiPathItem pathItem;
-                string pathKey = result.CurrentKeys.Path;
+                var pathKey = result.CurrentKeys.Path;
 
                 if (subset.Paths == null)
                 {
