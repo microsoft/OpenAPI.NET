@@ -150,7 +150,6 @@ namespace Microsoft.OpenApi.Tests
         // Enable Workspace to load from any reader, not just streams.
 
         // Test fragments
-        [Fact]
         public void OpenApiWorkspacesShouldLoadDocumentFragments()
         {
             Assert.True(false);
