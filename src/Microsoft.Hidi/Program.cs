@@ -5,8 +5,9 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.OpenApi;
 
-namespace Microsoft.OpenApi.Tool
+namespace Microsoft.Hidi
 {
     static class Program
     {
