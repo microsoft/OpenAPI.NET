@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6357D7FD-2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.SmokeTests", "test\Microsoft.OpenApi.SmokeTests\Microsoft.OpenApi.SmokeTests.csproj", "{AD79B61D-88CF-497C-9ED5-41AE3867C5AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.Tool", "src\Microsoft.OpenApi.Tool\Microsoft.OpenApi.Tool.csproj", "{254841B5-7DAC-4D1D-A9C5-44FE5CE467BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Hidi", "src\Microsoft.Hidi\Microsoft.Hidi.csproj", "{254841B5-7DAC-4D1D-A9C5-44FE5CE467BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
