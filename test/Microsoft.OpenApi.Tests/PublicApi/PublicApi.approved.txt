@@ -957,7 +957,7 @@ namespace Microsoft.OpenApi.Services
     public static class OpenApiFilterService
     {
         public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument source, System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
-        public static System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string operationIds) { }
+        public static System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null) { }
     }
     public class OpenApiReferenceError : Microsoft.OpenApi.Models.OpenApiError
     {
