@@ -23,6 +23,10 @@ namespace Microsoft.OpenApi.Services
         public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null)
         {
             Func<OpenApiOperation, bool> predicate;
+            if (!string.IsNullOrEmpty(operationIds) && !string.IsNullOrEmpty(tags))
+            {
+                throw new InvalidOperationException("Cannot specify both operationIds and tags at the same time.");
+            }
             if (operationIds != null)
             {
                 if (operationIds == "*")
@@ -49,7 +53,6 @@ namespace Microsoft.OpenApi.Services
                     predicate = (o) => o.Tags.Any(t => tagsArray.Contains(t.Name));
                 }
             }
-
             else
             {
                 throw new InvalidOperationException("Either operationId(s) or tag(s) need to be specified.");

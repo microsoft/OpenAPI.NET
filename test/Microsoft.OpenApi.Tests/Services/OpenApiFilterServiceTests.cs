@@ -46,8 +46,11 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ThrowsInvalidOperationExceptionInCreatePredicateWhenInvalidArgumentsArePassed()
         {
             // Act and Assert
-            var message = Assert.Throws<InvalidOperationException>(() =>OpenApiFilterService.CreatePredicate(null, null)).Message;
-            Assert.Equal("Either operationId(s) or tag(s) need to be specified.", message);
+            var message1 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate(null, null)).Message;
+            Assert.Equal("Either operationId(s) or tag(s) need to be specified.", message1);
+
+            var message2 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate("users.user.ListUser", "users.user")).Message;
+            Assert.Equal("Cannot specify both operationIds and tags at the same time.", message2);
         }
     }
 }
