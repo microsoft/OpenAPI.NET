@@ -1,7 +1,7 @@
-$latest = Get-ChildItem .\artifacts\ Microsoft.OpenApi.Tool* | select-object -Last 1
+$latest = Get-ChildItem .\artifacts\ Microsoft.OpenApi.Hidi* | select-object -Last 1
 $version = $latest.Name.Split(".")[3..5] | join-string -Separator "."
 
-if (Test-Path -Path ./artifacts/openapi-parser.exe) {
-  dotnet tool uninstall --tool-path artifacts Microsoft.OpenApi.Tool
+if (Test-Path -Path ./artifacts/hidi.exe) {
+  dotnet tool uninstall --tool-path artifacts Microsoft.OpenApi.Hidi
 }
-dotnet tool install --tool-path artifacts --add-source .\artifacts\ --version $version Microsoft.OpenApi.Tool
+dotnet tool install --tool-path artifacts --add-source .\artifacts\ --version $version Microsoft.OpenApi.Hidi

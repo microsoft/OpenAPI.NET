@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
-namespace Microsoft.Hidi
+namespace Microsoft.OpenApi.Hidi
 {
     internal class StatsVisitor : OpenApiVisitorBase
     {
