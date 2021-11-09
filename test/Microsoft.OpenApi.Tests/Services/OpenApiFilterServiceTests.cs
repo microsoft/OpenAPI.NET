@@ -19,14 +19,18 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Theory]
-        [InlineData("users.user.ListUser", null)]
-        [InlineData("users.user.GetUser", null)]
-        [InlineData("administrativeUnits.restore", null)]
-        [InlineData("graphService.GetGraphService", null)]
-        [InlineData(null, "users.user")]
-        [InlineData(null, "applications.application")]
-        [InlineData(null, "reports.Functions")]
-        public void ReturnFilteredOpenApiDocumentBasedOnOperationIds(string operationIds, string tags)
+        [InlineData("users.user.ListUser", null, 1)]
+        [InlineData("users.user.GetUser", null, 1)]
+        [InlineData("users.user.ListUser,users.user.GetUser", null, 2)]
+        [InlineData("*", null, 12)]
+        [InlineData("administrativeUnits.restore", null, 1)]
+        [InlineData("graphService.GetGraphService", null, 1)]
+        [InlineData(null, "users.user,applications.application", 3)]
+        [InlineData(null, "^users\\.", 3)]
+        [InlineData(null, "users.user", 2)]
+        [InlineData(null, "applications.application", 1)]
+        [InlineData(null, "reports.Functions", 2)]
+        public void ReturnFilteredOpenApiDocumentBasedOnOperationIdsAndTags(string operationIds, string tags, int expectedPathCount)
         {
             // Act
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
@@ -34,18 +38,12 @@ namespace Microsoft.OpenApi.Tests.Services
 
             // Assert
             Assert.NotNull(subsetOpenApiDocument);
-            if (!string.IsNullOrEmpty(operationIds))
-            {
-                Assert.Single(subsetOpenApiDocument.Paths);
-            }
-            else if (!string.IsNullOrEmpty(tags))
-            {
-                Assert.NotEmpty(subsetOpenApiDocument.Paths);
-            }
+            Assert.NotEmpty(subsetOpenApiDocument.Paths);
+            Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }
 
         [Fact]
-        public void ThrowsInvalidOperationExceptionInCreatePredicateWhenInvalidOperationIdIsSpecified()
+        public void ThrowsInvalidOperationExceptionInCreatePredicateWhenInvalidArgumentsArePassed()
         {
             // Act and Assert
             var message = Assert.Throws<InvalidOperationException>(() =>OpenApiFilterService.CreatePredicate(null, null)).Message;
