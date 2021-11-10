@@ -94,6 +94,13 @@ steps:
     configuration: Release
     msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
 
+- task: MSBuild@1
+  displayName: 'Pack OpenApi Hidi'
+  inputs:
+    solution: src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj
+    configuration: Release
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning Nuget Packages'
   inputs:
