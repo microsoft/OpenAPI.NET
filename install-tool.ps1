@@ -1,4 +1,4 @@
-$latest = Get-ChildItem .\artifacts\ Microsoft.OpenApi.Hidi* | select-object -Last 1
+$latest = Get-ChildItem .\artifacts\Microsoft.OpenApi.Hidi* | select-object -Last 1
 $version = $latest.Name.Split(".")[3..5] | join-string -Separator "."
 
 if (Test-Path -Path ./artifacts/hidi.exe) {
