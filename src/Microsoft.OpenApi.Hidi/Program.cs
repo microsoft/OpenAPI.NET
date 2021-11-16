@@ -6,7 +6,7 @@ using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Microsoft.OpenApi.Tool
+namespace Microsoft.OpenApi.Hidi
 {
     static class Program
     {

@@ -30,7 +30,7 @@ steps:
   inputs:
     testAssemblyVer2: |
      **\*.Tests.dll
-     
+
     vsTestVersion: 16.0
     codeCoverageEnabled: true
 
