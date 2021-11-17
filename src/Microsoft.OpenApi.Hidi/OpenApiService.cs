@@ -14,7 +14,7 @@ using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Tool
+namespace Microsoft.OpenApi.Hidi
 {
     static class OpenApiService
     {
