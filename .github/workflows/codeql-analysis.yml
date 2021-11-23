@@ -2,7 +2,7 @@ name: CodeQL Analysis
 
 on:
   push:
-      branches: [ vnext ]
+    branches: [ vnext ]
   pull_request:
   schedule:
     - cron: '0 8 * * *'
