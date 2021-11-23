@@ -47,11 +47,16 @@ namespace Microsoft.OpenApi.Services
         public string Segment { get; private set; }
 
         /// <summary>
-        /// Flag indicating whether the node's PathItems has operations.
+        /// Flag indicating whether the node's PathItems dictionary has operations
+        /// under a given label.
         /// </summary>
+        /// <param name="label">The name of the key for the target operations
+        /// in the node's PathItems dictionary.</param>
         /// <returns>true or false.</returns>
         public bool HasOperations(string label)
         {
+            Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+
             if (!(PathItems?.ContainsKey(label) ?? false))
             {
                 return false;
@@ -139,6 +144,8 @@ namespace Microsoft.OpenApi.Services
                                          string label)
         {
             Utils.CheckArgumentNullOrEmpty(label, nameof(label));
+            Utils.CheckArgumentNullOrEmpty(path, nameof(path));
+            Utils.CheckArgumentNull(pathItem, nameof(pathItem));
 
             if (path.StartsWith(RootPathSegment))
             {
