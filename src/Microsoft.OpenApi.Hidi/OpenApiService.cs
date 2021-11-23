@@ -14,7 +14,7 @@ using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
 
-namespace Microsoft.OpenApi.Tool
+namespace Microsoft.OpenApi.Hidi
 {
     static class OpenApiService
     {
@@ -24,6 +24,7 @@ namespace Microsoft.OpenApi.Tool
             OpenApiSpecVersion version,
             OpenApiFormat format,
             string filterByOperationIds,
+            string filterByTags,
             bool inline,
             bool resolveExternal)
         {
@@ -52,9 +53,19 @@ namespace Microsoft.OpenApi.Tool
             document = result.OpenApiDocument;
 
             // Check if filter options are provided, then execute
+            if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
+            {
+                throw new InvalidOperationException("Cannot filter by operationIds and tags at the same time.");
+            }
+
             if (!string.IsNullOrEmpty(filterByOperationIds))
             {
-                var predicate = OpenApiFilterService.CreatePredicate(filterByOperationIds);
+                var predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
+                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
+            }
+            if (!string.IsNullOrEmpty(filterByTags))
+            {
+                var predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 

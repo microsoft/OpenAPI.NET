@@ -6,7 +6,7 @@ using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Microsoft.OpenApi.Tool
+namespace Microsoft.OpenApi.Hidi
 {
     static class Program
     {
@@ -29,9 +29,10 @@ namespace Microsoft.OpenApi.Tool
                 new Option("--format", "File format",typeof(OpenApiFormat) ),
                 new Option("--inline", "Inline $ref instances", typeof(bool) ),
                 new Option("--resolveExternal","Resolve external $refs", typeof(bool)),
-                new Option("--filterByOperationIds", "Filters by OperationId provided", typeof(string))
+                new Option("--filterByOperationIds", "Filters OpenApiDocument by OperationId(s) provided", typeof(string)),
+                new Option("--filterByTags", "Filters OpenApiDocument by Tag(s) provided", typeof(string))
             };
-            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion, OpenApiFormat, string, bool, bool>(
+            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion, OpenApiFormat, string, string, bool, bool>(
                 OpenApiService.ProcessOpenApiDocument);
 
             rootCommand.Add(transformCommand);

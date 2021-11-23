@@ -62,7 +62,7 @@ jobs:
           $projectsArray = @(
             '.\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj',
             '.\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj',
-            '.\src\Microsoft.OpenApi.Tool\Microsoft.OpenApi.Tool.csproj'
+            '.\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj'
           )
           $gitNewVersion = if ("${{ steps.tag_generator.outputs.new_version }}") {"${{ steps.tag_generator.outputs.new_version }}"} else {$null}
           $projectCurrentVersion = ([xml](Get-Content .\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj)).Project.PropertyGroup.Version
