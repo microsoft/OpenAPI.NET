@@ -30,7 +30,7 @@ steps:
   inputs:
     testAssemblyVer2: |
      **\*.Tests.dll
-     
+
     vsTestVersion: 16.0
     codeCoverageEnabled: true
 
@@ -91,6 +91,13 @@ steps:
   displayName: 'Pack OpenAPI Readers'
   inputs:
     solution: src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj
+    configuration: Release
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+
+- task: MSBuild@1
+  displayName: 'Pack OpenApi Hidi'
+  inputs:
+    solution: src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj
     configuration: Release
     msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
 

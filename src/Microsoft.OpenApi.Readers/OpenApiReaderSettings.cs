@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -61,11 +61,17 @@ namespace Microsoft.OpenApi.Readers
         public Uri BaseUrl { get; set; }
 
         /// <summary>
-        /// Function used to provide an alternative loader for accessing external references.  
+        /// Function used to provide an alternative loader for accessing external references.
         /// </summary>
         /// <remarks>
         /// Default loader will attempt to dereference http(s) urls and file urls.
         /// </remarks>
         public IStreamLoader CustomExternalLoader { get; set; }
+
+        /// <summary>
+        /// Whether to leave the <see cref="Stream"/> object open after reading
+        /// from an <see cref="OpenApiStreamReader"/> object.
+        /// </summary>
+        public bool LeaveStreamOpen { get; set; }
     }
 }
