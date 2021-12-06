@@ -19,6 +19,11 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
+        /// REQUIRED. This string MUST be the version number of the OpenAPI Specification that the OpenAPI document uses. This is not related to the API info.version string.
+        /// </summary>
+        public string Version { get; set; }
+
+        /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
         /// </summary>
         public OpenApiWorkspace Workspace { get; set; }

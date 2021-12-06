@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -18,11 +19,7 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
-            {
-                "openapi", (o, n) =>
-                {
-                } /* Version is valid field but we already parsed it */
-            },
+            {"openapi", (o, n) => o.Version = n.GetScalarValue()},
             {"info", (o, n) => o.Info = LoadInfo(n)},
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},

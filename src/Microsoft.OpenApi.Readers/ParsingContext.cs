@@ -56,7 +56,6 @@ namespace Microsoft.OpenApi.Readers
             var inputVersion = GetVersion(RootNode);
 
             OpenApiDocument doc;
-
             switch (inputVersion)
             {
                 case string version when version == "2.0":

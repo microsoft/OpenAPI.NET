@@ -105,6 +105,7 @@ paths: {}",
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
+                    Version = "2.0",
                     Info = new OpenApiInfo
                     {
                         Title = "Simple Document",
@@ -244,6 +245,7 @@ paths: {}",
 
                 doc.Should().BeEquivalentTo(new OpenApiDocument
                 {
+                    Version = "2.0",
                     Info = new OpenApiInfo
                     {
                         Title = "Two responses",

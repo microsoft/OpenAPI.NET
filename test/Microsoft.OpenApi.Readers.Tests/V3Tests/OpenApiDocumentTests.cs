@@ -45,6 +45,7 @@ paths: {}",
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
+                    Version = "3.0.0",
                     Info = new OpenApiInfo
                     {
                         Title = "Simple Document",
@@ -91,6 +92,7 @@ paths: {}",
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
+                    Version = "3.0.0",
                     Info = new OpenApiInfo
                     {
                         Title = "Simple Document",
@@ -142,6 +144,7 @@ paths: {}",
                 openApiDoc.Should().BeEquivalentTo(
                     new OpenApiDocument
                     {
+                        Version = "3.0.0",
                         Info = new OpenApiInfo
                         {
                             Title = "The API",
@@ -175,6 +178,7 @@ paths: {}",
                 openApiDoc.Should().BeEquivalentTo(
                     new OpenApiDocument
                     {
+                        Version = "3.0.0",
                         Info = new OpenApiInfo
                         {
                             Version = "0.9"
@@ -204,6 +208,7 @@ paths: {}",
                 openApiDoc.Should().BeEquivalentTo(
                     new OpenApiDocument
                     {
+                        Version = "3.0.0",
                         Info = new OpenApiInfo
                         {
                             Title = "Simple Document",
@@ -347,6 +352,7 @@ paths: {}",
 
                 var expected = new OpenApiDocument
                 {
+                    Version = "3.0.0",
                     Info = new OpenApiInfo
                     {
                         Version = "1.0.0",
@@ -832,6 +838,7 @@ paths: {}",
 
                 var expected = new OpenApiDocument
                 {
+                    Version = "3.0.0",
                     Info = new OpenApiInfo
                     {
                         Version = "1.0.0",
