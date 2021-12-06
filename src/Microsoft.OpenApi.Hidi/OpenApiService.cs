@@ -23,8 +23,8 @@ namespace Microsoft.OpenApi.Hidi
         public static void ProcessOpenApiDocument(
             string input,
             FileInfo output,
-            OpenApiSpecVersion version,
-            OpenApiFormat format,
+            OpenApiSpecVersion? version,
+            OpenApiFormat? format,
             string filterByOperationIds,
             string filterByTags,
             string filterByCollection,
@@ -101,13 +101,16 @@ namespace Microsoft.OpenApi.Hidi
             {
                 ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
             };
-            IOpenApiWriter writer = format switch
+
+            var openApiFormat = format ?? GetOpenApiFormat(input);
+            var openApiVersion = version ?? result.OpenApiDiagnostic.SpecificationVersion;
+            IOpenApiWriter writer = openApiFormat switch
             {
                 OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
                 OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
                 _ => throw new ArgumentException("Unknown format"),
             };
-            document.Serialize(writer, version);
+            document.Serialize(writer, openApiVersion);
 
             textWriter.Flush();
         }
@@ -197,6 +200,18 @@ namespace Microsoft.OpenApi.Hidi
             walker.Walk(document);
 
             Console.WriteLine(statsVisitor.GetStatisticsReport());
+        }
+
+        private static OpenApiFormat GetOpenApiFormat(string input)
+        {
+            if (!input.StartsWith("http") && Path.GetExtension(input) == ".json")
+            {
+                return OpenApiFormat.Json;
+            }
+            else
+            {
+                return OpenApiFormat.Yaml;
+            }
         }
     }
 }
