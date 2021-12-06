@@ -24,6 +24,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 var openApiDocV2 = new OpenApiStreamReader().Read(streamV2, out var diagnosticV2);
                 var openApiDocV3 = new OpenApiStreamReader().Read(streamV3, out var diagnosticV3);
 
+                // Reset version for equivalence check.
+                openApiDocV2.Version = null;
+                openApiDocV3.Version = null;
+
                 openApiDocV3.Should().BeEquivalentTo(openApiDocV2);
 
                 diagnosticV2.Errors.Should().BeEquivalentTo(diagnosticV3.Errors);
