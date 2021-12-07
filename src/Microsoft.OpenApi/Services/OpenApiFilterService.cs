@@ -22,9 +22,13 @@ namespace Microsoft.OpenApi.Services
         /// <param name="operationIds">Comma delimited list of operationIds or * for all operations.</param>
         /// <param name="tags">Comma delimited list of tags or a single regex.</param>
         /// <returns>A predicate.</returns>
-        public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null)
+        public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, Dictionary<string, List<string>> urls = null, OpenApiDocument source = null)
         {
             Func<OpenApiOperation, bool> predicate;
+            if (urls != null && (operationIds != null || tags != null))
+            {
+                throw new InvalidOperationException("Cannot filter by postman collection and either operationIds and tags at the same time.");
+            }
             if (!string.IsNullOrEmpty(operationIds) && !string.IsNullOrEmpty(tags))
             {
                 throw new InvalidOperationException("Cannot specify both operationIds and tags at the same time.");
