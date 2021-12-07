@@ -51,6 +51,7 @@ namespace Microsoft.OpenApi.Hidi
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
             var document = result.OpenApiDocument;
+            Func<OpenApiOperation, bool> predicate;
 
             // Check if filter options are provided, then execute
             if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
@@ -59,12 +60,12 @@ namespace Microsoft.OpenApi.Hidi
             }
             if (!string.IsNullOrEmpty(filterByOperationIds))
             {
-                var predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
+                predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
             if (!string.IsNullOrEmpty(filterByTags))
             {
-                var predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
+                predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 
@@ -72,7 +73,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 var fileStream = GetStream(filterByCollection);
                 var urlDictionary = OpenApiFilterService.ParseJsonCollectionFile(fileStream);
-                var predicate = OpenApiFilterService.CreatePredicate(urls: urlDictionary, source:document);
+                predicate = OpenApiFilterService.CreatePredicate(urls: urlDictionary, source:document);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 
