@@ -130,6 +130,132 @@ namespace Microsoft.OpenApi.Services
             return subset;
         }
 
+        /// <summary>
+        /// Creates an <see cref="OpenApiUrlTreeNode"/> from a collection of <see cref="OpenApiDocument"/>.
+        /// </summary>
+        /// <param name="sources">Dictionary of labels and their corresponding <see cref="OpenApiDocument"/> objects.</param>
+        /// <returns>The created <see cref="OpenApiUrlTreeNode"/>.</returns>
+        public static OpenApiUrlTreeNode CreateOpenApiUrlTreeNode(Dictionary<string, OpenApiDocument> sources)
+        {
+            var rootNode = OpenApiUrlTreeNode.Create();
+            foreach (var source in sources)
+            {
+                rootNode.Attach(source.Value, source.Key);
+            }
+            return rootNode;
+        }
+
+        /// <summary>
+        /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
+        /// </summary>
+        /// <param name="stream"> A file stream.</param>
+        /// <returns> A dictionary of request urls and http methods from a collection.</returns>
+        public static Dictionary<string, List<string>> ParseJsonCollectionFile(Stream stream)
+        {
+            var requestUrls = new Dictionary<string, List<string>>();
+
+            // Convert file to JsonDocument
+            using JsonDocument document = JsonDocument.Parse(stream);
+            JsonElement root = document.RootElement;
+            JsonElement itemElement = root.GetProperty("item");
+            foreach(JsonElement item in itemElement.EnumerateArray())
+            {
+                var requestObject = item.GetProperty("request");
+
+                // Fetch list of methods and urls from collection, store them in a dictionary
+                var path = requestObject.GetProperty("url").GetProperty("raw").ToString();
+                var method = requestObject.GetProperty("method").ToString();
+
+                if (!requestUrls.ContainsKey(path))
+                {
+                    requestUrls.Add(path, new List<string>() { method });
+                }
+                else
+                {
+                    requestUrls[path].Add(method);
+                }
+            }
+
+            return requestUrls;
+        }
+
+        private static IDictionary<OperationType, OpenApiOperation> GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
+        {
+            if (relativeUrl.Equals("/", StringComparison.Ordinal) && rootNode.HasOperations(label))
+            {
+                return rootNode.PathItems[label].Operations;
+            }
+
+            var urlSegments = relativeUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+            IDictionary<OperationType, OpenApiOperation> operations = null;
+
+            var targetChild = rootNode;
+
+            /* This will help keep track of whether we've skipped a segment
+             * in the target url due to a possible parameter naming mismatch
+             * with the corresponding OpenApiUrlTreeNode target child segment.
+             */
+            var parameterNameOffset = 0;
+
+            for (var i = 0; i < urlSegments?.Length; i++)
+            {
+                var tempTargetChild = targetChild?.Children?
+                                                  .FirstOrDefault(x => x.Key.Equals(urlSegments[i],
+                                                                    StringComparison.OrdinalIgnoreCase)).Value;
+
+                // Segment name mismatch
+                if (tempTargetChild == null)
+                {
+                    if (i == 0)
+                    {
+                        /* If no match and we are at the 1st segment of the relative url,
+                         * exit; no need to continue matching subsequent segments.
+                         */
+                        break;
+                    }
+
+                    /* Attempt to get the parameter segment from the children of the current node:
+                     * We are assuming a failed match because of different parameter namings
+                     * between the relative url segment and the corresponding OpenApiUrlTreeNode segment name
+                     * ex.: matching '/users/12345/messages' with '/users/{user-id}/messages'
+                     */
+                    tempTargetChild = targetChild?.Children?
+                                                 .FirstOrDefault(x => x.Value.IsParameter).Value;
+
+                    /* If no parameter segment exists in the children of the
+                     * current node or we've already skipped a parameter
+                     * segment in the relative url from the last pass,
+                     * then exit; there's no match.
+                     */
+                    if (tempTargetChild == null || parameterNameOffset > 0)
+                    {
+                        break;
+                    }
+
+                    /* To help us know we've skipped a
+                     * corresponding segment in the relative url.
+                     */
+                    parameterNameOffset++;
+                }
+                else
+                {
+                    parameterNameOffset = 0;
+                }
+
+                // Move to the next segment
+                targetChild = tempTargetChild;
+
+                // We want the operations of the last segment of the path.
+                if (i == urlSegments.Length - 1 && targetChild.HasOperations(label))
+                {
+                    operations = targetChild.PathItems[label].Operations;
+                }
+            }
+
+            return operations;
+        }
+
         private static IList<SearchResult> FindOperations(OpenApiDocument graphOpenApi, Func<OpenApiOperation, bool> predicate)
         {
             var search = new OperationSearch(predicate);
