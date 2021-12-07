@@ -105,7 +105,6 @@ namespace Microsoft.OpenApi.Services
                 throw new InvalidOperationException("Either operationId(s),tag(s) or postman collection need to be specified.");
             }
 
-
             return predicate;
         }
 
