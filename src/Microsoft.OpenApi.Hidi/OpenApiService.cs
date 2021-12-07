@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -25,6 +25,7 @@ namespace Microsoft.OpenApi.Hidi
             OpenApiFormat format,
             string filterByOperationIds,
             string filterByTags,
+            string filterByCollection,
             bool inline,
             bool resolveExternal)
         {
@@ -66,6 +67,14 @@ namespace Microsoft.OpenApi.Hidi
             if (!string.IsNullOrEmpty(filterByTags))
             {
                 var predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
+                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
+            }
+
+            if (!string.IsNullOrEmpty(filterByCollection))
+            {
+                var fileStream = GetStream(filterByCollection);
+                var urlDictionary = OpenApiFilterService.ParseJsonCollectionFile(fileStream);
+                var predicate = OpenApiFilterService.CreatePredicate(urls: urlDictionary, source:document);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 
