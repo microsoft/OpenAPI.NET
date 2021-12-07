@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -156,7 +156,10 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
 
-                pathItem.Operations.Add((OperationType)result.CurrentKeys.Operation, result.Operation);
+                if (result.CurrentKeys.Operation != null)
+                {
+                    pathItem.Operations.Add((OperationType)result.CurrentKeys.Operation, result.Operation);
+                }
             }
 
             if (subset.Paths == null)
