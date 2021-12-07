@@ -130,12 +130,11 @@ namespace Microsoft.OpenApi.Services
                     Extensions = source.Info.Extensions
                 },
 
-                Components = new OpenApiComponents()
+                Components = new OpenApiComponents {SecuritySchemes = source.Components.SecuritySchemes},
+                SecurityRequirements = source.SecurityRequirements,
+                Servers = source.Servers
             };
 
-            subset.Components.SecuritySchemes = source.Components.SecuritySchemes;
-            subset.SecurityRequirements = source.SecurityRequirements;
-            subset.Servers = source.Servers;
 
             var results = FindOperations(source, predicate);
             foreach (var result in results)
