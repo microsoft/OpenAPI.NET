@@ -135,7 +135,6 @@ namespace Microsoft.OpenApi.Services
                 Servers = source.Servers
             };
 
-
             var results = FindOperations(source, predicate);
             foreach (var result in results)
             {
