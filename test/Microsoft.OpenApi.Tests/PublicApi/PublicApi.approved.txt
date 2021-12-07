@@ -427,6 +427,7 @@ namespace Microsoft.OpenApi.Models
         public const string Patch = "patch";
         public const string Paths = "paths";
         public const string Pattern = "pattern";
+        public const string PatternProperties = "patternProperties";
         public const string Post = "post";
         public const string Prefix = "prefix";
         public const string Produces = "produces";
@@ -795,6 +796,7 @@ namespace Microsoft.OpenApi.Models
         public bool Nullable { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> OneOf { get; set; }
         public string Pattern { get; set; }
+        public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> PatternProperties { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiSchema> Properties { get; set; }
         public bool ReadOnly { get; set; }
         public Microsoft.OpenApi.Models.OpenApiReference Reference { get; set; }

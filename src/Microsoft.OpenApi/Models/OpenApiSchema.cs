@@ -165,6 +165,15 @@ namespace Microsoft.OpenApi.Models
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
+        /// PatternProperty definitions MUST be a Schema Object and not a standard JSON Schema (inline or referenced)
+        /// Each property name of this object SHOULD be a valid regular expression according to the ECMA 262 r
+        /// egular expression dialect. Each property value of this object MUST be an object, and each object MUST 
+        /// be a valid Schema Object not a standard JSON Schema.
+        /// </summary>
+        public IDictionary<string, OpenApiSchema> PatternProperties { get; set; } = new Dictionary<string, OpenApiSchema>();
+
+        /// <summary>
+        /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
         public int? MaxProperties { get; set; }
 
@@ -353,6 +362,9 @@ namespace Microsoft.OpenApi.Models
 
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
+
+            // patternProperties
+            writer.WriteOptionalMap(OpenApiConstants.PatternProperties, PatternProperties, (w, s) => s.SerializeAsV3(w));
 
             // additionalProperties
             if (AdditionalPropertiesAllowed)

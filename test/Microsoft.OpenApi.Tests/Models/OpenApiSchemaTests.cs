@@ -79,6 +79,19 @@ namespace Microsoft.OpenApi.Tests.Models
                     },
                 },
             },
+            PatternProperties = new Dictionary<string, OpenApiSchema>
+            {
+                ["[abc]"] = new OpenApiSchema 
+                {
+                    Type = "string",
+                    MaxLength = 15
+                },
+                ["(^\\d{5}$)"] = new OpenApiSchema
+                {
+                    Type = "integer",
+                    MaxLength = 15
+                }
+            },
             Nullable = true,
             ExternalDocs = new OpenApiExternalDocs
             {
@@ -296,6 +309,16 @@ namespace Microsoft.OpenApi.Tests.Models
           ""type"": ""string""
         }
       }
+    }
+  },
+  ""patternProperties"": {
+    ""[abc]"": {
+      ""maxLength"": 15,
+      ""type"": ""string""
+    },
+    ""(^\\d{5}$)"": {
+      ""maxLength"": 15,
+      ""type"": ""integer""
     }
   },
   ""nullable"": true,
