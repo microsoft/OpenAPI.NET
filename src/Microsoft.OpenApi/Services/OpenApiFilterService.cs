@@ -59,51 +59,52 @@ namespace Microsoft.OpenApi.Services
                     predicate = (o) => o.Tags.Any(tag => tagsArray.Contains(tag.Name));
                 }
             }
-            else
+            else if (urls != null)
             {
                 List<OpenApiOperation> openApiOps = new List<OpenApiOperation>();
-                if (urls != null)
+
+                var graphVersion = source.Info.Version;
+
+                var sources = new Dictionary<string, OpenApiDocument> {{graphVersion, source}};
+                var rootNode = CreateOpenApiUrlTreeNode(sources);
+
+                //Iterate through urls dictionary and fetch each url
+                foreach (var path in urls)
                 {
-                    var graphVersion = source.Info.Version;
+                    var url = FormatUrlString(path.Key);
 
-                    var sources = new Dictionary<string, OpenApiDocument> { { graphVersion, source } };
-                    var rootNode = CreateOpenApiUrlTreeNode(sources);
-
-                    //Iterate through urls dictionary and fetch each url
-                    foreach (var path in urls)
+                    var openApiOperations = GetOpenApiOperations(rootNode, url, graphVersion);
+                    if (openApiOperations == null)
                     {
-                        var url = FormatUrlString(path.Key);
-
-                        var openApiOperations = GetOpenApiOperations(rootNode, url, graphVersion);
-                        if (openApiOperations == null)
-                        {
-                            continue;
-                        }
-
-                        foreach (var method in path.Value)
-                        {
-                            var ops = openApiOperations
-                                .Where(x => x.Key.ToString().Equals(method, StringComparison.OrdinalIgnoreCase))
-                                .Select(x => x.Value).ToList();
-
-                            openApiOps.AddRange(ops);
-                        }
-                    }
-                    if (!(openApiOps?.Any() ?? false))
-                    {
-                        throw new ArgumentException("The urls in the postman collection supplied could not be found.");
+                        continue;
                     }
 
-                    // Fetch the corresponding Operations Id(s) for the matched url
-                    var operationIdsArray = openApiOps.Select(x => x.OperationId).ToArray();
+                    foreach (var method in path.Value)
+                    {
+                        var ops = openApiOperations
+                            .Where(x => x.Key.ToString().Equals(method, StringComparison.OrdinalIgnoreCase))
+                            .Select(x => x.Value).ToList();
 
-                    predicate = (o) => operationIdsArray.Contains(o.OperationId);
+                        openApiOps.AddRange(ops);
+                    }
                 }
-                else
+
+                if (!(openApiOps?.Any() ?? false))
                 {
-                    throw new InvalidOperationException("Either operationId(s),tag(s) or postman collection need to be specified.");
+                    throw new ArgumentException("The urls in the postman collection supplied could not be found.");
                 }
+
+                // Fetch the corresponding Operations Id(s) for the matched url
+                var operationIdsArray = openApiOps.Select(x => x.OperationId).ToArray();
+
+                predicate = (o) => operationIdsArray.Contains(o.OperationId);
             }
+
+            else
+            {
+                throw new InvalidOperationException("Either operationId(s),tag(s) or postman collection need to be specified.");
+            }
+
 
             return predicate;
         }
