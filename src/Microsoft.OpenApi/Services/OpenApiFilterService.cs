@@ -183,5 +183,23 @@ namespace Microsoft.OpenApi.Services
             }
             return moreStuff;
         }
+
+        private static string FormatUrlString(string url)
+        {
+            var graphVersions = new List<string>() { "v1.0", "beta" };
+            var queryPath = string.Empty;
+            foreach (var version in graphVersions)
+            {
+                if (!url.Contains(version))
+                {
+                    continue;
+                }
+
+                var querySegments = url.Split(new[] { "v1.0", "beta" }, StringSplitOptions.None);
+                queryPath = querySegments[1];
+            }
+
+            return queryPath;
+        }
     }
 }
