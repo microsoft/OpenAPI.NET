@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -50,15 +50,13 @@ namespace Microsoft.OpenApi.Hidi
             }
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
-            OpenApiDocument document;
-            document = result.OpenApiDocument;
+            var document = result.OpenApiDocument;
 
             // Check if filter options are provided, then execute
             if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
             {
                 throw new InvalidOperationException("Cannot filter by operationIds and tags at the same time.");
             }
-
             if (!string.IsNullOrEmpty(filterByOperationIds))
             {
                 var predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
