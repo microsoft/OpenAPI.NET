@@ -67,8 +67,6 @@ namespace Microsoft.OpenApi.Services
                 List<OpenApiOperation> openApiOps = new List<OpenApiOperation>();
                 List<OperationType> operationTypes = new List<OperationType>();
                 List<string> pathItems = new List<string>();
-                IDictionary<OperationType, OpenApiOperation> openApiOperations =
-                    new Dictionary<OperationType, OpenApiOperation>();
 
                 var graphVersion = source.Info.Version;
 
@@ -81,7 +79,7 @@ namespace Microsoft.OpenApi.Services
                     var serverList = source.Servers;
                     var url = FormatUrlString(path.Key, serverList);
 
-                    openApiOperations = GetOpenApiOperations(rootNode, url, graphVersion);
+                    var openApiOperations = GetOpenApiOperations(rootNode, url, graphVersion);
                     if (openApiOperations == null)
                     {
                         continue;
@@ -106,7 +104,9 @@ namespace Microsoft.OpenApi.Services
                 var opTypesArray = operationTypes.Select(x => x.ToString()).ToArray();
 
                 // predicate for matching operations, url and operationTypes
-                predicate = (path, operationType, o) => (pathItems.Contains(path) && opTypesArray.Contains(operationType.ToString())) || operationIdsArray.Contains(o.OperationId);
+                predicate = (path, operationType, o) =>
+                    (pathItems.Contains(path) && opTypesArray.Contains(operationType.ToString())) ||
+                    operationIdsArray.Contains(o.OperationId);
             }
 
             else
