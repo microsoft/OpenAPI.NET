@@ -65,8 +65,7 @@ namespace Microsoft.OpenApi.Services
             }
             else if (requestUrls != null)
             {
-                List<OperationType?> operationTypes = new List<OperationType?>();
-                List<string> pathItems = new List<string>();
+                List<string> operationTypes = new List<string>();
 
                 var graphVersion = source.Info.Version;
 
@@ -87,11 +86,8 @@ namespace Microsoft.OpenApi.Services
 
                     foreach (var ops in openApiOperations)
                     {
-                        //openApiOps.Add(ops.Value);
-                        operationTypes.Add(ops.Key);
+                        operationTypes.Add(ops.Key + url);
                     }
-
-                    pathItems.Add(url);
                 }
 
                 if (!(bool)operationTypes?.Any())
@@ -100,7 +96,7 @@ namespace Microsoft.OpenApi.Services
                 }
 
                 // predicate for matching operations, url and operationTypes
-                predicate = (path, operationType, o) => (pathItems.Contains(path) && operationTypes.Contains(operationType));
+                predicate = (path, operationType, o) => operationTypes.Contains(operationType + path);
             }
 
             else
