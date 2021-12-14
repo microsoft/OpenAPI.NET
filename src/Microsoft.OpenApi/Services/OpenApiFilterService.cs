@@ -21,10 +21,11 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="operationIds">Comma delimited list of operationIds or * for all operations.</param>
         /// <param name="tags">Comma delimited list of tags or a single regex.</param>
-        /// <param name="urls">A dictionary of requests from a postman collection.</param>
+        /// <param name="requestUrls">A dictionary of requests from a postman collection.</param>
         /// <param name="source">The input OpenAPI document.</param>
         /// <returns>A predicate.</returns>
-        public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, Dictionary<string, List<string>> requestUrls = null, OpenApiDocument source = null)
+        public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(string operationIds = null,
+            string tags = null, Dictionary<string, List<string>> requestUrls = null, OpenApiDocument source = null)
         {
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
@@ -64,8 +65,7 @@ namespace Microsoft.OpenApi.Services
             }
             else if (requestUrls != null)
             {
-                List<OpenApiOperation> openApiOps = new List<OpenApiOperation>();
-                List<OperationType> operationTypes = new List<OperationType>();
+                List<OperationType?> operationTypes = new List<OperationType?>();
                 List<string> pathItems = new List<string>();
 
                 var graphVersion = source.Info.Version;
@@ -87,26 +87,20 @@ namespace Microsoft.OpenApi.Services
 
                     foreach (var ops in openApiOperations)
                     {
-                        openApiOps.Add(ops.Value);
+                        //openApiOps.Add(ops.Value);
                         operationTypes.Add(ops.Key);
                     }
 
                     pathItems.Add(url);
                 }
 
-                if (!(bool) openApiOps?.Any())
+                if (!(bool)operationTypes?.Any())
                 {
                     throw new ArgumentException("The urls in the postman collection supplied could not be found.");
                 }
 
-                // Fetch the corresponding Operations Id(s) and operationTypes for the matched url
-                var operationIdsArray = openApiOps.Select(x => x.OperationId).ToArray();
-                var opTypesArray = operationTypes.Select(x => x.ToString()).ToArray();
-
                 // predicate for matching operations, url and operationTypes
-                predicate = (path, operationType, o) =>
-                    (pathItems.Contains(path) && opTypesArray.Contains(operationType.ToString())) ||
-                    operationIdsArray.Contains(o.OperationId);
+                predicate = (path, operationType, o) => (pathItems.Contains(path) && operationTypes.Contains(operationType));
             }
 
             else
