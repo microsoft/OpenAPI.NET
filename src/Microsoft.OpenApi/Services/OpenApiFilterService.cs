@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Services
                 var sources = new Dictionary<string, OpenApiDocument> {{graphVersion, source}};
                 var rootNode = CreateOpenApiUrlTreeNode(sources);
 
-                //Iterate through urls dictionary and fetch each url
+                //Iterate through urls dictionary and fetch operations for each url
                 foreach (var path in requestUrls)
                 {
                     var serverList = source.Servers;
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Services
                     throw new ArgumentException("The urls in the postman collection supplied could not be found.");
                 }
 
-                // predicate for matching operations, url and operationTypes
+                // predicate for matching url and operationTypes
                 predicate = (path, operationType, o) => operationTypes.Contains(operationType + path);
             }
 
