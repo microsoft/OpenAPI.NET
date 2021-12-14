@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="source">The target <see cref="OpenApiDocument"/>.</param>
         /// <param name="predicate">A predicate function.</param>
         /// <returns>A partial OpenAPI document.</returns>
-        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, Func<OpenApiOperation, bool> predicate)
+        public static OpenApiDocument CreateFilteredDocument(OpenApiDocument source, Func<string, OperationType?, OpenApiOperation, bool> predicate)
         {
             // Fetch and copy title, graphVersion and server info from OpenApiDoc
             var subset = new OpenApiDocument
@@ -303,11 +303,11 @@ namespace Microsoft.OpenApi.Services
             return operations;
         }
 
-        private static IList<SearchResult> FindOperations(OpenApiDocument graphOpenApi, Func<OpenApiOperation, bool> predicate)
+        private static IList<SearchResult> FindOperations(OpenApiDocument sourceDocument, Func<string, OperationType?, OpenApiOperation, bool> predicate)
         {
             var search = new OperationSearch(predicate);
             var walker = new OpenApiWalker(search);
-            walker.Walk(graphOpenApi);
+            walker.Walk(sourceDocument);
             return search.SearchResults;
         }
 
