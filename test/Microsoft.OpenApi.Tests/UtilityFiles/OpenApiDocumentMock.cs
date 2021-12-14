@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using System.Security.Policy;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 
-namespace OpenAPIService.Test
+namespace Microsoft.OpenApi.Tests.UtilityFiles
 {
     /// <summary>
     /// Mock class that creates a sample OpenAPI document.
@@ -27,6 +28,13 @@ namespace OpenAPIService.Test
                 {
                     Title = "People",
                     Version = "v1.0"
+                },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
+                    {
+                        Url = "https://graph.microsoft.com/v1.0"
+                    }
                 },
                 Paths = new OpenApiPaths()
                 {
@@ -723,7 +731,6 @@ namespace OpenAPIService.Test
                     }
                 }
             };
-
             return document;
         }
     }
