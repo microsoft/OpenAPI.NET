@@ -72,8 +72,8 @@ namespace Microsoft.OpenApi.Hidi
             if (!string.IsNullOrEmpty(filterByCollection))
             {
                 var fileStream = GetStream(filterByCollection);
-                var urlDictionary = OpenApiFilterService.ParseJsonCollectionFile(fileStream);
-                predicate = OpenApiFilterService.CreatePredicate(urls: urlDictionary, source:document);
+                var requestUrls = OpenApiFilterService.ParseJsonCollectionFile(fileStream);
+                predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source:document);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 

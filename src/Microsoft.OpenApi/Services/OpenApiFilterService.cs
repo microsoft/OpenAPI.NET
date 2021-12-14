@@ -24,11 +24,11 @@ namespace Microsoft.OpenApi.Services
         /// <param name="urls">A dictionary of requests from a postman collection.</param>
         /// <param name="source">The input OpenAPI document.</param>
         /// <returns>A predicate.</returns>
-        public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, Dictionary<string, List<string>> urls = null, OpenApiDocument source = null)
+        public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, Dictionary<string, List<string>> requestUrls = null, OpenApiDocument source = null)
         {
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
-            if (urls != null && (operationIds != null || tags != null))
+            if (requestUrls != null && (operationIds != null || tags != null))
             {
                 throw new InvalidOperationException("Cannot filter by postman collection and either operationIds and tags at the same time.");
             }
@@ -62,11 +62,13 @@ namespace Microsoft.OpenApi.Services
                     predicate = (url, operationType, o) => o.Tags.Any(tag => tagsArray.Contains(tag.Name));
                 }
             }
-            else if (urls != null)
+            else if (requestUrls != null)
             {
                 List<OpenApiOperation> openApiOps = new List<OpenApiOperation>();
                 List<OperationType> operationTypes = new List<OperationType>();
                 List<string> pathItems = new List<string>();
+                IDictionary<OperationType, OpenApiOperation> openApiOperations =
+                    new Dictionary<OperationType, OpenApiOperation>();
 
                 var graphVersion = source.Info.Version;
 
@@ -74,28 +76,21 @@ namespace Microsoft.OpenApi.Services
                 var rootNode = CreateOpenApiUrlTreeNode(sources);
 
                 //Iterate through urls dictionary and fetch each url
-                foreach (var path in urls)
+                foreach (var path in requestUrls)
                 {
                     var serverList = source.Servers;
                     var url = FormatUrlString(path.Key, serverList);
 
-                    var openApiOperations = GetOpenApiOperations(rootNode, url, graphVersion);
+                    openApiOperations = GetOpenApiOperations(rootNode, url, graphVersion);
                     if (openApiOperations == null)
                     {
                         continue;
                     }
 
-                    foreach (var method in path.Value)
+                    foreach (var ops in openApiOperations)
                     {
-                        var ops = openApiOperations
-                            .Where(x => x.Key.ToString().Equals(method, StringComparison.OrdinalIgnoreCase))
-                            .Select(x => x.Value).ToList();
-                        var opTypes = openApiOperations
-                            .Where(x => x.Key.ToString().Equals(method, StringComparison.OrdinalIgnoreCase))
-                            .Select(x => x.Key).ToList();
-
-                        openApiOps.AddRange(ops);
-                        operationTypes.AddRange(opTypes);
+                        openApiOps.Add(ops.Value);
+                        operationTypes.Add(ops.Key);
                     }
 
                     pathItems.Add(url);
