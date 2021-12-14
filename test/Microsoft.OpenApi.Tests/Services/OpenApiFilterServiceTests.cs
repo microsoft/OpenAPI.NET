@@ -2,9 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.IO;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
-using OpenAPIService.Test;
+using Microsoft.OpenApi.Tests.UtilityFiles;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
@@ -43,11 +44,47 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
+        public void ReturnFilteredOpenApiDocumentBasedOnPostmanCollection()
+        {
+            // Arrange
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver2.json");
+            var fileInput = new FileInfo(filePath);
+            var stream = fileInput.OpenRead();
+
+            // Act
+            var requestUrls = OpenApiFilterService.ParseJsonCollectionFile(stream);
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
+
+            // Assert
+            Assert.NotNull(subsetOpenApiDocument);
+            Assert.NotEmpty(subsetOpenApiDocument.Paths);
+            Assert.Equal(3, subsetOpenApiDocument.Paths.Count);
+        }
+
+        [Fact]
+        public void ThrowsExceptionWhenUrlsInCollectionAreMissingFromSourceDocument()
+        {
+            // Arrange
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver1.json");
+            var fileInput = new FileInfo(filePath);
+            var stream = fileInput.OpenRead();
+
+            // Act
+            var requestUrls = OpenApiFilterService.ParseJsonCollectionFile(stream);
+
+            // Assert
+            var message = Assert.Throws<ArgumentException>(() =>
+                OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock)).Message;
+            Assert.Equal("The urls in the postman collection supplied could not be found.", message);
+        }
+
+        [Fact]
         public void ThrowsInvalidOperationExceptionInCreatePredicateWhenInvalidArgumentsArePassed()
         {
             // Act and Assert
             var message1 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate(null, null)).Message;
-            Assert.Equal("Either operationId(s) or tag(s) need to be specified.", message1);
+            Assert.Equal("Either operationId(s),tag(s) or postman collection need to be specified.", message1);
 
             var message2 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate("users.user.ListUser", "users.user")).Message;
             Assert.Equal("Cannot specify both operationIds and tags at the same time.", message2);
