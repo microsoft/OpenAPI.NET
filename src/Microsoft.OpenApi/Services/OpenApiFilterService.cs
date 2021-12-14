@@ -89,20 +89,28 @@ namespace Microsoft.OpenApi.Services
                         var ops = openApiOperations
                             .Where(x => x.Key.ToString().Equals(method, StringComparison.OrdinalIgnoreCase))
                             .Select(x => x.Value).ToList();
+                        var opTypes = openApiOperations
+                            .Where(x => x.Key.ToString().Equals(method, StringComparison.OrdinalIgnoreCase))
+                            .Select(x => x.Key).ToList();
 
                         openApiOps.AddRange(ops);
+                        operationTypes.AddRange(opTypes);
                     }
+
+                    pathItems.Add(url);
                 }
 
-                if (!(openApiOps?.Any() ?? false))
+                if (!((bool) openApiOps?.Any()))
                 {
                     throw new ArgumentException("The urls in the postman collection supplied could not be found.");
                 }
 
-                // Fetch the corresponding Operations Id(s) for the matched url
+                // Fetch the corresponding Operations Id(s) and operationTypes for the matched url
                 var operationIdsArray = openApiOps.Select(x => x.OperationId).ToArray();
+                var opTypesArray = operationTypes.Select(x => x.ToString()).ToArray();
 
-                predicate = (o) => operationIdsArray.Contains(o.OperationId);
+                // predicate for matching operations, url and operationTypes
+                predicate = (path, operationType, o) => (pathItems.Contains(path) && opTypesArray.Contains(operationType.ToString())) || operationIdsArray.Contains(o.OperationId);
             }
 
             else
