@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Services
                     pathItems.Add(url);
                 }
 
-                if (!((bool) openApiOps?.Any()))
+                if (!(bool) openApiOps?.Any())
                 {
                     throw new ArgumentException("The urls in the postman collection supplied could not be found.");
                 }
