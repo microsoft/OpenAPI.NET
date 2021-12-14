@@ -34,5 +34,11 @@
 
   <ItemGroup>
     <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />
+    <None Update="UtilityFiles\postmanCollection_ver1.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="UtilityFiles\postmanCollection_ver2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
