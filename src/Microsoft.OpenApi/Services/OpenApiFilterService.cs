@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -21,10 +21,13 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="operationIds">Comma delimited list of operationIds or * for all operations.</param>
         /// <param name="tags">Comma delimited list of tags or a single regex.</param>
+        /// <param name="urls">A dictionary of requests from a postman collection.</param>
+        /// <param name="source">The input OpenAPI document.</param>
         /// <returns>A predicate.</returns>
-        public static Func<OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, Dictionary<string, List<string>> urls = null, OpenApiDocument source = null)
+        public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, Dictionary<string, List<string>> urls = null, OpenApiDocument source = null)
         {
-            Func<OpenApiOperation, bool> predicate;
+            Func<string, OperationType?, OpenApiOperation, bool> predicate;
+
             if (urls != null && (operationIds != null || tags != null))
             {
                 throw new InvalidOperationException("Cannot filter by postman collection and either operationIds and tags at the same time.");
@@ -37,12 +40,12 @@ namespace Microsoft.OpenApi.Services
             {
                 if (operationIds == "*")
                 {
-                    predicate = (o) => true;  // All operations
+                    predicate = (url, operationType, o) => true;  // All operations
                 }
                 else
                 {
                     var operationIdsArray = operationIds.Split(',');
-                    predicate = (o) => operationIdsArray.Contains(o.OperationId);
+                    predicate = (url, operationType, o) => operationIdsArray.Contains(o.OperationId);
                 }
             }
             else if (tags != null)
@@ -52,16 +55,18 @@ namespace Microsoft.OpenApi.Services
                 {
                     var regex = new Regex(tagsArray[0]);
 
-                    predicate = (o) => o.Tags.Any(tag => regex.IsMatch(tag.Name));
+                    predicate = (url, operationType, o) => o.Tags.Any(tag => regex.IsMatch(tag.Name));
                 }
                 else
                 {
-                    predicate = (o) => o.Tags.Any(tag => tagsArray.Contains(tag.Name));
+                    predicate = (url, operationType, o) => o.Tags.Any(tag => tagsArray.Contains(tag.Name));
                 }
             }
             else if (urls != null)
             {
                 List<OpenApiOperation> openApiOps = new List<OpenApiOperation>();
+                List<OperationType> operationTypes = new List<OperationType>();
+                List<string> pathItems = new List<string>();
 
                 var graphVersion = source.Info.Version;
 

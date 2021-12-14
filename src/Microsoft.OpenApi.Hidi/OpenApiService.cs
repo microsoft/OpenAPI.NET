@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Hidi
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
             var document = result.OpenApiDocument;
-            Func<OpenApiOperation, bool> predicate;
+            Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
             // Check if filter options are provided, then execute
             if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
