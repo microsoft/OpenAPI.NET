@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -76,7 +76,8 @@ namespace Microsoft.OpenApi.Services
                 //Iterate through urls dictionary and fetch each url
                 foreach (var path in urls)
                 {
-                    var url = FormatUrlString(path.Key);
+                    var serverList = source.Servers;
+                    var url = FormatUrlString(path.Key, serverList);
 
                     var openApiOperations = GetOpenApiOperations(rootNode, url, graphVersion);
                     if (openApiOperations == null)
@@ -365,18 +366,18 @@ namespace Microsoft.OpenApi.Services
             return moreStuff;
         }
 
-        private static string FormatUrlString(string url)
+        private static string FormatUrlString(string url, IList<OpenApiServer> serverList)
         {
-            var graphVersions = new List<string>() { "v1.0", "beta" };
             var queryPath = string.Empty;
-            foreach (var version in graphVersions)
+            foreach (var server in serverList)
             {
-                if (!url.Contains(version))
+                var serverUrl = server.Url;
+                if (!url.Contains(serverUrl))
                 {
                     continue;
                 }
 
-                var querySegments = url.Split(new[] { "v1.0", "beta" }, StringSplitOptions.None);
+                var querySegments = url.Split(new[]{ serverUrl }, StringSplitOptions.None);
                 queryPath = querySegments[1];
             }
 
