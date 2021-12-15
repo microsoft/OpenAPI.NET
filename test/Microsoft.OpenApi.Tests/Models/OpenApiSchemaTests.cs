@@ -5,17 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
+    [UsesVerify]
     public class OpenApiSchemaTests
     {
         public static OpenApiSchema BasicSchema = new OpenApiSchema();
@@ -365,26 +368,15 @@ namespace Microsoft.OpenApi.Tests.Models
             actual.Should().Be(expected);
         }
 
-        [Fact]
-        public void SerializeReferencedSchemaAsV3WithoutReferenceJsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedSchemaAsV3WithoutReferenceJsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
-            var expected = @"{
-  ""title"": ""title1"",
-  ""multipleOf"": 3,
-  ""maximum"": 42,
-  ""minimum"": 10,
-  ""exclusiveMinimum"": true,
-  ""type"": ""integer"",
-  ""default"": 15,
-  ""nullable"": true,
-  ""externalDocs"": {
-    ""url"": ""http://example.com/externalDocs""
-  }
-}";
 
             // Act
             ReferencedSchema.SerializeAsV3WithoutReference(writer);
@@ -392,21 +384,17 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedSchemaAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedSchemaAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-
-            var expected = @"{
-  ""$ref"": ""#/components/schemas/schemaObject1""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             ReferencedSchema.SerializeAsV3(writer);
@@ -414,58 +402,17 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeSchemaWRequiredPropertiesAsV2JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeSchemaWRequiredPropertiesAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected = @"{
-  ""title"": ""title1"",
-  ""required"": [
-    ""property1""
-  ],
-  ""properties"": {
-    ""property1"": {
-      ""required"": [
-        ""property3""
-      ],
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        },
-        ""property3"": {
-          ""maxLength"": 15,
-          ""type"": ""string""
-        }
-      }
-    },
-    ""property4"": {
-      ""properties"": {
-        ""property5"": {
-          ""properties"": {
-            ""property6"": {
-              ""type"": ""boolean""
-            }
-          }
-        },
-        ""property7"": {
-          ""minLength"": 2,
-          ""type"": ""string""
-        }
-      },
-      ""readOnly"": true
-    }
-  },
-  ""externalDocs"": {
-    ""url"": ""http://example.com/externalDocs""
-  }
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             AdvancedSchemaWithRequiredPropertiesObject.SerializeAsV2(writer);
@@ -473,9 +420,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
     }
 }

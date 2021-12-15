@@ -954,6 +954,11 @@ namespace Microsoft.OpenApi.Services
         public string Response { get; set; }
         public string ServerVariable { get; }
     }
+    public static class OpenApiFilterService
+    {
+        public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument source, System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
+        public static System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null) { }
+    }
     public class OpenApiReferenceError : Microsoft.OpenApi.Models.OpenApiError
     {
         public OpenApiReferenceError(Microsoft.OpenApi.Exceptions.OpenApiException exception) { }
@@ -1043,6 +1048,19 @@ namespace Microsoft.OpenApi.Services
         public bool Contains(string location) { }
         public System.IO.Stream GetArtifact(string location) { }
         public Microsoft.OpenApi.Interfaces.IOpenApiReferenceable ResolveReference(Microsoft.OpenApi.Models.OpenApiReference reference) { }
+    }
+    public class OperationSearch : Microsoft.OpenApi.Services.OpenApiVisitorBase
+    {
+        public OperationSearch(System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Services.SearchResult> SearchResults { get; }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiOperation operation) { }
+        public override void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiParameter> parameters) { }
+    }
+    public class SearchResult
+    {
+        public SearchResult() { }
+        public Microsoft.OpenApi.Services.CurrentKeys CurrentKeys { get; set; }
+        public Microsoft.OpenApi.Models.OpenApiOperation Operation { get; set; }
     }
 }
 namespace Microsoft.OpenApi.Validations
@@ -1235,10 +1253,12 @@ namespace Microsoft.OpenApi.Writers
     public class OpenApiJsonWriter : Microsoft.OpenApi.Writers.OpenApiWriterBase
     {
         public OpenApiJsonWriter(System.IO.TextWriter textWriter) { }
+        public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.Writers.OpenApiJsonWriterSettings settings) { }
         public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.Writers.OpenApiWriterSettings settings) { }
         protected override int BaseIndentation { get; }
         public override void WriteEndArray() { }
         public override void WriteEndObject() { }
+        public override void WriteIndentation() { }
         public override void WriteNull() { }
         public override void WritePropertyName(string name) { }
         public override void WriteRaw(string value) { }
@@ -1246,6 +1266,11 @@ namespace Microsoft.OpenApi.Writers
         public override void WriteStartObject() { }
         public override void WriteValue(string value) { }
         protected override void WriteValueSeparator() { }
+    }
+    public class OpenApiJsonWriterSettings : Microsoft.OpenApi.Writers.OpenApiWriterSettings
+    {
+        public OpenApiJsonWriterSettings() { }
+        public bool Terse { get; set; }
     }
     public static class OpenApiWriterAnyExtensions
     {

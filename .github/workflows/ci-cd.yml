@@ -49,7 +49,7 @@ jobs:
       - if: steps.conditionals_handler.outputs.is_default_branch == 'true'
         name: Bump GH tag
         id: tag_generator
-        uses: mathieudutour/github-tag-action@v5.4
+        uses: mathieudutour/github-tag-action@v6.0
         with: 
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
@@ -62,7 +62,7 @@ jobs:
           $projectsArray = @(
             '.\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj',
             '.\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj',
-            '.\src\Microsoft.OpenApi.Tool\Microsoft.OpenApi.Tool.csproj'
+            '.\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj'
           )
           $gitNewVersion = if ("${{ steps.tag_generator.outputs.new_version }}") {"${{ steps.tag_generator.outputs.new_version }}"} else {$null}
           $projectCurrentVersion = ([xml](Get-Content .\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj)).Project.PropertyGroup.Version

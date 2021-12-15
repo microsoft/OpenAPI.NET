@@ -23,9 +23,24 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">Settings for controlling how the OpenAPI document will be written out.</param>
+        public OpenApiJsonWriter(TextWriter textWriter, OpenApiJsonWriterSettings settings) : base(textWriter, settings)
+        {
+            _produceTerseOutput = settings.Terse;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenApiJsonWriter"/> class.
+        /// </summary>
+        /// <param name="textWriter">The text writer.</param>
+        /// <param name="settings">Settings for controlling how the OpenAPI document will be written out.</param>
         public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
         {
         }
+
+        /// <summary>
+        /// Indicates whether or not the produced document will be written in a compact or pretty fashion.
+        /// </summary>
+        private bool _produceTerseOutput = false;
 
         /// <summary>
         /// Base Indentation Level.
@@ -51,7 +66,7 @@ namespace Microsoft.OpenApi.Writers
                     Writer.Write(WriterConstants.ArrayElementSeparator);
                 }
 
-                Writer.WriteLine();
+                WriteLine();
                 WriteIndentation();
             }
 
@@ -68,13 +83,16 @@ namespace Microsoft.OpenApi.Writers
             var currentScope = EndScope(ScopeType.Object);
             if (currentScope.ObjectCount != 0)
             {
-                Writer.WriteLine();
+                WriteLine();
                 DecreaseIndentation();
                 WriteIndentation();
             }
             else
             {
-                Writer.Write(WriterConstants.WhiteSpaceForEmptyObject);
+                if (!_produceTerseOutput)
+                {
+                    Writer.Write(WriterConstants.WhiteSpaceForEmptyObject);
+                }
                 DecreaseIndentation();
             }
 
@@ -99,7 +117,7 @@ namespace Microsoft.OpenApi.Writers
                     Writer.Write(WriterConstants.ArrayElementSeparator);
                 }
 
-                Writer.WriteLine();
+                WriteLine();
                 WriteIndentation();
             }
 
@@ -115,7 +133,7 @@ namespace Microsoft.OpenApi.Writers
             var current = EndScope(ScopeType.Array);
             if (current.ObjectCount != 0)
             {
-                Writer.WriteLine();
+                WriteLine();
                 DecreaseIndentation();
                 WriteIndentation();
             }
@@ -143,7 +161,7 @@ namespace Microsoft.OpenApi.Writers
                 Writer.Write(WriterConstants.ObjectMemberSeparator);
             }
 
-            Writer.WriteLine();
+            WriteLine();
 
             currentScope.ObjectCount++;
 
@@ -154,6 +172,11 @@ namespace Microsoft.OpenApi.Writers
             Writer.Write(name);
 
             Writer.Write(WriterConstants.NameValueSeparator);
+
+            if (!_produceTerseOutput)
+            {
+                Writer.Write(WriterConstants.NameValueSeparatorWhiteSpaceSuffix);
+            }
         }
 
         /// <summary>
@@ -198,7 +221,7 @@ namespace Microsoft.OpenApi.Writers
                     Writer.Write(WriterConstants.ArrayElementSeparator);
                 }
 
-                Writer.WriteLine();
+                WriteLine();
                 WriteIndentation();
                 currentScope.ObjectCount++;
             }
@@ -211,6 +234,32 @@ namespace Microsoft.OpenApi.Writers
         {
             WriteValueSeparator();
             Writer.Write(value);
+        }
+
+        /// <summary>
+        /// Write the indentation.
+        /// </summary>
+        public override void WriteIndentation()
+        {
+            if (_produceTerseOutput)
+            {
+                return;
+            }
+
+            base.WriteIndentation();
+        }
+
+        /// <summary>
+        /// Writes a line terminator to the text string or stream.
+        /// </summary>
+        private void WriteLine()
+        {
+            if (_produceTerseOutput)
+            {
+                return;
+            }
+
+            Writer.WriteLine();
         }
     }
 }
