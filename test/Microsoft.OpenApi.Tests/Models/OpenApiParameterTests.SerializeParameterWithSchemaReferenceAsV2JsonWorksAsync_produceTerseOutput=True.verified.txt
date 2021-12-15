@@ -1,0 +1,1 @@
+{"in":"header","name":"name1","description":"description1","required":true,"type":"string"}
