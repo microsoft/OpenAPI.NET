@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Newtonsoft.Json;
@@ -24,36 +25,36 @@ namespace Microsoft.OpenApi.Tests.Writers
             _output = output;
         }
 
+        static bool[] shouldProduceTerseOutputValues = new[] { true, false };
+
         public static IEnumerable<object[]> WriteStringListAsJsonShouldMatchExpectedTestCases()
         {
-            yield return new object[]
-            {
-                new[]
-                {
-                    "string1",
-                    "string2",
-                    "string3",
-                    "string4",
-                    "string5",
-                    "string6",
-                    "string7",
-                    "string8"
+            return
+                from input in new string[][] {
+                    new[]
+                    {
+                        "string1",
+                        "string2",
+                        "string3",
+                        "string4",
+                        "string5",
+                        "string6",
+                        "string7",
+                        "string8"
+                    },
+                    new[] {"string1", "string1", "string1", "string1"}
                 }
-            };
-
-            yield return new object[]
-            {
-                new[] {"string1", "string1", "string1", "string1"}
-            };
+                from shouldBeTerse in shouldProduceTerseOutputValues
+                select new object[] { input, shouldBeTerse };
         }
 
         [Theory]
         [MemberData(nameof(WriteStringListAsJsonShouldMatchExpectedTestCases))]
-        public void WriteStringListAsJsonShouldMatchExpected(string[] stringValues)
+        public void WriteStringListAsJsonShouldMatchExpected(string[] stringValues, bool produceTerseOutput)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputString);
+            var writer = new OpenApiJsonWriter(outputString, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             writer.WriteStartArray();
@@ -75,123 +76,112 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesSimple()
         {
-            // Simple map
-            yield return new object[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["property1"] = "value1",
-                    ["property2"] = "value2",
-                    ["property3"] = "value3",
-                    ["property4"] = "value4"
-                }
-            };
+            return
+                from input in new IDictionary<string, object>[] {
+                    // Simple map
+                    new Dictionary<string, object>
+                    {
+                        ["property1"] = "value1",
+                        ["property2"] = "value2",
+                        ["property3"] = "value3",
+                        ["property4"] = "value4"
+                    },
 
-            // Simple map with duplicate values
-            yield return new object[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["property1"] = "value1",
-                    ["property2"] = "value1",
-                    ["property3"] = "value1",
-                    ["property4"] = "value1"
+                    // Simple map with duplicate values
+                    new Dictionary<string, object>
+                    {
+                        ["property1"] = "value1",
+                        ["property2"] = "value1",
+                        ["property3"] = "value1",
+                        ["property4"] = "value1"
+                    },
                 }
-            };
+                from shouldBeTerse in shouldProduceTerseOutputValues
+                select new object[] { input, shouldBeTerse };
         }
 
         public static IEnumerable<object[]> WriteMapAsJsonShouldMatchExpectedTestCasesComplex()
         {
-            // Empty map and empty list
-            yield return new object[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["property1"] = new Dictionary<string, object>(),
-                    ["property2"] = new List<string>(),
-                    ["property3"] = new List<object>
+            return
+                from input in new IDictionary<string, object>[] {
+                    // Empty map and empty list
+                    new Dictionary<string, object>
                     {
-                        new Dictionary<string, object>(),
-                    },
-                    ["property4"] = "value4"
-                }
-            };
-
-            // Number, boolean, and null handling
-            yield return new object[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["property1"] = "10.0",
-                    ["property2"] = "10",
-                    ["property3"] = "-5",
-                    ["property4"] = 10.0M,
-                    ["property5"] = 10,
-                    ["property6"] = -5,
-                    ["property7"] = true,
-                    ["property8"] = "true",
-                    ["property9"] = null,
-                    ["property10"] = "null",
-                    ["property11"] = "",
-                }
-            };
-
-            // DateTime
-            yield return new object[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["property1"] = new DateTime(1970, 01, 01),
-                    ["property2"] = new DateTimeOffset(new DateTime(1970, 01, 01)),
-                    ["property3"] = new DateTime(2018, 04, 03),
-                }
-            };
-
-            // Nested map
-            yield return new object[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["property1"] = new Dictionary<string, object>
-                    {
-                        ["innerProperty1"] = "innerValue1"
-                    },
-                    ["property2"] = "value2",
-                    ["property3"] = new Dictionary<string, object>
-                    {
-                        ["innerProperty3"] = "innerValue3"
-                    },
-                    ["property4"] = "value4"
-                }
-            };
-
-            // Nested map and list
-            yield return new object[]
-            {
-                new Dictionary<string, object>
-                {
-                    ["property1"] = new Dictionary<string, object>(),
-                    ["property2"] = new List<string>(),
-                    ["property3"] = new List<object>
-                    {
-                        new Dictionary<string, object>(),
-                        "string1",
-                        new Dictionary<string, object>
+                        ["property1"] = new Dictionary<string, object>(),
+                        ["property2"] = new List<string>(),
+                        ["property3"] = new List<object>
                         {
-                            ["innerProperty1"] = new List<object>(),
-                            ["innerProperty2"] = "string2",
-                            ["innerProperty3"] = new List<object>
+                            new Dictionary<string, object>(),
+                        },
+                        ["property4"] = "value4"
+                    },
+
+                    // Number, boolean, and null handling
+                    new Dictionary<string, object>
+                    {
+                        ["property1"] = "10.0",
+                        ["property2"] = "10",
+                        ["property3"] = "-5",
+                        ["property4"] = 10.0M,
+                        ["property5"] = 10,
+                        ["property6"] = -5,
+                        ["property7"] = true,
+                        ["property8"] = "true",
+                        ["property9"] = null,
+                        ["property10"] = "null",
+                        ["property11"] = "",
+                    },
+
+                    // DateTime
+                    new Dictionary<string, object>
+                    {
+                        ["property1"] = new DateTime(1970, 01, 01),
+                        ["property2"] = new DateTimeOffset(new DateTime(1970, 01, 01)),
+                        ["property3"] = new DateTime(2018, 04, 03),
+                    },
+
+                    // Nested map
+                    new Dictionary<string, object>
+                    {
+                        ["property1"] = new Dictionary<string, object>
+                        {
+                            ["innerProperty1"] = "innerValue1"
+                        },
+                        ["property2"] = "value2",
+                        ["property3"] = new Dictionary<string, object>
+                        {
+                            ["innerProperty3"] = "innerValue3"
+                        },
+                        ["property4"] = "value4"
+                    },
+
+                    // Nested map and list
+                    new Dictionary<string, object>
+                    {
+                        ["property1"] = new Dictionary<string, object>(),
+                        ["property2"] = new List<string>(),
+                        ["property3"] = new List<object>
+                        {
+                            new Dictionary<string, object>(),
+                            "string1",
+                            new Dictionary<string, object>
                             {
-                                new List<string>
+                                ["innerProperty1"] = new List<object>(),
+                                ["innerProperty2"] = "string2",
+                                ["innerProperty3"] = new List<object>
                                 {
-                                    "string3"
+                                    new List<string>
+                                    {
+                                        "string3"
+                                    }
                                 }
                             }
-                        }
+                        },
+                        ["property4"] = "value4"
                     },
-                    ["property4"] = "value4"
                 }
-            };
+                from shouldBeTerse in shouldProduceTerseOutputValues
+                select new object[] { input, shouldBeTerse };
         }
 
         private void WriteValueRecursive(OpenApiJsonWriter writer, object value)
@@ -233,11 +223,11 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [MemberData(nameof(WriteMapAsJsonShouldMatchExpectedTestCasesSimple))]
         [MemberData(nameof(WriteMapAsJsonShouldMatchExpectedTestCasesComplex))]
-        public void WriteMapAsJsonShouldMatchExpected(IDictionary<string, object> inputMap)
+        public void WriteMapAsJsonShouldMatchExpected(IDictionary<string, object> inputMap, bool produceTerseOutput)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputString);
+            var writer = new OpenApiJsonWriter(outputString, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             WriteValueRecursive(writer, inputMap);
@@ -251,34 +241,24 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> WriteDateTimeAsJsonTestCases()
         {
-            yield return new object[]
-            {
-                new DateTimeOffset(2018, 1, 1, 10, 20, 30, TimeSpan.Zero),
-            };
-
-            yield return new object[]
-            {
-                new DateTimeOffset(2018, 1, 1, 10, 20, 30, 100, TimeSpan.FromHours(14)),
-            };
-
-            yield return new object[]
-            {
-                DateTimeOffset.UtcNow + TimeSpan.FromDays(4)
-            };
-
-            yield return new object[]
-            {
-                DateTime.UtcNow + TimeSpan.FromDays(4)
-            };
+            return
+                from input in new DateTimeOffset[] {
+                    new DateTimeOffset(2018, 1, 1, 10, 20, 30, TimeSpan.Zero),
+                    new DateTimeOffset(2018, 1, 1, 10, 20, 30, 100, TimeSpan.FromHours(14)),
+                    DateTimeOffset.UtcNow + TimeSpan.FromDays(4),
+                    DateTime.UtcNow + TimeSpan.FromDays(4),
+                }
+                from shouldBeTerse in shouldProduceTerseOutputValues
+                select new object[] { input, shouldBeTerse };
         }
 
         [Theory]
         [MemberData(nameof(WriteDateTimeAsJsonTestCases))]
-        public void WriteDateTimeAsJsonShouldMatchExpected(DateTimeOffset dateTimeOffset)
+        public void WriteDateTimeAsJsonShouldMatchExpected(DateTimeOffset dateTimeOffset, bool produceTerseOutput)
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputString);
+            var writer = new OpenApiJsonWriter(outputString, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             writer.WriteValue(dateTimeOffset);
