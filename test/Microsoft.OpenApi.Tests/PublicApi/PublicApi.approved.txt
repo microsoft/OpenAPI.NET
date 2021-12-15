@@ -984,8 +984,8 @@ namespace Microsoft.OpenApi.Services
         protected OpenApiVisitorBase() { }
         public Microsoft.OpenApi.Services.CurrentKeys CurrentKeys { get; }
         public string PathString { get; }
-        public void Enter(string segment) { }
-        public void Exit() { }
+        public virtual void Enter(string segment) { }
+        public virtual void Exit() { }
         public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible openApiExtensible) { }
         public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension openApiExtension) { }
         public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiReferenceable referenceable) { }
