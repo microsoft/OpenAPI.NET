@@ -1253,10 +1253,12 @@ namespace Microsoft.OpenApi.Writers
     public class OpenApiJsonWriter : Microsoft.OpenApi.Writers.OpenApiWriterBase
     {
         public OpenApiJsonWriter(System.IO.TextWriter textWriter) { }
+        public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.Writers.OpenApiJsonWriterSettings settings) { }
         public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.Writers.OpenApiWriterSettings settings) { }
         protected override int BaseIndentation { get; }
         public override void WriteEndArray() { }
         public override void WriteEndObject() { }
+        public override void WriteIndentation() { }
         public override void WriteNull() { }
         public override void WritePropertyName(string name) { }
         public override void WriteRaw(string value) { }
@@ -1264,6 +1266,11 @@ namespace Microsoft.OpenApi.Writers
         public override void WriteStartObject() { }
         public override void WriteValue(string value) { }
         protected override void WriteValueSeparator() { }
+    }
+    public class OpenApiJsonWriterSettings : Microsoft.OpenApi.Writers.OpenApiWriterSettings
+    {
+        public OpenApiJsonWriterSettings() { }
+        public bool Terse { get; set; }
     }
     public static class OpenApiWriterAnyExtensions
     {
