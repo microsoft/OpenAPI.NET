@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Services
             // Fetch and copy title, graphVersion and server info from OpenApiDoc
             var subset = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new OpenApiInfo
                 {
                     Title = source.Info.Title + " - Subset",
                     Description = source.Info.Description,
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Services
 
                 if (!requestUrls.ContainsKey(path))
                 {
-                    requestUrls.Add(path, new List<string>() { method });
+                    requestUrls.Add(path, new List<string> { method });
                 }
                 else
                 {
