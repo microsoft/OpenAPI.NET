@@ -196,9 +196,9 @@ namespace Microsoft.OpenApi.Services
             var requestUrls = new Dictionary<string, List<string>>();
 
             // Convert file to JsonDocument
-            using JsonDocument document = JsonDocument.Parse(stream);
-            JsonElement root = document.RootElement;
-            JsonElement itemElement = root.GetProperty("item");
+            using var document = JsonDocument.Parse(stream);
+            var root = document.RootElement;
+            var itemElement = root.GetProperty("item");
             foreach(JsonElement item in itemElement.EnumerateArray())
             {
                 var requestObject = item.GetProperty("request");
