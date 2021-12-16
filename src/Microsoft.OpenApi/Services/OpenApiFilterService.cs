@@ -41,12 +41,12 @@ namespace Microsoft.OpenApi.Services
             {
                 if (operationIds == "*")
                 {
-                    predicate = (url, operationType, o) => true;  // All operations
+                    predicate = (url, operationType, operation) => true;  // All operations
                 }
                 else
                 {
                     var operationIdsArray = operationIds.Split(',');
-                    predicate = (url, operationType, o) => operationIdsArray.Contains(o.OperationId);
+                    predicate = (url, operationType, operation) => operationIdsArray.Contains(operation.OperationId);
                 }
             }
             else if (tags != null)
@@ -56,11 +56,11 @@ namespace Microsoft.OpenApi.Services
                 {
                     var regex = new Regex(tagsArray[0]);
 
-                    predicate = (url, operationType, o) => o.Tags.Any(tag => regex.IsMatch(tag.Name));
+                    predicate = (url, operationType, operation) => operation.Tags.Any(tag => regex.IsMatch(tag.Name));
                 }
                 else
                 {
-                    predicate = (url, operationType, o) => o.Tags.Any(tag => tagsArray.Contains(tag.Name));
+                    predicate = (url, operationType, operation) => operation.Tags.Any(tag => tagsArray.Contains(tag.Name));
                 }
             }
             else if (requestUrls != null)
@@ -96,7 +96,7 @@ namespace Microsoft.OpenApi.Services
                 }
 
                 // predicate for matching url and operationTypes
-                predicate = (path, operationType, o) => operationTypes.Contains(operationType + path);
+                predicate = (path, operationType, operation) => operationTypes.Contains(operationType + path);
             }
 
             else
