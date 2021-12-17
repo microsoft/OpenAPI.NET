@@ -67,26 +67,29 @@ namespace Microsoft.OpenApi.Services
             {
                 var operationTypes = new List<string>();
 
-                var apiVersion = source.Info.Version;
-
-                var sources = new Dictionary<string, OpenApiDocument> {{ apiVersion, source}};
-                var rootNode = CreateOpenApiUrlTreeNode(sources);
-
-                //Iterate through urls dictionary and fetch operations for each url
-                foreach (var path in requestUrls)
+                if (source != null)
                 {
-                    var serverList = source.Servers;
-                    var url = FormatUrlString(path.Key, serverList);
+                    var apiVersion = source.Info.Version;
 
-                    var openApiOperations = GetOpenApiOperations(rootNode, url, apiVersion);
-                    if (openApiOperations == null)
-                    {
-                        continue;
-                    }
+                    var sources = new Dictionary<string, OpenApiDocument> {{ apiVersion, source}};
+                    var rootNode = CreateOpenApiUrlTreeNode(sources);
 
-                    foreach (var ops in openApiOperations)
+                    //Iterate through urls dictionary and fetch operations for each url
+                    foreach (var path in requestUrls)
                     {
-                        operationTypes.Add(ops.Key + url);
+                        var serverList = source.Servers;
+                        var url = FormatUrlString(path.Key, serverList);
+
+                        var openApiOperations = GetOpenApiOperations(rootNode, url, apiVersion);
+                        if (openApiOperations == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (var ops in openApiOperations)
+                        {
+                            operationTypes.Add(ops.Key + url);
+                        }
                     }
                 }
 
@@ -199,10 +202,8 @@ namespace Microsoft.OpenApi.Services
             using var document = JsonDocument.Parse(stream);
             var root = document.RootElement;
             var itemElement = root.GetProperty("item");
-            foreach(JsonElement item in itemElement.EnumerateArray())
+            foreach(var requestObject in itemElement.EnumerateArray().Select(item => item.GetProperty("request")))
             {
-                var requestObject = item.GetProperty("request");
-
                 // Fetch list of methods and urls from collection, store them in a dictionary
                 var path = requestObject.GetProperty("url").GetProperty("raw").ToString();
                 var method = requestObject.GetProperty("method").ToString();
