@@ -65,11 +65,11 @@ namespace Microsoft.OpenApi.Services
             }
             else if (requestUrls != null)
             {
-                List<string> operationTypes = new List<string>();
+                var operationTypes = new List<string>();
 
-                var graphVersion = source.Info.Version;
+                var apiVersion = source.Info.Version;
 
-                var sources = new Dictionary<string, OpenApiDocument> {{graphVersion, source}};
+                var sources = new Dictionary<string, OpenApiDocument> {{ apiVersion, source}};
                 var rootNode = CreateOpenApiUrlTreeNode(sources);
 
                 //Iterate through urls dictionary and fetch operations for each url
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Services
                     var serverList = source.Servers;
                     var url = FormatUrlString(path.Key, serverList);
 
-                    var openApiOperations = GetOpenApiOperations(rootNode, url, graphVersion);
+                    var openApiOperations = GetOpenApiOperations(rootNode, url, apiVersion);
                     if (openApiOperations == null)
                     {
                         continue;
@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
 
-                if (!(bool)operationTypes?.Any())
+                if (!operationTypes.Any())
                 {
                     throw new ArgumentException("The urls in the postman collection supplied could not be found.");
                 }
