@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Services
         /// Allow Rule to indicate validation error occured at a deeper context level.  
         /// </summary>
         /// <param name="segment">Identifier for context</param>
-        public void Enter(string segment)
+        public virtual void Enter(string segment)
         {
             this._path.Push(segment);
         }
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Exit from path context elevel.  Enter and Exit calls should be matched.
         /// </summary>
-        public void Exit()
+        public virtual void Exit()
         {
             this._path.Pop();
         }
