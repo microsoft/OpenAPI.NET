@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -84,16 +84,20 @@ namespace Microsoft.OpenApi.Services
                             continue;
                         }
 
+                        // Add the available ops if they are in the postman collection. See path.Value
                         foreach (var ops in openApiOperations)
                         {
-                            operationTypes.Add(ops.Key + url);
+                            if (path.Value.Contains(ops.Key.ToString().ToUpper()))
+                            {
+                                operationTypes.Add(ops.Key + url);
+                            }
                         }
                     }
                 }
 
                 if (!operationTypes.Any())
                 {
-                    throw new ArgumentException("The urls in the postman collection supplied could not be found.");
+                    throw new ArgumentException("The urls in the Postman collection supplied could not be found.");
                 }
 
                 // predicate for matching url and operationTypes
