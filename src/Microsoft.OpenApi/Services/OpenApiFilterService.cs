@@ -1,11 +1,9 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 
@@ -31,7 +29,7 @@ namespace Microsoft.OpenApi.Services
 
             if (requestUrls != null && (operationIds != null || tags != null))
             {
-                throw new InvalidOperationException("Cannot filter by postman collection and either operationIds and tags at the same time.");
+                throw new InvalidOperationException("Cannot filter by Postman collection and either operationIds and tags at the same time.");
             }
             if (!string.IsNullOrEmpty(operationIds) && !string.IsNullOrEmpty(tags))
             {
@@ -74,7 +72,7 @@ namespace Microsoft.OpenApi.Services
                     var sources = new Dictionary<string, OpenApiDocument> {{ apiVersion, source}};
                     var rootNode = CreateOpenApiUrlTreeNode(sources);
 
-                    //Iterate through urls dictionary and fetch operations for each url
+                    // Iterate through urls dictionary and fetch operations for each url
                     foreach (var path in requestUrls)
                     {
                         var serverList = source.Servers;
@@ -104,7 +102,7 @@ namespace Microsoft.OpenApi.Services
 
             else
             {
-                throw new InvalidOperationException("Either operationId(s),tag(s) or postman collection need to be specified.");
+                throw new InvalidOperationException("Either operationId(s),tag(s) or Postman collection need to be specified.");
             }
 
             return predicate;
