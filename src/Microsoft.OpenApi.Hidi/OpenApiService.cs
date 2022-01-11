@@ -2,11 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -72,7 +74,7 @@ namespace Microsoft.OpenApi.Hidi
             if (!string.IsNullOrEmpty(filterByCollection))
             {
                 var fileStream = GetStream(filterByCollection);
-                var requestUrls = OpenApiFilterService.ParseJsonCollectionFile(fileStream);
+                var requestUrls = ParseJsonCollectionFile(fileStream);
                 predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source:document);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
@@ -131,6 +133,38 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             return stream;
+        }
+
+        /// <summary>
+        /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
+        /// </summary>
+        /// <param name="stream"> A file stream.</param>
+        /// <returns> A dictionary of request urls and http methods from a collection.</returns>
+        private static Dictionary<string, List<string>> ParseJsonCollectionFile(Stream stream)
+        {
+            var requestUrls = new Dictionary<string, List<string>>();
+
+            // Convert file to JsonDocument
+            using var document = JsonDocument.Parse(stream);
+            var root = document.RootElement;
+            var itemElement = root.GetProperty("item");
+            foreach (var requestObject in itemElement.EnumerateArray().Select(item => item.GetProperty("request")))
+            {
+                // Fetch list of methods and urls from collection, store them in a dictionary
+                var path = requestObject.GetProperty("url").GetProperty("raw").ToString();
+                var method = requestObject.GetProperty("method").ToString();
+
+                if (!requestUrls.ContainsKey(path))
+                {
+                    requestUrls.Add(path, new List<string> { method });
+                }
+                else
+                {
+                    requestUrls[path].Add(method);
+                }
+            }
+
+            return requestUrls;
         }
 
         internal static void ValidateOpenApiDocument(string input)

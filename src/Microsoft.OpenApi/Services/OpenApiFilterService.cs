@@ -186,39 +186,7 @@ namespace Microsoft.OpenApi.Services
             }
             return rootNode;
         }
-
-        /// <summary>
-        /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
-        /// </summary>
-        /// <param name="stream"> A file stream.</param>
-        /// <returns> A dictionary of request urls and http methods from a collection.</returns>
-        public static Dictionary<string, List<string>> ParseJsonCollectionFile(Stream stream)
-        {
-            var requestUrls = new Dictionary<string, List<string>>();
-
-            // Convert file to JsonDocument
-            using var document = JsonDocument.Parse(stream);
-            var root = document.RootElement;
-            var itemElement = root.GetProperty("item");
-            foreach(var requestObject in itemElement.EnumerateArray().Select(item => item.GetProperty("request")))
-            {
-                // Fetch list of methods and urls from collection, store them in a dictionary
-                var path = requestObject.GetProperty("url").GetProperty("raw").ToString();
-                var method = requestObject.GetProperty("method").ToString();
-
-                if (!requestUrls.ContainsKey(path))
-                {
-                    requestUrls.Add(path, new List<string> { method });
-                }
-                else
-                {
-                    requestUrls[path].Add(method);
-                }
-            }
-
-            return requestUrls;
-        }
-
+        
         private static IDictionary<OperationType, OpenApiOperation> GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
         {
             if (relativeUrl.Equals("/", StringComparison.Ordinal) && rootNode.HasOperations(label))
