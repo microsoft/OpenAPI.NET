@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using Microsoft.OpenApi.Hidi;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
@@ -52,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var stream = fileInput.OpenRead();
 
             // Act
-            var requestUrls = OpenApiFilterService.ParseJsonCollectionFile(stream);
+            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream);
             var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
 
@@ -71,12 +72,12 @@ namespace Microsoft.OpenApi.Tests.Services
             var stream = fileInput.OpenRead();
 
             // Act
-            var requestUrls = OpenApiFilterService.ParseJsonCollectionFile(stream);
+            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream);
 
             // Assert
             var message = Assert.Throws<ArgumentException>(() =>
                 OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock)).Message;
-            Assert.Equal("The urls in the postman collection supplied could not be found.", message);
+            Assert.Equal("The urls in the Postman collection supplied could not be found.", message);
         }
 
         [Fact]
@@ -84,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             // Act and Assert
             var message1 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate(null, null)).Message;
-            Assert.Equal("Either operationId(s),tag(s) or postman collection need to be specified.", message1);
+            Assert.Equal("Either operationId(s),tag(s) or Postman collection need to be specified.", message1);
 
             var message2 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate("users.user.ListUser", "users.user")).Message;
             Assert.Equal("Cannot specify both operationIds and tags at the same time.", message2);
