@@ -18,7 +18,7 @@ using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Hidi
 {
-    static class OpenApiService
+    public static class OpenApiService
     {
         public static void ProcessOpenApiDocument(
             string input,
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="stream"> A file stream.</param>
         /// <returns> A dictionary of request urls and http methods from a collection.</returns>
-        private static Dictionary<string, List<string>> ParseJsonCollectionFile(Stream stream)
+        public static Dictionary<string, List<string>> ParseJsonCollectionFile(Stream stream)
         {
             var requestUrls = new Dictionary<string, List<string>>();
 
