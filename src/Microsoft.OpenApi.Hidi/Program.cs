@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Hidi
 
             var transformCommand = new Command("transform")
             {
-                new Option("--input", "Input OpenAPI description file path or URL", typeof(string) ),
+                new Option("--input", "Input OpenAPI description, JSON or CSDL file path or URL", typeof(string) ),
                 new Option("--output","Output OpenAPI description file", typeof(FileInfo), arity: ArgumentArity.ZeroOrOne),
                 new Option("--version", "OpenAPI specification version", typeof(OpenApiSpecVersion)),
                 new Option("--format", "File format",typeof(OpenApiFormat) ),
