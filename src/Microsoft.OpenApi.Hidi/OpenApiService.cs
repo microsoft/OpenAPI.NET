@@ -106,6 +106,49 @@ namespace Microsoft.OpenApi.Hidi
             textWriter.Flush();
         }
 
+        /// <summary>
+        /// Converts CSDL to OpenAPI
+        /// </summary>
+        /// <param name="csdl">The CSDL stream.</param>
+        /// <returns>An OpenAPI document.</returns>
+        public static OpenApiDocument ConvertCsdlToOpenApi(Stream csdl)
+        {
+            using var reader = new StreamReader(csdl);
+            var csdlText = reader.ReadToEndAsync().GetAwaiter().GetResult();            
+            var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
+
+            var settings = new OpenApiConvertSettings()
+            {
+                EnableKeyAsSegment = true,
+                EnableOperationId = true,
+                PrefixEntityTypeNameBeforeKey = true,
+                TagDepth = 2,
+                EnablePagination = true,
+                EnableDiscriminatorValue = false,
+                EnableDerivedTypesReferencesForRequestBody = false,
+                EnableDerivedTypesReferencesForResponses = false,
+                ShowRootPath = true,
+                ShowLinks = true
+            };
+            OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
+
+            document = FixReferences(document);
+
+            return document;
+        }
+
+        public static OpenApiDocument FixReferences(OpenApiDocument document)
+        {
+            // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
+            // So we write it out, and read it back in again to fix it up.
+
+            var sb = new StringBuilder();
+            document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
+            var doc = new OpenApiStringReader().Read(sb.ToString(), out _);
+
+            return doc;
+        }
+
         private static Stream GetStream(string input)
         {
             Stream stream;
