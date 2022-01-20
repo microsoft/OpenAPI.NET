@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -46,6 +46,13 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             var stream = GetStream(input);
+            OpenApiDocument document;
+
+            if (input.Contains("xml"))
+            {
+                document = ConvertCsdlToOpenApi(stream);
+            }
+           
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
@@ -53,9 +60,8 @@ namespace Microsoft.OpenApi.Hidi
             }
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
-            OpenApiDocument document;
             document = result.OpenApiDocument;
-
+            
             // Check if filter options are provided, then execute
             if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
             {
