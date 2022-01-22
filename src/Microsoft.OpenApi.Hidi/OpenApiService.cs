@@ -204,14 +204,7 @@ namespace Microsoft.OpenApi.Hidi
 
         private static OpenApiFormat GetOpenApiFormat(string input)
         {
-            if (!input.StartsWith("http") && Path.GetExtension(input) == ".json")
-            {
-                return OpenApiFormat.Json;
-            }
-            else
-            {
-                return OpenApiFormat.Yaml;
-            }
+            return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
         }
     }
 }
