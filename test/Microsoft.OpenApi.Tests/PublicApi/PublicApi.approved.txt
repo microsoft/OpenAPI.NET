@@ -959,7 +959,6 @@ namespace Microsoft.OpenApi.Services
         public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument source, System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
         public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode CreateOpenApiUrlTreeNode(System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiDocument> sources) { }
         public static System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> requestUrls = null, Microsoft.OpenApi.Models.OpenApiDocument source = null) { }
-        public static System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> ParseJsonCollectionFile(System.IO.Stream stream) { }
     }
     public class OpenApiReferenceError : Microsoft.OpenApi.Models.OpenApiError
     {
