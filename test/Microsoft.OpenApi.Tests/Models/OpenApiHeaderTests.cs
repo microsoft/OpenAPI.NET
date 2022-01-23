@@ -3,15 +3,17 @@
 
 using System.Globalization;
 using System.IO;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
+    [UsesVerify]
     public class OpenApiHeaderTests
     {
         public static OpenApiHeader AdvancedHeader = new OpenApiHeader
@@ -46,20 +48,14 @@ namespace Microsoft.OpenApi.Tests.Models
             _output = output;
         }
 
-        [Fact]
-        public void SerializeAdvancedHeaderAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeAdvancedHeaderAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""description"": ""sampleHeader"",
-  ""schema"": {
-    ""type"": ""integer"",
-    ""format"": ""int32""
-  }
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             AdvancedHeader.SerializeAsV3(writer);
@@ -67,21 +63,17 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedHeaderAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedHeaderAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""$ref"": ""#/components/headers/example1""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             ReferencedHeader.SerializeAsV3(writer);
@@ -89,25 +81,17 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedHeaderAsV3JsonWithoutReferenceWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedHeaderAsV3JsonWithoutReferenceWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""description"": ""sampleHeader"",
-  ""schema"": {
-    ""type"": ""integer"",
-    ""format"": ""int32""
-  }
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             ReferencedHeader.SerializeAsV3WithoutReference(writer);
@@ -115,23 +99,17 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeAdvancedHeaderAsV2JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeAdvancedHeaderAsV2JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""description"": ""sampleHeader"",
-  ""type"": ""integer"",
-  ""format"": ""int32""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             AdvancedHeader.SerializeAsV2(writer);
@@ -139,21 +117,17 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedHeaderAsV2JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedHeaderAsV2JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""$ref"": ""#/headers/example1""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             ReferencedHeader.SerializeAsV2(writer);
@@ -161,23 +135,17 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedHeaderAsV2JsonWithoutReferenceWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedHeaderAsV2JsonWithoutReferenceWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""description"": ""sampleHeader"",
-  ""type"": ""integer"",
-  ""format"": ""int32""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             ReferencedHeader.SerializeAsV2WithoutReference(writer);
@@ -185,9 +153,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
     }
 }

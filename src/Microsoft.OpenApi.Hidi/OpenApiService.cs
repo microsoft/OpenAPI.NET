@@ -2,12 +2,14 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -17,15 +19,16 @@ using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Hidi
 {
-    static class OpenApiService
+    public static class OpenApiService
     {
         public static void ProcessOpenApiDocument(
             string input,
             FileInfo output,
-            OpenApiSpecVersion version,
-            OpenApiFormat format,
+            OpenApiSpecVersion? version,
+            OpenApiFormat? format,
             string filterByOperationIds,
             string filterByTags,
+            string filterByCollection,
             bool inline,
             bool resolveExternal)
         {
@@ -55,23 +58,30 @@ namespace Microsoft.OpenApi.Hidi
             }
             ).ReadAsync(stream).GetAwaiter().GetResult();
 
-            OpenApiDocument document;
             document = result.OpenApiDocument;
+            Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
             // Check if filter options are provided, then execute
             if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
             {
                 throw new InvalidOperationException("Cannot filter by operationIds and tags at the same time.");
             }
-
             if (!string.IsNullOrEmpty(filterByOperationIds))
             {
-                var predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
+                predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
             if (!string.IsNullOrEmpty(filterByTags))
             {
-                var predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
+                predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
+                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
+            }
+
+            if (!string.IsNullOrEmpty(filterByCollection))
+            {
+                var fileStream = GetStream(GetInputUrl(filterByCollection));
+                var requestUrls = ParseJsonCollectionFile(fileStream);
+                predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source:document);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 
@@ -97,13 +107,16 @@ namespace Microsoft.OpenApi.Hidi
             {
                 ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
             };
-            IOpenApiWriter writer = format switch
+
+            var openApiFormat = format ?? GetOpenApiFormat(input);
+            var openApiVersion = version ?? result.OpenApiDiagnostic.SpecificationVersion;
+            IOpenApiWriter writer = openApiFormat switch
             {
                 OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
                 OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
                 _ => throw new ArgumentException("Unknown format"),
             };
-            document.Serialize(writer, version);
+            document.Serialize(writer, openApiVersion);
 
             textWriter.Flush();
         }
@@ -145,6 +158,38 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             return stream;
+        }
+
+        /// <summary>
+        /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
+        /// </summary>
+        /// <param name="stream"> A file stream.</param>
+        /// <returns> A dictionary of request urls and http methods from a collection.</returns>
+        public static Dictionary<string, List<string>> ParseJsonCollectionFile(Stream stream)
+        {
+            var requestUrls = new Dictionary<string, List<string>>();
+
+            // Convert file to JsonDocument
+            using var document = JsonDocument.Parse(stream);
+            var root = document.RootElement;
+            var itemElement = root.GetProperty("item");
+            foreach (var requestObject in itemElement.EnumerateArray().Select(item => item.GetProperty("request")))
+            {
+                // Fetch list of methods and urls from collection, store them in a dictionary
+                var path = requestObject.GetProperty("url").GetProperty("raw").ToString();
+                var method = requestObject.GetProperty("method").ToString();
+
+                if (!requestUrls.ContainsKey(path))
+                {
+                    requestUrls.Add(path, new List<string> { method });
+                }
+                else
+                {
+                    requestUrls[path].Add(method);
+                }
+            }
+
+            return requestUrls;
         }
 
         internal static async Task ValidateOpenApiDocument(string input, bool resolveExternal)
@@ -196,6 +241,11 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             
+        }
+
+        private static OpenApiFormat GetOpenApiFormat(string input)
+        {
+            return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OperationSearch : OpenApiVisitorBase
     {
-        private readonly Func<OpenApiOperation, bool> _predicate;
+        private readonly Func<string, OperationType?, OpenApiOperation, bool> _predicate;
         private readonly List<SearchResult> _searchResults = new();
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Services
         /// The OperationSearch constructor.
         /// </summary>
         /// <param name="predicate">A predicate function.</param>
-        public OperationSearch(Func<OpenApiOperation, bool> predicate)
+        public OperationSearch(Func<string, OperationType?,OpenApiOperation, bool> predicate)
         {
             _predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
         }
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="operation">The target <see cref="OpenApiOperation"/>.</param>
         public override void Visit(OpenApiOperation operation)
         {
-            if (_predicate(operation))
+            if (_predicate(CurrentKeys.Path, CurrentKeys.Operation, operation))
             {
                 _searchResults.Add(new SearchResult()
                 {

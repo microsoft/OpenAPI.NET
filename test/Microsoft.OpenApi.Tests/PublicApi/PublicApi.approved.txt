@@ -956,8 +956,9 @@ namespace Microsoft.OpenApi.Services
     }
     public static class OpenApiFilterService
     {
-        public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument source, System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
-        public static System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null) { }
+        public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument source, System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
+        public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode CreateOpenApiUrlTreeNode(System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Models.OpenApiDocument> sources) { }
+        public static System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> CreatePredicate(string operationIds = null, string tags = null, System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> requestUrls = null, Microsoft.OpenApi.Models.OpenApiDocument source = null) { }
     }
     public class OpenApiReferenceError : Microsoft.OpenApi.Models.OpenApiError
     {
@@ -984,8 +985,8 @@ namespace Microsoft.OpenApi.Services
         protected OpenApiVisitorBase() { }
         public Microsoft.OpenApi.Services.CurrentKeys CurrentKeys { get; }
         public string PathString { get; }
-        public void Enter(string segment) { }
-        public void Exit() { }
+        public virtual void Enter(string segment) { }
+        public virtual void Exit() { }
         public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible openApiExtensible) { }
         public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension openApiExtension) { }
         public virtual void Visit(Microsoft.OpenApi.Interfaces.IOpenApiReferenceable referenceable) { }
@@ -1051,7 +1052,7 @@ namespace Microsoft.OpenApi.Services
     }
     public class OperationSearch : Microsoft.OpenApi.Services.OpenApiVisitorBase
     {
-        public OperationSearch(System.Func<Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
+        public OperationSearch(System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Services.SearchResult> SearchResults { get; }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiOperation operation) { }
         public override void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiParameter> parameters) { }
@@ -1253,10 +1254,12 @@ namespace Microsoft.OpenApi.Writers
     public class OpenApiJsonWriter : Microsoft.OpenApi.Writers.OpenApiWriterBase
     {
         public OpenApiJsonWriter(System.IO.TextWriter textWriter) { }
+        public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.Writers.OpenApiJsonWriterSettings settings) { }
         public OpenApiJsonWriter(System.IO.TextWriter textWriter, Microsoft.OpenApi.Writers.OpenApiWriterSettings settings) { }
         protected override int BaseIndentation { get; }
         public override void WriteEndArray() { }
         public override void WriteEndObject() { }
+        public override void WriteIndentation() { }
         public override void WriteNull() { }
         public override void WritePropertyName(string name) { }
         public override void WriteRaw(string value) { }
@@ -1264,6 +1267,11 @@ namespace Microsoft.OpenApi.Writers
         public override void WriteStartObject() { }
         public override void WriteValue(string value) { }
         protected override void WriteValueSeparator() { }
+    }
+    public class OpenApiJsonWriterSettings : Microsoft.OpenApi.Writers.OpenApiWriterSettings
+    {
+        public OpenApiJsonWriterSettings() { }
+        public bool Terse { get; set; }
     }
     public static class OpenApiWriterAnyExtensions
     {
