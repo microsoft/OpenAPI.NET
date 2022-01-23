@@ -31,15 +31,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "style", (o, n) =>
                 {
-                    ParameterStyle style;
-                    if (Enum.TryParse(n.GetScalarValue(), out style))
-                    {
-                        o.Style = style;
-                    }
-                    else
-                    {
-                        o.Style = null;
-                    }
+                    o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
                 }
             },
             {
