@@ -30,9 +30,10 @@ namespace Microsoft.OpenApi.Hidi
                 new Option("--inline", "Inline $ref instances", typeof(bool) ),
                 new Option("--resolveExternal","Resolve external $refs", typeof(bool)),
                 new Option("--filterByOperationIds", "Filters OpenApiDocument by OperationId(s) provided", typeof(string)),
-                new Option("--filterByTags", "Filters OpenApiDocument by Tag(s) provided", typeof(string))
+                new Option("--filterByTags", "Filters OpenApiDocument by Tag(s) provided", typeof(string)),
+                new Option("--filterByCollection", "Filters OpenApiDocument by Postman collection provided", typeof(string))
             };
-            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion, OpenApiFormat, string, string, bool, bool>(
+            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, string, string, string, bool, bool>(
                 OpenApiService.ProcessOpenApiDocument);
 
             rootCommand.Add(transformCommand);

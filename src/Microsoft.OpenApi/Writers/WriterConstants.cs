@@ -81,7 +81,13 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// The separator between the name and the value.
         /// </summary>
-        internal const string NameValueSeparator = ": ";
+        internal const string NameValueSeparator = ":";
+
+        /// <summary>
+        /// The white space postfixing <see cref="NameValueSeparator"/>
+        /// when producing pretty content.
+        /// </summary>
+        internal const string NameValueSeparatorWhiteSpaceSuffix = " ";
 
         /// <summary>
         /// The white space for empty object
