@@ -1,0 +1,102 @@
+{
+  "info": {
+    "_postman_id": "0017059134807617005",
+    "name": "Graph-Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "agreementAcceptances-GET",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "agreementAcceptances"
+          ]
+        }
+      }
+    },
+    {
+      "name": "agreementAcceptances-POST",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "agreementAcceptances"
+          ]
+        }
+      }
+    },
+    {
+      "name": "{agreementAcceptance-id}-GET",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances/{agreementAcceptance-id}",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "agreementAcceptances",
+            "{agreementAcceptance-id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "{agreementAcceptance-id}-PATCH",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances/{agreementAcceptance-id}",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "agreementAcceptances",
+            "{agreementAcceptance-id}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "{agreementAcceptance-id}-DELETE",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances/{agreementAcceptance-id}",
+          "protocol": "https",
+          "host": [
+            "graph",
+            "microsoft",
+            "com"
+          ],
+          "path": [
+            "agreementAcceptances",
+            "{agreementAcceptance-id}"
+          ]
+        }
+      }
+    }
+  ]
+}
