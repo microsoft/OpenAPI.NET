@@ -14,14 +14,8 @@ namespace Microsoft.OpenApi.Hidi
         {
             var rootCommand = new RootCommand() {
             };
-
-            var validateCommand = new Command("validate")
-            {
-                new Option("--input", "Input OpenAPI description file path or URL", typeof(string) )
-            };
-            validateCommand.Handler = CommandHandler.Create<string>(OpenApiService.ValidateOpenApiDocument);
-
-            // transform command options
+            
+            // command option parameters and aliases
             var descriptionOption = new Option("--openapi", "Input OpenAPI description file path or URL", typeof(string));
             descriptionOption.AddAlias("-d");
 
@@ -48,6 +42,12 @@ namespace Microsoft.OpenApi.Hidi
 ;
             var filterByCollectionOption = new Option("--filterByCollection", "Filters OpenApiDocument by Postman collection provided", typeof(string));
             filterByCollectionOption.AddAlias("-c");
+
+            var validateCommand = new Command("validate")
+            {
+                descriptionOption
+            };
+            validateCommand.Handler = CommandHandler.Create<string>(OpenApiService.ValidateOpenApiDocument);
 
             var transformCommand = new Command("transform")
             {
