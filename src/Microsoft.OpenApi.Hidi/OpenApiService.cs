@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Hidi
     public static class OpenApiService
     {
         public static void ProcessOpenApiDocument(
-            string input,
+            string openapi,
             FileInfo output,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
@@ -31,9 +31,9 @@ namespace Microsoft.OpenApi.Hidi
             bool inline,
             bool resolveExternal)
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(openapi))
             {
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentNullException(nameof(openapi));
             }
             if(output == null)
             {
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Hidi
                 throw new IOException("The file you're writing to already exists. Please input a new output path.");
             }
 
-            var stream = GetStream(input);
+            var stream = GetStream(openapi);
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Hidi
                 ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
             };
 
-            var openApiFormat = format ?? GetOpenApiFormat(input);
+            var openApiFormat = format ?? GetOpenApiFormat(openapi);
             var openApiVersion = version ?? result.OpenApiDiagnostic.SpecificationVersion;
             IOpenApiWriter writer = openApiFormat switch
             {
@@ -115,10 +115,10 @@ namespace Microsoft.OpenApi.Hidi
             textWriter.Flush();
         }
 
-        private static Stream GetStream(string input)
+        private static Stream GetStream(string openapi)
         {
             Stream stream;
-            if (input.StartsWith("http"))
+            if (openapi.StartsWith("http"))
             {
                 var httpClient = new HttpClient(new HttpClientHandler()
                 {
@@ -127,11 +127,11 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     DefaultRequestVersion = HttpVersion.Version20
                 };
-                stream = httpClient.GetStreamAsync(input).Result;
+                stream = httpClient.GetStreamAsync(openapi).Result;
             }
             else
             {
-                var fileInput = new FileInfo(input);
+                var fileInput = new FileInfo(openapi);
                 stream = fileInput.OpenRead();
             }
 
@@ -170,14 +170,14 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-        internal static void ValidateOpenApiDocument(string input)
+        internal static void ValidateOpenApiDocument(string openapi)
         {
-            if (input == null)
+            if (openapi == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException("openapi");
             }
 
-            var stream = GetStream(input);
+            var stream = GetStream(openapi);
 
             OpenApiDocument document;
 
@@ -202,9 +202,9 @@ namespace Microsoft.OpenApi.Hidi
             Console.WriteLine(statsVisitor.GetStatisticsReport());
         }
 
-        private static OpenApiFormat GetOpenApiFormat(string input)
+        private static OpenApiFormat GetOpenApiFormat(string openapi)
         {
-            return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
+            return !openapi.StartsWith("http") && Path.GetExtension(openapi) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
         }
     }
 }
