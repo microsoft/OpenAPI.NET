@@ -21,10 +21,16 @@ namespace Microsoft.OpenApi.Hidi
             };
             validateCommand.Handler = CommandHandler.Create<string>(OpenApiService.ValidateOpenApiDocument);
 
+            var descriptionOption = new Option("--openapi", "Input OpenAPI description file path or URL", typeof(string));
+            descriptionOption.AddAlias("-d");
+
+            var outputOption = new Option("--output", "The output directory path for the generated file.", typeof(FileInfo), () => "./output", arity: ArgumentArity.ZeroOrOne);
+            outputOption.AddAlias("o");
+
             var transformCommand = new Command("transform")
             {
-                new Option("--input", "Input OpenAPI description file path or URL", typeof(string) ),
-                new Option("--output","Output OpenAPI description file", typeof(FileInfo), arity: ArgumentArity.ZeroOrOne),
+                descriptionOption,
+                outputOption,
                 new Option("--version", "OpenAPI specification version", typeof(OpenApiSpecVersion)),
                 new Option("--format", "File format",typeof(OpenApiFormat) ),
                 new Option("--inline", "Inline $ref instances", typeof(bool) ),
