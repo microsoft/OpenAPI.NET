@@ -9,7 +9,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OpenApi.Extensions;
@@ -49,21 +48,27 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             var stream = GetStream(input);
+            
+            ReadResult result = null;
+            
             OpenApiDocument document;
 
-            if (input.Contains("xml"))
+            if (input.Contains(".xml"))
             {
                 document = ConvertCsdlToOpenApi(stream);
             }
-           
-            var result = new OpenApiStreamReader(new OpenApiReaderSettings
+            else
             {
-                ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
-                RuleSet = ValidationRuleSet.GetDefaultRuleSet()
-            }
-            ).ReadAsync(stream).GetAwaiter().GetResult();
+                result = new OpenApiStreamReader(new OpenApiReaderSettings
+                {
+                    ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                }
+                ).ReadAsync(stream).GetAwaiter().GetResult();
 
-            document = result.OpenApiDocument;
+                document = result.OpenApiDocument;
+            }
+            
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
             // Check if filter options are provided, then execute
