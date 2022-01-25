@@ -67,6 +67,20 @@ namespace Microsoft.OpenApi.Hidi
                 ).ReadAsync(stream).GetAwaiter().GetResult();
 
                 document = result.OpenApiDocument;
+
+                var context = result.OpenApiDiagnostic;
+
+                if (context.Errors.Count > 0)
+                {
+                    var errorReport = new StringBuilder();
+
+                    foreach (var error in context.Errors)
+                    {
+                        errorReport.AppendLine(error.ToString());
+                    }
+
+                    throw new ArgumentException(string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
+                }
             }
             
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
@@ -94,21 +108,7 @@ namespace Microsoft.OpenApi.Hidi
                 predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source:document);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
-
-            var context = result.OpenApiDiagnostic;
-
-            if (context.Errors.Count > 0)
-            {
-                var errorReport = new StringBuilder();
-
-                foreach (var error in context.Errors)
-                {
-                    errorReport.AppendLine(error.ToString());
-                }
-
-                throw new ArgumentException(string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
-            }
-
+            
             using var outputStream = output?.Create();
 
             var textWriter = outputStream != null ? new StreamWriter(outputStream) : Console.Out;
