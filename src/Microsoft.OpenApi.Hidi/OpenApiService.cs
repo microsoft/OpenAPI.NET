@@ -162,6 +162,11 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
+        /// <summary>
+        /// Fixes the references in the resulting OpenApiDocument.
+        /// </summary>
+        /// <param name="document"> The converted OpenApiDocument.</param>
+        /// <returns> A valid OpenApiDocument instance.</returns>
         public static OpenApiDocument FixReferences(OpenApiDocument document)
         {
             // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
