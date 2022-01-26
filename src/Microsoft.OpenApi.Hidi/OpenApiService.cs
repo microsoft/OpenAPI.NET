@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Hidi
             
             OpenApiDocument document;
 
-            if (input.Contains(".xml"))
+            if (input.Contains(".xml") || input.Contains(".csdl"))
             {
                 document = ConvertCsdlToOpenApi(stream);
             }
