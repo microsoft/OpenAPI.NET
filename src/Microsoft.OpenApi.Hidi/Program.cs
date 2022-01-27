@@ -19,6 +19,9 @@ namespace Microsoft.OpenApi.Hidi
             var descriptionOption = new Option("--openapi", "Input OpenAPI description file path or URL", typeof(string));
             descriptionOption.AddAlias("-d");
 
+            var csdlOption = new Option("--csdl", "Input CSDL file path or URL", typeof(string));
+            csdlOption.AddAlias("-cs");
+
             var outputOption = new Option("--output", "The output directory path for the generated file.", typeof(FileInfo), () => "./output", arity: ArgumentArity.ZeroOrOne);
             outputOption.AddAlias("-o");
 
@@ -52,6 +55,7 @@ namespace Microsoft.OpenApi.Hidi
             var transformCommand = new Command("transform")
             {
                 descriptionOption,
+                csdlOption,
                 outputOption,
                 versionOption,
                 formatOption,
@@ -61,7 +65,7 @@ namespace Microsoft.OpenApi.Hidi
                 filterByTagsOption,
                 filterByCollectionOption
             };
-            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, string, string, string, bool, bool>(
+            transformCommand.Handler = CommandHandler.Create<string, string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, string, string, string, bool, bool>(
                 OpenApiService.ProcessOpenApiDocument);
 
             rootCommand.Add(transformCommand);
