@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
-    public class OpenApiCSDLConversionTests
+    public class OpenApiServiceTests
     {
         [Fact]
         public void ReturnConvertedCSDLFile()
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Tests.Services
         [InlineData("Todos.Todo.UpdateTodo",null, 1)]
         [InlineData("Todos.Todo.ListTodo",null, 1)]
         [InlineData(null, "Todos.Todo", 4)]
-        public void ReturnFilteredOpenApiDocumentBasedOnOperationIdsAndInputCsdlDocument(string operationIds, string tags, int expectedPathCount)
+        public void ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string operationIds, string tags, int expectedPathCount)
         {
             // Arrange
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
