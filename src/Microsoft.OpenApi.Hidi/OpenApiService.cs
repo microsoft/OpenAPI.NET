@@ -25,6 +25,7 @@ namespace Microsoft.OpenApi.Hidi
     {
         public static void ProcessOpenApiDocument(
             string openapi,
+            string csdl,
             FileInfo output,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
@@ -34,9 +35,9 @@ namespace Microsoft.OpenApi.Hidi
             bool inline,
             bool resolveexternal)
         {
-            if (string.IsNullOrEmpty(openapi))
+            if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
             {
-                throw new ArgumentNullException(nameof(openapi));
+                throw new ArgumentNullException("Please input a file path");
             }
             if(output == null)
             {
@@ -47,21 +48,25 @@ namespace Microsoft.OpenApi.Hidi
                 throw new IOException("The file you're writing to already exists. Please input a new output path.");
             }
 
-            var stream = GetStream(input);
-            
-            ReadResult result = null;
-            
+            Stream stream;
             OpenApiDocument document;
+            OpenApiFormat openApiFormat;
 
-            if (input.Contains(".xml") || input.Contains(".csdl"))
+            if (!string.IsNullOrEmpty(csdl))
             {
-                document = ConvertCsdlToOpenApi(stream);
+                // Default to yaml during csdl to OpenApi conversion
+                openApiFormat = format ?? GetOpenApiFormat(csdl);
+                 
+                stream = GetStream(csdl);                
+                document = ConvertCsdlToOpenApi(stream);                
             }
             else
             {
-                result = new OpenApiStreamReader(new OpenApiReaderSettings
+                stream = GetStream(openapi);
+
+                var result = new OpenApiStreamReader(new OpenApiReaderSettings
                 {
-                    ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                    ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 }
                 ).ReadAsync(stream).GetAwaiter().GetResult();
@@ -81,8 +86,11 @@ namespace Microsoft.OpenApi.Hidi
 
                     throw new ArgumentException(string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray()));
                 }
+
+                openApiFormat = format ?? GetOpenApiFormat(openapi);
+                version ??= result.OpenApiDiagnostic.SpecificationVersion;
             }
-            
+
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
             // Check if filter options are provided, then execute
@@ -100,7 +108,6 @@ namespace Microsoft.OpenApi.Hidi
                 predicate = OpenApiFilterService.CreatePredicate(tags: filterbytags);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
-
             if (!string.IsNullOrEmpty(filterbycollection))
             {
                 var fileStream = GetStream(filterbycollection);
@@ -118,15 +125,13 @@ namespace Microsoft.OpenApi.Hidi
                 ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
             };
 
-            var openApiFormat = format ?? GetOpenApiFormat(openapi);
-            var openApiVersion = version ?? result.OpenApiDiagnostic.SpecificationVersion;
             IOpenApiWriter writer = openApiFormat switch
             {
                 OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
                 OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
                 _ => throw new ArgumentException("Unknown format"),
             };
-            document.Serialize(writer, openApiVersion);
+            document.Serialize(writer, (OpenApiSpecVersion)version);
 
             textWriter.Flush();
         }
@@ -139,7 +144,7 @@ namespace Microsoft.OpenApi.Hidi
         public static OpenApiDocument ConvertCsdlToOpenApi(Stream csdl)
         {
             using var reader = new StreamReader(csdl);
-            var csdlText = reader.ReadToEndAsync().GetAwaiter().GetResult();            
+            var csdlText = reader.ReadToEndAsync().GetAwaiter().GetResult();           
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
 
             var settings = new OpenApiConvertSettings()
@@ -179,7 +184,7 @@ namespace Microsoft.OpenApi.Hidi
             return doc;
         }
 
-        private static Stream GetStream(string input)
+        private static Stream GetStream(string openapi)
         {
             Stream stream;
             if (openapi.StartsWith("http"))
