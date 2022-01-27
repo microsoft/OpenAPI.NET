@@ -25,11 +25,11 @@ namespace Microsoft.OpenApi.Hidi
             FileInfo output,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
-            string filterByOperationIds,
-            string filterByTags,
-            string filterByCollection,
+            string filterbyoperationids,
+            string filterbytags,
+            string filterbycollection,
             bool inline,
-            bool resolveExternal)
+            bool resolveexternal)
         {
             if (string.IsNullOrEmpty(openapi))
             {
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Hidi
             var stream = GetStream(openapi);
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
-                ReferenceResolution = resolveExternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet()
             }
             ).ReadAsync(stream).GetAwaiter().GetResult();
@@ -56,24 +56,24 @@ namespace Microsoft.OpenApi.Hidi
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
             // Check if filter options are provided, then execute
-            if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
+            if (!string.IsNullOrEmpty(filterbyoperationids) && !string.IsNullOrEmpty(filterbytags))
             {
                 throw new InvalidOperationException("Cannot filter by operationIds and tags at the same time.");
             }
-            if (!string.IsNullOrEmpty(filterByOperationIds))
+            if (!string.IsNullOrEmpty(filterbyoperationids))
             {
-                predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
+                predicate = OpenApiFilterService.CreatePredicate(operationIds: filterbyoperationids);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
-            if (!string.IsNullOrEmpty(filterByTags))
+            if (!string.IsNullOrEmpty(filterbytags))
             {
-                predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
+                predicate = OpenApiFilterService.CreatePredicate(tags: filterbytags);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 
-            if (!string.IsNullOrEmpty(filterByCollection))
+            if (!string.IsNullOrEmpty(filterbycollection))
             {
-                var fileStream = GetStream(filterByCollection);
+                var fileStream = GetStream(filterbycollection);
                 var requestUrls = ParseJsonCollectionFile(fileStream);
                 predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source:document);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);

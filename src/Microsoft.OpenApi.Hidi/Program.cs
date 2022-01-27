@@ -31,16 +31,16 @@ namespace Microsoft.OpenApi.Hidi
             var inlineOption = new Option("--inline", "Inline $ref instances", typeof(bool));
             inlineOption.AddAlias("-i");
 ;
-            var resolveExternalOption = new Option("--resolveExternal", "Resolve external $refs", typeof(bool));
+            var resolveExternalOption = new Option("--resolve-external", "Resolve external $refs", typeof(bool));
             resolveExternalOption.AddAlias("-ex");
 ;
-            var filterByOperationIdsOption = new Option("--filterByOperationIds", "Filters OpenApiDocument by OperationId(s) provided", typeof(string));
+            var filterByOperationIdsOption = new Option("--filter-by-operationids", "Filters OpenApiDocument by OperationId(s) provided", typeof(string));
             filterByOperationIdsOption.AddAlias("-op");
 ;
-            var filterByTagsOption = new Option("--filterByTags", "Filters OpenApiDocument by Tag(s) provided", typeof(string));
+            var filterByTagsOption = new Option("--filter-by-tags", "Filters OpenApiDocument by Tag(s) provided", typeof(string));
             filterByTagsOption.AddAlias("-t");
 ;
-            var filterByCollectionOption = new Option("--filterByCollection", "Filters OpenApiDocument by Postman collection provided", typeof(string));
+            var filterByCollectionOption = new Option("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided", typeof(string));
             filterByCollectionOption.AddAlias("-c");
 
             var validateCommand = new Command("validate")
