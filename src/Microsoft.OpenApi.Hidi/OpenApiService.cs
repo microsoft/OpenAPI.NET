@@ -24,19 +24,19 @@ namespace Microsoft.OpenApi.Hidi
     public static class OpenApiService
     {
         public static void ProcessOpenApiDocument(
-            string input,
+            string openapi,
             FileInfo output,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
-            string filterByOperationIds,
-            string filterByTags,
-            string filterByCollection,
+            string filterbyoperationids,
+            string filterbytags,
+            string filterbycollection,
             bool inline,
-            bool resolveExternal)
+            bool resolveexternal)
         {
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(openapi))
             {
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentNullException(nameof(openapi));
             }
             if(output == null)
             {
@@ -86,24 +86,24 @@ namespace Microsoft.OpenApi.Hidi
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
             // Check if filter options are provided, then execute
-            if (!string.IsNullOrEmpty(filterByOperationIds) && !string.IsNullOrEmpty(filterByTags))
+            if (!string.IsNullOrEmpty(filterbyoperationids) && !string.IsNullOrEmpty(filterbytags))
             {
                 throw new InvalidOperationException("Cannot filter by operationIds and tags at the same time.");
             }
-            if (!string.IsNullOrEmpty(filterByOperationIds))
+            if (!string.IsNullOrEmpty(filterbyoperationids))
             {
-                predicate = OpenApiFilterService.CreatePredicate(operationIds: filterByOperationIds);
+                predicate = OpenApiFilterService.CreatePredicate(operationIds: filterbyoperationids);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
-            if (!string.IsNullOrEmpty(filterByTags))
+            if (!string.IsNullOrEmpty(filterbytags))
             {
-                predicate = OpenApiFilterService.CreatePredicate(tags: filterByTags);
+                predicate = OpenApiFilterService.CreatePredicate(tags: filterbytags);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
 
-            if (!string.IsNullOrEmpty(filterByCollection))
+            if (!string.IsNullOrEmpty(filterbycollection))
             {
-                var fileStream = GetStream(filterByCollection);
+                var fileStream = GetStream(filterbycollection);
                 var requestUrls = ParseJsonCollectionFile(fileStream);
                 predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source:document);
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Hidi
                 ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
             };
 
-            var openApiFormat = format ?? GetOpenApiFormat(input);
+            var openApiFormat = format ?? GetOpenApiFormat(openapi);
             var openApiVersion = version ?? result.OpenApiDiagnostic.SpecificationVersion;
             IOpenApiWriter writer = openApiFormat switch
             {
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Hidi
         private static Stream GetStream(string input)
         {
             Stream stream;
-            if (input.StartsWith("http"))
+            if (openapi.StartsWith("http"))
             {
                 var httpClient = new HttpClient(new HttpClientHandler()
                 {
@@ -191,11 +191,11 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     DefaultRequestVersion = HttpVersion.Version20
                 };
-                stream = httpClient.GetStreamAsync(input).Result;
+                stream = httpClient.GetStreamAsync(openapi).Result;
             }
             else
             {
-                var fileInput = new FileInfo(input);
+                var fileInput = new FileInfo(openapi);
                 stream = fileInput.OpenRead();
             }
 
@@ -234,14 +234,14 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-        internal static void ValidateOpenApiDocument(string input)
+        internal static void ValidateOpenApiDocument(string openapi)
         {
-            if (input == null)
+            if (openapi == null)
             {
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException("openapi");
             }
 
-            var stream = GetStream(input);
+            var stream = GetStream(openapi);
 
             OpenApiDocument document;
 
@@ -266,9 +266,9 @@ namespace Microsoft.OpenApi.Hidi
             Console.WriteLine(statsVisitor.GetStatisticsReport());
         }
 
-        private static OpenApiFormat GetOpenApiFormat(string input)
+        private static OpenApiFormat GetOpenApiFormat(string openapi)
         {
-            return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
+            return !openapi.StartsWith("http") && Path.GetExtension(openapi) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
         }
     }
 }
