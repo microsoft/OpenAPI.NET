@@ -115,10 +115,10 @@ namespace Microsoft.OpenApi.Hidi
             textWriter.Flush();
         }
 
-        private static Stream GetStream(string openapi)
+        private static Stream GetStream(string input)
         {
             Stream stream;
-            if (openapi.StartsWith("http"))
+            if (input.StartsWith("http"))
             {
                 var httpClient = new HttpClient(new HttpClientHandler()
                 {
@@ -127,11 +127,11 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     DefaultRequestVersion = HttpVersion.Version20
                 };
-                stream = httpClient.GetStreamAsync(openapi).Result;
+                stream = httpClient.GetStreamAsync(input).Result;
             }
             else
             {
-                var fileInput = new FileInfo(openapi);
+                var fileInput = new FileInfo(input);
                 stream = fileInput.OpenRead();
             }
 
