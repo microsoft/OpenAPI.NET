@@ -26,11 +26,12 @@ namespace Microsoft.OpenApi.Hidi
             FileInfo output,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
+            bool inlineExternal,
+            bool inlineLocal,
             string filterByOperationIds,
             string filterByTags,
-            string filterByCollection,
-            bool inline,
-            bool resolveExternal)
+            string filterByCollection
+            )
         {
             if (string.IsNullOrEmpty(input))
             {
@@ -52,7 +53,7 @@ namespace Microsoft.OpenApi.Hidi
 
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
-                ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                ReferenceResolution = inlineExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
                 BaseUrl = new Uri(inputUrl.AbsoluteUri)
             }
@@ -105,7 +106,8 @@ namespace Microsoft.OpenApi.Hidi
 
             var settings = new OpenApiWriterSettings()
             {
-                ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
+                InlineLocalReferences = inlineLocal,
+                InlineExternalReferences = inlineExternal
             };
 
             var openApiFormat = format ?? GetOpenApiFormat(input);

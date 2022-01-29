@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         ResolveLocalReferences,
         /// <summary>
-        /// Convert all references to references of valid domain objects.
+        /// Not used anymore. Will be removed in v2. Convert all references to references of valid domain objects.
         /// </summary>
         ResolveAllReferences
     }
