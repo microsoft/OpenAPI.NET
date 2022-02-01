@@ -5,6 +5,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -27,7 +28,10 @@ namespace Microsoft.OpenApi.Hidi
 
             var formatOption = new Option("--format", "File format", typeof(OpenApiFormat));
             formatOption.AddAlias("-f");
-            
+
+            var logLevelOption = new Option("--loglevel", "The log level to use when logging messages to the main output.", typeof(LogLevel), () => LogLevel.Warning);
+            logLevelOption.AddAlias("-ll");
+
             var inlineOption = new Option("--inline", "Inline $ref instances", typeof(bool));
             inlineOption.AddAlias("-i");
 
@@ -45,9 +49,11 @@ namespace Microsoft.OpenApi.Hidi
 
             var validateCommand = new Command("validate")
             {
-                descriptionOption
+                descriptionOption,
+                logLevelOption
             };
-            validateCommand.Handler = CommandHandler.Create<string>(OpenApiService.ValidateOpenApiDocument);
+
+            validateCommand.Handler = CommandHandler.Create<string, LogLevel>(OpenApiService.ValidateOpenApiDocument);
 
             var transformCommand = new Command("transform")
             {
@@ -55,13 +61,15 @@ namespace Microsoft.OpenApi.Hidi
                 outputOption,
                 versionOption,
                 formatOption,
+                logLevelOption,
                 inlineOption,
                 resolveExternalOption,
                 filterByOperationIdsOption,
                 filterByTagsOption,
                 filterByCollectionOption
             };
-            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, string, string, string, bool, bool>(
+
+            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, LogLevel, string, string, string, bool, bool>(
                 OpenApiService.ProcessOpenApiDocument);
 
             rootCommand.Add(transformCommand);
