@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Security;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -23,7 +24,7 @@ namespace Microsoft.OpenApi.Hidi
 {
     public class OpenApiService
     {
-        public static void ProcessOpenApiDocument(
+        public static async void ProcessOpenApiDocument(
             string openapi,
             FileInfo output,
             OpenApiSpecVersion? version,
@@ -74,7 +75,7 @@ namespace Microsoft.OpenApi.Hidi
                 return;
             }
             
-            var stream = GetStream(openapi, logger);
+            var stream = await GetStream(openapi, logger);
 
             // Parsing OpenAPI file
             var stopwatch = new Stopwatch();
@@ -130,7 +131,7 @@ namespace Microsoft.OpenApi.Hidi
             }
             if (!string.IsNullOrEmpty(filterbycollection))
             {
-                var fileStream = GetStream(filterbycollection, logger);
+                var fileStream = await GetStream(filterbycollection, logger);
                 var requestUrls = ParseJsonCollectionFile(fileStream, logger);
 
                 logger.LogTrace("Creating predicate based on the paths and Http methods defined in the Postman collection.");
@@ -169,7 +170,7 @@ namespace Microsoft.OpenApi.Hidi
             textWriter.Flush();
         }
 
-        private static Stream GetStream(string input, ILogger logger)
+        private static async Task<Stream> GetStream(string input, ILogger logger)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -179,14 +180,15 @@ namespace Microsoft.OpenApi.Hidi
             {
                 try
                 {
-                    var httpClient = new HttpClient(new HttpClientHandler()
+                    using var httpClientHandler = new HttpClientHandler()
                     {
                         SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
-                    })
+                    };
+                    using var httpClient = new HttpClient(httpClientHandler)
                     {
                         DefaultRequestVersion = HttpVersion.Version20
                     };
-                    stream = httpClient.GetStreamAsync(input).Result;
+                    stream = await httpClient.GetStreamAsync(input);
                 }
                 catch (HttpRequestException ex)
                 {
@@ -250,14 +252,14 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-        internal static void ValidateOpenApiDocument(string openapi, LogLevel loglevel)
+        internal static async void ValidateOpenApiDocument(string openapi, LogLevel loglevel)
         {
             if (string.IsNullOrEmpty(openapi))
             {
                 throw new ArgumentNullException(nameof(openapi));
             }
             var logger = ConfigureLoggerInstance(loglevel);
-            var stream = GetStream(openapi, logger);
+            var stream = await GetStream(openapi, logger);
 
             OpenApiDocument document;
             logger.LogTrace("Parsing the OpenApi file");
