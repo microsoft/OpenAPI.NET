@@ -3,10 +3,12 @@
 
 using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
+using Moq;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
@@ -14,10 +16,14 @@ namespace Microsoft.OpenApi.Tests.Services
     public class OpenApiFilterServiceTests
     {
         private readonly OpenApiDocument _openApiDocumentMock;
+        private readonly Mock<ILogger<OpenApiService>> _mockLogger;
+        private readonly ILogger<OpenApiService> _logger;
 
         public OpenApiFilterServiceTests()
         {
             _openApiDocumentMock = OpenApiDocumentMock.CreateOpenApiDocument();
+            _mockLogger = new Mock<ILogger<OpenApiService>>();
+            _logger = _mockLogger.Object;
         }
 
         [Theory]
@@ -53,7 +59,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var stream = fileInput.OpenRead();
 
             // Act
-            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream);
+            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream, _logger);
             var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
 
@@ -72,7 +78,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var stream = fileInput.OpenRead();
 
             // Act
-            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream);
+            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream, _logger);
 
             // Assert
             var message = Assert.Throws<ArgumentException>(() =>
