@@ -30,11 +30,12 @@ namespace Microsoft.OpenApi.Hidi
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
             LogLevel loglevel,
+            bool inline,
+            bool resolveexternal,
             string filterbyoperationids,
             string filterbytags,
-            string filterbycollection,
-            bool inline,
-            bool resolveexternal)
+            string filterbycollection
+           )
         {
             var logger = ConfigureLoggerInstance(loglevel);
 
