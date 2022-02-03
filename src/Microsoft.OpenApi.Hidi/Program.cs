@@ -2,9 +2,9 @@
 // Licensed under the MIT license.
 
 using System.CommandLine;
-using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -14,43 +14,48 @@ namespace Microsoft.OpenApi.Hidi
         {
             var rootCommand = new RootCommand() {
             };
-            
+
             // command option parameters and aliases
-            var descriptionOption = new Option("--openapi", "Input OpenAPI description file path or URL", typeof(string));
+            var descriptionOption = new Option<string>("--openapi", "Input OpenAPI description file path or URL");
             descriptionOption.AddAlias("-d");
 
             var csdlOption = new Option("--csdl", "Input CSDL file path or URL", typeof(string));
             csdlOption.AddAlias("-cs");
 
-            var outputOption = new Option("--output", "The output directory path for the generated file.", typeof(FileInfo), () => "./output", arity: ArgumentArity.ZeroOrOne);
+            var outputOption = new Option<FileInfo>("--output", () => new FileInfo("./output"), "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
             outputOption.AddAlias("-o");
 
-            var versionOption = new Option("--version", "OpenAPI specification version", typeof(OpenApiSpecVersion));
+            var versionOption = new Option<OpenApiSpecVersion?>("--version", "OpenAPI specification version");
             versionOption.AddAlias("-v");
 
-            var formatOption = new Option("--format", "File format", typeof(OpenApiFormat));
+            var formatOption = new Option<OpenApiFormat?>("--format", "File format");
             formatOption.AddAlias("-f");
-;
-            var inlineOption = new Option("--inline", "Inline $ref instances", typeof(bool));
-            inlineOption.AddAlias("-i");
-;
-            var resolveExternalOption = new Option("--resolve-external", "Resolve external $refs", typeof(bool));
-            resolveExternalOption.AddAlias("-ex");
-;
-            var filterByOperationIdsOption = new Option("--filter-by-operationids", "Filters OpenApiDocument by OperationId(s) provided", typeof(string));
+
+            var logLevelOption = new Option<LogLevel>("--loglevel", () => LogLevel.Warning, "The log level to use when logging messages to the main output.");
+            logLevelOption.AddAlias("-ll");
+
+            var filterByOperationIdsOption = new Option<string>("--filter-by-operationids", "Filters OpenApiDocument by OperationId(s) provided");
             filterByOperationIdsOption.AddAlias("-op");
-;
-            var filterByTagsOption = new Option("--filter-by-tags", "Filters OpenApiDocument by Tag(s) provided", typeof(string));
+
+            var filterByTagsOption = new Option<string>("--filter-by-tags", "Filters OpenApiDocument by Tag(s) provided");
             filterByTagsOption.AddAlias("-t");
-;
-            var filterByCollectionOption = new Option("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided", typeof(string));
+
+            var filterByCollectionOption = new Option<string>("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided");
             filterByCollectionOption.AddAlias("-c");
+
+            var inlineOption = new Option<bool>("--inline", "Inline $ref instances");
+            inlineOption.AddAlias("-i");
+
+            var resolveExternalOption = new Option<bool>("--resolve-external", "Resolve external $refs");
+            resolveExternalOption.AddAlias("-ex");
 
             var validateCommand = new Command("validate")
             {
-                descriptionOption
+                descriptionOption,
+                logLevelOption
             };
-            validateCommand.Handler = CommandHandler.Create<string>(OpenApiService.ValidateOpenApiDocument);
+
+            validateCommand.SetHandler<string, LogLevel>(OpenApiService.ValidateOpenApiDocument, descriptionOption, logLevelOption);
 
             var transformCommand = new Command("transform")
             {
@@ -59,14 +64,16 @@ namespace Microsoft.OpenApi.Hidi
                 outputOption,
                 versionOption,
                 formatOption,
-                inlineOption,
-                resolveExternalOption,
+                logLevelOption,               
                 filterByOperationIdsOption,
                 filterByTagsOption,
-                filterByCollectionOption
+                filterByCollectionOption,
+                inlineOption,
+                resolveExternalOption,
             };
-            transformCommand.Handler = CommandHandler.Create<string, string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, string, string, string, bool, bool>(
-                OpenApiService.ProcessOpenApiDocument);
+
+            transformCommand.SetHandler<string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, LogLevel, bool, bool, string, string, string> (
+                OpenApiService.ProcessOpenApiDocument, descriptionOption, outputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
