@@ -83,21 +83,21 @@ namespace Microsoft.OpenApi.Hidi
             Stream stream;
             OpenApiDocument document;
             OpenApiFormat openApiFormat;
+            var stopwatch = new Stopwatch();
 
             if (!string.IsNullOrEmpty(csdl))
             {
                 // Default to yaml during csdl to OpenApi conversion
-                openApiFormat = format ?? GetOpenApiFormat(csdl);
+                openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
 
-                stream = GetStream(csdl);
+                stream = await GetStream(csdl, logger);
                 document = ConvertCsdlToOpenApi(stream);
             }
             else
             {
-                stream = GetStream(openapi, logger);
+                stream = await GetStream(openapi, logger);
 
                 // Parsing OpenAPI file
-                var stopwatch = new Stopwatch();
                 stopwatch.Start();
                 logger.LogTrace("Parsing OpenApi file");
                 var result = new OpenApiStreamReader(new OpenApiReaderSettings
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Hidi
                     logger.LogTrace("{timestamp}ms: Parsed OpenApi successfully. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                 }
 
-                openApiFormat = format ?? GetOpenApiFormat(openapi);
+                openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
                 version ??= result.OpenApiDiagnostic.SpecificationVersion;
             }
 
