@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -356,10 +356,10 @@ namespace Microsoft.OpenApi.Hidi
             Console.WriteLine(statsVisitor.GetStatisticsReport());
         }
 
-        private static OpenApiFormat GetOpenApiFormat(string openapi, ILogger logger)
+        private static OpenApiFormat GetOpenApiFormat(string input, ILogger logger)
         {
             logger.LogTrace("Getting the OpenApi format");
-            return !openapi.StartsWith("http") && Path.GetExtension(openapi) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
+            return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
         }
 
         private static ILogger ConfigureLoggerInstance(LogLevel loglevel)
