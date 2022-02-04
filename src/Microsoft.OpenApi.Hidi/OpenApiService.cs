@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -87,8 +87,9 @@ namespace Microsoft.OpenApi.Hidi
 
             if (!string.IsNullOrEmpty(csdl))
             {
-                // Default to yaml during csdl to OpenApi conversion
+                // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
                 openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
+                version ??= OpenApiSpecVersion.OpenApi3_0;
 
                 stream = await GetStream(csdl, logger);
                 document = ConvertCsdlToOpenApi(stream);
