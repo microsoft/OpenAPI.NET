@@ -3,11 +3,29 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-      <LangVersion>9.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <PackAsTool>true</PackAsTool>
+    <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Authors>Microsoft</Authors>
+    <Company>Microsoft</Company>
+    <Title>Microsoft.OpenApi.Hidi</Title>
+    <PackageId>Microsoft.OpenApi.Hidi</PackageId>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
     <Version>0.5.0-preview3</Version>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <PackageTags>OpenAPI .NET</PackageTags>
+    <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
+    <PackageReleaseNotes>
+- Publish symbols.
+    </PackageReleaseNotes>
+    <AssemblyName>Microsoft.OpenApi.Hidi</AssemblyName>
+    <RootNamespace>Microsoft.OpenApi.Hidi</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <ItemGroup>
