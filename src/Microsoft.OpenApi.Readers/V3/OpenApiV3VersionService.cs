@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -88,7 +88,14 @@ namespace Microsoft.OpenApi.Readers.V3
                     if (reference.StartsWith("#"))
                     {
                         // "$ref": "#/components/schemas/Pet"
-                        return ParseLocalReference(segments[1]);
+                        try
+                        {
+                            return ParseLocalReference(segments[1]);
+                        }
+                        catch (OpenApiException)
+                        {
+                            return null;
+                        }
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
                     string id = segments[1];
