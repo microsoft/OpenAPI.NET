@@ -19,6 +19,17 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal class OpenApiV3VersionService : IOpenApiVersionService
     {
+        public OpenApiDiagnostic Diagnostic { get; }
+
+        /// <summary>
+        /// Create Parsing Context
+        /// </summary>
+        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        public OpenApiV3VersionService(OpenApiDiagnostic diagnostic)
+        {
+            Diagnostic = diagnostic;
+        }
+
         private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
         {
             [typeof(IOpenApiAny)] = OpenApiV3Deserializer.LoadAny,
@@ -92,8 +103,9 @@ namespace Microsoft.OpenApi.Readers.V3
                         {
                             return ParseLocalReference(segments[1]);
                         }
-                        catch (OpenApiException)
+                        catch (OpenApiException ex)
                         {
+                            Diagnostic.Errors.Add(new OpenApiError(ex));
                             return null;
                         }
                     }

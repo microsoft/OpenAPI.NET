@@ -20,6 +20,17 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal class OpenApiV2VersionService : IOpenApiVersionService
     {
+        public OpenApiDiagnostic Diagnostic { get; }
+
+        /// <summary>
+        /// Create Parsing Context
+        /// </summary>
+        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        public OpenApiV2VersionService(OpenApiDiagnostic diagnostic)
+        {
+            Diagnostic = diagnostic;
+        }
+
         private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
         {
             [typeof(IOpenApiAny)] = OpenApiV2Deserializer.LoadAny,
@@ -154,7 +165,15 @@ namespace Microsoft.OpenApi.Readers.V2
                     if (reference.StartsWith("#"))
                     {
                         // "$ref": "#/definitions/Pet"
-                        return ParseLocalReference(segments[1]);
+                        try
+                        {
+                            return ParseLocalReference(segments[1]);
+                        }
+                        catch (OpenApiException ex)
+                        {
+                            Diagnostic.Errors.Add(new OpenApiError(ex));
+                            return null;
+                        }
                     }
 
                     // $ref: externalSource.yaml#/Pet
