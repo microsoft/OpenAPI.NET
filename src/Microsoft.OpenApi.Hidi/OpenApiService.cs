@@ -251,13 +251,13 @@ namespace Microsoft.OpenApi.Hidi
             {
                 try
                 {
-                    using var httpClientHandler = new HttpClientHandler()
+                    var httpClientHandler = new HttpClientHandler()
                     {
                         SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
                     };
                     using var httpClient = new HttpClient(httpClientHandler)
                     {
-                        DefaultRequestVersion = HttpVersion.Version20
+                      DefaultRequestVersion = HttpVersion.Version20
                     };
                     stream = await httpClient.GetStreamAsync(input);
                 }
@@ -323,7 +323,7 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-        internal static async void ValidateOpenApiDocument(string openapi, LogLevel loglevel)
+        internal static async Task ValidateOpenApiDocument(string openapi, LogLevel loglevel)
         {
             if (string.IsNullOrEmpty(openapi))
             {
