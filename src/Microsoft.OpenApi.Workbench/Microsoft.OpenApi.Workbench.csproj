@@ -7,7 +7,6 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Infragistics.Themes.MetroLight.Wpf" Version="1.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
       <PrivateAssets>all</PrivateAssets>
