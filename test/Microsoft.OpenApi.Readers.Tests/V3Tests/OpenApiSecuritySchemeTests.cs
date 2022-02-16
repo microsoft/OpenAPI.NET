@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.Http,
-                        Scheme = "basic"
+                        Scheme = AuthenticationScheme.Basic
                     });
             }
         }
@@ -95,8 +95,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.Http,
-                        Scheme = "bearer",
-                        BearerFormat = "JWT"
+                        Scheme = AuthenticationScheme.Bearer,
+                        BearerFormat = BearerFormat.JWT
                     });
             }
         }

@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OpenIdConnect,
-                    Scheme = "openIdConnectUrl",
+                    Scheme = AuthenticationScheme.OpenIdConnectUrl,
                     OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
                 }
             }
@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     Description = "description1",
                     Type = SecuritySchemeType.OpenIdConnect,
-                    Scheme = "openIdConnectUrl",
+                    Scheme = AuthenticationScheme.OpenIdConnectUrl,
                     OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
                     Reference = new OpenApiReference
                     {

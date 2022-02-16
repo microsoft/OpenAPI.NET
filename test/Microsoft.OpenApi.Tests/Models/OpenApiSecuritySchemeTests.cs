@@ -32,15 +32,15 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = "basic",
+            Scheme = AuthenticationScheme.Basic,
         };
 
         public static OpenApiSecurityScheme HttpBearerSecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = "bearer",
-            BearerFormat = "JWT",
+            Scheme = AuthenticationScheme.Bearer,
+            BearerFormat = BearerFormat.JWT,
         };
 
         public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new OpenApiSecurityScheme
@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
-            Scheme = "openIdConnectUrl",
+            Scheme = AuthenticationScheme.OpenIdConnectUrl,
             OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
         };
 
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
-            Scheme = "openIdConnectUrl",
+            Scheme = AuthenticationScheme.OpenIdConnectUrl,
             OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
             Reference = new OpenApiReference
             {
