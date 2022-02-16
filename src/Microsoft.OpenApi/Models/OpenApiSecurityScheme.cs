@@ -118,8 +118,8 @@ namespace Microsoft.OpenApi.Models
                     // These properties apply to http type only.
                     // scheme
                     // bearerFormat
-                    writer.WriteProperty(OpenApiConstants.Scheme, Scheme);
-                    writer.WriteProperty(OpenApiConstants.BearerFormat, BearerFormat);
+                    writer.WriteProperty(OpenApiConstants.Scheme, Scheme.GetDisplayName());
+                    writer.WriteProperty(OpenApiConstants.BearerFormat, BearerFormat.GetDisplayName());
                     break;
                 case SecuritySchemeType.OAuth2:
                     // This property apply to oauth2 type only.
