@@ -51,27 +51,6 @@ namespace Microsoft.OpenApi.Hidi
 
             var validateCommand = new Command("validate")
             {
-<<<<<<< HEAD
-                new Option("--input", "Input OpenAPI description file path or URL", typeof(string) ),
-                new Option("--resolveExternal","Resolve external $refs", typeof(bool))
-            };
-            validateCommand.Handler = CommandHandler.Create<string,bool>(OpenApiService.ValidateOpenApiDocument);
-
-            var transformCommand = new Command("transform")
-            {
-                new Option("--input", "Input OpenAPI description file path or URL", typeof(string) ),
-                new Option("--output","Output OpenAPI description file", typeof(FileInfo), arity: ArgumentArity.ZeroOrOne),
-                new Option("--version", "OpenAPI specification version", typeof(OpenApiSpecVersion)),
-                new Option("--format", "File format",typeof(OpenApiFormat) ),
-                new Option("--inlineExternal", "Inline external $ref instances", typeof(bool) ),
-                new Option("--inlineLocal", "Inline local $ref instances", typeof(bool) ),
-                new Option("--filterByOperationIds", "Filters OpenApiDocument by OperationId(s) provided", typeof(string)),
-                new Option("--filterByTags", "Filters OpenApiDocument by Tag(s) provided", typeof(string)),
-                new Option("--filterByCollection", "Filters OpenApiDocument by Postman collection provided", typeof(string))
-            };
-            transformCommand.Handler = CommandHandler.Create<string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, bool, bool, string, string, string>(
-                OpenApiService.ProcessOpenApiDocument);
-=======
                 descriptionOption,
                 logLevelOption
             };
@@ -95,7 +74,6 @@ namespace Microsoft.OpenApi.Hidi
 
             transformCommand.SetHandler<string, string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, LogLevel, bool, bool, string, string, string> (
                 OpenApiService.ProcessOpenApiDocument, descriptionOption, csdlOption, outputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
->>>>>>> origin/vnext
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);

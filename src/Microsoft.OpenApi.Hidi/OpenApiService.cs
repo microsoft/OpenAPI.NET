@@ -34,14 +34,6 @@ namespace Microsoft.OpenApi.Hidi
             FileInfo output,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
-<<<<<<< HEAD
-            bool inlineExternal,
-            bool inlineLocal,
-            string filterByOperationIds,
-            string filterByTags,
-            string filterByCollection
-            )
-=======
             LogLevel loglevel,
             bool inline,
             bool resolveexternal,
@@ -49,7 +41,6 @@ namespace Microsoft.OpenApi.Hidi
             string filterbytags,
             string filterbycollection
            )
->>>>>>> origin/vnext
         {
             var logger = ConfigureLoggerInstance(loglevel);
 
@@ -95,18 +86,6 @@ namespace Microsoft.OpenApi.Hidi
             OpenApiFormat openApiFormat;
             var stopwatch = new Stopwatch();
 
-<<<<<<< HEAD
-            var inputUrl = GetInputUrl(input);
-            var stream = GetStream(inputUrl);
-
-            OpenApiDocument document;
-
-            var result = new OpenApiStreamReader(new OpenApiReaderSettings
-            {
-                LoadExternalRefs = inlineExternal,
-                RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
-                BaseUrl = new Uri(inputUrl.AbsoluteUri)
-=======
             if (!string.IsNullOrEmpty(csdl))
             {
                 // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
@@ -151,13 +130,8 @@ namespace Microsoft.OpenApi.Hidi
 
                 openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
                 version ??= result.OpenApiDiagnostic.SpecificationVersion;
->>>>>>> origin/vnext
             }
 
-<<<<<<< HEAD
-            document = result.OpenApiDocument;
-=======
->>>>>>> origin/vnext
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
 
             // Check if filter options are provided, then slice the OpenAPI document
@@ -178,15 +152,7 @@ namespace Microsoft.OpenApi.Hidi
                 logger.LogTrace("Creating predicate based on the tags supplied.");
                 predicate = OpenApiFilterService.CreatePredicate(tags: filterbytags);
 
-<<<<<<< HEAD
-            if (!string.IsNullOrEmpty(filterByCollection))
-            {
-                var fileStream = GetStream(GetInputUrl(filterByCollection));
-                var requestUrls = ParseJsonCollectionFile(fileStream);
-                predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source:document);
-=======
                 logger.LogTrace("Creating subset OpenApi document.");
->>>>>>> origin/vnext
                 document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
             }
             if (!string.IsNullOrEmpty(filterbycollection))
@@ -229,26 +195,6 @@ namespace Microsoft.OpenApi.Hidi
             textWriter.Flush();
         }
 
-<<<<<<< HEAD
-        private static Uri GetInputUrl(string input)
-        {
-            if (input.StartsWith("http"))
-            {
-                return new Uri(input);
-            } 
-            else
-            {
-                return new Uri("file://" + Path.GetFullPath(input));
-            }
-        }
-
-        private static Stream GetStream(Uri input)
-        {
-            Stream stream;
-            if (input.Scheme == "http" || input.Scheme == "https")
-            {
-                var httpClient = new HttpClient(new HttpClientHandler()
-=======
         /// <summary>
         /// Converts CSDL to OpenAPI
         /// </summary>
@@ -303,10 +249,9 @@ namespace Microsoft.OpenApi.Hidi
             stopwatch.Start();
 
             Stream stream;
-            if (input.StartsWith("http"))
+            if (input.Scheme == "http" || input.Scheme == "https")
             {
                 try
->>>>>>> origin/vnext
                 {
                     var httpClientHandler = new HttpClientHandler()
                     {
@@ -326,14 +271,6 @@ namespace Microsoft.OpenApi.Hidi
             }
             else if (input.Scheme == "file")
             {
-<<<<<<< HEAD
-                var fileInput = new FileInfo(input.AbsolutePath);
-                stream = fileInput.OpenRead();
-            } 
-            else
-            {
-                throw new ArgumentException("Unrecognized exception");
-=======
                 try
                 {
                     var fileInput = new FileInfo(input);
@@ -350,7 +287,6 @@ namespace Microsoft.OpenApi.Hidi
                     logger.LogError($"Could not open the file at {input}, reason: {ex.Message}");
                     return null;
                 }
->>>>>>> origin/vnext
             }
             stopwatch.Stop();
             logger.LogTrace("{timestamp}ms: Read file {input}", stopwatch.ElapsedMilliseconds, input);
@@ -389,31 +325,18 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-<<<<<<< HEAD
-        internal static async Task ValidateOpenApiDocument(string input, bool resolveExternal)
-=======
         internal static async Task ValidateOpenApiDocument(string openapi, LogLevel loglevel)
->>>>>>> origin/vnext
         {
             if (string.IsNullOrEmpty(openapi))
             {
                 throw new ArgumentNullException(nameof(openapi));
             }
-<<<<<<< HEAD
-            var inputUrl = GetInputUrl(input);
-            var stream = GetStream(GetInputUrl(input));
-
-            OpenApiDocument document;
-
-            var result = await new OpenApiStreamReader(new OpenApiReaderSettings
-=======
             var logger = ConfigureLoggerInstance(loglevel);
             var stream = await GetStream(openapi, logger);
 
             OpenApiDocument document;
             logger.LogTrace("Parsing the OpenApi file");
             document = new OpenApiStreamReader(new OpenApiReaderSettings
->>>>>>> origin/vnext
             {
                 ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
@@ -432,30 +355,12 @@ namespace Microsoft.OpenApi.Hidi
                 }
             }
 
-            if (document.Workspace == null) { 
-                var statsVisitor = new StatsVisitor();
-                var walker = new OpenApiWalker(statsVisitor);
-                walker.Walk(document);
-                Console.WriteLine(statsVisitor.GetStatisticsReport());
-            } 
-            else
-            {
-                foreach (var memberDocument in document.Workspace.Documents)
-                {
-                    Console.WriteLine("Stats for " + memberDocument.Info.Title);
-                    var statsVisitor = new StatsVisitor();
-                    var walker = new OpenApiWalker(statsVisitor);
-                    walker.Walk(memberDocument);
-                    Console.WriteLine(statsVisitor.GetStatisticsReport());
-                }
-            }
+            var statsVisitor = new StatsVisitor();
+            var walker = new OpenApiWalker(statsVisitor);
+            walker.Walk(document);
 
-<<<<<<< HEAD
-            
-=======
             logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
             Console.WriteLine(statsVisitor.GetStatisticsReport());
->>>>>>> origin/vnext
         }
 
         private static OpenApiFormat GetOpenApiFormat(string input, ILogger logger)
