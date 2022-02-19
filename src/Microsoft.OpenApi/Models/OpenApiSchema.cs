@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Schema Object.
     /// </summary>
-    public class OpenApiSchema : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiSchema : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiSchema>, IOpenApiExtensible
     {
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
@@ -252,6 +252,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             var settings = writer.GetSettings();
+            var target = this;
 
             if (Reference != null)
             {
@@ -259,6 +260,13 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV3(writer);
                     return;
+                } 
+                else
+                {
+                    if (Reference.IsExternal)  // Temporary until v2
+                    {
+                        target = this.GetEffective(Reference.HostDocument);
+                    }
                 }
 
                 // If Loop is detected then just Serialize as a reference.
@@ -270,7 +278,7 @@ namespace Microsoft.OpenApi.Models
                 }
             }
 
-            SerializeAsV3WithoutReference(writer);
+            target.SerializeAsV3WithoutReference(writer);
 
             if (Reference != null)
             {
@@ -283,6 +291,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
+
             writer.WriteStartObject();
 
             // title
@@ -665,6 +674,17 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        public OpenApiSchema GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiSchema>(this.Reference);
+            } else
+            {
+                return this;
+            }
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Hidi
 
             var result = new OpenApiStreamReader(new OpenApiReaderSettings
             {
-                ReferenceResolution = inlineExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                LoadExternalRefs = inlineExternal,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
                 BaseUrl = new Uri(inputUrl.AbsoluteUri)
             }

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
-using Microsoft.OpenApi.Readers.Services;
-using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
@@ -24,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             // Create a reader that will resolve all references
             var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
             {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences,
+                LoadExternalRefs = true,
                 CustomExternalLoader = new MockLoader(),
                 BaseUrl = new Uri("file://c:\\")
             });
@@ -54,7 +50,7 @@ paths: {}";
             // Create a reader that will resolve all references
             var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
             {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences,
+                LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
                 BaseUrl = new Uri("fie://c:\\")
             });
@@ -73,7 +69,7 @@ paths: {}";
                                             .Operations[OperationType.Get]
                                             .Responses["200"]
                                             .Content["application/json"]
-                                                .Schema;
+                                                .Schema.GetEffective(result.OpenApiDocument);
             Assert.Equal("object", referencedSchema.Type);
             Assert.Equal("string", referencedSchema.Properties["subject"].Type);
             Assert.False(referencedSchema.UnresolvedReference);
@@ -81,8 +77,9 @@ paths: {}";
             var referencedParameter = result.OpenApiDocument
                                             .Paths["/todos"]
                                             .Operations[OperationType.Get]
-                                            .Parameters
+                                            .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
                                             .Where(p => p.Name == "filter").FirstOrDefault();
+          
             Assert.Equal("string", referencedParameter.Schema.Type);
 
         }

@@ -46,6 +46,11 @@ namespace Microsoft.OpenApi.Models
         public bool IsLocal => ExternalResource == null;
 
         /// <summary>
+        /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
+        /// </summary>
+        public OpenApiDocument HostDocument { get; set; } = null;
+
+        /// <summary>
         /// Gets the full reference string for v3.0.
         /// </summary>
         public string ReferenceV3

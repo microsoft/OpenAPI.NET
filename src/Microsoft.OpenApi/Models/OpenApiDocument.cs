@@ -321,27 +321,37 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Walk the OpenApiDocument and resolve unresolved references
         /// </summary>
-        /// <param name="useExternal">Indicates if external references should be resolved.  Document needs to reference a workspace for this to be possible.</param>
-        public IEnumerable<OpenApiError> ResolveReferences(bool useExternal = false)
+        /// <remarks>
+        /// This method will be replaced by a LoadExternalReferences in the next major update to this library.
+        /// Resolving references at load time is going to go away.
+        /// </remarks>
+        public IEnumerable<OpenApiError> ResolveReferences()
         {
-            var resolver = new OpenApiReferenceResolver(this, useExternal);
+            var resolver = new OpenApiReferenceResolver(this, false);
             var walker = new OpenApiWalker(resolver);
             walker.Walk(this);
             return resolver.Errors;
         }
 
-            /// <summary>
-            /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
-            /// </summary>
-            public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
+        internal T ResolveReferenceTo<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable
+        {
+            if (reference.IsExternal)
             {
-                return ResolveReference(reference, false);
+                return ResolveReference(reference, true) as T;
             }
+            else
+            {
+                return ResolveReference(reference, false) as T;
+            }
+        }
 
-            /// <summary>
-            /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
-            /// </summary>
-            public IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
+        internal IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
         {
             if (reference == null)
             {
