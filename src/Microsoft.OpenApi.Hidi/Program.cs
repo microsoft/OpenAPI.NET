@@ -43,11 +43,11 @@ namespace Microsoft.OpenApi.Hidi
             var filterByCollectionOption = new Option<string>("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided");
             filterByCollectionOption.AddAlias("-c");
 
-            var inlineOption = new Option<bool>("--inline", "Inline $ref instances");
-            inlineOption.AddAlias("-i");
+            var inlineLocalOption = new Option<bool>("--inlineLocal", "Inline local $ref instances");
+            inlineLocalOption.AddAlias("-il");
 
-            var resolveExternalOption = new Option<bool>("--resolve-external", "Resolve external $refs");
-            resolveExternalOption.AddAlias("-ex");
+            var inlineExternalOption = new Option<bool>("--inlineExternal", "Inline external $ref instances");
+            inlineExternalOption.AddAlias("-ie");
 
             var validateCommand = new Command("validate")
             {
@@ -68,12 +68,12 @@ namespace Microsoft.OpenApi.Hidi
                 filterByOperationIdsOption,
                 filterByTagsOption,
                 filterByCollectionOption,
-                inlineOption,
-                resolveExternalOption,
+                inlineLocalOption,
+                inlineExternalOption
             };
 
             transformCommand.SetHandler<string, string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, LogLevel, bool, bool, string, string, string> (
-                OpenApiService.ProcessOpenApiDocument, descriptionOption, csdlOption, outputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
+                OpenApiService.ProcessOpenApiDocument, descriptionOption, csdlOption, outputOption, versionOption, formatOption, logLevelOption, inlineLocalOption, inlineExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);

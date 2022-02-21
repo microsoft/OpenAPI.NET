@@ -55,13 +55,38 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
+            var target = this;
+
             if (Reference != null)
             {
-                Reference.SerializeAsV3(writer);
-                return;
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV3(writer);
+                    return;
+                }
+                else
+                {
+                    target = GetEffective(Reference.HostDocument);
+                }
             }
+            target.SerializeAsV3WithoutReference(writer);
+        }
 
-            SerializeAsV3WithoutReference(writer);
+        /// <summary>
+        /// Returns an effective OpenApiRequestBody object based on the presence of a $ref 
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiRequestBody</returns>
+        public OpenApiRequestBody GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiRequestBody>(this.Reference);
+            }
+            else
+            {
+                return this;
+            }
         }
 
         /// <summary>

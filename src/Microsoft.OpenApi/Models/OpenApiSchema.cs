@@ -451,13 +451,22 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
+            var settings = writer.GetSettings();
+            var target = this;
+
             if (Reference != null)
             {
-                var settings = writer.GetSettings();
                 if (!settings.ShouldInlineReference(Reference))
                 {
                     Reference.SerializeAsV2(writer);
                     return;
+                }
+                else
+                {
+                    if (Reference.IsExternal)  // Temporary until v2
+                    {
+                        target = this.GetEffective(Reference.HostDocument);
+                    }
                 }
 
                 // If Loop is detected then just Serialize as a reference.
@@ -475,7 +484,7 @@ namespace Microsoft.OpenApi.Models
                 parentRequiredProperties = new HashSet<string>();
             }
 
-            SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
+            target.SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
         }
 
         /// <summary>
@@ -676,6 +685,11 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
         }
 
+        /// <summary>
+        /// Returns an effective OpenApiSchema object based on the presence of a $ref 
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiSchema</returns>
         public OpenApiSchema GetEffective(OpenApiDocument doc)
         {
             if (this.Reference != null)

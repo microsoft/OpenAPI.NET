@@ -28,15 +28,15 @@ namespace Microsoft.OpenApi.Hidi
 {
     public class OpenApiService
     {
-        public static async void ProcessOpenApiDocument(
+        public static async Task ProcessOpenApiDocument(
             string openapi,
             string csdl,
             FileInfo output,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
             LogLevel loglevel,
-            bool inline,
-            bool resolveexternal,
+            bool inlineLocal,
+            bool inlineExternal,
             string filterbyoperationids,
             string filterbytags,
             string filterbycollection
@@ -104,8 +104,9 @@ namespace Microsoft.OpenApi.Hidi
                 logger.LogTrace("Parsing OpenApi file");
                 var result = new OpenApiStreamReader(new OpenApiReaderSettings
                 {
-                    ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
-                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                    RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
+                    LoadExternalRefs = inlineExternal,
+                    BaseUrl = openapi.StartsWith("http") ? new Uri(openapi) : new Uri("file:" + new FileInfo(openapi).DirectoryName + "\\")
                 }
                 ).ReadAsync(stream).GetAwaiter().GetResult();
 
@@ -249,7 +250,7 @@ namespace Microsoft.OpenApi.Hidi
             stopwatch.Start();
 
             Stream stream;
-            if (input.Scheme == "http" || input.Scheme == "https")
+            if (input.StartsWith("http"))
             {
                 try
                 {
@@ -269,7 +270,7 @@ namespace Microsoft.OpenApi.Hidi
                     return null;
                 }
             }
-            else if (input.Scheme == "file")
+            else 
             {
                 try
                 {
@@ -336,11 +337,10 @@ namespace Microsoft.OpenApi.Hidi
 
             OpenApiDocument document;
             logger.LogTrace("Parsing the OpenApi file");
-            document = new OpenApiStreamReader(new OpenApiReaderSettings
+            var result = await new OpenApiStreamReader(new OpenApiReaderSettings
             {
-                ReferenceResolution = resolveExternal == true ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                 RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
-                BaseUrl = new Uri(inputUrl.AbsoluteUri)
+                BaseUrl = new Uri(openapi)
             }
             ).ReadAsync(stream);
 

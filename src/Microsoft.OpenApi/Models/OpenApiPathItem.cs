@@ -74,15 +74,38 @@ namespace Microsoft.OpenApi.Models
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
+            var target = this;
 
-            if (Reference != null && !writer.GetSettings().ShouldInlineReference(Reference))
+            if (Reference != null)
             {
-                Reference.SerializeAsV3(writer);
-                return;
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV3(writer);
+                    return;
+                } 
+                else
+                {
+                    target = GetEffective(Reference.HostDocument);
+                }
             }
+            target.SerializeAsV3WithoutReference(writer);
+        }
 
-            SerializeAsV3WithoutReference(writer);
-
+        /// <summary>
+        /// Returns an effective OpenApiPathItem object based on the presence of a $ref 
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiPathItem</returns>
+        public OpenApiPathItem GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiPathItem>(this.Reference);
+            }
+            else
+            {
+                return this;
+            }
         }
 
         /// <summary>
@@ -95,13 +118,22 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null && !writer.GetSettings().ShouldInlineReference(Reference))
+            var target = this;
+
+            if (Reference != null)
             {
-                Reference.SerializeAsV2(writer);
-                return;
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV2(writer);
+                    return;
+                } 
+                else
+                {
+                    target = this.GetEffective(Reference.HostDocument);
+                }
             }
 
-            SerializeAsV2WithoutReference(writer);
+            target.SerializeAsV2WithoutReference(writer);
         }
 
         /// <summary>
