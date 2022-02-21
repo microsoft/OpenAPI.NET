@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.Http,
-                        Scheme = AuthenticationScheme.Basic
+                        Scheme = OpenApiConstants.Basic
                     });
             }
         }

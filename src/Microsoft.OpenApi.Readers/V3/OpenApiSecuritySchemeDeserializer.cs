@@ -44,13 +44,13 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "scheme", (o, n) =>
                     {
-                        o.Scheme = n.GetScalarValue().GetEnumFromDisplayName<AuthenticationScheme>();
+                        o.Scheme = n.GetScalarValue();
                     }
                 },
                 {
                     "bearerFormat", (o, n) =>
                     {
-                        o.BearerFormat = n.GetScalarValue().GetEnumFromDisplayName<BearerFormat>();
+                        o.BearerFormat = n.GetScalarValue();
                     }
                 },
                 {

@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         {
                             case "basic":
                                 o.Type = SecuritySchemeType.Http;
-                                o.Scheme = AuthenticationScheme.Basic;
+                                o.Scheme = OpenApiConstants.Basic;
                                 break;
 
                             case "apiKey":
