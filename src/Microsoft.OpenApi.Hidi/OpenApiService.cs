@@ -12,7 +12,6 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
