@@ -618,6 +618,16 @@ namespace Microsoft.OpenApi.Models
         public const string Basic = "basic";
 
         /// <summary>
+        /// Field: Bearer
+        /// </summary>
+        public const string Bearer = "bearer";
+
+        /// <summary>
+        /// Field: JWT
+        /// </summary>
+        public const string Jwt = "JWT";
+
+        /// <summary>
         /// Field: Consumes
         /// </summary>
         public const string Consumes = "consumes";
