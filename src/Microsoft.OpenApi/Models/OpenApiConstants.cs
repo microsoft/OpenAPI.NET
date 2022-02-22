@@ -536,6 +536,11 @@ namespace Microsoft.OpenApi.Models
         public const string Flows = "flows";
 
         /// <summary>
+        /// Field: OpenIdConnectUrl
+        /// </summary>
+        public const string OpenIdConnectUrl = "openIdConnectUrl";
+
+        /// <summary>
         /// Field: DefaultName
         /// </summary>
         public const string DefaultName = "Default Name";
