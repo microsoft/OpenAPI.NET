@@ -19,6 +19,13 @@ pool:
 steps:
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
+  
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
+  inputs:
+    packageType: 'sdk'
+    version: '6.0.x'
+    includePreviewVersions: true
 
 - task: MSBuild@1
   displayName: 'Build solution **/*.sln'
@@ -127,7 +134,31 @@ steps:
      ]
     SessionTimeout: 20
 
+- task: PowerShell@2
+  displayName: "Get Hidi's version-number from .csproj"
+  inputs:
+    targetType: 'inline'
+    script: |
+         $xml = [Xml] (Get-Content .\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj)
+         $version = $xml.Project.PropertyGroup.Version
+         echo $version
+         echo "##vso[task.setvariable variable=version]$version"  
+
+# publish hidi as an .exe
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true --self-contained --output $(Build.ArtifactStagingDirectory) --no-dependencies
+    projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
+    publishWebProjects: False
+    zipAfterPublish: false 
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: Nugets'
   inputs:
     ArtifactName: Nugets
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Hidi'
+  inputs: 
+    ArtifactName: Microsoft.OpenApi.Hidi-v$(version)
