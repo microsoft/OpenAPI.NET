@@ -17,6 +17,13 @@ pool:
   - vstest
 
 steps:
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
+  inputs:
+    packageType: 'sdk'
+    version: '6.0.x'
+    includePreviewVersions: true
+
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
 
@@ -85,21 +92,21 @@ steps:
   inputs:
     solution: src/Microsoft.OpenApi/Microsoft.OpenApi.csproj
     configuration: Release
-    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/Nugets /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
 
 - task: MSBuild@1
   displayName: 'Pack OpenAPI Readers'
   inputs:
     solution: src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj
     configuration: Release
-    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/Nugets /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
 
 - task: MSBuild@1
   displayName: 'Pack OpenApi Hidi'
   inputs:
     solution: src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj
     configuration: Release
-    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory) /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/Nugets /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning Nuget Packages'
@@ -127,7 +134,33 @@ steps:
      ]
     SessionTimeout: 20
 
+- task: PowerShell@2
+  displayName: "Get Hidi's version-number from .csproj"
+  inputs:
+    targetType: 'inline'
+    script: |
+         $xml = [Xml] (Get-Content .\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj)
+         $version = $xml.Project.PropertyGroup.Version
+         echo $version
+         echo "##vso[task.setvariable variable=version]$version"  
+
+# publish hidi as an .exe
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(version) --no-dependencies
+    projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
+    publishWebProjects: False
+    zipAfterPublish: false 
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: Nugets'
   inputs:
     ArtifactName: Nugets
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Nugets'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Hidi'
+  inputs: 
+    ArtifactName: Microsoft.OpenApi.Hidi-v$(version)
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(version)'
