@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Hidi;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -12,7 +13,7 @@ namespace Microsoft.OpenApi.Tests.Services
     public class OpenApiServiceTests
     {
         [Fact]
-        public void ReturnConvertedCSDLFile()
+        public async Task ReturnConvertedCSDLFile()
         {
             // Arrange
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
@@ -20,20 +21,20 @@ namespace Microsoft.OpenApi.Tests.Services
             var csdlStream = fileInput.OpenRead();
 
             // Act
-            var openApiDoc = OpenApiService.ConvertCsdlToOpenApi(csdlStream);
-            var expectedPathCount = 5;
+            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
+            var expectedPathCount = 6;
 
             // Assert
             Assert.NotNull(openApiDoc);
             Assert.NotEmpty(openApiDoc.Paths);
-            Assert.Equal(openApiDoc.Paths.Count, expectedPathCount);
+            Assert.Equal(expectedPathCount, openApiDoc.Paths.Count);
         }
         
         [Theory]
         [InlineData("Todos.Todo.UpdateTodo",null, 1)]
         [InlineData("Todos.Todo.ListTodo",null, 1)]
         [InlineData(null, "Todos.Todo", 4)]
-        public void ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string operationIds, string tags, int expectedPathCount)
+        public async Task ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string operationIds, string tags, int expectedPathCount)
         {
             // Arrange
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var csdlStream = fileInput.OpenRead();
 
             // Act
-            var openApiDoc = OpenApiService.ConvertCsdlToOpenApi(csdlStream);
+            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(openApiDoc, predicate);
 
