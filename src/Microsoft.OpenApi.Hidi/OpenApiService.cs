@@ -206,8 +206,12 @@ namespace Microsoft.OpenApi.Hidi
 
             var settings = new OpenApiConvertSettings()
             {
+                AddSingleQuotesForStringParameters = true,
+                AddEnumDescriptionExtension = true,
+                DeclarePathParametersOnPathItem = true,
                 EnableKeyAsSegment = true,
                 EnableOperationId = true,
+                ErrorResponsesAsDefault  = false,
                 PrefixEntityTypeNameBeforeKey = true,
                 TagDepth = 2,
                 EnablePagination = true,
