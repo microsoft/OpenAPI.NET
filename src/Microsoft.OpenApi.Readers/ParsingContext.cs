@@ -60,13 +60,13 @@ namespace Microsoft.OpenApi.Readers
             switch (inputVersion)
             {
                 case string version when version == "2.0":
-                    VersionService = new OpenApiV2VersionService();
+                    VersionService = new OpenApiV2VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     break;
 
                 case string version when version.StartsWith("3.0"):
-                    VersionService = new OpenApiV3VersionService();
+                    VersionService = new OpenApiV3VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
                     break;
@@ -93,12 +93,12 @@ namespace Microsoft.OpenApi.Readers
             switch (version)
             {
                 case OpenApiSpecVersion.OpenApi2_0:
-                    VersionService = new OpenApiV2VersionService();
+                    VersionService = new OpenApiV2VersionService(Diagnostic);
                     element = this.VersionService.LoadElement<T>(node);
                     break;
 
                 case OpenApiSpecVersion.OpenApi3_0:
-                    this.VersionService = new OpenApiV3VersionService();
+                    this.VersionService = new OpenApiV3VersionService(Diagnostic);
                     element = this.VersionService.LoadElement<T>(node);
                     break;
             }

@@ -10,12 +10,20 @@ namespace Microsoft.OpenApi.Readers.Tests
 {
     public class ConvertToOpenApiReferenceV3Tests
     {
+        public OpenApiDiagnostic Diagnostic { get; }
+
+        public ConvertToOpenApiReferenceV3Tests()
+        {
+            Diagnostic = new OpenApiDiagnostic();
+        }
+
+
 
         [Fact]
         public void ParseExternalReference()
         {
             // Arrange
-            var versionService = new OpenApiV3VersionService();
+            var versionService = new OpenApiV3VersionService(Diagnostic);
             var externalResource = "externalSchema.json";
             var id = "/externalPathSegment1/externalPathSegment2/externalPathSegment3";
             var input = $"{externalResource}#{id}";
@@ -33,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         public void ParseLocalParameterReference()
         {
             // Arrange
-            var versionService = new OpenApiV3VersionService();
+            var versionService = new OpenApiV3VersionService(Diagnostic);
             var referenceType = ReferenceType.Parameter;
             var id = "parameterId";
             var input = $"#/components/parameters/{id}";
@@ -51,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         public void ParseLocalSchemaReference()
         {
             // Arrange
-            var versionService = new OpenApiV3VersionService();
+            var versionService = new OpenApiV3VersionService(Diagnostic);
             var referenceType = ReferenceType.Schema;
             var id = "schemaId";
             var input = $"#/components/schemas/{id}";
@@ -69,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         public void ParseTagReference()
         {
             // Arrange
-            var versionService = new OpenApiV3VersionService();
+            var versionService = new OpenApiV3VersionService(Diagnostic);
             var referenceType = ReferenceType.Tag;
             var id = "tagId";
             var input = $"{id}";
@@ -87,7 +95,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         public void ParseSecuritySchemeReference()
         {
             // Arrange
-            var versionService = new OpenApiV3VersionService();
+            var versionService = new OpenApiV3VersionService(Diagnostic);
             var referenceType = ReferenceType.SecurityScheme;
             var id = "securitySchemeId";
             var input = $"{id}";
