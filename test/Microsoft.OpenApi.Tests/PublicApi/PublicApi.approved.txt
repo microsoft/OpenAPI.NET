@@ -358,6 +358,7 @@ namespace Microsoft.OpenApi.Models
         public const string AuthorizationUrl = "authorizationUrl";
         public const string BasePath = "basePath";
         public const string Basic = "basic";
+        public const string Bearer = "bearer";
         public const string BearerFormat = "bearerFormat";
         public const string BodyName = "x-bodyName";
         public const string Callbacks = "callbacks";
@@ -400,6 +401,7 @@ namespace Microsoft.OpenApi.Models
         public const string In = "in";
         public const string Info = "info";
         public const string Items = "items";
+        public const string Jwt = "JWT";
         public const string License = "license";
         public const string Links = "links";
         public const string Mapping = "mapping";
@@ -1206,7 +1208,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiResponses> ResponsesMustBeIdentifiedByDefaultOrStatusCode { get; }
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiResponses> ResponsesMustContainAtLeastOneResponse { get; }
     }
-    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.All, AllowMultiple=false, Inherited=false)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple=false, Inherited=false)]
     public class OpenApiRuleAttribute : System.Attribute
     {
         public OpenApiRuleAttribute() { }
