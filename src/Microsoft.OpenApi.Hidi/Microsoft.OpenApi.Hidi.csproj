@@ -22,6 +22,7 @@
     <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
     <PackageReleaseNotes>
 - Upgrades Microsoft.OpenApi.OData to 1.0.10-preview1
+- Fixes an issue where hidi would not process async operations
     </PackageReleaseNotes>
     <AssemblyName>Microsoft.OpenApi.Hidi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Hidi</RootNamespace>

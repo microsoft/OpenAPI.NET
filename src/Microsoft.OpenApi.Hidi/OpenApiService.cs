@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Hidi
 {
     public class OpenApiService
     {
-        public static async void ProcessOpenApiDocument(
+        public static async Task ProcessOpenApiDocument(
             string openapi,
             string csdl,
             FileInfo output,
