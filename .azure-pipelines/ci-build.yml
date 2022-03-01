@@ -216,22 +216,17 @@ stages:
               $xml = [Xml] (Get-Content .\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj)
               $version = $xml.Project.PropertyGroup.Version
               echo $version
-              echo "##vso[task.setvariable variable=version]$version"  
+              echo "##vso[task.setvariable variable=hidiversion]$version"  
 
       # publish hidi as an .exe
       - task: DotNetCoreCLI@2
+        displayName: publish Hidi as executable
         inputs:
           command: 'publish'
-          arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(version) --no-dependencies
+          arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion) --no-dependencies
           projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
           publishWebProjects: False
           zipAfterPublish: false 
-
-      - task: PublishBuildArtifacts@1
-        displayName: 'Publish Artifact: Hidi'
-        inputs: 
-          ArtifactName: Microsoft.OpenApi.Hidi-v$(version)
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(version)'
 
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Artifact: Nugets'
@@ -239,11 +234,96 @@ stages:
           ArtifactName: Nugets
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/Nugets'
 
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact: Hidi'
+        inputs: 
+          ArtifactName: Microsoft.OpenApi.Hidi-v$(hidiversion)
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)'
+
 - stage: deploy
   condition: and(contains(variables['build.sourceBranch'], 'refs/heads/vnext'), succeeded())
   dependsOn: build
   jobs:
-    - deployment: deploy
+    - deployment: deploy_hidi
+      dependsOn: []
+      environment: nuget-org
+      strategy:
+        runOnce:
+          deploy:
+            pool:
+              vmImage: ubuntu-latest
+            steps:
+            - task: DownloadPipelineArtifact@2
+              displayName: Download nupkg from artifacts
+              inputs:
+                artifact: Nugets
+                source: current
+            # TODO update that script so it looks at the artifact name (name starts with) rather than a fixed index
+            - powershell: |
+                $url = "$($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)$env:SYSTEM_TEAMPROJECTID/_apis/build/builds/$env:BUILD_BUILDID/artifacts?api-version=4.1"
+                Write-Host "URL: $url"
+                $pipeline = Invoke-RestMethod -Uri $url -Headers @{
+                Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN"
+                }
+                Write-Host "artifactName:" ($artifactName = $Pipeline.value.name[1])   
+                #Set Variable $artifactName
+                Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true;]$artifactName"
+                displayName: 'Fetch Artifact Name'
+            - task: DownloadPipelineArtifact@2
+              displayName: Download hidi executable from artifacts
+              inputs:
+                artifact: $(artifactName)
+                source: current
+            - task: NuGetCommand@2
+              displayName: 'NuGet push'
+              inputs:
+                command: push
+                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg'
+                nuGetFeedType: external
+                publishFeedCredentials: 'OpenAPI Nuget Connection'
+            - task: GitHubRelease@1
+              displayName: 'GitHub release (create)'
+              inputs:
+                gitHubConnection: 'Github-MaggieKimani1'
+                tagSource: userSpecifiedTag
+                tag: '$(artifactName)'
+                title: '$(artifactName)'
+                releaseNotesSource: inline
+                assets: '$(System.DefaultWorkingDirectory)\**\*.exe'
+                changeLogType: issueBased
+    
+    - deployment: deploy_lib
+      dependsOn: []
+      environment: nuget-org
+      strategy:
+        runOnce:
+          deploy:
+            pool:
+              vmImage: ubuntu-latest
+            steps:
+            - task: DownloadPipelineArtifact@2
+              displayName: Download nupkg from artifacts
+              inputs:
+                artifact: Nugets
+                source: current
+            - powershell: |
+                $fileNames = "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Readers.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Workbench.*.nupkg"
+                foreach($fileName in $fileNames) {
+                  if(Test-Path $fileName) {
+                    rm $fileName -Verbose
+                  }
+                }
+              displayName: remove other nupkgs to avoid duplication
+            - task: NuGetCommand@2
+              displayName: 'NuGet push'
+              inputs:
+                command: push
+                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.*.nupkg'
+                nuGetFeedType: external
+                publishFeedCredentials: 'OpenAPI Nuget Connection'
+
+    - deployment: deploy_readers
+      dependsOn: deploy_lib
       environment: nuget-org
       strategy:
         runOnce:
@@ -260,6 +340,6 @@ stages:
               displayName: 'NuGet push'
               inputs:
                 command: push
-                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.*.nupkg'
+                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Readers.*.nupkg'
                 nuGetFeedType: external
                 publishFeedCredentials: 'OpenAPI Nuget Connection'
