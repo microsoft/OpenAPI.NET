@@ -228,7 +228,7 @@ stages:
           publishWebProjects: False
           zipAfterPublish: false 
 
-      - task: CopyFile@2
+      - task: CopyFiles@2
         displayName: Prepare staging folder for upload
         inputs:
          targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
