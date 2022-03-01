@@ -164,7 +164,7 @@ stages:
         inputs:
           command: pack
           projects: src/Microsoft.OpenApi/Microsoft.OpenApi.csproj
-          arguments: '-o $(Build.ArtifactStagingDirectory)/Nugets --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
+          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
       
       # Pack
       - task: DotNetCoreCLI@2
@@ -172,7 +172,7 @@ stages:
         inputs:
           command: pack
           projects: src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj
-          arguments: '-o $(Build.ArtifactStagingDirectory)/Nugets --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
+          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
       
       # Pack
       - task: DotNetCoreCLI@2
@@ -180,7 +180,7 @@ stages:
         inputs:
           command: pack
           projects: src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj
-          arguments: '-o $(Build.ArtifactStagingDirectory)/Nugets --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
+          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
       
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
         displayName: 'ESRP CodeSigning Nuget Packages'
@@ -227,6 +227,13 @@ stages:
           projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
           publishWebProjects: False
           zipAfterPublish: false 
+
+      - task: CopyFile@2
+        displayName: Prepare staging folder for upload
+        inputs:
+         targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
+         sourceFolder: $(Build.ArtifactStagingDirectory)
+         content: '*.nupkg'
 
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Artifact: Nugets'
