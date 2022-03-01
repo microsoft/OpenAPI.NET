@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi", "src\Microsoft.OpenApi\Microsoft.OpenApi.csproj", "{A8E50143-69B2-472A-9D45-3F9A05D13202}"
 EndProject
@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Workbench", "src\Microsoft.OpenApi.Workbench\Microsoft.OpenApi.Workbench.csproj", "{6A5E91E5-0441-46EE-AEB9-8334981B7F08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.Workbench", "src\Microsoft.OpenApi.Workbench\Microsoft.OpenApi.Workbench.csproj", "{6A5E91E5-0441-46EE-AEB9-8334981B7F08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.Readers", "src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj", "{79933258-0126-4382-8755-D50820ECC483}"
 EndProject

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -19,6 +19,17 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal class OpenApiV3VersionService : IOpenApiVersionService
     {
+        public OpenApiDiagnostic Diagnostic { get; }
+
+        /// <summary>
+        /// Create Parsing Context
+        /// </summary>
+        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        public OpenApiV3VersionService(OpenApiDiagnostic diagnostic)
+        {
+            Diagnostic = diagnostic;
+        }
+
         private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
         {
             [typeof(IOpenApiAny)] = OpenApiV3Deserializer.LoadAny,
@@ -90,7 +101,15 @@ namespace Microsoft.OpenApi.Readers.V3
                     if (reference.StartsWith("#"))
                     {
                         // "$ref": "#/components/schemas/Pet"
-                        return ParseLocalReference(segments[1]);
+                        try
+                        {
+                            return ParseLocalReference(segments[1]);
+                        }
+                        catch (OpenApiException ex)
+                        {
+                            Diagnostic.Errors.Add(new OpenApiError(ex));
+                            return null;
+                        }
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
                     string id = segments[1];

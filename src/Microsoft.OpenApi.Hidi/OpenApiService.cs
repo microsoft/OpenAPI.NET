@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Hidi
                 version ??= OpenApiSpecVersion.OpenApi3_0;
 
                 stream = await GetStream(csdl, logger);
-                document = ConvertCsdlToOpenApi(stream);
+                document = await ConvertCsdlToOpenApi(stream);
             }
             else
             {
@@ -200,16 +200,20 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static OpenApiDocument ConvertCsdlToOpenApi(Stream csdl)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl)
         {
             using var reader = new StreamReader(csdl);
-            var csdlText = reader.ReadToEndAsync().GetAwaiter().GetResult();           
+            var csdlText = await reader.ReadToEndAsync();
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
 
             var settings = new OpenApiConvertSettings()
             {
+                AddSingleQuotesForStringParameters = true,
+                AddEnumDescriptionExtension = true,
+                DeclarePathParametersOnPathItem = true,
                 EnableKeyAsSegment = true,
                 EnableOperationId = true,
+                ErrorResponsesAsDefault  = false,
                 PrefixEntityTypeNameBeforeKey = true,
                 TagDepth = 2,
                 EnablePagination = true,
