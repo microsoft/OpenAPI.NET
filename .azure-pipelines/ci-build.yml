@@ -7,14 +7,16 @@ trigger:
   branches:
     include:
       - master
-pr: none
+      - vnext
+pr:
+  branches:
+    include:
+      - master
+      - vnext
 
 pool:
   name: Azure Pipelines
   vmImage: windows-latest
-  demands:
-  - msbuild
-  - vstest
 
 variables:
   buildPlatform: 'Any CPU'
