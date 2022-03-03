@@ -14,9 +14,9 @@ jobs:
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
 
       - name: Data gatherer
         id: data_gatherer

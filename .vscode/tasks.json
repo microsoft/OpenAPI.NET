@@ -5,16 +5,43 @@
     "tasks": [
         {
             "label": "build",
-            "type": "shell",
-            "command": "msbuild",
-            "args": [
-                "/property:GenerateFullPaths=true",
-                "/t:build"
-            ],
+            "command": "dotnet",
+            "type": "process",
             "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test",
+            "command": "dotnet",
+            "type": "process",
+            "group": "test",
+            "args": [
+                "test",
+                "${workspaceFolder}/Microsoft.OpenApi.sln",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "--collect:\"XPlat Code Coverage\""
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "${workspaceFolder}/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
             "problemMatcher": "$msCompile"
         },
         {

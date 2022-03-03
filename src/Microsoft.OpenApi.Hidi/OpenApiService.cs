@@ -13,8 +13,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
+using Microsoft.OData.Edm.Csdl;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
@@ -24,8 +27,9 @@ namespace Microsoft.OpenApi.Hidi
 {
     public class OpenApiService
     {
-        public static async void ProcessOpenApiDocument(
+        public static async Task ProcessOpenApiDocument(
             string openapi,
+            string csdl,
             FileInfo output,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
@@ -41,9 +45,9 @@ namespace Microsoft.OpenApi.Hidi
 
             try
             {
-                if (string.IsNullOrEmpty(openapi))
+                if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
                 {
-                    throw new ArgumentNullException(nameof(openapi));
+                    throw new ArgumentNullException("Please input a file path");
                 }
             }
             catch (ArgumentNullException ex)
@@ -75,36 +79,56 @@ namespace Microsoft.OpenApi.Hidi
                 logger.LogError(ex.Message);
                 return;
             }
-            
-            var stream = await GetStream(openapi, logger);
 
-            // Parsing OpenAPI file
+            Stream stream;
+            OpenApiDocument document;
+            OpenApiFormat openApiFormat;
             var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            logger.LogTrace("Parsing OpenApi file");
-            var result = new OpenApiStreamReader(new OpenApiReaderSettings
-            {
-                ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
-                RuleSet = ValidationRuleSet.GetDefaultRuleSet()
-            }
-            ).ReadAsync(stream).GetAwaiter().GetResult();
-            var document = result.OpenApiDocument;
-            stopwatch.Stop();
 
-            var context = result.OpenApiDiagnostic;
-            if (context.Errors.Count > 0)
+            if (!string.IsNullOrEmpty(csdl))
             {
-                var errorReport = new StringBuilder();
+                // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
+                openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
+                version ??= OpenApiSpecVersion.OpenApi3_0;
 
-                foreach (var error in context.Errors)
-                {
-                    errorReport.AppendLine(error.ToString());
-                }
-                logger.LogError($"{stopwatch.ElapsedMilliseconds}ms: OpenApi Parsing errors {string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray())}");
+                stream = await GetStream(csdl, logger);
+                document = await ConvertCsdlToOpenApi(stream);
             }
             else
             {
-                logger.LogTrace("{timestamp}ms: Parsed OpenApi successfully. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+                stream = await GetStream(openapi, logger);
+
+                // Parsing OpenAPI file
+                stopwatch.Start();
+                logger.LogTrace("Parsing OpenApi file");
+                var result = new OpenApiStreamReader(new OpenApiReaderSettings
+                {
+                    ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                }
+                ).ReadAsync(stream).GetAwaiter().GetResult();
+
+                document = result.OpenApiDocument;
+                stopwatch.Stop();
+
+                var context = result.OpenApiDiagnostic;
+                if (context.Errors.Count > 0)
+                {
+                    var errorReport = new StringBuilder();
+
+                    foreach (var error in context.Errors)
+                    {
+                        errorReport.AppendLine(error.ToString());
+                    }
+                    logger.LogError($"{stopwatch.ElapsedMilliseconds}ms: OpenApi Parsing errors {string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray())}");
+                }
+                else
+                {
+                    logger.LogTrace("{timestamp}ms: Parsed OpenApi successfully. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+                }
+
+                openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
+                version ??= result.OpenApiDiagnostic.SpecificationVersion;
             }
 
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
@@ -151,8 +175,6 @@ namespace Microsoft.OpenApi.Hidi
                 ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
             };
 
-            var openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
-            var openApiVersion = version ?? result.OpenApiDiagnostic.SpecificationVersion;
             IOpenApiWriter writer = openApiFormat switch
             {
                 OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
@@ -163,12 +185,64 @@ namespace Microsoft.OpenApi.Hidi
             logger.LogTrace("Serializing to OpenApi document using the provided spec version and writer");
             
             stopwatch.Start();
-            document.Serialize(writer, openApiVersion);
+            document.Serialize(writer, (OpenApiSpecVersion)version);
             stopwatch.Stop();
 
             logger.LogTrace($"Finished serializing in {stopwatch.ElapsedMilliseconds}ms");
 
             textWriter.Flush();
+        }
+
+        /// <summary>
+        /// Converts CSDL to OpenAPI
+        /// </summary>
+        /// <param name="csdl">The CSDL stream.</param>
+        /// <returns>An OpenAPI document.</returns>
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl)
+        {
+            using var reader = new StreamReader(csdl);
+            var csdlText = await reader.ReadToEndAsync();
+            var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
+
+            var settings = new OpenApiConvertSettings()
+            {
+                AddSingleQuotesForStringParameters = true,
+                AddEnumDescriptionExtension = true,
+                DeclarePathParametersOnPathItem = true,
+                EnableKeyAsSegment = true,
+                EnableOperationId = true,
+                ErrorResponsesAsDefault  = false,
+                PrefixEntityTypeNameBeforeKey = true,
+                TagDepth = 2,
+                EnablePagination = true,
+                EnableDiscriminatorValue = false,
+                EnableDerivedTypesReferencesForRequestBody = false,
+                EnableDerivedTypesReferencesForResponses = false,
+                ShowRootPath = true,
+                ShowLinks = true
+            };
+            OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
+
+            document = FixReferences(document);
+
+            return document;
+        }
+
+        /// <summary>
+        /// Fixes the references in the resulting OpenApiDocument.
+        /// </summary>
+        /// <param name="document"> The converted OpenApiDocument.</param>
+        /// <returns> A valid OpenApiDocument instance.</returns>
+        public static OpenApiDocument FixReferences(OpenApiDocument document)
+        {
+            // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
+            // So we write it out, and read it back in again to fix it up.
+
+            var sb = new StringBuilder();
+            document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
+            var doc = new OpenApiStringReader().Read(sb.ToString(), out _);
+
+            return doc;
         }
 
         private static async Task<Stream> GetStream(string input, ILogger logger)
@@ -181,13 +255,13 @@ namespace Microsoft.OpenApi.Hidi
             {
                 try
                 {
-                    using var httpClientHandler = new HttpClientHandler()
+                    var httpClientHandler = new HttpClientHandler()
                     {
                         SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
                     };
                     using var httpClient = new HttpClient(httpClientHandler)
                     {
-                        DefaultRequestVersion = HttpVersion.Version20
+                      DefaultRequestVersion = HttpVersion.Version20
                     };
                     stream = await httpClient.GetStreamAsync(input);
                 }
@@ -253,7 +327,7 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-        internal static async void ValidateOpenApiDocument(string openapi, LogLevel loglevel)
+        internal static async Task ValidateOpenApiDocument(string openapi, LogLevel loglevel)
         {
             if (string.IsNullOrEmpty(openapi))
             {
@@ -286,10 +360,10 @@ namespace Microsoft.OpenApi.Hidi
             Console.WriteLine(statsVisitor.GetStatisticsReport());
         }
 
-        private static OpenApiFormat GetOpenApiFormat(string openapi, ILogger logger)
+        private static OpenApiFormat GetOpenApiFormat(string input, ILogger logger)
         {
             logger.LogTrace("Getting the OpenApi format");
-            return !openapi.StartsWith("http") && Path.GetExtension(openapi) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
+            return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
         }
 
         private static ILogger ConfigureLoggerInstance(LogLevel loglevel)

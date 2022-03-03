@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <PackAsTool>true</PackAsTool>
+    <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -14,12 +15,14 @@
     <PackageId>Microsoft.OpenApi.Hidi</PackageId>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>0.5.0-preview4</Version>
+    <Version>0.5.0-preview5</Version>
+    <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
     <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
     <PackageReleaseNotes>
-- Publish symbols.
+- Upgrades Microsoft.OpenApi.OData to 1.0.10-preview1
+- Fixes an issue where hidi would not process async operations
     </PackageReleaseNotes>
     <AssemblyName>Microsoft.OpenApi.Hidi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Hidi</RootNamespace>
@@ -34,6 +37,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta2.21617.1" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.10.0" />
+    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.0.10-preview2" />
   </ItemGroup>
 
   <ItemGroup>
