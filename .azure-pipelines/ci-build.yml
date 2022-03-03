@@ -248,7 +248,7 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)'
 
 - stage: deploy
-  condition: and(contains(variables['build.sourceBranch'], 'refs/heads/vnext'), succeeded())
+  condition: and(contains(variables['build.sourceBranch'], 'refs/heads/master'), succeeded())
   dependsOn: build
   jobs:
     - deployment: deploy_hidi
