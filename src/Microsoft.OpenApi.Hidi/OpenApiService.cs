@@ -101,12 +101,12 @@ namespace Microsoft.OpenApi.Hidi
                 // Parsing OpenAPI file
                 stopwatch.Start();
                 logger.LogTrace("Parsing OpenApi file");
-                var result = new OpenApiStreamReader(new OpenApiReaderSettings
+                var result = await new OpenApiStreamReader(new OpenApiReaderSettings
                 {
                     ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 }
-                ).ReadAsync(stream).GetAwaiter().GetResult();
+                ).ReadAsync(stream);
 
                 document = result.OpenApiDocument;
                 stopwatch.Stop();
