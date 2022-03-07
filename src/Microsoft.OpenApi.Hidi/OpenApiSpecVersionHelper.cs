@@ -6,24 +6,24 @@ using System.Linq;
 
 namespace Microsoft.OpenApi.Hidi
 {
-    public static class OpenApiSpecVersionExtension
+    public static class OpenApiSpecVersionHelper
     {
-        public static OpenApiSpecVersion TryParseOpenApiSpecVersion(this string value)
+        public static OpenApiSpecVersion TryParseOpenApiSpecVersion(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
                 throw new InvalidOperationException("Please provide a version");
             }
             var res = value.Split('.', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-            
+
             if (int.TryParse(res, out int result))
             {
 
-                if (result >= 2 || result <= 3)
+                if (result >= 2 && result < 3)
                 {
-                    return (OpenApiSpecVersion)result;
+                    return OpenApiSpecVersion.OpenApi2_0;
                 }
-            }  
+            }
 
             return OpenApiSpecVersion.OpenApi3_0; // default
         }

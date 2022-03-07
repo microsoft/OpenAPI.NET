@@ -22,7 +22,7 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionExtension;
+using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
                 openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
-                openApiVersion = version.TryParseOpenApiSpecVersion();
+                openApiVersion = TryParseOpenApiSpecVersion(version);
 
                 stream = await GetStream(csdl, logger);
                 document = await ConvertCsdlToOpenApi(stream);
