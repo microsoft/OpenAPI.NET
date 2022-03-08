@@ -354,35 +354,49 @@ namespace Microsoft.OpenApi.Hidi
 
         internal static async Task ValidateOpenApiDocument(string openapi, LogLevel loglevel, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(openapi))
-            {
-                throw new ArgumentNullException(nameof(openapi));
-            }
             var logger = ConfigureLoggerInstance(loglevel);
-            var stream = await GetStream(openapi, logger, cancellationToken);
 
-            OpenApiDocument document;
-            logger.LogTrace("Parsing the OpenApi file");
-            document = new OpenApiStreamReader(new OpenApiReaderSettings
+            try
             {
-                RuleSet = ValidationRuleSet.GetDefaultRuleSet()
-            }
-            ).Read(stream, out var context);
-
-            if (context.Errors.Count != 0)
-            {
-                foreach (var error in context.Errors)
+                if (string.IsNullOrEmpty(openapi))
                 {
-                    Console.WriteLine(error.ToString());
+                    throw new ArgumentNullException(nameof(openapi));
                 }
+                var stream = await GetStream(openapi, logger, cancellationToken);
+
+                OpenApiDocument document;
+                logger.LogTrace("Parsing the OpenApi file");
+                document = new OpenApiStreamReader(new OpenApiReaderSettings
+                {
+                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                }
+                ).Read(stream, out var context);
+
+                if (context.Errors.Count != 0)
+                {
+                    foreach (var error in context.Errors)
+                    {
+                        logger.LogError("OpenApi Parsing error: {message}", error.ToString());
+                        Console.WriteLine(error.ToString());
+                    }
+                }
+
+                var statsVisitor = new StatsVisitor();
+                var walker = new OpenApiWalker(statsVisitor);
+                walker.Walk(document);
+
+                logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
+                Console.WriteLine(statsVisitor.GetStatisticsReport());
+            }
+            catch(Exception ex)
+            {
+#if DEBUG
+                logger.LogCritical(ex, ex.Message);
+#else
+                logger.LogCritical(ex.Message);
+#endif
             }
 
-            var statsVisitor = new StatsVisitor();
-            var walker = new OpenApiWalker(statsVisitor);
-            walker.Walk(document);
-
-            logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
-            Console.WriteLine(statsVisitor.GetStatisticsReport());
         }
 
         private static OpenApiFormat GetOpenApiFormat(string input, ILogger logger)
