@@ -22,6 +22,7 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
+using System.Threading;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -38,7 +39,8 @@ namespace Microsoft.OpenApi.Hidi
             bool resolveexternal,
             string filterbyoperationids,
             string filterbytags,
-            string filterbycollection
+            string filterbycollection,
+            CancellationToken cancellationToken
            )
         {
             var logger = ConfigureLoggerInstance(loglevel);
@@ -52,7 +54,11 @@ namespace Microsoft.OpenApi.Hidi
             }
             catch (ArgumentNullException ex)
             {
-                logger.LogError(ex.Message);
+#if DEBUG
+                logger.LogCritical(ex, ex.Message);
+#else
+                logger.LogCritical(ex.Message);
+#endif
                 return;
             }
             try
@@ -64,19 +70,27 @@ namespace Microsoft.OpenApi.Hidi
             }
             catch (ArgumentException ex)
             {
-                logger.LogError(ex.Message);
+#if DEBUG
+                logger.LogCritical(ex, ex.Message);
+#else
+                logger.LogCritical(ex.Message);
+#endif
                 return;
             }
             try
             {
                 if (output.Exists)
                 {
-                    throw new IOException("The file you're writing to already exists. Please input a new file path.");
+                    throw new IOException($"The file {output} already exists. Please input a new file path.");
                 }
             }
             catch (IOException ex)
             {
-                logger.LogError(ex.Message);
+#if DEBUG  
+                logger.LogCritical(ex, ex.Message);
+#else
+                logger.LogCritical(ex.Message);
+#endif
                 return;
             }
 
@@ -91,12 +105,12 @@ namespace Microsoft.OpenApi.Hidi
                 openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
                 version ??= OpenApiSpecVersion.OpenApi3_0;
 
-                stream = await GetStream(csdl, logger);
+                stream = await GetStream(csdl, logger, cancellationToken);
                 document = await ConvertCsdlToOpenApi(stream);
             }
             else
             {
-                stream = await GetStream(openapi, logger);
+                stream = await GetStream(openapi, logger, cancellationToken);
 
                 // Parsing OpenAPI file
                 stopwatch.Start();
@@ -156,7 +170,7 @@ namespace Microsoft.OpenApi.Hidi
             }
             if (!string.IsNullOrEmpty(filterbycollection))
             {
-                var fileStream = await GetStream(filterbycollection, logger);
+                var fileStream = await GetStream(filterbycollection, logger, cancellationToken);
                 var requestUrls = ParseJsonCollectionFile(fileStream, logger);
 
                 logger.LogTrace("Creating predicate based on the paths and Http methods defined in the Postman collection.");
@@ -245,7 +259,7 @@ namespace Microsoft.OpenApi.Hidi
             return doc;
         }
 
-        private static async Task<Stream> GetStream(string input, ILogger logger)
+        private static async Task<Stream> GetStream(string input, ILogger logger, CancellationToken cancellationToken)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -263,11 +277,15 @@ namespace Microsoft.OpenApi.Hidi
                     {
                       DefaultRequestVersion = HttpVersion.Version20
                     };
-                    stream = await httpClient.GetStreamAsync(input);
+                    stream = await httpClient.GetStreamAsync(input, cancellationToken);
                 }
                 catch (HttpRequestException ex)
                 {
-                    logger.LogError($"Could not download the file at {input}, reason{ex}");
+#if DEBUG
+                    logger.LogCritical(ex, $"Could not download the file at {input}, reason: {ex.Message}");
+#else
+                    logger.LogCritical($"Could not download the file at {input}, reason: {ex.Message}", input, ex.Message);
+#endif
                     return null;
                 }
             }
@@ -286,7 +304,11 @@ namespace Microsoft.OpenApi.Hidi
                     ex is SecurityException ||
                     ex is NotSupportedException)
                 {
-                    logger.LogError($"Could not open the file at {input}, reason: {ex.Message}");
+#if DEBUG
+                    logger.LogCritical(ex, $"Could not open the file at {input}, reason: {ex.Message}");
+#else
+                    logger.LogCritical($"Could not open the file at {input}, reason: {ex.Message}");
+#endif
                     return null;
                 }
             }
@@ -327,14 +349,14 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-        internal static async Task ValidateOpenApiDocument(string openapi, LogLevel loglevel)
+        internal static async Task ValidateOpenApiDocument(string openapi, LogLevel loglevel, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(openapi))
             {
                 throw new ArgumentNullException(nameof(openapi));
             }
             var logger = ConfigureLoggerInstance(loglevel);
-            var stream = await GetStream(openapi, logger);
+            var stream = await GetStream(openapi, logger, cancellationToken);
 
             OpenApiDocument document;
             logger.LogTrace("Parsing the OpenApi file");
@@ -369,16 +391,16 @@ namespace Microsoft.OpenApi.Hidi
         private static ILogger ConfigureLoggerInstance(LogLevel loglevel)
         {
             // Configure logger options
-            #if DEBUG
+#if DEBUG
             loglevel = loglevel > LogLevel.Debug ? LogLevel.Debug : loglevel;
-            #endif
+#endif
 
             var logger = LoggerFactory.Create((builder) => {
                 builder
                     .AddConsole()
-                #if DEBUG
+#if DEBUG
                     .AddDebug()
-                #endif
+#endif
                     .SetMinimumLevel(loglevel);
             }).CreateLogger<OpenApiService>();
 
