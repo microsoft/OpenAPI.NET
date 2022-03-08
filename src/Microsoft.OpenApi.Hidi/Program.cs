@@ -3,6 +3,7 @@
 
 using System.CommandLine;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -58,7 +59,7 @@ namespace Microsoft.OpenApi.Hidi
                 logLevelOption
             };
 
-            validateCommand.SetHandler<string, LogLevel>(OpenApiService.ValidateOpenApiDocument, descriptionOption, logLevelOption);
+            validateCommand.SetHandler<string, LogLevel, CancellationToken>(OpenApiService.ValidateOpenApiDocument, descriptionOption, logLevelOption);
 
             var transformCommand = new Command("transform")
             {
