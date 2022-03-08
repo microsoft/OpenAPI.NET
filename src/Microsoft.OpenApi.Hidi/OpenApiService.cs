@@ -31,6 +31,7 @@ namespace Microsoft.OpenApi.Hidi
             string openapi,
             string csdl,
             FileInfo output,
+            bool cleanoutput,
             OpenApiSpecVersion? version,
             OpenApiFormat? format,
             LogLevel loglevel,
@@ -69,6 +70,10 @@ namespace Microsoft.OpenApi.Hidi
             }
             try
             {
+                if (cleanoutput)
+                {
+                    output.Delete();
+                }
                 if (output.Exists)
                 {
                     throw new IOException("The file you're writing to already exists. Please input a new file path.");
