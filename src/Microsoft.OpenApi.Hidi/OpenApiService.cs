@@ -353,7 +353,6 @@ namespace Microsoft.OpenApi.Hidi
                     foreach (var error in context.Errors)
                     {
                         logger.LogError("OpenApi Parsing error: {message}", error.ToString());
-                        Console.WriteLine(error.ToString());
                     }
                 }
 
@@ -362,7 +361,7 @@ namespace Microsoft.OpenApi.Hidi
                 walker.Walk(document);
 
                 logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
-                Console.WriteLine(statsVisitor.GetStatisticsReport());
+                logger.LogInformation(statsVisitor.GetStatisticsReport());
             }
             catch(Exception ex)
             {
@@ -371,6 +370,7 @@ namespace Microsoft.OpenApi.Hidi
 #else
                 logger.LogCritical(ex.Message);
 #endif
+                return;
             }
 
         }
