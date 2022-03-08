@@ -128,10 +128,13 @@ namespace Microsoft.OpenApi.Hidi
                 var context = result.OpenApiDiagnostic;
                 if (context.Errors.Count > 0)
                 {
+                    logger.LogTrace("{timestamp}ms: Parsed OpenAPI with errors. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+
                     var errorReport = new StringBuilder();
 
                     foreach (var error in context.Errors)
                     {
+                        logger.LogError("OpenApi Parsing error: {message}", error.ToString());
                         errorReport.AppendLine(error.ToString());
                     }
                     logger.LogError($"{stopwatch.ElapsedMilliseconds}ms: OpenApi Parsing errors {string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray())}");
@@ -282,9 +285,9 @@ namespace Microsoft.OpenApi.Hidi
                 catch (HttpRequestException ex)
                 {
 #if DEBUG
-                    logger.LogCritical(ex, $"Could not download the file at {input}, reason: {ex.Message}");
+                    logger.LogCritical(ex, "Could not download the file at {inputPath}, reason: {exMessage}", input, ex.Message);
 #else
-                    logger.LogCritical($"Could not download the file at {input}, reason: {ex.Message}", input, ex.Message);
+                    logger.LogCritical( "Could not download the file at {inputPath}, reason: {exMessage}", input, ex.Message);
 #endif
                     return null;
                 }
@@ -305,9 +308,9 @@ namespace Microsoft.OpenApi.Hidi
                     ex is NotSupportedException)
                 {
 #if DEBUG
-                    logger.LogCritical(ex, $"Could not open the file at {input}, reason: {ex.Message}");
+                    logger.LogCritical(ex, "Could not open the file at {inputPath}, reason: {exMessage}", input, ex.Message);
 #else
-                    logger.LogCritical($"Could not open the file at {input}, reason: {ex.Message}");
+                    logger.LogCritical("Could not open the file at {inputPath}, reason: {exMessage}", input, ex.Message);
 #endif
                     return null;
                 }
