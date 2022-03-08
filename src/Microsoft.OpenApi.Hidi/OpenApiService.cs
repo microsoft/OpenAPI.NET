@@ -59,6 +59,121 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     throw new IOException($"The file {output} already exists. Please input a new file path.");
                 }
+
+                Stream stream;
+                OpenApiDocument document;
+                OpenApiFormat openApiFormat;
+                var stopwatch = new Stopwatch();
+
+                if (!string.IsNullOrEmpty(csdl))
+                {
+                    // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
+                    openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
+                    version ??= OpenApiSpecVersion.OpenApi3_0;
+
+                    stream = await GetStream(csdl, logger, cancellationToken);
+                    document = await ConvertCsdlToOpenApi(stream);
+                }
+                else
+                {
+                    stream = await GetStream(openapi, logger, cancellationToken);
+
+                    // Parsing OpenAPI file
+                    stopwatch.Start();
+                    logger.LogTrace("Parsing OpenApi file");
+                    var result = new OpenApiStreamReader(new OpenApiReaderSettings
+                    {
+                        ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
+                        RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                    }
+                    ).ReadAsync(stream).GetAwaiter().GetResult();
+
+                    document = result.OpenApiDocument;
+                    stopwatch.Stop();
+
+                    var context = result.OpenApiDiagnostic;
+                    if (context.Errors.Count > 0)
+                    {
+                        logger.LogTrace("{timestamp}ms: Parsed OpenAPI with errors. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+
+                        var errorReport = new StringBuilder();
+
+                        foreach (var error in context.Errors)
+                        {
+                            logger.LogError("OpenApi Parsing error: {message}", error.ToString());
+                            errorReport.AppendLine(error.ToString());
+                        }
+                        logger.LogError($"{stopwatch.ElapsedMilliseconds}ms: OpenApi Parsing errors {string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray())}");
+                    }
+                    else
+                    {
+                        logger.LogTrace("{timestamp}ms: Parsed OpenApi successfully. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+                    }
+
+                    openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
+                    version ??= result.OpenApiDiagnostic.SpecificationVersion;
+                }
+
+                Func<string, OperationType?, OpenApiOperation, bool> predicate;
+
+                // Check if filter options are provided, then slice the OpenAPI document
+                if (!string.IsNullOrEmpty(filterbyoperationids) && !string.IsNullOrEmpty(filterbytags))
+                {
+                    throw new InvalidOperationException("Cannot filter by operationIds and tags at the same time.");
+                }
+                if (!string.IsNullOrEmpty(filterbyoperationids))
+                {
+                    logger.LogTrace("Creating predicate based on the operationIds supplied.");
+                    predicate = OpenApiFilterService.CreatePredicate(operationIds: filterbyoperationids);
+
+                    logger.LogTrace("Creating subset OpenApi document.");
+                    document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
+                }
+                if (!string.IsNullOrEmpty(filterbytags))
+                {
+                    logger.LogTrace("Creating predicate based on the tags supplied.");
+                    predicate = OpenApiFilterService.CreatePredicate(tags: filterbytags);
+
+                    logger.LogTrace("Creating subset OpenApi document.");
+                    document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
+                }
+                if (!string.IsNullOrEmpty(filterbycollection))
+                {
+                    var fileStream = await GetStream(filterbycollection, logger, cancellationToken);
+                    var requestUrls = ParseJsonCollectionFile(fileStream, logger);
+
+                    logger.LogTrace("Creating predicate based on the paths and Http methods defined in the Postman collection.");
+                    predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: document);
+
+                    logger.LogTrace("Creating subset OpenApi document.");
+                    document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
+                }
+
+                logger.LogTrace("Creating a new file");
+                using var outputStream = output?.Create();
+                var textWriter = outputStream != null ? new StreamWriter(outputStream) : Console.Out;
+
+                var settings = new OpenApiWriterSettings()
+                {
+                    ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
+                };
+
+                IOpenApiWriter writer = openApiFormat switch
+                {
+                    OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
+                    OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
+                    _ => throw new ArgumentException("Unknown format"),
+                };
+
+                logger.LogTrace("Serializing to OpenApi document using the provided spec version and writer");
+
+                stopwatch.Start();
+                document.Serialize(writer, (OpenApiSpecVersion)version);
+                stopwatch.Stop();
+
+                logger.LogTrace($"Finished serializing in {stopwatch.ElapsedMilliseconds}ms");
+
+                textWriter.Flush();
             }
             catch (Exception ex)
             {
@@ -68,122 +183,7 @@ namespace Microsoft.OpenApi.Hidi
                 logger.LogCritical(ex.Message);
 #endif
                 return;
-            }
-
-            Stream stream;
-            OpenApiDocument document;
-            OpenApiFormat openApiFormat;
-            var stopwatch = new Stopwatch();
-
-            if (!string.IsNullOrEmpty(csdl))
-            {
-                // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
-                openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
-                version ??= OpenApiSpecVersion.OpenApi3_0;
-
-                stream = await GetStream(csdl, logger, cancellationToken);
-                document = await ConvertCsdlToOpenApi(stream);
-            }
-            else
-            {
-                stream = await GetStream(openapi, logger, cancellationToken);
-
-                // Parsing OpenAPI file
-                stopwatch.Start();
-                logger.LogTrace("Parsing OpenApi file");
-                var result = new OpenApiStreamReader(new OpenApiReaderSettings
-                {
-                    ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
-                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
-                }
-                ).ReadAsync(stream).GetAwaiter().GetResult();
-
-                document = result.OpenApiDocument;
-                stopwatch.Stop();
-
-                var context = result.OpenApiDiagnostic;
-                if (context.Errors.Count > 0)
-                {
-                    logger.LogTrace("{timestamp}ms: Parsed OpenAPI with errors. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
-
-                    var errorReport = new StringBuilder();
-
-                    foreach (var error in context.Errors)
-                    {
-                        logger.LogError("OpenApi Parsing error: {message}", error.ToString());
-                        errorReport.AppendLine(error.ToString());
-                    }
-                    logger.LogError($"{stopwatch.ElapsedMilliseconds}ms: OpenApi Parsing errors {string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray())}");
-                }
-                else
-                {
-                    logger.LogTrace("{timestamp}ms: Parsed OpenApi successfully. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
-                }
-
-                openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
-                version ??= result.OpenApiDiagnostic.SpecificationVersion;
-            }
-
-            Func<string, OperationType?, OpenApiOperation, bool> predicate;
-
-            // Check if filter options are provided, then slice the OpenAPI document
-            if (!string.IsNullOrEmpty(filterbyoperationids) && !string.IsNullOrEmpty(filterbytags))
-            {
-                throw new InvalidOperationException("Cannot filter by operationIds and tags at the same time.");
-            }
-            if (!string.IsNullOrEmpty(filterbyoperationids))
-            {
-                logger.LogTrace("Creating predicate based on the operationIds supplied.");
-                predicate = OpenApiFilterService.CreatePredicate(operationIds: filterbyoperationids);
-
-                logger.LogTrace("Creating subset OpenApi document.");
-                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
-            }
-            if (!string.IsNullOrEmpty(filterbytags))
-            {
-                logger.LogTrace("Creating predicate based on the tags supplied.");
-                predicate = OpenApiFilterService.CreatePredicate(tags: filterbytags);
-
-                logger.LogTrace("Creating subset OpenApi document.");
-                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
-            }
-            if (!string.IsNullOrEmpty(filterbycollection))
-            {
-                var fileStream = await GetStream(filterbycollection, logger, cancellationToken);
-                var requestUrls = ParseJsonCollectionFile(fileStream, logger);
-
-                logger.LogTrace("Creating predicate based on the paths and Http methods defined in the Postman collection.");
-                predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source:document);
-
-                logger.LogTrace("Creating subset OpenApi document.");
-                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
-            }
-            
-            logger.LogTrace("Creating a new file");
-            using var outputStream = output?.Create();
-            var textWriter = outputStream != null ? new StreamWriter(outputStream) : Console.Out;            
-
-            var settings = new OpenApiWriterSettings()
-            {
-                ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
-            };
-
-            IOpenApiWriter writer = openApiFormat switch
-            {
-                OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
-                OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
-                _ => throw new ArgumentException("Unknown format"),
-            };
-
-            logger.LogTrace("Serializing to OpenApi document using the provided spec version and writer");
-            
-            stopwatch.Start();
-            document.Serialize(writer, (OpenApiSpecVersion)version);
-            stopwatch.Stop();
-
-            logger.LogTrace($"Finished serializing in {stopwatch.ElapsedMilliseconds}ms");
-
-            textWriter.Flush();
+            }            
         }
 
         /// <summary>
@@ -260,12 +260,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 catch (HttpRequestException ex)
                 {
-#if DEBUG
-                    logger.LogCritical(ex, "Could not download the file at {inputPath}, reason: {exMessage}", input, ex.Message);
-#else
-                    logger.LogCritical( "Could not download the file at {inputPath}, reason: {exMessage}", input, ex.Message);
-#endif
-                    return null;
+                    throw new InvalidOperationException($"Could not download the file at {input}", ex);
                 }
             }
             else
@@ -283,12 +278,7 @@ namespace Microsoft.OpenApi.Hidi
                     ex is SecurityException ||
                     ex is NotSupportedException)
                 {
-#if DEBUG
-                    logger.LogCritical(ex, "Could not open the file at {inputPath}, reason: {exMessage}", input, ex.Message);
-#else
-                    logger.LogCritical("Could not open the file at {inputPath}, reason: {exMessage}", input, ex.Message);
-#endif
-                    return null;
+                    throw new InvalidOperationException($"Could not open the file at {input}", ex);
                 }
             }
             stopwatch.Stop();
