@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Hidi
 {
     public class OpenApiService
     {
-        public static async Task ProcessOpenApiDocument(
+        public static async Task<int> ProcessOpenApiDocument(
             string openapi,
             string csdl,
             FileInfo output,
@@ -174,6 +174,8 @@ namespace Microsoft.OpenApi.Hidi
                 logger.LogTrace($"Finished serializing in {stopwatch.ElapsedMilliseconds}ms");
 
                 textWriter.Flush();
+
+                return 0;
             }
             catch (Exception ex)
             {
@@ -182,7 +184,7 @@ namespace Microsoft.OpenApi.Hidi
 #else
                 logger.LogCritical(ex.Message);
 #endif
-                return;
+                return 1;
             }            
         }
 
@@ -318,7 +320,7 @@ namespace Microsoft.OpenApi.Hidi
             return requestUrls;
         }
 
-        internal static async Task ValidateOpenApiDocument(string openapi, LogLevel loglevel, CancellationToken cancellationToken)
+        internal static async Task<int> ValidateOpenApiDocument(string openapi, LogLevel loglevel, CancellationToken cancellationToken)
         {
             var logger = ConfigureLoggerInstance(loglevel);
 
@@ -352,6 +354,8 @@ namespace Microsoft.OpenApi.Hidi
 
                 logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
                 logger.LogInformation(statsVisitor.GetStatisticsReport());
+
+                return 0;
             }
             catch(Exception ex)
             {
@@ -360,7 +364,7 @@ namespace Microsoft.OpenApi.Hidi
 #else
                 logger.LogCritical(ex.Message);
 #endif
-                return;
+                return 1;
             }
 
         }
