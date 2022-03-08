@@ -49,42 +49,18 @@ namespace Microsoft.OpenApi.Hidi
             {
                 if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
                 {
-                    throw new ArgumentNullException("Please input a file path");
+                    throw new ArgumentException("Please input a file path");
                 }
-            }
-            catch (ArgumentNullException ex)
-            {
-#if DEBUG
-                logger.LogCritical(ex, ex.Message);
-#else
-                logger.LogCritical(ex.Message);
-#endif
-                return;
-            }
-            try
-            {
                 if(output == null)
                 {
-                    throw new ArgumentException(nameof(output));
+                    throw new ArgumentNullException(nameof(output));
                 }
-            }
-            catch (ArgumentException ex)
-            {
-#if DEBUG
-                logger.LogCritical(ex, ex.Message);
-#else
-                logger.LogCritical(ex.Message);
-#endif
-                return;
-            }
-            try
-            {
                 if (output.Exists)
                 {
                     throw new IOException($"The file {output} already exists. Please input a new file path.");
                 }
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
 #if DEBUG  
                 logger.LogCritical(ex, ex.Message);
