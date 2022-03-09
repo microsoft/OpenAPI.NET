@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Hidi
             var outputOption = new Option<FileInfo>("--output", () => new FileInfo("./output"), "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
             outputOption.AddAlias("-o");
 
-            var versionOption = new Option<OpenApiSpecVersion?>("--version", "OpenAPI specification version");
+            var versionOption = new Option<string?>("--version", "OpenAPI specification version");
             versionOption.AddAlias("-v");
 
             var formatOption = new Option<OpenApiFormat?>("--format", "File format");
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Hidi
                 resolveExternalOption,
             };
 
-            transformCommand.SetHandler<string, string, FileInfo, OpenApiSpecVersion?, OpenApiFormat?, LogLevel, bool, bool, string, string, string, CancellationToken> (
+            transformCommand.SetHandler<string, string, FileInfo, string?, OpenApiFormat?, LogLevel, bool, bool, string, string, string, CancellationToken> (
                 OpenApiService.ProcessOpenApiDocument, descriptionOption, csdlOption, outputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
 
             rootCommand.Add(transformCommand);

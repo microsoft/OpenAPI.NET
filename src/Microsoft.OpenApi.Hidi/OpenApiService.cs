@@ -22,6 +22,7 @@ using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 using System.Threading;
 
 namespace Microsoft.OpenApi.Hidi
@@ -32,7 +33,7 @@ namespace Microsoft.OpenApi.Hidi
             string openapi,
             string csdl,
             FileInfo output,
-            OpenApiSpecVersion? version,
+            string? version,
             OpenApiFormat? format,
             LogLevel loglevel,
             bool inline,
@@ -63,14 +64,15 @@ namespace Microsoft.OpenApi.Hidi
                 Stream stream;
                 OpenApiDocument document;
                 OpenApiFormat openApiFormat;
+                OpenApiSpecVersion openApiVersion;
                 var stopwatch = new Stopwatch();
 
                 if (!string.IsNullOrEmpty(csdl))
                 {
                     // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
                     openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
-                    version ??= OpenApiSpecVersion.OpenApi3_0;
-
+                    openApiVersion = version == null ? OpenApiSpecVersion.OpenApi3_0 : TryParseOpenApiSpecVersion(version);
+                    
                     stream = await GetStream(csdl, logger, cancellationToken);
                     document = await ConvertCsdlToOpenApi(stream);
                 }
@@ -81,12 +83,12 @@ namespace Microsoft.OpenApi.Hidi
                     // Parsing OpenAPI file
                     stopwatch.Start();
                     logger.LogTrace("Parsing OpenApi file");
-                    var result = new OpenApiStreamReader(new OpenApiReaderSettings
+                    var result = await new OpenApiStreamReader(new OpenApiReaderSettings
                     {
                         ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
                         RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                     }
-                    ).ReadAsync(stream).GetAwaiter().GetResult();
+                    ).ReadAsync(stream);
 
                     document = result.OpenApiDocument;
                     stopwatch.Stop();
@@ -111,7 +113,7 @@ namespace Microsoft.OpenApi.Hidi
                     }
 
                     openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
-                    version ??= result.OpenApiDiagnostic.SpecificationVersion;
+                    openApiVersion = version == null ? TryParseOpenApiSpecVersion(version) : result.OpenApiDiagnostic.SpecificationVersion;
                 }
 
                 Func<string, OperationType?, OpenApiOperation, bool> predicate;
@@ -168,11 +170,10 @@ namespace Microsoft.OpenApi.Hidi
                 logger.LogTrace("Serializing to OpenApi document using the provided spec version and writer");
 
                 stopwatch.Start();
-                document.Serialize(writer, (OpenApiSpecVersion)version);
+                document.Serialize(writer, openApiVersion);
                 stopwatch.Stop();
 
                 logger.LogTrace($"Finished serializing in {stopwatch.ElapsedMilliseconds}ms");
-
                 textWriter.Flush();
 
                 return 0;
@@ -187,7 +188,7 @@ namespace Microsoft.OpenApi.Hidi
                 return 1;
             }            
         }
-
+        
         /// <summary>
         /// Converts CSDL to OpenAPI
         /// </summary>
