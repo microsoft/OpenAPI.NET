@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Hidi
             var cleanOutputOption = new Option<bool>("--clean-output", "Overwrite an existing file");
             cleanOutputOption.AddAlias("-co");
 
-            var versionOption = new Option<OpenApiSpecVersion?>("--version", "OpenAPI specification version");
+            var versionOption = new Option<string?>("--version", "OpenAPI specification version");
             versionOption.AddAlias("-v");
 
             var formatOption = new Option<OpenApiFormat?>("--format", "File format");
@@ -77,8 +77,8 @@ namespace Microsoft.OpenApi.Hidi
                 resolveExternalOption,
             };
 
-            transformCommand.SetHandler<string, string, FileInfo, bool, OpenApiSpecVersion?, OpenApiFormat?, LogLevel, bool, bool, string, string, string> (
-                OpenApiService.ProcessOpenApiDocument, descriptionOption, csdlOption, outputOption, cleanOutputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
+            transformCommand.SetHandler<string, string, FileInfo, bool, string?, OpenApiFormat?, LogLevel, bool, bool, string, string, string, CancellationToken> (
+                OpenApiService.ProcessOpenApiDocument, descriptionOption, csdlOption, outputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
