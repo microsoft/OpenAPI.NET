@@ -64,14 +64,15 @@ namespace Microsoft.OpenApi.Hidi
                 Stream stream;
                 OpenApiDocument document;
                 OpenApiFormat openApiFormat;
+                OpenApiSpecVersion openApiVersion;
                 var stopwatch = new Stopwatch();
 
                 if (!string.IsNullOrEmpty(csdl))
                 {
                     // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
                     openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
-                    version ??= OpenApiSpecVersion.OpenApi3_0;
-
+                    openApiVersion = version == null ? OpenApiSpecVersion.OpenApi3_0 : TryParseOpenApiSpecVersion(version);
+                    
                     stream = await GetStream(csdl, logger, cancellationToken);
                     document = await ConvertCsdlToOpenApi(stream);
                 }
@@ -112,7 +113,7 @@ namespace Microsoft.OpenApi.Hidi
                     }
 
                     openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
-                    version ??= result.OpenApiDiagnostic.SpecificationVersion;
+                    openApiVersion = version == null ? TryParseOpenApiSpecVersion(version) : result.OpenApiDiagnostic.SpecificationVersion;
                 }
 
                 Func<string, OperationType?, OpenApiOperation, bool> predicate;
@@ -127,14 +128,14 @@ namespace Microsoft.OpenApi.Hidi
                     logger.LogTrace("Creating predicate based on the operationIds supplied.");
                     predicate = OpenApiFilterService.CreatePredicate(operationIds: filterbyoperationids);
 
-\                    logger.LogTrace("Creating subset OpenApi document.");
+                    logger.LogTrace("Creating subset OpenApi document.");
                     document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
                 }
                 if (!string.IsNullOrEmpty(filterbytags))
                 {
                     logger.LogTrace("Creating predicate based on the tags supplied.");
                     predicate = OpenApiFilterService.CreatePredicate(tags: filterbytags);
-\
+
                     logger.LogTrace("Creating subset OpenApi document.");
                     document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
                 }
@@ -169,7 +170,7 @@ namespace Microsoft.OpenApi.Hidi
                 logger.LogTrace("Serializing to OpenApi document using the provided spec version and writer");
 
                 stopwatch.Start();
-                document.Serialize(writer, (OpenApiSpecVersion)version);
+                document.Serialize(writer, openApiVersion);
                 stopwatch.Stop();
 
                 logger.LogTrace($"Finished serializing in {stopwatch.ElapsedMilliseconds}ms");
