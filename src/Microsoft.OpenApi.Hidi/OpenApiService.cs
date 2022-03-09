@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     throw new ArgumentNullException(nameof(output));
                 }
-                if (cleanoutput)
+                if (cleanoutput && output.Exists)
                 {
                     output.Delete();
                 }
