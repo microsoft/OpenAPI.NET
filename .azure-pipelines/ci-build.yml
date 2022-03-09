@@ -248,7 +248,7 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)'
 
 - stage: deploy
-  condition: and(contains(variables['build.sourceBranch'], 'refs/heads/vnext'), succeeded())
+  condition: and(contains(variables['build.sourceBranch'], 'refs/heads/master'), succeeded())
   dependsOn: build
   jobs:
     - deployment: deploy_hidi
@@ -265,22 +265,18 @@ stages:
               inputs:
                 artifact: Nugets
                 source: current
-            # TODO update that script so it looks at the artifact name (name starts with) rather than a fixed index
-            - powershell: |
-                $url = "$($env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)$env:SYSTEM_TEAMPROJECTID/_apis/build/builds/$env:BUILD_BUILDID/artifacts?api-version=4.1"
-                Write-Host "URL: $url"
-                $pipeline = Invoke-RestMethod -Uri $url -Headers @{
-                Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN"
-                }
-                Write-Host "artifactName:" ($artifactName = $Pipeline.value.name[1])   
-                #Set Variable $artifactName
-                Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true;]$artifactName"
-                displayName: 'Fetch Artifact Name'
             - task: DownloadPipelineArtifact@2
               displayName: Download hidi executable from artifacts
               inputs:
-                artifact: $(artifactName)
                 source: current
+            - pwsh: |
+                $artifactMainDirectory = Get-ChildItem -Filter Microsoft.OpenApi.Hidi-* -Directory -Recurse | select -First 1
+                $artifactName = $artifactMainDirectory.Name -replace "Microsoft.OpenApi.Hidi-", ""
+                #Set Variable $artifactName
+                Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true;]$artifactName"
+                Write-Host "##vso[task.setvariable variable=artifactMainDirectory; isSecret=false; isOutput=true;]$artifactMainDirectory"
+              displayName: 'Fetch Artifact Name'
+
             - task: NuGetCommand@2
               displayName: 'NuGet push'
               inputs:
@@ -296,7 +292,7 @@ stages:
                 tag: '$(artifactName)'
                 title: '$(artifactName)'
                 releaseNotesSource: inline
-                assets: '$(System.DefaultWorkingDirectory)\**\*.exe'
+                assets: '$(artifactMainDirectory)\**\*.exe'
                 changeLogType: issueBased
     
     - deployment: deploy_lib
