@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -301,24 +301,41 @@ namespace Microsoft.OpenApi.Hidi
             logger.LogTrace("Parsing the json collection file into a JsonDocument");
             using var document = JsonDocument.Parse(stream);
             var root = document.RootElement;
-            var itemElement = root.GetProperty("item");
-            foreach (var requestObject in itemElement.EnumerateArray().Select(item => item.GetProperty("request")))
-            {
-                // Fetch list of methods and urls from collection, store them in a dictionary
-                var path = requestObject.GetProperty("url").GetProperty("raw").ToString();
-                var method = requestObject.GetProperty("method").ToString();
 
-                if (!requestUrls.ContainsKey(path))
+            requestUrls = Enumerate(root, requestUrls);
+
+            logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
+            return requestUrls;
+        }
+
+        private static Dictionary<string, List<string>> Enumerate(JsonElement itemElement, Dictionary<string, List<string>> paths)
+        {
+            var itemsArray = itemElement.GetProperty("item");
+             
+            foreach (var item in itemsArray.EnumerateArray())
+            {
+                if (item.TryGetProperty("request", out var request))
                 {
-                    requestUrls.Add(path, new List<string> { method });
+                    // Fetch list of methods and urls from collection, store them in a dictionary
+                    var path = request.GetProperty("url").GetProperty("raw").ToString();
+                    var method = request.GetProperty("method").ToString();
+
+                    if (!paths.ContainsKey(path))
+                    {
+                        paths.Add(path, new List<string> { method });
+                    }
+                    else
+                    {
+                        paths[path].Add(method);
+                    }
                 }
                 else
                 {
-                    requestUrls[path].Add(method);
+                    Enumerate(item, paths);
                 }
             }
-            logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
-            return requestUrls;
+
+            return paths;
         }
 
         internal static async Task<int> ValidateOpenApiDocument(string openapi, LogLevel loglevel, CancellationToken cancellationToken)
