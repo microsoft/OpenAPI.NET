@@ -70,6 +70,23 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
+        public void ShouldParseNestedPostmanCollection()
+        {
+            // Arrange
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver3.json");
+            var fileInput = new FileInfo(filePath);
+            var stream = fileInput.OpenRead();
+
+            // Act
+            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream, _logger);
+            var pathCount = requestUrls.Count;
+
+            // Assert
+            Assert.NotNull(requestUrls);
+            Assert.Equal(30, pathCount);
+        }
+
+        [Fact]
         public void ThrowsExceptionWhenUrlsInCollectionAreMissingFromSourceDocument()
         {
             // Arrange
