@@ -44,6 +44,9 @@
     <None Update="UtilityFiles\postmanCollection_ver2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="UtilityFiles\postmanCollection_ver3.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="UtilityFiles\Todo.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
