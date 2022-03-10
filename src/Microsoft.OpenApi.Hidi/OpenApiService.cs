@@ -314,20 +314,26 @@ namespace Microsoft.OpenApi.Hidi
              
             foreach (var item in itemsArray.EnumerateArray())
             {
-                if (item.TryGetProperty("request", out var request))
+                if(item.ValueKind == JsonValueKind.Object)
                 {
-                    // Fetch list of methods and urls from collection, store them in a dictionary
-                    var path = request.GetProperty("url").GetProperty("raw").ToString();
-                    var method = request.GetProperty("method").ToString();
-
-                    if (!paths.ContainsKey(path))
-                    {
-                        paths.Add(path, new List<string> { method });
-                    }
-                    else
-                    {
-                        paths[path].Add(method);
-                    }
+                   if(item.TryGetProperty("request", out var request))
+                   {
+                        // Fetch list of methods and urls from collection, store them in a dictionary
+                        var path = request.GetProperty("url").GetProperty("raw").ToString();
+                        var method = request.GetProperty("method").ToString();
+                        if (!paths.ContainsKey(path))
+                        {
+                            paths.Add(path, new List<string> { method });
+                        }
+                        else
+                        {
+                            paths[path].Add(method);
+                        }
+                   }
+                   else
+                   {
+                        Enumerate(item, paths);
+                   }
                 }
                 else
                 {
