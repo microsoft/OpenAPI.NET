@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Hidi
                     }
 
                     openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
-                    openApiVersion = version == null ? TryParseOpenApiSpecVersion(version) : result.OpenApiDiagnostic.SpecificationVersion;
+                    openApiVersion = version == null ? result.OpenApiDiagnostic.SpecificationVersion : TryParseOpenApiSpecVersion(version);
                 }
 
                 Func<string, OperationType?, OpenApiOperation, bool> predicate;
