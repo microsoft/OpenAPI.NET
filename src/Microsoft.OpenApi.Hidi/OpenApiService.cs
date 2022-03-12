@@ -71,8 +71,8 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
                     openApiFormat = format ?? GetOpenApiFormat(csdl, logger);
-                    openApiVersion = version == null ? OpenApiSpecVersion.OpenApi3_0 : TryParseOpenApiSpecVersion(version);
-                    
+                    openApiVersion = version != null ? TryParseOpenApiSpecVersion(version) : OpenApiSpecVersion.OpenApi3_0;
+
                     stream = await GetStream(csdl, logger, cancellationToken);
                     document = await ConvertCsdlToOpenApi(stream);
                 }
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Hidi
                     }
 
                     openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
-                    openApiVersion = version == null ? TryParseOpenApiSpecVersion(version) : result.OpenApiDiagnostic.SpecificationVersion;
+                    openApiVersion = version != null ? TryParseOpenApiSpecVersion(version) : result.OpenApiDiagnostic.SpecificationVersion;
                 }
 
                 Func<string, OperationType?, OpenApiOperation, bool> predicate;
@@ -181,9 +181,10 @@ namespace Microsoft.OpenApi.Hidi
             catch (Exception ex)
             {
 #if DEBUG  
-                logger.LogCritical(ex, ex.Message);
+                logger.LogCritical(ex, ex.Message);               
 #else
                 logger.LogCritical(ex.Message);
+                
 #endif
                 return 1;
             }            
@@ -335,12 +336,14 @@ namespace Microsoft.OpenApi.Hidi
 
                 OpenApiDocument document;
                 logger.LogTrace("Parsing the OpenApi file");
-                document = new OpenApiStreamReader(new OpenApiReaderSettings
+                var result = await new OpenApiStreamReader(new OpenApiReaderSettings
                 {
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                 }
-                ).Read(stream, out var context);
+                ).ReadAsync(stream);
 
+                document = result.OpenApiDocument;
+                var context = result.OpenApiDiagnostic;
                 if (context.Errors.Count != 0)
                 {
                     foreach (var error in context.Errors)
@@ -355,7 +358,7 @@ namespace Microsoft.OpenApi.Hidi
 
                 logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
                 logger.LogInformation(statsVisitor.GetStatisticsReport());
-
+                
                 return 0;
             }
             catch(Exception ex)
@@ -385,7 +388,9 @@ namespace Microsoft.OpenApi.Hidi
 
             var logger = LoggerFactory.Create((builder) => {
                 builder
-                    .AddConsole()
+                    .AddConsole(c => { 
+                        c.LogToStandardErrorThreshold = LogLevel.Error;
+                    })
 #if DEBUG
                     .AddDebug()
 #endif
