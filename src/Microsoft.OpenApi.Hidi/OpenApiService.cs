@@ -33,6 +33,7 @@ namespace Microsoft.OpenApi.Hidi
             string openapi,
             string csdl,
             FileInfo output,
+            bool cleanoutput,
             string? version,
             OpenApiFormat? format,
             LogLevel loglevel,
@@ -55,6 +56,10 @@ namespace Microsoft.OpenApi.Hidi
                 if(output == null)
                 {
                     throw new ArgumentNullException(nameof(output));
+                }
+                if (cleanoutput && output.Exists)
+                {
+                    output.Delete();
                 }
                 if (output.Exists)
                 {
