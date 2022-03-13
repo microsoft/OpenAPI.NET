@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Hidi
             };
 
             transformCommand.SetHandler<string, string, FileInfo, string?, OpenApiFormat?, LogLevel, bool, bool, string, string, string, CancellationToken> (
-                OpenApiService.ProcessOpenApiDocument, descriptionOption, csdlOption, outputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
+                OpenApiService.TransformOpenApiDocument, descriptionOption, csdlOption, outputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
