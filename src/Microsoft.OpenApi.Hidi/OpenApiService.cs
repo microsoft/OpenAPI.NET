@@ -302,13 +302,13 @@ namespace Microsoft.OpenApi.Hidi
             using var document = JsonDocument.Parse(stream);
             var root = document.RootElement;
 
-            requestUrls = Enumerate(root, requestUrls);
-
+            requestUrls = EnumerateJsonDocument(root, requestUrls);
             logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
+
             return requestUrls;
         }
 
-        private static Dictionary<string, List<string>> Enumerate(JsonElement itemElement, Dictionary<string, List<string>> paths)
+        private static Dictionary<string, List<string>> EnumerateJsonDocument(JsonElement itemElement, Dictionary<string, List<string>> paths)
         {
             var itemsArray = itemElement.GetProperty("item");
              
@@ -332,12 +332,12 @@ namespace Microsoft.OpenApi.Hidi
                    }
                    else
                    {
-                        Enumerate(item, paths);
+                        EnumerateJsonDocument(item, paths);
                    }
                 }
                 else
                 {
-                    Enumerate(item, paths);
+                    EnumerateJsonDocument(item, paths);
                 }
             }
 
