@@ -104,6 +104,28 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
+        public void ContinueProcessingWhenUrlsInCollectionAreMissingFromSourceDocument()
+        {
+            // Arrange
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver4.json");
+            var fileInput = new FileInfo(filePath);
+            var stream = fileInput.OpenRead();
+
+            // Act
+            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream, _logger);
+            var pathCount = requestUrls.Count;
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
+            var subsetPathCount = subsetOpenApiDocument.Paths.Count;
+
+            // Assert
+            Assert.NotNull(subsetOpenApiDocument);
+            Assert.NotEmpty(subsetOpenApiDocument.Paths);
+            Assert.Equal(2, subsetPathCount);
+            Assert.NotEqual(pathCount, subsetPathCount);
+        }
+
+        [Fact]
         public void ThrowsInvalidOperationExceptionInCreatePredicateWhenInvalidArgumentsArePassed()
         {
             // Act and Assert

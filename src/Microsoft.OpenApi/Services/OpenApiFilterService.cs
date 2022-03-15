@@ -81,6 +81,7 @@ namespace Microsoft.OpenApi.Services
                         var openApiOperations = GetOpenApiOperations(rootNode, url, apiVersion);
                         if (openApiOperations == null)
                         {
+                            Console.WriteLine($"The url {url} could not be found in the OpenApi description");
                             continue;
                         }
 
