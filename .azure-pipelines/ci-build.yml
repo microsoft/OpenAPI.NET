@@ -271,7 +271,7 @@ stages:
                 source: current
             - pwsh: |
                 $artifactName = Get-ChildItem -Path $(Pipeline.Workspace) -Filter Microsoft.OpenApi.Hidi-* -recurse | select -First 1
-                $artifactVersion= $artifactName -replace "Microsoft.OpenApi.Hidi-", ""                  
+                $artifactVersion= $artifactName -replace "Microsoft.OpenApi.Hidi-", ""
                 #Set Variable $artifactName and $artifactVersion
                 Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
                 Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true]$artifactName.FullName"
