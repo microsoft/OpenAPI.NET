@@ -270,11 +270,11 @@ stages:
               inputs:
                 source: current
             - pwsh: |
-                $artifactMainDirectory = Get-ChildItem -Filter Microsoft.OpenApi.Hidi-* -Directory -Recurse | select -First 1
-                $artifactName = $artifactMainDirectory.Name -replace "Microsoft.OpenApi.Hidi-", ""
-                #Set Variable $artifactName
-                Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true;]$artifactName"
-                Write-Host "##vso[task.setvariable variable=artifactMainDirectory; isSecret=false; isOutput=true;]$artifactMainDirectory"
+                $artifactName = Get-ChildItem -Path $(Pipeline.Workspace) -Filter Microsoft.OpenApi.Hidi-* -recurse | select -First 1
+                $artifactVersion= $artifactName -replace "Microsoft.OpenApi.Hidi-", ""                  
+                #Set Variable $artifactName and $artifactVersion
+                Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
+                Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true]$artifactName.FullName"
               displayName: 'Fetch Artifact Name'
 
             - task: NuGetCommand@2
@@ -289,10 +289,10 @@ stages:
               inputs:
                 gitHubConnection: 'Github-MaggieKimani1'
                 tagSource: userSpecifiedTag
-                tag: '$(artifactName)'
+                tag: '$(artifactVersion)'
                 title: '$(artifactName)'
                 releaseNotesSource: inline
-                assets: '$(artifactMainDirectory)\**\*.exe'
+                assets: '$(Pipeline.Workspace)\**\*.exe'
                 changeLogType: issueBased
     
     - deployment: deploy_lib
