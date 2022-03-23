@@ -24,6 +24,9 @@ namespace Microsoft.OpenApi.Hidi
             var csdlOption = new Option<string>("--csdl", "Input CSDL file path or URL");
             csdlOption.AddAlias("-cs");
 
+            var csdlFilterOption = new Option<string>("--csdlFilter", "Name of EntitySet or Singleton to filter CSDL on");
+            csdlOption.AddAlias("-csf");
+
             var outputOption = new Option<FileInfo>("--output", () => new FileInfo("./output"), "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
             outputOption.AddAlias("-o");
 
@@ -66,6 +69,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 descriptionOption,
                 csdlOption,
+                csdlFilterOption,
                 outputOption,
                 cleanOutputOption,
                 versionOption,
@@ -78,8 +82,8 @@ namespace Microsoft.OpenApi.Hidi
                 resolveExternalOption,
             };
 
-            transformCommand.SetHandler<string, string, FileInfo, bool, string?, OpenApiFormat?, LogLevel, bool, bool, string, string, string, CancellationToken> (
-                OpenApiService.TransformOpenApiDocument, descriptionOption, csdlOption, outputOption, cleanOutputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
+            transformCommand.SetHandler<string, string, string, FileInfo, bool, string?, OpenApiFormat?, LogLevel, bool, bool, string, string, string, CancellationToken> (
+                OpenApiService.TransformOpenApiDocument, descriptionOption, csdlOption, csdlFilterOption, outputOption, cleanOutputOption, versionOption, formatOption, logLevelOption, inlineOption, resolveExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
