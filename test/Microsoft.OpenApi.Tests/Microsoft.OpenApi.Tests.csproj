@@ -30,7 +30,7 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="PublicApiGenerator" Version="10.3.0" />
   </ItemGroup>
-    
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj" />
     <ProjectReference Include="..\..\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />

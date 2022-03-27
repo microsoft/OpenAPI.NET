@@ -7,160 +7,342 @@ trigger:
   branches:
     include:
       - master
-pr: none
+      - vnext
+pr:
+  branches:
+    include:
+      - master
+      - vnext
 
 pool:
   name: Azure Pipelines
   vmImage: windows-latest
-  demands:
-  - msbuild
-  - vstest
 
-steps:
-- task: UseDotNet@2
-  displayName: 'Use .NET Core sdk'
-  inputs:
-    packageType: 'sdk'
-    version: '6.0.x'
-    includePreviewVersions: true
+variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)' 
 
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
 
-- task: MSBuild@1
-  displayName: 'Build solution **/*.sln'
-  inputs:
-    configuration: Release
+stages:
 
-- task: VSTest@2
-  displayName: 'XUnit Tests'
-  inputs:
-    testAssemblyVer2: |
-     **\*.Tests.dll
+- stage: build
+  jobs:
+    - job: build
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Use .NET 6'
+        inputs:
+          version: 6.x
 
-    vsTestVersion: 16.0
-    codeCoverageEnabled: true
+      - task: PoliCheck@1
+        displayName: 'Run PoliCheck "/src"'
+        inputs:
+          inputType: CmdLine
+          cmdLineArgs: '/F:$(Build.SourcesDirectory)/src /T:9 /Sev:"1|2" /PE:2 /O:poli_result_src.xml'
 
-- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  displayName: 'ESRP CodeSigning'
-  inputs:
-    ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
-    FolderPath: src
-    signConfigType: inlineSignParams
-    inlineOperation: |
-     [
-         {
-             "keyCode": "CP-230012",
-             "operationSetCode": "SigntoolSign",
-             "parameters": [
-             {
-                 "parameterName": "OpusName",
-                 "parameterValue": "Microsoft"
-             },
-             {
-                 "parameterName": "OpusInfo",
-                 "parameterValue": "http://www.microsoft.com"
-             },
-             {
-                 "parameterName": "FileDigest",
-                 "parameterValue": "/fd \"SHA256\""
-             },
-             {
-                 "parameterName": "PageHash",
-                 "parameterValue": "/NPH"
-             },
-             {
-                 "parameterName": "TimeStamp",
-                 "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
-             }
-             ],
-             "toolName": "sign",
-             "toolVersion": "1.0"
-         },
-         {
-             "keyCode": "CP-230012",
-             "operationSetCode": "SigntoolVerify",
-             "parameters": [ ],
-             "toolName": "sign",
-             "toolVersion": "1.0"
-         }
-     ]
-    SessionTimeout: 20
+      - task: PoliCheck@1
+        displayName: 'Run PoliCheck "/test"'
+        inputs:
+          inputType: CmdLine
+          cmdLineArgs: '/F:$(Build.SourcesDirectory)/test /T:9 /Sev:"1|2" /PE:2 /O:poli_result_test.xml'
 
-- task: MSBuild@1
-  displayName: 'Pack OpenAPI'
-  inputs:
-    solution: src/Microsoft.OpenApi/Microsoft.OpenApi.csproj
-    configuration: Release
-    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/Nugets /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+      # Install the nuget tool.
+      - task: NuGetToolInstaller@0
+        displayName: 'Use NuGet >=5.2.0'
+        inputs:
+          versionSpec: '>=5.2.0'
+          checkLatest: true
 
-- task: MSBuild@1
-  displayName: 'Pack OpenAPI Readers'
-  inputs:
-    solution: src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj
-    configuration: Release
-    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/Nugets /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+      # Build the Product project
+      - task: DotNetCoreCLI@2
+        displayName: 'build'
+        inputs:
+          projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.sln'
+          arguments: '--configuration $(BuildConfiguration) --no-incremental'
 
-- task: MSBuild@1
-  displayName: 'Pack OpenApi Hidi'
-  inputs:
-    solution: src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj
-    configuration: Release
-    msbuildArguments: '/t:pack /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/Nugets /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg'
+      # Run the Unit test
+      - task: DotNetCoreCLI@2
+        displayName: 'test'
+        inputs:
+          command: test
+          projects: '$(Build.SourcesDirectory)\Microsoft.OpenApi.sln'
+          arguments: '--configuration $(BuildConfiguration) --no-build'
 
-- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  displayName: 'ESRP CodeSigning Nuget Packages'
-  inputs:
-    ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
-    FolderPath: '$(Build.ArtifactStagingDirectory)'
-    Pattern: '*.nupkg'
-    signConfigType: inlineSignParams
-    inlineOperation: |
-     [
-         {
-             "keyCode": "CP-401405",
-             "operationSetCode": "NuGetSign",
-             "parameters": [ ],
-             "toolName": "sign",
-             "toolVersion": "1.0"
-         },
-         {
-             "keyCode": "CP-401405",
-             "operationSetCode": "NuGetVerify",
-             "parameters": [ ],
-             "toolName": "sign",
-             "toolVersion": "1.0"
-         }
-     ]
-    SessionTimeout: 20
+      # CredScan
+      - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+        displayName: 'Run CredScan - Src'
+        inputs:
+          toolMajorVersion: 'V2'
+          scanFolder: '$(Build.SourcesDirectory)\src'
+          debugMode: false
 
-- task: PowerShell@2
-  displayName: "Get Hidi's version-number from .csproj"
-  inputs:
-    targetType: 'inline'
-    script: |
-         $xml = [Xml] (Get-Content .\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj)
-         $version = $xml.Project.PropertyGroup.Version
-         echo $version
-         echo "##vso[task.setvariable variable=version]$version"  
+      - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+        displayName: 'Run CredScan - Test'
+        inputs:
+          toolMajorVersion: 'V2'
+          scanFolder: '$(Build.SourcesDirectory)\test'
+          debugMode: false
 
-# publish hidi as an .exe
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(version) --no-dependencies
-    projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
-    publishWebProjects: False
-    zipAfterPublish: false 
+      - task: AntiMalware@3
+        displayName: 'Run MpCmdRun.exe - ProductBinPath'
+        inputs:
+          FileDirPath: '$(ProductBinPath)'
+        enabled: false
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: Nugets'
-  inputs:
-    ArtifactName: Nugets
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Nugets'
+      - task: BinSkim@3
+        displayName: 'Run BinSkim - Product Binaries'
+        inputs:
+          InputType: Basic
+          AnalyzeTarget: '$(ProductBinPath)\**\Microsoft.OpenApi.dll'
+          AnalyzeSymPath: '$(ProductBinPath)'
+          AnalyzeVerbose: true
+          AnalyzeHashes: true
+          AnalyzeEnvironment: true
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: Hidi'
-  inputs: 
-    ArtifactName: Microsoft.OpenApi.Hidi-v$(version)
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(version)'
+      - task: PublishSecurityAnalysisLogs@2
+        displayName: 'Publish Security Analysis Logs'
+        inputs:
+          ArtifactName: SecurityLogs
+
+      - task: PostAnalysis@1
+        displayName: 'Post Analysis'
+        inputs:
+          BinSkim: true
+          CredScan: true
+          PoliCheck: true
+
+      - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+        displayName: 'ESRP CodeSigning'
+        inputs:
+          ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
+          FolderPath: src
+          signConfigType: inlineSignParams
+          inlineOperation: |
+            [
+                {
+                    "keyCode": "CP-230012",
+                    "operationSetCode": "SigntoolSign",
+                    "parameters": [
+                    {
+                        "parameterName": "OpusName",
+                        "parameterValue": "Microsoft"
+                    },
+                    {
+                        "parameterName": "OpusInfo",
+                        "parameterValue": "http://www.microsoft.com"
+                    },
+                    {
+                        "parameterName": "FileDigest",
+                        "parameterValue": "/fd \"SHA256\""
+                    },
+                    {
+                        "parameterName": "PageHash",
+                        "parameterValue": "/NPH"
+                    },
+                    {
+                        "parameterName": "TimeStamp",
+                        "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                    }
+                    ],
+                    "toolName": "sign",
+                    "toolVersion": "1.0"
+                },
+                {
+                    "keyCode": "CP-230012",
+                    "operationSetCode": "SigntoolVerify",
+                    "parameters": [ ],
+                    "toolName": "sign",
+                    "toolVersion": "1.0"
+                }
+            ]
+          SessionTimeout: 20
+      
+      # Pack
+      - task: DotNetCoreCLI@2
+        displayName: 'pack OpenAPI'
+        inputs:
+          command: pack
+          projects: src/Microsoft.OpenApi/Microsoft.OpenApi.csproj
+          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
+      
+      # Pack
+      - task: DotNetCoreCLI@2
+        displayName: 'pack Readers'
+        inputs:
+          command: pack
+          projects: src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj
+          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
+      
+      # Pack
+      - task: DotNetCoreCLI@2
+        displayName: 'pack Hidi'
+        inputs:
+          command: pack
+          projects: src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj
+          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
+      
+      - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+        displayName: 'ESRP CodeSigning Nuget Packages'
+        inputs:
+          ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
+          FolderPath: '$(Build.ArtifactStagingDirectory)'
+          Pattern: '*.nupkg'
+          signConfigType: inlineSignParams
+          inlineOperation: |
+            [
+                {
+                    "keyCode": "CP-401405",
+                    "operationSetCode": "NuGetSign",
+                    "parameters": [ ],
+                    "toolName": "sign",
+                    "toolVersion": "1.0"
+                },
+                {
+                    "keyCode": "CP-401405",
+                    "operationSetCode": "NuGetVerify",
+                    "parameters": [ ],
+                    "toolName": "sign",
+                    "toolVersion": "1.0"
+                }
+            ]
+          SessionTimeout: 20
+
+      - task: PowerShell@2
+        displayName: "Get Hidi's version-number from .csproj"
+        inputs:
+          targetType: 'inline'
+          script: |
+              $xml = [Xml] (Get-Content .\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj)
+              $version = $xml.Project.PropertyGroup.Version
+              echo $version
+              echo "##vso[task.setvariable variable=hidiversion]$version"  
+
+      # publish hidi as an .exe
+      - task: DotNetCoreCLI@2
+        displayName: publish Hidi as executable
+        inputs:
+          command: 'publish'
+          arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion) -p:PublishTrimmed=true
+          projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
+          publishWebProjects: False
+          zipAfterPublish: false 
+
+      - task: CopyFiles@2
+        displayName: Prepare staging folder for upload
+        inputs:
+         targetFolder: $(Build.ArtifactStagingDirectory)/Nugets
+         sourceFolder: $(Build.ArtifactStagingDirectory)
+         content: '*.nupkg'
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact: Nugets'
+        inputs:
+          ArtifactName: Nugets
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Nugets'
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact: Hidi'
+        inputs: 
+          ArtifactName: Microsoft.OpenApi.Hidi-v$(hidiversion)
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)'
+
+- stage: deploy
+  condition: and(contains(variables['build.sourceBranch'], 'refs/heads/master'), succeeded())
+  dependsOn: build
+  jobs:
+    - deployment: deploy_hidi
+      dependsOn: []
+      environment: nuget-org
+      strategy:
+        runOnce:
+          deploy:
+            pool:
+              vmImage: ubuntu-latest
+            steps:
+            - task: DownloadPipelineArtifact@2
+              displayName: Download nupkg from artifacts
+              inputs:
+                artifact: Nugets
+                source: current
+            - task: DownloadPipelineArtifact@2
+              displayName: Download hidi executable from artifacts
+              inputs:
+                source: current
+            - pwsh: |
+                $artifactName = Get-ChildItem -Path $(Pipeline.Workspace) -Filter Microsoft.OpenApi.Hidi-* -recurse | select -First 1
+                $artifactVersion= $artifactName -replace "Microsoft.OpenApi.Hidi-", ""
+                #Set Variable $artifactName and $artifactVersion
+                Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
+                Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true]$artifactName.FullName"
+              displayName: 'Fetch Artifact Name'
+
+            - task: NuGetCommand@2
+              displayName: 'NuGet push'
+              inputs:
+                command: push
+                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg'
+                nuGetFeedType: external
+                publishFeedCredentials: 'OpenAPI Nuget Connection'
+            - task: GitHubRelease@1
+              displayName: 'GitHub release (create)'
+              inputs:
+                gitHubConnection: 'Github-MaggieKimani1'
+                tagSource: userSpecifiedTag
+                tag: '$(artifactVersion)'
+                title: '$(artifactName)'
+                releaseNotesSource: inline
+                assets: '$(Pipeline.Workspace)\**\*.exe'
+                changeLogType: issueBased
+    
+    - deployment: deploy_lib
+      dependsOn: []
+      environment: nuget-org
+      strategy:
+        runOnce:
+          deploy:
+            pool:
+              vmImage: ubuntu-latest
+            steps:
+            - task: DownloadPipelineArtifact@2
+              displayName: Download nupkg from artifacts
+              inputs:
+                artifact: Nugets
+                source: current
+            - powershell: |
+                $fileNames = "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Readers.*.nupkg", "$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Workbench.*.nupkg"
+                foreach($fileName in $fileNames) {
+                  if(Test-Path $fileName) {
+                    rm $fileName -Verbose
+                  }
+                }
+              displayName: remove other nupkgs to avoid duplication
+            - task: NuGetCommand@2
+              displayName: 'NuGet push'
+              inputs:
+                command: push
+                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.*.nupkg'
+                nuGetFeedType: external
+                publishFeedCredentials: 'OpenAPI Nuget Connection'
+
+    - deployment: deploy_readers
+      dependsOn: deploy_lib
+      environment: nuget-org
+      strategy:
+        runOnce:
+          deploy:
+            pool:
+              vmImage: ubuntu-latest
+            steps:
+            - task: DownloadPipelineArtifact@2
+              displayName: Download nupkg from artifacts
+              inputs:
+                artifact: Nugets
+                source: current
+            - task: NuGetCommand@2
+              displayName: 'NuGet push'
+              inputs:
+                command: push
+                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Readers.*.nupkg'
+                nuGetFeedType: external
+                publishFeedCredentials: 'OpenAPI Nuget Connection'
