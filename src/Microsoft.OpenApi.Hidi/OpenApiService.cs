@@ -397,24 +397,47 @@ namespace Microsoft.OpenApi.Hidi
             logger.LogTrace("Parsing the json collection file into a JsonDocument");
             using var document = JsonDocument.Parse(stream);
             var root = document.RootElement;
-            var itemElement = root.GetProperty("item");
-            foreach (var requestObject in itemElement.EnumerateArray().Select(item => item.GetProperty("request")))
-            {
-                // Fetch list of methods and urls from collection, store them in a dictionary
-                var path = requestObject.GetProperty("url").GetProperty("raw").ToString();
-                var method = requestObject.GetProperty("method").ToString();
 
-                if (!requestUrls.ContainsKey(path))
+            requestUrls = EnumerateJsonDocument(root, requestUrls);
+            logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
+
+            return requestUrls;
+        }
+
+        private static Dictionary<string, List<string>> EnumerateJsonDocument(JsonElement itemElement, Dictionary<string, List<string>> paths)
+        {
+            var itemsArray = itemElement.GetProperty("item");
+             
+            foreach (var item in itemsArray.EnumerateArray())
+            {
+                if(item.ValueKind == JsonValueKind.Object)
                 {
-                    requestUrls.Add(path, new List<string> { method });
+                   if(item.TryGetProperty("request", out var request))
+                   {
+                        // Fetch list of methods and urls from collection, store them in a dictionary
+                        var path = request.GetProperty("url").GetProperty("raw").ToString();
+                        var method = request.GetProperty("method").ToString();
+                        if (!paths.ContainsKey(path))
+                        {
+                            paths.Add(path, new List<string> { method });
+                        }
+                        else
+                        {
+                            paths[path].Add(method);
+                        }
+                   }
+                   else
+                   {
+                        EnumerateJsonDocument(item, paths);
+                   }
                 }
                 else
                 {
-                    requestUrls[path].Add(method);
+                    EnumerateJsonDocument(item, paths);
                 }
             }
-            logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
-            return requestUrls;
+
+            return paths;
         }
 
         /// <summary>
