@@ -24,8 +24,8 @@ namespace Microsoft.OpenApi.Hidi
             var csdlOption = new Option<string>("--csdl", "Input CSDL file path or URL");
             csdlOption.AddAlias("-cs");
 
-            var csdlFilterOption = new Option<string>("--csdlFilter", "Name of EntitySet or Singleton to filter CSDL on");
-            csdlOption.AddAlias("-csf");
+            var csdlFilterOption = new Option<string>("--csdl-filter", "Comma delimited list of EntitySets or Singletons to filter CSDL on. e.g. tasks,accounts");
+            csdlFilterOption.AddAlias("-csf");
 
             var outputOption = new Option<FileInfo>("--output", () => new FileInfo("./output"), "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
             outputOption.AddAlias("-o");
@@ -42,13 +42,13 @@ namespace Microsoft.OpenApi.Hidi
             var logLevelOption = new Option<LogLevel>("--loglevel", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
             logLevelOption.AddAlias("-ll");
 
-            var filterByOperationIdsOption = new Option<string>("--filter-by-operationids", "Filters OpenApiDocument by OperationId(s) provided");
+            var filterByOperationIdsOption = new Option<string>("--filter-by-operationids", "Filters OpenApiDocument by comma delimited list of OperationId(s) provided");
             filterByOperationIdsOption.AddAlias("-op");
 
-            var filterByTagsOption = new Option<string>("--filter-by-tags", "Filters OpenApiDocument by Tag(s) provided");
+            var filterByTagsOption = new Option<string>("--filter-by-tags", "Filters OpenApiDocument by comma delimited list of Tag(s) provided. Also accepts a single regex.");
             filterByTagsOption.AddAlias("-t");
 
-            var filterByCollectionOption = new Option<string>("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided");
+            var filterByCollectionOption = new Option<string>("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided. Provide path to collection file.");
             filterByCollectionOption.AddAlias("-c");
 
             var inlineLocalOption = new Option<bool>("--inlineLocal", "Inline local $ref instances");
