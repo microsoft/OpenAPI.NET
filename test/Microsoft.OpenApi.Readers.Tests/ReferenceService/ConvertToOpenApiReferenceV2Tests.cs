@@ -18,13 +18,31 @@ namespace Microsoft.OpenApi.Readers.Tests
         }
 
         [Fact]
+        public void ParseExternalReferenceToV2OpenApi()
+        {
+            // Arrange
+            var versionService = new OpenApiV2VersionService(Diagnostic);
+            var externalResource = "externalSchema.json";
+            var id = "mySchema";
+            var input = $"{externalResource}#/definitions/{id}";
+
+            // Act
+            var reference = versionService.ConvertToOpenApiReference(input, null);
+
+            // Assert
+            reference.ExternalResource.Should().Be(externalResource);
+            reference.Type.Should().NotBeNull();
+            reference.Id.Should().Be(id);
+        }
+
+        [Fact]
         public void ParseExternalReference()
         {
             // Arrange
             var versionService = new OpenApiV2VersionService(Diagnostic);
             var externalResource = "externalSchema.json";
-            var id = "externalPathSegment1/externalPathSegment2/externalPathSegment3";
-            var input = $"{externalResource}#/{id}";
+            var id = "/externalPathSegment1/externalPathSegment2/externalPathSegment3";
+            var input = $"{externalResource}#{id}";
 
             // Act
             var reference = versionService.ConvertToOpenApiReference(input, null);

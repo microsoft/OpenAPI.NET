@@ -73,23 +73,24 @@ namespace Microsoft.OpenApi.Services
                     var rootNode = CreateOpenApiUrlTreeNode(sources);
 
                     // Iterate through urls dictionary and fetch operations for each url
-                    foreach (var path in requestUrls)
+                    foreach (var url in requestUrls)
                     {
                         var serverList = source.Servers;
-                        var url = FormatUrlString(path.Key, serverList);
+                        var path = ExtractPath(url.Key, serverList);
 
-                        var openApiOperations = GetOpenApiOperations(rootNode, url, apiVersion);
+                        var openApiOperations = GetOpenApiOperations(rootNode, path, apiVersion);
                         if (openApiOperations == null)
                         {
+                            Console.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
                             continue;
                         }
 
                         // Add the available ops if they are in the postman collection. See path.Value
                         foreach (var ops in openApiOperations)
                         {
-                            if (path.Value.Contains(ops.Key.ToString().ToUpper()))
+                            if (url.Value.Contains(ops.Key.ToString().ToUpper()))
                             {
-                                operationTypes.Add(ops.Key + url);
+                                operationTypes.Add(ops.Key + path);
                             }
                         }
                     }
@@ -322,7 +323,7 @@ namespace Microsoft.OpenApi.Services
             return moreStuff;
         }
 
-        private static string FormatUrlString(string url, IList<OpenApiServer> serverList)
+        private static string ExtractPath(string url, IList<OpenApiServer> serverList)
         {
             var queryPath = string.Empty;
             foreach (var server in serverList)
@@ -333,8 +334,8 @@ namespace Microsoft.OpenApi.Services
                     continue;
                 }
 
-                var querySegments = url.Split(new[]{ serverUrl }, StringSplitOptions.None);
-                queryPath = querySegments[1];
+                var urlComponents = url.Split(new[]{ serverUrl }, StringSplitOptions.None);
+                queryPath = urlComponents[1];
             }
 
             return queryPath;

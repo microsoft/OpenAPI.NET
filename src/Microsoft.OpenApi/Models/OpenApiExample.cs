@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiExample : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiExample>
     {
         /// <summary>
         /// Short description for the example.
@@ -64,13 +64,38 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
+            var target = this;
 
-            SerializeAsV3WithoutReference(writer);
+            if (Reference != null)
+            {
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV3(writer);
+                    return;
+                }
+                else
+                {
+                    target = GetEffective(Reference.HostDocument);
+                }
+            }
+            target.SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Returns an effective OpenApiExample object based on the presence of a $ref 
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiExample</returns>
+        public OpenApiExample GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiExample>(this.Reference);
+            }
+            else
+            {
+                return this;
+            }
         }
 
         /// <summary>

@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Models
 
             // If references have been inlined we don't need the to render the components section
             // however if they have cycles, then we will need a component rendered
-            if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
+            if (writer.GetSettings().InlineLocalReferences)
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
                 writer.WriteStartObject();

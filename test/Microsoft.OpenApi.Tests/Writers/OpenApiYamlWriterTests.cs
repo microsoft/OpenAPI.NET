@@ -373,7 +373,7 @@ paths:
 components: { }";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences});
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true } );
 
             // Act
             doc.SerializeAsV3(writer);
@@ -409,7 +409,7 @@ paths:
             type: object";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV2(writer);
@@ -468,6 +468,8 @@ paths:
                         ["thing"] = thingSchema}
                 }
             };
+            thingSchema.Reference.HostDocument = doc;
+
             return doc;
         }
 
@@ -515,7 +517,7 @@ components:
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV3(writer);
@@ -544,12 +546,6 @@ components:
             var relatedSchema = new OpenApiSchema()
             {
                 Type = "integer",
-                UnresolvedReference = false,
-                Reference = new OpenApiReference
-                {
-                    Id = "related",
-                    Type = ReferenceType.Schema
-                }
             };
 
             thingSchema.Properties["related"] = relatedSchema;
@@ -587,6 +583,7 @@ components:
                         ["thing"] = thingSchema}
                 }
             };
+            thingSchema.Reference.HostDocument = doc;
             return doc;
         }
 
@@ -623,13 +620,11 @@ definitions:
       children:
         $ref: '#/definitions/thing'
       related:
-        $ref: '#/definitions/related'
-  related:
-    type: integer";
+        type: integer";
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { ReferenceInline = ReferenceInlineSetting.InlineLocalReferences });
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV2(writer);

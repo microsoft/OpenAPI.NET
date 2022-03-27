@@ -359,7 +359,8 @@ get:
                                 Reference = new OpenApiReference
                                 {
                                     Type = ReferenceType.Schema,
-                                    Id = "ErrorModel"
+                                    Id = "ErrorModel",
+                                    HostDocument = openApiDoc
                                 },
                                 Required =
                                 {
@@ -372,7 +373,8 @@ get:
                                 Reference = new OpenApiReference
                                 {
                                     Type = ReferenceType.Schema,
-                                    Id = "ExtendedErrorModel"
+                                    Id = "ExtendedErrorModel",
+                                    HostDocument = openApiDoc
                                 },
                                 AllOf =
                                 {
@@ -381,7 +383,8 @@ get:
                                         Reference = new OpenApiReference
                                         {
                                             Type = ReferenceType.Schema,
-                                            Id = "ErrorModel"
+                                            Id = "ErrorModel",
+                                            HostDocument = openApiDoc
                                         },
                                         // Schema should be dereferenced in our model, so all the properties
                                         // from the ErrorModel above should be propagated here.
@@ -420,7 +423,7 @@ get:
                                 }
                             }
                         }
-                    });
+                    },options => options.Excluding(m => m.Name == "HostDocument"));
             }
         }
 
@@ -469,7 +472,8 @@ get:
                                 Reference = new OpenApiReference()
                                 {
                                     Id= "Pet",
-                                    Type = ReferenceType.Schema
+                                    Type = ReferenceType.Schema,
+                                    HostDocument = openApiDoc
                                 }
                             },
                             ["Cat"] = new OpenApiSchema
@@ -482,7 +486,8 @@ get:
                                         Reference = new OpenApiReference
                                         {
                                             Type = ReferenceType.Schema,
-                                            Id = "Pet"
+                                            Id = "Pet",
+                                            HostDocument = openApiDoc
                                         },
                                         // Schema should be dereferenced in our model, so all the properties
                                         // from the Pet above should be propagated here.
@@ -532,7 +537,8 @@ get:
                                 Reference = new OpenApiReference()
                                 {
                                     Id= "Cat",
-                                    Type = ReferenceType.Schema
+                                    Type = ReferenceType.Schema,
+                                    HostDocument = openApiDoc
                                 }
                             },
                             ["Dog"] = new OpenApiSchema
@@ -545,7 +551,8 @@ get:
                                         Reference = new OpenApiReference
                                         {
                                             Type = ReferenceType.Schema,
-                                            Id = "Pet"
+                                            Id = "Pet",
+                                            HostDocument = openApiDoc
                                         },
                                         // Schema should be dereferenced in our model, so all the properties
                                         // from the Pet above should be propagated here.
@@ -591,11 +598,12 @@ get:
                                 Reference = new OpenApiReference()
                                 {
                                     Id= "Dog",
-                                    Type = ReferenceType.Schema
+                                    Type = ReferenceType.Schema,
+                                    HostDocument = openApiDoc
                                 }
                             }
                         }
-                    });
+                    }, options => options.Excluding(m => m.Name == "HostDocument"));
             }
         }
 

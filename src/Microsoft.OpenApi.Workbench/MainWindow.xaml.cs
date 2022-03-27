@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Windows;
 
 namespace Microsoft.OpenApi.Workbench
@@ -18,9 +19,15 @@ namespace Microsoft.OpenApi.Workbench
             DataContext = _mainModel;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            _mainModel.ParseDocument();
+            try
+            {
+                await _mainModel.ParseDocument();
+            } catch (Exception ex)
+            {
+                _mainModel.Errors = ex.Message;
+            }
         }
     }
 }
