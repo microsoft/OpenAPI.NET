@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
-using Microsoft.OpenApi.Readers.Services;
-using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
@@ -19,13 +15,14 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         // Use OpenApiWorkspace to load a document and a referenced document
 
         [Fact]
-        public async Task LoadDocumentIntoWorkspace()
+        public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
             var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
             {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences,
-                CustomExternalLoader = new MockLoader()
+                LoadExternalRefs = true,
+                CustomExternalLoader = new MockLoader(),
+                BaseUrl = new Uri("file://c:\\")
             });
 
             // Todo: this should be ReadAsync
@@ -48,13 +45,14 @@ paths: {}";
 
 
         [Fact]
-        public async Task LoadTodoDocumentIntoWorkspace()
+        public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
             var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
             {
-                ReferenceResolution = ReferenceResolutionSetting.ResolveAllReferences,
-                CustomExternalLoader = new ResourceLoader()
+                LoadExternalRefs = true,
+                CustomExternalLoader = new ResourceLoader(),
+                BaseUrl = new Uri("fie://c:\\")
             });
 
             ReadResult result;
@@ -65,12 +63,13 @@ paths: {}";
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));
+
             var referencedSchema = result.OpenApiDocument
                                             .Paths["/todos"]
                                             .Operations[OperationType.Get]
                                             .Responses["200"]
                                             .Content["application/json"]
-                                                .Schema;
+                                                .Schema.GetEffective(result.OpenApiDocument);
             Assert.Equal("object", referencedSchema.Type);
             Assert.Equal("string", referencedSchema.Properties["subject"].Type);
             Assert.False(referencedSchema.UnresolvedReference);
@@ -78,8 +77,9 @@ paths: {}";
             var referencedParameter = result.OpenApiDocument
                                             .Paths["/todos"]
                                             .Operations[OperationType.Get]
-                                            .Parameters
+                                            .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
                                             .Where(p => p.Name == "filter").FirstOrDefault();
+          
             Assert.Equal("string", referencedParameter.Schema.Type);
 
         }

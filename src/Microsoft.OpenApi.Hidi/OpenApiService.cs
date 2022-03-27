@@ -10,8 +10,8 @@ using System.Net;
 using System.Net.Http;
 using System.Security;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
@@ -40,8 +40,8 @@ namespace Microsoft.OpenApi.Hidi
             string? version,
             OpenApiFormat? format,
             LogLevel loglevel,
-            bool inline,
-            bool resolveexternal,
+            bool inlineLocal,
+            bool inlineExternal,
             string filterbyoperationids,
             string filterbytags,
             string filterbycollection,
@@ -99,8 +99,9 @@ namespace Microsoft.OpenApi.Hidi
                         stopwatch.Restart();
                         var result = await new OpenApiStreamReader(new OpenApiReaderSettings
                         {
-                            ReferenceResolution = resolveexternal ? ReferenceResolutionSetting.ResolveAllReferences : ReferenceResolutionSetting.ResolveLocalReferences,
-                            RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                            RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
+                            LoadExternalRefs = inlineExternal,
+                            BaseUrl = openapi.StartsWith("http") ? new Uri(openapi) : new Uri("file:" + new FileInfo(openapi).DirectoryName + "\\")
                         }
                         ).ReadAsync(stream);
 
@@ -177,7 +178,8 @@ namespace Microsoft.OpenApi.Hidi
 
                     var settings = new OpenApiWriterSettings()
                     {
-                        ReferenceInline = inline ? ReferenceInlineSetting.InlineLocalReferences : ReferenceInlineSetting.DoNotInlineReferences
+                        InlineLocalReferences = inlineLocal,
+                        InlineExternalReferences = inlineExternal
                     };
 
                     IOpenApiWriter writer = openApiFormat switch
@@ -239,7 +241,7 @@ namespace Microsoft.OpenApi.Hidi
                         RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                     }
                     ).ReadAsync(stream);
-
+                    
                     logger.LogTrace("{timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
 
                     document = result.OpenApiDocument;
@@ -317,6 +319,73 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         /// <summary>
+        /// Fixes the references in the resulting OpenApiDocument.
+        /// </summary>
+        /// <param name="document"> The converted OpenApiDocument.</param>
+        /// <returns> A valid OpenApiDocument instance.</returns>
+        public static OpenApiDocument FixReferences(OpenApiDocument document)
+        {
+            // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
+            // So we write it out, and read it back in again to fix it up.
+
+            var sb = new StringBuilder();
+            document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
+            var doc = new OpenApiStringReader().Read(sb.ToString(), out _);
+
+            return doc;
+        }
+
+        private static async Task<Stream> GetStream(string input, ILogger logger)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            Stream stream;
+            if (input.StartsWith("http"))
+            {
+                try
+                {
+                    var httpClientHandler = new HttpClientHandler()
+                    {
+                        SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
+                    };
+                    using var httpClient = new HttpClient(httpClientHandler)
+                    {
+                      DefaultRequestVersion = HttpVersion.Version20
+                    };
+                    stream = await httpClient.GetStreamAsync(input);
+                }
+                catch (HttpRequestException ex)
+                {
+                    logger.LogError($"Could not download the file at {input}, reason{ex}");
+                    return null;
+                }
+            }
+            else 
+            {
+                try
+                {
+                    var fileInput = new FileInfo(input);
+                    stream = fileInput.OpenRead();
+                }
+                catch (Exception ex) when (ex is FileNotFoundException ||
+                    ex is PathTooLongException ||
+                    ex is DirectoryNotFoundException ||
+                    ex is IOException ||
+                    ex is UnauthorizedAccessException ||
+                    ex is SecurityException ||
+                    ex is NotSupportedException)
+                {
+                    logger.LogError($"Could not open the file at {input}, reason: {ex.Message}");
+                    return null;
+                }
+            }
+            stopwatch.Stop();
+            logger.LogTrace("{timestamp}ms: Read file {input}", stopwatch.ElapsedMilliseconds, input);
+            return stream;
+        }
+
+        /// <summary>
         /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
         /// </summary>
         /// <param name="stream"> A file stream.</param>
@@ -376,17 +445,28 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="document"> The converted OpenApiDocument.</param>
         /// <returns> A valid OpenApiDocument instance.</returns>
-        private static OpenApiDocument FixReferences(OpenApiDocument document)
-        {
-            // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
-            // So we write it out, and read it back in again to fix it up.
+        // private static OpenApiDocument FixReferences2(OpenApiDocument document)
+        // {
+        //     // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
+        //     // So we write it out, and read it back in again to fix it up.
 
-            var sb = new StringBuilder();
-            document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
-            var doc = new OpenApiStringReader().Read(sb.ToString(), out _);
+        //     OpenApiDocument document;
+        //     logger.LogTrace("Parsing the OpenApi file");
+        //     var result = await new OpenApiStreamReader(new OpenApiReaderSettings
+        //     {
+        //         RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
+        //         BaseUrl = new Uri(openapi)
+        //     }
+        //     ).ReadAsync(stream);
 
-            return doc;
-        }
+        //     document = result.OpenApiDocument;
+        //     var context = result.OpenApiDiagnostic;
+        //     var sb = new StringBuilder();
+        //     document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
+        //     var doc = new OpenApiStringReader().Read(sb.ToString(), out _);
+
+        //     return doc;
+        // }
 
         /// <summary>
         /// Reads stream from file system or makes HTTP request depending on the input string
