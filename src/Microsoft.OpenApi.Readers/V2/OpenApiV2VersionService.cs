@@ -130,6 +130,30 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
+        private static ReferenceType GetReferenceTypeV2FromName(string referenceType)
+        {
+            switch (referenceType)
+            {
+                case "definitions":
+                    return ReferenceType.Schema;
+
+                case "parameters":
+                    return ReferenceType.Parameter;
+
+                case "responses":
+                    return ReferenceType.Response;
+
+                case "tags":
+                    return ReferenceType.Tag;
+
+                case "securityDefinitions":
+                    return ReferenceType.SecurityScheme;
+
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
@@ -176,12 +200,34 @@ namespace Microsoft.OpenApi.Readers.V2
                         }
                     }
 
+                    // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
+                    string id = segments[1];
+                    // $ref: externalSource.yaml#/Pet
+                    if (id.StartsWith("/definitions/"))
+                    {
+                        var localSegments = id.Split('/');
+                        var referencedType = GetReferenceTypeV2FromName(localSegments[1]);
+                        if (type == null)
+                        {
+                            type = referencedType;
+                        }
+                        else
+                        {
+                            if (type != referencedType)
+                            {
+                                throw new OpenApiException("Referenced type mismatch");
+                            }
+                        }
+                        id = localSegments[2];
+                    }
+
+
                     // $ref: externalSource.yaml#/Pet
                     return new OpenApiReference
                     {
                         ExternalResource = segments[0],
                         Type = type,
-                        Id = segments[1].Substring(1)
+                        Id = id
                     };
                 }
             }
