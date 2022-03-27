@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -64,6 +64,8 @@ namespace Microsoft.OpenApi.Readers.V3
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
+        /// <param name="reference">The URL of the reference</param>
+        /// <param name="type">The type of object refefenced based on the context of the reference</param>
         public OpenApiReference ConvertToOpenApiReference(
             string reference,
             ReferenceType? type)
@@ -114,8 +116,22 @@ namespace Microsoft.OpenApi.Readers.V3
                     // $ref: externalSource.yaml#/Pet
                     if (id.StartsWith("/components/"))
                     {
-                        id = segments[1].Split('/')[3];
-                    } 
+                        var localSegments = segments[1].Split('/');
+                        var referencedType = localSegments[2].GetEnumFromDisplayName<ReferenceType>();
+                        if (type == null)
+                        {
+                            type = referencedType;
+                        } 
+                        else
+                        {
+                            if (type != referencedType)
+                            {
+                                throw new OpenApiException("Referenced type mismatch");
+                            }
+                        }
+                        id = localSegments[3];
+                    }
+
                     return new OpenApiReference
                     {
                         ExternalResource = segments[0],

@@ -53,6 +53,11 @@ namespace Microsoft.OpenApi.Readers
                 // Parse the OpenAPI Document
                 document = context.Parse(input);
 
+                if (_settings.LoadExternalRefs)
+                {
+                    throw new InvalidOperationException("Cannot load external refs using the synchronous Read, use ReadAsync instead.");
+                }
+
                 ResolveReferences(diagnostic, document);
             }
             catch (OpenApiException ex)
@@ -88,7 +93,12 @@ namespace Microsoft.OpenApi.Readers
                 // Parse the OpenAPI Document
                 document = context.Parse(input);
 
-                await ResolveReferencesAsync(diagnostic, document);
+                if (_settings.LoadExternalRefs)
+                {
+                    await LoadExternalRefs(document);
+                }
+
+                ResolveReferences(diagnostic, document);
             }
             catch (OpenApiException ex)
             {
@@ -112,28 +122,18 @@ namespace Microsoft.OpenApi.Readers
             };
         }
 
-
-        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
+        private async Task LoadExternalRefs(OpenApiDocument document)
         {
-            // Resolve References if requested
-            switch (_settings.ReferenceResolution)
-            {
-                case ReferenceResolutionSetting.ResolveAllReferences:
-                    throw new ArgumentException("Cannot resolve all references via a synchronous call. Use ReadAsync.");
-                case ReferenceResolutionSetting.ResolveLocalReferences:
-                    var errors = document.ResolveReferences(false);
+            // Create workspace for all documents to live in.
+            var openApiWorkSpace = new OpenApiWorkspace();
 
-                    foreach (var item in errors)
-                    {
-                        diagnostic.Errors.Add(item);
-                    }
-                    break;
-                case ReferenceResolutionSetting.DoNotResolveReferences:
-                    break;
-            }
+            // Load this root document into the workspace
+            var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
+            var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
+            await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document);
         }
 
-        private async Task ResolveReferencesAsync(OpenApiDiagnostic diagnostic, OpenApiDocument document)
+        private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
         {
             List<OpenApiError> errors = new List<OpenApiError>();
 
@@ -141,23 +141,9 @@ namespace Microsoft.OpenApi.Readers
             switch (_settings.ReferenceResolution)
             {
                 case ReferenceResolutionSetting.ResolveAllReferences:
-
-                    // Create workspace for all documents to live in.
-                    var openApiWorkSpace = new OpenApiWorkspace();
-
-                    // Load this root document into the workspace
-                    var streamLoader = new DefaultStreamLoader();
-                    var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
-                    await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document);
-
-                    // Resolve all references in all the documents loaded into the OpenApiWorkspace
-                    foreach (var doc in openApiWorkSpace.Documents)
-                    {
-                        errors.AddRange(doc.ResolveReferences(true));
-                    }
-                    break;
+                    throw new ArgumentException("Resolving external references is not supported");
                 case ReferenceResolutionSetting.ResolveLocalReferences:
-                    errors.AddRange(document.ResolveReferences(false));
+                    errors.AddRange(document.ResolveReferences());
                     break;
                 case ReferenceResolutionSetting.DoNotResolveReferences:
                     break;
