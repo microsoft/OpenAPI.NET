@@ -1,0 +1,478 @@
+openapi: 3.0.1
+info:
+  title: OData Service for namespace microsoft.graph - Subset
+  description: This OData service is located at https://graph.microsoft.com/v1.0
+  version: 1.0.1
+servers:
+  - url: https://graph.microsoft.com/v1.0
+paths:
+  /admin/serviceAnnouncement:
+    get:
+      tags:
+        - admin.serviceAnnouncement
+      summary: Get serviceAnnouncement from admin
+      description: A container for service communications resources. Read-only.
+      operationId: admin.GetServiceAnnouncement
+      parameters:
+        - name: $select
+          in: query
+          description: Select properties to be returned
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              enum:
+                - id
+                - healthOverviews
+                - issues
+                - messages
+              type: string
+        - name: $expand
+          in: query
+          description: Expand related entities
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              enum:
+                - '*'
+                - healthOverviews
+                - issues
+                - messages
+              type: string
+      responses:
+        '200':
+          description: Retrieved navigation property
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/microsoft.graph.serviceAnnouncement'
+          links:
+            healthOverviews:
+              operationId: admin.ServiceAnnouncement.ListHealthOverviews
+            issues:
+              operationId: admin.ServiceAnnouncement.ListIssues
+            messages:
+              operationId: admin.ServiceAnnouncement.ListMessages
+        4XX:
+          $ref: '#/components/responses/error'
+        5XX:
+          $ref: '#/components/responses/error'
+      x-ms-docs-operation-type: operation
+    patch:
+      tags:
+        - admin.serviceAnnouncement
+      summary: Update the navigation property serviceAnnouncement in admin
+      operationId: admin.UpdateServiceAnnouncement
+      requestBody:
+        description: New navigation property values
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/microsoft.graph.serviceAnnouncement'
+        required: true
+      responses:
+        '204':
+          description: Success
+        4XX:
+          $ref: '#/components/responses/error'
+        5XX:
+          $ref: '#/components/responses/error'
+      x-ms-docs-operation-type: operation
+components:
+  schemas:
+    microsoft.graph.serviceAnnouncement:
+      allOf:
+        - $ref: '#/components/schemas/microsoft.graph.entity'
+        - title: serviceAnnouncement
+          type: object
+          properties:
+            healthOverviews:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.serviceHealth'
+              description: 'A collection of service health information for tenant. This property is a contained navigation property, it is nullable and readonly.'
+            issues:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.serviceHealthIssue'
+              description: 'A collection of service issues for tenant. This property is a contained navigation property, it is nullable and readonly.'
+            messages:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.serviceUpdateMessage'
+              description: 'A collection of service messages for tenant. This property is a contained navigation property, it is nullable and readonly.'
+    microsoft.graph.entity:
+      title: entity
+      type: object
+      properties:
+        id:
+          type: string
+          description: Read-only.
+    microsoft.graph.serviceHealth:
+      allOf:
+        - $ref: '#/components/schemas/microsoft.graph.entity'
+        - title: serviceHealth
+          type: object
+          properties:
+            service:
+              type: string
+              description: The service name. Use the list healthOverviews operation to get exact string names for services subscribed by the tenant.
+            status:
+              anyOf:
+                - $ref: '#/components/schemas/microsoft.graph.serviceHealthStatus'
+              description: 'Show the overral service health status. Possible values are: serviceOperational, investigating, restoringService, verifyingService, serviceRestored, postIncidentReviewPublished, serviceDegradation, serviceInterruption, extendedRecovery, falsePositive, investigationSuspended, resolved, mitigatedExternal, mitigated, resolvedExternal, confirmed, reported, unknownFutureValue. For more details, see serviceHealthStatus values.'
+            issues:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.serviceHealthIssue'
+              description: 'A collection of issues that happened on the service, with detailed information for each issue.'
+    microsoft.graph.serviceHealthIssue:
+      allOf:
+        - $ref: '#/components/schemas/microsoft.graph.serviceAnnouncementBase'
+        - title: serviceHealthIssue
+          type: object
+          properties:
+            classification:
+              anyOf:
+                - $ref: '#/components/schemas/microsoft.graph.serviceHealthClassificationType'
+              description: 'The type of service health issue. Possible values are: advisory, incident, unknownFutureValue.'
+            feature:
+              type: string
+              description: The feature name of the service issue.
+              nullable: true
+            featureGroup:
+              type: string
+              description: The feature group name of the service issue.
+              nullable: true
+            impactDescription:
+              type: string
+              description: The description of the service issue impact.
+            isResolved:
+              type: boolean
+              description: Indicates whether the issue is resolved.
+            origin:
+              anyOf:
+                - $ref: '#/components/schemas/microsoft.graph.serviceHealthOrigin'
+              description: 'Indicates the origin of the service issue. Possible values are: microsoft, thirdParty, customer, unknownFutureValue.'
+            posts:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.serviceHealthIssuePost'
+              description: Collection of historical posts for the service issue.
+            service:
+              type: string
+              description: Indicates the service affected by the issue.
+            status:
+              anyOf:
+                - $ref: '#/components/schemas/microsoft.graph.serviceHealthStatus'
+              description: 'The status of the service issue. Possible values are: serviceOperational, investigating, restoringService, verifyingService, serviceRestored, postIncidentReviewPublished, serviceDegradation, serviceInterruption, extendedRecovery, falsePositive, investigationSuspended, resolved, mitigatedExternal, mitigated, resolvedExternal, confirmed, reported, unknownFutureValue. See more in the table below.'
+    microsoft.graph.serviceUpdateMessage:
+      allOf:
+        - $ref: '#/components/schemas/microsoft.graph.serviceAnnouncementBase'
+        - title: serviceUpdateMessage
+          type: object
+          properties:
+            actionRequiredByDateTime:
+              pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+              type: string
+              description: The expected deadline of the action for the message.
+              format: date-time
+              nullable: true
+            attachmentsArchive:
+              type: string
+              description: The zip file that contains all attachments for a message.
+              format: base64url
+              nullable: true
+            body:
+              $ref: '#/components/schemas/microsoft.graph.itemBody'
+            category:
+              anyOf:
+                - $ref: '#/components/schemas/microsoft.graph.serviceUpdateCategory'
+              description: 'The service message category. Possible values are: preventOrFixIssue, planForChange, stayInformed, unknownFutureValue.'
+            hasAttachments:
+              type: boolean
+              description: Indicates whether the message has any attachment.
+            isMajorChange:
+              type: boolean
+              description: Indicates whether the message describes a major update for the service.
+              nullable: true
+            services:
+              type: array
+              items:
+                type: string
+                nullable: true
+              description: The affected services by the service message.
+            severity:
+              anyOf:
+                - $ref: '#/components/schemas/microsoft.graph.serviceUpdateSeverity'
+              description: 'The severity of the service message. Possible values are: normal, high, critical, unknownFutureValue.'
+            tags:
+              type: array
+              items:
+                type: string
+                nullable: true
+              description: 'A collection of tags for the service message. Tags are provided by the service team/support team who post the message to tell whether this message contains privacy data, or whether this message is for a service new feature update, and so on.'
+            viewPoint:
+              anyOf:
+                - $ref: '#/components/schemas/microsoft.graph.serviceUpdateMessageViewpoint'
+              description: 'Represents user viewpoints data of the service message. This data includes message status such as whether the user has archived, read, or marked the message as favorite. This property is null when accessed with application permissions.'
+              nullable: true
+            attachments:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.serviceAnnouncementAttachment'
+              description: A collection of serviceAnnouncementAttachments.
+    microsoft.graph.ODataErrors.ODataError:
+      required:
+        - error
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/microsoft.graph.ODataErrors.MainError'
+    microsoft.graph.serviceHealthStatus:
+      title: serviceHealthStatus
+      enum:
+        - serviceOperational
+        - investigating
+        - restoringService
+        - verifyingService
+        - serviceRestored
+        - postIncidentReviewPublished
+        - serviceDegradation
+        - serviceInterruption
+        - extendedRecovery
+        - falsePositive
+        - investigationSuspended
+        - resolved
+        - mitigatedExternal
+        - mitigated
+        - resolvedExternal
+        - confirmed
+        - reported
+        - unknownFutureValue
+      type: string
+    microsoft.graph.serviceAnnouncementBase:
+      allOf:
+        - $ref: '#/components/schemas/microsoft.graph.entity'
+        - title: serviceAnnouncementBase
+          type: object
+          properties:
+            details:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/microsoft.graph.keyValuePair'
+                nullable: true
+              description: Additional details about service event. This property doesn't support filters.
+            endDateTime:
+              pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+              type: string
+              description: The end time of the service event.
+              format: date-time
+              nullable: true
+            lastModifiedDateTime:
+              pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+              type: string
+              description: The last modified time of the service event.
+              format: date-time
+            startDateTime:
+              pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+              type: string
+              description: The start time of the service event.
+              format: date-time
+            title:
+              type: string
+              description: The title of the service event.
+    microsoft.graph.serviceHealthClassificationType:
+      title: serviceHealthClassificationType
+      enum:
+        - advisory
+        - incident
+        - unknownFutureValue
+      type: string
+    microsoft.graph.serviceHealthOrigin:
+      title: serviceHealthOrigin
+      enum:
+        - microsoft
+        - thirdParty
+        - customer
+        - unknownFutureValue
+      type: string
+    microsoft.graph.serviceHealthIssuePost:
+      title: serviceHealthIssuePost
+      type: object
+      properties:
+        createdDateTime:
+          pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+          type: string
+          description: The published time of the post.
+          format: date-time
+        description:
+          anyOf:
+            - $ref: '#/components/schemas/microsoft.graph.itemBody'
+          description: The content of the service issue post.
+          nullable: true
+        postType:
+          anyOf:
+            - $ref: '#/components/schemas/microsoft.graph.postType'
+          description: 'The post type of the service issue historical post. Possible values are: regular, quick, strategic, unknownFutureValue.'
+          nullable: true
+    microsoft.graph.itemBody:
+      title: itemBody
+      type: object
+      properties:
+        content:
+          type: string
+          description: The content of the item.
+          nullable: true
+        contentType:
+          anyOf:
+            - $ref: '#/components/schemas/microsoft.graph.bodyType'
+          description: The type of the content. Possible values are text and html.
+          nullable: true
+    microsoft.graph.serviceUpdateCategory:
+      title: serviceUpdateCategory
+      enum:
+        - preventOrFixIssue
+        - planForChange
+        - stayInformed
+        - unknownFutureValue
+      type: string
+    microsoft.graph.serviceUpdateSeverity:
+      title: serviceUpdateSeverity
+      enum:
+        - normal
+        - high
+        - critical
+        - unknownFutureValue
+      type: string
+    microsoft.graph.serviceUpdateMessageViewpoint:
+      title: serviceUpdateMessageViewpoint
+      type: object
+      properties:
+        isArchived:
+          type: boolean
+          description: Indicates whether the user archived the message.
+          nullable: true
+        isFavorited:
+          type: boolean
+          description: Indicates whether the user marked the message as favorite.
+          nullable: true
+        isRead:
+          type: boolean
+          description: Indicates whether the user read the message.
+          nullable: true
+    microsoft.graph.serviceAnnouncementAttachment:
+      allOf:
+        - $ref: '#/components/schemas/microsoft.graph.entity'
+        - title: serviceAnnouncementAttachment
+          type: object
+          properties:
+            content:
+              type: string
+              description: The attachment content.
+              format: base64url
+              nullable: true
+            contentType:
+              type: string
+              nullable: true
+            lastModifiedDateTime:
+              pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+              type: string
+              format: date-time
+              nullable: true
+            name:
+              type: string
+              nullable: true
+            size:
+              maximum: 2147483647
+              minimum: -2147483648
+              type: integer
+              format: int32
+    microsoft.graph.ODataErrors.MainError:
+      required:
+        - code
+        - message
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/microsoft.graph.ODataErrors.ErrorDetails'
+        innererror:
+          $ref: '#/components/schemas/microsoft.graph.ODataErrors.InnerError'
+    microsoft.graph.keyValuePair:
+      title: keyValuePair
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name for this key-value pair
+        value:
+          type: string
+          description: Value for this key-value pair
+          nullable: true
+    microsoft.graph.postType:
+      title: postType
+      enum:
+        - regular
+        - quick
+        - strategic
+        - unknownFutureValue
+      type: string
+    microsoft.graph.bodyType:
+      title: bodyType
+      enum:
+        - text
+        - html
+      type: string
+    microsoft.graph.ODataErrors.ErrorDetails:
+      required:
+        - code
+        - message
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        target:
+          type: string
+          nullable: true
+    microsoft.graph.ODataErrors.InnerError:
+      title: InnerError
+      type: object
+      properties:
+        request-id:
+          type: string
+          description: Request Id as tracked internally by the service
+          nullable: true
+        client-request-id:
+          type: string
+          description: Client request Id as sent by the client application.
+          nullable: true
+        Date:
+          pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+          type: string
+          description: Date when the error occured.
+          format: date-time
+          nullable: true
+  responses:
+    error:
+      description: error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/microsoft.graph.ODataErrors.ODataError'
