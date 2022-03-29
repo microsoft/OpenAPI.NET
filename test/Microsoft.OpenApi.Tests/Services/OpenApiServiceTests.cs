@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             // Act
             var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
-            var expectedPathCount = 6;
+            var expectedPathCount = 5;
 
             // Assert
             Assert.NotNull(openApiDoc);

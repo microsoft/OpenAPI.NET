@@ -24,6 +24,10 @@ using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
 using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 using System.Threading;
+using System.Xml.Xsl;
+using System.Xml;
+using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -35,6 +39,7 @@ namespace Microsoft.OpenApi.Hidi
         public static async Task<int> TransformOpenApiDocument(
             string openapi,
             string csdl,
+            string csdlFilter,
             FileInfo output,
             bool cleanoutput,
             string? version,
@@ -85,6 +90,13 @@ namespace Microsoft.OpenApi.Hidi
                         openApiVersion = version != null ? TryParseOpenApiSpecVersion(version) : OpenApiSpecVersion.OpenApi3_0;
 
                         stream = await GetStream(csdl, logger, cancellationToken);
+
+                        if (!string.IsNullOrEmpty(csdlFilter))
+                        {
+                            XslCompiledTransform transform = GetFilterTransform();
+                            stream = ApplyFilter(csdl, csdlFilter, transform);
+                            stream.Position = 0;
+                        }
                         document = await ConvertCsdlToOpenApi(stream);
                         stopwatch.Stop();
                         logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
@@ -212,6 +224,31 @@ namespace Microsoft.OpenApi.Hidi
             }            
         }
 
+        private static XslCompiledTransform GetFilterTransform()
+        {
+            XslCompiledTransform transform = new();
+            Assembly assembly = typeof(OpenApiService).GetTypeInfo().Assembly;
+            Stream xslt = assembly.GetManifestResourceStream("Microsoft.OpenApi.Hidi.CsdlFilter.xslt");
+            transform.Load(new XmlTextReader(new StreamReader(xslt)));
+            return transform;
+        }
+
+        private static Stream ApplyFilter(string csdl, string entitySetOrSingleton, XslCompiledTransform transform)
+        {
+            Stream stream;
+            StreamReader inputReader = new(csdl);
+            XmlReader inputXmlReader = XmlReader.Create(inputReader);
+            MemoryStream filteredStream = new();
+            StreamWriter writer = new(filteredStream);
+            XsltArgumentList args = new();
+            args.AddParam("entitySetOrSingleton", "", entitySetOrSingleton);
+            transform.Transform(inputXmlReader, args, writer);
+            stream = filteredStream;
+            return stream;
+        }
+
+
+
         /// <summary>
         /// Implementation of the validate command
         /// </summary>
@@ -308,8 +345,8 @@ namespace Microsoft.OpenApi.Hidi
                 EnableDiscriminatorValue = false,
                 EnableDerivedTypesReferencesForRequestBody = false,
                 EnableDerivedTypesReferencesForResponses = false,
-                ShowRootPath = true,
-                ShowLinks = true
+                ShowRootPath = false,
+                ShowLinks = false
             };
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
