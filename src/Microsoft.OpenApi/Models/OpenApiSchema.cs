@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -260,7 +261,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV3(writer);
                     return;
-                } 
+                }
                 else
                 {
                     if (Reference.IsExternal)  // Temporary until v2
@@ -643,6 +644,20 @@ namespace Microsoft.OpenApi.Models
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
+
+            // If there isn't already an AllOf, and the schema contains a oneOf or anyOf write an allOf with the first
+            // schema in the list as an attempt to guess at a graceful downgrade situation.
+            if (AllOf == null || AllOf.Count == 0)
+            {
+                // anyOf (Not Supported in V2)  - Write the first schema only as an allOf.
+                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf.Take(1), (w, s) => s.SerializeAsV2(w));
+
+                if (AnyOf == null || AnyOf.Count == 0)
+                {
+                    // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
+                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf.Take(1), (w, s) => s.SerializeAsV2(w));
+                }
+            }
 
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, key, s) =>
