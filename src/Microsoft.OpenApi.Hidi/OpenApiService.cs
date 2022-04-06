@@ -335,7 +335,6 @@ namespace Microsoft.OpenApi.Hidi
             {
                 AddSingleQuotesForStringParameters = true,
                 AddEnumDescriptionExtension = true,
-                DeclarePathParametersOnPathItem = true,
                 EnableKeyAsSegment = true,
                 EnableOperationId = true,
                 ErrorResponsesAsDefault  = false,
