@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -12,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.Services;
 using Microsoft.OpenApi.Services;
+using Microsoft.OpenApi.Validations;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
@@ -68,11 +70,16 @@ namespace Microsoft.OpenApi.Readers
             // Validate the document
             if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
-                var errors = document.Validate(_settings.RuleSet);
-                foreach (var item in errors)
+                var openApiErrors = document.Validate(_settings.RuleSet);
+                foreach (var item in openApiErrors.Where(e => e is OpenApiValidatorError))
                 {
                     diagnostic.Errors.Add(item);
                 }
+                foreach (var item in openApiErrors.Where(e => e is OpenApiValidatorWarning))
+                {
+                    diagnostic.Warnings.Add(item);
+                }
+
             }
 
             return document;

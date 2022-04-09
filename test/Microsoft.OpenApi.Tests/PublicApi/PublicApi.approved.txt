@@ -1085,6 +1085,7 @@ namespace Microsoft.OpenApi.Validations
     {
         string PathString { get; }
         void AddError(Microsoft.OpenApi.Validations.OpenApiValidatorError error);
+        void AddWarning(Microsoft.OpenApi.Validations.OpenApiValidatorWarning warning);
         void Enter(string segment);
         void Exit();
     }
@@ -1092,7 +1093,9 @@ namespace Microsoft.OpenApi.Validations
     {
         public OpenApiValidator(Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet) { }
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.OpenApiValidatorError> Errors { get; }
+        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.OpenApiValidatorWarning> Warnings { get; }
         public void AddError(Microsoft.OpenApi.Validations.OpenApiValidatorError error) { }
+        public void AddWarning(Microsoft.OpenApi.Validations.OpenApiValidatorWarning warning) { }
         public override void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible item) { }
         public override void Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension item) { }
         public override void Visit(Microsoft.OpenApi.Models.OpenApiCallback item) { }
@@ -1119,9 +1122,15 @@ namespace Microsoft.OpenApi.Validations
         public OpenApiValidatorError(string ruleName, string pointer, string message) { }
         public string RuleName { get; set; }
     }
+    public class OpenApiValidatorWarning : Microsoft.OpenApi.Models.OpenApiError
+    {
+        public OpenApiValidatorWarning(string ruleName, string pointer, string message) { }
+        public string RuleName { get; set; }
+    }
     public static class ValidationContextExtensions
     {
         public static void CreateError(this Microsoft.OpenApi.Validations.IValidationContext context, string ruleName, string message) { }
+        public static void CreateWarning(this Microsoft.OpenApi.Validations.IValidationContext context, string ruleName, string message) { }
     }
     public abstract class ValidationRule
     {
@@ -1188,6 +1197,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     {
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiLicense> LicenseRequiredFields { get; }
     }
+    [Microsoft.OpenApi.Validations.Rules.OpenApiRule]
     public static class OpenApiMediaTypeRules
     {
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiMediaType> MediaTypeMismatchedDataType { get; }

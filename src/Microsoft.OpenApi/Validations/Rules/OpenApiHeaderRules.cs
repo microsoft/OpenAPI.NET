@@ -10,6 +10,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// <summary>
     /// The validation rules for <see cref="OpenApiHeader"/>.
     /// </summary>
+    //Removed from Default Rules as this is not a MUST in OpenAPI
     [OpenApiRule]
     public static class OpenApiHeaderRules
     {
