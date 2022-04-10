@@ -46,6 +46,11 @@ namespace Microsoft.OpenApi.Models
         public bool IsLocal => ExternalResource == null;
 
         /// <summary>
+        /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
+        /// </summary>
+        public OpenApiDocument HostDocument { get; set; } = null;
+
+        /// <summary>
         /// Gets the full reference string for v3.0.
         /// </summary>
         public string ReferenceV3
@@ -54,7 +59,7 @@ namespace Microsoft.OpenApi.Models
             {
                 if (IsExternal)
                 {
-                    return GetExternalReference();
+                    return GetExternalReferenceV3();
                 }
 
                 if (!Type.HasValue)
@@ -85,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             {
                 if (IsExternal)
                 {
-                    return GetExternalReference();
+                    return GetExternalReferenceV2();
                 }
 
                 if (!Type.HasValue)
@@ -171,11 +176,21 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private string GetExternalReference()
+        private string GetExternalReferenceV3()
         {
             if (Id != null)
             {
-                return ExternalResource + "#/" + Id;
+                    return ExternalResource + "#/components/" + Type.GetDisplayName() + "/"+ Id;
+            }
+
+            return ExternalResource;
+        }
+
+        private string GetExternalReferenceV2()
+        {
+            if (Id != null)
+            {
+                return ExternalResource + "#/" + GetReferenceTypeNameAsV2((ReferenceType)Type) + "/" + Id;
             }
 
             return ExternalResource;

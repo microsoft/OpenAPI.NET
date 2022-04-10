@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -11,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Schema Object.
     /// </summary>
-    public class OpenApiSchema : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiSchema : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiSchema>, IOpenApiExtensible
     {
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.
@@ -252,13 +253,21 @@ namespace Microsoft.OpenApi.Models
             }
 
             var settings = writer.GetSettings();
+            var target = this;
 
             if (Reference != null)
             {
-                if (settings.ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+                if (!settings.ShouldInlineReference(Reference))
                 {
                     Reference.SerializeAsV3(writer);
                     return;
+                }
+                else
+                {
+                    if (Reference.IsExternal)  // Temporary until v2
+                    {
+                        target = this.GetEffective(Reference.HostDocument);
+                    }
                 }
 
                 // If Loop is detected then just Serialize as a reference.
@@ -270,7 +279,7 @@ namespace Microsoft.OpenApi.Models
                 }
             }
 
-            SerializeAsV3WithoutReference(writer);
+            target.SerializeAsV3WithoutReference(writer);
 
             if (Reference != null)
             {
@@ -283,6 +292,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
+
             writer.WriteStartObject();
 
             // title
@@ -442,13 +452,22 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
+            var settings = writer.GetSettings();
+            var target = this;
+
             if (Reference != null)
             {
-                var settings = writer.GetSettings();
-                if (settings.ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+                if (!settings.ShouldInlineReference(Reference))
                 {
                     Reference.SerializeAsV2(writer);
                     return;
+                }
+                else
+                {
+                    if (Reference.IsExternal)  // Temporary until v2
+                    {
+                        target = this.GetEffective(Reference.HostDocument);
+                    }
                 }
 
                 // If Loop is detected then just Serialize as a reference.
@@ -466,7 +485,7 @@ namespace Microsoft.OpenApi.Models
                 parentRequiredProperties = new HashSet<string>();
             }
 
-            SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
+            target.SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
         }
 
         /// <summary>
@@ -626,6 +645,20 @@ namespace Microsoft.OpenApi.Models
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
 
+            // If there isn't already an AllOf, and the schema contains a oneOf or anyOf write an allOf with the first
+            // schema in the list as an attempt to guess at a graceful downgrade situation.
+            if (AllOf == null || AllOf.Count == 0)
+            {
+                // anyOf (Not Supported in V2)  - Write the first schema only as an allOf.
+                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf.Take(1), (w, s) => s.SerializeAsV2(w));
+
+                if (AnyOf == null || AnyOf.Count == 0)
+                {
+                    // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
+                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf.Take(1), (w, s) => s.SerializeAsV2(w));
+                }
+            }
+
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, key, s) =>
                 s.SerializeAsV2(w, Required, key));
@@ -665,6 +698,22 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        /// <summary>
+        /// Returns an effective OpenApiSchema object based on the presence of a $ref 
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiSchema</returns>
+        public OpenApiSchema GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiSchema>(this.Reference);
+            } else
+            {
+                return this;
+            }
         }
     }
 }

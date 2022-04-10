@@ -70,6 +70,23 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
+        public void ShouldParseNestedPostmanCollection()
+        {
+            // Arrange
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver3.json");
+            var fileInput = new FileInfo(filePath);
+            var stream = fileInput.OpenRead();
+
+            // Act
+            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream, _logger);
+            var pathCount = requestUrls.Count;
+
+            // Assert
+            Assert.NotNull(requestUrls);
+            Assert.Equal(30, pathCount);
+        }
+
+        [Fact]
         public void ThrowsExceptionWhenUrlsInCollectionAreMissingFromSourceDocument()
         {
             // Arrange
@@ -84,6 +101,28 @@ namespace Microsoft.OpenApi.Tests.Services
             var message = Assert.Throws<ArgumentException>(() =>
                 OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock)).Message;
             Assert.Equal("The urls in the Postman collection supplied could not be found.", message);
+        }
+
+        [Fact]
+        public void ContinueProcessingWhenUrlsInCollectionAreMissingFromSourceDocument()
+        {
+            // Arrange
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver4.json");
+            var fileInput = new FileInfo(filePath);
+            var stream = fileInput.OpenRead();
+
+            // Act
+            var requestUrls = OpenApiService.ParseJsonCollectionFile(stream, _logger);
+            var pathCount = requestUrls.Count;
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: _openApiDocumentMock);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
+            var subsetPathCount = subsetOpenApiDocument.Paths.Count;
+
+            // Assert
+            Assert.NotNull(subsetOpenApiDocument);
+            Assert.NotEmpty(subsetOpenApiDocument.Paths);
+            Assert.Equal(2, subsetPathCount);
+            Assert.NotEqual(pathCount, subsetPathCount);
         }
 
         [Fact]

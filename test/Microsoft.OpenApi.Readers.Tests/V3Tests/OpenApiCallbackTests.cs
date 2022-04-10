@@ -127,6 +127,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         {
                             Type = ReferenceType.Callback,
                             Id = "simpleHook",
+                            HostDocument = openApiDoc
                         }
                     });
             }
@@ -185,6 +186,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         {
                             Type = ReferenceType.Callback,
                             Id = "simpleHook",
+                            HostDocument = openApiDoc
                         }
                     });
 

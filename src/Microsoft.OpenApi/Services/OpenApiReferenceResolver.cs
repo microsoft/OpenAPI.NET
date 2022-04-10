@@ -42,6 +42,13 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+        public override void Visit(IOpenApiReferenceable referenceable)
+        {
+            if (referenceable.Reference != null)
+            {
+                referenceable.Reference.HostDocument = _currentDocument;
+            }
+        }
         public override void Visit(OpenApiComponents components)
         {
             ResolveMap(components.Parameters);
@@ -237,7 +244,7 @@ namespace Microsoft.OpenApi.Services
             {
                 try
                 {
-                    return _currentDocument.ResolveReference(reference) as T;
+                    return _currentDocument.ResolveReference(reference, false) as T;
                 }
                 catch (OpenApiException ex)
                 {
@@ -245,24 +252,26 @@ namespace Microsoft.OpenApi.Services
                     return null;
                 }
             }
-            else if (_resolveRemoteReferences == true)
-            {
-                if (_currentDocument.Workspace == null)
-                {
-                    _errors.Add(new OpenApiReferenceError(reference,"Cannot resolve external references for documents not in workspaces."));
-                    // Leave as unresolved reference
-                    return new T()
-                    {
-                        UnresolvedReference = true,
-                        Reference = reference
-                    };
-                }
-                var target = _currentDocument.Workspace.ResolveReference(reference);
+            // The concept of merging references with their target at load time is going away in the next major version
+            // External references will not support this approach.
+            //else if (_resolveRemoteReferences == true)
+            //{
+            //    if (_currentDocument.Workspace == null)
+            //    {
+            //        _errors.Add(new OpenApiReferenceError(reference,"Cannot resolve external references for documents not in workspaces."));
+            //        // Leave as unresolved reference
+            //        return new T()
+            //        {
+            //            UnresolvedReference = true,
+            //            Reference = reference
+            //        };
+            //    }
+            //    var target = _currentDocument.Workspace.ResolveReference(reference);
 
-                // TODO:  If it is a document fragment, then we should resolve it within the current context
+            //    // TODO:  If it is a document fragment, then we should resolve it within the current context
 
-                return target as T;
-            }
+            //    return target as T;
+            //}
             else
             {
                 // Leave as unresolved reference

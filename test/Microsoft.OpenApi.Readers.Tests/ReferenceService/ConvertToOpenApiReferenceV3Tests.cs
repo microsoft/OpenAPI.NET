@@ -108,5 +108,21 @@ namespace Microsoft.OpenApi.Readers.Tests
             reference.ExternalResource.Should().BeNull();
             reference.Id.Should().Be(id);
         }
+
+        [Fact]
+        public void ParseLocalFileReference()
+        {
+            // Arrange
+            var versionService = new OpenApiV3VersionService(Diagnostic);
+            var referenceType = ReferenceType.Schema;
+            var input = $"../schemas/collection.json";
+
+            // Act
+            var reference = versionService.ConvertToOpenApiReference(input, referenceType);
+
+            // Assert
+            reference.Type.Should().Be(referenceType);
+            reference.ExternalResource.Should().Be(input);
+        }
     }
 }
