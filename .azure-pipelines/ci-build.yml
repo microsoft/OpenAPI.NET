@@ -275,8 +275,8 @@ stages:
                 #Set Variable $artifactName and $artifactVersion
                 Write-Host "##vso[task.setvariable variable=artifactVersion; isSecret=false; isOutput=true]$artifactVersion"
                 Write-Host "##vso[task.setvariable variable=artifactName; isSecret=false; isOutput=true]$artifactName.FullName"
-                echo $artifactName
-                echo $artifactVersion
+                echo "$artifactName"
+                echo "$artifactVersion"
               displayName: 'Fetch Artifact Name'
 
             - task: NuGetCommand@2
