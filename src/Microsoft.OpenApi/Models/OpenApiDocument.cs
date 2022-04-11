@@ -351,6 +351,14 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
+        public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
+        {
+            return ResolveReference(reference, false);
+        }
+
+        /// <summary>
+        /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
+        /// </summary>
         internal IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
         {
             if (reference == null)
