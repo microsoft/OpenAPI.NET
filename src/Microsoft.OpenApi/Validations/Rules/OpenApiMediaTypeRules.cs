@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// Future versions of the example parsers should not try an infer types.
     /// Example validation should be done as a separate post reading step so all schemas can be fully available.
     /// </remarks>
-    //[OpenApiRule]
+    [OpenApiRule]
     public static class OpenApiMediaTypeRules
     {
         /// <summary>
