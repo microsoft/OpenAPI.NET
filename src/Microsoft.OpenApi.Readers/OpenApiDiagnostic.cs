@@ -18,6 +18,11 @@ namespace Microsoft.OpenApi.Readers
         public IList<OpenApiError> Errors { get; set; } = new List<OpenApiError>();
 
         /// <summary>
+        /// List of all warnings
+        /// </summary>
+        public IList<OpenApiError> Warnings { get; set; } = new List<OpenApiError>();
+
+        /// <summary>
         /// Open API specification version of the document parsed.
         /// </summary>
         public OpenApiSpecVersion SpecificationVersion { get; set; }

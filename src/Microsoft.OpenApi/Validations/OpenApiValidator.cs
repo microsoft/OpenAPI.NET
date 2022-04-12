@@ -17,6 +17,7 @@ namespace Microsoft.OpenApi.Validations
     {
         private readonly ValidationRuleSet _ruleSet;
         private readonly IList<OpenApiValidatorError> _errors = new List<OpenApiValidatorError>();
+        private readonly IList<OpenApiValidatorWarning> _warnings = new List<OpenApiValidatorWarning>();
 
         /// <summary>
         /// Create a vistor that will validate an OpenAPIDocument
@@ -39,6 +40,17 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
+        /// Gets the validation warnings.
+        /// </summary>
+        public IEnumerable<OpenApiValidatorWarning> Warnings
+        {
+            get
+            {
+                return _warnings;
+            }
+        }
+
+        /// <summary>
         /// Register an error with the validation context.
         /// </summary>
         /// <param name="error">Error to register.</param>
@@ -52,6 +64,19 @@ namespace Microsoft.OpenApi.Validations
             _errors.Add(error);
         }
 
+        /// <summary>
+        /// Register an error with the validation context.
+        /// </summary>
+        /// <param name="warning">Error to register.</param>
+        public void AddWarning(OpenApiValidatorWarning warning)
+        {
+            if (warning == null)
+            {
+                throw Error.ArgumentNull(nameof(warning));
+            }
+
+            _warnings.Add(warning);
+        }
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiDocument"/>
