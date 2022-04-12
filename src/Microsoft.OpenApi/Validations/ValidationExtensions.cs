@@ -23,5 +23,15 @@ namespace Microsoft.OpenApi.Validations
             OpenApiValidatorError error = new OpenApiValidatorError(ruleName, context.PathString, message);
             context.AddError(error);
         }
+
+        /// <summary>
+        /// Helper method to simplify validation rules
+        /// </summary>
+        public static void CreateWarning(this IValidationContext context, string ruleName, string message)
+        {
+            OpenApiValidatorWarning warning = new OpenApiValidatorWarning(ruleName, context.PathString, message);
+            context.AddWarning(warning);
+        }
+
     }
 }
