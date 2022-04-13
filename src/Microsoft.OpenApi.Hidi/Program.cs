@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Hidi
             var formatOption = new Option<OpenApiFormat?>("--format", "File format");
             formatOption.AddAlias("-f");
 
-            var terseOutputOption = new Option<bool>("--terseOutput", "Produce terse json output");
+            var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
             terseOutputOption.AddAlias("-to");
 
             var logLevelOption = new Option<LogLevel>("--loglevel", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
