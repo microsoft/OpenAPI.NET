@@ -39,6 +39,9 @@ namespace Microsoft.OpenApi.Hidi
             var formatOption = new Option<OpenApiFormat?>("--format", "File format");
             formatOption.AddAlias("-f");
 
+            var terseOutputOption = new Option<bool>("--terseOutput", "Produce terse json output");
+            terseOutputOption.AddAlias("-to");
+
             var logLevelOption = new Option<LogLevel>("--loglevel", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
             logLevelOption.AddAlias("-ll");
 
@@ -74,6 +77,7 @@ namespace Microsoft.OpenApi.Hidi
                 cleanOutputOption,
                 versionOption,
                 formatOption,
+                terseOutputOption,
                 logLevelOption,               
                 filterByOperationIdsOption,
                 filterByTagsOption,
@@ -82,8 +86,8 @@ namespace Microsoft.OpenApi.Hidi
                 inlineExternalOption
             };
 
-            transformCommand.SetHandler<string, string, string, FileInfo, bool, string?, OpenApiFormat?, LogLevel, bool, bool, string, string, string, CancellationToken> (
-                OpenApiService.TransformOpenApiDocument, descriptionOption, csdlOption, csdlFilterOption, outputOption, cleanOutputOption, versionOption, formatOption, logLevelOption, inlineLocalOption, inlineExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
+            transformCommand.SetHandler<string, string, string, FileInfo, bool, string?, OpenApiFormat?, bool, LogLevel, bool, bool, string, string, string, CancellationToken> (
+                OpenApiService.TransformOpenApiDocument, descriptionOption, csdlOption, csdlFilterOption, outputOption, cleanOutputOption, versionOption, formatOption, terseOutputOption, logLevelOption, inlineLocalOption, inlineExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
