@@ -44,6 +44,7 @@ namespace Microsoft.OpenApi.Hidi
             bool cleanoutput,
             string? version,
             OpenApiFormat? format,
+            bool terseOutput,
             LogLevel loglevel,
             bool inlineLocal,
             bool inlineExternal,
@@ -188,11 +189,13 @@ namespace Microsoft.OpenApi.Hidi
                     using var outputStream = output?.Create();
                     var textWriter = outputStream != null ? new StreamWriter(outputStream) : Console.Out;
 
-                    var settings = new OpenApiWriterSettings()
+                    var settings = new OpenApiWriterSettings();
+                    if (terseOutput)
                     {
-                        InlineLocalReferences = inlineLocal,
-                        InlineExternalReferences = inlineExternal
-                    };
+                        settings.Terse = terseOutput;
+                    }
+                    settings.InlineLocalReferences = inlineLocal;
+                    settings.InlineExternalReferences = inlineExternal;
 
                     IOpenApiWriter writer = openApiFormat switch
                     {
