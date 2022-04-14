@@ -69,12 +69,6 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public bool InlineExternalReferences { get; set; } = false;
 
-        /// <summary>
-        /// Indicates whether or not the produced document will be written in a compact or pretty fashion.
-        /// </summary>
-        public bool Terse { get; set; } = false;
-
-
         internal bool ShouldInlineReference(OpenApiReference reference)
         {
             return (reference.IsLocal && InlineLocalReferences)
