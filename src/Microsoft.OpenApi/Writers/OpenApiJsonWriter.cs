@@ -35,7 +35,10 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="settings">Settings for controlling how the OpenAPI document will be written out.</param>
         public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
         {
-            _produceTerseOutput = settings.Terse;
+            if (settings != null)
+            {
+                _produceTerseOutput = settings.Terse;
+            }
         }
 
         /// <summary>
