@@ -1297,7 +1297,7 @@ namespace Microsoft.OpenApi.Writers
     public class OpenApiJsonWriterSettings : Microsoft.OpenApi.Writers.OpenApiWriterSettings
     {
         public OpenApiJsonWriterSettings() { }
-        public bool Terse { get; set; }
+        public new bool Terse { get; set; }
     }
     public static class OpenApiWriterAnyExtensions
     {
@@ -1379,6 +1379,7 @@ namespace Microsoft.OpenApi.Writers
         public bool InlineLocalReferences { get; set; }
         [System.Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
         public Microsoft.OpenApi.Writers.ReferenceInlineSetting ReferenceInline { get; set; }
+        public bool Terse { get; set; }
     }
     public class OpenApiYamlWriter : Microsoft.OpenApi.Writers.OpenApiWriterBase
     {
