@@ -189,17 +189,15 @@ namespace Microsoft.OpenApi.Hidi
                     using var outputStream = output?.Create();
                     var textWriter = outputStream != null ? new StreamWriter(outputStream) : Console.Out;
 
-                    var settings = new OpenApiWriterSettings();
-                    if (terseOutput)
+                    var settings = new OpenApiWriterSettings()
                     {
-                        settings.Terse = terseOutput;
-                    }
-                    settings.InlineLocalReferences = inlineLocal;
-                    settings.InlineExternalReferences = inlineExternal;
+                        InlineLocalReferences = inlineLocal,
+                        InlineExternalReferences = inlineExternal
+                    };
 
                     IOpenApiWriter writer = openApiFormat switch
                     {
-                        OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
+                        OpenApiFormat.Json => terseOutput ? new OpenApiJsonWriter(textWriter, settings, terseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
                         OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
                         _ => throw new ArgumentException("Unknown format"),
                     };

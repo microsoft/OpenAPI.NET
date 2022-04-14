@@ -83,20 +83,14 @@ namespace Microsoft.OpenApi.Extensions
                 throw Error.ArgumentNull(nameof(stream));
             }
 
-            IOpenApiWriter writer;
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-            switch (format)
-            {
-                case OpenApiFormat.Json:
-                    writer = new OpenApiJsonWriter(streamWriter,settings);
-                    break;
-                case OpenApiFormat.Yaml:
-                    writer = new OpenApiYamlWriter(streamWriter, settings);
-                    break;
-                default:
-                    throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format));
-            }
 
+            IOpenApiWriter writer = format switch
+            {
+                OpenApiFormat.Json => new OpenApiJsonWriter(streamWriter, settings, false),
+                OpenApiFormat.Yaml => new OpenApiYamlWriter(streamWriter, settings),
+                _ => throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format)),
+            };
             element.Serialize(writer, specVersion);
         }
 

@@ -33,12 +33,10 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         /// <param name="textWriter">The text writer.</param>
         /// <param name="settings">Settings for controlling how the OpenAPI document will be written out.</param>
-        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings settings) : base(textWriter, settings)
+        /// <param name="terseOutput"> Setting for allowing the JSON emitted to be in terse format.</param>
+        public OpenApiJsonWriter(TextWriter textWriter, OpenApiWriterSettings settings, bool terseOutput = false) : base(textWriter, settings)
         {
-            if (settings != null)
-            {
-                _produceTerseOutput = settings.Terse;
-            }
+            _produceTerseOutput = terseOutput;
         }
 
         /// <summary>
