@@ -69,7 +69,6 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         public bool InlineExternalReferences { get; set; } = false;
 
-
         internal bool ShouldInlineReference(OpenApiReference reference)
         {
             return (reference.IsLocal && InlineLocalReferences)
