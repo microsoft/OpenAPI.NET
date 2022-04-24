@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests
 {
-    
+
     public class OpenApiWorkspaceTests
     {
         [Fact]
@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Tests
                                 }
                             }
                         }
-                    } 
+                    }
                 }
             });
             workspace.AddDocument("common", new OpenApiDocument() {
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Tests
                       re.CreateContent("application/json", co =>
                           co.Schema = new OpenApiSchema()
                           {
-                              Reference = new OpenApiReference()  // Reference 
+                              Reference = new OpenApiReference()  // Reference
                               {
                                   Id = "test",
                                   Type = ReferenceType.Schema,
@@ -126,11 +126,12 @@ namespace Microsoft.OpenApi.Tests
 
             workspace.AddDocument("root", doc);
             workspace.AddDocument("common", CreateCommonDocument());
-            var errors = doc.ResolveReferences(true);
+            var errors = doc.ResolveReferences();
             Assert.Empty(errors);
 
             var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            Assert.False(schema.UnresolvedReference);
+            var effectiveSchema = schema.GetEffective(doc);
+            Assert.False(effectiveSchema.UnresolvedReference);
         }
 
         [Fact]
@@ -150,7 +151,7 @@ namespace Microsoft.OpenApi.Tests
         // Enable Workspace to load from any reader, not just streams.
 
         // Test fragments
-        public void OpenApiWorkspacesShouldLoadDocumentFragments()
+        internal void OpenApiWorkspacesShouldLoadDocumentFragments()
         {
             Assert.True(false);
         }

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
@@ -23,6 +24,12 @@ namespace Microsoft.OpenApi.Readers
         public OpenApiStreamReader(OpenApiReaderSettings settings = null)
         {
             _settings = settings ?? new OpenApiReaderSettings();
+
+            if((_settings.ReferenceResolution == ReferenceResolutionSetting.ResolveAllReferences || _settings.LoadExternalRefs)
+                && _settings.BaseUrl == null)
+            {
+                throw new ArgumentException("BaseUrl must be provided to resolve external references.");
+            }
         }
 
         /// <summary>

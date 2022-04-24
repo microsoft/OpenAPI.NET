@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateExampleShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
-            IEnumerable<OpenApiError> errors;
+            IEnumerable<OpenApiError> warnings;
             var mediaType = new OpenApiMediaType()
             {
                 Example = new OpenApiInteger(55),
@@ -33,21 +33,20 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
-            ruleset.Add(OpenApiMediaTypeRules.MediaTypeMismatchedDataType);
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
             walker.Walk(mediaType);
 
-            errors = validator.Errors;
-            bool result = !errors.Any();
+            warnings = validator.Warnings;
+            bool result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
-            errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
+            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
                 RuleHelpers.DataTypeMismatchedErrorMessage
             });
-            errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
+            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
                 "#/example",
             });
@@ -57,7 +56,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateExamplesShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
-            IEnumerable<OpenApiError> errors;
+            IEnumerable<OpenApiError> warnings;
 
             var mediaType = new OpenApiMediaType()
             {
@@ -105,23 +104,22 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
-            ruleset.Add(OpenApiMediaTypeRules.MediaTypeMismatchedDataType);
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);
             walker.Walk(mediaType);
 
-            errors = validator.Errors;
-            bool result = !errors.Any();
+            warnings = validator.Warnings;
+            bool result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
-            errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
+            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
                 RuleHelpers.DataTypeMismatchedErrorMessage,
                 RuleHelpers.DataTypeMismatchedErrorMessage,
                 RuleHelpers.DataTypeMismatchedErrorMessage,
             });
-            errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
+            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
                 // #enum/0 is not an error since the spec allows
                 // representing an object using a string.

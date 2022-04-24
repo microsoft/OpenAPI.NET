@@ -11,6 +11,7 @@ namespace Microsoft.OpenApi.Validations.Rules
     /// <summary>
     /// The validation rules for <see cref="OpenApiSchema"/>.
     /// </summary>
+    
     [OpenApiRule]
     public static class OpenApiSchemaRules
     {

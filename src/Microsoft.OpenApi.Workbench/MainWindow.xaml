@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Microsoft.OpenApi.Workbench"
+        xmlns:writers="clr-namespace:Microsoft.OpenApi.Writers;assembly=Microsoft.OpenApi"
         mc:Ignorable="d"
         Title="OpenAPI Workbench" Height="600" Width="800">
     <Grid>
@@ -42,7 +43,9 @@
                         <RadioButton GroupName="Format" Content="V3.0.1" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV3_0}" />
                         <RadioButton GroupName="Format" Content="V2.0" Padding="5" Height="24" VerticalAlignment="Top" IsChecked="{Binding IsV2_0}" />
                     </StackPanel>
-                    <CheckBox Name="Inline" Content="Inline" IsChecked="{Binding Inline}" />
+                    <CheckBox Name="InlineLocal" Content="Inline Local" IsChecked="{Binding InlineLocal}" />
+                    <CheckBox Name="ResolveExternal" Content="Resolve External" IsChecked="{Binding ResolveExternal}" />
+                    <CheckBox Name="InlineExternal" Content="Inline External" IsChecked="{Binding InlineExternal}" />
                 </StackPanel>
             </StackPanel>
             <TextBox x:Name="txtErrors"  Margin="10,10,10,10" TextWrapping="Wrap" Text="{Binding Errors}"  Background="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" DockPanel.Dock="Top" MaxHeight="100" ScrollViewer.VerticalScrollBarVisibility="Auto" IsReadOnlyCaretVisible="True" IsManipulationEnabled="True" />

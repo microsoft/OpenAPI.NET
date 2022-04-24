@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReference(reference);
+            var referencedObject = document.ResolveReferenceTo<OpenApiSchema>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReference(reference);
+            var referencedObject = document.ResolveReferenceTo<OpenApiParameter>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReference(reference);
+            var referencedObject = document.ResolveReferenceTo<OpenApiSecurityScheme>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(
@@ -173,7 +173,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReference(reference);
+            var referencedObject = document.ResolveReferenceTo<OpenApiResponse>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
             };
 
             // Act
-            var referencedObject = document.ResolveReference(reference);
+            var referencedObject = document.ResolveReferenceTo<OpenApiResponse>(reference);
 
             // Assert
             referencedObject.Should().BeEquivalentTo(
@@ -241,7 +241,8 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                                 Reference = new OpenApiReference
                                 {
                                     Type = ReferenceType.Schema,
-                                    Id = "SampleObject2"
+                                    Id = "SampleObject2",
+                                    HostDocument = document
                                 }
                             }
                         }

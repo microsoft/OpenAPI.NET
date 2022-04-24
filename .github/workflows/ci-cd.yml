@@ -13,13 +13,13 @@ jobs:
       GITHUB_RUN_NUMBER: ${{ github.run_number }}
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
 
       - name: Checkout repository
         id: checkout_repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
@@ -27,7 +27,7 @@ jobs:
       - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         name: Bump GH tag
         id: tag_generator
-        uses: mathieudutour/github-tag-action@v5.4
+        uses: mathieudutour/github-tag-action@v6.0
         with: 
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false

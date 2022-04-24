@@ -81,11 +81,6 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Content);
 
-            if (!mapNode.Any())
-            {
-                return null;
-            }
-
             var mediaType = new OpenApiMediaType();
 
             ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields);

@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Runtime;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -12,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
     {
         private bool? _explode;
 
@@ -145,13 +146,39 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+            var target = this;
+
+            if (Reference != null)
             {
-                Reference.SerializeAsV3(writer);
-                return;
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV3(writer);
+                    return;
+                } 
+                else
+                {
+                    target = this.GetEffective(Reference.HostDocument);
+                }
             }
 
-            SerializeAsV3WithoutReference(writer);
+            target.SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Returns an effective OpenApiParameter object based on the presence of a $ref 
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiParameter</returns>
+        public OpenApiParameter GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiParameter>(this.Reference);
+            }
+            else
+            {
+                return this;
+            }
         }
 
         /// <summary>
@@ -216,13 +243,21 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
+            var target = this;
+            if (Reference != null)
             {
-                Reference.SerializeAsV2(writer);
-                return;
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV2(writer);
+                    return;
+                } 
+                else
+                {
+                    target = this.GetEffective(Reference.HostDocument);
+                }
             }
 
-            SerializeAsV2WithoutReference(writer);
+            target.SerializeAsV2WithoutReference(writer);
         }
 
         /// <summary>
@@ -332,6 +367,7 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteEndObject();
         }
+
     }
 
     /// <summary>

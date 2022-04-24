@@ -2,6 +2,7 @@ name: CodeQL Analysis
 
 on:
   push:
+    branches: [ vnext ]
   pull_request:
   schedule:
     - cron: '0 8 * * *'
@@ -13,12 +14,12 @@ jobs:
     steps:
       - name: Checkout repository
         id: checkout_repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: 6.0.x
 
       - name: Initialize CodeQL
         id: init_codeql
@@ -33,7 +34,7 @@ jobs:
           $projectsArray = @(
             '.\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj',
             '.\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj',
-            '.\src\Microsoft.OpenApi.Tool\Microsoft.OpenApi.Tool.csproj'
+            '.\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj'
           )
 
           $projectsArray | ForEach-Object {
