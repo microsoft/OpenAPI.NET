@@ -23,7 +23,7 @@ jobs:
 
       - name: Initialize CodeQL
         id: init_codeql
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2
         with:
           queries: security-and-quality
 
@@ -43,6 +43,6 @@ jobs:
 
       - name: Perform CodeQL Analysis
         id: analyze_codeql
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2
 
 # Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)

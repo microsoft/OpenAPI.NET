@@ -15,14 +15,14 @@
     <PackageId>Microsoft.OpenApi.Hidi</PackageId>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.0.0-preview1</Version>
+    <Version>1.0.0-preview2</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
     <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
     <PackageReleaseNotes>
-- Upgrades Microsoft.OpenApi.OData to 1.0.10-preview1
-- Fixes an issue where hidi would not process async operations
+- Upgrades Microsoft.OpenApi.OData to 1.0.10
+- Upgrades Microsoft.OData.Edm to 7.11.0
     </PackageReleaseNotes>
     <AssemblyName>Microsoft.OpenApi.Hidi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Hidi</RootNamespace>
@@ -45,8 +45,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
-    <PackageReference Include="Microsoft.OData.Edm" Version="7.10.0" />
-    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.0.10-preview3" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.11.0" />
+    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.0.10" />
   </ItemGroup>
 
   <ItemGroup>

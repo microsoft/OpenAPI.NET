@@ -44,6 +44,7 @@ namespace Microsoft.OpenApi.Hidi
             bool cleanoutput,
             string? version,
             OpenApiFormat? format,
+            bool terseOutput,
             LogLevel loglevel,
             bool inlineLocal,
             bool inlineExternal,
@@ -196,7 +197,7 @@ namespace Microsoft.OpenApi.Hidi
 
                     IOpenApiWriter writer = openApiFormat switch
                     {
-                        OpenApiFormat.Json => new OpenApiJsonWriter(textWriter, settings),
+                        OpenApiFormat.Json => terseOutput ? new OpenApiJsonWriter(textWriter, settings, terseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
                         OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
                         _ => throw new ArgumentException("Unknown format"),
                     };

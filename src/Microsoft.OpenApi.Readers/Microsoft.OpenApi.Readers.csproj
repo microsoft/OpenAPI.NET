@@ -40,7 +40,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="SharpYaml" Version="1.9.0" />
+        <PackageReference Include="SharpYaml" Version="1.9.1" />
     </ItemGroup>
 
     <ItemGroup>
