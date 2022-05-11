@@ -2,8 +2,14 @@
 // Licensed under the MIT license.
 
 using System.CommandLine;
+using System.CommandLine.Builder;
+using System.CommandLine.Hosting;
+using System.CommandLine.Parsing;
+
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Handlers;
 
@@ -110,8 +116,19 @@ namespace Microsoft.OpenApi.Hidi
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
 
+
             // Parse the incoming args and invoke the handler
             await rootCommand.InvokeAsync(args);
+
+
+            //await new CommandLineBuilder(rootCommand)
+            //        .UseHost(_ => Host.CreateDefaultBuilder(), 
+            //        host => {
+            //            var config = host.Services.GetRequiredService<IConfiguration>();
+            //        })
+            //        .UseDefaults()
+            //        .Build()
+            //        .InvokeAsync(args);
 
             //// Wait for logger to write messages to the console before exiting
             await Task.Delay(10);

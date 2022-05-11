@@ -27,6 +27,7 @@ using System.Threading;
 using System.Xml.Xsl;
 using System.Xml;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -98,6 +99,7 @@ namespace Microsoft.OpenApi.Hidi
                             stream = ApplyFilter(csdl, csdlFilter, transform);
                             stream.Position = 0;
                         }
+
                         document = await ConvertCsdlToOpenApi(stream);
                         stopwatch.Stop();
                         logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
@@ -302,6 +304,14 @@ namespace Microsoft.OpenApi.Hidi
             {
                 throw new InvalidOperationException($"Could not validate the document, reason: {ex.Message}", ex);
             }
+        }
+
+        internal static IConfiguration GetConfiguration()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json",true)
+            .Build();
+            return config;
         }
 
         /// <summary>
