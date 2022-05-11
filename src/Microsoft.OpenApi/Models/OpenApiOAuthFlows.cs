@@ -39,6 +39,24 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiOAuthFlows() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiOAuthFlows"/> object
+        /// </summary>
+        /// <param name="oAuthFlows"></param>
+        public OpenApiOAuthFlows(OpenApiOAuthFlows oAuthFlows)
+        {
+            Implicit = oAuthFlows.Implicit;
+            Password = oAuthFlows.Password;
+            ClientCredentials = oAuthFlows.ClientCredentials;
+            AuthorizationCode = oAuthFlows.AuthorizationCode;
+            Extensions = oAuthFlows.Extensions;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

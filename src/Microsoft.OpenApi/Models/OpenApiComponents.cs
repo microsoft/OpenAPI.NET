@@ -69,6 +69,28 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiComponents() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiComponents"/> object
+        /// </summary>
+        public OpenApiComponents(OpenApiComponents components)
+        {
+            Schemas = components.Schemas;
+            Responses = components.Responses;
+            Parameters = components.Parameters;
+            Examples = components.Examples;
+            RequestBodies = components.RequestBodies;
+            Headers = components.Headers;
+            SecuritySchemes = components.SecuritySchemes;
+            Links = components.Links;
+            Callbacks = components.Callbacks;
+            Extensions = components.Extensions;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

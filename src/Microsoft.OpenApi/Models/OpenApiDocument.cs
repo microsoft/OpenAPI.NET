@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -63,6 +61,27 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+
+        /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiDocument() {}
+
+        /// <summary>
+        /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
+        /// </summary>
+        public OpenApiDocument(OpenApiDocument document)
+        {
+            Workspace = document.Workspace;
+            Info = document.Info;
+            Servers = document.Servers;
+            Paths = document.Paths;
+            Components = document.Components;
+            SecurityRequirements = document.SecurityRequirements;
+            Tags = document.Tags;
+            ExternalDocs = document.ExternalDocs;
+            Extensions = document.Extensions;
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.

@@ -55,6 +55,25 @@ namespace Microsoft.OpenApi.Models
         public bool UnresolvedReference { get; set; } = false;
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiExample() {}
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiExample"/> object
+        /// </summary>
+        public OpenApiExample(OpenApiExample example)
+        {
+            Summary = example.Summary;
+            Description = example.Description;
+            Value = example.Value;
+            ExternalValue = example.ExternalValue;
+            Extensions = example.Extensions;
+            Reference = example.Reference;
+            UnresolvedReference = example.UnresolvedReference;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

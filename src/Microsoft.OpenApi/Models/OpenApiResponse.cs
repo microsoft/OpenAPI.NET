@@ -52,6 +52,25 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiResponse() {}
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiResponse"/> object
+        /// </summary>
+        public OpenApiResponse(OpenApiResponse response)
+        {
+            Description = response.Description;
+            Headers = response.Headers;
+            Content = response.Content;
+            Links = response.Links;
+            Extensions = response.Extensions;
+            UnresolvedReference = response.UnresolvedReference;
+            Reference = response.Reference;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

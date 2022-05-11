@@ -44,6 +44,23 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiMediaType() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiMediaType"/> object
+        /// </summary>
+        public OpenApiMediaType(OpenApiMediaType mediaType)
+        {
+            Schema = mediaType.Schema;
+            Example = mediaType.Example;
+            Examples = mediaType.Examples;
+            Encoding = mediaType.Encoding;
+            Extensions = mediaType.Extensions;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

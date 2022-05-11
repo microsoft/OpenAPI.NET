@@ -137,6 +137,34 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// A parameterless constructor
+        /// </summary>
+        public OpenApiParameter() {}
+
+        /// <summary>
+        /// Initializes a clone instance of <see cref="OpenApiParameter"/> object
+        /// </summary>
+        public OpenApiParameter(OpenApiParameter parameter)
+        {
+            UnresolvedReference = parameter.UnresolvedReference;
+            Reference = parameter.Reference;
+            Name = parameter.Name;
+            In = parameter.In;
+            Description = parameter.Description;
+            Required = parameter.Required;
+            Style = parameter.Style;
+            Explode = parameter.Explode;
+            AllowReserved = parameter.AllowReserved;
+            Schema = parameter.Schema;
+            Examples = parameter.Examples;
+            Example = parameter.Example;
+            Content = parameter.Content;
+            Extensions = parameter.Extensions;
+            AllowEmptyValue = parameter.AllowEmptyValue;
+            Deprecated = parameter.Deprecated;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

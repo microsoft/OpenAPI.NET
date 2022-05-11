@@ -107,6 +107,31 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiOperation() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiOperation"/> object
+        /// </summary>
+        public OpenApiOperation(OpenApiOperation operation)
+        {
+            Tags = operation.Tags;
+            Summary = operation.Summary;
+            Description = operation.Description;
+            ExternalDocs = operation.ExternalDocs;
+            OperationId = operation.OperationId;
+            Parameters = operation.Parameters;
+            RequestBody = operation.RequestBody;
+            Responses = operation.Responses;
+            Callbacks = operation.Callbacks;
+            Deprecated = operation.Deprecated;
+            Security = operation.Security;
+            Servers = operation.Servers;
+            Extensions = operation.Extensions;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

@@ -75,6 +75,29 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiSecurityScheme() {}
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiSecurityScheme"/> object
+        /// </summary>
+        public OpenApiSecurityScheme(OpenApiSecurityScheme securityScheme)
+        {
+            Type = securityScheme.Type;
+            Description = securityScheme.Description;
+            Name = securityScheme.Name;
+            In = securityScheme.In;
+            Scheme = securityScheme.Scheme;
+            BearerFormat = securityScheme.BearerFormat;
+            Flows = securityScheme.Flows;
+            OpenIdConnectUrl = securityScheme.OpenIdConnectUrl;
+            Extensions = securityScheme.Extensions;
+            UnresolvedReference = securityScheme.UnresolvedReference;
+            Reference = securityScheme.Reference;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
