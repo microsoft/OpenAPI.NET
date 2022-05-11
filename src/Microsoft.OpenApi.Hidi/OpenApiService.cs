@@ -28,6 +28,7 @@ using System.Xml.Xsl;
 using System.Xml;
 using System.Runtime.CompilerServices;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -98,6 +99,7 @@ namespace Microsoft.OpenApi.Hidi
                             stream = ApplyFilter(csdl, csdlFilter, transform);
                             stream.Position = 0;
                         }
+
                         document = await ConvertCsdlToOpenApi(stream);
                         stopwatch.Stop();
                         logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
@@ -321,6 +323,14 @@ namespace Microsoft.OpenApi.Hidi
 
         }
 
+        internal static IConfiguration GetConfiguration()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json",true)
+            .Build();
+            return config;
+        }
+
         /// <summary>
         /// Converts CSDL to OpenAPI
         /// </summary>
@@ -332,23 +342,28 @@ namespace Microsoft.OpenApi.Hidi
             var csdlText = await reader.ReadToEndAsync();
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
 
-            var settings = new OpenApiConvertSettings()
+            var config = GetConfiguration();
+            OpenApiConvertSettings settings = config.GetSection("OpenApiConvertSettings").Get<OpenApiConvertSettings>();
+            if (settings == null)
             {
-                AddSingleQuotesForStringParameters = true,
-                AddEnumDescriptionExtension = true,
-                DeclarePathParametersOnPathItem = true,
-                EnableKeyAsSegment = true,
-                EnableOperationId = true,
-                ErrorResponsesAsDefault  = false,
-                PrefixEntityTypeNameBeforeKey = true,
-                TagDepth = 2,
-                EnablePagination = true,
-                EnableDiscriminatorValue = false,
-                EnableDerivedTypesReferencesForRequestBody = false,
-                EnableDerivedTypesReferencesForResponses = false,
-                ShowRootPath = false,
-                ShowLinks = false
-            };
+                settings = new OpenApiConvertSettings()
+                {
+                    AddSingleQuotesForStringParameters = true,
+                    AddEnumDescriptionExtension = true,
+                    DeclarePathParametersOnPathItem = true,
+                    EnableKeyAsSegment = true,
+                    EnableOperationId = true,
+                    ErrorResponsesAsDefault = false,
+                    PrefixEntityTypeNameBeforeKey = true,
+                    TagDepth = 2,
+                    EnablePagination = true,
+                    EnableDiscriminatorValue = false,
+                    EnableDerivedTypesReferencesForRequestBody = false,
+                    EnableDerivedTypesReferencesForResponses = false,
+                    ShowRootPath = false,
+                    ShowLinks = false
+                };
+            }
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
             document = FixReferences(document);

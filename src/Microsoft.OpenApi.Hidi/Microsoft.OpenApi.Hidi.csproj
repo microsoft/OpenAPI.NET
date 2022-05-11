@@ -47,6 +47,7 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
     <PackageReference Include="Microsoft.OData.Edm" Version="7.10.0" />
     <PackageReference Include="Microsoft.OpenApi.OData" Version="1.0.10-preview3" />
+    <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22114.1" />
   </ItemGroup>
 
   <ItemGroup>
