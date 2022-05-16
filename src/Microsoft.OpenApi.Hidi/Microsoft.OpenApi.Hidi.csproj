@@ -15,14 +15,13 @@
     <PackageId>Microsoft.OpenApi.Hidi</PackageId>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.0.0-preview2</Version>
+    <Version>1.0.0-preview3</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
     <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
     <PackageReleaseNotes>
-- Upgrades Microsoft.OpenApi.OData to 1.0.10
-- Upgrades Microsoft.OData.Edm to 7.11.0
+- Enables discriminator values
     </PackageReleaseNotes>
     <AssemblyName>Microsoft.OpenApi.Hidi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Hidi</RootNamespace>
