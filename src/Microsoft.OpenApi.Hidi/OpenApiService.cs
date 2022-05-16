@@ -343,7 +343,7 @@ namespace Microsoft.OpenApi.Hidi
                 PrefixEntityTypeNameBeforeKey = true,
                 TagDepth = 2,
                 EnablePagination = true,
-                EnableDiscriminatorValue = false,
+                EnableDiscriminatorValue = true,
                 EnableDerivedTypesReferencesForRequestBody = false,
                 EnableDerivedTypesReferencesForResponses = false,
                 ShowRootPath = false,
