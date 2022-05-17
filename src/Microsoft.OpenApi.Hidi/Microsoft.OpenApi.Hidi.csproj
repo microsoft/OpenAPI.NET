@@ -15,13 +15,14 @@
     <PackageId>Microsoft.OpenApi.Hidi</PackageId>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.0.0-preview3</Version>
+    <Version>1.0.0-preview4</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
     <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
     <PackageReleaseNotes>
 - Enables discriminator values
+- Adds new OpenAPI convert setting, ExpandDerivedTypesNavigationProperties and sets it to false
     </PackageReleaseNotes>
     <AssemblyName>Microsoft.OpenApi.Hidi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Hidi</RootNamespace>
