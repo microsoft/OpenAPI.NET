@@ -14,12 +14,14 @@ Hidi has these key capabilities that enable you to build different scenarios off
 Install [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi/1.0.0-preview4) package from NuGet by running the following command:  
  
 ### .NET CLI(Global)  
-	1. dotnet tool install --global Microsoft.OpenApi.Hidi --version 0.5.0-preview4 
+	1. dotnet tool install --global Microsoft.OpenApi.Hidi --prerelease
+
  
 ### .NET CLI(local) 
  
 	1. dotnet new tool-manifest #if you are setting up the OpenAPI.NET repo 
-	2. dotnet tool install --local Microsoft.OpenApi.Hidi --version 0.5.0-preview4 
+	2. dotnet tool install --local Microsoft.OpenApi.Hidi --prerelease 
+
  
  
  
@@ -49,7 +51,8 @@ It accepts the following command:
 	• --loglevel(-ll) - The log level to use when logging messages to the main output 
 	 
 
-**Example:** hidi.exe validate --openapi C:\OpenApidocs\Mail.yml --loglevel trace 
+**Example:** `hidi.exe validate --openapi C:\OpenApidocs\Mail.yml --loglevel trace` 
+
 Run validate -h to see the options available. 
  
 ### Transform 
