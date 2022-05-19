@@ -4,6 +4,7 @@ Hidi is a command line tool that makes it easy to work with and transform OpenAP
 
 ## Capabilities
 Hidi has these key capabilities that enable you to build different scenarios off the tool
+
 	• Validation of OpenAPI files 
 	• Conversion of OpenAPI files into different file formats: convert files from JSON to YAML, YAML to JSON
 	• Slice or filter OpenAPI documents to smaller subsets using operationIDs and tags
