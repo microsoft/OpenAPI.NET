@@ -54,10 +54,10 @@ namespace Microsoft.OpenApi.Hidi
             var filterByCollectionOption = new Option<string>("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided. Provide path to collection file.");
             filterByCollectionOption.AddAlias("-c");
 
-            var inlineLocalOption = new Option<bool>("--inlineLocal", "Inline local $ref instances");
+            var inlineLocalOption = new Option<bool>("--inline-local", "Inline local $ref instances");
             inlineLocalOption.AddAlias("-il");
 
-            var inlineExternalOption = new Option<bool>("--inlineExternal", "Inline external $ref instances");
+            var inlineExternalOption = new Option<bool>("--inline-external", "Inline external $ref instances");
             inlineExternalOption.AddAlias("-ie");
 
             var validateCommand = new Command("validate")
