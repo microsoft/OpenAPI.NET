@@ -22,16 +22,16 @@ namespace Microsoft.OpenApi.Hidi
             descriptionOption.AddAlias("-d");
 
             var csdlOption = new Option<string>("--csdl", "Input CSDL file path or URL");
-            csdlOption.AddAlias("-cs");
+            csdlOption.AddAlias("--cs");
 
             var csdlFilterOption = new Option<string>("--csdl-filter", "Comma delimited list of EntitySets or Singletons to filter CSDL on. e.g. tasks,accounts");
-            csdlFilterOption.AddAlias("-csf");
+            csdlFilterOption.AddAlias("--csf");
 
             var outputOption = new Option<FileInfo>("--output", () => new FileInfo("./output"), "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
             outputOption.AddAlias("-o");
 
             var cleanOutputOption = new Option<bool>("--clean-output", "Overwrite an existing file");
-            cleanOutputOption.AddAlias("-co");
+            cleanOutputOption.AddAlias("--co");
 
             var versionOption = new Option<string?>("--version", "OpenAPI specification version");
             versionOption.AddAlias("-v");
@@ -40,25 +40,25 @@ namespace Microsoft.OpenApi.Hidi
             formatOption.AddAlias("-f");
 
             var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
-            terseOutputOption.AddAlias("-to");
+            terseOutputOption.AddAlias("--to");
 
             var logLevelOption = new Option<LogLevel>("--loglevel", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
-            logLevelOption.AddAlias("-ll");
+            logLevelOption.AddAlias("--ll");
 
             var filterByOperationIdsOption = new Option<string>("--filter-by-operationids", "Filters OpenApiDocument by comma delimited list of OperationId(s) provided");
-            filterByOperationIdsOption.AddAlias("-op");
+            filterByOperationIdsOption.AddAlias("--op");
 
             var filterByTagsOption = new Option<string>("--filter-by-tags", "Filters OpenApiDocument by comma delimited list of Tag(s) provided. Also accepts a single regex.");
-            filterByTagsOption.AddAlias("-t");
+            filterByTagsOption.AddAlias("--t");
 
             var filterByCollectionOption = new Option<string>("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided. Provide path to collection file.");
             filterByCollectionOption.AddAlias("-c");
 
             var inlineLocalOption = new Option<bool>("--inline-local", "Inline local $ref instances");
-            inlineLocalOption.AddAlias("-il");
+            inlineLocalOption.AddAlias("--il");
 
             var inlineExternalOption = new Option<bool>("--inline-external", "Inline external $ref instances");
-            inlineExternalOption.AddAlias("-ie");
+            inlineExternalOption.AddAlias("--ie");
 
             var validateCommand = new Command("validate")
             {
