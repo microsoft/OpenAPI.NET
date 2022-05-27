@@ -54,7 +54,8 @@ namespace Microsoft.OpenApi.Hidi
             CancellationToken cancellationToken
            )
         {
-            var logger = ConfigureLoggerInstance(loglevel);
+            using var loggerFactory = ConfigureLoggerInstance(loglevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
 
             try
             {
@@ -258,7 +259,8 @@ namespace Microsoft.OpenApi.Hidi
             LogLevel loglevel, 
             CancellationToken cancellationToken)
         {
-            var logger = ConfigureLoggerInstance(loglevel);
+            using var loggerFactory = ConfigureLoggerInstance(loglevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
 
             try
             {
@@ -573,14 +575,14 @@ namespace Microsoft.OpenApi.Hidi
             return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
         }
 
-        private static ILogger ConfigureLoggerInstance(LogLevel loglevel)
+        private static ILoggerFactory ConfigureLoggerInstance(LogLevel loglevel)
         {
             // Configure logger options
 #if DEBUG
             loglevel = loglevel > LogLevel.Debug ? LogLevel.Debug : loglevel;
 #endif
 
-            var logger = LoggerFactory.Create((builder) => {
+            return LoggerFactory.Create((builder) => {
                 builder
                     .AddSimpleConsole(c => {
                         c.IncludeScopes = true;
@@ -589,9 +591,7 @@ namespace Microsoft.OpenApi.Hidi
                     .AddDebug()
 #endif
                     .SetMinimumLevel(loglevel);
-            }).CreateLogger<OpenApiService>();
-
-            return logger;
+            });
         }
     }
 }
