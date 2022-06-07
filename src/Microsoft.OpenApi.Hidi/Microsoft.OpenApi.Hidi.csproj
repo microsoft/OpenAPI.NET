@@ -23,6 +23,7 @@
     <PackageReleaseNotes>
 - Enables discriminator values
 - Adds new OpenAPI convert setting, ExpandDerivedTypesNavigationProperties and sets it to false
+- Bumps up the Microsoft.OpenApi.OData library to v1.0.11-preview2
     </PackageReleaseNotes>
     <AssemblyName>Microsoft.OpenApi.Hidi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Hidi</RootNamespace>
