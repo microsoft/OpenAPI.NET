@@ -1,0 +1,4 @@
+{
+  "in": "path",
+  "name": "name1"
+}

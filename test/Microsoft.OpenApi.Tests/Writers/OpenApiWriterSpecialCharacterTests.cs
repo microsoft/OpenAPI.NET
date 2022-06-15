@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -20,21 +22,36 @@ namespace Microsoft.OpenApi.Tests.Writers
             _output = output;
         }
 
+        static bool[] shouldProduceTerseOutputValues = new[] { true, false };
+
+        public static IEnumerable<object[]> StringWithSpecialCharacters
+        {
+            get
+            {
+                return
+                    from inputExpected in new[] {
+                       new[]{ "Test\bTest", "\"Test\\bTest\"" },
+                       new[]{ "Test\fTest", "\"Test\\fTest\""},
+                       new[]{ "Test\nTest", "\"Test\\nTest\""},
+                       new[]{ "Test\rTest", "\"Test\\rTest\""},
+                       new[]{ "Test\tTest", "\"Test\\tTest\""},
+                       new[]{ "Test\\Test", "\"Test\\\\Test\""},
+                       new[]{ "Test\"Test", "\"Test\\\"Test\""},
+                       new[]{ "StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\""},
+                       new[]{ "0x1234", "\"0x1234\""},
+                     }
+                    from shouldBeTerse in shouldProduceTerseOutputValues
+                    select new object[] { inputExpected[0], inputExpected[1], shouldBeTerse };
+            }
+        }
+
         [Theory]
-        [InlineData("Test\bTest", "\"Test\\bTest\"")]
-        [InlineData("Test\fTest", "\"Test\\fTest\"")]
-        [InlineData("Test\nTest", "\"Test\\nTest\"")]
-        [InlineData("Test\rTest", "\"Test\\rTest\"")]
-        [InlineData("Test\tTest", "\"Test\\tTest\"")]
-        [InlineData("Test\\Test", "\"Test\\\\Test\"")]
-        [InlineData("Test\"Test", "\"Test\\\"Test\"")]
-        [InlineData("StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\"")]
-        [InlineData("0x1234", "\"0x1234\"")]
-        public void WriteStringWithSpecialCharactersAsJsonWorks(string input, string expected)
+        [MemberData(nameof(StringWithSpecialCharacters))]
+        public void WriteStringWithSpecialCharactersAsJsonWorks(string input, string expected, bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             writer.WriteValue(input);
@@ -76,7 +93,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             actual.Should().Be(expected);
         }
-        
+
         [Theory]
         [InlineData("multiline\r\nstring", "test: |-\n  multiline\n  string")]
         [InlineData("ends with\r\nline break\r\n", "test: |\n  ends with\n  line break")]
@@ -104,7 +121,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             actual.Should().Be(expected);
         }
-        
+
         [Theory]
         [InlineData("multiline\r\nstring", "- |-\n  multiline\n  string")]
         [InlineData("ends with\r\nline break\r\n", "- |\n  ends with\n  line break")]

@@ -1,0 +1,1382 @@
+{
+  "info": {
+    "_postman_id": "6281bdba-62b8-2276-a5d6-268e87f48c89",
+    "name": "Graph-Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "admin",
+      "item": [
+        {
+          "name": "/admin",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}",
+                "issues"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}",
+                "issues"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues/{serviceHealthIssue-id}",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues/{serviceHealthIssue-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}",
+                "issues",
+                "{serviceHealthIssue-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues/{serviceHealthIssue-id}",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues/{serviceHealthIssue-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}",
+                "issues",
+                "{serviceHealthIssue-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues/{serviceHealthIssue-id}",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues/{serviceHealthIssue-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}",
+                "issues",
+                "{serviceHealthIssue-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues/{serviceHealthIssue-id}/microsoft.graph.incidentReport()",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/healthOverviews/{serviceHealth-id}/issues/{serviceHealthIssue-id}/microsoft.graph.incidentReport()",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "healthOverviews",
+                "{serviceHealth-id}",
+                "issues",
+                "{serviceHealthIssue-id}",
+                "microsoft.graph.incidentReport()"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/issues",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/issues",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "issues"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/issues",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/issues",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "issues"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/issues/{serviceHealthIssue-id}",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/issues/{serviceHealthIssue-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "issues",
+                "{serviceHealthIssue-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/issues/{serviceHealthIssue-id}",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/issues/{serviceHealthIssue-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "issues",
+                "{serviceHealthIssue-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/issues/{serviceHealthIssue-id}",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/issues/{serviceHealthIssue-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "issues",
+                "{serviceHealthIssue-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/issues/{serviceHealthIssue-id}/microsoft.graph.incidentReport()",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/issues/{serviceHealthIssue-id}/microsoft.graph.incidentReport()",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "issues",
+                "{serviceHealthIssue-id}",
+                "microsoft.graph.incidentReport()"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/microsoft.graph.archive",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/microsoft.graph.archive",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "microsoft.graph.archive"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/microsoft.graph.favorite",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/microsoft.graph.favorite",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "microsoft.graph.favorite"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/microsoft.graph.markRead",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/microsoft.graph.markRead",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "microsoft.graph.markRead"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/microsoft.graph.markUnread",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/microsoft.graph.markUnread",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "microsoft.graph.markUnread"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/microsoft.graph.unarchive",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/microsoft.graph.unarchive",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "microsoft.graph.unarchive"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/microsoft.graph.unfavorite",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/microsoft.graph.unfavorite",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "microsoft.graph.unfavorite"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachments",
+                "{serviceAnnouncementAttachment-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachments",
+                "{serviceAnnouncementAttachment-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachments",
+                "{serviceAnnouncementAttachment-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}/content",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}/content",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachments",
+                "{serviceAnnouncementAttachment-id}",
+                "content"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}/content",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachments/{serviceAnnouncementAttachment-id}/content",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachments",
+                "{serviceAnnouncementAttachment-id}",
+                "content"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachmentsArchive",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachmentsArchive",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachmentsArchive"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachmentsArchive",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/admin/serviceAnnouncement/messages/{serviceUpdateMessage-id}/attachmentsArchive",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "admin",
+                "serviceAnnouncement",
+                "messages",
+                "{serviceUpdateMessage-id}",
+                "attachmentsArchive"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "agreementAcceptances",
+      "item": [
+        {
+          "name": "/agreementAcceptances",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "agreementAcceptances"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/agreementAcceptances",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "agreementAcceptances"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/agreementAcceptances/{agreementAcceptance-id}",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances/{agreementAcceptance-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "agreementAcceptances",
+                "{agreementAcceptance-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/agreementAcceptances/{agreementAcceptance-id}",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances/{agreementAcceptance-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "agreementAcceptances",
+                "{agreementAcceptance-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/agreementAcceptances/{agreementAcceptance-id}",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/agreementAcceptances/{agreementAcceptance-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "agreementAcceptances",
+                "{agreementAcceptance-id}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "appCatalogs",
+      "item": [
+        {
+          "name": "/appCatalogs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}",
+                "appDefinitions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}",
+                "appDefinitions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}",
+                "appDefinitions",
+                "{teamsAppDefinition-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}",
+                "appDefinitions",
+                "{teamsAppDefinition-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}",
+                "appDefinitions",
+                "{teamsAppDefinition-id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/bot",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/bot",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}",
+                "appDefinitions",
+                "{teamsAppDefinition-id}",
+                "bot"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/bot",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/bot",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}",
+                "appDefinitions",
+                "{teamsAppDefinition-id}",
+                "bot"
+              ]
+            }
+          }
+        },
+        {
+          "name": "/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/bot",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "https://graph.microsoft.com/v1.0/appCatalogs/teamsApps/{teamsApp-id}/appDefinitions/{teamsAppDefinition-id}/bot",
+              "protocol": "https",
+              "host": [
+                "graph",
+                "microsoft",
+                "com"
+              ],
+              "path": [
+                "v1.0",
+                "appCatalogs",
+                "teamsApps",
+                "{teamsApp-id}",
+                "appDefinitions",
+                "{teamsAppDefinition-id}",
+                "bot"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

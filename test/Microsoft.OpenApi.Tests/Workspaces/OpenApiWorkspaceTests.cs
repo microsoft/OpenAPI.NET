@@ -126,11 +126,12 @@ namespace Microsoft.OpenApi.Tests
 
             workspace.AddDocument("root", doc);
             workspace.AddDocument("common", CreateCommonDocument());
-            var errors = doc.ResolveReferences(true);
+            var errors = doc.ResolveReferences();
             Assert.Empty(errors);
 
             var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            Assert.False(schema.UnresolvedReference);
+            var effectiveSchema = schema.GetEffective(doc);
+            Assert.False(effectiveSchema.UnresolvedReference);
         }
 
         [Fact]
@@ -150,7 +151,7 @@ namespace Microsoft.OpenApi.Tests
         // Enable Workspace to load from any reader, not just streams.
 
         // Test fragments
-        public void OpenApiWorkspacesShouldLoadDocumentFragments()
+        internal void OpenApiWorkspacesShouldLoadDocumentFragments()
         {
             Assert.True(false);
         }

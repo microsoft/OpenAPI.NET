@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 // If value is not a string and also not an object, there is a data mismatch.
                 if (!(value is OpenApiObject))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                     return;
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 // If value is not a string and also not an array, there is a data mismatch.
                 if (!(value is OpenApiArray))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                     return;
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiInteger))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiLong))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                        ruleName,
                        DataTypeMismatchedErrorMessage);
                 }
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiInteger))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiFloat))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiDouble))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiDouble))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiByte))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiDate))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -237,7 +237,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiDateTime))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -249,7 +249,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiPassword))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -261,7 +261,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiString))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -273,7 +273,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 if (!(value is OpenApiBoolean))
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }

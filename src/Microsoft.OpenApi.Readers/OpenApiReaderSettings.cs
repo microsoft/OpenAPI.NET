@@ -4,15 +4,10 @@
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Readers.Interface;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.Services;
 using Microsoft.OpenApi.Validations;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -30,7 +25,7 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         ResolveLocalReferences,
         /// <summary>
-        /// Convert all references to references of valid domain objects.
+        /// ResolveAllReferences effectively means load external references. Will be removed in v2. External references are never "resolved".
         /// </summary>
         ResolveAllReferences
     }
@@ -43,7 +38,13 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Indicates how references in the source document should be handled.
         /// </summary>
+        /// <remarks>This setting will be going away in the next major version of this library.  Use GetEffective on model objects to get resolved references.</remarks>
         public ReferenceResolutionSetting ReferenceResolution { get; set; } = ReferenceResolutionSetting.ResolveLocalReferences;
+
+        /// <summary>
+        /// When external references are found, load them into a shared workspace
+        /// </summary>
+        public bool LoadExternalRefs { get; set; } = false;
 
         /// <summary>
         /// Dictionary of parsers for converting extensions into strongly typed classes

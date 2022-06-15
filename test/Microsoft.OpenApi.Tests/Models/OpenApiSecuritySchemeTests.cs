@@ -5,16 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
+    [UsesVerify]
     public class OpenApiSecuritySchemeTests
     {
         public static OpenApiSecurityScheme ApiKeySecurityScheme = new OpenApiSecurityScheme
@@ -29,15 +32,16 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = "basic",
+            Scheme = OpenApiConstants.Basic           
+
         };
 
         public static OpenApiSecurityScheme HttpBearerSecurityScheme = new OpenApiSecurityScheme
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = "bearer",
-            BearerFormat = "JWT",
+            Scheme = OpenApiConstants.Bearer,
+            BearerFormat = OpenApiConstants.Jwt
         };
 
         public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new OpenApiSecurityScheme
@@ -100,7 +104,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
-            Scheme = "openIdConnectUrl",
+            Scheme = OpenApiConstants.Bearer,
             OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
         };
 
@@ -108,7 +112,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
-            Scheme = "openIdConnectUrl",
+            Scheme = OpenApiConstants.Bearer,
             OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
             Reference = new OpenApiReference
             {
@@ -297,16 +301,14 @@ in: query";
             actual.Should().Be(expected);
         }
 
-        [Fact]
-        public void SerializeReferencedSecuritySchemeAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedSecuritySchemeAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""sampleSecurityScheme"": null
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme 
@@ -319,23 +321,17 @@ in: query";
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedSecuritySchemeAsV3JsonWithoutReferenceWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedSecuritySchemeAsV3JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""type"": ""openIdConnect"",
-  ""description"": ""description1"",
-  ""openIdConnectUrl"": ""https://example.com/openIdConnect""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
             ReferencedSecurityScheme.SerializeAsV3WithoutReference(writer);
@@ -343,9 +339,7 @@ in: query";
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
     }
 }

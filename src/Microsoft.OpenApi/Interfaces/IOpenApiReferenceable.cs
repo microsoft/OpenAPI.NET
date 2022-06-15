@@ -31,5 +31,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// Serialize to OpenAPI V2 document without using reference.
         /// </summary>
         void SerializeAsV2WithoutReference(IOpenApiWriter writer);
+
     }
 }

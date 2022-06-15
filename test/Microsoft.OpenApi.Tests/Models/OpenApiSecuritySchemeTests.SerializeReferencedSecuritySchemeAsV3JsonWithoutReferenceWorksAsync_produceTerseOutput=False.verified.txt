@@ -1,0 +1,5 @@
+{
+  "type": "openIdConnect",
+  "description": "description1",
+  "openIdConnectUrl": "https://example.com/openIdConnect"
+}

@@ -15,6 +15,12 @@ namespace Microsoft.OpenApi.Validations
         void AddError(OpenApiValidatorError error);
 
         /// <summary>
+        /// Register a warning with the validation context.
+        /// </summary>
+        /// <param name="warning">Warning to register.</param>
+        void AddWarning(OpenApiValidatorWarning warning);
+
+        /// <summary>
         /// Allow Rule to indicate validation error occured at a deeper context level.  
         /// </summary>
         /// <param name="segment">Identifier for context</param>
