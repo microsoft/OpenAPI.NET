@@ -38,6 +38,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                        new[]{ "Test\\Test", "\"Test\\\\Test\""},
                        new[]{ "Test\"Test", "\"Test\\\"Test\""},
                        new[]{ "StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\""},
+                       new[]{ "0x1234", "\"0x1234\""},
                      }
                     from shouldBeTerse in shouldProduceTerseOutputValues
                     select new object[] { inputExpected[0], inputExpected[1], shouldBeTerse };
@@ -79,6 +80,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [InlineData("trailingspace ", " 'trailingspace '")]
         [InlineData("     trailingspace", " '     trailingspace'")]
         [InlineData("terminal:", " 'terminal:'")]
+        [InlineData("0x1234", " '0x1234'")]
         public void WriteStringWithSpecialCharactersAsYamlWorks(string input, string expected)
         {
             // Arrange
