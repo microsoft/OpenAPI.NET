@@ -29,6 +29,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [InlineData("Test\\Test", "\"Test\\\\Test\"")]
         [InlineData("Test\"Test", "\"Test\\\"Test\"")]
         [InlineData("StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\"")]
+        [InlineData("0x1234", "\"0x1234\"")]
         public void WriteStringWithSpecialCharactersAsJsonWorks(string input, string expected)
         {
             // Arrange
