@@ -6,7 +6,7 @@ on:
     paths: ['src/Microsoft.OpenApi.Hidi/**', '.github/workflows/**']
 env:
   REGISTRY: msgraphprod.azurecr.io
-  IMAGE_NAME: public/hidi/generator
+  IMAGE_NAME: public/hidi
 jobs:
   push_to_registry:
     environment:
