@@ -28,7 +28,6 @@ jobs:
           echo "::set-output name=version::${version}"
         shell: pwsh
         id: getversion
-        if: contains(github.ref, 'refs/tags/v')
         env:
           BRANCH_NAME: ${{ github.ref }}
       - name: Push to GitHub Packages - Nightly
