@@ -28,8 +28,6 @@ jobs:
           echo "::set-output name=version::${version}"
         shell: pwsh
         id: getversion
-        env:
-          BRANCH_NAME: ${{ github.ref }}
       - name: Push to GitHub Packages - Nightly
         if: contains(github.ref, 'refs/head/vnext')
         uses: docker/build-push-action@v3.0.0
