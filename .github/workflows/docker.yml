@@ -29,13 +29,13 @@ jobs:
         shell: pwsh
         id: getversion
       - name: Push to GitHub Packages - Nightly
-        if: contains(github.ref, 'refs/head/vnext')
+        if: ${{ github.ref == 'refs/heads/vnext' }}
         uses: docker/build-push-action@v3.0.0
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly
       - name: Push to GitHub Packages - Release
-        if: contains(github.ref, 'refs/head/master')
+        if: ${{ github.ref == 'refs/heads/master' }}
         uses: docker/build-push-action@v3.0.0
         with:
           push: true
