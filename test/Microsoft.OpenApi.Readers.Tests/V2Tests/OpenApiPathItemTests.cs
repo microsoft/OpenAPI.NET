@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -253,10 +254,28 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             }
 
             // Act
-            var operation = OpenApiV2Deserializer.LoadPathItem(node);
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_basicPathItemWithFormData);
+            pathItem.Should().BeEquivalentTo(_basicPathItemWithFormData);
+        }
+
+        [Fact]
+        public void ParsePathItemWithFormDataPathParameterShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathItemWithFormDataPathParameter.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+
+            // Assert
+            // FormData parameters at in the path level are pushed into Operation request bodies.
+            Assert.True(pathItem.Operations.All(o => o.Value.RequestBody != null));
         }
     }
 }
