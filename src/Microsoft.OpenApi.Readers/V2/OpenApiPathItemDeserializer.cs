@@ -90,16 +90,13 @@ namespace Microsoft.OpenApi.Readers.V2
                     var requestBody = CreateFormBody(node.Context, formParameters);
                     foreach (var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
                     {
-                        if (opPair.Value.RequestBody == null)
+                        switch (opPair.Key)
                         {
-                            switch (opPair.Key)
-                            {
-                                case OperationType.Post:
-                                case OperationType.Put:
-                                case OperationType.Patch:
-                                    opPair.Value.RequestBody = requestBody;
-                                    break;
-                            }
+                            case OperationType.Post:
+                            case OperationType.Put:
+                            case OperationType.Patch:
+                                opPair.Value.RequestBody = requestBody;
+                                break;
                         }
                     }
                 }
