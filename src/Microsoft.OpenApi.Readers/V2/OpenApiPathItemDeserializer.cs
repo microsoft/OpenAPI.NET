@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -32,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "parameters", (o, n) =>
                 {
-                    o.Parameters = n.CreateList(LoadParameter);
+                    LoadPathParameters(o,n);
                 }
             },
         };
@@ -52,6 +54,52 @@ namespace Microsoft.OpenApi.Readers.V2
             ParseMap(mapNode, pathItem, _pathItemFixedFields, _pathItemPatternFields);
 
             return pathItem;
+        }
+
+        private static void LoadPathParameters(OpenApiPathItem pathItem, ParseNode node)
+        {
+            node.Context.SetTempStorage(TempStorageKeys.BodyParameter, null);
+            node.Context.SetTempStorage(TempStorageKeys.FormParameters, null);
+
+            pathItem.Parameters = node.CreateList(LoadParameter);
+
+            // Build request body based on information determined while parsing OpenApiOperation
+            var bodyParameter = node.Context.GetFromTempStorage<OpenApiParameter>(TempStorageKeys.BodyParameter);
+            if (bodyParameter != null)
+            {
+                var requestBody = CreateRequestBody(node.Context, bodyParameter);
+                foreach(var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
+                {
+                    switch (opPair.Key)
+                    {
+                        case OperationType.Post:
+                        case OperationType.Put:
+                        case OperationType.Patch:
+                            opPair.Value.RequestBody = requestBody;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                var formParameters = node.Context.GetFromTempStorage<List<OpenApiParameter>>(TempStorageKeys.FormParameters);
+                if (formParameters != null)
+                {
+                    var requestBody = CreateFormBody(node.Context, formParameters);
+                    foreach (var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
+                    {
+                        switch (opPair.Key)
+                        {
+                            case OperationType.Post:
+                            case OperationType.Put:
+                            case OperationType.Patch:
+                                opPair.Value.RequestBody = requestBody;
+                                break;
+                        }
+                    }
+                }
+            }
+
         }
     }
 }
