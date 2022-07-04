@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 if (formParameters != null)
                 {
                     var requestBody = CreateFormBody(node.Context, formParameters);
-                    foreach (var opPair in pathItem.Operations)
+                    foreach (var opPair in pathItem.Operations.Where(x => x.Value.RequestBody is null))
                     {
                         if (opPair.Value.RequestBody == null)
                         {
