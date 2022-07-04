@@ -275,7 +275,29 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             // FormData parameters at in the path level are pushed into Operation request bodies.
-            Assert.True(pathItem.Operations.All(o => o.Value.RequestBody != null));
+            Assert.True(pathItem.Operations[OperationType.Put].RequestBody != null);
+            Assert.True(pathItem.Operations[OperationType.Post].RequestBody != null);
+            Assert.Equal(2, pathItem.Operations.Count(o => o.Value.RequestBody != null));
         }
+        [Fact]
+        public void ParsePathItemBodyDataPathParameterShouldSucceed()
+        {
+            // Arrange
+            MapNode node;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "pathItemWithBodyPathParameter.yaml")))
+            {
+                node = TestHelper.CreateYamlMapNode(stream);
+            }
+
+            // Act
+            var pathItem = OpenApiV2Deserializer.LoadPathItem(node);
+
+            // Assert
+            // FormData parameters at in the path level are pushed into Operation request bodies.
+            Assert.True(pathItem.Operations[OperationType.Put].RequestBody != null);
+            Assert.True(pathItem.Operations[OperationType.Post].RequestBody != null);
+            Assert.Equal(2, pathItem.Operations.Count(o => o.Value.RequestBody != null));
+        }
+
     }
 }
