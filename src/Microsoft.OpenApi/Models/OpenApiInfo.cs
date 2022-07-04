@@ -63,9 +63,9 @@ namespace Microsoft.OpenApi.Models
             Description = info.Description;
             Version = info.Version;
             TermsOfService = info.TermsOfService;
-            Contact = info.Contact;
-            License = info.License;
-            Extensions = info.Extensions;
+            Contact = new(info.Contact);
+            License = new(info.License);
+            Extensions = new Dictionary<string, IOpenApiExtension>(info.Extensions);
         }
 
         /// <summary>

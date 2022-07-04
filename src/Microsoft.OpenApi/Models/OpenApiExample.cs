@@ -68,8 +68,8 @@ namespace Microsoft.OpenApi.Models
             Description = example.Description;
             Value = example.Value;
             ExternalValue = example.ExternalValue;
-            Extensions = example.Extensions;
-            Reference = example.Reference;
+            Extensions = new Dictionary<string, IOpenApiExtension>(example.Extensions);
+            Reference = new(example.Reference);
             UnresolvedReference = example.UnresolvedReference;
         }
 

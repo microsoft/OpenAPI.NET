@@ -78,16 +78,16 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas = components.Schemas;
-            Responses = components.Responses;
-            Parameters = components.Parameters;
-            Examples = components.Examples;
-            RequestBodies = components.RequestBodies;
-            Headers = components.Headers;
-            SecuritySchemes = components.SecuritySchemes;
-            Links = components.Links;
-            Callbacks = components.Callbacks;
-            Extensions = components.Extensions;
+            Schemas = new Dictionary<string, OpenApiSchema>(components.Schemas);
+            Responses = new Dictionary<string, OpenApiResponse>(components.Responses);
+            Parameters = new Dictionary<string, OpenApiParameter>(components.Parameters);
+            Examples = new Dictionary<string, OpenApiExample>(components.Examples);
+            RequestBodies = new Dictionary<string, OpenApiRequestBody>(components.RequestBodies);
+            Headers = new Dictionary<string, OpenApiHeader>(components.Headers);
+            SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes);
+            Links = new Dictionary<string, OpenApiLink>(components.Links);
+            Callbacks = new Dictionary<string, OpenApiCallback>(components.Callbacks);
+            Extensions = new Dictionary<string, IOpenApiExtension>(components.Extensions);
         }
 
         /// <summary>

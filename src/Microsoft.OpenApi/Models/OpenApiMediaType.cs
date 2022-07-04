@@ -53,11 +53,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
-            Schema = mediaType.Schema;
+            Schema = new(mediaType.Schema);
             Example = mediaType.Example;
-            Examples = mediaType.Examples;
-            Encoding = mediaType.Encoding;
-            Extensions = mediaType.Extensions;
+            Examples = new Dictionary<string, OpenApiExample>(mediaType.Examples);
+            Encoding = new Dictionary<string, OpenApiEncoding>(mediaType.Encoding);
+            Extensions = new Dictionary<string, IOpenApiExtension>(mediaType.Extensions);
         }
 
         /// <summary>

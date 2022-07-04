@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiHeader(OpenApiHeader header)
         {
             UnresolvedReference = header.UnresolvedReference;
-            Reference = header.Reference;
+            Reference = new(header.Reference);
             Description = header.Description;
             Required = header.Required;
             Deprecated = header.Deprecated;
@@ -105,11 +105,11 @@ namespace Microsoft.OpenApi.Models
             Style = header.Style;
             Explode = header.Explode;
             AllowReserved = header.AllowReserved;
-            Schema = header.Schema;
+            Schema = new(header.Schema);
             Example = header.Example;
-            Examples = header.Examples;
-            Content = header.Content;
-            Extensions = header.Extensions;
+            Examples = new Dictionary<string, OpenApiExample>(header.Examples);
+            Content = new Dictionary<string, OpenApiMediaType>(header.Content);
+            Extensions = new Dictionary<string, IOpenApiExtension>(header.Extensions);
         }
 
         /// <summary>

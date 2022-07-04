@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
             Prefix = xml.Prefix;
             Attribute = xml.Attribute;
             Wrapped = xml.Wrapped;
-            Extensions = xml.Extensions;
+            Extensions = new Dictionary<string, IOpenApiExtension>(xml.Extensions);
         }
 
         /// <summary>

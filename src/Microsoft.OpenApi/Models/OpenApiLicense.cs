@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         {
             Name = license.Name;
             Url = license.Url;
-            Extensions = license.Extensions;
+            Extensions = new Dictionary<string, IOpenApiExtension>(license.Extensions);
         }
 
         /// <summary>

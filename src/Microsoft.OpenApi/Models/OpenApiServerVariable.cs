@@ -46,8 +46,8 @@ namespace Microsoft.OpenApi.Models
         {
             Description = serverVariable.Description;
             Default = serverVariable.Default;
-            Enum = serverVariable.Enum;
-            Extensions = serverVariable.Extensions;
+            Enum = new List<string>(serverVariable.Enum);
+            Extensions = new Dictionary<string, IOpenApiExtension>(serverVariable.Extensions);
         }
 
         /// <summary>

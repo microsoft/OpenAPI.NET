@@ -63,6 +63,8 @@ namespace Microsoft.OpenApi.Services
             BaseUrl = new Uri("file://" + Environment.CurrentDirectory + "\\" );
         }
 
+        public OpenApiWorkspace(OpenApiWorkspace workspace){}
+
         /// <summary>
         /// Verify if workspace contains a document based on its URL. 
         /// </summary>

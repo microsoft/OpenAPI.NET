@@ -8,5 +8,9 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiResponses : OpenApiExtensibleDictionary<OpenApiResponse>
     {
+        public OpenApiResponses() { }
+
+        public OpenApiResponses(OpenApiResponses openApiResponses) { }
+
     }
 }

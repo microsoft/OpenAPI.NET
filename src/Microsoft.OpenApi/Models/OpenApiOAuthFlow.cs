@@ -54,8 +54,8 @@ namespace Microsoft.OpenApi.Models
             AuthorizationUrl = oAuthFlow.AuthorizationUrl;
             TokenUrl = oAuthFlow.TokenUrl;
             RefreshUrl = oAuthFlow.RefreshUrl;
-            Scopes = oAuthFlow.Scopes;
-            Extensions = oAuthFlow.Extensions;
+            Scopes = new Dictionary<string, string>(oAuthFlow.Scopes);
+            Extensions = new Dictionary<string, IOpenApiExtension>(oAuthFlow.Extensions);
         }
 
         /// <summary>

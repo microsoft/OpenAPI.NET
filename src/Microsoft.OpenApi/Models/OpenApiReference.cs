@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Models
             ExternalResource = reference.ExternalResource;
             Type = reference.Type;
             Id = reference.Id;
-            HostDocument = reference.HostDocument;
+            HostDocument = new(reference.HostDocument);
         }
 
         /// <summary>

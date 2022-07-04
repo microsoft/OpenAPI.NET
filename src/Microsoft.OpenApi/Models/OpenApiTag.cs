@@ -55,10 +55,10 @@ namespace Microsoft.OpenApi.Models
         {
             Name = tag.Name;
             Description = tag.Description;
-            ExternalDocs = tag.ExternalDocs;
-            Extensions = tag.Extensions;
+            ExternalDocs = new(tag.ExternalDocs);
+            Extensions = new Dictionary<string, IOpenApiExtension>(tag.Extensions);
             UnresolvedReference = tag.UnresolvedReference;
-            Reference = tag.Reference;
+            Reference = new(tag.Reference);
         }
 
         /// <summary>

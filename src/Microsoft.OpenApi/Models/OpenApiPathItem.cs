@@ -77,12 +77,12 @@ namespace Microsoft.OpenApi.Models
         {
             Summary = pathItem.Summary;
             Description = pathItem.Description;
-            Operations = pathItem.Operations;
-            Servers = pathItem.Servers;
-            Parameters = pathItem.Parameters;
-            Extensions = pathItem.Extensions;
+            Operations = new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations);
+            Servers = new List<OpenApiServer>(pathItem.Servers);
+            Parameters = new List<OpenApiParameter>(pathItem.Parameters);
+            Extensions = new Dictionary<string, IOpenApiExtension>(pathItem.Extensions);
             UnresolvedReference = pathItem.UnresolvedReference;
-            Reference = pathItem.Reference;
+            Reference = new(pathItem.Reference);
         }
 
         /// <summary>

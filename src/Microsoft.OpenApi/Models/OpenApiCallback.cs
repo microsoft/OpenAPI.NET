@@ -45,10 +45,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiCallback(OpenApiCallback callback)
         {
-            PathItems = callback.PathItems;
+            PathItems = new(callback.PathItems);
             UnresolvedReference = callback.UnresolvedReference;
-            Reference = callback.Reference;
-            Extensions = callback.Extensions;
+            Reference = new(callback.Reference);
+            Extensions = new Dictionary<string, IOpenApiExtension>(callback.Extensions);
         }
 
         /// <summary>

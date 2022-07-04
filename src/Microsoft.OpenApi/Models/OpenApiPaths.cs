@@ -8,5 +8,8 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiPaths : OpenApiExtensibleDictionary<OpenApiPathItem>
     {
+        public OpenApiPaths() {}
+        public OpenApiPaths(OpenApiPaths paths) {}
+
     }
 }

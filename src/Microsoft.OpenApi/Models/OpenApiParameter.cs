@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiParameter(OpenApiParameter parameter)
         {
             UnresolvedReference = parameter.UnresolvedReference;
-            Reference = parameter.Reference;
+            Reference = new(parameter.Reference);
             Name = parameter.Name;
             In = parameter.In;
             Description = parameter.Description;
@@ -155,11 +155,11 @@ namespace Microsoft.OpenApi.Models
             Style = parameter.Style;
             Explode = parameter.Explode;
             AllowReserved = parameter.AllowReserved;
-            Schema = parameter.Schema;
-            Examples = parameter.Examples;
+            Schema = new(parameter.Schema);
+            Examples = new Dictionary<string, OpenApiExample>(parameter.Examples);
             Example = parameter.Example;
-            Content = parameter.Content;
-            Extensions = parameter.Extensions;
+            Content = new Dictionary<string, OpenApiMediaType>(parameter.Content);
+            Extensions = new Dictionary<string, IOpenApiExtension>(parameter.Extensions);
             AllowEmptyValue = parameter.AllowEmptyValue;
             Deprecated = parameter.Deprecated;
         }

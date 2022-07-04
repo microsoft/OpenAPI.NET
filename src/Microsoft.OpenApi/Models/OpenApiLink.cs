@@ -73,13 +73,13 @@ namespace Microsoft.OpenApi.Models
         {
             OperationRef = link.OperationRef;
             OperationId = link.OperationId;
-            Parameters = link.Parameters;
-            RequestBody = link.RequestBody;
+            Parameters = new(link.Parameters);
+            RequestBody = new(link.RequestBody);
             Description = link.Description;
-            Server = link.Server;
-            Extensions = link.Extensions;
+            Server = new(link.Server);
+            Extensions = new Dictionary<string, IOpenApiExtension>(link.Extensions);
             UnresolvedReference = link.UnresolvedReference;
-            Reference = link.Reference;
+            Reference = new(link.Reference);
         }
 
         /// <summary>

@@ -64,11 +64,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiEncoding(OpenApiEncoding encoding)
         {
             ContentType = encoding.ContentType;
-            Headers = encoding.Headers;
+            Headers = new Dictionary<string, OpenApiHeader>(encoding.Headers);
             Style = encoding.Style;
             Explode = encoding.Explode;
             AllowReserved = encoding.AllowReserved;
-            Extensions = encoding.Extensions;
+            Extensions = new Dictionary<string, IOpenApiExtension>(encoding.Extensions);
         }
 
         /// <summary>

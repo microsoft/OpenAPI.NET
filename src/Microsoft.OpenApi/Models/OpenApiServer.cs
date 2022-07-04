@@ -48,8 +48,8 @@ namespace Microsoft.OpenApi.Models
         {
             Description = server.Description;
             Url = server.Url;
-            Variables = server.Variables;
-            Extensions = server.Extensions;
+            Variables = new Dictionary<string, OpenApiServerVariable>(server.Variables);
+            Extensions = new Dictionary<string, IOpenApiExtension>(server.Extensions);
         }
 
         /// <summary>

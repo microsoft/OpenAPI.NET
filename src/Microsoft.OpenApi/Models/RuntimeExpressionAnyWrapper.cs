@@ -16,6 +16,14 @@ namespace Microsoft.OpenApi.Models
         private IOpenApiAny _any;
         private RuntimeExpression _expression;
 
+        public RuntimeExpressionAnyWrapper() {}
+
+        public RuntimeExpressionAnyWrapper(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper)
+        {
+            Any = runtimeExpressionAnyWrapper.Any;
+            Expression = runtimeExpressionAnyWrapper.Expression;
+        }
+
         /// <summary>
         /// Gets/Sets the <see cref="IOpenApiAny"/>
         /// </summary>

@@ -90,11 +90,11 @@ namespace Microsoft.OpenApi.Models
             In = securityScheme.In;
             Scheme = securityScheme.Scheme;
             BearerFormat = securityScheme.BearerFormat;
-            Flows = securityScheme.Flows;
+            Flows = new(securityScheme.Flows);
             OpenIdConnectUrl = securityScheme.OpenIdConnectUrl;
-            Extensions = securityScheme.Extensions;
+            Extensions = new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions);
             UnresolvedReference = securityScheme.UnresolvedReference;
-            Reference = securityScheme.Reference;
+            Reference = new(securityScheme.Reference);
         }
 
         /// <summary>

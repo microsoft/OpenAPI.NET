@@ -56,11 +56,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiRequestBody(OpenApiRequestBody requestBody)
         {
             UnresolvedReference = requestBody.UnresolvedReference;
-            Reference = requestBody.Reference;
+            Reference = new(requestBody.Reference);
             Description = requestBody.Description;
             Required = requestBody.Required;
-            Content = requestBody.Content;
-            Extensions = requestBody.Extensions;
+            Content = new Dictionary<string, OpenApiMediaType>(requestBody.Content);
+            Extensions = new Dictionary<string, IOpenApiExtension>(requestBody.Extensions);
         }
 
         /// <summary>

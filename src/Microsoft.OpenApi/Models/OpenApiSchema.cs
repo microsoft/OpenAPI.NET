@@ -267,29 +267,29 @@ namespace Microsoft.OpenApi.Models
             Default = schema.Default;
             ReadOnly = schema.ReadOnly;
             WriteOnly = schema.WriteOnly;
-            AllOf = schema.AllOf;
-            OneOf = schema.OneOf;
-            AnyOf = schema.AnyOf;
-            Not = schema.Not;
-            Required = schema.Required;
-            Items = schema.Items;
+            AllOf = new List<OpenApiSchema>(schema.AllOf);
+            OneOf = new List<OpenApiSchema>(schema.OneOf);
+            AnyOf = new List<OpenApiSchema>(schema.AnyOf);
+            Not = new(schema.Not);
+            Required = new HashSet<string>(schema.Required);
+            Items = new(schema.Items);
             MaxItems = schema.MaxItems;
             MinItems = schema.MinItems;
             UniqueItems = schema.UniqueItems;
-            Properties = schema.Properties;
+            Properties = new Dictionary<string, OpenApiSchema>(schema.Properties);
             MaxProperties = schema.MaxProperties;
             MinProperties = schema.MinProperties;
             AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
-            AdditionalProperties = schema.AdditionalProperties;
-            Discriminator = schema.Discriminator;
+            AdditionalProperties = new(schema.AdditionalProperties);
+            Discriminator = new(schema.Discriminator);
             Example = schema.Example;
-            Enum = schema.Enum;
+            Enum = new List<IOpenApiAny>(schema.Enum);
             Nullable = schema.Nullable;
-            ExternalDocs = schema.ExternalDocs;
+            ExternalDocs = new(schema.ExternalDocs);
             Deprecated = schema.Deprecated;
-            Xml = schema.Xml;
+            Xml = new(schema.Xml);
             UnresolvedReference = schema.UnresolvedReference;
-            Reference = schema.Reference;
+            Reference = new(schema.Reference);
         }
 
         /// <summary>
