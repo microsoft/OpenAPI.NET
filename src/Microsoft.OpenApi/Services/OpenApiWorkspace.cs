@@ -63,6 +63,9 @@ namespace Microsoft.OpenApi.Services
             BaseUrl = new Uri("file://" + Environment.CurrentDirectory + "\\" );
         }
 
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiWorkspace"/> object
+        /// </summary>
         public OpenApiWorkspace(OpenApiWorkspace workspace){}
 
         /// <summary>
