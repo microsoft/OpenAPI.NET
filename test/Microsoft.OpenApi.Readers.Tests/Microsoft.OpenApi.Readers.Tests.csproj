@@ -14,6 +14,8 @@
     </PropertyGroup>
     <ItemGroup>
       <None Remove="V2Tests\Samples\ComponentRootReference.json" />
+      <None Remove="V2Tests\Samples\OpenApiPathItem\pathItemWithBodyPathParameter.yaml" />
+      <None Remove="V2Tests\Samples\OpenApiPathItem\pathItemWithFormDataPathParameter.yaml" />
       <None Remove="V3Tests\Samples\OpenApiWorkspace\TodoComponents.yaml" />
       <None Remove="V3Tests\Samples\OpenApiWorkspace\TodoMain.yaml" />
     </ItemGroup>
@@ -83,6 +85,12 @@
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\queryParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiPathItem\pathItemWithFormDataPathParameter.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V2Tests\Samples\OpenApiPathItem\pathItemWithBodyPathParameter.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\OpenApiPathItem\basicPathItemWithFormData.yaml">

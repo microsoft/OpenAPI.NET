@@ -1,0 +1,31 @@
+﻿put:
+    summary: Puts a pet in the store with form data
+    description: ""
+    responses:
+        '200':
+          description: Pet updated.
+        '405':
+          description: Invalid input
+post:
+    summary: Posts a pet in the store with form data
+    description: ""
+    responses:
+        '200':
+        description: Pet updated.
+parameters:
+  - name: petId
+    in: path
+    description: ID of pet that needs to be updated
+    required: true
+    schema: 
+    type: string
+  - name: name
+    in: body
+    description: Updated pet body
+    required: true
+    type: object
+    properties:
+      name: 
+        type: string
+      status: 
+        type: string

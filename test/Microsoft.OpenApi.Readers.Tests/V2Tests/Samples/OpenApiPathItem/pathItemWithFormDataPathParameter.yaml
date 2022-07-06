@@ -1,0 +1,41 @@
+﻿put:
+    summary: Puts a pet in the store with form data
+    description: ""
+    responses:
+        '200':
+          description: Pet updated.
+        '405':
+          description: Invalid input
+    x-http-tests: 
+    - parameterValues:
+        petId: 10
+        name: Milo
+        status: Happy
+        expectedRequest: 
+        href: /pathitem-form-parameter/10
+        headers:
+            Content-Type: multipart/form-data 
+        content: name=Milo&status=Happy
+post:
+    summary: Posts a pet in the store with form data
+    description: ""
+    responses:
+        '200':
+        description: Pet updated.
+parameters:
+  - name: petId
+    in: path
+    description: ID of pet that needs to be updated
+    required: true
+    schema: 
+    type: string
+  - name: name
+    in: formData
+    description: Updated name of the pet
+    required: true
+    type: string
+  - name: status
+    in: formData
+    description: Updated status of the pet
+    required: false
+    type: string
