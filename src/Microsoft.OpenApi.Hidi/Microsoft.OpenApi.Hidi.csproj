@@ -20,9 +20,7 @@
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
     <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
-    <PackageReleaseNotes>
-- Bumps up the Microsoft.OpenApi.OData library to v1.0.11-preview4
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/microsoft/OpenAPI.NET/releases</PackageReleaseNotes>
     <AssemblyName>Microsoft.OpenApi.Hidi</AssemblyName>
     <RootNamespace>Microsoft.OpenApi.Hidi</RootNamespace>
     <SignAssembly>true</SignAssembly>
