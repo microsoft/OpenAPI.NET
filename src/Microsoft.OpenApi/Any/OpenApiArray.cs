@@ -18,6 +18,19 @@ namespace Microsoft.OpenApi.Any
         public AnyType AnyType { get; } = AnyType.Array;
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiArray() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiArray"/> object
+        /// </summary>
+        public OpenApiArray(OpenApiArray array)
+        {
+            AnyType = array.AnyType;
+        }
+
+        /// <summary>
         /// Write out contents of OpenApiArray to passed writer
         /// </summary>
         /// <param name="writer">Instance of JSON or YAML writer.</param>

@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
             Schema = new(mediaType.Schema);
-            Example = CloneHelper.CloneFromCopyConstructor(mediaType.Example);
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(mediaType.Example);
             Examples = new Dictionary<string, OpenApiExample>(mediaType.Examples);
             Encoding = new Dictionary<string, OpenApiEncoding>(mediaType.Encoding);
             Extensions = new Dictionary<string, IOpenApiExtension>(mediaType.Extensions);

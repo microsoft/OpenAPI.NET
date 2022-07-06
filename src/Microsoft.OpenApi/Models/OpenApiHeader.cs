@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Models
             Explode = header.Explode;
             AllowReserved = header.AllowReserved;
             Schema = new(header.Schema);
-            Example = CloneHelper.CloneFromCopyConstructor(header.Example);
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header.Example);
             Examples = new Dictionary<string, OpenApiExample>(header.Examples);
             Content = new Dictionary<string, OpenApiMediaType>(header.Content);
             Extensions = new Dictionary<string, IOpenApiExtension>(header.Extensions);

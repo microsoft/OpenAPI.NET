@@ -8,7 +8,7 @@ namespace Microsoft.OpenApi.Any
     /// <summary>
     /// Contains logic for cloning objects through copy constructors.
     /// </summary>
-    public class CloneHelper
+    public class OpenApiAnyCloneHelper
     {
         /// <summary>
         /// Clones an instance of <see cref="IOpenApiAny"/> object from the copy constructor
