@@ -15,16 +15,6 @@ namespace Microsoft.OpenApi.Any
         /// </summary>
         public AnyType AnyType { get; } = AnyType.Null;
 
-
-        /// <summary>
-        /// Implement ICloneable interface to allow for deep copying
-        /// </summary>
-        /// <returns>A new copy of <see cref="OpenApiNull"/></returns>
-        public object Clone()
-        {
-            return new OpenApiNull();
-        }
-
         /// <summary>
         /// Write out null representation
         /// </summary>

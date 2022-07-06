@@ -39,7 +39,6 @@ namespace Microsoft.OpenApi.Any
         /// </summary>
         public AnyType AnyType { get; } = AnyType.Primitive;
 
-
         /// <summary>
         /// The primitive class this object represents.
         /// </summary>
@@ -49,40 +48,6 @@ namespace Microsoft.OpenApi.Any
         /// Value of this <see cref="IOpenApiPrimitive"/>
         /// </summary>
         public T Value { get; }
-
-        /// <summary>
-        /// Implement ICloneable interface to allow for deep copying
-        /// </summary>
-        /// <returns>A new copy of <see cref="IOpenApiPrimitive"/></returns>
-        public object Clone()
-        {
-            var clone = CloneFromCopyConstructor(this);
-            if (clone == null) throw new ApplicationException("There's no copy constructor defined");
-            return clone;
-        }
-
-        /// <summary>
-        /// Clones an instance of <see cref="IOpenApiPrimitive"/> object from the copy constructor
-        /// </summary>
-        /// <param name="obj">The object instance.</param>
-        /// <returns>A clone copy.</returns>
-        public static object CloneFromCopyConstructor(Object obj)
-        {
-            if (obj != null)
-            {
-                Type t = obj.GetType();
-                foreach (ConstructorInfo ci in t.GetConstructors())
-                {
-                    ParameterInfo[] pi = ci.GetParameters();
-                    if (pi.Length == 1 && pi[0].ParameterType == t)
-                    {
-                        return ci.Invoke(new object[] { obj });
-                    }
-                }
-            }
-
-            return null;
-        }
 
         /// <summary>
         /// Write out content of primitive element

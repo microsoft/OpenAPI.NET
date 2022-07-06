@@ -11,19 +11,23 @@ namespace Microsoft.OpenApi.Any
         Array = 2,
         Object = 3,
     }
-    public interface IOpenApiAny : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension, System.ICloneable
+    public class CloneHelper
+    {
+        public CloneHelper() { }
+        public static Microsoft.OpenApi.Any.IOpenApiAny CloneFromCopyConstructor(Microsoft.OpenApi.Any.IOpenApiAny obj) { }
+    }
+    public interface IOpenApiAny : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
     {
         Microsoft.OpenApi.Any.AnyType AnyType { get; }
     }
-    public interface IOpenApiPrimitive : Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension, System.ICloneable
+    public interface IOpenApiPrimitive : Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
     {
         Microsoft.OpenApi.Any.PrimitiveType PrimitiveType { get; }
     }
-    public class OpenApiArray : System.Collections.Generic.List<Microsoft.OpenApi.Any.IOpenApiAny>, Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension, System.ICloneable
+    public class OpenApiArray : System.Collections.Generic.List<Microsoft.OpenApi.Any.IOpenApiAny>, Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
     {
         public OpenApiArray() { }
         public Microsoft.OpenApi.Any.AnyType AnyType { get; }
-        public object Clone() { }
         public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
     }
     public class OpenApiBinary : Microsoft.OpenApi.Any.OpenApiPrimitive<byte[]>
@@ -72,18 +76,16 @@ namespace Microsoft.OpenApi.Any
         public OpenApiLong(long value) { }
         public override Microsoft.OpenApi.Any.PrimitiveType PrimitiveType { get; }
     }
-    public class OpenApiNull : Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension, System.ICloneable
+    public class OpenApiNull : Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
     {
         public OpenApiNull() { }
         public Microsoft.OpenApi.Any.AnyType AnyType { get; }
-        public object Clone() { }
         public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
     }
-    public class OpenApiObject : System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Any.IOpenApiAny>, Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension, System.ICloneable
+    public class OpenApiObject : System.Collections.Generic.Dictionary<string, Microsoft.OpenApi.Any.IOpenApiAny>, Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
     {
         public OpenApiObject() { }
         public Microsoft.OpenApi.Any.AnyType AnyType { get; }
-        public object Clone() { }
         public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
     }
     public class OpenApiPassword : Microsoft.OpenApi.Any.OpenApiPrimitive<string>
@@ -91,16 +93,14 @@ namespace Microsoft.OpenApi.Any
         public OpenApiPassword(string value) { }
         public override Microsoft.OpenApi.Any.PrimitiveType PrimitiveType { get; }
     }
-    public abstract class OpenApiPrimitive<T> : Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Any.IOpenApiPrimitive, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension, System.ICloneable
+    public abstract class OpenApiPrimitive<T> : Microsoft.OpenApi.Any.IOpenApiAny, Microsoft.OpenApi.Any.IOpenApiPrimitive, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtension
     {
         public OpenApiPrimitive(Microsoft.OpenApi.Any.OpenApiPrimitive<T> openApiPrimitive) { }
         public OpenApiPrimitive(T value) { }
         public Microsoft.OpenApi.Any.AnyType AnyType { get; }
         public abstract Microsoft.OpenApi.Any.PrimitiveType PrimitiveType { get; }
         public T Value { get; }
-        public object Clone() { }
         public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
-        public static object CloneFromCopyConstructor(object obj) { }
     }
     public class OpenApiString : Microsoft.OpenApi.Any.OpenApiPrimitive<string>
     {

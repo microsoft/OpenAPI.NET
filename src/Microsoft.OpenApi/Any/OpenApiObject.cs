@@ -17,15 +17,6 @@ namespace Microsoft.OpenApi.Any
         public AnyType AnyType { get; } = AnyType.Object;
 
         /// <summary>
-        /// Implement ICloneable interface to allow for deep copying
-        /// </summary>
-        /// <returns>A new copy of <see cref="OpenApiObject"/></returns>
-        public object Clone()
-        {
-            return new OpenApiObject();
-        }
-
-        /// <summary>
         /// Serialize OpenApiObject to writer
         /// </summary>
         /// <param name="writer"></param>

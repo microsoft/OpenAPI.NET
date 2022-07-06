@@ -10,21 +10,12 @@ namespace Microsoft.OpenApi.Any
     /// <summary>
     /// Open API array.
     /// </summary>
-    public class OpenApiArray : List<IOpenApiAny>, IOpenApiAny, ICloneable
+    public class OpenApiArray : List<IOpenApiAny>, IOpenApiAny
     {
         /// <summary>
         /// The type of <see cref="IOpenApiAny"/>
         /// </summary>
         public AnyType AnyType { get; } = AnyType.Array;
-
-        /// <summary>
-        /// Implement ICloneable interface to allow for deep copying
-        /// </summary>
-        /// <returns>A new copy of <see cref="OpenApiArray"/></returns>
-        public object Clone()
-        {
-            return new OpenApiArray();
-        }
 
         /// <summary>
         /// Write out contents of OpenApiArray to passed writer

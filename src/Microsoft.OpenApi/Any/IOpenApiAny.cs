@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Any
     /// <summary>
     /// Base interface for all the types that represent Open API Any.
     /// </summary>
-    public interface IOpenApiAny : IOpenApiElement, IOpenApiExtension, ICloneable
+    public interface IOpenApiAny : IOpenApiElement, IOpenApiExtension
     {
         /// <summary>
         /// Type of an <see cref="IOpenApiAny"/>.
