@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public RuntimeExpressionAnyWrapper(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper)
         {
-            Any = runtimeExpressionAnyWrapper.Any;
+            Any = (IOpenApiAny)runtimeExpressionAnyWrapper.Any.Clone();
             Expression = runtimeExpressionAnyWrapper.Expression;
         }
 

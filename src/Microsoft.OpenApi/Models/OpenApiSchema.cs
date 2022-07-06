@@ -264,7 +264,7 @@ namespace Microsoft.OpenApi.Models
             MinLength = schema.MinLength;
             Pattern = schema.Pattern;
             MultipleOf = schema.MultipleOf;
-            Default = schema.Default;
+            Default = (IOpenApiAny)schema.Default.Clone();
             ReadOnly = schema.ReadOnly;
             WriteOnly = schema.WriteOnly;
             AllOf = new List<OpenApiSchema>(schema.AllOf);
@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Models
             AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
             AdditionalProperties = new(schema.AdditionalProperties);
             Discriminator = new(schema.Discriminator);
-            Example = schema.Example;
+            Example = (IOpenApiAny)schema.Example.Clone();
             Enum = new List<IOpenApiAny>(schema.Enum);
             Nullable = schema.Nullable;
             ExternalDocs = new(schema.ExternalDocs);
