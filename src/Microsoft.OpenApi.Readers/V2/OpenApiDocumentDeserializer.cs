@@ -36,11 +36,22 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "consumes",
-                (o, n) => n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, n.CreateSimpleList(s => s.GetScalarValue()))
+                (o, n) => {
+                    var consumes = n.CreateSimpleList(s => s.GetScalarValue());
+                    if (consumes.Count > 0)
+                    {
+                        n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
+                    }
+                   }
             },
             {
-                "produces",
-                (o, n) => n.Context.SetTempStorage(TempStorageKeys.GlobalProduces, n.CreateSimpleList(s => s.GetScalarValue()))
+                "produces", (o, n) => {
+                    var produces = n.CreateSimpleList(s => s.GetScalarValue());
+                    if (produces.Count > 0)
+                    {
+                        n.Context.SetTempStorage(TempStorageKeys.GlobalProduces, produces);
+                    }
+                }
             },
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
             {
