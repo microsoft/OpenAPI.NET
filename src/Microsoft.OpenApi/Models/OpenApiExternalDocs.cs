@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiExternalDocs(OpenApiExternalDocs externalDocs)
         {
             Description = externalDocs.Description;
-            Url = externalDocs.Url;
+            Url = new Uri(externalDocs.Url.OriginalString);
             Extensions = new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions);
         }
 

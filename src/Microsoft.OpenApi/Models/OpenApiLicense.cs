@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiLicense(OpenApiLicense license)
         {
             Name = license.Name;
-            Url = license.Url;
+            Url = new Uri(license.Url.OriginalString);
             Extensions = new Dictionary<string, IOpenApiExtension>(license.Extensions);
         }
 

@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiContact(OpenApiContact contact)
         {
             Name = contact.Name;
-            Url = contact.Url;
+            Url = new Uri(contact.Url.OriginalString);
             Email = contact.Email;
             Extensions = new Dictionary<string, IOpenApiExtension>(contact.Extensions);
         }
