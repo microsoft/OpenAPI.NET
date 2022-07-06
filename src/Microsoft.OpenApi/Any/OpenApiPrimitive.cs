@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Any
         }
 
         /// <summary>
-        /// 
+        /// Initializes a copy of an <see cref="IOpenApiPrimitive"/> object
         /// </summary>
         /// <param name="openApiPrimitive"></param>
         public OpenApiPrimitive(OpenApiPrimitive<T> openApiPrimitive)
