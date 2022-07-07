@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Hidi
             var csdlFilterOption = new Option<string>("--csdl-filter", "Comma delimited list of EntitySets or Singletons to filter CSDL on. e.g. tasks,accounts");
             csdlFilterOption.AddAlias("--csf");
 
-            var outputOption = new Option<FileInfo>("--output", () => new FileInfo("./output"), "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
+            var outputOption = new Option<FileInfo>("--output", "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
             outputOption.AddAlias("-o");
 
             var cleanOutputOption = new Option<bool>("--clean-output", "Overwrite an existing file");
