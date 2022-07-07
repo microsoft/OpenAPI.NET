@@ -581,7 +581,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 extension = Path.GetExtension(openapi);
             }
-            if (!string.IsNullOrEmpty(csdl))
+            else if (!string.IsNullOrEmpty(csdl))
             {
                 extension = ".yml";
             }
