@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedLinkAsV3JsonWorksAsync(bool produceTerseOutput)
+        public Task SerializeAdvancedLinkAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -89,17 +89,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedLink.SerializeAsV3(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeReferencedLinkAsV3JsonWorksAsync(bool produceTerseOutput)
+        public Task SerializeReferencedLinkAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -107,17 +105,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedLink.SerializeAsV3(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeReferencedLinkAsV3JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
+        public Task SerializeReferencedLinkAsV3JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -125,11 +121,9 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedLink.SerializeAsV3WithoutReference(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

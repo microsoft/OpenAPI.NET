@@ -371,7 +371,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeReferencedSchemaAsV3WithoutReferenceJsonWorksAsync(bool produceTerseOutput)
+        public Task SerializeReferencedSchemaAsV3WithoutReferenceJsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -380,17 +380,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedSchema.SerializeAsV3WithoutReference(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeReferencedSchemaAsV3JsonWorksAsync(bool produceTerseOutput)
+        public Task SerializeReferencedSchemaAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -398,17 +396,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             ReferencedSchema.SerializeAsV3(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeSchemaWRequiredPropertiesAsV2JsonWorksAsync(bool produceTerseOutput)
+        public Task SerializeSchemaWRequiredPropertiesAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -416,11 +412,9 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedSchemaWithRequiredPropertiesObject.SerializeAsV2(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

@@ -988,7 +988,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentAsV3JsonWorks(bool produceTerseOutput)
+        public Task SerializeAdvancedDocumentAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -996,17 +996,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocument.SerializeAsV3(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentWithReferenceAsV3JsonWorks(bool produceTerseOutput)
+        public Task SerializeAdvancedDocumentWithReferenceAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1014,17 +1012,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithReference.SerializeAsV3(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentAsV2JsonWorks(bool produceTerseOutput)
+        public Task SerializeAdvancedDocumentAsV2JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1032,17 +1028,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocument.SerializeAsV2(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeDuplicateExtensionsAsV3JsonWorks(bool produceTerseOutput)
+        public Task SerializeDuplicateExtensionsAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1050,17 +1044,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             DuplicateExtensions.SerializeAsV3(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeDuplicateExtensionsAsV2JsonWorks(bool produceTerseOutput)
+        public Task SerializeDuplicateExtensionsAsV2JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1068,17 +1060,15 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             DuplicateExtensions.SerializeAsV2(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeAdvancedDocumentWithReferenceAsV2JsonWorks(bool produceTerseOutput)
+        public Task SerializeAdvancedDocumentWithReferenceAsV2JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -1086,11 +1076,9 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithReference.SerializeAsV2(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]

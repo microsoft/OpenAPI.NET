@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task WriteOpenApiObjectAsJsonWorks(bool produceTerseOutput)
+        public Task WriteOpenApiObjectAsJsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var openApiObject = new OpenApiObject
@@ -224,13 +224,13 @@ namespace Microsoft.OpenApi.Tests.Writers
             var actualJson = WriteAsJson(openApiObject, produceTerseOutput);
 
             // Assert
-            await Verifier.Verify(actualJson).UseParameters(produceTerseOutput);
+            return Verifier.Verify(actualJson).UseParameters(produceTerseOutput);
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task WriteOpenApiArrayAsJsonWorks(bool produceTerseOutput)
+        public Task WriteOpenApiArrayAsJsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var openApiObject = new OpenApiObject
@@ -256,7 +256,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var actualJson = WriteAsJson(array, produceTerseOutput);
 
             // Assert
-            await Verifier.Verify(actualJson).UseParameters(produceTerseOutput);
+            return Verifier.Verify(actualJson).UseParameters(produceTerseOutput);
         }
 
         private static string WriteAsJson(IOpenApiAny any, bool produceTerseOutput = false)
