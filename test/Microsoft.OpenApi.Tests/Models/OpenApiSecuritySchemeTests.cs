@@ -304,7 +304,7 @@ in: query";
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeReferencedSecuritySchemeAsV3JsonWorksAsync(bool produceTerseOutput)
+        public Task SerializeReferencedSecuritySchemeAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -320,7 +320,7 @@ in: query";
             writer.Flush();
 
             // Assert
-            Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+            return Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
