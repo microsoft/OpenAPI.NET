@@ -34,10 +34,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="SharpYaml" Version="1.9.2" />
     </ItemGroup>
 
