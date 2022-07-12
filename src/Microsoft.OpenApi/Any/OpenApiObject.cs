@@ -17,6 +17,19 @@ namespace Microsoft.OpenApi.Any
         public AnyType AnyType { get; } = AnyType.Object;
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiObject() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiObject"/> object
+        /// </summary>
+        public OpenApiObject(OpenApiObject obj)
+        {
+            AnyType = obj.AnyType;
+        }
+
+        /// <summary>
         /// Serialize OpenApiObject to writer
         /// </summary>
         /// <param name="writer"></param>

@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Writers;
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Any
@@ -15,6 +16,19 @@ namespace Microsoft.OpenApi.Any
         /// The type of <see cref="IOpenApiAny"/>
         /// </summary>
         public AnyType AnyType { get; } = AnyType.Array;
+
+        /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiArray() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiArray"/> object
+        /// </summary>
+        public OpenApiArray(OpenApiArray array)
+        {
+            AnyType = array.AnyType;
+        }
 
         /// <summary>
         /// Write out contents of OpenApiArray to passed writer

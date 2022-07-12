@@ -8,5 +8,15 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiResponses : OpenApiExtensibleDictionary<OpenApiResponse>
     {
+        /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiResponses() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiResponses"/> object
+        /// </summary>
+        public OpenApiResponses(OpenApiResponses openApiResponses) { }
+
     }
 }

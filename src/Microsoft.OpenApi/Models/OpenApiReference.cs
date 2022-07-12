@@ -113,6 +113,22 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiReference() {}
+
+        /// <summary>
+        /// Initializes a copy instance of the <see cref="OpenApiReference"/> object
+        /// </summary>
+        public OpenApiReference(OpenApiReference reference)
+        {
+            ExternalResource = reference.ExternalResource;
+            Type = reference.Type;
+            Id = reference.Id;
+            HostDocument = new(reference.HostDocument);
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

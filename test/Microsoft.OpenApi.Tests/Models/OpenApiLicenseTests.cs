@@ -108,5 +108,20 @@ x-copyright: Abc";
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
+
+        [Fact]
+        public void ShouldCopyFromOriginalObjectWithoutMutating()
+        {
+            // Arrange
+            var licenseCopy = new OpenApiLicense(AdvanceLicense);
+
+            // Act
+            licenseCopy.Name = "";
+            licenseCopy.Url = new Uri("https://exampleCopy.com");
+
+            // Assert
+            Assert.NotEqual(AdvanceLicense.Name, licenseCopy.Name);
+            Assert.NotEqual(AdvanceLicense.Url, licenseCopy.Url);
+        }
     }
 }
