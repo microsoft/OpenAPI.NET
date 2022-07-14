@@ -31,18 +31,25 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiOperation"/>.
+        /// Visits <see cref="OpenApiPathItem"/>
         /// </summary>
-        /// <param name="operation">The target <see cref="OpenApiOperation"/>.</param>
-        public override void Visit(OpenApiOperation operation)
+        /// <param name="pathItem"> The target <see cref="OpenApiPathItem"/>.</param>
+        public override void Visit(OpenApiPathItem pathItem)
         {
-            if (_predicate(CurrentKeys.Path, CurrentKeys.Operation, operation))
+            foreach (var item in pathItem.Operations)
             {
-                _searchResults.Add(new SearchResult()
+                var operation = item.Value;
+                var operationType = item.Key;
+
+                if (_predicate(CurrentKeys.Path, CurrentKeys.Operation, operation))
                 {
-                    Operation = operation,
-                    CurrentKeys = CopyCurrentKeys(CurrentKeys)
-                });
+                    _searchResults.Add(new SearchResult()
+                    {
+                        Operation = operation,
+                        Parameters = pathItem.Parameters,
+                        CurrentKeys = CopyCurrentKeys(CurrentKeys, operationType)
+                    });
+                }
             }
         }
 
@@ -65,12 +72,12 @@ namespace Microsoft.OpenApi.Services
             base.Visit(parameters);
         }
 
-        private static CurrentKeys CopyCurrentKeys(CurrentKeys currentKeys)
+        private static CurrentKeys CopyCurrentKeys(CurrentKeys currentKeys, OperationType operationType)
         {
             return new CurrentKeys
             {
                 Path = currentKeys.Path,
-                Operation = currentKeys.Operation
+                Operation = operationType
             };
         }
     }
