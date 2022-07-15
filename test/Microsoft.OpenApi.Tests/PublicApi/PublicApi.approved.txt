@@ -1006,7 +1006,6 @@ namespace Microsoft.OpenApi.Services
         public string Header { get; }
         public string Link { get; set; }
         public Microsoft.OpenApi.Models.OperationType? Operation { get; set; }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiParameter> Parameters { get; set; }
         public string Path { get; set; }
         public string Response { get; set; }
         public string ServerVariable { get; }
