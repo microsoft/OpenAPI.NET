@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Services
                 var operation = item.Value;
                 var operationType = item.Key;
 
-                if (_predicate(CurrentKeys.Path, CurrentKeys.Operation, operation))
+                if (_predicate(CurrentKeys.Path, operationType, operation))
                 {
                     _searchResults.Add(new SearchResult()
                     {
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Services
             return new CurrentKeys
             {
                 Path = currentKeys.Path,
-                Operation = operationType
+                Operation = operationType,
             };
         }
     }
