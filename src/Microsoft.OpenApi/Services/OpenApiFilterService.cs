@@ -164,6 +164,14 @@ namespace Microsoft.OpenApi.Services
                 if (result.CurrentKeys.Operation != null)
                 {
                     pathItem.Operations.Add((OperationType)result.CurrentKeys.Operation, result.Operation);
+
+                    if (result.Parameters?.Any() ?? false)
+                    {
+                        foreach (var parameter in result.Parameters)
+                        {
+                            pathItem.Parameters.Add(parameter);
+                        }
+                    }
                 }
             }
 

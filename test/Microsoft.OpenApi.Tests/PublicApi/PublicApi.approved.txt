@@ -1111,7 +1111,7 @@ namespace Microsoft.OpenApi.Services
     {
         public OperationSearch(System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Services.SearchResult> SearchResults { get; }
-        public override void Visit(Microsoft.OpenApi.Models.OpenApiOperation operation) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiPathItem pathItem) { }
         public override void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiParameter> parameters) { }
     }
     public class SearchResult
@@ -1119,6 +1119,7 @@ namespace Microsoft.OpenApi.Services
         public SearchResult() { }
         public Microsoft.OpenApi.Services.CurrentKeys CurrentKeys { get; set; }
         public Microsoft.OpenApi.Models.OpenApiOperation Operation { get; set; }
+        public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiParameter> Parameters { get; set; }
     }
 }
 namespace Microsoft.OpenApi.Validations

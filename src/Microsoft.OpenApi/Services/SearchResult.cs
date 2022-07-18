@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
@@ -19,5 +20,11 @@ namespace Microsoft.OpenApi.Services
         /// An Operation object.
         /// </summary>
         public OpenApiOperation Operation { get; set; }
+
+        /// <summary>
+        /// Parameters object
+        /// </summary>
+        public IList<OpenApiParameter> Parameters { get; set; }
+
     }
 }

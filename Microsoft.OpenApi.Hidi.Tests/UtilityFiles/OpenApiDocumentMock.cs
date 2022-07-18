@@ -116,6 +116,21 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     }
                                 }
                             }
+                        },
+                        Parameters = new List<OpenApiParameter>
+                        {
+                            {
+                                new OpenApiParameter()
+                                {
+                                    Name = "period",
+                                    In = ParameterLocation.Path,
+                                    Required = true,
+                                    Schema = new OpenApiSchema()
+                                    {
+                                        Type = "string"
+                                    }
+                                }
+                            }
                         }
                     },
                     ["/reports/microsoft.graph.getTeamsUserActivityUserDetail(date={date})"] = new OpenApiPathItem()
@@ -175,7 +190,20 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     }
                                 }
                             }
-                        }
+                        },
+                        Parameters = new List<OpenApiParameter>
+                        {
+                            new OpenApiParameter
+                            {
+                                Name = "period",
+                                In = ParameterLocation.Path,
+                                Required = true,
+                                Schema = new OpenApiSchema()
+                                {
+                                    Type = "string"
+                                }
+                            }
+                        }                                    
                     },
                     ["/users"] = new OpenApiPathItem()
                     {
