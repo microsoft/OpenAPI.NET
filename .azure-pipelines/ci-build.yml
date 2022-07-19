@@ -290,6 +290,7 @@ stages:
               displayName: 'GitHub release (edit)'
               inputs:
                 gitHubConnection: 'Github-MaggieKimani1'
+                action: edit
                 tagSource: userSpecifiedTag
                 tag: '$(artifactVersion)'
                 title: '$(artifactVersion)'
