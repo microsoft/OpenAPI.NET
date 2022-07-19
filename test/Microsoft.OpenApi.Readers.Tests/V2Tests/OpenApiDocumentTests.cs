@@ -174,15 +174,6 @@ paths: {}",
                     },
                     Items = new OpenApiSchema()
                     {
-                        //Properties = new Dictionary<string, OpenApiSchema>()
-                        //                    {
-                        //                        { "id", new OpenApiSchema()
-                        //                            {
-                        //                                Type = "string",
-                        //                                Description = "Item identifier."
-                        //                            }
-                        //                        }
-                        //                    },
                         Reference = new OpenApiReference()
                         {
                             Type = ReferenceType.Schema,

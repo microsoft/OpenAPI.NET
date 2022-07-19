@@ -54,6 +54,24 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiEncoding() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiEncoding"/> object
+        /// </summary>
+        public OpenApiEncoding(OpenApiEncoding encoding)
+        {
+            ContentType = encoding.ContentType;
+            Headers = new Dictionary<string, OpenApiHeader>(encoding.Headers);
+            Style = encoding.Style;
+            Explode = encoding.Explode;
+            AllowReserved = encoding.AllowReserved;
+            Extensions = new Dictionary<string, IOpenApiExtension>(encoding.Extensions);
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

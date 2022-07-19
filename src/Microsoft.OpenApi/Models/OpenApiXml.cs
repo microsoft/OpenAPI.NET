@@ -47,6 +47,24 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiXml() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiXml"/> object
+        /// </summary>
+        public OpenApiXml(OpenApiXml xml)
+        {
+            Name = xml.Name;
+            Namespace = xml.Namespace;
+            Prefix = xml.Prefix;
+            Attribute = xml.Attribute;
+            Wrapped = xml.Wrapped;
+            Extensions = new Dictionary<string, IOpenApiExtension>(xml.Extensions);
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiXml"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
