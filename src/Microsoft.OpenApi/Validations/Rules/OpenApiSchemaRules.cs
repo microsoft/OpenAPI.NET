@@ -92,8 +92,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                                                                             schema.Reference.Id, schema.Discriminator.PropertyName));
                             }
                         }
-                    }                   
-
+                    }
+                    
                     context.Exit();
                 });
 
