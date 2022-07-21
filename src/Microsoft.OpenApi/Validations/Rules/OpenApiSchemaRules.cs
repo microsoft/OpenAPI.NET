@@ -72,13 +72,48 @@ namespace Microsoft.OpenApi.Validations.Rules
                     {
                         if (!schema.Required.Contains(schema.Discriminator?.PropertyName))
                         {
-                            context.CreateError(nameof(ValidateSchemaDiscriminator),
-                                                string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
-                                                                                schema.Reference.Id, schema.Discriminator.PropertyName));
+                            // check schema.OneOf, schema.AnyOf or schema.AllOf
+                            if(schema.OneOf.Count != 0)
+                            {
+                                ValidateDiscriminatorAgainstChildSchema(schema.OneOf, schema, context);                                
+                            }
+                            else if (schema.AnyOf.Count != 0)
+                            {
+                                ValidateDiscriminatorAgainstChildSchema(schema.AnyOf, schema, context);
+                            }
+                            else if (schema.AllOf.Count != 0)
+                            {
+                                ValidateDiscriminatorAgainstChildSchema(schema.AllOf, schema, context);
+                            }
+                            else
+                            {
+                                context.CreateError(nameof(ValidateSchemaDiscriminator),
+                                            string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
+                                                                            schema.Reference.Id, schema.Discriminator.PropertyName));
+                            }
                         }
-                    }
+                    }                   
 
                     context.Exit();
                 });
+
+        /// <summary>
+        /// Validates the property name in the discriminator against the ones present in the children schema
+        /// </summary>
+        /// <param name="childSchema">The derived schema.</param>
+        /// <param name="schema">The parent schema.</param>
+        /// <param name="context">A validation context.</param>
+        public static void ValidateDiscriminatorAgainstChildSchema(IList<OpenApiSchema> childSchema, OpenApiSchema schema, IValidationContext context)
+        {
+            foreach (var schemaItem in childSchema)
+            {
+                if (!schemaItem.Properties.Keys.Contains(schema.Discriminator?.PropertyName))
+                {
+                    context.CreateError(nameof(ValidateSchemaDiscriminator),
+                                string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
+                                                                schema.Reference.Id, schema.Discriminator.PropertyName));
+                }
+            }            
+        }
     }
 }
