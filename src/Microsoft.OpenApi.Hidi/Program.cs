@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.CommandLine;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Hidi.Handlers;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -66,7 +65,11 @@ namespace Microsoft.OpenApi.Hidi
                 logLevelOption
             };
 
-            validateCommand.SetHandler<string, LogLevel, CancellationToken>(OpenApiService.ValidateOpenApiDocument, descriptionOption, logLevelOption);
+            validateCommand.Handler = new ValidateCommandHandler 
+            {
+                DescriptionOption = descriptionOption,
+                LogLevelOption = logLevelOption
+            };
 
             var transformCommand = new Command("transform")
             {
@@ -86,8 +89,23 @@ namespace Microsoft.OpenApi.Hidi
                 inlineExternalOption
             };
 
-            transformCommand.SetHandler<string, string, string, FileInfo, bool, string?, OpenApiFormat?, bool, LogLevel, bool, bool, string, string, string, CancellationToken> (
-                OpenApiService.TransformOpenApiDocument, descriptionOption, csdlOption, csdlFilterOption, outputOption, cleanOutputOption, versionOption, formatOption, terseOutputOption, logLevelOption, inlineLocalOption, inlineExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
+            transformCommand.Handler = new TransformCommandHandler
+            {
+                DescriptionOption = descriptionOption,
+                CsdlOption = csdlOption,
+                CsdlFilterOption = csdlFilterOption,
+                OutputOption = outputOption,
+                CleanOutputOption = cleanOutputOption,
+                VersionOption = versionOption,
+                FormatOption = formatOption,
+                TerseOutputOption = terseOutputOption,
+                LogLevelOption = logLevelOption,
+                FilterByOperationIdsOption = filterByOperationIdsOption,
+                FilterByTagsOption = filterByTagsOption,
+                FilterByCollectionOption = filterByCollectionOption,
+                InlineLocalOption = inlineLocalOption,
+                InlineExternalOption = inlineExternalOption
+            };
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
