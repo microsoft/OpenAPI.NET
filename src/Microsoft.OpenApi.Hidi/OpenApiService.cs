@@ -26,7 +26,6 @@ using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 using System.Threading;
 using System.Xml.Xsl;
 using System.Xml;
-using System.Runtime.CompilerServices;
 using System.Reflection;
 
 namespace Microsoft.OpenApi.Hidi
@@ -36,7 +35,7 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
-        public static async Task<int> TransformOpenApiDocument(
+        public static async Task TransformOpenApiDocument(
             string openapi,
             string csdl,
             string csdlFilter,
@@ -54,8 +53,7 @@ namespace Microsoft.OpenApi.Hidi
             CancellationToken cancellationToken
            )
         {
-            using var loggerFactory = ConfigureLoggerInstance(loglevel);
-            var logger = loggerFactory.CreateLogger<OpenApiService>();
+            var logger = Logger.ConfigureLogger(loglevel);
 
             try
             {
@@ -212,18 +210,11 @@ namespace Microsoft.OpenApi.Hidi
                     logger.LogTrace($"Finished serializing in {stopwatch.ElapsedMilliseconds}ms");
                     textWriter.Flush();
                 }
-                return 0;
             }
             catch (Exception ex)
             {
-#if DEBUG  
-                logger.LogCritical(ex, ex.Message);               
-#else
-                logger.LogCritical(ex.Message);
-                
-#endif
-                return 1;
-            }            
+                throw new InvalidOperationException($"Could not transform the document, reason: {ex.Message}", ex);
+            }
         }
 
         private static XslCompiledTransform GetFilterTransform()
@@ -249,18 +240,15 @@ namespace Microsoft.OpenApi.Hidi
             return stream;
         }
 
-
-
         /// <summary>
         /// Implementation of the validate command
         /// </summary>
-        public static async Task<int> ValidateOpenApiDocument(
+        public static async Task ValidateOpenApiDocument(
             string openapi, 
             LogLevel loglevel, 
             CancellationToken cancellationToken)
         {
-            using var loggerFactory = ConfigureLoggerInstance(loglevel);
-            var logger = loggerFactory.CreateLogger<OpenApiService>();
+            var logger = Logger.ConfigureLogger(loglevel);
 
             try
             {
@@ -308,19 +296,11 @@ namespace Microsoft.OpenApi.Hidi
                     logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
                     logger.LogInformation(statsVisitor.GetStatisticsReport());
                 }
-
-                return 0;
             }
             catch (Exception ex)
             {
-#if DEBUG
-                logger.LogCritical(ex, ex.Message);
-#else
-                logger.LogCritical(ex.Message);
-#endif
-                return 1;
+                throw new InvalidOperationException($"Could not validate the document, reason: {ex.Message}", ex);
             }
-
         }
 
         /// <summary>
