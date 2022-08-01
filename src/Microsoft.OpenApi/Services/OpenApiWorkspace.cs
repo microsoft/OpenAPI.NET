@@ -64,6 +64,11 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiWorkspace"/> object
+        /// </summary>
+        public OpenApiWorkspace(OpenApiWorkspace workspace){}
+
+        /// <summary>
         /// Verify if workspace contains a document based on its URL. 
         /// </summary>
         /// <param name="location">A relative or absolute URL of the file.  Use file:// for folder locations.</param>

@@ -157,30 +157,18 @@ stages:
                 }
             ]
           SessionTimeout: 20
-      
+           
       # Pack
-      - task: DotNetCoreCLI@2
+      - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi/Microsoft.OpenApi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
         displayName: 'pack OpenAPI'
-        inputs:
-          command: pack
-          projects: src/Microsoft.OpenApi/Microsoft.OpenApi.csproj
-          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
       
       # Pack
-      - task: DotNetCoreCLI@2
+      - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
         displayName: 'pack Readers'
-        inputs:
-          command: pack
-          projects: src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj
-          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
-      
+
       # Pack
-      - task: DotNetCoreCLI@2
-        displayName: 'pack Hidi'
-        inputs:
-          command: pack
-          projects: src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj
-          arguments: '-o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg'
+      - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
+        displayName: 'pack Hidi'     
       
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
         displayName: 'ESRP CodeSigning Nuget Packages'
@@ -290,6 +278,7 @@ stages:
               displayName: 'GitHub release (edit)'
               inputs:
                 gitHubConnection: 'Github-MaggieKimani1'
+                action: edit
                 tagSource: userSpecifiedTag
                 tag: '$(artifactVersion)'
                 title: '$(artifactVersion)'

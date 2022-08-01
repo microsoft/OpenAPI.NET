@@ -16,6 +16,19 @@ namespace Microsoft.OpenApi.Any
         public AnyType AnyType { get; } = AnyType.Null;
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiNull() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiNull"/> object
+        /// </summary>
+        public OpenApiNull(OpenApiNull openApiNull)
+        {
+            AnyType = openApiNull.AnyType;
+        }
+
+        /// <summary>
         /// Write out null representation
         /// </summary>
         /// <param name="writer"></param>

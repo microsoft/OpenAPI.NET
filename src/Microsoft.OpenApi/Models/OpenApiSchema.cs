@@ -243,6 +243,56 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiSchema() {}
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiSchema"/> object
+        /// </summary>
+        public OpenApiSchema(OpenApiSchema schema)
+        {
+            Title = schema.Title;
+            Type = schema.Type;
+            Format = schema.Format;
+            Description = schema.Description;
+            Maximum = schema.Maximum;
+            ExclusiveMaximum = schema.ExclusiveMaximum;
+            Minimum = schema.Minimum;
+            ExclusiveMinimum = schema.ExclusiveMinimum;
+            MaxLength = schema.MaxLength;
+            MinLength = schema.MinLength;
+            Pattern = schema.Pattern;
+            MultipleOf = schema.MultipleOf;
+            Default = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema.Default);
+            ReadOnly = schema.ReadOnly;
+            WriteOnly = schema.WriteOnly;
+            AllOf = new List<OpenApiSchema>(schema.AllOf);
+            OneOf = new List<OpenApiSchema>(schema.OneOf);
+            AnyOf = new List<OpenApiSchema>(schema.AnyOf);
+            Not = new(schema.Not);
+            Required = new HashSet<string>(schema.Required);
+            Items = new(schema.Items);
+            MaxItems = schema.MaxItems;
+            MinItems = schema.MinItems;
+            UniqueItems = schema.UniqueItems;
+            Properties = new Dictionary<string, OpenApiSchema>(schema.Properties);
+            MaxProperties = schema.MaxProperties;
+            MinProperties = schema.MinProperties;
+            AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
+            AdditionalProperties = new(schema.AdditionalProperties);
+            Discriminator = new(schema.Discriminator);
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema.Example);
+            Enum = new List<IOpenApiAny>(schema.Enum);
+            Nullable = schema.Nullable;
+            ExternalDocs = new(schema.ExternalDocs);
+            Deprecated = schema.Deprecated;
+            Xml = new(schema.Xml);
+            UnresolvedReference = schema.UnresolvedReference;
+            Reference = new(schema.Reference);
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

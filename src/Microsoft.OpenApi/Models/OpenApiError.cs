@@ -27,6 +27,15 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiError"/> object
+        /// </summary>
+        public OpenApiError(OpenApiError error)
+        {
+            Pointer = error.Pointer;
+            Message = error.Message;
+        }
+
+        /// <summary>
         /// Message explaining the error.
         /// </summary>
         public string Message { get; set; }

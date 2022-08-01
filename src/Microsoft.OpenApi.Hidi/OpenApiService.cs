@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -61,10 +61,11 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     throw new ArgumentException("Please input a file path");
                 }
-                if(output == null)
+                if (output == null)
                 {
-                    throw new ArgumentNullException(nameof(output));
-                }
+                    var inputExtension = GetInputPathExtension(openapi, csdl);
+                    output = new FileInfo($"./output{inputExtension}");
+                };
                 if (cleanoutput && output.Exists)
                 {
                     output.Delete();
@@ -553,6 +554,21 @@ namespace Microsoft.OpenApi.Hidi
         {
             logger.LogTrace("Getting the OpenApi format");
             return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
+        }
+
+        private static string GetInputPathExtension(string openapi = null, string csdl = null)
+        {
+            var extension = String.Empty;
+            if (!string.IsNullOrEmpty(openapi))
+            {
+                extension = Path.GetExtension(openapi);
+            }
+            else if (!string.IsNullOrEmpty(csdl))
+            {
+                extension = ".yml";
+            }
+
+            return extension;
         }
 
         private static ILoggerFactory ConfigureLoggerInstance(LogLevel loglevel)
