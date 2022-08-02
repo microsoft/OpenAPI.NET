@@ -68,14 +68,13 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (schema.Reference != null && schema.Discriminator != null)
                     {
-                        var discriminator = schema.Discriminator?.PropertyName;
-                        var schemaReferenceId = schema.Reference.Id;
+                        var discriminatorName = schema.Discriminator?.PropertyName;
 
-                        if (!ValidateChildSchemaAgainstDiscriminator(schema, discriminator, schemaReferenceId, context))
+                        if (!ValidateChildSchemaAgainstDiscriminator(schema, discriminatorName))
                         {
                             context.CreateError(nameof(ValidateSchemaDiscriminator),
                             string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
-                                schemaReferenceId, discriminator));
+                                schema.Reference.Id, discriminatorName));
                         }
                     }
 
@@ -86,29 +85,31 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validates the property name in the discriminator against the ones present in the children schema
         /// </summary>
         /// <param name="schema">The parent schema.</param>
-        /// <param name="discriminator">Adds support for polymorphism. The discriminator is an object name that is used to differentiate
+        /// <param name="discriminatorName">Adds support for polymorphism. The discriminator is an object name that is used to differentiate
         /// between other schemas which may satisfy the payload description.</param>
-        /// <param name="schemaReferenceId"></param>
-        /// <param name="context">A validation context.</param>
-        public static bool ValidateChildSchemaAgainstDiscriminator(OpenApiSchema schema, string discriminator, string schemaReferenceId, IValidationContext context)
+        public static bool ValidateChildSchemaAgainstDiscriminator(OpenApiSchema schema, string discriminatorName)
         {
             bool containsDiscriminator = false;
 
-            if (!schema.Required.Contains(discriminator))
+            if (!schema.Required?.Contains(discriminatorName) ?? false)
             {
                 // recursively check nested schema.OneOf, schema.AnyOf or schema.AllOf and their required fields for the discriminator
                 if (schema.OneOf.Count != 0)
                 {
-                    return TraverseSchemaElements(discriminator, schema.OneOf, schemaReferenceId, context, containsDiscriminator);
+                    return TraverseSchemaElements(discriminatorName, schema.OneOf, ref containsDiscriminator);
                 }
                 if (schema.AnyOf.Count != 0)
                 {
-                    return TraverseSchemaElements(discriminator, schema.AnyOf, schemaReferenceId, context, containsDiscriminator);
+                    return TraverseSchemaElements(discriminatorName, schema.AnyOf, ref containsDiscriminator);
                 }
                 if (schema.AllOf.Count != 0)
                 {
-                    return TraverseSchemaElements(discriminator, schema.AllOf, schemaReferenceId, context, containsDiscriminator);
+                    return TraverseSchemaElements(discriminatorName, schema.AllOf, ref containsDiscriminator);
                 }
+            }
+            else
+            {
+                return true;
             }
 
             return containsDiscriminator;
@@ -117,20 +118,19 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// <summary>
         /// Traverses the schema elements and checks whether the schema contains the discriminator.
         /// </summary>
-        /// <param name="discriminator">Adds support for polymorphism. The discriminator is an object name that is used to differentiate
+        /// <param name="discriminatorName">Adds support for polymorphism. The discriminator is an object name that is used to differentiate
         /// between other schemas which may satisfy the payload description.</param>
         /// <param name="childSchema">The child schema.</param>
-        /// <param name="schemaReferenceId"> The schema reference Id.</param>
-        /// <param name="context"> A validation context.</param>
         /// <param name="containsDiscriminator">Tracks whether the discriminator is present.</param>
         /// <returns></returns>
-        public static bool TraverseSchemaElements(string discriminator, IList<OpenApiSchema> childSchema, string schemaReferenceId, IValidationContext context, bool containsDiscriminator)
+        public static bool TraverseSchemaElements(string discriminatorName, IList<OpenApiSchema> childSchema, ref bool containsDiscriminator)
         {
             foreach (var childItem in childSchema)
             {
-                if (!childItem.Properties.ContainsKey(discriminator) && !childItem.Required.Contains(discriminator))
+                if ((!childItem.Properties?.ContainsKey(discriminatorName) ?? false) &&
+                                    (!childItem.Required?.Contains(discriminatorName) ?? false))
                 {
-                    return ValidateChildSchemaAgainstDiscriminator(childItem, discriminator, schemaReferenceId, context);
+                    return ValidateChildSchemaAgainstDiscriminator(childItem, discriminatorName);
                 }
                 else
                 {
