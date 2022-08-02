@@ -1283,7 +1283,8 @@ namespace Microsoft.OpenApi.Validations.Rules
     {
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiSchema> SchemaMismatchedDataType { get; }
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiSchema> ValidateSchemaDiscriminator { get; }
-        public static void ValidateDiscriminatorAgainstChildSchema(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> childSchema, Microsoft.OpenApi.Models.OpenApiSchema schema, Microsoft.OpenApi.Validations.IValidationContext context) { }
+        public static bool TraverseSchemaElements(string discriminatorName, System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> childSchema, ref bool containsDiscriminator) { }
+        public static bool ValidateChildSchemaAgainstDiscriminator(Microsoft.OpenApi.Models.OpenApiSchema schema, string discriminatorName) { }
     }
     [Microsoft.OpenApi.Validations.Rules.OpenApiRule]
     public static class OpenApiServerRules
