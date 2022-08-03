@@ -26,8 +26,8 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
 
 
-            var logger = Logger.ConfigureLogger(logLevel);
-
+            using var loggerFactory = Logger.ConfigureLogger(logLevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
                 await OpenApiService.ValidateOpenApiDocument(openapi, logLevel, cancellationToken);

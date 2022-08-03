@@ -50,8 +50,8 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             string filterbycollection = context.ParseResult.GetValueForOption(FilterByCollectionOption);
             CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
 
-            var logger = Logger.ConfigureLogger(logLevel);
-
+            using var loggerFactory = Logger.ConfigureLogger(logLevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
                 await OpenApiService.TransformOpenApiDocument(openapi, csdl, csdlFilter, output, cleanOutput, version, format, terseOutput, logLevel, inlineLocal, inlineExternal, filterbyoperationids, filterbytags, filterbycollection, cancellationToken);

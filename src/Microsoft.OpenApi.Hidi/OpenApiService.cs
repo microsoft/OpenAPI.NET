@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Hidi
             string? version,
             OpenApiFormat? format,
             bool terseOutput,
-            LogLevel loglevel,
+            LogLevel logLevel,
             bool inlineLocal,
             bool inlineExternal,
             string filterbyoperationids,
@@ -53,8 +53,8 @@ namespace Microsoft.OpenApi.Hidi
             CancellationToken cancellationToken
            )
         {
-            var logger = Logger.ConfigureLogger(loglevel);
-
+            using var loggerFactory = Logger.ConfigureLogger(logLevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
                 if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
@@ -246,11 +246,11 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         public static async Task ValidateOpenApiDocument(
             string openapi, 
-            LogLevel loglevel, 
+            LogLevel logLevel, 
             CancellationToken cancellationToken)
         {
-            var logger = Logger.ConfigureLogger(loglevel);
-
+            using var loggerFactory = Logger.ConfigureLogger(logLevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
                 if (string.IsNullOrEmpty(openapi))
@@ -578,7 +578,7 @@ namespace Microsoft.OpenApi.Hidi
             loglevel = loglevel > LogLevel.Debug ? LogLevel.Debug : loglevel;
 #endif
 
-            return LoggerFactory.Create((builder) => {
+            return Microsoft.Extensions.Logging.LoggerFactory.Create((builder) => {
                 builder
                     .AddSimpleConsole(c => {
                         c.IncludeScopes = true;

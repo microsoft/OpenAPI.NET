@@ -7,14 +7,14 @@ namespace Microsoft.OpenApi.Hidi
 {
     public class Logger
     {
-        public static ILogger<OpenApiService> ConfigureLogger(LogLevel logLevel)
+        public static ILoggerFactory ConfigureLogger(LogLevel logLevel)
         {
             // Configure logger options
 #if DEBUG
             logLevel = logLevel > LogLevel.Debug ? LogLevel.Debug : logLevel;
 #endif
 
-            using var loggerFactory = LoggerFactory.Create((builder) =>
+            return LoggerFactory.Create((builder) =>
             {
                 builder
                     .AddSimpleConsole(c =>
@@ -26,10 +26,6 @@ namespace Microsoft.OpenApi.Hidi
 #endif
                     .SetMinimumLevel(logLevel);
             });
-
-            var logger = loggerFactory.CreateLogger<OpenApiService>();
-
-            return logger;
         }
     }
 }
