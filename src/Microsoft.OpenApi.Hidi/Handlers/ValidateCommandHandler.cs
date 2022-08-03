@@ -40,7 +40,6 @@ namespace Microsoft.OpenApi.Hidi.Handlers
                 throw; // so debug tools go straight to the source of the exception when attached
 #else
                 logger.LogCritical( ex.Message);
-                Environment.Exit(1);
                 return 1;
 #endif
             }
