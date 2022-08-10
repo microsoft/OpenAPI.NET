@@ -250,7 +250,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0-preview-20220612-01" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
         <PackageReference Include="FluentAssertions" Version="6.7.0">
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1">
