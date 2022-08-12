@@ -84,10 +84,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiSecurityScheme(OpenApiSecurityScheme securityScheme)
         {
-            Type = (SecuritySchemeType)(securityScheme?.Type);
+            Type = securityScheme?.Type ?? default;
             Description = securityScheme?.Description;
             Name = securityScheme?.Name;
-            In = (ParameterLocation)(securityScheme?.In);
+            In = securityScheme?.In ?? default;
             Scheme = securityScheme?.Scheme;
             BearerFormat = securityScheme?.BearerFormat;
             Flows = new(securityScheme?.Flows);
