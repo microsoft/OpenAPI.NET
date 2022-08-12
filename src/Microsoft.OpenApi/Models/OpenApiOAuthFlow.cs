@@ -51,11 +51,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiOAuthFlow(OpenApiOAuthFlow oAuthFlow)
         {
-            AuthorizationUrl = oAuthFlow?.AuthorizationUrl != null ? new Uri(oAuthFlow?.AuthorizationUrl?.OriginalString) : oAuthFlow?.AuthorizationUrl;
-            TokenUrl = oAuthFlow?.TokenUrl != null ? new Uri(oAuthFlow?.TokenUrl?.OriginalString) : oAuthFlow?.TokenUrl;
-            RefreshUrl = oAuthFlow?.RefreshUrl != null ? new Uri(oAuthFlow?.RefreshUrl?.OriginalString) : oAuthFlow?.RefreshUrl;
-            Scopes = oAuthFlow?.Scopes != null ? new Dictionary<string, string>(oAuthFlow?.Scopes) : oAuthFlow?.Scopes;
-            Extensions = oAuthFlow?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlow?.Extensions) : oAuthFlow?.Extensions;
+            AuthorizationUrl = oAuthFlow?.AuthorizationUrl != null ? new Uri(oAuthFlow.AuthorizationUrl.OriginalString) : null;
+            TokenUrl = oAuthFlow?.TokenUrl != null ? new Uri(oAuthFlow.TokenUrl.OriginalString) : null;
+            RefreshUrl = oAuthFlow?.RefreshUrl != null ? new Uri(oAuthFlow.RefreshUrl.OriginalString) : null;
+            Scopes = oAuthFlow?.Scopes != null ? new Dictionary<string, string>(oAuthFlow.Scopes) : null;
+            Extensions = oAuthFlow?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlow.Extensions) : null;
         }
 
         /// <summary>

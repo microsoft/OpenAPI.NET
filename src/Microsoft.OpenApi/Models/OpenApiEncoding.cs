@@ -63,12 +63,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiEncoding(OpenApiEncoding encoding)
         {
-            ContentType = encoding?.ContentType;
-            Headers = encoding?.Headers != null ? new Dictionary<string, OpenApiHeader>(encoding?.Headers) : encoding?.Headers;
-            Style = encoding?.Style;
-            Explode = encoding?.Explode ?? false;
-            AllowReserved = encoding?.AllowReserved ?? false;
-            Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding?.Extensions) : encoding?.Extensions;
+            ContentType = encoding?.ContentType ?? ContentType;
+            Headers = encoding?.Headers != null ? new Dictionary<string, OpenApiHeader>(encoding.Headers) : null;
+            Style = encoding?.Style ?? Style;
+            Explode = encoding?.Explode ?? Explode;
+            AllowReserved = encoding?.AllowReserved ?? AllowReserved;
+            Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
         }
 
         /// <summary>

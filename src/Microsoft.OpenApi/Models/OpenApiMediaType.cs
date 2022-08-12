@@ -53,11 +53,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
-            Schema = new(mediaType?.Schema);
+            Schema = mediaType?.Schema != null ? new(mediaType?.Schema) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(mediaType?.Example);
-            Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType?.Examples) : mediaType?.Examples;
-            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType?.Encoding) : mediaType?.Encoding;
-            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType?.Extensions) : mediaType?.Extensions;
+            Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
+            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
+            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
         }
 
         /// <summary>

@@ -46,10 +46,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiServer(OpenApiServer server)
         {
-            Description = server?.Description;
-            Url = server?.Url;
-            Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server?.Variables) : server?.Variables;
-            Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server?.Extensions) : server?.Extensions;
+            Description = server?.Description ?? Description;
+            Url = server?.Url ?? Url;
+            Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server.Variables) : null;
+            Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
         }
 
         /// <summary>

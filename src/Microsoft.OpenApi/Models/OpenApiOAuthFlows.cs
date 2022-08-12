@@ -49,11 +49,11 @@ namespace Microsoft.OpenApi.Models
         /// <param name="oAuthFlows"></param>
         public OpenApiOAuthFlows(OpenApiOAuthFlows oAuthFlows)
         {
-            Implicit = new(oAuthFlows?.Implicit);
-            Password = new(oAuthFlows?.Password);
-            ClientCredentials = new(oAuthFlows?.ClientCredentials);
-            AuthorizationCode = new(oAuthFlows?.AuthorizationCode);
-            Extensions = oAuthFlows?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlows?.Extensions) : oAuthFlows?.Extensions;
+            Implicit = oAuthFlows?.Implicit != null ? new(oAuthFlows?.Implicit) : null;
+            Password = oAuthFlows?.Password != null ? new(oAuthFlows?.Password) : null;
+            ClientCredentials = oAuthFlows?.ClientCredentials != null ? new(oAuthFlows?.ClientCredentials) : null;
+            AuthorizationCode = oAuthFlows?.AuthorizationCode != null ? new(oAuthFlows?.AuthorizationCode) : null;
+            Extensions = oAuthFlows?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlows.Extensions) : null;
         }
 
         /// <summary>

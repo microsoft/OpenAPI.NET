@@ -84,17 +84,17 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiSecurityScheme(OpenApiSecurityScheme securityScheme)
         {
-            Type = securityScheme?.Type ?? default;
-            Description = securityScheme?.Description;
-            Name = securityScheme?.Name;
-            In = securityScheme?.In ?? default;
-            Scheme = securityScheme?.Scheme;
-            BearerFormat = securityScheme?.BearerFormat;
-            Flows = new(securityScheme?.Flows);
-            OpenIdConnectUrl = new Uri(securityScheme?.OpenIdConnectUrl?.OriginalString);
-            Extensions = securityScheme?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme?.Extensions) : securityScheme?.Extensions;
-            UnresolvedReference = securityScheme?.UnresolvedReference ?? false;
-            Reference = new(securityScheme?.Reference);
+            Type = securityScheme?.Type ?? Type;
+            Description = securityScheme?.Description ?? Description;
+            Name = securityScheme?.Name ?? Name;
+            In = securityScheme?.In ?? In;
+            Scheme = securityScheme?.Scheme ?? Scheme;
+            BearerFormat = securityScheme?.BearerFormat ?? BearerFormat;
+            Flows = securityScheme?.Flows != null ? new(securityScheme?.Flows) : null;
+            OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString) : null;
+            Extensions = securityScheme?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
+            UnresolvedReference = securityScheme?.UnresolvedReference ?? UnresolvedReference;
+            Reference = securityScheme?.Reference != null ? new(securityScheme?.Reference) : null;
         }
 
         /// <summary>

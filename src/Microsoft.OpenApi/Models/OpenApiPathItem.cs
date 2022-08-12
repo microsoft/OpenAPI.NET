@@ -75,14 +75,14 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiPathItem(OpenApiPathItem pathItem)
         {
-            Summary = pathItem?.Summary;
-            Description = pathItem?.Description;
-            Operations = pathItem?.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem?.Operations) : pathItem?.Operations;
-            Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem?.Servers) : pathItem?.Servers;
-            Parameters = pathItem?.Parameters != null ? new List<OpenApiParameter>(pathItem?.Parameters) : pathItem?.Parameters;
-            Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem?.Extensions) : pathItem?.Extensions;
-            UnresolvedReference = pathItem?.UnresolvedReference ?? false;
-            Reference = new(pathItem?.Reference);
+            Summary = pathItem?.Summary ?? Summary;
+            Description = pathItem?.Description ?? Description;
+            Operations = pathItem?.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
+            Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
+            Parameters = pathItem?.Parameters != null ? new List<OpenApiParameter>(pathItem.Parameters) : null;
+            Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
+            UnresolvedReference = pathItem?.UnresolvedReference ?? UnresolvedReference;
+            Reference = pathItem?.Reference != null ? new(pathItem?.Reference) : null;
         }
 
         /// <summary>
