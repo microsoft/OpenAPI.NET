@@ -116,19 +116,19 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiOperation(OpenApiOperation operation)
         {
-            Tags = new List<OpenApiTag>(operation.Tags);
-            Summary = operation.Summary;
-            Description = operation.Description;
-            ExternalDocs = new(operation.ExternalDocs);
-            OperationId = operation.OperationId;
-            Parameters = new List<OpenApiParameter>(operation.Parameters);
-            RequestBody = new(operation.RequestBody);
-            Responses = new(operation.Responses);
-            Callbacks = new Dictionary<string, OpenApiCallback>(operation.Callbacks);
-            Deprecated = operation.Deprecated;
-            Security = new List<OpenApiSecurityRequirement>(operation.Security);
-            Servers = new List<OpenApiServer>(operation.Servers);
-            Extensions = new Dictionary<string, IOpenApiExtension>(operation.Extensions);
+            Tags = new List<OpenApiTag>(operation?.Tags);
+            Summary = operation?.Summary;
+            Description = operation?.Description;
+            ExternalDocs = new(operation?.ExternalDocs);
+            OperationId = operation?.OperationId;
+            Parameters = operation?.Parameters != null ? new List<OpenApiParameter>(operation?.Parameters) : operation?.Parameters;
+            RequestBody = new(operation?.RequestBody);
+            Responses = new(operation?.Responses);
+            Callbacks = operation?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(operation?.Callbacks) : operation?.Callbacks;
+            Deprecated = operation?.Deprecated ?? false;
+            Security = operation?.Security != null ? new List<OpenApiSecurityRequirement>(operation?.Security) : operation?.Security;
+            Servers = operation?.Servers != null ? new List<OpenApiServer>(operation?.Servers) : operation?.Servers;
+            Extensions = operation?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation?.Extensions) : operation?.Extensions;
         }
 
         /// <summary>

@@ -72,15 +72,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiDocument(OpenApiDocument document)
         {
-            Workspace = new(document.Workspace);
-            Info = new(document.Info);
-            Servers = new List<OpenApiServer>(document.Servers);
-            Paths = new(document.Paths);
-            Components = new(document.Components);
-            SecurityRequirements = new List<OpenApiSecurityRequirement>(document.SecurityRequirements);
-            Tags = new List<OpenApiTag>(document.Tags);
-            ExternalDocs = new(document.ExternalDocs);
-            Extensions = new Dictionary<string, IOpenApiExtension>(document.Extensions);
+            Workspace = new(document?.Workspace);
+            Info = new(document?.Info);
+            Servers = document?.Servers != null ? new List<OpenApiServer>(document?.Servers) : document?.Servers;
+            Paths = new(document?.Paths);
+            Components = new(document?.Components);
+            SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document?.SecurityRequirements) : document?.SecurityRequirements;
+            Tags = document?.Tags != null ? new List<OpenApiTag>(document?.Tags) : document?.Tags;
+            ExternalDocs = new(document?.ExternalDocs);
+            Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document?.Extensions) : document?.Extensions;
         }
 
         /// <summary>

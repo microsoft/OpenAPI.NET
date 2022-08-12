@@ -96,20 +96,20 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiHeader(OpenApiHeader header)
         {
-            UnresolvedReference = header.UnresolvedReference;
-            Reference = new(header.Reference);
-            Description = header.Description;
-            Required = header.Required;
-            Deprecated = header.Deprecated;
-            AllowEmptyValue = header.AllowEmptyValue;
-            Style = header.Style;
-            Explode = header.Explode;
-            AllowReserved = header.AllowReserved;
-            Schema = new(header.Schema);
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header.Example);
-            Examples = new Dictionary<string, OpenApiExample>(header.Examples);
-            Content = new Dictionary<string, OpenApiMediaType>(header.Content);
-            Extensions = new Dictionary<string, IOpenApiExtension>(header.Extensions);
+            UnresolvedReference = header?.UnresolvedReference ?? false;
+            Reference = new(header?.Reference);
+            Description = header?.Description;
+            Required = header?.Required ?? false;
+            Deprecated = header?.Deprecated ?? false;
+            AllowEmptyValue = header?.AllowEmptyValue ?? false;
+            Style = header?.Style;
+            Explode = header?.Explode ?? false;
+            AllowReserved = header?.AllowReserved ?? false;
+            Schema = new(header?.Schema);
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header?.Example);
+            Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header?.Examples) : header?.Examples;
+            Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header?.Content) : header?.Content;
+            Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header?.Extensions) : header?.Extensions;
         }
 
         /// <summary>

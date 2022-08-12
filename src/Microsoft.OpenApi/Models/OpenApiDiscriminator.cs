@@ -32,8 +32,8 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiDiscriminator(OpenApiDiscriminator discriminator)
         {
-            PropertyName = discriminator.PropertyName;
-            Mapping = new Dictionary<string, string>(discriminator.Mapping);
+            PropertyName = discriminator?.PropertyName;
+            Mapping = discriminator?.Mapping != null ? new Dictionary<string, string>(discriminator?.Mapping) : discriminator?.Mapping;
         }
 
         /// <summary>

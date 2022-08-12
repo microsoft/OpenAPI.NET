@@ -39,9 +39,9 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiExternalDocs(OpenApiExternalDocs externalDocs)
         {
-            Description = externalDocs.Description;
-            Url = new Uri(externalDocs.Url.OriginalString);
-            Extensions = new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions);
+            Description = externalDocs?.Description;
+            Url = externalDocs?.Url != null ? new Uri(externalDocs?.Url?.OriginalString) : externalDocs?.Url;
+            Extensions = externalDocs?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(externalDocs?.Extensions) : externalDocs?.Extensions;
         }
 
         /// <summary>

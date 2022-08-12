@@ -56,12 +56,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiXml(OpenApiXml xml)
         {
-            Name = xml.Name;
-            Namespace = xml.Namespace;
-            Prefix = xml.Prefix;
-            Attribute = xml.Attribute;
-            Wrapped = xml.Wrapped;
-            Extensions = new Dictionary<string, IOpenApiExtension>(xml.Extensions);
+            Name = xml?.Name;
+            Namespace = xml?.Namespace;
+            Prefix = xml?.Prefix;
+            Attribute = xml?.Attribute ?? false;
+            Wrapped = xml?.Wrapped ?? false;
+            Extensions = xml?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(xml?.Extensions) : xml?.Extensions;
         }
 
         /// <summary>

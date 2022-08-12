@@ -146,22 +146,22 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiParameter(OpenApiParameter parameter)
         {
-            UnresolvedReference = parameter.UnresolvedReference;
-            Reference = new(parameter.Reference);
-            Name = parameter.Name;
-            In = parameter.In;
-            Description = parameter.Description;
-            Required = parameter.Required;
-            Style = parameter.Style;
-            Explode = parameter.Explode;
-            AllowReserved = parameter.AllowReserved;
-            Schema = new(parameter.Schema);
-            Examples = new Dictionary<string, OpenApiExample>(parameter.Examples);
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter.Example);
-            Content = new Dictionary<string, OpenApiMediaType>(parameter.Content);
-            Extensions = new Dictionary<string, IOpenApiExtension>(parameter.Extensions);
-            AllowEmptyValue = parameter.AllowEmptyValue;
-            Deprecated = parameter.Deprecated;
+            UnresolvedReference = parameter?.UnresolvedReference ?? false;
+            Reference = new(parameter?.Reference);
+            Name = parameter?.Name;
+            In = parameter?.In;
+            Description = parameter?.Description;
+            Required = parameter?.Required ?? false;
+            Style = parameter?.Style;
+            Explode = parameter?.Explode ?? false;
+            AllowReserved = parameter?.AllowReserved ?? false;
+            Schema = new(parameter?.Schema);
+            Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter?.Examples) : parameter?.Examples;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
+            Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter?.Content) : parameter?.Content;
+            Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter?.Extensions) : parameter?.Extensions;
+            AllowEmptyValue = parameter?.AllowEmptyValue ?? false;
+            Deprecated = parameter?.Deprecated ?? false;
         }
 
         /// <summary>
