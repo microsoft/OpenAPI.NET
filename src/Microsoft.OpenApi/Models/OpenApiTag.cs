@@ -53,12 +53,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiTag(OpenApiTag tag)
         {
-            Name = tag.Name;
-            Description = tag.Description;
-            ExternalDocs = new(tag.ExternalDocs);
-            Extensions = new Dictionary<string, IOpenApiExtension>(tag.Extensions);
-            UnresolvedReference = tag.UnresolvedReference;
-            Reference = new(tag.Reference);
+            Name = tag?.Name ?? Name;
+            Description = tag?.Description ?? Description;
+            ExternalDocs = tag?.ExternalDocs != null ? new(tag?.ExternalDocs) : null;
+            Extensions = tag?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
+            UnresolvedReference = tag?.UnresolvedReference ?? UnresolvedReference;
+            Reference = tag?.Reference != null ? new(tag?.Reference) : null;
         }
 
         /// <summary>

@@ -39,9 +39,9 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiLicense(OpenApiLicense license)
         {
-            Name = license.Name;
-            Url = new Uri(license.Url.OriginalString);
-            Extensions = new Dictionary<string, IOpenApiExtension>(license.Extensions);
+            Name = license?.Name ?? Name;
+            Url = license?.Url != null ? new Uri(license.Url.OriginalString) : null;
+            Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
         }
 
         /// <summary>
