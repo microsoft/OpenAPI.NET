@@ -18,13 +18,7 @@ A clear and concise description of what you expected to happen.
 
 **Screenshots/Code Snippets**
 If applicable, add screenshots of the stack trace or a code snippet to help explain your problem.
-
-**Your environment:**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
- - Desktop or mobile
- - If applicable, Link to your project
+If applicable, add a link to your project
 
 **Additional context**
 Add any other context about the problem here.
