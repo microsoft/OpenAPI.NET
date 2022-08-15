@@ -146,22 +146,22 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiParameter(OpenApiParameter parameter)
         {
-            UnresolvedReference = parameter.UnresolvedReference;
-            Reference = new(parameter.Reference);
-            Name = parameter.Name;
-            In = parameter.In;
-            Description = parameter.Description;
-            Required = parameter.Required;
-            Style = parameter.Style;
-            Explode = parameter.Explode;
-            AllowReserved = parameter.AllowReserved;
-            Schema = new(parameter.Schema);
-            Examples = new Dictionary<string, OpenApiExample>(parameter.Examples);
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter.Example);
-            Content = new Dictionary<string, OpenApiMediaType>(parameter.Content);
-            Extensions = new Dictionary<string, IOpenApiExtension>(parameter.Extensions);
-            AllowEmptyValue = parameter.AllowEmptyValue;
-            Deprecated = parameter.Deprecated;
+            UnresolvedReference = parameter?.UnresolvedReference ?? UnresolvedReference;
+            Reference = parameter?.Reference != null ? new(parameter?.Reference) : null;
+            Name = parameter?.Name ?? Name;
+            In = parameter?.In ?? In;
+            Description = parameter?.Description ?? Description;
+            Required = parameter?.Required ?? Required;
+            Style = parameter?.Style ?? Style;
+            Explode = parameter?.Explode ?? Explode;
+            AllowReserved = parameter?.AllowReserved ?? AllowReserved;
+            Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
+            Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
+            Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
+            Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
+            AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
+            Deprecated = parameter?.Deprecated ?? Deprecated;
         }
 
         /// <summary>

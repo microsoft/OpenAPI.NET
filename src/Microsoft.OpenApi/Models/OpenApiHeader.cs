@@ -96,20 +96,20 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiHeader(OpenApiHeader header)
         {
-            UnresolvedReference = header.UnresolvedReference;
-            Reference = new(header.Reference);
-            Description = header.Description;
-            Required = header.Required;
-            Deprecated = header.Deprecated;
-            AllowEmptyValue = header.AllowEmptyValue;
-            Style = header.Style;
-            Explode = header.Explode;
-            AllowReserved = header.AllowReserved;
-            Schema = new(header.Schema);
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header.Example);
-            Examples = new Dictionary<string, OpenApiExample>(header.Examples);
-            Content = new Dictionary<string, OpenApiMediaType>(header.Content);
-            Extensions = new Dictionary<string, IOpenApiExtension>(header.Extensions);
+            UnresolvedReference = header?.UnresolvedReference ?? UnresolvedReference;
+            Reference = header?.Reference != null ? new(header?.Reference) : null;
+            Description = header?.Description ?? Description;
+            Required = header?.Required ?? Required;
+            Deprecated = header?.Deprecated ?? Deprecated;
+            AllowEmptyValue = header?.AllowEmptyValue ?? AllowEmptyValue;
+            Style = header?.Style ?? Style;
+            Explode = header?.Explode ?? Explode;
+            AllowReserved = header?.AllowReserved ?? AllowReserved;
+            Schema = header?.Schema != null ? new(header?.Schema) : null;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header?.Example);
+            Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
+            Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
+            Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
 
         /// <summary>

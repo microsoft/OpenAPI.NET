@@ -71,15 +71,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiLink(OpenApiLink link)
         {
-            OperationRef = link.OperationRef;
-            OperationId = link.OperationId;
-            Parameters = new(link.Parameters);
-            RequestBody = new(link.RequestBody);
-            Description = link.Description;
-            Server = new(link.Server);
-            Extensions = new Dictionary<string, IOpenApiExtension>(link.Extensions);
-            UnresolvedReference = link.UnresolvedReference;
-            Reference = new(link.Reference);
+            OperationRef = link?.OperationRef ?? OperationRef;
+            OperationId = link?.OperationId ?? OperationId;
+            Parameters = link?.Parameters != null ? new(link?.Parameters) : null;
+            RequestBody = link?.RequestBody != null ? new(link?.RequestBody) : null;
+            Description = link?.Description ?? Description;
+            Server = link?.Server != null ? new(link?.Server) : null;
+            Extensions = link?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(link.Extensions) : null;
+            UnresolvedReference = link?.UnresolvedReference ?? UnresolvedReference;
+            Reference = link?.Reference != null ? new(link?.Reference) : null;
         }
 
         /// <summary>

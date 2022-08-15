@@ -55,12 +55,12 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiRequestBody(OpenApiRequestBody requestBody)
         {
-            UnresolvedReference = requestBody.UnresolvedReference;
-            Reference = new(requestBody.Reference);
-            Description = requestBody.Description;
-            Required = requestBody.Required;
-            Content = new Dictionary<string, OpenApiMediaType>(requestBody.Content);
-            Extensions = new Dictionary<string, IOpenApiExtension>(requestBody.Extensions);
+            UnresolvedReference = requestBody?.UnresolvedReference ?? UnresolvedReference;
+            Reference = requestBody?.Reference != null ? new(requestBody?.Reference) : null;
+            Description = requestBody?.Description ?? Description;
+            Required = requestBody?.Required ?? Required;
+            Content = requestBody?.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
+            Extensions = requestBody?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
         }
 
         /// <summary>

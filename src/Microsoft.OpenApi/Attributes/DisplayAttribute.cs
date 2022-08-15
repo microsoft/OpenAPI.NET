@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Attributes
     /// Represents the Open Api Data type metadata attribute.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    internal class DisplayAttribute : Attribute
+    public class DisplayAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DisplayAttribute"/> class.

@@ -116,19 +116,19 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiOperation(OpenApiOperation operation)
         {
-            Tags = new List<OpenApiTag>(operation.Tags);
-            Summary = operation.Summary;
-            Description = operation.Description;
-            ExternalDocs = new(operation.ExternalDocs);
-            OperationId = operation.OperationId;
-            Parameters = new List<OpenApiParameter>(operation.Parameters);
-            RequestBody = new(operation.RequestBody);
-            Responses = new(operation.Responses);
-            Callbacks = new Dictionary<string, OpenApiCallback>(operation.Callbacks);
-            Deprecated = operation.Deprecated;
-            Security = new List<OpenApiSecurityRequirement>(operation.Security);
-            Servers = new List<OpenApiServer>(operation.Servers);
-            Extensions = new Dictionary<string, IOpenApiExtension>(operation.Extensions);
+            Tags = new List<OpenApiTag>(operation?.Tags);
+            Summary = operation?.Summary ?? Summary;
+            Description = operation?.Description ?? Description;
+            ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;
+            OperationId = operation?.OperationId ?? OperationId;
+            Parameters = operation?.Parameters != null ? new List<OpenApiParameter>(operation.Parameters) : null;
+            RequestBody = new(operation?.RequestBody);
+            Responses = operation?.Responses != null ? new(operation?.Responses) : null;
+            Callbacks = operation?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(operation.Callbacks) : null;
+            Deprecated = operation?.Deprecated ?? Deprecated;
+            Security = operation?.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
+            Servers = operation?.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;
+            Extensions = operation?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
         }
 
         /// <summary>

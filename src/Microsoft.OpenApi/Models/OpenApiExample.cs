@@ -64,13 +64,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiExample(OpenApiExample example)
         {
-            Summary = example.Summary;
-            Description = example.Description;
-            Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor(example.Value);
-            ExternalValue = example.ExternalValue;
-            Extensions = new Dictionary<string, IOpenApiExtension>(example.Extensions);
-            Reference = new(example.Reference);
-            UnresolvedReference = example.UnresolvedReference;
+            Summary = example?.Summary ?? Summary;
+            Description = example?.Description ?? Description;
+            Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor(example?.Value);
+            ExternalValue = example?.ExternalValue ?? ExternalValue;
+            Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
+            Reference = example?.Reference != null ? new(example?.Reference) : null;
+            UnresolvedReference = example?.UnresolvedReference ?? UnresolvedReference;
         }
 
         /// <summary>

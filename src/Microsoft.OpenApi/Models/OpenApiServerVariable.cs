@@ -44,10 +44,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiServerVariable(OpenApiServerVariable serverVariable)
         {
-            Description = serverVariable.Description;
-            Default = serverVariable.Default;
-            Enum = new List<string>(serverVariable.Enum);
-            Extensions = new Dictionary<string, IOpenApiExtension>(serverVariable.Extensions);
+            Description = serverVariable?.Description;
+            Default = serverVariable?.Default;
+            Enum = serverVariable?.Enum != null ? new List<string>(serverVariable?.Enum) : serverVariable?.Enum;
+            Extensions = serverVariable?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(serverVariable?.Extensions) : serverVariable?.Extensions;
         }
 
         /// <summary>
