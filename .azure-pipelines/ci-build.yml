@@ -266,14 +266,6 @@ stages:
                 echo "$artifactName"
                 echo "$artifactVersion"
               displayName: 'Fetch Artifact Name'
-
-            - task: NuGetCommand@2
-              displayName: 'NuGet push'
-              inputs:
-                command: push
-                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg'
-                nuGetFeedType: external
-                publishFeedCredentials: 'OpenAPI Nuget Connection'
             - task: GitHubRelease@1
               displayName: 'GitHub release (edit)'
               inputs:
@@ -285,6 +277,13 @@ stages:
                 releaseNotesSource: inline
                 assets: '$(Pipeline.Workspace)\**\*.exe'
                 changeLogType: issueBased
+            - task: NuGetCommand@2
+              displayName: 'NuGet push'
+              inputs:
+                command: push
+                packagesToPush: '$(Pipeline.Workspace)/Nugets/Microsoft.OpenApi.Hidi.*.nupkg'
+                nuGetFeedType: external
+                publishFeedCredentials: 'OpenAPI Nuget Connection'
     
     - deployment: deploy_lib
       dependsOn: []
