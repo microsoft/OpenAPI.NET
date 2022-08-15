@@ -700,12 +700,12 @@ namespace Microsoft.OpenApi.Models
             if (AllOf == null || AllOf.Count == 0)
             {
                 // anyOf (Not Supported in V2)  - Write the first schema only as an allOf.
-                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf.Take(1), (w, s) => s.SerializeAsV2(w));
+                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf?.Take(1), (w, s) => s.SerializeAsV2(w));
 
                 if (AnyOf == null || AnyOf.Count == 0)
                 {
                     // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
-                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf.Take(1), (w, s) => s.SerializeAsV2(w));
+                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf?.Take(1), (w, s) => s.SerializeAsV2(w));
                 }
             }
 
