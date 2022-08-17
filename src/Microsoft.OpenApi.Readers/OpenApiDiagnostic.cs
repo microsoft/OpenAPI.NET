@@ -26,5 +26,10 @@ namespace Microsoft.OpenApi.Readers
         /// Open API specification version of the document parsed.
         /// </summary>
         public OpenApiSpecVersion SpecificationVersion { get; set; }
+
+        /// <summary>
+        /// The unique hash code of the generated OpenAPI document
+        /// </summary>
+        public int HashCode { get; set; }
     }
 }

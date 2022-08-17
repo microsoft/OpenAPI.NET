@@ -75,6 +75,7 @@ namespace Microsoft.OpenApi.Readers
                     throw new OpenApiUnsupportedSpecVersionException(inputVersion);
             }
 
+            Diagnostic.HashCode = doc.GetHashCode();
             return doc;
         }
 
