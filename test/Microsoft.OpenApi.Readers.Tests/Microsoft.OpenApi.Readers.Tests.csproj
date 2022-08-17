@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -135,6 +135,9 @@
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\minimalDocumentWithWhitespace.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\apiWithFullHeaderComponent.yaml">

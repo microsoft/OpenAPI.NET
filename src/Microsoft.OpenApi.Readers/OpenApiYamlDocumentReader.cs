@@ -79,7 +79,6 @@ namespace Microsoft.OpenApi.Readers
                 {
                     diagnostic.Warnings.Add(item);
                 }
-
             }
 
             return document;

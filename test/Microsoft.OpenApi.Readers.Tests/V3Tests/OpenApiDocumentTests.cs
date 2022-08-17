@@ -243,25 +243,54 @@ paths: {}",
         [Fact]
         public void ParseMinimalDocumentShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml")))
-            {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                openApiDoc.Should().BeEquivalentTo(
-                    new OpenApiDocument
+            openApiDoc.Should().BeEquivalentTo(
+                new OpenApiDocument
+                {
+                    Info = new OpenApiInfo
                     {
-                        Info = new OpenApiInfo
-                        {
-                            Title = "Simple Document",
-                            Version = "0.9.1"
-                        },
-                        Paths = new OpenApiPaths()
-                    });
+                        Title = "Simple Document",
+                        Version = "0.9.1"
+                    },
+                    Paths = new OpenApiPaths()
+                });
 
-                diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
-            }
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
+
+        [Fact]
+        public void TestHashCodesForSimilarOpenApiDocuments()
+        {
+            // Arrange
+            using var stream1 = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
+            using var stream2 = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
+            using var stream3 = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocumentWithWhitespace.yaml"));
+
+            // Act
+            /*
+             Test whether reading in the same document twice yields the same hash code,
+             And reading in similar documents but one has a whitespace yields the same hash code
+            */
+            var openApiDoc1 = new OpenApiStreamReader().Read(stream1, out var diagnostic1);
+            var openApiDoc2 = new OpenApiStreamReader().Read(stream2, out var diagnostic2);
+            var openApiDoc3 = new OpenApiStreamReader().Read(stream3, out var diagnostic3);
+
+            // Assert
+            /* The assumption is, if doc1.Equals(doc2), then doc1.GetHashCode().Equals(doc2.GetHashCode())*/
+            if (openApiDoc1.Equals(openApiDoc2) && openApiDoc2.Equals(openApiDoc3))
+            {
+                Assert.Equal(diagnostic1.HashCode, diagnostic2.HashCode);
+                Assert.Equal(diagnostic2.HashCode, diagnostic3.HashCode);
+            }
+
+            /*Adding a server object to the original doc to check whether the hash code changes*/
+            openApiDoc1.Servers = new List<OpenApiServer>();
+            var hash = openApiDoc1.GetHashCode();
+            Assert.NotEqual(diagnostic1.HashCode, hash);
+        }        
 
         [Fact]
         public void ParseStandardPetStoreDocumentShouldSucceed()
