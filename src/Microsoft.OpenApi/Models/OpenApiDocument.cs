@@ -376,6 +376,27 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Computes the hash code for an OpenApiDocument and its property values.
+        /// </summary>
+        /// <returns> The hash code.</returns>
+        public override int GetHashCode()
+        {
+            // select two random prime numbers e.g 1 and 3 and use them to compute hash codes
+            int hash = 1;
+            hash = hash * 3 + (Workspace == null ? 0 : Workspace.GetHashCode());
+            hash = hash * 3 + (Info == null ? 0 : Info.GetHashCode());
+            hash = hash * 3 + (Servers == null ? 0 : Servers.GetHashCode());
+            hash = hash * 3 + (Paths == null ? 0 : Paths.GetHashCode());
+            hash = hash * 3 + (Components == null ? 0 : Components.GetHashCode());
+            hash = hash * 3 + (SecurityRequirements == null ? 0 : SecurityRequirements.GetHashCode());
+            hash = hash * 3 + (Tags == null ? 0 : Tags.GetHashCode());
+            hash = hash * 3 + (ExternalDocs == null ? 0 : ExternalDocs.GetHashCode());
+            hash = hash * 3 + (Extensions == null ? 0 : Extensions.GetHashCode());
+
+            return hash;
+        }        
+
+        /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object
         /// </summary>
         internal IOpenApiReferenceable ResolveReference(OpenApiReference reference, bool useExternal)
