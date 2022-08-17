@@ -150,9 +150,9 @@ paths: {}",
                     },
                     Paths = new OpenApiPaths()
                 });
+            var context2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 };
 
-            context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
+            Assert.Equal(context.SpecificationVersion, context2.SpecificationVersion);
         }
 
         [Fact]
