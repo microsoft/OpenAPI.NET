@@ -122,10 +122,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiReference(OpenApiReference reference)
         {
-            ExternalResource = reference.ExternalResource;
-            Type = reference.Type;
-            Id = reference.Id;
-            HostDocument = new(reference.HostDocument);
+            ExternalResource = reference?.ExternalResource;
+            Type = reference?.Type;
+            Id = reference?.Id;
+            HostDocument = new(reference?.HostDocument);
         }
 
         /// <summary>

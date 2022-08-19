@@ -252,44 +252,44 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiSchema(OpenApiSchema schema)
         {
-            Title = schema.Title;
-            Type = schema.Type;
-            Format = schema.Format;
-            Description = schema.Description;
-            Maximum = schema.Maximum;
-            ExclusiveMaximum = schema.ExclusiveMaximum;
-            Minimum = schema.Minimum;
-            ExclusiveMinimum = schema.ExclusiveMinimum;
-            MaxLength = schema.MaxLength;
-            MinLength = schema.MinLength;
-            Pattern = schema.Pattern;
-            MultipleOf = schema.MultipleOf;
-            Default = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema.Default);
-            ReadOnly = schema.ReadOnly;
-            WriteOnly = schema.WriteOnly;
-            AllOf = new List<OpenApiSchema>(schema.AllOf);
-            OneOf = new List<OpenApiSchema>(schema.OneOf);
-            AnyOf = new List<OpenApiSchema>(schema.AnyOf);
-            Not = new(schema.Not);
-            Required = new HashSet<string>(schema.Required);
-            Items = new(schema.Items);
-            MaxItems = schema.MaxItems;
-            MinItems = schema.MinItems;
-            UniqueItems = schema.UniqueItems;
-            Properties = new Dictionary<string, OpenApiSchema>(schema.Properties);
-            MaxProperties = schema.MaxProperties;
-            MinProperties = schema.MinProperties;
-            AdditionalPropertiesAllowed = schema.AdditionalPropertiesAllowed;
-            AdditionalProperties = new(schema.AdditionalProperties);
-            Discriminator = new(schema.Discriminator);
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema.Example);
-            Enum = new List<IOpenApiAny>(schema.Enum);
-            Nullable = schema.Nullable;
-            ExternalDocs = new(schema.ExternalDocs);
-            Deprecated = schema.Deprecated;
-            Xml = new(schema.Xml);
-            UnresolvedReference = schema.UnresolvedReference;
-            Reference = new(schema.Reference);
+            Title = schema?.Title ?? Title;
+            Type = schema?.Type ?? Type;
+            Format = schema?.Format ?? Format;
+            Description = schema?.Description ?? Description;
+            Maximum = schema?.Maximum ?? Maximum;
+            ExclusiveMaximum = schema?.ExclusiveMaximum ?? ExclusiveMaximum;
+            Minimum = schema?.Minimum ?? Minimum;
+            ExclusiveMinimum = schema?.ExclusiveMinimum ?? ExclusiveMinimum;
+            MaxLength = schema?.MaxLength ?? MaxLength;
+            MinLength = schema?.MinLength ?? MinLength;
+            Pattern = schema?.Pattern ?? Pattern;
+            MultipleOf = schema?.MultipleOf ?? MultipleOf;
+            Default = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Default);
+            ReadOnly = schema?.ReadOnly ?? ReadOnly;
+            WriteOnly = schema?.WriteOnly ?? WriteOnly;
+            AllOf = schema?.AllOf != null ? new List<OpenApiSchema>(schema.AllOf) : null;
+            OneOf = schema?.OneOf != null ? new List<OpenApiSchema>(schema.OneOf) : null;
+            AnyOf = schema?.AnyOf != null ? new List<OpenApiSchema>(schema.AnyOf) : null;
+            Not = schema?.Not != null ? new(schema?.Not) : null;
+            Required = schema?.Required != null ? new HashSet<string>(schema.Required) : null;
+            Items = schema?.Items != null ? new(schema?.Items) : null;
+            MaxItems = schema?.MaxItems ?? MaxItems;
+            MinItems = schema?.MinItems ?? MinItems;
+            UniqueItems = schema?.UniqueItems ?? UniqueItems;
+            Properties = schema?.Properties != null ? new Dictionary<string, OpenApiSchema>(schema.Properties) : null;
+            MaxProperties = schema?.MaxProperties ?? MaxProperties;
+            MinProperties = schema?.MinProperties ?? MinProperties;
+            AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
+            AdditionalProperties = new(schema?.AdditionalProperties);
+            Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Example);
+            Enum = schema?.Enum != null ? new List<IOpenApiAny>(schema.Enum) : null;
+            Nullable = schema?.Nullable ?? Nullable;
+            ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
+            Deprecated = schema?.Deprecated ?? Deprecated;
+            Xml = schema?.Xml != null ? new(schema?.Xml) : null;
+            UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
+            Reference = schema?.Reference != null ? new(schema?.Reference) : null;
         }
 
         /// <summary>
@@ -700,12 +700,12 @@ namespace Microsoft.OpenApi.Models
             if (AllOf == null || AllOf.Count == 0)
             {
                 // anyOf (Not Supported in V2)  - Write the first schema only as an allOf.
-                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf.Take(1), (w, s) => s.SerializeAsV2(w));
+                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf?.Take(1), (w, s) => s.SerializeAsV2(w));
 
                 if (AnyOf == null || AnyOf.Count == 0)
                 {
                     // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
-                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf.Take(1), (w, s) => s.SerializeAsV2(w));
+                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf?.Take(1), (w, s) => s.SerializeAsV2(w));
                 }
             }
 

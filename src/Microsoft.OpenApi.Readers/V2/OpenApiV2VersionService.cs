@@ -107,30 +107,6 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
-        private static string GetReferenceTypeV2Name(ReferenceType referenceType)
-        {
-            switch (referenceType)
-            {
-                case ReferenceType.Schema:
-                    return "definitions";
-
-                case ReferenceType.Parameter:
-                    return "parameters";
-
-                case ReferenceType.Response:
-                    return "responses";
-
-                case ReferenceType.Tag:
-                    return "tags";
-
-                case ReferenceType.SecurityScheme:
-                    return "securityDefinitions";
-
-                default:
-                    throw new ArgumentException();
-            }
-        }
-
         private static ReferenceType GetReferenceTypeV2FromName(string referenceType)
         {
             switch (referenceType)

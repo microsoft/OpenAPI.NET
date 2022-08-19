@@ -393,9 +393,9 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="name">property name</param>
         protected void VerifyCanWritePropertyName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (name == null)
             {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
+                throw Error.ArgumentNull(nameof(name));
             }
 
             if (Scopes.Count == 0)

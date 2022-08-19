@@ -266,7 +266,6 @@ stages:
                 echo "$artifactName"
                 echo "$artifactVersion"
               displayName: 'Fetch Artifact Name'
-
             - task: NuGetCommand@2
               displayName: 'NuGet push'
               inputs:
@@ -276,6 +275,7 @@ stages:
                 publishFeedCredentials: 'OpenAPI Nuget Connection'
             - task: GitHubRelease@1
               displayName: 'GitHub release (edit)'
+              condition: succeededOrFailed()
               inputs:
                 gitHubConnection: 'Github-MaggieKimani1'
                 action: edit

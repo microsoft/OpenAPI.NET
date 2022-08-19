@@ -61,13 +61,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiResponse(OpenApiResponse response)
         {
-            Description = response.Description;
-            Headers = new Dictionary<string, OpenApiHeader>(response.Headers);
-            Content = new Dictionary<string, OpenApiMediaType>(response.Content);
-            Links = new Dictionary<string, OpenApiLink>(response.Links);
-            Extensions = new Dictionary<string, IOpenApiExtension>(response.Extensions);
-            UnresolvedReference = response.UnresolvedReference;
-            Reference = new(response.Reference);
+            Description = response?.Description ?? Description;
+            Headers = response?.Headers != null ? new Dictionary<string, OpenApiHeader>(response.Headers) : null;
+            Content = response?.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
+            Links = response?.Links != null ? new Dictionary<string, OpenApiLink>(response.Links) : null;
+            Extensions = response?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
+            UnresolvedReference = response?.UnresolvedReference ?? UnresolvedReference;
+            Reference = response?.Reference != null ? new(response?.Reference) : null;
         }
 
         /// <summary>

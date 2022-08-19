@@ -129,6 +129,15 @@ namespace Microsoft.OpenApi.Any
         Password = 10,
     }
 }
+namespace Microsoft.OpenApi.Attributes
+{
+    [System.AttributeUsage(System.AttributeTargets.Property | System.AttributeTargets.Field)]
+    public class DisplayAttribute : System.Attribute
+    {
+        public DisplayAttribute(string name) { }
+        public string Name { get; }
+    }
+}
 namespace Microsoft.OpenApi.Exceptions
 {
     public class OpenApiException : System.Exception
@@ -938,43 +947,72 @@ namespace Microsoft.OpenApi.Models
     }
     public enum OperationType
     {
+        [Microsoft.OpenApi.Attributes.Display("get")]
         Get = 0,
+        [Microsoft.OpenApi.Attributes.Display("put")]
         Put = 1,
+        [Microsoft.OpenApi.Attributes.Display("post")]
         Post = 2,
+        [Microsoft.OpenApi.Attributes.Display("delete")]
         Delete = 3,
+        [Microsoft.OpenApi.Attributes.Display("options")]
         Options = 4,
+        [Microsoft.OpenApi.Attributes.Display("head")]
         Head = 5,
+        [Microsoft.OpenApi.Attributes.Display("patch")]
         Patch = 6,
+        [Microsoft.OpenApi.Attributes.Display("trace")]
         Trace = 7,
     }
     public enum ParameterLocation
     {
+        [Microsoft.OpenApi.Attributes.Display("query")]
         Query = 0,
+        [Microsoft.OpenApi.Attributes.Display("header")]
         Header = 1,
+        [Microsoft.OpenApi.Attributes.Display("path")]
         Path = 2,
+        [Microsoft.OpenApi.Attributes.Display("cookie")]
         Cookie = 3,
     }
     public enum ParameterStyle
     {
+        [Microsoft.OpenApi.Attributes.Display("matrix")]
         Matrix = 0,
+        [Microsoft.OpenApi.Attributes.Display("label")]
         Label = 1,
+        [Microsoft.OpenApi.Attributes.Display("form")]
         Form = 2,
+        [Microsoft.OpenApi.Attributes.Display("simple")]
         Simple = 3,
+        [Microsoft.OpenApi.Attributes.Display("spaceDelimited")]
         SpaceDelimited = 4,
+        [Microsoft.OpenApi.Attributes.Display("pipeDelimited")]
         PipeDelimited = 5,
+        [Microsoft.OpenApi.Attributes.Display("deepObject")]
         DeepObject = 6,
     }
     public enum ReferenceType
     {
+        [Microsoft.OpenApi.Attributes.Display("schemas")]
         Schema = 0,
+        [Microsoft.OpenApi.Attributes.Display("responses")]
         Response = 1,
+        [Microsoft.OpenApi.Attributes.Display("parameters")]
         Parameter = 2,
+        [Microsoft.OpenApi.Attributes.Display("examples")]
         Example = 3,
+        [Microsoft.OpenApi.Attributes.Display("requestBodies")]
         RequestBody = 4,
+        [Microsoft.OpenApi.Attributes.Display("headers")]
         Header = 5,
+        [Microsoft.OpenApi.Attributes.Display("securitySchemes")]
         SecurityScheme = 6,
+        [Microsoft.OpenApi.Attributes.Display("links")]
         Link = 7,
+        [Microsoft.OpenApi.Attributes.Display("callbacks")]
         Callback = 8,
+        [Microsoft.OpenApi.Attributes.Display("tags")]
         Tag = 9,
     }
     public class RuntimeExpressionAnyWrapper : Microsoft.OpenApi.Interfaces.IOpenApiElement
@@ -987,9 +1025,13 @@ namespace Microsoft.OpenApi.Models
     }
     public enum SecuritySchemeType
     {
+        [Microsoft.OpenApi.Attributes.Display("apiKey")]
         ApiKey = 0,
+        [Microsoft.OpenApi.Attributes.Display("http")]
         Http = 1,
+        [Microsoft.OpenApi.Attributes.Display("oauth2")]
         OAuth2 = 2,
+        [Microsoft.OpenApi.Attributes.Display("openIdConnect")]
         OpenIdConnect = 3,
     }
 }
@@ -1284,6 +1326,8 @@ namespace Microsoft.OpenApi.Validations.Rules
     {
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiSchema> SchemaMismatchedDataType { get; }
         public static Microsoft.OpenApi.Validations.ValidationRule<Microsoft.OpenApi.Models.OpenApiSchema> ValidateSchemaDiscriminator { get; }
+        public static bool TraverseSchemaElements(string discriminatorName, System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> childSchema) { }
+        public static bool ValidateChildSchemaAgainstDiscriminator(Microsoft.OpenApi.Models.OpenApiSchema schema, string discriminatorName) { }
     }
     [Microsoft.OpenApi.Validations.Rules.OpenApiRule]
     public static class OpenApiServerRules

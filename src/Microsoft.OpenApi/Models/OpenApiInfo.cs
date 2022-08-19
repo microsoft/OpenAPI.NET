@@ -59,13 +59,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiInfo(OpenApiInfo info)
         {
-            Title = info.Title;
-            Description = info.Description;
-            Version = info.Version;
-            TermsOfService = info.TermsOfService;
-            Contact = new(info.Contact);
-            License = new(info.License);
-            Extensions = new Dictionary<string, IOpenApiExtension>(info.Extensions);
+            Title = info?.Title ?? Title;
+            Description = info?.Description ?? Description;
+            Version = info?.Version ?? Version;
+            TermsOfService = info?.TermsOfService ?? TermsOfService;
+            Contact = info?.Contact != null ? new(info?.Contact) : null;
+            License = info?.License != null ? new(info?.License) : null;
+            Extensions = info?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(info.Extensions) : null;
         }
 
         /// <summary>
