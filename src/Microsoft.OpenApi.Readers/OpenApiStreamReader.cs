@@ -45,16 +45,6 @@ namespace Microsoft.OpenApi.Readers
             var reader = new StreamReader(input);
             var result = new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
 
-            //HashAlgorithm sha = SHA512.Create();
-            //byte[] data = sha.ComputeHash(input);
-            //StringBuilder sb = new StringBuilder();
-            //for (int i = 0; i < data.Length; i++)
-            //{
-            //    sb.Append(data[i].ToString("X2"));
-            //}
-            
-
-            //diagnostic.HashCode = sb.ToString();
             diagnostic.HashCode = OpenApiDocument.GenerateHashValue(input);
 
             if (!_settings.LeaveStreamOpen)
