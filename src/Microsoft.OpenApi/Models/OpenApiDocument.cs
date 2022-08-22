@@ -3,7 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -61,6 +65,8 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+
+        private static readonly object locker = new();
 
         /// <summary>
         /// Parameter-less constructor
@@ -375,26 +381,42 @@ namespace Microsoft.OpenApi.Models
             return ResolveReference(reference, false);
         }
 
-        /// <summary>
-        /// Computes the hash code for an OpenApiDocument and its property values.
-        /// </summary>
-        /// <returns> The hash code.</returns>
-        public override int GetHashCode()
-        {
-            // select two random prime numbers e.g 1 and 3 and use them to compute hash codes
-            int hash = 1;
-            hash = hash * 3 + (Workspace == null ? 0 : Workspace.GetHashCode());
-            hash = hash * 3 + (Info == null ? 0 : Info.GetHashCode());
-            hash = hash * 3 + (Servers == null ? 0 : Servers.GetHashCode());
-            hash = hash * 3 + (Paths == null ? 0 : Paths.GetHashCode());
-            hash = hash * 3 + (Components == null ? 0 : Components.GetHashCode());
-            hash = hash * 3 + (SecurityRequirements == null ? 0 : SecurityRequirements.GetHashCode());
-            hash = hash * 3 + (Tags == null ? 0 : Tags.GetHashCode());
-            hash = hash * 3 + (ExternalDocs == null ? 0 : ExternalDocs.GetHashCode());
-            hash = hash * 3 + (Extensions == null ? 0 : Extensions.GetHashCode());
+        ///// <summary>
+        ///// Computes the hash code for an OpenApiDocument and its property values.
+        ///// </summary>
+        ///// <returns> The hash code.</returns>
+        //public override int GetHashCode()
+        //{
+        //    // select two random prime numbers e.g 1 and 3 and use them to compute hash codes
+        //    int hash = 1;
+        //    hash = hash * 3 + (Workspace == null ? 0 : Workspace.GetHashCode());
+        //    hash = hash * 3 + (Info == null ? 0 : Info.GetHashCode());
+        //    hash = hash * 3 + (Servers == null ? 0 : Servers.GetHashCode());
+        //    hash = hash * 3 + (Paths == null ? 0 : Paths.GetHashCode());
+        //    hash = hash * 3 + (Components == null ? 0 : Components.GetHashCode());
+        //    hash = hash * 3 + (SecurityRequirements == null ? 0 : SecurityRequirements.GetHashCode());
+        //    hash = hash * 3 + (Tags == null ? 0 : Tags.GetHashCode());
+        //    hash = hash * 3 + (ExternalDocs == null ? 0 : ExternalDocs.GetHashCode());
+        //    hash = hash * 3 + (Extensions == null ? 0 : Extensions.GetHashCode());
 
-            return hash;
-        }        
+        //    return hash;
+        //}
+
+        public static string GenerateHashValue(Stream input)
+        {
+            HashAlgorithm sha = SHA512.Create();
+            byte[] result = sha.ComputeHash(input);
+
+            // Build the final string by converting each byte
+            // into hex and appending it to a StringBuilder
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < result.Length; i++)
+            {
+                sb.Append(result[i].ToString("X2"));
+            }
+
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Load the referenced <see cref="IOpenApiReferenceable"/> object from a <see cref="OpenApiReference"/> object

@@ -9,13 +9,11 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -275,17 +273,8 @@ paths: {}",
             var openApiDoc3 = new OpenApiStreamReader().Read(stream3, out var diagnostic3);
 
             // Assert
-            /* The assumption is, if doc1.Equals(doc2), then doc1.GetHashCode().Equals(doc2.GetHashCode())*/
-            if (openApiDoc1.Equals(openApiDoc2) && openApiDoc2.Equals(openApiDoc3))
-            {
-                Assert.Equal(diagnostic1.HashCode, diagnostic2.HashCode);
-                Assert.Equal(diagnostic2.HashCode, diagnostic3.HashCode);
-            }
-
-            /*Adding a server object to the original doc to check whether the hash code changes*/
-            openApiDoc1.Servers = new List<OpenApiServer>();
-            var hash = openApiDoc1.GetHashCode();
-            Assert.NotEqual(diagnostic1.HashCode, hash);
+            Assert.Equal(diagnostic1.HashCode, diagnostic2.HashCode);
+            Assert.Equal(diagnostic2.HashCode, diagnostic3.HashCode);
         }        
 
         [Fact]
