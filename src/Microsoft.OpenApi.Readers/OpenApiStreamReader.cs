@@ -3,6 +3,8 @@
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -42,6 +44,17 @@ namespace Microsoft.OpenApi.Readers
         {
             var reader = new StreamReader(input);
             var result = new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
+
+            HashAlgorithm sha = SHA512.Create();
+            byte[] data = sha.ComputeHash(input);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < data.Length; i++)
+            {
+                sb.Append(data[i].ToString("X2"));
+            }
+
+            diagnostic.HashCode = sb.ToString();
+
             if (!_settings.LeaveStreamOpen)
             {
                 reader.Dispose();

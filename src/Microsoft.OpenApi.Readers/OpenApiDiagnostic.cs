@@ -30,6 +30,6 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// The unique hash code of the generated OpenAPI document
         /// </summary>
-        public int HashCode { get; set; }
+        public string HashCode { get; set; }
     }
 }
