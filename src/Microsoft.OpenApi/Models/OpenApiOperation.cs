@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Models
                     {
                         var paramName = property.Key;
                         var paramSchema = property.Value;
-                        if (paramSchema.Type == "string" && paramSchema.Format == "binary" || paramSchema.Format == "base64") {
+                        if (paramSchema.Type == "string" && (paramSchema.Format == "binary" || paramSchema.Format == "base64")) {
                             paramSchema.Type = "file";
                             paramSchema.Format = null;
                         }
