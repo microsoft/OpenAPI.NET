@@ -390,17 +390,16 @@ namespace Microsoft.OpenApi.Models
         /// <returns>The hash value.</returns>
         public static string GenerateHashValue(OpenApiDocument doc)
         {
-            HashAlgorithm sha = SHA512.Create();
-            using var memoryStream = new MemoryStream();
-
-            using var cryptoStream = new CryptoStream(memoryStream, sha, CryptoStreamMode.Write);
+            using HashAlgorithm sha = SHA512.Create();
+            using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
             var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings { Terse = true });
             doc.SerializeAsV3(openApiJsonWriter);
             openApiJsonWriter.Flush();
 
-            var hash = memoryStream.ToArray();
+            cryptoStream.FlushFinalBlock();
+            var hash = sha.Hash;
 
             return ConvertByteArrayToString(hash);
         }

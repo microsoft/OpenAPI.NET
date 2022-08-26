@@ -3,8 +3,6 @@
 
 using System;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -44,7 +42,6 @@ namespace Microsoft.OpenApi.Readers
         {
             var reader = new StreamReader(input);
             var result = new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
-
             if (!_settings.LeaveStreamOpen)
             {
                 reader.Dispose();
