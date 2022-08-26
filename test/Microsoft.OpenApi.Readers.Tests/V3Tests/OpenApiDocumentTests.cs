@@ -34,8 +34,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             {
                 IOpenApiWriter writer;
                 var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings() {
-                InlineLocalReferences = true});
+                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
+                {
+                    InlineLocalReferences = true
+                });
                 element.SerializeAsV3(writer);
                 writer.Flush();
                 stream.Position = 0;
@@ -48,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             }
         }
 
-        public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element) 
+        public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
         {
             using (var stream = new MemoryStream())
             {

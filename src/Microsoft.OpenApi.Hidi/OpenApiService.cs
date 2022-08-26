@@ -356,57 +356,7 @@ namespace Microsoft.OpenApi.Hidi
 
             return doc;
         }
-
-        private static async Task<Stream> GetStream(string input, ILogger logger)
-        {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            Stream stream;
-            if (input.StartsWith("http"))
-            {
-                try
-                {
-                    var httpClientHandler = new HttpClientHandler()
-                    {
-                        SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
-                    };
-                    using var httpClient = new HttpClient(httpClientHandler)
-                    {
-                      DefaultRequestVersion = HttpVersion.Version20
-                    };
-                    stream = await httpClient.GetStreamAsync(input);
-                }
-                catch (HttpRequestException ex)
-                {
-                    logger.LogError($"Could not download the file at {input}, reason{ex}");
-                    return null;
-                }
-            }
-            else 
-            {
-                try
-                {
-                    var fileInput = new FileInfo(input);
-                    stream = fileInput.OpenRead();
-                }
-                catch (Exception ex) when (ex is FileNotFoundException ||
-                    ex is PathTooLongException ||
-                    ex is DirectoryNotFoundException ||
-                    ex is IOException ||
-                    ex is UnauthorizedAccessException ||
-                    ex is SecurityException ||
-                    ex is NotSupportedException)
-                {
-                    logger.LogError($"Could not open the file at {input}, reason: {ex.Message}");
-                    return null;
-                }
-            }
-            stopwatch.Stop();
-            logger.LogTrace("{timestamp}ms: Read file {input}", stopwatch.ElapsedMilliseconds, input);
-            return stream;
-        }
-
+        
         /// <summary>
         /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
         /// </summary>
@@ -461,34 +411,6 @@ namespace Microsoft.OpenApi.Hidi
 
             return paths;
         }
-
-        /// <summary>
-        /// Fixes the references in the resulting OpenApiDocument.
-        /// </summary>
-        /// <param name="document"> The converted OpenApiDocument.</param>
-        /// <returns> A valid OpenApiDocument instance.</returns>
-        // private static OpenApiDocument FixReferences2(OpenApiDocument document)
-        // {
-        //     // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
-        //     // So we write it out, and read it back in again to fix it up.
-
-        //     OpenApiDocument document;
-        //     logger.LogTrace("Parsing the OpenApi file");
-        //     var result = await new OpenApiStreamReader(new OpenApiReaderSettings
-        //     {
-        //         RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
-        //         BaseUrl = new Uri(openapi)
-        //     }
-        //     ).ReadAsync(stream);
-
-        //     document = result.OpenApiDocument;
-        //     var context = result.OpenApiDiagnostic;
-        //     var sb = new StringBuilder();
-        //     document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
-        //     var doc = new OpenApiStringReader().Read(sb.ToString(), out _);
-
-        //     return doc;
-        // }
 
         /// <summary>
         /// Reads stream from file system or makes HTTP request depending on the input string

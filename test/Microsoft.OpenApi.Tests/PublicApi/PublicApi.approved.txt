@@ -525,6 +525,7 @@ namespace Microsoft.OpenApi.Models
         public Microsoft.OpenApi.Models.OpenApiComponents Components { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExternalDocs ExternalDocs { get; set; }
+        public string HashCode { get; }
         public Microsoft.OpenApi.Models.OpenApiInfo Info { get; set; }
         public Microsoft.OpenApi.Models.OpenApiPaths Paths { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSecurityRequirement> SecurityRequirements { get; set; }
@@ -535,6 +536,7 @@ namespace Microsoft.OpenApi.Models
         public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiError> ResolveReferences() { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
+        public static string GenerateHashValue(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
     }
     public class OpenApiEncoding : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {

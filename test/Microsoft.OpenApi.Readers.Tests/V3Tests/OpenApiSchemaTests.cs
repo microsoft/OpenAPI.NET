@@ -423,7 +423,7 @@ get:
                                 }
                             }
                         }
-                    },options => options.Excluding(m => m.Name == "HostDocument"));
+                    }, options => options.Excluding(m => m.Name == "HostDocument"));
             }
         }
 
