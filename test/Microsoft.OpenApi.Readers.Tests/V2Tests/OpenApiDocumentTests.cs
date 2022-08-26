@@ -150,9 +150,9 @@ paths: {}",
                     },
                     Paths = new OpenApiPaths()
                 });
-            var context2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 };
 
-            Assert.Equal(context.SpecificationVersion, context2.SpecificationVersion);
+            context.Should().BeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
         }
 
         [Fact]
@@ -208,7 +208,7 @@ paths: {}",
                     {
                         Type = ReferenceType.Schema,
                         Id = "Error",
-                        HostDocument= doc
+                        HostDocument = doc
                     },
                     Properties = new Dictionary<string, OpenApiSchema>()
                                                     {
@@ -407,7 +407,7 @@ paths: {}",
                 {
                     Id = "Error",
                     Type = ReferenceType.Schema,
-                    HostDocument= document
+                    HostDocument = document
                 }
             };
             var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;

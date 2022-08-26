@@ -280,12 +280,14 @@ paths: {}
 
             var doc = reader.Read(input, out var diagnostic);
             doc.Servers.Count.Should().Be(0);
-
-            Assert.Equal(OpenApiSpecVersion.OpenApi2_0, diagnostic.SpecificationVersion);
-            diagnostic.Errors.Should().BeEquivalentTo(
-                new List<OpenApiError>
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic
                 {
-                    new OpenApiError("#/", "Invalid host")
+                    Errors =
+                    {
+                        new OpenApiError("#/", "Invalid host")
+                    },
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
                 });
         }
 

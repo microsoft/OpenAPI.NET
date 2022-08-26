@@ -332,9 +332,8 @@ get:
                 // Assert
                 var components = openApiDoc.Components;
 
-                var diagnostic2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
-
-                Assert.Equal(diagnostic.SpecificationVersion, diagnostic2.SpecificationVersion);
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 components.Should().BeEquivalentTo(
                     new OpenApiComponents
@@ -424,7 +423,7 @@ get:
                                 }
                             }
                         }
-                    },options => options.Excluding(m => m.Name == "HostDocument"));
+                    }, options => options.Excluding(m => m.Name == "HostDocument"));
             }
         }
 
@@ -439,9 +438,8 @@ get:
                 // Assert
                 var components = openApiDoc.Components;
 
-                var diagnostic2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
-
-                Assert.Equal(diagnostic.SpecificationVersion, diagnostic2.SpecificationVersion);
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 components.Should().BeEquivalentTo(
                     new OpenApiComponents
@@ -621,9 +619,8 @@ get:
                 // Assert
                 var components = openApiDoc.Components;
 
-                var diagnostic2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
-
-                Assert.Equal(diagnostic.SpecificationVersion, diagnostic2.SpecificationVersion);
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 var schemaExtension = new OpenApiSchema()
                 {

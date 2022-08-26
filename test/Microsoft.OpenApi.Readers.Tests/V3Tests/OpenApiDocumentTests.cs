@@ -9,11 +9,13 @@ using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
+using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -32,8 +34,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             {
                 IOpenApiWriter writer;
                 var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings() {
-                InlineLocalReferences = true});
+                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
+                {
+                    InlineLocalReferences = true
+                });
                 element.SerializeAsV3(writer);
                 writer.Flush();
                 stream.Position = 0;
@@ -46,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             }
         }
 
-        public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element) 
+        public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
         {
             using (var stream = new MemoryStream())
             {
@@ -97,9 +101,8 @@ paths: {}",
                     Paths = new OpenApiPaths()
                 });
 
-            var context2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
-
-            Assert.Equal(context.SpecificationVersion, context2.SpecificationVersion);
+            context.Should().BeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Theory]
@@ -169,30 +172,31 @@ paths: {}",
                     },
                     Paths = new OpenApiPaths()
                 });
-            var context2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
 
-            Assert.Equal(context.SpecificationVersion, context2.SpecificationVersion);
+            context.Should().BeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
         public void ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            var diagnostic2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            Assert.Equal(diagnostic.SpecificationVersion, diagnostic2.SpecificationVersion);          
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-            openApiDoc.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new OpenApiInfo
+                openApiDoc.Should().BeEquivalentTo(
+                    new OpenApiDocument
                     {
-                        Title = "The API",
-                        Version = "0.9.1",
-                    },
-                    Servers =
-                    {
+                        Info = new OpenApiInfo
+                        {
+                            Title = "The API",
+                            Version = "0.9.1",
+                        },
+                        Servers =
+                        {
                             new OpenApiServer
                             {
                                 Url = new Uri("http://www.example.org/api").ToString(),
@@ -203,79 +207,63 @@ paths: {}",
                                 Url = new Uri("https://www.example.org/api").ToString(),
                                 Description = "The https endpoint"
                             }
-                    },
-                    Paths = new OpenApiPaths()
-                });
+                        },
+                        Paths = new OpenApiPaths()
+                    });
+            }
         }
 
         [Fact]
         public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            openApiDoc.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new OpenApiInfo
+                openApiDoc.Should().BeEquivalentTo(
+                    new OpenApiDocument
                     {
-                        Version = "0.9"
-                    },
-                    Paths = new OpenApiPaths()
-                });
+                        Info = new OpenApiInfo
+                        {
+                            Version = "0.9"
+                        },
+                        Paths = new OpenApiPaths()
+                    });
 
-            diagnostic.Errors.Should().BeEquivalentTo(
-                new List<OpenApiError>
-                {
-                        new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
-                });
-
-            Assert.Equal(OpenApiSpecVersion.OpenApi3_0, diagnostic.SpecificationVersion);
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic
+                    {
+                        Errors =
+                        {
+                            new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
+                        },
+                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                    });
+            }
         }
 
         [Fact]
         public void ParseMinimalDocumentShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            openApiDoc.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new OpenApiInfo
+                openApiDoc.Should().BeEquivalentTo(
+                    new OpenApiDocument
                     {
-                        Title = "Simple Document",
-                        Version = "0.9.1"
-                    },
-                    Paths = new OpenApiPaths()
-                });
+                        Info = new OpenApiInfo
+                        {
+                            Title = "Simple Document",
+                            Version = "0.9.1"
+                        },
+                        Paths = new OpenApiPaths()
+                    });
 
-            var diagnostic2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
-
-            Assert.Equal(diagnostic.SpecificationVersion, diagnostic2.SpecificationVersion);
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            }
         }
-
-        [Fact]
-        public void TestHashCodesForSimilarOpenApiDocuments()
-        {
-            // Arrange
-            using var stream1 = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
-            using var stream2 = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
-            using var stream3 = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocumentWithWhitespace.yaml"));
-
-            // Act
-            /*
-             Test whether reading in the same document twice yields the same hash code,
-             And reading in similar documents but one has a whitespace yields the same hash code
-            */
-            var openApiDoc1 = new OpenApiStreamReader().Read(stream1, out var diagnostic1);
-            var openApiDoc2 = new OpenApiStreamReader().Read(stream2, out var diagnostic2);
-            var openApiDoc3 = new OpenApiStreamReader().Read(stream3, out var diagnostic3);
-
-            // Assert
-            Assert.Equal(diagnostic1.HashCode, diagnostic2.HashCode);
-            Assert.Equal(diagnostic2.HashCode, diagnostic3.HashCode);
-        }        
 
         [Fact]
         public void ParseStandardPetStoreDocumentShouldSucceed()
@@ -703,9 +691,8 @@ paths: {}",
                 actual.Should().BeEquivalentTo(expected);
             }
 
-            var context2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
-
-            Assert.Equal(context.SpecificationVersion, context2.SpecificationVersion);
+            context.Should().BeEquivalentTo(
+                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -1237,9 +1224,8 @@ paths: {}",
                 actual.Should().BeEquivalentTo(expected, options => options.Excluding(m => m.Name == "HostDocument"));
             }
 
-            var context2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
-
-            Assert.Equal(context.SpecificationVersion, context2.SpecificationVersion);
+            context.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -1254,9 +1240,8 @@ paths: {}",
                 // TODO: Create the object in memory and compare with the one read from YAML file.
             }
 
-            var context2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
-
-            Assert.Equal(context.SpecificationVersion, context2.SpecificationVersion);
+            context.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]

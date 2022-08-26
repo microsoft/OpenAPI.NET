@@ -21,28 +21,29 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicCallbackShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicCallback.yaml"));
-            // Arrange
-            var yamlStream = new YamlStream();
-            yamlStream.Load(new StreamReader(stream));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicCallback.yaml")))
+            {
+                // Arrange
+                var yamlStream = new YamlStream();
+                yamlStream.Load(new StreamReader(stream));
+                var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
+                var diagnostic = new OpenApiDiagnostic();
+                var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
+                var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
-            // Act
-            var callback = OpenApiV3Deserializer.LoadCallback(node);
+                // Act
+                var callback = OpenApiV3Deserializer.LoadCallback(node);
 
-            // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+                // Assert
+                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            callback.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+                callback.Should().BeEquivalentTo(
+                    new OpenApiCallback
                     {
+                        PathItems =
+                        {
                             [RuntimeExpression.Build("$request.body#/url")]
                             = new OpenApiPathItem
                             {
@@ -68,31 +69,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                    }
-                });
+                        }
+                    });
+            }
         }
 
         [Fact]
         public void ParseCallbackWithReferenceShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml"));
-            // Act
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "callbackWithReference.yaml")))
+            {
+                // Act
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            // Assert
-            var path = openApiDoc.Paths.First().Value;
-            var subscribeOperation = path.Operations[OperationType.Post];
+                // Assert
+                var path = openApiDoc.Paths.First().Value;
+                var subscribeOperation = path.Operations[OperationType.Post];
 
-            var callback = subscribeOperation.Callbacks["simpleHook"];
-            var diagnostic2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
+                var callback = subscribeOperation.Callbacks["simpleHook"];
 
-            Assert.Equal(diagnostic.SpecificationVersion, diagnostic2.SpecificationVersion);
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-            callback.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+                callback.Should().BeEquivalentTo(
+                    new OpenApiCallback
                     {
+                        PathItems =
+                        {
                             [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                                 Operations = {
                                     [OperationType.Post] = new OpenApiOperation()
@@ -119,38 +122,39 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                    },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Callback,
-                        Id = "simpleHook",
-                        HostDocument = openApiDoc
-                    }
-                });
+                        },
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.Callback,
+                            Id = "simpleHook",
+                            HostDocument = openApiDoc
+                        }
+                    });
+            }
         }
 
         [Fact]
         public void ParseMultipleCallbacksWithReferenceShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml"));
-            // Act
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleCallbacksWithReference.yaml")))
+            {
+                // Act
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            // Assert
-            var path = openApiDoc.Paths.First().Value;
-            var subscribeOperation = path.Operations[OperationType.Post];
+                // Assert
+                var path = openApiDoc.Paths.First().Value;
+                var subscribeOperation = path.Operations[OperationType.Post];
 
-            var diagnostic2 = new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 };
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-            Assert.Equal(diagnostic.SpecificationVersion, diagnostic2.SpecificationVersion);
+                var callback1 = subscribeOperation.Callbacks["simpleHook"];
 
-            var callback1 = subscribeOperation.Callbacks["simpleHook"];
-
-            callback1.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+                callback1.Should().BeEquivalentTo(
+                    new OpenApiCallback
                     {
+                        PathItems =
+                        {
                             [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                                 Operations = {
                                     [OperationType.Post] = new OpenApiOperation()
@@ -177,21 +181,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                    },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Callback,
-                        Id = "simpleHook",
-                        HostDocument = openApiDoc
-                    }
-                });
+                        },
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.Callback,
+                            Id = "simpleHook",
+                            HostDocument = openApiDoc
+                        }
+                    });
 
-            var callback2 = subscribeOperation.Callbacks["callback2"];
-            callback2.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+                var callback2 = subscribeOperation.Callbacks["callback2"];
+                callback2.Should().BeEquivalentTo(
+                    new OpenApiCallback
                     {
+                        PathItems =
+                        {
                             [RuntimeExpression.Build("/simplePath")]= new OpenApiPathItem {
                                 Operations = {
                                     [OperationType.Post] = new OpenApiOperation()
@@ -219,15 +223,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 },
                             }
-                    }
-                });
+                        }
+                    });
 
-            var callback3 = subscribeOperation.Callbacks["callback3"];
-            callback3.Should().BeEquivalentTo(
-                new OpenApiCallback
-                {
-                    PathItems =
+                var callback3 = subscribeOperation.Callbacks["callback3"];
+                callback3.Should().BeEquivalentTo(
+                    new OpenApiCallback
                     {
+                        PathItems =
+                        {
                             [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new OpenApiPathItem {
                                 Operations = {
                                     [OperationType.Post] = new OpenApiOperation()
@@ -262,8 +266,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                    }
-                });
+                        }
+                    });
+            }
         }
     }
 }

@@ -45,8 +45,6 @@ namespace Microsoft.OpenApi.Readers
             var reader = new StreamReader(input);
             var result = new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
 
-            diagnostic.HashCode = OpenApiDocument.GenerateHashValue(input);
-
             if (!_settings.LeaveStreamOpen)
             {
                 reader.Dispose();
