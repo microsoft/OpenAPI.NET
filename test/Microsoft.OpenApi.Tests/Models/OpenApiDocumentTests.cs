@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -10,6 +10,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -1314,5 +1315,32 @@ paths: { }";
             actual.Should().Be(expected);
         }
 
+        [Fact]
+        public void TestHashCodesForSimilarOpenApiDocuments()
+        {
+            // Arrange
+            var sampleFolderPath = "Models/Samples/";            
+
+            var doc1 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
+            var doc2 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
+            var doc3 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocumentWithWhiteSpaces.yaml"));
+
+            // Act && Assert
+            /*
+                Test whether reading in two similar documents yield the same hash code,
+                And reading in similar documents(one has a whitespace) yields the same hash code as the result is terse
+            */
+            Assert.True(doc1.HashCode != null && doc2.HashCode != null && doc1.HashCode.Equals(doc2.HashCode));
+            Assert.Equal(doc1.HashCode, doc3.HashCode);
+        }
+
+        private static OpenApiDocument ParseInputFile(string filePath)
+        {
+            // Read in the input yaml file
+            using FileStream stream = File.OpenRead(filePath);
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+
+            return openApiDoc;
+        }
     }
 }

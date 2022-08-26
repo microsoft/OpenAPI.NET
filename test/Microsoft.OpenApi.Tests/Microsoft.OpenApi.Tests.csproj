@@ -36,6 +36,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Models\Samples\sampleDocument.yaml">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Models\Samples\sampleDocumentWithWhiteSpaces.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+      
     <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Samples\" />
   </ItemGroup>
 </Project>
