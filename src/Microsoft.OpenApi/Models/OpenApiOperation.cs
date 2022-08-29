@@ -253,9 +253,11 @@ namespace Microsoft.OpenApi.Models
                 {
                     foreach (var property in RequestBody.Content.First().Value.Schema.Properties)
                     {
-                        var paramName = property.Key;
                         var paramSchema = property.Value;
-                        if (paramSchema.Type == "string" && (paramSchema.Format == "binary" || paramSchema.Format == "base64")) {
+                        if ("string".Equals(paramSchema.Type, StringComparison.OrdinalIgnoreCase) 
+                            && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase) 
+                            || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
+                        {
                             paramSchema.Type = "file";
                             paramSchema.Format = null;
                         }
