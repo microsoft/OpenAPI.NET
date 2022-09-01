@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -630,6 +630,10 @@ namespace Microsoft.OpenApi.Models
             }
 
             // format
+            Format ??= AllOf?.FirstOrDefault(x => x.Format != null)?.Format ??
+                    AnyOf?.FirstOrDefault(x => x.Format != null)?.Format ??
+                    OneOf?.FirstOrDefault(x => x.Format != null)?.Format;
+
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // title
@@ -695,7 +699,7 @@ namespace Microsoft.OpenApi.Models
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
 
-            // If there isn't already an AllOf, and the schema contains a oneOf or anyOf write an allOf with the first
+            // If there isn't already an allOf, and the schema contains a oneOf or anyOf write an allOf with the first
             // schema in the list as an attempt to guess at a graceful downgrade situation.
             if (AllOf == null || AllOf.Count == 0)
             {
@@ -706,12 +710,6 @@ namespace Microsoft.OpenApi.Models
                 {
                     // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
                     writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf?.Take(1), (w, s) => s.SerializeAsV2(w));
-                }
-                if (OneOf?.Count > 0)
-                {
-                    // Take the format and set it at the root
-                    var oneOfFormat = OneOf.Select<OpenApiSchema, string>(x => x.Format.ToString()).FirstOrDefault();
-                    this.Format = oneOfFormat;
                 }
             }
 
