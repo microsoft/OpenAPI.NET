@@ -448,7 +448,7 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV2(openApiJsonWriter);
             openApiJsonWriter.Flush();
 
-            var v2Schema = outputStringWriter.GetStringBuilder().ToString();//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n","");
+            var v2Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n","");
 
             // Serialize as V3
             //schema.SerializeAsV3(openApiJsonWriter);
@@ -457,13 +457,14 @@ namespace Microsoft.OpenApi.Tests.Models
             //var v3Schema = outputStringWriter.GetStringBuilder().ToString();//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n", "");
 
             var expectedV2Schema = @"{
-""allOf"": [
-{
-    ""format"": ""decimal"",
-    ""type"": ""number""
-}],
-""format"": ""decimal""
-}".Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n","");
+  ""format"": ""decimal"",
+  ""allOf"": [
+    {
+      ""format"": ""decimal"",
+      ""type"": ""number""
+    }
+  ]
+}".MakeLineBreaksEnvironmentNeutral();
 
             
             var expectedV3Schema = @"{
