@@ -424,7 +424,7 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Fact]
-        public void SerializeSchemaPrimitiveTypeShouldRemoveFormatInRootIfPresentInChildrenSchema()
+        public void SerializeAsV2ShouldSetFormatPropertyInParentSchemaIfPresentInChildrenSchema()
         {
             // Arrange
             var schema = new OpenApiSchema()
@@ -448,13 +448,7 @@ namespace Microsoft.OpenApi.Tests.Models
             schema.SerializeAsV2(openApiJsonWriter);
             openApiJsonWriter.Flush();
 
-            var v2Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n","");
-
-            // Serialize as V3
-            //schema.SerializeAsV3(openApiJsonWriter);
-            //openApiJsonWriter.Flush();
-
-            //var v3Schema = outputStringWriter.GetStringBuilder().ToString();//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n", "");
+            var v2Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
 
             var expectedV2Schema = @"{
   ""format"": ""decimal"",
@@ -466,25 +460,8 @@ namespace Microsoft.OpenApi.Tests.Models
   ]
 }".MakeLineBreaksEnvironmentNeutral();
 
-            
-            var expectedV3Schema = @"{
-""allOf"": [
-{
-    ""format"": ""decimal"",
-    ""type"": ""number""
-}]}
-{""oneOf"": [
-{
-    ""type"": ""number"",
-    ""format"": ""decimal""
-},
-{""type"" : ""string""}
-
-]}}";//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n", "");
-
             // Assert
-            Assert.Equal(expectedV2Schema, v2Schema); // Assert that v2 schema has the root schema Format defined
-            //Assert.Equal(expectedV3Schema, v3Schema);
+            Assert.Equal(expectedV2Schema, v2Schema);
         }
     }
 }

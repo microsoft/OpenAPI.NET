@@ -630,9 +630,9 @@ namespace Microsoft.OpenApi.Models
             }
 
             // format
-            Format ??= AllOf?.FirstOrDefault(x => x.Format != null)?.Format ??
-                    AnyOf?.FirstOrDefault(x => x.Format != null)?.Format ??
-                    OneOf?.FirstOrDefault(x => x.Format != null)?.Format;
+            Format ??= AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
+                    AnyOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
+                    OneOf?.FirstOrDefault(static x => x.Format != null)?.Format;
 
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
