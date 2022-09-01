@@ -422,5 +422,68 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
+
+        [Fact]
+        public void SerializeSchemaPrimitiveTypeShouldRemoveFormatInRootIfPresentInChildrenSchema()
+        {
+            // Arrange
+            var schema = new OpenApiSchema()
+            {
+                OneOf = new List<OpenApiSchema>
+                {
+                    new OpenApiSchema
+                    { 
+                        Type = "number",
+                        Format = "decimal"
+                    },
+                    new OpenApiSchema { Type = "string" },
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var openApiJsonWriter = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+
+            // Act
+            // Serialize as V2
+            schema.SerializeAsV2(openApiJsonWriter);
+            openApiJsonWriter.Flush();
+
+            var v2Schema = outputStringWriter.GetStringBuilder().ToString();//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n","");
+
+            // Serialize as V3
+            //schema.SerializeAsV3(openApiJsonWriter);
+            //openApiJsonWriter.Flush();
+
+            //var v3Schema = outputStringWriter.GetStringBuilder().ToString();//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n", "");
+
+            var expectedV2Schema = @"{
+""allOf"": [
+{
+    ""format"": ""decimal"",
+    ""type"": ""number""
+}],
+""format"": ""decimal""
+}".Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n","");
+
+            
+            var expectedV3Schema = @"{
+""allOf"": [
+{
+    ""format"": ""decimal"",
+    ""type"": ""number""
+}]}
+{""oneOf"": [
+{
+    ""type"": ""number"",
+    ""format"": ""decimal""
+},
+{""type"" : ""string""}
+
+]}}";//.Replace(Environment.NewLine, "").Replace(" ", "").Replace("\n", "");
+
+            // Assert
+            Assert.Equal(expectedV2Schema, v2Schema); // Assert that v2 schema has the root schema Format defined
+            //Assert.Equal(expectedV3Schema, v3Schema);
+        }
     }
 }

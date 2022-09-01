@@ -707,6 +707,12 @@ namespace Microsoft.OpenApi.Models
                     // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
                     writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf?.Take(1), (w, s) => s.SerializeAsV2(w));
                 }
+                if (OneOf?.Count > 0)
+                {
+                    // Take the format and set it at the root
+                    var oneOfFormat = OneOf.Select<OpenApiSchema, string>(x => x.Format.ToString()).FirstOrDefault();
+                    this.Format = oneOfFormat;
+                }
             }
 
             // properties
