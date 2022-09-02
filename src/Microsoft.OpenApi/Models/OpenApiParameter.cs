@@ -16,6 +16,7 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
     {
         private bool? _explode;
+        public ParameterStyle? _style;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -73,7 +74,11 @@ namespace Microsoft.OpenApi.Models
         /// Default values (based on value of in): for query - form; for path - simple; for header - simple;
         /// for cookie - form.
         /// </summary>
-        public ParameterStyle? Style { get; set; }
+        public ParameterStyle? Style
+        { 
+            get => _style ?? SetDefaultStyleValue();
+            set => _style = value;
+        }
 
         /// <summary>
         /// When this is true, parameter values of type array or object generate separate parameters
@@ -394,6 +399,20 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        private ParameterStyle? SetDefaultStyleValue()
+        {
+            Style = In switch
+            {
+                ParameterLocation.Query => (ParameterStyle?)ParameterStyle.Form,
+                ParameterLocation.Header => (ParameterStyle?)ParameterStyle.Simple,
+                ParameterLocation.Path => (ParameterStyle?)ParameterStyle.Simple,
+                ParameterLocation.Cookie => (ParameterStyle?)ParameterStyle.Form,
+                _ => (ParameterStyle?)ParameterStyle.Simple,
+            };
+
+            return Style;
         }
 
     }
