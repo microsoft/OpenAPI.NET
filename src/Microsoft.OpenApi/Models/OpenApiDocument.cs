@@ -1,9 +1,12 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -61,6 +64,11 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+
+        /// <summary>
+        /// The unique hash code of the generated OpenAPI document
+        /// </summary>
+        public string HashCode => GenerateHashValue(this);
 
         /// <summary>
         /// Parameter-less constructor
@@ -373,6 +381,40 @@ namespace Microsoft.OpenApi.Models
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
             return ResolveReference(reference, false);
+        }
+
+        /// <summary>
+        /// Takes in an OpenApi document instance and generates its hash value 
+        /// </summary>
+        /// <param name="doc">The OpenAPI description to hash.</param>
+        /// <returns>The hash value.</returns>
+        public static string GenerateHashValue(OpenApiDocument doc)
+        {
+            using HashAlgorithm sha = SHA512.Create();
+            using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
+            using var streamWriter = new StreamWriter(cryptoStream);
+
+            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings { Terse = true });
+            doc.SerializeAsV3(openApiJsonWriter);
+            openApiJsonWriter.Flush();
+
+            cryptoStream.FlushFinalBlock();
+            var hash = sha.Hash;
+
+            return ConvertByteArrayToString(hash);
+        }
+
+        private static string ConvertByteArrayToString(byte[] hash)
+        {
+            // Build the final string by converting each byte
+            // into hex and appending it to a StringBuilder
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>

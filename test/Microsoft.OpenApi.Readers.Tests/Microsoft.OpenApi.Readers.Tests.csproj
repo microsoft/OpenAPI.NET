@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -250,12 +250,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
         <PackageReference Include="FluentAssertions" Version="6.7.0">
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1">
         </PackageReference>
-        <PackageReference Include="SharpYaml" Version="2.0.0">
+        <PackageReference Include="SharpYaml" Version="2.1.0">
         </PackageReference>
         <PackageReference Include="xunit" Version="2.4.2">
         </PackageReference>
