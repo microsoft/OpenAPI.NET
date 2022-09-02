@@ -169,7 +169,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(ParameterStyle.Form, true)]
         [InlineData(ParameterStyle.SpaceDelimited, false)]
-        [InlineData(null, false)]
         public void WhenStyleIsFormTheDefaultValueOfExplodeShouldBeTrueOtherwiseFalse(ParameterStyle? style, bool expectedExplode)
         {
             // Arrange
@@ -184,13 +183,33 @@ namespace Microsoft.OpenApi.Tests.Models
             parameter.Explode.Should().Be(expectedExplode);
         }
 
+        [Theory]
+        [InlineData(ParameterLocation.Path, ParameterStyle.Simple)]
+        [InlineData(ParameterLocation.Query, ParameterStyle.Form)]
+        [InlineData(ParameterLocation.Header, ParameterStyle.Simple)]
+        [InlineData(ParameterLocation.Cookie, ParameterStyle.Form)]
+        [InlineData(null, ParameterStyle.Simple)]
+        public void WhenStyleAndInIsNullTheDefaultValueOfStyleShouldBeSimple(ParameterLocation? inValue, ParameterStyle expectedStyle)
+        {
+            // Arrange
+            var parameter = new OpenApiParameter
+            {
+                Name = "name1",
+                In = inValue,
+            };
+
+            // Act & Assert
+            parameter.Style.Should().Be(expectedStyle);
+        }
+
         [Fact]
         public void SerializeBasicParameterAsV3JsonWorks()
         {
             // Arrange
             var expected = @"{
   ""name"": ""name1"",
-  ""in"": ""path""
+  ""in"": ""path"",
+  ""style"": ""simple""
 }";
 
             // Act

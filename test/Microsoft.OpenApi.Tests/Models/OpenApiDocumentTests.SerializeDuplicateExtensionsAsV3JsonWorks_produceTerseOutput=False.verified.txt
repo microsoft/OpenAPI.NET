@@ -20,6 +20,7 @@
             "in": "path",
             "description": "The first operand",
             "required": true,
+            "style": "simple",
             "schema": {
               "type": "integer",
               "my-extension": 4
@@ -31,6 +32,7 @@
             "in": "path",
             "description": "The second operand",
             "required": true,
+            "style": "simple",
             "schema": {
               "type": "integer",
               "my-extension": 4
