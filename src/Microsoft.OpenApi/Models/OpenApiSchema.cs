@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -630,6 +630,10 @@ namespace Microsoft.OpenApi.Models
             }
 
             // format
+            Format ??= AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
+                    AnyOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
+                    OneOf?.FirstOrDefault(static x => x.Format != null)?.Format;
+
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // title
@@ -695,7 +699,7 @@ namespace Microsoft.OpenApi.Models
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
 
-            // If there isn't already an AllOf, and the schema contains a oneOf or anyOf write an allOf with the first
+            // If there isn't already an allOf, and the schema contains a oneOf or anyOf write an allOf with the first
             // schema in the list as an attempt to guess at a graceful downgrade situation.
             if (AllOf == null || AllOf.Count == 0)
             {
