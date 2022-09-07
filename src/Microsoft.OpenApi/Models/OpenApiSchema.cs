@@ -566,10 +566,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // format
-            Format ??= AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
+            if (string.IsNullOrEmpty(Format))
+            {
+                Format = AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
                     AnyOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
                     OneOf?.FirstOrDefault(static x => x.Format != null)?.Format;
-
+            }
+            
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // items
@@ -634,9 +637,12 @@ namespace Microsoft.OpenApi.Models
             }
 
             // format
-            Format ??= AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
+            if (string.IsNullOrEmpty(Format))
+            {
+                Format = AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
                     AnyOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
                     OneOf?.FirstOrDefault(static x => x.Format != null)?.Format;
+            }
 
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
