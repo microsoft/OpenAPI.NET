@@ -50,7 +50,12 @@ namespace Microsoft.OpenApi.Tests.Models
             Schema = new OpenApiSchema
             {
                 Title = "title2",
-                Description = "description2"
+                Description = "description2",
+                OneOf = new List<OpenApiSchema>
+                {
+                    new OpenApiSchema { Type = "number", Format = "double" },
+                    new OpenApiSchema { Type = "string" }                        
+                }
             },
             Examples = new Dictionary<string, OpenApiExample>
             {
@@ -234,6 +239,15 @@ namespace Microsoft.OpenApi.Tests.Models
   ""explode"": true,
   ""schema"": {
     ""title"": ""title2"",
+    ""oneOf"": [
+      {
+        ""type"": ""number"",
+        ""format"": ""double""
+      },
+      {
+        ""type"": ""string""
+      }
+    ],
     ""description"": ""description2""
   },
   ""examples"": {
@@ -246,6 +260,27 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeAdvancedParameterAsV2JsonWorks()
+        {
+            // Arrange
+            var expected = @"{
+  ""in"": ""path"",
+  ""name"": ""name1"",
+  ""description"": ""description1"",
+  ""required"": true,
+  ""format"": ""double""
+}";
+
+            // Act
+            var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
