@@ -568,9 +568,9 @@ namespace Microsoft.OpenApi.Models
             // format
             if (string.IsNullOrEmpty(Format))
             {
-                Format = AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
-                    AnyOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
-                    OneOf?.FirstOrDefault(static x => x.Format != null)?.Format;
+                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
             }
             
             writer.WriteProperty(OpenApiConstants.Format, Format);
@@ -639,9 +639,9 @@ namespace Microsoft.OpenApi.Models
             // format
             if (string.IsNullOrEmpty(Format))
             {
-                Format = AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
-                    AnyOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
-                    OneOf?.FirstOrDefault(static x => x.Format != null)?.Format;
+                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
             }
 
             writer.WriteProperty(OpenApiConstants.Format, Format);
