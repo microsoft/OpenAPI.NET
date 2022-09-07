@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -566,6 +566,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // format
+            if (string.IsNullOrEmpty(Format))
+            {
+                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
+            
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // items
@@ -630,9 +637,12 @@ namespace Microsoft.OpenApi.Models
             }
 
             // format
-            Format ??= AllOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
-                    AnyOf?.FirstOrDefault(static x => x.Format != null)?.Format ??
-                    OneOf?.FirstOrDefault(static x => x.Format != null)?.Format;
+            if (string.IsNullOrEmpty(Format))
+            {
+                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
 
             writer.WriteProperty(OpenApiConstants.Format, Format);
 

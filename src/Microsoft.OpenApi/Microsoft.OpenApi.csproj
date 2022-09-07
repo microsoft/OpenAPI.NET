@@ -11,7 +11,7 @@
         <Company>Microsoft</Company>
         <Title>Microsoft.OpenApi</Title>
         <PackageId>Microsoft.OpenApi</PackageId>
-        <Version>1.4.0</Version>
+        <Version>1.4.1</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <PackageTags>OpenAPI .NET</PackageTags>
