@@ -71,11 +71,11 @@ namespace Microsoft.OpenApi.Readers
             if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
                 var openApiErrors = document.Validate(_settings.RuleSet);
-                foreach (var item in openApiErrors.Where(e => e is OpenApiValidatorError))
+                foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
                 {
                     diagnostic.Errors.Add(item);
                 }
-                foreach (var item in openApiErrors.Where(e => e is OpenApiValidatorWarning))
+                foreach (var item in openApiErrors.OfType<OpenApiValidatorWarning>())
                 {
                     diagnostic.Warnings.Add(item);
                 }
@@ -114,10 +114,14 @@ namespace Microsoft.OpenApi.Readers
             // Validate the document
             if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
             {
-                var errors = document.Validate(_settings.RuleSet);
-                foreach (var item in errors)
+                var openApiErrors = document.Validate(_settings.RuleSet);
+                foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
                 {
                     diagnostic.Errors.Add(item);
+                }
+                foreach (var item in openApiErrors.OfType<OpenApiValidatorWarning>())
+                {
+                    diagnostic.Warnings.Add(item);
                 }
             }
 
