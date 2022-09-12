@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -83,7 +83,11 @@ namespace Microsoft.OpenApi.Models
             Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
             Info = document?.Info != null ? new(document?.Info) : null;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
-            Paths = document?.Paths != null ? new(document?.Paths) : null;
+            if (document.Paths != null)
+            {
+                Paths = new();
+                Paths = document.Paths;
+            }
             Components = document?.Components != null ? new(document?.Components) : null;
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
