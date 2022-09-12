@@ -1342,5 +1342,19 @@ paths: { }";
 
             return openApiDoc;
         }
+
+        [Fact]
+        public void CopyConstructorForAdvancedDocumentWorks()
+        {
+            // Arrange & Act
+            var doc = new OpenApiDocument(AdvancedDocument);
+
+            // Assert
+            Assert.NotNull(doc.Info);
+            Assert.NotNull(doc.Servers);
+            Assert.NotNull(doc.Paths);
+            Assert.Equal(2, doc.Paths.Count);
+            Assert.NotNull(doc.Components);
+        }
     }
 }
