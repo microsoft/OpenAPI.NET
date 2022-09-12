@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Models
             Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
             Info = document?.Info != null ? new(document?.Info) : null;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
-            if (document.Paths != null)
+            if (document?.Paths != null)
             {
                 Paths = new();
                 Paths = document.Paths;
