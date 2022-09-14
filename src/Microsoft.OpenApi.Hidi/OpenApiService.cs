@@ -331,7 +331,9 @@ namespace Microsoft.OpenApi.Hidi
                 EnableDerivedTypesReferencesForResponses = false,
                 ShowRootPath = false,
                 ShowLinks = false,
-                ExpandDerivedTypesNavigationProperties = false
+                ExpandDerivedTypesNavigationProperties = false,
+                EnableCount = true,
+                UseSuccessStatusCodeRange = true
             };
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
