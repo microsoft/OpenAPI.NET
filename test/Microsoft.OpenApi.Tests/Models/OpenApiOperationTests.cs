@@ -787,5 +787,16 @@ namespace Microsoft.OpenApi.Tests.Models
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
+
+        [Fact]
+        public void EnsureOpenApiOperationCopyConstructorCopiesResponsesObject()
+        {
+            // Arrange and act
+            var operation = new OpenApiOperation(_operationWithBody);
+
+            // Assert
+            Assert.NotNull(operation.Responses);
+            Assert.Equal(2, operation.Responses.Count);
+        }
     }
 }
