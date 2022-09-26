@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiResponses"/> object
         /// </summary>
-        public OpenApiResponses(OpenApiResponses openApiResponses) { }
-
+        /// <param name="openApiResponses">The <see cref="OpenApiResponses"/></param>
+        public OpenApiResponses(OpenApiResponses openApiResponses) : base(dictionary: openApiResponses) {}
     }
 }
