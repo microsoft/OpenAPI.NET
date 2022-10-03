@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Services
     /// <summary>
     /// This class is used to walk an OpenApiDocument and convert unresolved references to references to populated objects
     /// </summary>
-    internal class OpenApiReferenceResolver : OpenApiVisitorBase
+    public class OpenApiReferenceResolver : OpenApiVisitorBase
     {
         private OpenApiDocument _currentDocument;
         private bool _resolveRemoteReferences;
