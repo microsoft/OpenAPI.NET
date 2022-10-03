@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiReferenceResolver : OpenApiVisitorBase
     {
         private OpenApiDocument _currentDocument;
-        private bool _resolveRemoteReferences;
+        private readonly bool _resolveRemoteReferences;
         private List<OpenApiError> _errors = new List<OpenApiError>();
 
         /// <summary>
