@@ -1067,6 +1067,25 @@ namespace Microsoft.OpenApi.Services
         public OpenApiReferenceError(Microsoft.OpenApi.Exceptions.OpenApiException exception) { }
         public OpenApiReferenceError(Microsoft.OpenApi.Models.OpenApiReference reference, string message) { }
     }
+    public class OpenApiReferenceResolver : Microsoft.OpenApi.Services.OpenApiVisitorBase
+    {
+        public OpenApiReferenceResolver(Microsoft.OpenApi.Models.OpenApiDocument currentDocument, bool resolveRemoteReferences = true) { }
+        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Models.OpenApiError> Errors { get; }
+        public override void Visit(Microsoft.OpenApi.Interfaces.IOpenApiReferenceable referenceable) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiComponents components) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiMediaType mediaType) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiOperation operation) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiParameter parameter) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiResponses responses) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiSchema schema) { }
+        public override void Visit(Microsoft.OpenApi.Models.OpenApiSecurityRequirement securityRequirement) { }
+        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiCallback> callbacks) { }
+        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiExample> examples) { }
+        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiHeader> headers) { }
+        public override void Visit(System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiLink> links) { }
+        public override void Visit(System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiParameter> parameters) { }
+    }
     public class OpenApiUrlTreeNode
     {
         public System.Collections.Generic.IDictionary<string, System.Collections.Generic.List<string>> AdditionalData { get; set; }
