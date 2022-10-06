@@ -283,7 +283,7 @@ namespace Microsoft.OpenApi.Models
                     .SelectMany(r => r.Value.Content?.Keys)
                     .Concat(
                         Responses
-                        .Where(r => r.Value.Reference != null && r.Value.Reference.HostDocument != null)
+                        .Where(static r => r.Value.Reference != null && r.Value.Reference.HostDocument != null)
                         .SelectMany(r => r.Value.GetEffective(r.Value.Reference.HostDocument)?.Content?.Keys))
                     .Distinct()
                     .ToList();
