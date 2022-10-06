@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Models
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV2(w));
 
-            // If references have been inlined we don't need the to render the components section
+            // If references have been inlined we don't need to render the components section
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
@@ -208,9 +208,20 @@ namespace Microsoft.OpenApi.Models
                     });
             }
             // parameters
+            var parameters = Components?.Parameters != null 
+                ? new Dictionary<string, OpenApiParameter>(Components.Parameters) 
+                : new Dictionary<string, OpenApiParameter>();
+
+            if (Components?.RequestBodies != null)
+            {
+                foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
+                {
+                    parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
+                }
+            }
             writer.WriteOptionalMap(
                 OpenApiConstants.Parameters,
-                Components?.Parameters,
+                parameters,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&

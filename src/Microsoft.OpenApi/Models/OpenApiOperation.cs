@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Models
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
-            IList<OpenApiParameter> parameters;
+            List<OpenApiParameter> parameters;
             if (Parameters == null)
             {
                 parameters = new List<OpenApiParameter>();
@@ -237,70 +237,58 @@ namespace Microsoft.OpenApi.Models
             if (RequestBody != null)
             {
                 // consumes
-                writer.WritePropertyName(OpenApiConstants.Consumes);
-                writer.WriteStartArray();
                 var consumes = RequestBody.Content.Keys.Distinct().ToList();
-                foreach (var mediaType in consumes)
+                if (consumes.Any())
                 {
-                    writer.WriteValue(mediaType);
-                }
-
-                writer.WriteEndArray();
-
-                // This is form data. We need to split the request body into multiple parameters.
-                if (consumes.Contains("application/x-www-form-urlencoded") ||
-                    consumes.Contains("multipart/form-data"))
-                {
-                    foreach (var property in RequestBody.Content.First().Value.Schema.Properties)
+                    // This is form data. We need to split the request body into multiple parameters.
+                    if (consumes.Contains("application/x-www-form-urlencoded") ||
+                        consumes.Contains("multipart/form-data"))
                     {
-                        var paramSchema = property.Value;
-                        if ("string".Equals(paramSchema.Type, StringComparison.OrdinalIgnoreCase) 
-                            && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase) 
-                            || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
+                        parameters.AddRange(RequestBody.ConvertToFormDataParameters());
+                    }
+                    else
+                    {
+                        parameters.Add(RequestBody.ConvertToBodyParameter());
+                    }
+                }
+                else if (RequestBody.Reference != null)
+                {
+                    parameters.Add(
+                        new OpenApiParameter
                         {
-                            paramSchema.Type = "file";
-                            paramSchema.Format = null;
-                        }
-                        parameters.Add(
-                            new OpenApiFormDataParameter
-                            {
-                                Description = property.Value.Description,
-                                Name = property.Key,
-                                Schema = property.Value,
-                                Required = RequestBody.Content.First().Value.Schema.Required.Contains(property.Key)
+                            UnresolvedReference = true,
+                            Reference = RequestBody.Reference
+                        });
 
-                            });
+                    if (RequestBody.Reference.HostDocument != null)
+                    {
+                        var effectiveRequestBody = RequestBody.GetEffective(RequestBody.Reference.HostDocument);
+                        if (effectiveRequestBody != null)
+                            consumes = effectiveRequestBody.Content.Keys.Distinct().ToList();
                     }
                 }
-                else
+
+                if (consumes.Any())
                 {
-                    var content = RequestBody.Content.Values.FirstOrDefault();
-
-                    var bodyParameter = new OpenApiBodyParameter
+                    writer.WritePropertyName(OpenApiConstants.Consumes);
+                    writer.WriteStartArray();
+                    foreach (var mediaType in consumes)
                     {
-                        Description = RequestBody.Description,
-                        // V2 spec actually allows the body to have custom name.
-                        // To allow round-tripping we use an extension to hold the name
-                        Name = "body",
-                        Schema = content?.Schema ?? new OpenApiSchema(),
-                        Required = RequestBody.Required,
-                        Extensions = RequestBody.Extensions.ToDictionary(k => k.Key, v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
-                    };
-
-                    if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
-                    {
-                        bodyParameter.Name = (RequestBody.Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
-                        bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
+                        writer.WriteValue(mediaType);
                     }
-                    
-                    parameters.Add(bodyParameter);
+                    writer.WriteEndArray();
                 }
             }
 
             if (Responses != null)
             {
-                var produces = Responses.Where(r => r.Value.Content != null)
-                    .SelectMany(r => r.Value.Content?.Keys)
+                var produces = Responses
+                    .Where(static r => r.Value.Content != null)
+                    .SelectMany(static r => r.Value.Content?.Keys)
+                    .Concat(
+                        Responses
+                        .Where(static r => r.Value.Reference != null && r.Value.Reference.HostDocument != null)
+                        .SelectMany(static r => r.Value.GetEffective(r.Value.Reference.HostDocument)?.Content?.Keys))
                     .Distinct()
                     .ToList();
 

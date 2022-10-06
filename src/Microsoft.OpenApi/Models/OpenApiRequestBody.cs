@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -143,6 +145,51 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             // RequestBody object does not exist in V2.
+        }
+
+        internal OpenApiBodyParameter ConvertToBodyParameter()
+        {
+            var bodyParameter = new OpenApiBodyParameter
+            {
+                Description = Description,
+                // V2 spec actually allows the body to have custom name.
+                // To allow round-tripping we use an extension to hold the name
+                Name = "body",
+                Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
+                Required = Required,
+                Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
+            };
+            if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
+            {
+                bodyParameter.Name = (Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
+                bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
+            }
+            return bodyParameter;
+        }
+
+        internal IEnumerable<OpenApiFormDataParameter> ConvertToFormDataParameters()
+        {
+            if (Content == null || !Content.Any())
+                yield break;
+
+            foreach (var property in Content.First().Value.Schema.Properties)
+            {
+                var paramSchema = property.Value;
+                if ("string".Equals(paramSchema.Type, StringComparison.OrdinalIgnoreCase)
+                    && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
+                    || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
+                {
+                    paramSchema.Type = "file";
+                    paramSchema.Format = null;
+                }
+                yield return new OpenApiFormDataParameter
+                {
+                    Description = property.Value.Description,
+                    Name = property.Key,
+                    Schema = property.Value,
+                    Required = Content.First().Value.Schema.Required.Contains(property.Key) 
+                };
+            }
         }
     }
 }
