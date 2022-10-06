@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -143,6 +144,26 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {
             // RequestBody object does not exist in V2.
+        }
+
+        internal OpenApiBodyParameter ConvertToBodyParameter()
+        {
+            var bodyParameter = new OpenApiBodyParameter
+            {
+                Description = Description,
+                // V2 spec actually allows the body to have custom name.
+                // To allow round-tripping we use an extension to hold the name
+                Name = "body",
+                Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
+                Required = Required,
+                Extensions = Extensions.ToDictionary(k => k.Key, v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
+            };
+            if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
+            {
+                bodyParameter.Name = (Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
+                bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
+            }
+            return bodyParameter;
         }
     }
 }

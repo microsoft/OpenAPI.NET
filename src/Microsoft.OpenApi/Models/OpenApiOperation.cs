@@ -275,27 +275,17 @@ namespace Microsoft.OpenApi.Models
                     }
                     else
                     {
-                        var content = RequestBody.Content.Values.FirstOrDefault();
-
-                        var bodyParameter = new OpenApiBodyParameter
-                        {
-                            Description = RequestBody.Description,
-                            // V2 spec actually allows the body to have custom name.
-                            // To allow round-tripping we use an extension to hold the name
-                            Name = "body",
-                            Schema = content?.Schema ?? new OpenApiSchema(),
-                            Required = RequestBody.Required,
-                            Extensions = RequestBody.Extensions.ToDictionary(k => k.Key, v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
-                        };
-
-                        if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
-                        {
-                            bodyParameter.Name = (RequestBody.Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
-                            bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
-                        }
-
-                        parameters.Add(bodyParameter);
+                        parameters.Add(RequestBody.ConvertToBodyParameter());
                     }
+                }
+                else if (RequestBody.Reference != null)
+                {
+                    parameters.Add(
+                        new OpenApiParameter 
+                        { 
+                            UnresolvedReference = true,
+                            Reference = RequestBody.Reference
+                        });
                 }
             }
 
