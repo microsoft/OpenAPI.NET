@@ -224,7 +224,7 @@ namespace Microsoft.OpenApi.Models
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
-            IList<OpenApiParameter> parameters;
+            List<OpenApiParameter> parameters;
             if (Parameters == null)
             {
                 parameters = new List<OpenApiParameter>();
@@ -240,38 +240,11 @@ namespace Microsoft.OpenApi.Models
                 var consumes = RequestBody.Content.Keys.Distinct().ToList();
                 if (consumes.Any())
                 {
-                    writer.WritePropertyName(OpenApiConstants.Consumes);
-                    writer.WriteStartArray();
-                    foreach (var mediaType in consumes)
-                    {
-                        writer.WriteValue(mediaType);
-                    }
-
-                    writer.WriteEndArray();
-
                     // This is form data. We need to split the request body into multiple parameters.
                     if (consumes.Contains("application/x-www-form-urlencoded") ||
                         consumes.Contains("multipart/form-data"))
                     {
-                        foreach (var property in RequestBody.Content.First().Value.Schema.Properties)
-                        {
-                            var paramSchema = property.Value;
-                            if ("string".Equals(paramSchema.Type, StringComparison.OrdinalIgnoreCase)
-                                && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
-                                || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
-                            {
-                                paramSchema.Type = "file";
-                                paramSchema.Format = null;
-                            }
-                            parameters.Add(
-                                new OpenApiFormDataParameter
-                                {
-                                    Description = property.Value.Description,
-                                    Name = property.Key,
-                                    Schema = property.Value,
-                                    Required = RequestBody.Content.First().Value.Schema.Required.Contains(property.Key)
-                                });
-                        }
+                        parameters.AddRange(RequestBody.ConvertToFormDataParameters());
                     }
                     else
                     {
@@ -281,18 +254,37 @@ namespace Microsoft.OpenApi.Models
                 else if (RequestBody.Reference != null)
                 {
                     parameters.Add(
-                        new OpenApiParameter 
-                        { 
+                        new OpenApiParameter
+                        {
                             UnresolvedReference = true,
                             Reference = RequestBody.Reference
                         });
+
+                    if (RequestBody.Reference.HostDocument != null)
+                        consumes = RequestBody.GetEffective(RequestBody.Reference.HostDocument)?.Content.Keys.Distinct().ToList();
+                }
+
+                if (consumes.Any())
+                {
+                    writer.WritePropertyName(OpenApiConstants.Consumes);
+                    writer.WriteStartArray();
+                    foreach (var mediaType in consumes)
+                    {
+                        writer.WriteValue(mediaType);
+                    }
+                    writer.WriteEndArray();
                 }
             }
 
             if (Responses != null)
             {
-                var produces = Responses.Where(r => r.Value.Content != null)
+                var produces = Responses
+                    .Where(r => r.Value.Content != null)
                     .SelectMany(r => r.Value.Content?.Keys)
+                    .Concat(
+                        Responses
+                        .Where(r => r.Value.Reference != null && r.Value.Reference.HostDocument != null)
+                        .SelectMany(r => r.Value.GetEffective(r.Value.Reference.HostDocument)?.Content?.Keys))
                     .Distinct()
                     .ToList();
 

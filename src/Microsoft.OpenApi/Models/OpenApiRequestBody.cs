@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
@@ -164,6 +165,28 @@ namespace Microsoft.OpenApi.Models
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
             }
             return bodyParameter;
+        }
+
+        internal IEnumerable<OpenApiFormDataParameter> ConvertToFormDataParameters()
+        {
+            foreach (var property in Content.First().Value.Schema.Properties)
+            {
+                var paramSchema = property.Value;
+                if ("string".Equals(paramSchema.Type, StringComparison.OrdinalIgnoreCase)
+                    && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
+                    || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
+                {
+                    paramSchema.Type = "file";
+                    paramSchema.Format = null;
+                }
+                yield return new OpenApiFormDataParameter
+                { 
+                    Description = property.Value.Description,
+                    Name = property.Key,
+                    Schema = property.Value,
+                    Required = Content.First().Value.Schema.Required.Contains(property.Key)
+                };
+            }
         }
     }
 }
