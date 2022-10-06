@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Models
                 Name = "body",
                 Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
                 Required = Required,
-                Extensions = Extensions.ToDictionary(k => k.Key, v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
+                Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
             if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
             {

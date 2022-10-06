@@ -279,12 +279,12 @@ namespace Microsoft.OpenApi.Models
             if (Responses != null)
             {
                 var produces = Responses
-                    .Where(r => r.Value.Content != null)
-                    .SelectMany(r => r.Value.Content?.Keys)
+                    .Where(static r => r.Value.Content != null)
+                    .SelectMany(static r => r.Value.Content?.Keys)
                     .Concat(
                         Responses
                         .Where(static r => r.Value.Reference != null && r.Value.Reference.HostDocument != null)
-                        .SelectMany(r => r.Value.GetEffective(r.Value.Reference.HostDocument)?.Content?.Keys))
+                        .SelectMany(static r => r.Value.GetEffective(r.Value.Reference.HostDocument)?.Content?.Keys))
                     .Distinct()
                     .ToList();
 
