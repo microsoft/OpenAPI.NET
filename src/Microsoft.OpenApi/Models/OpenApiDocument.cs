@@ -208,10 +208,13 @@ namespace Microsoft.OpenApi.Models
                     });
             }
             // parameters
-            IDictionary<string, OpenApiParameter> parameters =  Components?.Parameters;
+            var parameters = Components?.Parameters != null 
+                ? new Dictionary<string, OpenApiParameter>(Components.Parameters) 
+                : new Dictionary<string, OpenApiParameter>();
+
             if (Components?.RequestBodies != null)
             {
-                foreach (var requestBody in Components.RequestBodies)
+                foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
                 {
                     parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
                 }

@@ -261,7 +261,11 @@ namespace Microsoft.OpenApi.Models
                         });
 
                     if (RequestBody.Reference.HostDocument != null)
-                        consumes = RequestBody.GetEffective(RequestBody.Reference.HostDocument)?.Content.Keys.Distinct().ToList();
+                    {
+                        var effectiveRequestBody = RequestBody.GetEffective(RequestBody.Reference.HostDocument);
+                        if (effectiveRequestBody != null)
+                            consumes = effectiveRequestBody.Content.Keys.Distinct().ToList();
+                    }
                 }
 
                 if (consumes.Any())

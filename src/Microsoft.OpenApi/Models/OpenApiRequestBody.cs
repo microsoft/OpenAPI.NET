@@ -169,6 +169,9 @@ namespace Microsoft.OpenApi.Models
 
         internal IEnumerable<OpenApiFormDataParameter> ConvertToFormDataParameters()
         {
+            if (Content == null || !Content.Any())
+                yield break;
+
             foreach (var property in Content.First().Value.Schema.Properties)
             {
                 var paramSchema = property.Value;
@@ -180,11 +183,11 @@ namespace Microsoft.OpenApi.Models
                     paramSchema.Format = null;
                 }
                 yield return new OpenApiFormDataParameter
-                { 
+                {
                     Description = property.Value.Description,
                     Name = property.Key,
                     Schema = property.Value,
-                    Required = Content.First().Value.Schema.Required.Contains(property.Key)
+                    Required = Content.First().Value.Schema.Required.Contains(property.Key) 
                 };
             }
         }
