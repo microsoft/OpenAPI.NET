@@ -123,6 +123,24 @@ namespace Microsoft.OpenApi.Models
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV3(w));
 
+            // webhooks
+            writer.WriteOptionalMap(
+                OpenApiConstants.Webhooks,
+                Webhooks,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Schema &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+
             // components
             writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => c.SerializeAsV3(w));
 
