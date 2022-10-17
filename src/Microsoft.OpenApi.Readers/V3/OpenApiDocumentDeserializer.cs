@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -26,6 +26,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"info", (o, n) => o.Info = LoadInfo(n)},
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
+            {"webhooks", (o, n) => o.Webhooks = n.CreateMapWithReference(ReferenceType.PathItem, LoadPathItem)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
