@@ -91,6 +91,7 @@ namespace Microsoft.OpenApi.Models
             Info = document?.Info != null ? new(document?.Info) : null;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
             Paths = document?.Paths != null ? new(document?.Paths) : null;
+            Webhooks = document?.Webhooks != null ? new Dictionary<string, OpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
