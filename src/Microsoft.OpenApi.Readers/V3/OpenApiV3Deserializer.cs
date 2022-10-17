@@ -108,9 +108,7 @@ namespace Microsoft.OpenApi.Readers.V3
             foreach (var anyMapFieldName in anyMapFieldMap.Keys.ToList())
             {
                 try
-                {
-                    var newProperty = new List<IOpenApiAny>();
-
+                {                   
                     mapNode.Context.StartObject(anyMapFieldName);
 
                     foreach (var propertyMapElement in anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject))
