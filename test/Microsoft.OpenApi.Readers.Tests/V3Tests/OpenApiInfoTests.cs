@@ -41,6 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     new OpenApiInfo
                     {
                         Title = "Advanced Info",
+                        Summary = "Sample Summary",
                         Description = "Sample Description",
                         Version = "1.0.0",
                         TermsOfService = new Uri("http://example.org/termsOfService"),
@@ -101,6 +102,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     new OpenApiInfo
                     {
                         Title = "Basic Info",
+                        Summary = "Sample Summary",
                         Description = "Sample Description",
                         Version = "1.0.1",
                         TermsOfService = new Uri("http://swagger.io/terms/"),

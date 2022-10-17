@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -20,10 +19,15 @@ namespace Microsoft.OpenApi.Models
         public string Title { get; set; }
 
         /// <summary>
+        /// A short summary of the API.
+        /// </summary>
+        public string Summary { get; set; }
+        
+        /// <summary>
         /// A short description of the application.
         /// </summary>
         public string Description { get; set; }
-
+        
         /// <summary>
         /// REQUIRED. The version of the OpenAPI document.
         /// </summary>
@@ -60,6 +64,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiInfo(OpenApiInfo info)
         {
             Title = info?.Title ?? Title;
+            Summary = info?.Summary ?? Summary;
             Description = info?.Description ?? Description;
             Version = info?.Version ?? Version;
             TermsOfService = info?.TermsOfService ?? TermsOfService;
@@ -83,6 +88,9 @@ namespace Microsoft.OpenApi.Models
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
 
+            // summary
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
 

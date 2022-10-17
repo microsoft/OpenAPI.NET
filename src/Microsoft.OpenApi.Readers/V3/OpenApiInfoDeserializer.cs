@@ -30,6 +30,12 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             },
             {
+                "summary", (o, n) =>
+                {
+                    o.Summary = n.GetScalarValue();
+                }
+            },
+            {
                 "description", (o, n) =>
                 {
                     o.Description = n.GetScalarValue();
@@ -63,10 +69,7 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiInfo LoadInfo(ParseNode node)
         {
             var mapNode = node.CheckMapNode("Info");
-
             var info = new OpenApiInfo();
-            var required = new List<string> { "title", "version" };
-
             ParseMap(mapNode, info, InfoFixedFields, InfoPatternFields);
 
             return info;
