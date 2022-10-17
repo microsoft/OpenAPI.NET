@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -38,6 +38,13 @@ namespace Microsoft.OpenApi.Models
         /// REQUIRED. The available paths and operations for the API.
         /// </summary>
         public OpenApiPaths Paths { get; set; }
+
+        /// <summary>
+        /// The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement.
+        /// A map of requests initiated other than by an API call, for example by an out of band registration. 
+        /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
+        /// </summary>
+        public IDictionary<string, OpenApiPathItem> Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
 
         /// <summary>
         /// An element to hold various schemas for the specification.
