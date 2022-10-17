@@ -30,6 +30,12 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             },
             {
+                "summary", (o, n) =>
+                {
+                    o.Summary = n.GetScalarValue();
+                }
+            },
+            {
                 "description", (o, n) =>
                 {
                     o.Description = n.GetScalarValue();
