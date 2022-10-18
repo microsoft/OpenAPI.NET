@@ -121,6 +121,11 @@ namespace Microsoft.OpenApi.Models
         public const string Name = "name";
 
         /// <summary>
+        /// Field: Identifier
+        /// </summary>
+        public const string Identifier = "identifier";
+
+        /// <summary>
         /// Field: Namespace
         /// </summary>
         public const string Namespace = "namespace";
