@@ -76,6 +76,11 @@ namespace Microsoft.OpenApi.Models
         public const string Components = "components";
 
         /// <summary>
+        /// Field: PathItems
+        /// </summary>
+        public const string PathItems = "pathItems";
+        
+        /// <summary>
         /// Field: Security
         /// </summary>
         public const string Security = "security";

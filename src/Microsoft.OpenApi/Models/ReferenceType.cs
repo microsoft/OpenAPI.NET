@@ -58,6 +58,11 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Tags item.
         /// </summary>
-        [Display("tags")] Tag
+        [Display("tags")] Tag,
+
+        /// <summary>
+        /// Path item.
+        /// </summary>
+        [Display("pathItems")] PathItem
     }
 }
