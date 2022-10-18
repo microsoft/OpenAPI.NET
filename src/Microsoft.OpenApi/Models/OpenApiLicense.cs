@@ -20,6 +20,11 @@ namespace Microsoft.OpenApi.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// An SPDX license expression for the API. The identifier field is mutually exclusive of the url field.
+        /// </summary>
+        public string Identifier { get; set; }
+
+        /// <summary>
         /// The URL pointing to the contact information. MUST be in the format of a URL.
         /// </summary>
         public Uri Url { get; set; }
@@ -40,6 +45,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiLicense(OpenApiLicense license)
         {
             Name = license?.Name ?? Name;
+            Identifier = license?.Identifier ?? Identifier;
             Url = license?.Url != null ? new Uri(license.Url.OriginalString) : null;
             Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
         }
@@ -71,6 +77,9 @@ namespace Microsoft.OpenApi.Models
 
             // name
             writer.WriteProperty(OpenApiConstants.Name, Name);
+
+            // identifier
+            writer.WriteProperty(OpenApiConstants.Identifier, Identifier);
 
             // url
             writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);

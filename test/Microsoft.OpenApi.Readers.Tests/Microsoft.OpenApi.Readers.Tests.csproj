@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net6.0</TargetFrameworks>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -162,6 +162,9 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiExample\explicitString.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiResponse\responseWithHeaderReference.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\basicInfo.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiLicense\licenseWithSpdxIdentifier.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiInfo\minimalInfo.yaml">
