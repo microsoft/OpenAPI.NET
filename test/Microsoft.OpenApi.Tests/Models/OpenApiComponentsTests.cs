@@ -245,6 +245,84 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public static OpenApiComponents ComponentsWithPathItem = new OpenApiComponents
+        {
+            Schemas = new Dictionary<string, OpenApiSchema>
+            {
+                ["schema1"] = new OpenApiSchema
+                {
+                    Properties = new Dictionary<string, OpenApiSchema>
+                    {
+                        ["property2"] = new OpenApiSchema
+                        {
+                            Type = "integer"
+                        },
+                        ["property3"] = new OpenApiSchema
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = "schema2"
+                            }
+                        }
+                    },
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = "schema1"
+                    }
+                },
+                ["schema2"] = new OpenApiSchema
+                {
+                    Properties = new Dictionary<string, OpenApiSchema>
+                    {
+                        ["property2"] = new OpenApiSchema
+                        {
+                            Type = "integer"
+                        }
+                    }
+                },
+            },
+            PathItems = new Dictionary<string, OpenApiPathItem>
+            {
+                ["/pets"] = new OpenApiPathItem
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Post] = new OpenApiOperation
+                        {
+                            RequestBody = new OpenApiRequestBody
+                            {
+                                Description = "Information about a new pet in the system",
+                                Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType
+                                    {
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Reference = new OpenApiReference
+                                            {
+                                                Id = "schema1",
+                                                Type = ReferenceType.Schema
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "Return a 200 status to indicate that the data was received successfully"
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        };
+        
         private readonly ITestOutputHelper _output;
 
         public OpenApiComponentsTests(ITestOutputHelper output)
@@ -579,6 +657,98 @@ securitySchemes:
 
             // Act
             var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeComponentsWithPathItemsAsJsonWorks()
+        {
+            // Arrange
+            var expected = @"{
+  ""schemas"": {
+    ""schema1"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        },
+        ""property3"": {
+          ""$ref"": ""#/components/schemas/schema2""
+        }
+      }
+    },
+    ""schema2"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        }
+      }
+    }
+  },
+  ""pathItems"": {
+    ""/pets"": {
+      ""post"": {
+        ""requestBody"": {
+          ""description"": ""Information about a new pet in the system"",
+          ""content"": {
+            ""application/json"": {
+              ""schema"": {
+                ""$ref"": ""#/components/schemas/schema1""
+              }
+            }
+          }
+        },
+        ""responses"": {
+          ""200"": {
+            ""description"": ""Return a 200 status to indicate that the data was received successfully""
+          }
+        }
+      }
+    }
+  }
+}";
+            // Act
+            var actual = ComponentsWithPathItem.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void SerializeComponentsWithPathItemsAsYamlWorks()
+        {
+            // Arrange
+        var expected = @"schemas:
+  schema1:
+    properties:
+      property2:
+        type: integer
+      property3:
+        $ref: '#/components/schemas/schema2'
+  schema2:
+    properties:
+      property2:
+        type: integer
+pathItems:
+  /pets:
+    post:
+      requestBody:
+        description: Information about a new pet in the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schema1'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully";
+
+            // Act
+            var actual = ComponentsWithPathItem.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
