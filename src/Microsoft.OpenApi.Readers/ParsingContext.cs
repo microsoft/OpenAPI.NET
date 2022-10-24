@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     break;
 
-                case string version when version.StartsWith("3.0"):
+                case string version when version.StartsWith("3.0") || version.StartsWith("3.1"):
                     VersionService = new OpenApiV3VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
