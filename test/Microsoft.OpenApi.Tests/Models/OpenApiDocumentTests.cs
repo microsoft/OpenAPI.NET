@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -890,6 +890,78 @@ namespace Microsoft.OpenApi.Tests.Models
             Components = AdvancedComponents
         };
 
+        public static OpenApiDocument DocumentWithWebhooks = new OpenApiDocument()
+        {
+            Info = new OpenApiInfo
+            {
+                Title = "Webhook Example",
+                Version = "1.0.0"
+            },
+            Webhooks = new Dictionary<string, OpenApiPathItem>
+            {
+                ["newPet"] = new OpenApiPathItem
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Post] = new OpenApiOperation
+                        {
+                            RequestBody = new OpenApiRequestBody
+                            {
+                                Description = "Information about a new pet in the system",
+                                Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType
+                                    {
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Reference = new OpenApiReference
+                                            {
+                                                Id = "Pet",
+                                                Type = ReferenceType.Schema
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "Return a 200 status to indicate that the data was received successfully"                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            Components = new OpenApiComponents
+            {
+                Schemas = new Dictionary<string, OpenApiSchema>
+                {
+                    ["Pet"] = new OpenApiSchema
+                    {
+                        Required = new HashSet<string> { "id", "name" },
+                        Properties = new Dictionary<string, OpenApiSchema>
+                        {
+                            ["id"] = new OpenApiSchema
+                            {
+                                Type = "integer",
+                                Format = "int64"
+                            },
+                            ["name"] = new OpenApiSchema
+                            {
+                                Type = "string"
+                            },
+                            ["tag"] = new OpenApiSchema
+                            {
+                                Type = "string"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
         public static OpenApiDocument DuplicateExtensions = new OpenApiDocument
         {
             Info = new OpenApiInfo
@@ -1319,7 +1391,7 @@ paths: { }";
         public void TestHashCodesForSimilarOpenApiDocuments()
         {
             // Arrange
-            var sampleFolderPath = "Models/Samples/";            
+            var sampleFolderPath = "Models/Samples/";
 
             var doc1 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
             var doc2 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
@@ -1355,6 +1427,69 @@ paths: { }";
             Assert.NotNull(doc.Paths);
             Assert.Equal(2, doc.Paths.Count);
             Assert.NotNull(doc.Components);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void SerializeDocumentWithWebhooksAsV3JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            DocumentWithWebhooks.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);            
+        }
+
+        [Fact]
+        public void SerializeDocumentWithWebhooksAsV3YamlWorks()
+        {
+            // Arrange
+            var expected = @"openapi: 3.0.1
+info:
+  title: Webhook Example
+  version: 1.0.0
+paths: { }
+webhooks:
+  newPet:
+    post:
+      requestBody:
+        description: Information about a new pet in the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully
+components:
+  schemas:
+    Pet:
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+          type: string";
+            
+            // Act
+            var actual = DocumentWithWebhooks.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            Assert.Equal(expected, actual);
         }
     }
 }

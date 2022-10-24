@@ -137,6 +137,9 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\documentWithWebhooks.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\apiWithFullHeaderComponent.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
