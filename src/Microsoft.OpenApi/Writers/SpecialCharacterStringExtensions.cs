@@ -192,7 +192,7 @@ namespace Microsoft.OpenApi.Writers
             if (decimal.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out var _) ||
                 IsHexadecimalNotation(input) ||
                 bool.TryParse(input, out var _) ||
-                DateTime.TryParse(input, out var _))
+                DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out var _))
             {
                 return $"'{input}'";
             }
