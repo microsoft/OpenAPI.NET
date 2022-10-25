@@ -46,6 +46,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Info, () => Walk(doc.Info));
             Walk(OpenApiConstants.Servers, () => Walk(doc.Servers));
             Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
+            Walk(OpenApiConstants.Webhooks, () => Walk(doc.Webhooks));
             Walk(OpenApiConstants.Components, () => Walk(doc.Components));
             Walk(OpenApiConstants.Security, () => Walk(doc.SecurityRequirements));
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
@@ -217,6 +218,28 @@ namespace Microsoft.OpenApi.Services
                     _visitor.CurrentKeys.Path = pathItem.Key;
                     Walk(pathItem.Key, () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
                     _visitor.CurrentKeys.Path = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Visits Webhooks and child objects
+        /// </summary>
+        internal void Walk(IDictionary<string, OpenApiPathItem> webhooks)
+        {
+            if (webhooks == null)
+            {
+                return;
+            }
+
+            _visitor.Visit(webhooks);
+            
+            // Visit Webhooks
+            if (webhooks != null)
+            {
+                foreach (var pathItem in webhooks)
+                {
+                    Walk(pathItem.Key, () => Walk(pathItem.Value));
                 }
             }
         }

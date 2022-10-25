@@ -100,6 +100,13 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits Webhooks>
+        /// </summary>
+        public virtual void Visit(IDictionary<string, OpenApiPathItem> webhooks)
+        {
+        }
+        
+        /// <summary>
         /// Visits <see cref="OpenApiPathItem"/>
         /// </summary>
         public virtual void Visit(OpenApiPathItem pathItem)
