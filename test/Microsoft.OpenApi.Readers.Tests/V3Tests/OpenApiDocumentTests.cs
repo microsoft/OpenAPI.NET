@@ -1429,7 +1429,7 @@ paths: {}",
                     Version = "1.0.0",
                     Title = "Webhook Example"                    
                 },
-                Webhooks = new OpenApiPaths
+                Webhooks = new Dictionary<string, OpenApiPathItem>
                 {
                     ["/pets"] = new OpenApiPathItem
                     {
