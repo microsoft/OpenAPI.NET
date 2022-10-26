@@ -48,12 +48,24 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
         {
             var openApidoc = new OpenApiDocument();
-
+            
             var openApiNode = rootNode.GetMap();
 
             ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
+            ValidatePathsField(openApidoc, rootNode);
 
             return openApidoc;
+        }
+        
+        private static void ValidatePathsField(OpenApiDocument doc, RootNode rootNode)
+        {
+            var versionNode = rootNode.Find(new JsonPointer("/openapi")).GetScalarValue();
+            if (versionNode == null) return;
+            else if (versionNode.Contains("3.0") && doc.Paths == null)
+            {
+                // paths is a required field in OpenAPI 3.0 but optional in 3.1
+                rootNode.Context.Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {rootNode.Context.GetLocation()}"));
+            }
         }
     }
 }
