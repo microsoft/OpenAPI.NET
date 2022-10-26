@@ -63,12 +63,14 @@ namespace Microsoft.OpenApi.Readers
                     VersionService = new OpenApiV2VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
+                    ValidateRequiredFields(doc, version);
                     break;
 
                 case string version when version.StartsWith("3.0") || version.StartsWith("3.1"):
                     VersionService = new OpenApiV3VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
+                    ValidateRequiredFields(doc, version);
                     break;
 
                 default:
@@ -244,5 +246,21 @@ namespace Microsoft.OpenApi.Readers
             }
         }
 
+        private void ValidateRequiredFields(OpenApiDocument doc, string version)
+        {
+            if ((version == "2.0" || version.StartsWith("3.0")) && (doc.Paths == null || doc.Paths.Count == 0))
+            {
+                // paths is a required field in OpenAPI 3.0 but optional in 3.1
+                RootNode.Context.Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {RootNode.Context.GetLocation()}"));
+            }
+            else if (version.StartsWith("3.1"))
+            {
+                if ((doc.Paths == null || doc.Paths.Count == 0) && (doc.Webhooks == null || doc.Webhooks.Count == 0))
+                {
+                    RootNode.Context.Diagnostic.Errors.Add(new OpenApiError(
+                        "", $"The document MUST contain either a Paths or Webhooks field at {RootNode.Context.GetLocation()}"));
+                }
+            }
+        }
     }
 }
