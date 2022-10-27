@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Readers
             }
             else if (version.StartsWith("3.1"))
             {
-                if ((doc.Paths == null || doc.Paths.Count == 0) && (doc.Webhooks == null || doc.Webhooks.Any()))
+                if ((doc.Paths == null || doc.Paths.Any()) && (doc.Webhooks == null || doc.Webhooks.Any()))
                 {
                     RootNode.Context.Diagnostic.Errors.Add(new OpenApiError(
                         "", $"The document MUST contain either a Paths or Webhooks field at {RootNode.Context.GetLocation()}"));
