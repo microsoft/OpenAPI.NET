@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Models
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
+                        component.Reference.Type == ReferenceType.PathItem &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
