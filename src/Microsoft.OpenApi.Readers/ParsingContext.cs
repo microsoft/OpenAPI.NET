@@ -248,14 +248,14 @@ namespace Microsoft.OpenApi.Readers
 
         private void ValidateRequiredFields(OpenApiDocument doc, string version)
         {
-            if ((version == "2.0" || version.StartsWith("3.0")) && (doc.Paths == null || doc.Paths.Any()))
+            if ((version == "2.0" || version.StartsWith("3.0")) && (doc.Paths == null || !doc.Paths.Any()))
             {
                 // paths is a required field in OpenAPI 3.0 but optional in 3.1
                 RootNode.Context.Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {RootNode.Context.GetLocation()}"));
             }
             else if (version.StartsWith("3.1"))
             {
-                if ((doc.Paths == null || doc.Paths.Count == 0) && (doc.Webhooks == null || doc.Webhooks.Any()))
+                if ((doc.Paths == null || !doc.Paths.Any()) && (doc.Webhooks == null || !doc.Webhooks.Any()))
                 {
                     RootNode.Context.Diagnostic.Errors.Add(new OpenApiError(
                         "", $"The document MUST contain either a Paths or Webhooks field at {RootNode.Context.GetLocation()}"));
