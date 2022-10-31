@@ -48,7 +48,6 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiDocument LoadOpenApi(RootNode rootNode)
         {
             var openApidoc = new OpenApiDocument();
-            
             var openApiNode = rootNode.GetMap();
 
             ParseMap(openApiNode, openApidoc, _openApiFixedFields, _openApiPatternFields);
