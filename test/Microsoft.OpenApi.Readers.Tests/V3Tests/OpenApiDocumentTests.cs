@@ -1525,11 +1525,6 @@ paths: {}",
                                     }
                                 }
                             }
-                        },
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.PathItem,
-                            Id = "/pets"
                         }
                     }
                 },
