@@ -129,6 +129,17 @@ namespace Microsoft.OpenApi.Services
                 }
             });
 
+            Walk(OpenApiConstants.PathItems, () =>
+            {
+                if (components.PathItems != null)
+                {
+                    foreach (var path in components.PathItems)
+                    {
+                        Walk(path.Key, () => Walk(path.Value, isComponent: true));
+                    }
+                }
+            });
+
             Walk(OpenApiConstants.Parameters, () =>
             {
                 if (components.Parameters != null)
@@ -233,15 +244,17 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(webhooks);
-            
+
             // Visit Webhooks
             if (webhooks != null)
             {
                 foreach (var pathItem in webhooks)
                 {
-                    Walk(pathItem.Key, () => Walk(pathItem.Value));
+                    _visitor.CurrentKeys.Path = pathItem.Key;
+                    Walk(pathItem.Key, () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
+                    _visitor.CurrentKeys.Path = null;
                 }
-            }
+            };
         }
 
         /// <summary>
@@ -441,9 +454,9 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiPathItem"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiPathItem pathItem)
+        internal void Walk(OpenApiPathItem pathItem, bool isComponent = false)
         {
-            if (pathItem == null)
+            if (pathItem == null || ProcessAsReference(pathItem, isComponent))
             {
                 return;
             }

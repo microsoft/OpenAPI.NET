@@ -505,7 +505,10 @@ namespace Microsoft.OpenApi.Models
                 {
                     case ReferenceType.Schema:
                         return this.Components.Schemas[reference.Id];
-
+                        
+                    case ReferenceType.PathItem:
+                        return this.Components.PathItems[reference.Id];
+                        
                     case ReferenceType.Response:
                         return this.Components.Responses[reference.Id];
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -70,6 +70,7 @@ namespace Microsoft.OpenApi.Services
             ResolveMap(components.Callbacks);
             ResolveMap(components.Examples);
             ResolveMap(components.Schemas);
+            ResolveMap(components.PathItems);
             ResolveMap(components.SecuritySchemes);
             ResolveMap(components.Headers);
         }
@@ -81,6 +82,15 @@ namespace Microsoft.OpenApi.Services
         public override void Visit(IDictionary<string, OpenApiCallback> callbacks)
         {
             ResolveMap(callbacks);
+        }
+
+        /// <summary>
+        /// Resolves all references used in webhooks
+        /// </summary>
+        /// <param name="webhooks"></param>
+        public override void Visit(IDictionary<string, OpenApiPathItem> webhooks)
+        {
+            ResolveMap(webhooks);
         }
 
         /// <summary>
@@ -301,7 +311,7 @@ namespace Microsoft.OpenApi.Services
 
         private bool IsUnresolvedReference(IOpenApiReferenceable possibleReference)
         {
-            return (possibleReference != null && possibleReference.UnresolvedReference);
+            return possibleReference != null && possibleReference.UnresolvedReference;
         }
     }
 }

@@ -165,7 +165,12 @@ namespace Microsoft.OpenApi.Readers.V3
                 if (segments[1] == "components")
                 {
                     var referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
-                    return new OpenApiReference { Type = referenceType, Id = segments[3] };
+                    var refId = segments[3];
+                    if (segments[2] == "pathItems")
+                    {
+                        refId = "/" + segments[3];
+                    };
+                    return new OpenApiReference { Type = referenceType, Id = refId };
                 }
             }
 
