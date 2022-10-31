@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"info", (o, n) => o.Info = LoadInfo(n)},
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
-            {"webhooks", (o, n) => o.Webhooks = n.CreateMapWithReference(ReferenceType.PathItem, LoadPathItem)},
+            {"webhooks", (o, n) => o.Webhooks = LoadPaths(n)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
