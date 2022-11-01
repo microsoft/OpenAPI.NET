@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
+
 namespace Microsoft.OpenApi.Readers
 {
     /// <summary>
@@ -16,7 +18,7 @@ namespace Microsoft.OpenApi.Readers
         public static bool is2_0(this string version)
         {
             bool result = false;
-            if (version.Equals("2.0"))
+            if (version.Equals("2.0", StringComparison.OrdinalIgnoreCase))
             {
                 result = true;
             }
@@ -32,7 +34,7 @@ namespace Microsoft.OpenApi.Readers
         public static bool is3_0(this string version)
         {
             bool result = false;
-            if (version.StartsWith("3.0"))
+            if (version.StartsWith("3.0", StringComparison.OrdinalIgnoreCase))
             {
                 result = true;
             }
@@ -48,7 +50,7 @@ namespace Microsoft.OpenApi.Readers
         public static bool is3_1(this string version)
         {
             bool result = false;
-            if (version.StartsWith("3.1"))
+            if (version.StartsWith("3.1", StringComparison.OrdinalIgnoreCase))
             {
                 result = true;
             }
