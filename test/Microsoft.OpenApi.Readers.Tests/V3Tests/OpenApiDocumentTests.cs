@@ -100,7 +100,14 @@ paths: {}",
                 });
 
             context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                new OpenApiDiagnostic()
+                { 
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Errors = new List<OpenApiError>()
+                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                        }
+                });
         }
 
         [Theory]
@@ -172,7 +179,14 @@ paths: {}",
                 });
 
             context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                new OpenApiDiagnostic()
+                { 
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Errors = new List<OpenApiError>()
+                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                        }
+                });
         }
 
         [Fact]
@@ -183,7 +197,14 @@ paths: {}",
                 var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
                 diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                    new OpenApiDiagnostic()
+                    { 
+                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                        Errors = new List<OpenApiError>()
+                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                        }
+                    });
 
                 openApiDoc.Should().BeEquivalentTo(
                     new OpenApiDocument
@@ -214,30 +235,29 @@ paths: {}",
         [Fact]
         public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml")))
-            {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                openApiDoc.Should().BeEquivalentTo(
-                    new OpenApiDocument
+            openApiDoc.Should().BeEquivalentTo(
+                new OpenApiDocument
+                {
+                    Info = new OpenApiInfo
                     {
-                        Info = new OpenApiInfo
-                        {
-                            Version = "0.9"
-                        },
-                        Paths = new OpenApiPaths()
-                    });
+                        Version = "0.9"
+                    },
+                    Paths = new OpenApiPaths()
+                });
 
-                diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic
+                {
+                    Errors =
                     {
-                        Errors =
-                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/"),
                             new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
-                        },
-                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
-                    });
-            }
+                    },
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                });
         }
 
         [Fact]
@@ -259,7 +279,14 @@ paths: {}",
                     });
 
                 diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                    new OpenApiDiagnostic()
+                    { 
+                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                        Errors = new List<OpenApiError>()
+                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                        }
+                    });
             }
         }
 
