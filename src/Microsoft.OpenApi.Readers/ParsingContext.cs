@@ -253,13 +253,10 @@ namespace Microsoft.OpenApi.Readers
                 // paths is a required field in OpenAPI 3.0 but optional in 3.1
                 RootNode.Context.Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {RootNode.Context.GetLocation()}"));
             }
-            else if (version.StartsWith("3.1"))
+            else if (version.StartsWith("3.1") && (doc.Paths == null || !doc.Paths.Any()) && (doc.Webhooks == null || !doc.Webhooks.Any()))
             {
-                if ((doc.Paths == null || !doc.Paths.Any()) && (doc.Webhooks == null || !doc.Webhooks.Any()))
-                {
-                    RootNode.Context.Diagnostic.Errors.Add(new OpenApiError(
-                        "", $"The document MUST contain either a Paths or Webhooks field at {RootNode.Context.GetLocation()}"));
-                }
+                RootNode.Context.Diagnostic.Errors.Add(new OpenApiError(
+                    "", $"The document MUST contain either a Paths or Webhooks field at {RootNode.Context.GetLocation()}"));
             }
         }
     }
