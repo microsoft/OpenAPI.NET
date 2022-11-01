@@ -59,14 +59,14 @@ namespace Microsoft.OpenApi.Readers
 
             switch (inputVersion)
             {
-                case string version when version == "2.0":
+                case string version when version.is2_0():
                     VersionService = new OpenApiV2VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
                     ValidateRequiredFields(doc, version);
                     break;
 
-                case string version when version.StartsWith("3.0") || version.StartsWith("3.1"):
+                case string version when version.is3_0() || version.is3_1():
                     VersionService = new OpenApiV3VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_0;
@@ -248,12 +248,12 @@ namespace Microsoft.OpenApi.Readers
 
         private void ValidateRequiredFields(OpenApiDocument doc, string version)
         {
-            if ((version == "2.0" || version.StartsWith("3.0")) && (doc.Paths == null || !doc.Paths.Any()))
+            if ((version.is2_0() || version.is3_0()) && (doc.Paths == null || !doc.Paths.Any()))
             {
                 // paths is a required field in OpenAPI 3.0 but optional in 3.1
                 RootNode.Context.Diagnostic.Errors.Add(new OpenApiError("", $"Paths is a REQUIRED field at {RootNode.Context.GetLocation()}"));
             }
-            else if (version.StartsWith("3.1") && (doc.Paths == null || !doc.Paths.Any()) && (doc.Webhooks == null || !doc.Webhooks.Any()))
+            else if (version.is3_1() && (doc.Paths == null || !doc.Paths.Any()) && (doc.Webhooks == null || !doc.Webhooks.Any()))
             {
                 RootNode.Context.Diagnostic.Errors.Add(new OpenApiError(
                     "", $"The document MUST contain either a Paths or Webhooks field at {RootNode.Context.GetLocation()}"));
