@@ -21,6 +21,11 @@ namespace Microsoft.OpenApi.Models
         public const string Info = "info";
 
         /// <summary>
+        /// Field: Webhooks
+        /// </summary>
+        public const string Webhooks = "webhooks";
+        
+        /// <summary>
         /// Field: Title
         /// </summary>
         public const string Title = "title";
@@ -75,6 +80,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public const string Components = "components";
 
+        /// <summary>
+        /// Field: PathItems
+        /// </summary>
+        public const string PathItems = "pathItems";
+        
         /// <summary>
         /// Field: Security
         /// </summary>

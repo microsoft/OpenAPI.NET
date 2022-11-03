@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
@@ -324,22 +326,28 @@ get:
         [Fact]
         public void ParseBasicSchemaWithReferenceShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml")))
-            {
-                // Act
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSchemaWithReference.yaml"));
+            // Act
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                // Assert
-                var components = openApiDoc.Components;
+            // Assert
+            var components = openApiDoc.Components;
 
-                diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
-
-                components.Should().BeEquivalentTo(
-                    new OpenApiComponents
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic()
+                {
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Errors = new List<OpenApiError>()
                     {
-                        Schemas =
-                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                    }
+                });
+
+            components.Should().BeEquivalentTo(
+                new OpenApiComponents
+                {
+                    Schemas =
+                    {
                             ["ErrorModel"] = new OpenApiSchema
                             {
                                 Type = "object",
@@ -422,30 +430,35 @@ get:
                                     }
                                 }
                             }
-                        }
-                    }, options => options.Excluding(m => m.Name == "HostDocument"));
-            }
+                    }
+                }, options => options.Excluding(m => m.Name == "HostDocument"));
         }
 
         [Fact]
         public void ParseAdvancedSchemaWithReferenceShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml")))
-            {
-                // Act
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedSchemaWithReference.yaml"));
+            // Act
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                // Assert
-                var components = openApiDoc.Components;
+            // Assert
+            var components = openApiDoc.Components;
 
-                diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
-
-                components.Should().BeEquivalentTo(
-                    new OpenApiComponents
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic()
+                {
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Errors = new List<OpenApiError>()
                     {
-                        Schemas =
-                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                    }
+                });
+
+            components.Should().BeEquivalentTo(
+                new OpenApiComponents
+                {
+                    Schemas =
+                    {
                             ["Pet"] = new OpenApiSchema
                             {
                                 Type = "object",
@@ -602,29 +615,34 @@ get:
                                     HostDocument = openApiDoc
                                 }
                             }
-                        }
-                    }, options => options.Excluding(m => m.Name == "HostDocument"));
-            }
+                    }
+                }, options => options.Excluding(m => m.Name == "HostDocument"));
         }
 
 
         [Fact]
         public void ParseSelfReferencingSchemaShouldNotStackOverflow()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "selfReferencingSchema.yaml")))
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "selfReferencingSchema.yaml"));
+            // Act
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+
+            // Assert
+            var components = openApiDoc.Components;
+
+            diagnostic.Should().BeEquivalentTo(
+                new OpenApiDiagnostic()
+                { 
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
+                    Errors = new List<OpenApiError>()
+                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                        }
+                });
+
+            var schemaExtension = new OpenApiSchema()
             {
-                // Act
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
-
-                // Assert
-                var components = openApiDoc.Components;
-
-                diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
-
-                var schemaExtension = new OpenApiSchema()
-                {
-                    AllOf = { new OpenApiSchema()
+                AllOf = { new OpenApiSchema()
                     {
                         Title = "schemaExtension",
                         Type = "object",
@@ -642,17 +660,16 @@ get:
                                     }
                         }
                     },
-                    Reference = new OpenApiReference()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "microsoft.graph.schemaExtension"
-                    }
-                };
+                Reference = new OpenApiReference()
+                {
+                    Type = ReferenceType.Schema,
+                    Id = "microsoft.graph.schemaExtension"
+                }
+            };
 
-                schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
+            schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
 
-                components.Schemas["microsoft.graph.schemaExtension"].Should().BeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].AllOf[0].Properties["child"]);
-            }
+            components.Schemas["microsoft.graph.schemaExtension"].Should().BeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].AllOf[0].Properties["child"]);
         }
     }
 }

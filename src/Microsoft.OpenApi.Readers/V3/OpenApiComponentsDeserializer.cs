@@ -17,9 +17,7 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         private static FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
         {
-            {
-                "schemas", (o, n) => o.Schemas = n.CreateMapWithReference(ReferenceType.Schema, LoadSchema)
-            },
+            {"schemas", (o, n) => o.Schemas = n.CreateMapWithReference(ReferenceType.Schema, LoadSchema)},
             {"responses", (o, n) => o.Responses = n.CreateMapWithReference(ReferenceType.Response, LoadResponse)},
             {"parameters", (o, n) => o.Parameters = n.CreateMapWithReference(ReferenceType.Parameter, LoadParameter)},
             {"examples", (o, n) => o.Examples = n.CreateMapWithReference(ReferenceType.Example, LoadExample)},
@@ -28,8 +26,8 @@ namespace Microsoft.OpenApi.Readers.V3
             {"securitySchemes", (o, n) => o.SecuritySchemes = n.CreateMapWithReference(ReferenceType.SecurityScheme, LoadSecurityScheme)},
             {"links", (o, n) => o.Links = n.CreateMapWithReference(ReferenceType.Link, LoadLink)},
             {"callbacks", (o, n) => o.Callbacks = n.CreateMapWithReference(ReferenceType.Callback, LoadCallback)},
+            {"pathItems", (o, n) => o.PathItems = n.CreateMapWithReference(ReferenceType.PathItem, LoadPathItem)}
         };
-
 
         private static PatternFieldMap<OpenApiComponents> _componentsPatternFields =
             new PatternFieldMap<OpenApiComponents>

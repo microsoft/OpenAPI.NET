@@ -1,0 +1,84 @@
+﻿openapi : 3.1.0
+info:
+  title: Webhook Example
+  version: 1.0.0
+webhooks:
+  /pets:
+    "$ref": '#/components/pathItems/pets'
+components:
+  schemas:
+    pet:
+        type: object
+        required:
+        - id
+        - name
+        properties:
+            id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            tag:
+              type: string
+    newPet:
+        type: object
+        required:
+        - name
+        properties:
+            id:
+              type: integer
+              format: int64
+            name:
+              type: string
+            tag:
+              type: string
+  pathItems:
+     /pets:
+        get:
+          description: Returns all pets from the system that the user has access to
+          operationId: findPets
+          parameters:
+            - name: tags
+              in: query
+              description: tags to filter by
+              required: false
+              schema:
+                type: array
+                items:
+                  type: string
+            - name: limit
+              in: query
+              description: maximum number of results to return
+              required: false
+              schema:
+                type: integer
+                format: int32
+          responses:
+            '200':
+               description: pet response
+               content:
+                 application/json:
+                   schema:
+                     type: array
+                     items:
+                       "$ref": '#/components/schemas/pet'
+                 application/xml:
+                   schema:
+                     type: array
+                     items:
+                       "$ref": '#/components/schemas/pet'
+        post:
+          requestBody:
+            description: Information about a new pet in the system
+            required: true
+            content:
+              'application/json':
+                 schema:
+                   "$ref": '#/components/schemas/newPet'
+          responses:
+            "200":
+              description: Return a 200 status to indicate that the data was received successfully
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/pet'

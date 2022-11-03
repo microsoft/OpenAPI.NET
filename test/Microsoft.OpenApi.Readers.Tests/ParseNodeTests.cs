@@ -28,7 +28,8 @@ paths: { }";
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
                 new OpenApiError(new OpenApiReaderException("Expected a value.") {
                     Pointer = "#line=4"
-                })
+                }),                                        
+                new OpenApiError("", "Paths is a REQUIRED field at #/")                        
             });
         }
 

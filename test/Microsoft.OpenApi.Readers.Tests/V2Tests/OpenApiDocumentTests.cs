@@ -152,7 +152,14 @@ paths: {}",
                 });
 
             context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
+                new OpenApiDiagnostic() 
+                { 
+                    SpecificationVersion = OpenApiSpecVersion.OpenApi2_0,
+                    Errors = new List<OpenApiError>()
+                        {
+                            new OpenApiError("", "Paths is a REQUIRED field at #/")
+                        }
+                });
         }
 
         [Fact]

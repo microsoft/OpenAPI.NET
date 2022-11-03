@@ -46,6 +46,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Info, () => Walk(doc.Info));
             Walk(OpenApiConstants.Servers, () => Walk(doc.Servers));
             Walk(OpenApiConstants.Paths, () => Walk(doc.Paths));
+            Walk(OpenApiConstants.Webhooks, () => Walk(doc.Webhooks));
             Walk(OpenApiConstants.Components, () => Walk(doc.Components));
             Walk(OpenApiConstants.Security, () => Walk(doc.SecurityRequirements));
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
@@ -124,6 +125,17 @@ namespace Microsoft.OpenApi.Services
                     foreach (var item in components.Callbacks)
                     {
                         Walk(item.Key, () => Walk(item.Value, isComponent: true));
+                    }
+                }
+            });
+
+            Walk(OpenApiConstants.PathItems, () =>
+            {
+                if (components.PathItems != null)
+                {
+                    foreach (var path in components.PathItems)
+                    {
+                        Walk(path.Key, () => Walk(path.Value, isComponent: true));
                     }
                 }
             });
@@ -219,6 +231,30 @@ namespace Microsoft.OpenApi.Services
                     _visitor.CurrentKeys.Path = null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Visits Webhooks and child objects
+        /// </summary>
+        internal void Walk(IDictionary<string, OpenApiPathItem> webhooks)
+        {
+            if (webhooks == null)
+            {
+                return;
+            }
+
+            _visitor.Visit(webhooks);
+
+            // Visit Webhooks
+            if (webhooks != null)
+            {
+                foreach (var pathItem in webhooks)
+                {
+                    _visitor.CurrentKeys.Path = pathItem.Key;
+                    Walk(pathItem.Key, () => Walk(pathItem.Value));// JSON Pointer uses ~1 as an escape character for /
+                    _visitor.CurrentKeys.Path = null;
+                }
+            };
         }
 
         /// <summary>
@@ -418,9 +454,9 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiPathItem"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiPathItem pathItem)
+        internal void Walk(OpenApiPathItem pathItem, bool isComponent = false)
         {
-            if (pathItem == null)
+            if (pathItem == null || ProcessAsReference(pathItem, isComponent))
             {
                 return;
             }

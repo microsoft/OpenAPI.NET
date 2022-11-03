@@ -40,6 +40,13 @@ namespace Microsoft.OpenApi.Models
         public OpenApiPaths Paths { get; set; }
 
         /// <summary>
+        /// The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement.
+        /// A map of requests initiated other than by an API call, for example by an out of band registration. 
+        /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
+        /// </summary>
+        public IDictionary<string, OpenApiPathItem> Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
+
+        /// <summary>
         /// An element to hold various schemas for the specification.
         /// </summary>
         public OpenApiComponents Components { get; set; }
@@ -84,6 +91,7 @@ namespace Microsoft.OpenApi.Models
             Info = document?.Info != null ? new(document?.Info) : null;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
             Paths = document?.Paths != null ? new(document?.Paths) : null;
+            Webhooks = document?.Webhooks != null ? new Dictionary<string, OpenApiPathItem>(document.Webhooks) : null;
             Components = document?.Components != null ? new(document?.Components) : null;
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
@@ -114,6 +122,24 @@ namespace Microsoft.OpenApi.Models
 
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV3(w));
+
+            // webhooks
+            writer.WriteOptionalMap(
+                OpenApiConstants.Webhooks,
+                Webhooks,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.PathItem &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
 
             // components
             writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => c.SerializeAsV3(w));
@@ -479,7 +505,10 @@ namespace Microsoft.OpenApi.Models
                 {
                     case ReferenceType.Schema:
                         return this.Components.Schemas[reference.Id];
-
+                        
+                    case ReferenceType.PathItem:
+                        return this.Components.PathItems[reference.Id];
+                        
                     case ReferenceType.Response:
                         return this.Components.Responses[reference.Id];
 

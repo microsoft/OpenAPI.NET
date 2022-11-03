@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -64,6 +62,11 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
 
         /// <summary>
+        /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
+        /// </summary>
+        public IDictionary<string, OpenApiPathItem> PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+
+        /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
@@ -87,6 +90,7 @@ namespace Microsoft.OpenApi.Models
             SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
             Links = components?.Links != null ? new Dictionary<string, OpenApiLink>(components.Links) : null;
             Callbacks = components?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(components.Callbacks) : null;
+            PathItems = components?.PathItems != null ? new Dictionary<string, OpenApiPathItem>(components.PathItems) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 
@@ -288,7 +292,25 @@ namespace Microsoft.OpenApi.Models
                         component.SerializeAsV3(w);
                     }
                 });
-
+            
+            // pathItems
+            writer.WriteOptionalMap(
+                OpenApiConstants.PathItems,
+                PathItems,
+                (w, key, component) =>
+                {
+                    if (component.Reference != null &&
+                        component.Reference.Type == ReferenceType.Schema &&
+                        component.Reference.Id == key)
+                    {
+                        component.SerializeAsV3WithoutReference(w);
+                    }
+                    else
+                    {
+                        component.SerializeAsV3(w);
+                    }
+                });
+            
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 

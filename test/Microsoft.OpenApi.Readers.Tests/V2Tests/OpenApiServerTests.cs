@@ -285,7 +285,8 @@ paths: {}
                 {
                     Errors =
                     {
-                        new OpenApiError("#/", "Invalid host")
+                        new OpenApiError("#/", "Invalid host"),
+                        new OpenApiError("", "Paths is a REQUIRED field at #/")                        
                     },
                     SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
                 });
