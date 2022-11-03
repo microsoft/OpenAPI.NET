@@ -114,7 +114,6 @@ namespace Microsoft.OpenApi.Readers.V3
                         catch (OpenApiException ex)
                         {
                             Diagnostic.Errors.Add(new OpenApiError(ex));
-                            return null;
                         }
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
