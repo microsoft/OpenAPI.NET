@@ -62,6 +62,27 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiLink() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiLink"/> object
+        /// </summary>
+        public OpenApiLink(OpenApiLink link)
+        {
+            OperationRef = link?.OperationRef ?? OperationRef;
+            OperationId = link?.OperationId ?? OperationId;
+            Parameters = link?.Parameters != null ? new(link?.Parameters) : null;
+            RequestBody = link?.RequestBody != null ? new(link?.RequestBody) : null;
+            Description = link?.Description ?? Description;
+            Server = link?.Server != null ? new(link?.Server) : null;
+            Extensions = link?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(link.Extensions) : null;
+            UnresolvedReference = link?.UnresolvedReference ?? UnresolvedReference;
+            Reference = link?.Reference != null ? new(link?.Reference) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiLink"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

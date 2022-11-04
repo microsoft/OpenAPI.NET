@@ -422,5 +422,46 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
+
+        [Fact]
+        public void SerializeAsV2ShouldSetFormatPropertyInParentSchemaIfPresentInChildrenSchema()
+        {
+            // Arrange
+            var schema = new OpenApiSchema()
+            {
+                OneOf = new List<OpenApiSchema>
+                {
+                    new OpenApiSchema
+                    { 
+                        Type = "number",
+                        Format = "decimal"
+                    },
+                    new OpenApiSchema { Type = "string" },
+                }
+            };
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var openApiJsonWriter = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
+
+            // Act
+            // Serialize as V2
+            schema.SerializeAsV2(openApiJsonWriter);
+            openApiJsonWriter.Flush();
+
+            var v2Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
+
+            var expectedV2Schema = @"{
+  ""format"": ""decimal"",
+  ""allOf"": [
+    {
+      ""format"": ""decimal"",
+      ""type"": ""number""
+    }
+  ]
+}".MakeLineBreaksEnvironmentNeutral();
+
+            // Assert
+            Assert.Equal(expectedV2Schema, v2Schema);
+        }
     }
 }

@@ -30,6 +30,21 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiLicense() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiLicense"/> object
+        /// </summary>
+        public OpenApiLicense(OpenApiLicense license)
+        {
+            Name = license?.Name ?? Name;
+            Url = license?.Url != null ? new Uri(license.Url.OriginalString) : null;
+            Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

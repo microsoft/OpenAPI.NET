@@ -113,6 +113,22 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiReference() {}
+
+        /// <summary>
+        /// Initializes a copy instance of the <see cref="OpenApiReference"/> object
+        /// </summary>
+        public OpenApiReference(OpenApiReference reference)
+        {
+            ExternalResource = reference?.ExternalResource;
+            Type = reference?.Type;
+            Id = reference?.Id;
+            HostDocument = new(reference?.HostDocument);
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
@@ -198,31 +214,17 @@ namespace Microsoft.OpenApi.Models
 
         private string GetReferenceTypeNameAsV2(ReferenceType type)
         {
-            switch (type)
+            return type switch
             {
-                case ReferenceType.Schema:
-                    return OpenApiConstants.Definitions;
-
-                case ReferenceType.Parameter:
-                    return OpenApiConstants.Parameters;
-
-                case ReferenceType.Response:
-                    return OpenApiConstants.Responses;
-
-                case ReferenceType.Header:
-                    return OpenApiConstants.Headers;
-
-                case ReferenceType.Tag:
-                    return OpenApiConstants.Tags;
-
-                case ReferenceType.SecurityScheme:
-                    return OpenApiConstants.SecurityDefinitions;
-
-                default:
-                    // If the reference type is not supported in V2, simply return null
-                    // to indicate that the reference is not pointing to any object.
-                    return null;
-            }
+                ReferenceType.Schema => OpenApiConstants.Definitions,
+                ReferenceType.Parameter or ReferenceType.RequestBody => OpenApiConstants.Parameters,
+                ReferenceType.Response => OpenApiConstants.Responses,
+                ReferenceType.Header => OpenApiConstants.Headers,
+                ReferenceType.Tag => OpenApiConstants.Tags,
+                ReferenceType.SecurityScheme => OpenApiConstants.SecurityDefinitions,
+                _ => null,// If the reference type is not supported in V2, simply return null
+                          // to indicate that the reference is not pointing to any object.
+            };
         }
     }
 }

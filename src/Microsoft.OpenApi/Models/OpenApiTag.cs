@@ -44,6 +44,24 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiTag() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiTag"/> object
+        /// </summary>
+        public OpenApiTag(OpenApiTag tag)
+        {
+            Name = tag?.Name ?? Name;
+            Description = tag?.Description ?? Description;
+            ExternalDocs = tag?.ExternalDocs != null ? new(tag?.ExternalDocs) : null;
+            Extensions = tag?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
+            UnresolvedReference = tag?.UnresolvedReference ?? UnresolvedReference;
+            Reference = tag?.Reference != null ? new(tag?.Reference) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

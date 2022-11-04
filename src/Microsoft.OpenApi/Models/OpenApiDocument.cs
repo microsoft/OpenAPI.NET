@@ -3,9 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Microsoft.OpenApi.Any;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -63,6 +64,32 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+
+        /// <summary>
+        /// The unique hash code of the generated OpenAPI document
+        /// </summary>
+        public string HashCode => GenerateHashValue(this);
+
+        /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiDocument() {}
+
+        /// <summary>
+        /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
+        /// </summary>
+        public OpenApiDocument(OpenApiDocument document)
+        {
+            Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
+            Info = document?.Info != null ? new(document?.Info) : null;
+            Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
+            Paths = document?.Paths != null ? new(document?.Paths) : null;
+            Components = document?.Components != null ? new(document?.Components) : null;
+            SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
+            Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
+            ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
+            Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.
@@ -133,7 +160,7 @@ namespace Microsoft.OpenApi.Models
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV2(w));
 
-            // If references have been inlined we don't need the to render the components section
+            // If references have been inlined we don't need to render the components section
             // however if they have cycles, then we will need a component rendered
             if (writer.GetSettings().InlineLocalReferences)
             {
@@ -181,9 +208,20 @@ namespace Microsoft.OpenApi.Models
                     });
             }
             // parameters
+            var parameters = Components?.Parameters != null 
+                ? new Dictionary<string, OpenApiParameter>(Components.Parameters) 
+                : new Dictionary<string, OpenApiParameter>();
+
+            if (Components?.RequestBodies != null)
+            {
+                foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
+                {
+                    parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
+                }
+            }
             writer.WriteOptionalMap(
                 OpenApiConstants.Parameters,
-                Components?.Parameters,
+                parameters,
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
@@ -354,6 +392,40 @@ namespace Microsoft.OpenApi.Models
         public IOpenApiReferenceable ResolveReference(OpenApiReference reference)
         {
             return ResolveReference(reference, false);
+        }
+
+        /// <summary>
+        /// Takes in an OpenApi document instance and generates its hash value 
+        /// </summary>
+        /// <param name="doc">The OpenAPI description to hash.</param>
+        /// <returns>The hash value.</returns>
+        public static string GenerateHashValue(OpenApiDocument doc)
+        {
+            using HashAlgorithm sha = SHA512.Create();
+            using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
+            using var streamWriter = new StreamWriter(cryptoStream);
+
+            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings { Terse = true });
+            doc.SerializeAsV3(openApiJsonWriter);
+            openApiJsonWriter.Flush();
+
+            cryptoStream.FlushFinalBlock();
+            var hash = sha.Hash;
+
+            return ConvertByteArrayToString(hash);
+        }
+
+        private static string ConvertByteArrayToString(byte[] hash)
+        {
+            // Build the final string by converting each byte
+            // into hex and appending it to a StringBuilder
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>

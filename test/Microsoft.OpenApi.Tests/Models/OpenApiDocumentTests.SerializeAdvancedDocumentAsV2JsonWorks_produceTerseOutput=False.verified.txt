@@ -38,14 +38,16 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "collectionFormat": "multi"
           },
           {
             "in": "query",
             "name": "limit",
             "description": "maximum number of results to return",
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "collectionFormat": "multi"
           }
         ],
         "responses": {

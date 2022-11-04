@@ -7,33 +7,36 @@ using System.Linq;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Services
 {
     /// <summary>
     /// This class is used to walk an OpenApiDocument and convert unresolved references to references to populated objects
     /// </summary>
-    internal class OpenApiReferenceResolver : OpenApiVisitorBase
+    public class OpenApiReferenceResolver : OpenApiVisitorBase
     {
         private OpenApiDocument _currentDocument;
-        private bool _resolveRemoteReferences;
+        private readonly bool _resolveRemoteReferences;
         private List<OpenApiError> _errors = new List<OpenApiError>();
 
+        /// <summary>
+        /// Initializes the <see cref="OpenApiReferenceResolver"/> class.
+        /// </summary>
         public OpenApiReferenceResolver(OpenApiDocument currentDocument, bool resolveRemoteReferences = true)
         {
             _currentDocument = currentDocument;
             _resolveRemoteReferences = resolveRemoteReferences;
         }
 
-        public IEnumerable<OpenApiError> Errors
-        {
-            get
-            {
-                return _errors;
-            }
-        }
+        /// <summary>
+        /// List of errors related to the OpenApiDocument
+        /// </summary>
+        public IEnumerable<OpenApiError> Errors => _errors;
 
+        /// <summary>
+        /// Resolves tags in OpenApiDocument
+        /// </summary>
+        /// <param name="doc"></param>
         public override void Visit(OpenApiDocument doc)
         {
             if (doc.Tags != null)
@@ -42,6 +45,10 @@ namespace Microsoft.OpenApi.Services
             }
         }
 
+        /// <summary>
+        /// Visits the referenceable element in the host document
+        /// </summary>
+        /// <param name="referenceable">The referenceable element in the doc.</param>
         public override void Visit(IOpenApiReferenceable referenceable)
         {
             if (referenceable.Reference != null)
@@ -49,6 +56,11 @@ namespace Microsoft.OpenApi.Services
                 referenceable.Reference.HostDocument = _currentDocument;
             }
         }
+
+        /// <summary>
+        /// Resolves references in components
+        /// </summary>
+        /// <param name="components"></param>
         public override void Visit(OpenApiComponents components)
         {
             ResolveMap(components.Parameters);
@@ -62,6 +74,10 @@ namespace Microsoft.OpenApi.Services
             ResolveMap(components.Headers);
         }
 
+        /// <summary>
+        /// Resolves all references used in callbacks
+        /// </summary>
+        /// <param name="callbacks"></param>
         public override void Visit(IDictionary<string, OpenApiCallback> callbacks)
         {
             ResolveMap(callbacks);

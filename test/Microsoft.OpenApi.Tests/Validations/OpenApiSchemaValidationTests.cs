@@ -268,5 +268,60 @@ namespace Microsoft.OpenApi.Validations.Tests
                                     "schema1", "property1"))
             });
         }
+
+        [Fact]
+        public void ValidateOneOfSchemaPropertyNameContainsPropertySpecifiedInTheDiscriminator()
+        {
+            // Arrange
+            var components = new OpenApiComponents
+            {
+                Schemas = 
+                {
+                    {
+                        "Person",
+                        new OpenApiSchema
+                        {
+                            Type = "array",
+                            Discriminator = new OpenApiDiscriminator
+                            {
+                                PropertyName = "type"
+                            },
+                            OneOf = new List<OpenApiSchema>
+                            {
+                                new OpenApiSchema
+                                {
+                                    Properties =
+                                    {
+                                        {
+                                            "type",
+                                            new OpenApiSchema
+                                            {
+                                                Type = "array"
+                                            }
+                                        }
+                                    },
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type = ReferenceType.Schema,
+                                        Id = "Person"
+                                    }
+                                }
+                            },
+                            Reference = new OpenApiReference { Id = "Person" }
+                        }
+                    }                    
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(components);
+
+            var errors = validator.Errors;
+
+            //Assert
+            errors.Should().BeEmpty();
+        }
     }
 }

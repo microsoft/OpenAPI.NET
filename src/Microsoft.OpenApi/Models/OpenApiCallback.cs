@@ -36,6 +36,22 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiCallback() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiCallback"/> object
+        /// </summary>
+        public OpenApiCallback(OpenApiCallback callback)
+        {
+            PathItems = callback?.PathItems != null ? new(callback?.PathItems) : null;
+            UnresolvedReference = callback?.UnresolvedReference ?? UnresolvedReference;
+            Reference = callback?.Reference != null ? new(callback?.Reference) : null;
+            Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
+        }
+
+        /// <summary>
         /// Add a <see cref="OpenApiPathItem"/> into the <see cref="PathItems"/>.
         /// </summary>
         /// <param name="expression">The runtime expression.</param>

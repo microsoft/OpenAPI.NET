@@ -26,7 +26,6 @@ using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 using System.Threading;
 using System.Xml.Xsl;
 using System.Xml;
-using System.Runtime.CompilerServices;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
@@ -37,7 +36,7 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
-        public static async Task<int> TransformOpenApiDocument(
+        public static async Task TransformOpenApiDocument(
             string openapi,
             string csdl,
             string csdlFilter,
@@ -46,7 +45,7 @@ namespace Microsoft.OpenApi.Hidi
             string? version,
             OpenApiFormat? format,
             bool terseOutput,
-            LogLevel loglevel,
+            LogLevel logLevel,
             bool inlineLocal,
             bool inlineExternal,
             string filterbyoperationids,
@@ -55,18 +54,19 @@ namespace Microsoft.OpenApi.Hidi
             CancellationToken cancellationToken
            )
         {
-            var logger = ConfigureLoggerInstance(loglevel);
-
+            using var loggerFactory = Logger.ConfigureLogger(logLevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
                 if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
                 {
                     throw new ArgumentException("Please input a file path");
                 }
-                if(output == null)
+                if (output == null)
                 {
-                    throw new ArgumentNullException(nameof(output));
-                }
+                    var inputExtension = GetInputPathExtension(openapi, csdl);
+                    output = new FileInfo($"./output{inputExtension}");
+                };
                 if (cleanoutput && output.Exists)
                 {
                     output.Delete();
@@ -213,18 +213,11 @@ namespace Microsoft.OpenApi.Hidi
                     logger.LogTrace($"Finished serializing in {stopwatch.ElapsedMilliseconds}ms");
                     textWriter.Flush();
                 }
-                return 0;
             }
             catch (Exception ex)
             {
-#if DEBUG  
-                logger.LogCritical(ex, ex.Message);               
-#else
-                logger.LogCritical(ex.Message);
-                
-#endif
-                return 1;
-            }            
+                throw new InvalidOperationException($"Could not transform the document, reason: {ex.Message}", ex);
+            }
         }
 
         private static XslCompiledTransform GetFilterTransform()
@@ -250,18 +243,16 @@ namespace Microsoft.OpenApi.Hidi
             return stream;
         }
 
-
-
         /// <summary>
         /// Implementation of the validate command
         /// </summary>
-        public static async Task<int> ValidateOpenApiDocument(
+        public static async Task ValidateOpenApiDocument(
             string openapi, 
-            LogLevel loglevel, 
+            LogLevel logLevel, 
             CancellationToken cancellationToken)
         {
-            var logger = ConfigureLoggerInstance(loglevel);
-
+            using var loggerFactory = Logger.ConfigureLogger(logLevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
                 if (string.IsNullOrEmpty(openapi))
@@ -308,19 +299,11 @@ namespace Microsoft.OpenApi.Hidi
                     logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
                     logger.LogInformation(statsVisitor.GetStatisticsReport());
                 }
-
-                return 0;
             }
             catch (Exception ex)
             {
-#if DEBUG
-                logger.LogCritical(ex, ex.Message);
-#else
-                logger.LogCritical(ex.Message);
-#endif
-                return 1;
+                throw new InvalidOperationException($"Could not validate the document, reason: {ex.Message}", ex);
             }
-
         }
 
         internal static IConfiguration GetConfiguration()
@@ -348,20 +331,23 @@ namespace Microsoft.OpenApi.Hidi
             {
                 settings = new OpenApiConvertSettings()
                 {
-                    AddSingleQuotesForStringParameters = true,
-                    AddEnumDescriptionExtension = true,
-                    DeclarePathParametersOnPathItem = true,
-                    EnableKeyAsSegment = true,
-                    EnableOperationId = true,
-                    ErrorResponsesAsDefault = false,
-                    PrefixEntityTypeNameBeforeKey = true,
-                    TagDepth = 2,
-                    EnablePagination = true,
-                    EnableDiscriminatorValue = false,
-                    EnableDerivedTypesReferencesForRequestBody = false,
-                    EnableDerivedTypesReferencesForResponses = false,
-                    ShowRootPath = false,
-                    ShowLinks = false
+                AddSingleQuotesForStringParameters = true,
+                AddEnumDescriptionExtension = true,
+                DeclarePathParametersOnPathItem = true,
+                EnableKeyAsSegment = true,
+                EnableOperationId = true,
+                ErrorResponsesAsDefault  = false,
+                PrefixEntityTypeNameBeforeKey = true,
+                TagDepth = 2,
+                EnablePagination = true,
+                EnableDiscriminatorValue = true,
+                EnableDerivedTypesReferencesForRequestBody = false,
+                EnableDerivedTypesReferencesForResponses = false,
+                ShowRootPath = false,
+                ShowLinks = false,
+                ExpandDerivedTypesNavigationProperties = false,
+                EnableCount = true,
+                UseSuccessStatusCodeRange = true
                 };
             }
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
@@ -387,57 +373,7 @@ namespace Microsoft.OpenApi.Hidi
 
             return doc;
         }
-
-        private static async Task<Stream> GetStream(string input, ILogger logger)
-        {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            Stream stream;
-            if (input.StartsWith("http"))
-            {
-                try
-                {
-                    var httpClientHandler = new HttpClientHandler()
-                    {
-                        SslProtocols = System.Security.Authentication.SslProtocols.Tls12,
-                    };
-                    using var httpClient = new HttpClient(httpClientHandler)
-                    {
-                      DefaultRequestVersion = HttpVersion.Version20
-                    };
-                    stream = await httpClient.GetStreamAsync(input);
-                }
-                catch (HttpRequestException ex)
-                {
-                    logger.LogError($"Could not download the file at {input}, reason{ex}");
-                    return null;
-                }
-            }
-            else 
-            {
-                try
-                {
-                    var fileInput = new FileInfo(input);
-                    stream = fileInput.OpenRead();
-                }
-                catch (Exception ex) when (ex is FileNotFoundException ||
-                    ex is PathTooLongException ||
-                    ex is DirectoryNotFoundException ||
-                    ex is IOException ||
-                    ex is UnauthorizedAccessException ||
-                    ex is SecurityException ||
-                    ex is NotSupportedException)
-                {
-                    logger.LogError($"Could not open the file at {input}, reason: {ex.Message}");
-                    return null;
-                }
-            }
-            stopwatch.Stop();
-            logger.LogTrace("{timestamp}ms: Read file {input}", stopwatch.ElapsedMilliseconds, input);
-            return stream;
-        }
-
+        
         /// <summary>
         /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
         /// </summary>
@@ -492,34 +428,6 @@ namespace Microsoft.OpenApi.Hidi
 
             return paths;
         }
-
-        /// <summary>
-        /// Fixes the references in the resulting OpenApiDocument.
-        /// </summary>
-        /// <param name="document"> The converted OpenApiDocument.</param>
-        /// <returns> A valid OpenApiDocument instance.</returns>
-        // private static OpenApiDocument FixReferences2(OpenApiDocument document)
-        // {
-        //     // This method is only needed because the output of ConvertToOpenApi isn't quite a valid OpenApiDocument instance.
-        //     // So we write it out, and read it back in again to fix it up.
-
-        //     OpenApiDocument document;
-        //     logger.LogTrace("Parsing the OpenApi file");
-        //     var result = await new OpenApiStreamReader(new OpenApiReaderSettings
-        //     {
-        //         RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
-        //         BaseUrl = new Uri(openapi)
-        //     }
-        //     ).ReadAsync(stream);
-
-        //     document = result.OpenApiDocument;
-        //     var context = result.OpenApiDiagnostic;
-        //     var sb = new StringBuilder();
-        //     document.SerializeAsV3(new OpenApiYamlWriter(new StringWriter(sb)));
-        //     var doc = new OpenApiStringReader().Read(sb.ToString(), out _);
-
-        //     return doc;
-        // }
 
         /// <summary>
         /// Reads stream from file system or makes HTTP request depending on the input string
@@ -587,14 +495,29 @@ namespace Microsoft.OpenApi.Hidi
             return !input.StartsWith("http") && Path.GetExtension(input) == ".json" ? OpenApiFormat.Json : OpenApiFormat.Yaml;
         }
 
-        private static ILogger ConfigureLoggerInstance(LogLevel loglevel)
+        private static string GetInputPathExtension(string openapi = null, string csdl = null)
+        {
+            var extension = String.Empty;
+            if (!string.IsNullOrEmpty(openapi))
+            {
+                extension = Path.GetExtension(openapi);
+            }
+            else if (!string.IsNullOrEmpty(csdl))
+            {
+                extension = ".yml";
+            }
+
+            return extension;
+        }
+
+        private static ILoggerFactory ConfigureLoggerInstance(LogLevel loglevel)
         {
             // Configure logger options
 #if DEBUG
             loglevel = loglevel > LogLevel.Debug ? LogLevel.Debug : loglevel;
 #endif
 
-            var logger = LoggerFactory.Create((builder) => {
+            return Microsoft.Extensions.Logging.LoggerFactory.Create((builder) => {
                 builder
                     .AddSimpleConsole(c => {
                         c.IncludeScopes = true;
@@ -603,9 +526,7 @@ namespace Microsoft.OpenApi.Hidi
                     .AddDebug()
 #endif
                     .SetMinimumLevel(loglevel);
-            }).CreateLogger<OpenApiService>();
-
-            return logger;
+            });
         }
     }
 }

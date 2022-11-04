@@ -2,7 +2,6 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -17,6 +16,23 @@ namespace Microsoft.OpenApi.Models
         IOpenApiExtensible
         where T : IOpenApiSerializable
     {
+        /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        protected OpenApiExtensibleDictionary() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiExtensibleDictionary{T}"/> class.
+        /// </summary>
+        /// <param name="dictionary">The generic dictionary.</param>
+        /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
+        protected OpenApiExtensibleDictionary(
+            Dictionary<string, T> dictionary = null,
+            IDictionary<string, IOpenApiExtension> extensions = null) : base (dictionary)
+        {
+            Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : null;
+        }       
+
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>

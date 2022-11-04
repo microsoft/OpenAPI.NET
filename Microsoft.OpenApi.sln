@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.SmokeTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OpenApi.Hidi", "src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj", "{254841B5-7DAC-4D1D-A9C5-44FE5CE467BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OpenApi.Hidi.Tests", "test\Microsoft.OpenApi.Hidi.Tests\Microsoft.OpenApi.Hidi.Tests.csproj", "{D8F799DD-04AC-4A13-B344-45A5B944450A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{254841B5-7DAC-4D1D-A9C5-44FE5CE467BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{254841B5-7DAC-4D1D-A9C5-44FE5CE467BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{254841B5-7DAC-4D1D-A9C5-44FE5CE467BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F799DD-04AC-4A13-B344-45A5B944450A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F799DD-04AC-4A13-B344-45A5B944450A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F799DD-04AC-4A13-B344-45A5B944450A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F799DD-04AC-4A13-B344-45A5B944450A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +80,7 @@ Global
 		{1ED3C2C1-E1E7-4925-B4E6-2D969C3F5237} = {6357D7FD-2DE4-4900-ADB9-ABC37052040A}
 		{AD79B61D-88CF-497C-9ED5-41AE3867C5AC} = {6357D7FD-2DE4-4900-ADB9-ABC37052040A}
 		{254841B5-7DAC-4D1D-A9C5-44FE5CE467BE} = {E546B92F-20A8-49C3-8323-4B25BB78F3E1}
+		{D8F799DD-04AC-4A13-B344-45A5B944450A} = {6357D7FD-2DE4-4900-ADB9-ABC37052040A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F171EFC-0DB5-4B10-ABFA-AF48D52CC565}

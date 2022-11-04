@@ -23,6 +23,20 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, string> Mapping { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiDiscriminator() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiDiscriminator"/> instance
+        /// </summary>
+        public OpenApiDiscriminator(OpenApiDiscriminator discriminator)
+        {
+            PropertyName = discriminator?.PropertyName ?? PropertyName;
+            Mapping = discriminator?.Mapping != null ? new Dictionary<string, string>(discriminator.Mapping) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

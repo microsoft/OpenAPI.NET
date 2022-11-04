@@ -34,6 +34,7 @@ namespace Microsoft.OpenApi.Readers.V2
         private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
         {
             [typeof(IOpenApiAny)] = OpenApiV2Deserializer.LoadAny,
+            [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
             [typeof(OpenApiExternalDocs)] = OpenApiV2Deserializer.LoadExternalDocs,
             [typeof(OpenApiHeader)] = OpenApiV2Deserializer.LoadHeader,
             [typeof(OpenApiInfo)] = OpenApiV2Deserializer.LoadInfo,
@@ -103,30 +104,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
                 default:
                     throw new OpenApiReaderException($"Unknown reference type '{referenceTypeName}'");
-            }
-        }
-
-        private static string GetReferenceTypeV2Name(ReferenceType referenceType)
-        {
-            switch (referenceType)
-            {
-                case ReferenceType.Schema:
-                    return "definitions";
-
-                case ReferenceType.Parameter:
-                    return "parameters";
-
-                case ReferenceType.Response:
-                    return "responses";
-
-                case ReferenceType.Tag:
-                    return "tags";
-
-                case ReferenceType.SecurityScheme:
-                    return "securityDefinitions";
-
-                default:
-                    throw new ArgumentException();
             }
         }
 

@@ -55,6 +55,25 @@ namespace Microsoft.OpenApi.Models
         public bool UnresolvedReference { get; set; } = false;
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiExample() {}
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiExample"/> object
+        /// </summary>
+        public OpenApiExample(OpenApiExample example)
+        {
+            Summary = example?.Summary ?? Summary;
+            Description = example?.Description ?? Description;
+            Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor(example?.Value);
+            ExternalValue = example?.ExternalValue ?? ExternalValue;
+            Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
+            Reference = example?.Reference != null ? new(example?.Reference) : null;
+            UnresolvedReference = example?.UnresolvedReference ?? UnresolvedReference;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

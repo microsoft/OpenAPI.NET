@@ -17,6 +17,20 @@ namespace Microsoft.OpenApi.Models
         private RuntimeExpression _expression;
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public RuntimeExpressionAnyWrapper() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="RuntimeExpressionAnyWrapper"/> object
+        /// </summary>
+        public RuntimeExpressionAnyWrapper(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper)
+        {
+            Any = OpenApiAnyCloneHelper.CloneFromCopyConstructor(runtimeExpressionAnyWrapper?.Any);
+            Expression = runtimeExpressionAnyWrapper?.Expression;
+        }
+
+        /// <summary>
         /// Gets/Sets the <see cref="IOpenApiAny"/>
         /// </summary>
         public IOpenApiAny Any

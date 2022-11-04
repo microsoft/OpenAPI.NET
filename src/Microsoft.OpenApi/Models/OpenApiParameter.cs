@@ -16,6 +16,7 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
     {
         private bool? _explode;
+        public ParameterStyle? _style;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -73,7 +74,11 @@ namespace Microsoft.OpenApi.Models
         /// Default values (based on value of in): for query - form; for path - simple; for header - simple;
         /// for cookie - form.
         /// </summary>
-        public ParameterStyle? Style { get; set; }
+        public ParameterStyle? Style
+        { 
+            get => _style ?? SetDefaultStyleValue();
+            set => _style = value;
+        }
 
         /// <summary>
         /// When this is true, parameter values of type array or object generate separate parameters
@@ -135,6 +140,34 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+
+        /// <summary>
+        /// A parameterless constructor
+        /// </summary>
+        public OpenApiParameter() {}
+
+        /// <summary>
+        /// Initializes a clone instance of <see cref="OpenApiParameter"/> object
+        /// </summary>
+        public OpenApiParameter(OpenApiParameter parameter)
+        {
+            UnresolvedReference = parameter?.UnresolvedReference ?? UnresolvedReference;
+            Reference = parameter?.Reference != null ? new(parameter?.Reference) : null;
+            Name = parameter?.Name ?? Name;
+            In = parameter?.In ?? In;
+            Description = parameter?.Description ?? Description;
+            Required = parameter?.Required ?? Required;
+            Style = parameter?.Style ?? Style;
+            Explode = parameter?.Explode ?? Explode;
+            AllowReserved = parameter?.AllowReserved ?? AllowReserved;
+            Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
+            Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
+            Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
+            Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
+            AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
+            Deprecated = parameter?.Deprecated ?? Deprecated;
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0
@@ -366,6 +399,20 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        private ParameterStyle? SetDefaultStyleValue()
+        {
+            Style = In switch
+            {
+                ParameterLocation.Query => (ParameterStyle?)ParameterStyle.Form,
+                ParameterLocation.Header => (ParameterStyle?)ParameterStyle.Simple,
+                ParameterLocation.Path => (ParameterStyle?)ParameterStyle.Simple,
+                ParameterLocation.Cookie => (ParameterStyle?)ParameterStyle.Form,
+                _ => (ParameterStyle?)ParameterStyle.Simple,
+            };
+
+            return Style;
         }
 
     }

@@ -174,15 +174,6 @@ paths: {}",
                     },
                     Items = new OpenApiSchema()
                     {
-                        //Properties = new Dictionary<string, OpenApiSchema>()
-                        //                    {
-                        //                        { "id", new OpenApiSchema()
-                        //                            {
-                        //                                Type = "string",
-                        //                                Description = "Item identifier."
-                        //                            }
-                        //                        }
-                        //                    },
                         Reference = new OpenApiReference()
                         {
                             Type = ReferenceType.Schema,
@@ -217,7 +208,7 @@ paths: {}",
                     {
                         Type = ReferenceType.Schema,
                         Id = "Error",
-                        HostDocument= doc
+                        HostDocument = doc
                     },
                     Properties = new Dictionary<string, OpenApiSchema>()
                                                     {
@@ -416,7 +407,7 @@ paths: {}",
                 {
                     Id = "Error",
                     Type = ReferenceType.Schema,
-                    HostDocument= document
+                    HostDocument = document
                 }
             };
             var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;

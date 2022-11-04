@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -134,6 +134,23 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var message2 = Assert.Throws<InvalidOperationException>(() => OpenApiFilterService.CreatePredicate("users.user.ListUser", "users.user")).Message;
             Assert.Equal("Cannot specify both operationIds and tags at the same time.", message2);
+        }
+
+        [Theory]
+        [InlineData("reports.getTeamsUserActivityUserDetail-a3f1", null)]
+        [InlineData(null, "reports.Functions")]
+        public void ReturnsPathParametersOnSlicingBasedOnOperationIdsOrTags(string operationIds, string tags)
+        {
+            // Act
+            var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
+            var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(_openApiDocumentMock, predicate);
+
+            // Assert
+            foreach (var pathItem in subsetOpenApiDocument.Paths)
+            {
+                Assert.True(pathItem.Value.Parameters.Any());
+                Assert.Equal(1, pathItem.Value.Parameters.Count);
+            }
         }
     }
 }

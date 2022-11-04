@@ -1,18 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
 
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Hidi.Handlers;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -28,16 +27,16 @@ namespace Microsoft.OpenApi.Hidi
             descriptionOption.AddAlias("-d");
 
             var csdlOption = new Option<string>("--csdl", "Input CSDL file path or URL");
-            csdlOption.AddAlias("-cs");
+            csdlOption.AddAlias("--cs");
 
             var csdlFilterOption = new Option<string>("--csdl-filter", "Comma delimited list of EntitySets or Singletons to filter CSDL on. e.g. tasks,accounts");
-            csdlFilterOption.AddAlias("-csf");
+            csdlFilterOption.AddAlias("--csf");
 
-            var outputOption = new Option<FileInfo>("--output", () => new FileInfo("./output"), "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
+            var outputOption = new Option<FileInfo>("--output", "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
             outputOption.AddAlias("-o");
 
             var cleanOutputOption = new Option<bool>("--clean-output", "Overwrite an existing file");
-            cleanOutputOption.AddAlias("-co");
+            cleanOutputOption.AddAlias("--co");
 
             var versionOption = new Option<string?>("--version", "OpenAPI specification version");
             versionOption.AddAlias("-v");
@@ -46,25 +45,25 @@ namespace Microsoft.OpenApi.Hidi
             formatOption.AddAlias("-f");
 
             var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
-            terseOutputOption.AddAlias("-to");
+            terseOutputOption.AddAlias("--to");
 
-            var logLevelOption = new Option<LogLevel>("--loglevel", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
-            logLevelOption.AddAlias("-ll");
+            var logLevelOption = new Option<LogLevel>("--log-level", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
+            logLevelOption.AddAlias("--ll");
 
             var filterByOperationIdsOption = new Option<string>("--filter-by-operationids", "Filters OpenApiDocument by comma delimited list of OperationId(s) provided");
-            filterByOperationIdsOption.AddAlias("-op");
+            filterByOperationIdsOption.AddAlias("--op");
 
             var filterByTagsOption = new Option<string>("--filter-by-tags", "Filters OpenApiDocument by comma delimited list of Tag(s) provided. Also accepts a single regex.");
-            filterByTagsOption.AddAlias("-t");
+            filterByTagsOption.AddAlias("--t");
 
             var filterByCollectionOption = new Option<string>("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided. Provide path to collection file.");
             filterByCollectionOption.AddAlias("-c");
 
-            var inlineLocalOption = new Option<bool>("--inlineLocal", "Inline local $ref instances");
-            inlineLocalOption.AddAlias("-il");
+            var inlineLocalOption = new Option<bool>("--inline-local", "Inline local $ref instances");
+            inlineLocalOption.AddAlias("--il");
 
-            var inlineExternalOption = new Option<bool>("--inlineExternal", "Inline external $ref instances");
-            inlineExternalOption.AddAlias("-ie");
+            var inlineExternalOption = new Option<bool>("--inline-external", "Inline external $ref instances");
+            inlineExternalOption.AddAlias("--ie");
 
             var validateCommand = new Command("validate")
             {
@@ -72,7 +71,11 @@ namespace Microsoft.OpenApi.Hidi
                 logLevelOption
             };
 
-            validateCommand.SetHandler<string, LogLevel, CancellationToken>(OpenApiService.ValidateOpenApiDocument, descriptionOption, logLevelOption);
+            validateCommand.Handler = new ValidateCommandHandler 
+            {
+                DescriptionOption = descriptionOption,
+                LogLevelOption = logLevelOption
+            };
 
             var transformCommand = new Command("transform")
             {
@@ -92,8 +95,23 @@ namespace Microsoft.OpenApi.Hidi
                 inlineExternalOption
             };
 
-            transformCommand.SetHandler<string, string, string, FileInfo, bool, string?, OpenApiFormat?, bool, LogLevel, bool, bool, string, string, string, CancellationToken> (
-                OpenApiService.TransformOpenApiDocument, descriptionOption, csdlOption, csdlFilterOption, outputOption, cleanOutputOption, versionOption, formatOption, terseOutputOption, logLevelOption, inlineLocalOption, inlineExternalOption, filterByOperationIdsOption, filterByTagsOption, filterByCollectionOption);
+            transformCommand.Handler = new TransformCommandHandler
+            {
+                DescriptionOption = descriptionOption,
+                CsdlOption = csdlOption,
+                CsdlFilterOption = csdlFilterOption,
+                OutputOption = outputOption,
+                CleanOutputOption = cleanOutputOption,
+                VersionOption = versionOption,
+                FormatOption = formatOption,
+                TerseOutputOption = terseOutputOption,
+                LogLevelOption = logLevelOption,
+                FilterByOperationIdsOption = filterByOperationIdsOption,
+                FilterByTagsOption = filterByTagsOption,
+                FilterByCollectionOption = filterByCollectionOption,
+                InlineLocalOption = inlineLocalOption,
+                InlineExternalOption = inlineExternalOption
+            };
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);

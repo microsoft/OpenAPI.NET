@@ -36,6 +36,22 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiContact() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiContact"/> instance
+        /// </summary>
+        public OpenApiContact(OpenApiContact contact)
+        {
+            Name = contact?.Name ?? Name;
+            Url = contact?.Url != null ? new Uri(contact.Url.OriginalString) : null;
+            Email = contact?.Email ?? Email;
+            Extensions = contact?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(contact.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

@@ -66,6 +66,26 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiPathItem() {}
+
+        /// <summary>
+        /// Initializes a clone of an <see cref="OpenApiPathItem"/> object
+        /// </summary>
+        public OpenApiPathItem(OpenApiPathItem pathItem)
+        {
+            Summary = pathItem?.Summary ?? Summary;
+            Description = pathItem?.Description ?? Description;
+            Operations = pathItem?.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
+            Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
+            Parameters = pathItem?.Parameters != null ? new List<OpenApiParameter>(pathItem.Parameters) : null;
+            Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
+            UnresolvedReference = pathItem?.UnresolvedReference ?? UnresolvedReference;
+            Reference = pathItem?.Reference != null ? new(pathItem?.Reference) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)

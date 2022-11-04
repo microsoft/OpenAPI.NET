@@ -38,6 +38,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                        new[]{ "Test\\Test", "\"Test\\\\Test\""},
                        new[]{ "Test\"Test", "\"Test\\\"Test\""},
                        new[]{ "StringsWith\"Quotes\"", "\"StringsWith\\\"Quotes\\\"\""},
+                       new[]{ "0x1234", "\"0x1234\""},
                      }
                     from shouldBeTerse in shouldProduceTerseOutputValues
                     select new object[] { inputExpected[0], inputExpected[1], shouldBeTerse };
@@ -79,6 +80,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         [InlineData("trailingspace ", " 'trailingspace '")]
         [InlineData("     trailingspace", " '     trailingspace'")]
         [InlineData("terminal:", " 'terminal:'")]
+        [InlineData("0x1234", " '0x1234'")]
         public void WriteStringWithSpecialCharactersAsYamlWorks(string input, string expected)
         {
             // Arrange
@@ -142,6 +144,27 @@ namespace Microsoft.OpenApi.Tests.Writers
             var actual = outputStringWriter.GetStringBuilder().ToString()
                 // Normalize newline for cross platform
                 .Replace("\r", "");
+
+            // Assert
+            actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("1.8.0", " '1.8.0'", "en-US")]
+        [InlineData("1.8.0", " '1.8.0'", "en-GB")]
+        [InlineData("1.13.0", " '1.13.0'", "en-US")]
+        [InlineData("1.13.0", " '1.13.0'", "en-GB")]
+        public void WriteStringAsYamlDoesNotDependOnSystemCulture(string input, string expected, string culture)
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+            
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputStringWriter);
+            
+            // Act
+            writer.WriteValue(input);
+            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
             actual.Should().Be(expected);

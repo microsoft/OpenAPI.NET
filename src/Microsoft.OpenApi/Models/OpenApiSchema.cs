@@ -243,6 +243,56 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiSchema() {}
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiSchema"/> object
+        /// </summary>
+        public OpenApiSchema(OpenApiSchema schema)
+        {
+            Title = schema?.Title ?? Title;
+            Type = schema?.Type ?? Type;
+            Format = schema?.Format ?? Format;
+            Description = schema?.Description ?? Description;
+            Maximum = schema?.Maximum ?? Maximum;
+            ExclusiveMaximum = schema?.ExclusiveMaximum ?? ExclusiveMaximum;
+            Minimum = schema?.Minimum ?? Minimum;
+            ExclusiveMinimum = schema?.ExclusiveMinimum ?? ExclusiveMinimum;
+            MaxLength = schema?.MaxLength ?? MaxLength;
+            MinLength = schema?.MinLength ?? MinLength;
+            Pattern = schema?.Pattern ?? Pattern;
+            MultipleOf = schema?.MultipleOf ?? MultipleOf;
+            Default = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Default);
+            ReadOnly = schema?.ReadOnly ?? ReadOnly;
+            WriteOnly = schema?.WriteOnly ?? WriteOnly;
+            AllOf = schema?.AllOf != null ? new List<OpenApiSchema>(schema.AllOf) : null;
+            OneOf = schema?.OneOf != null ? new List<OpenApiSchema>(schema.OneOf) : null;
+            AnyOf = schema?.AnyOf != null ? new List<OpenApiSchema>(schema.AnyOf) : null;
+            Not = schema?.Not != null ? new(schema?.Not) : null;
+            Required = schema?.Required != null ? new HashSet<string>(schema.Required) : null;
+            Items = schema?.Items != null ? new(schema?.Items) : null;
+            MaxItems = schema?.MaxItems ?? MaxItems;
+            MinItems = schema?.MinItems ?? MinItems;
+            UniqueItems = schema?.UniqueItems ?? UniqueItems;
+            Properties = schema?.Properties != null ? new Dictionary<string, OpenApiSchema>(schema.Properties) : null;
+            MaxProperties = schema?.MaxProperties ?? MaxProperties;
+            MinProperties = schema?.MinProperties ?? MinProperties;
+            AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
+            AdditionalProperties = new(schema?.AdditionalProperties);
+            Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Example);
+            Enum = schema?.Enum != null ? new List<IOpenApiAny>(schema.Enum) : null;
+            Nullable = schema?.Nullable ?? Nullable;
+            ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
+            Deprecated = schema?.Deprecated ?? Deprecated;
+            Xml = schema?.Xml != null ? new(schema?.Xml) : null;
+            UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
+            Reference = schema?.Reference != null ? new(schema?.Reference) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
@@ -516,6 +566,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // format
+            if (string.IsNullOrEmpty(Format))
+            {
+                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
+            
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // items
@@ -580,6 +637,13 @@ namespace Microsoft.OpenApi.Models
             }
 
             // format
+            if (string.IsNullOrEmpty(Format))
+            {
+                Format = AllOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
+                    OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
+            }
+
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // title
@@ -645,17 +709,17 @@ namespace Microsoft.OpenApi.Models
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV2(w));
 
-            // If there isn't already an AllOf, and the schema contains a oneOf or anyOf write an allOf with the first
+            // If there isn't already an allOf, and the schema contains a oneOf or anyOf write an allOf with the first
             // schema in the list as an attempt to guess at a graceful downgrade situation.
             if (AllOf == null || AllOf.Count == 0)
             {
                 // anyOf (Not Supported in V2)  - Write the first schema only as an allOf.
-                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf.Take(1), (w, s) => s.SerializeAsV2(w));
+                writer.WriteOptionalCollection(OpenApiConstants.AllOf, AnyOf?.Take(1), (w, s) => s.SerializeAsV2(w));
 
                 if (AnyOf == null || AnyOf.Count == 0)
                 {
                     // oneOf (Not Supported in V2) - Write the first schema only as an allOf.
-                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf.Take(1), (w, s) => s.SerializeAsV2(w));
+                    writer.WriteOptionalCollection(OpenApiConstants.AllOf, OneOf?.Take(1), (w, s) => s.SerializeAsV2(w));
                 }
             }
 
