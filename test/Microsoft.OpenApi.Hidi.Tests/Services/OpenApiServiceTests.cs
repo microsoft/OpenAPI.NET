@@ -4,7 +4,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Hidi;
+using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
@@ -50,6 +52,20 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotNull(subsetOpenApiDocument);
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
+        }
+        
+        [Fact]
+        public void ReturnOpenApiConvertSettings()
+        {
+            // Arrange
+            var filePath = "C:\\Users\\v-makim\\source\\repos\\OpenAPI.NET\\test\\Microsoft.OpenApi.Hidi.Tests\\Services\\appsettingstest.json";
+            var config = OpenApiService.GetConfiguration(filePath);
+            
+            // Act
+            var settings = config.GetSection("OpenApiConvertSettings").Get<OpenApiConvertSettings>();
+
+            // Assert
+            Assert.NotNull(settings);
         }
     }
 }
