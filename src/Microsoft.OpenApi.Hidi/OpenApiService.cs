@@ -45,6 +45,7 @@ namespace Microsoft.OpenApi.Hidi
             string? version,
             OpenApiFormat? format,
             bool terseOutput,
+            string settingsFile,
             LogLevel logLevel,
             bool inlineLocal,
             bool inlineExternal,
@@ -100,7 +101,7 @@ namespace Microsoft.OpenApi.Hidi
                             stream.Position = 0;
                         }
 
-                        document = await ConvertCsdlToOpenApi(stream);
+                        document = await ConvertCsdlToOpenApi(stream, settingsFile);
                         stopwatch.Stop();
                         logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                     }
@@ -306,11 +307,14 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        internal static IConfiguration GetConfiguration()
+        public static IConfiguration GetConfiguration(string settingsFile)
         {
+            settingsFile ??= "appsettings.json";
+
             IConfiguration config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json",true)
+            .AddJsonFile(settingsFile, true)
             .Build();
+
             return config;
         }
 
@@ -319,12 +323,16 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string settingsFile = null)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync();
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
+            
+            var config = GetConfiguration(settingsFile);
+            var settings = config.GetSection("OpenApiConvertSettings").Get<OpenApiConvertSettings>();
 
+<<<<<<< HEAD
             var settings = new OpenApiConvertSettings()
             {
                 AddSingleQuotesForStringParameters = true,
@@ -345,6 +353,29 @@ namespace Microsoft.OpenApi.Hidi
                 EnableCount = true,
                 UseSuccessStatusCodeRange = true
             };
+=======
+            settings ??= new OpenApiConvertSettings()
+                {
+                    AddSingleQuotesForStringParameters = true,
+                    AddEnumDescriptionExtension = true,
+                    DeclarePathParametersOnPathItem = true,
+                    EnableKeyAsSegment = true,
+                    EnableOperationId = true,
+                    ErrorResponsesAsDefault  = false,
+                    PrefixEntityTypeNameBeforeKey = true,
+                    TagDepth = 2,
+                    EnablePagination = true,
+                    EnableDiscriminatorValue = true,
+                    EnableDerivedTypesReferencesForRequestBody = false,
+                    EnableDerivedTypesReferencesForResponses = false,
+                    ShowRootPath = false,
+                    ShowLinks = false,
+                    ExpandDerivedTypesNavigationProperties = false,
+                    EnableCount = true,
+                    UseSuccessStatusCodeRange = true
+                };
+            
+>>>>>>> e2101373 (Add a settingsFile parameter that allows one to input a path to the settingsfile)
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
             document = FixReferences(document);
