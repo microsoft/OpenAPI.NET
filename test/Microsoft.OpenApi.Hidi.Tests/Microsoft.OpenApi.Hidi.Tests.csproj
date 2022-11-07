@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Services\appsettingstest.json">
+    <None Update="UtilityFiles\appsettingstest.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="UtilityFiles\postmanCollection_ver1.json">

@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ReturnOpenApiConvertSettings()
         {
             // Arrange
-            var filePath = "C:/Users/v-makim/source/repos/OpenAPI.NET/test/Microsoft.OpenApi.Hidi.Tests/Services/appsettingstest.json";
+            var filePath = "C:/Users/v-makim/source/repos/OpenAPI.NET/test/Microsoft.OpenApi.Hidi.Tests/UtilityFiles/appsettingstest.json";
             var config = OpenApiService.GetConfiguration(filePath);
             
             // Act
