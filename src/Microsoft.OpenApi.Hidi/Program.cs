@@ -2,8 +2,14 @@
 // Licensed under the MIT license.
 
 using System.CommandLine;
+using System.CommandLine.Builder;
+using System.CommandLine.Hosting;
+using System.CommandLine.Parsing;
+
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Handlers;
 
@@ -41,6 +47,9 @@ namespace Microsoft.OpenApi.Hidi
             var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
             terseOutputOption.AddAlias("--to");
 
+            var settingsFileOption = new Option<string>("--settings-path", "The configuration file with CSDL conversion settings.");
+            settingsFileOption.AddAlias("--sp");
+            
             var logLevelOption = new Option<LogLevel>("--log-level", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
             logLevelOption.AddAlias("--ll");
 
@@ -81,6 +90,7 @@ namespace Microsoft.OpenApi.Hidi
                 versionOption,
                 formatOption,
                 terseOutputOption,
+                settingsFileOption,
                 logLevelOption,               
                 filterByOperationIdsOption,
                 filterByTagsOption,
@@ -99,6 +109,7 @@ namespace Microsoft.OpenApi.Hidi
                 VersionOption = versionOption,
                 FormatOption = formatOption,
                 TerseOutputOption = terseOutputOption,
+                SettingsFileOption = settingsFileOption,
                 LogLevelOption = logLevelOption,
                 FilterByOperationIdsOption = filterByOperationIdsOption,
                 FilterByTagsOption = filterByTagsOption,

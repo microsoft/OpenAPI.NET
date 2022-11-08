@@ -44,11 +44,20 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="Microsoft.OData.Edm" Version="7.12.5" />
     <PackageReference Include="Microsoft.OpenApi.OData" Version="1.2.0-preview6" />
+    <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22114.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
     <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
   </ItemGroup>
+
+  <!-- Make internals available for Unit Testing -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Microsoft.OpenApi.Hidi.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+    <!-- End Unit test Internals -->
 
 </Project>

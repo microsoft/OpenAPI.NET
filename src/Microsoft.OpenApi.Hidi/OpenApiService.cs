@@ -27,6 +27,8 @@ using System.Threading;
 using System.Xml.Xsl;
 using System.Xml;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -44,6 +46,7 @@ namespace Microsoft.OpenApi.Hidi
             string? version,
             OpenApiFormat? format,
             bool terseOutput,
+            string settingsFile,
             LogLevel logLevel,
             bool inlineLocal,
             bool inlineExternal,
@@ -98,7 +101,8 @@ namespace Microsoft.OpenApi.Hidi
                             stream = ApplyFilter(csdl, csdlFilter, transform);
                             stream.Position = 0;
                         }
-                        document = await ConvertCsdlToOpenApi(stream);
+
+                        document = await ConvertCsdlToOpenApi(stream, settingsFile);
                         stopwatch.Stop();
                         logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                     }
@@ -304,17 +308,29 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
+        internal static IConfiguration GetConfiguration(string settingsFile)
+        {
+            settingsFile ??= "appsettings.json";
+
+            IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile(settingsFile, true)
+            .Build();
+
+            return config;
+        }
+        
         /// <summary>
         /// Converts CSDL to OpenAPI
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string settingsFile = null)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync();
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
-
+            
+            var config = GetConfiguration(settingsFile);
             var settings = new OpenApiConvertSettings()
             {
                 AddSingleQuotesForStringParameters = true,
@@ -322,7 +338,7 @@ namespace Microsoft.OpenApi.Hidi
                 DeclarePathParametersOnPathItem = true,
                 EnableKeyAsSegment = true,
                 EnableOperationId = true,
-                ErrorResponsesAsDefault  = false,
+                ErrorResponsesAsDefault = false,
                 PrefixEntityTypeNameBeforeKey = true,
                 TagDepth = 2,
                 EnablePagination = true,
@@ -335,6 +351,8 @@ namespace Microsoft.OpenApi.Hidi
                 EnableCount = true,
                 UseSuccessStatusCodeRange = true
             };
+            config.GetSection("OpenApiConvertSettings").Bind(settings);
+            
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
             document = FixReferences(document);
