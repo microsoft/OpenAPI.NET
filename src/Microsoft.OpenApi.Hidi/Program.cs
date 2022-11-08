@@ -47,8 +47,8 @@ namespace Microsoft.OpenApi.Hidi
             var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
             terseOutputOption.AddAlias("--to");
 
-            var settingsFileOption = new Option<string>("--settingsFile", "The configuration file with CSDL conversion settings.");
-            settingsFileOption.AddAlias("--sf");
+            var settingsFileOption = new Option<string>("--settings-path", "The configuration file with CSDL conversion settings.");
+            settingsFileOption.AddAlias("--sp");
             
             var logLevelOption = new Option<LogLevel>("--log-level", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
             logLevelOption.AddAlias("--ll");
@@ -121,19 +121,8 @@ namespace Microsoft.OpenApi.Hidi
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
 
-
             // Parse the incoming args and invoke the handler
             await rootCommand.InvokeAsync(args);
-
-
-            //await new CommandLineBuilder(rootCommand)
-            //        .UseHost(_ => Host.CreateDefaultBuilder(), 
-            //        host => {
-            //            var config = host.Services.GetRequiredService<IConfiguration>();
-            //        })
-            //        .UseDefaults()
-            //        .Build()
-            //        .InvokeAsync(args);
 
             //// Wait for logger to write messages to the console before exiting
             await Task.Delay(10);

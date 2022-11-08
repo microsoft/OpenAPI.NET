@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Hidi;
 using Microsoft.OpenApi.OData;
@@ -54,18 +51,25 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }
         
-        [Fact]
-        public void ReturnOpenApiConvertSettings()
+        [Theory]
+        [InlineData("UtilityFiles/appsettingstest.json")]
+        [InlineData(null)]
+        public void ReturnOpenApiConvertSettingsWhenSettingsFileIsProvided(string filePath)
         {
             // Arrange
-            var filePath = "C:/Users/v-makim/source/repos/OpenAPI.NET/test/Microsoft.OpenApi.Hidi.Tests/UtilityFiles/appsettingstest.json";
             var config = OpenApiService.GetConfiguration(filePath);
-            
-            // Act
+
+            // Act and Assert
             var settings = config.GetSection("OpenApiConvertSettings").Get<OpenApiConvertSettings>();
 
-            // Assert
-            Assert.NotNull(settings);
+            if (filePath == null)
+            {
+                Assert.Null(settings);
+            }
+            else
+            {
+                Assert.NotNull(settings);
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ using System.Xml.Xsl;
 using System.Xml;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -307,7 +308,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        public static IConfiguration GetConfiguration(string settingsFile)
+        internal static IConfiguration GetConfiguration(string settingsFile)
         {
             settingsFile ??= "appsettings.json";
 
@@ -317,7 +318,7 @@ namespace Microsoft.OpenApi.Hidi
 
             return config;
         }
-
+        
         /// <summary>
         /// Converts CSDL to OpenAPI
         /// </summary>
@@ -330,28 +331,27 @@ namespace Microsoft.OpenApi.Hidi
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
             
             var config = GetConfiguration(settingsFile);
-            var settings = config.GetSection("OpenApiConvertSettings").Get<OpenApiConvertSettings>();
-
-            settings ??= new OpenApiConvertSettings()
-                {
-                    AddSingleQuotesForStringParameters = true,
-                    AddEnumDescriptionExtension = true,
-                    DeclarePathParametersOnPathItem = true,
-                    EnableKeyAsSegment = true,
-                    EnableOperationId = true,
-                    ErrorResponsesAsDefault  = false,
-                    PrefixEntityTypeNameBeforeKey = true,
-                    TagDepth = 2,
-                    EnablePagination = true,
-                    EnableDiscriminatorValue = true,
-                    EnableDerivedTypesReferencesForRequestBody = false,
-                    EnableDerivedTypesReferencesForResponses = false,
-                    ShowRootPath = false,
-                    ShowLinks = false,
-                    ExpandDerivedTypesNavigationProperties = false,
-                    EnableCount = true,
-                    UseSuccessStatusCodeRange = true
-                };
+            var settings = new OpenApiConvertSettings()
+            {
+                AddSingleQuotesForStringParameters = true,
+                AddEnumDescriptionExtension = true,
+                DeclarePathParametersOnPathItem = true,
+                EnableKeyAsSegment = true,
+                EnableOperationId = true,
+                ErrorResponsesAsDefault = false,
+                PrefixEntityTypeNameBeforeKey = true,
+                TagDepth = 2,
+                EnablePagination = true,
+                EnableDiscriminatorValue = true,
+                EnableDerivedTypesReferencesForRequestBody = false,
+                EnableDerivedTypesReferencesForResponses = false,
+                ShowRootPath = false,
+                ShowLinks = false,
+                ExpandDerivedTypesNavigationProperties = false,
+                EnableCount = true,
+                UseSuccessStatusCodeRange = true
+            };
+            config.GetSection("OpenApiConvertSettings").Bind(settings);
             
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
