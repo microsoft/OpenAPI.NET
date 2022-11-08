@@ -27,7 +27,6 @@ using System.Threading;
 using System.Xml.Xsl;
 using System.Xml;
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -45,7 +44,6 @@ namespace Microsoft.OpenApi.Hidi
             string? version,
             OpenApiFormat? format,
             bool terseOutput,
-            string settingsFile,
             LogLevel logLevel,
             bool inlineLocal,
             bool inlineExternal,
@@ -100,8 +98,7 @@ namespace Microsoft.OpenApi.Hidi
                             stream = ApplyFilter(csdl, csdlFilter, transform);
                             stream.Position = 0;
                         }
-
-                        document = await ConvertCsdlToOpenApi(stream, settingsFile);
+                        document = await ConvertCsdlToOpenApi(stream);
                         stopwatch.Stop();
                         logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                     }
@@ -110,7 +107,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     stream = await GetStream(openapi, logger, cancellationToken);
 
-                    using (logger.BeginScope($"Parse OpenAPI: {openapi}",openapi))
+                    using (logger.BeginScope($"Parse OpenAPI: {openapi}", openapi))
                     {
                         stopwatch.Restart();
                         var result = await new OpenApiStreamReader(new OpenApiReaderSettings
@@ -248,8 +245,8 @@ namespace Microsoft.OpenApi.Hidi
         /// Implementation of the validate command
         /// </summary>
         public static async Task ValidateOpenApiDocument(
-            string openapi, 
-            LogLevel logLevel, 
+            string openapi,
+            LogLevel logLevel,
             CancellationToken cancellationToken)
         {
             using var loggerFactory = Logger.ConfigureLogger(logLevel);
@@ -273,7 +270,7 @@ namespace Microsoft.OpenApi.Hidi
                         RuleSet = ValidationRuleSet.GetDefaultRuleSet()
                     }
                     ).ReadAsync(stream);
-                    
+
                     logger.LogTrace("{timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
 
                     document = result.OpenApiDocument;
@@ -287,7 +284,7 @@ namespace Microsoft.OpenApi.Hidi
                                 logger.LogError(error.ToString());
                             }
                         }
-                    } 
+                    }
                     stopwatch.Stop();
                 }
 
@@ -307,32 +304,17 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        public static IConfiguration GetConfiguration(string settingsFile)
-        {
-            settingsFile ??= "appsettings.json";
-
-            IConfiguration config = new ConfigurationBuilder()
-            .AddJsonFile(settingsFile, true)
-            .Build();
-
-            return config;
-        }
-
         /// <summary>
         /// Converts CSDL to OpenAPI
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string settingsFile = null)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync();
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
-            
-            var config = GetConfiguration(settingsFile);
-            var settings = config.GetSection("OpenApiConvertSettings").Get<OpenApiConvertSettings>();
 
-<<<<<<< HEAD
             var settings = new OpenApiConvertSettings()
             {
                 AddSingleQuotesForStringParameters = true,
@@ -340,7 +322,7 @@ namespace Microsoft.OpenApi.Hidi
                 DeclarePathParametersOnPathItem = true,
                 EnableKeyAsSegment = true,
                 EnableOperationId = true,
-                ErrorResponsesAsDefault  = false,
+                ErrorResponsesAsDefault = false,
                 PrefixEntityTypeNameBeforeKey = true,
                 TagDepth = 2,
                 EnablePagination = true,
@@ -353,29 +335,6 @@ namespace Microsoft.OpenApi.Hidi
                 EnableCount = true,
                 UseSuccessStatusCodeRange = true
             };
-=======
-            settings ??= new OpenApiConvertSettings()
-                {
-                    AddSingleQuotesForStringParameters = true,
-                    AddEnumDescriptionExtension = true,
-                    DeclarePathParametersOnPathItem = true,
-                    EnableKeyAsSegment = true,
-                    EnableOperationId = true,
-                    ErrorResponsesAsDefault  = false,
-                    PrefixEntityTypeNameBeforeKey = true,
-                    TagDepth = 2,
-                    EnablePagination = true,
-                    EnableDiscriminatorValue = true,
-                    EnableDerivedTypesReferencesForRequestBody = false,
-                    EnableDerivedTypesReferencesForResponses = false,
-                    ShowRootPath = false,
-                    ShowLinks = false,
-                    ExpandDerivedTypesNavigationProperties = false,
-                    EnableCount = true,
-                    UseSuccessStatusCodeRange = true
-                };
-            
->>>>>>> e2101373 (Add a settingsFile parameter that allows one to input a path to the settingsfile)
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
             document = FixReferences(document);
@@ -399,7 +358,7 @@ namespace Microsoft.OpenApi.Hidi
 
             return doc;
         }
-        
+
         /// <summary>
         /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
         /// </summary>
@@ -422,13 +381,13 @@ namespace Microsoft.OpenApi.Hidi
         private static Dictionary<string, List<string>> EnumerateJsonDocument(JsonElement itemElement, Dictionary<string, List<string>> paths)
         {
             var itemsArray = itemElement.GetProperty("item");
-             
+
             foreach (var item in itemsArray.EnumerateArray())
             {
-                if(item.ValueKind == JsonValueKind.Object)
+                if (item.ValueKind == JsonValueKind.Object)
                 {
-                   if(item.TryGetProperty("request", out var request))
-                   {
+                    if (item.TryGetProperty("request", out var request))
+                    {
                         // Fetch list of methods and urls from collection, store them in a dictionary
                         var path = request.GetProperty("url").GetProperty("raw").ToString();
                         var method = request.GetProperty("method").ToString();
@@ -440,11 +399,11 @@ namespace Microsoft.OpenApi.Hidi
                         {
                             paths[path].Add(method);
                         }
-                   }
-                   else
-                   {
+                    }
+                    else
+                    {
                         EnumerateJsonDocument(item, paths);
-                   }
+                    }
                 }
                 else
                 {

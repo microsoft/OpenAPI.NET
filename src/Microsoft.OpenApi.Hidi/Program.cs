@@ -2,14 +2,8 @@
 // Licensed under the MIT license.
 
 using System.CommandLine;
-using System.CommandLine.Builder;
-using System.CommandLine.Hosting;
-using System.CommandLine.Parsing;
-
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Handlers;
 
@@ -19,7 +13,8 @@ namespace Microsoft.OpenApi.Hidi
     {
         static async Task Main(string[] args)
         {
-            var rootCommand = new RootCommand() {
+            var rootCommand = new RootCommand()
+            {
             };
 
             // command option parameters and aliases
@@ -47,9 +42,6 @@ namespace Microsoft.OpenApi.Hidi
             var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
             terseOutputOption.AddAlias("--to");
 
-            var settingsFileOption = new Option<string>("--settingsFile", "The configuration file with CSDL conversion settings.");
-            settingsFileOption.AddAlias("--sf");
-            
             var logLevelOption = new Option<LogLevel>("--log-level", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
             logLevelOption.AddAlias("--ll");
 
@@ -74,7 +66,7 @@ namespace Microsoft.OpenApi.Hidi
                 logLevelOption
             };
 
-            validateCommand.Handler = new ValidateCommandHandler 
+            validateCommand.Handler = new ValidateCommandHandler
             {
                 DescriptionOption = descriptionOption,
                 LogLevelOption = logLevelOption
@@ -90,8 +82,7 @@ namespace Microsoft.OpenApi.Hidi
                 versionOption,
                 formatOption,
                 terseOutputOption,
-                settingsFileOption,
-                logLevelOption,               
+                logLevelOption,
                 filterByOperationIdsOption,
                 filterByTagsOption,
                 filterByCollectionOption,
@@ -109,7 +100,6 @@ namespace Microsoft.OpenApi.Hidi
                 VersionOption = versionOption,
                 FormatOption = formatOption,
                 TerseOutputOption = terseOutputOption,
-                SettingsFileOption = settingsFileOption,
                 LogLevelOption = logLevelOption,
                 FilterByOperationIdsOption = filterByOperationIdsOption,
                 FilterByTagsOption = filterByTagsOption,
@@ -121,19 +111,8 @@ namespace Microsoft.OpenApi.Hidi
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
 
-
             // Parse the incoming args and invoke the handler
             await rootCommand.InvokeAsync(args);
-
-
-            //await new CommandLineBuilder(rootCommand)
-            //        .UseHost(_ => Host.CreateDefaultBuilder(), 
-            //        host => {
-            //            var config = host.Services.GetRequiredService<IConfiguration>();
-            //        })
-            //        .UseDefaults()
-            //        .Build()
-            //        .InvokeAsync(args);
 
             //// Wait for logger to write messages to the console before exiting
             await Task.Delay(10);
