@@ -13,6 +13,16 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiReference : IOpenApiSerializable
     {
         /// <summary>
+        /// A short summary of the Reference
+        /// </summary>
+        public string Summary { get; set; }
+
+        /// <summary>
+        /// A short description of the reference
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// External resource in the reference.
         /// It maybe:
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
@@ -122,6 +132,8 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiReference(OpenApiReference reference)
         {
+            Summary = reference?.Summary;
+            Description = reference?.Description;
             ExternalResource = reference?.ExternalResource;
             Type = reference?.Type;
             Id = reference?.Id;
@@ -153,6 +165,12 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
+            
+            // summary
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
