@@ -13,12 +13,15 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiReference : IOpenApiSerializable
     {
         /// <summary>
-        /// A short summary of the Reference
+        /// A short summary which by default SHOULD override that of the referenced component.
+        /// If the referenced object-type does not allow a summary field, then this field has no effect.
         /// </summary>
         public string Summary { get; set; }
 
         /// <summary>
-        /// A short description of the reference
+        /// A description which by default SHOULD override that of the referenced component.
+        /// CommonMark syntax MAY be used for rich text representation.
+        /// If the referenced object-type does not allow a description field, then this field has no effect.
         /// </summary>
         public string Description { get; set; }
 
