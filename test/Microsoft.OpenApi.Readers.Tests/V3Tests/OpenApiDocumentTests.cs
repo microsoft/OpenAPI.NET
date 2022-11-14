@@ -16,6 +16,8 @@ using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -1776,6 +1778,23 @@ paths: {}",
             context.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
+        }
+
+        [Fact]
+        public void ParseDocumentWithDescriptionInDollarRefsShouldSucceed()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithSummaryAndDescriptionInReference.yaml"));
+
+            // Act
+            var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var schema = actual.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+            var header = actual.Components.Responses["Test"].Headers["X-Test"];
+
+            // Assert
+            Assert.True(header.Description == "A referenced X-Test header"); /*response header #ref's description overrides the header's description*/
+            Assert.True(schema.UnresolvedReference == false && schema.Type == "object"); /*schema reference is resolved*/
+            Assert.Equal("A pet in a petstore", schema.Description); /*The reference object's description overrides that of the referenced component*/
         }
     }
 }
