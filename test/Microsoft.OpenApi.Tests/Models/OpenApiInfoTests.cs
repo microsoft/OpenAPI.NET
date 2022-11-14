@@ -110,7 +110,6 @@ version: '1.0'"
                     specVersion,
                     @"{
   ""title"": ""Sample Pet Store App"",
-  ""summary"": ""This is a sample server for a pet store."",
   ""description"": ""This is a sample server for a pet store."",
   ""termsOfService"": ""http://example.com/terms/"",
   ""contact"": {
