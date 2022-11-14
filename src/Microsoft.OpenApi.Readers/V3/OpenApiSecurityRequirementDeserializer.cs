@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -15,14 +16,20 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiSecurityRequirement LoadSecurityRequirement(ParseNode node)
         {
             var mapNode = node.CheckMapNode("security");
-
+            string description = null;
+            string summary = null;
+            
             var securityRequirement = new OpenApiSecurityRequirement();
 
             foreach (var property in mapNode)
             {
-                var scheme = LoadSecuritySchemeByReference(
-                    mapNode.Context,
-                    property.Name);
+                if(property.Name.Equals("description") || property.Name.Equals("summary"))
+                {
+                    description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                    summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                }
+
+                var scheme = LoadSecuritySchemeByReference(mapNode.Context, property.Name, summary, description);
 
                 var scopes = property.Value.CreateSimpleList(value => value.GetScalarValue());
 
@@ -42,13 +49,17 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
             ParsingContext context,
-            string schemeName)
+            string schemeName,
+            string summary = null,
+            string description = null)
         {
             var securitySchemeObject = new OpenApiSecurityScheme()
             {
                 UnresolvedReference = true,
                 Reference = new OpenApiReference()
                 {
+                    Summary = summary,
+                    Description = description,
                     Id = schemeName,
                     Type = ReferenceType.SecurityScheme
                 }

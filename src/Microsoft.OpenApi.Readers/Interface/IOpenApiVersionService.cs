@@ -19,8 +19,10 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// </summary>
         /// <param name="reference">The reference string.</param>
         /// <param name="type">The type of the reference.</param>
+        /// <param name="summary">The summary of the reference.</param>
+        /// <param name="description">A reference description</param>
         /// <returns>The <see cref="OpenApiReference"/> object or null.</returns>
-        OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type);
+        OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type, string summary = null, string description = null);
 
         /// <summary>
         /// Loads an OpenAPI Element from a document fragment
@@ -36,5 +38,13 @@ namespace Microsoft.OpenApi.Readers.Interface
         /// <param name="rootNode">RootNode containing the information to be converted into an OpenAPI Document</param>
         /// <returns>Instance of OpenApiDocument populated with data from rootNode</returns>
         OpenApiDocument LoadDocument(RootNode rootNode);
+
+        /// <summary>
+        /// Gets the description and summary scalar values in a reference object for V3.1 support
+        /// </summary>
+        /// <param name="mapNode">A YamlMappingNode.</param>
+        /// <param name="scalarValue">The scalar value we're parsing.</param>
+        /// <returns>The resulting node value.</returns>
+        string GetReferenceScalarValues(MapNode mapNode, string scalarValue);
     }
 }

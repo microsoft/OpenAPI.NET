@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.V3
 {
@@ -275,15 +276,22 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
+            string description = null;
+            string summary = null;
 
             var pointer = mapNode.GetReferencePointer();
-
             if (pointer != null)
             {
-                return new OpenApiSchema()
+                if(mapNode.Count() > 1)
+                {                    
+                    description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                    summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                }
+
+                return new OpenApiSchema
                 {
                     UnresolvedReference = true,
-                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema)
+                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema, summary, description)
                 };
             }
 

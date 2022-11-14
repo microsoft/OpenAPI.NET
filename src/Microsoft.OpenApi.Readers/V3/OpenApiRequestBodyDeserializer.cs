@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -45,11 +46,18 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiRequestBody LoadRequestBody(ParseNode node)
         {
             var mapNode = node.CheckMapNode("requestBody");
+            string description = null;
+            string summary = null;
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiRequestBody>(ReferenceType.RequestBody, pointer);
+                if (mapNode.Count() > 1)
+                {
+                    description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                    summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                }
+                return mapNode.GetReferencedObject<OpenApiRequestBody>(ReferenceType.RequestBody, pointer, summary, description);
             }
 
             var requestBody = new OpenApiRequestBody();
