@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Readers.V2
         /// <inheritdoc />
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
     }
 }

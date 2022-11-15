@@ -167,7 +167,7 @@ namespace Microsoft.OpenApi.Readers.V3
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
             var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
-                .Select(x => x.Value as ValueNode).FirstOrDefault();
+                .Select(static x => x.Value).OfType<ValueNode>().FirstOrDefault();
 
             return valueNode.GetScalarValue();
         }
