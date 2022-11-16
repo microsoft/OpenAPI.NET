@@ -52,17 +52,12 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiExample LoadExample(ParseNode node)
         {
             var mapNode = node.CheckMapNode("example");
-            string description = null;
-            string summary = null;
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                if (mapNode.Count() > 1)
-                {
-                    description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                    summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-                }
+                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);                
                 
                 return mapNode.GetReferencedObject<OpenApiExample>(ReferenceType.Example, pointer, summary, description);
             }

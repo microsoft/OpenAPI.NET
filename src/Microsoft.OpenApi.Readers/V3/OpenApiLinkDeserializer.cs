@@ -58,17 +58,13 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode("link");
             var link = new OpenApiLink();
-            string description = null;
-            string summary = null;
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                if (mapNode.Count() > 1)
-                {
-                    description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                    summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-                }
+                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                
                 return mapNode.GetReferencedObject<OpenApiLink>(ReferenceType.Link, pointer, summary, description);
             }
 

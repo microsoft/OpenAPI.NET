@@ -276,17 +276,12 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
-            string description = null;
-            string summary = null;
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
-            {
-                if(mapNode.Count() > 1)
-                {                    
-                    description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                    summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-                }
+            {                   
+                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
 
                 return new OpenApiSchema
                 {
@@ -294,7 +289,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema, summary, description)
                 };
             }
-
+            
             var schema = new OpenApiSchema();
 
             foreach (var propertyNode in mapNode)

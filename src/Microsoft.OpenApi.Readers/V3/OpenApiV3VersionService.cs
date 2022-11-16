@@ -166,10 +166,17 @@ namespace Microsoft.OpenApi.Readers.V3
         /// <inheritdoc />
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
-            var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
+            var filteredList = mapNode.Where(x => x.Name != "$ref");
+
+            if (filteredList.Any())
+            {
+                var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
                 .Select(static x => x.Value).OfType<ValueNode>().FirstOrDefault();
 
-            return valueNode.GetScalarValue();
+                return valueNode.GetScalarValue();
+            }
+
+            return null;
         }
 
         private OpenApiReference ParseLocalReference(string localReference, string summary = null, string description = null)

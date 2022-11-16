@@ -86,17 +86,13 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiHeader LoadHeader(ParseNode node)
         {
             var mapNode = node.CheckMapNode("header");
-            string description = null;
-            string summary = null;
 
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                if (mapNode.Count() > 1)
-                {
-                    description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                    summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-                }
+                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                
                 return mapNode.GetReferencedObject<OpenApiHeader>(ReferenceType.Header, pointer, summary, description);
             }
 
