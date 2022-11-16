@@ -146,7 +146,10 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer);
+                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                
+                return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer, summary, description);
             }
 
             var parameter = new OpenApiParameter();

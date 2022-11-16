@@ -13,6 +13,19 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiReference : IOpenApiSerializable
     {
         /// <summary>
+        /// A short summary which by default SHOULD override that of the referenced component.
+        /// If the referenced object-type does not allow a summary field, then this field has no effect.
+        /// </summary>
+        public string Summary { get; set; }
+
+        /// <summary>
+        /// A description which by default SHOULD override that of the referenced component.
+        /// CommonMark syntax MAY be used for rich text representation.
+        /// If the referenced object-type does not allow a description field, then this field has no effect.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// External resource in the reference.
         /// It maybe:
         /// 1. a absolute/relative file path, for example:  ../commons/pet.json
@@ -122,6 +135,8 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiReference(OpenApiReference reference)
         {
+            Summary = reference?.Summary;
+            Description = reference?.Description;
             ExternalResource = reference?.ExternalResource;
             Type = reference?.Type;
             Id = reference?.Id;
@@ -153,6 +168,12 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
+            
+            // summary
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            
+            // description
+            writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);

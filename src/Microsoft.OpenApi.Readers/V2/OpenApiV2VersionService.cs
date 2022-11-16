@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Readers.V2
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
-        public OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type)
+        public OpenApiReference ConvertToOpenApiReference(string reference, ReferenceType? type, string summary = null, string description = null)
         {
             if (!string.IsNullOrWhiteSpace(reference))
             {
@@ -220,6 +220,12 @@ namespace Microsoft.OpenApi.Readers.V2
         public T LoadElement<T>(ParseNode node) where T : IOpenApiElement
         {
             return (T)_loaders[typeof(T)](node);
+        }
+
+        /// <inheritdoc />
+        public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
+        {
+            throw new InvalidOperationException();
         }
     }
 }

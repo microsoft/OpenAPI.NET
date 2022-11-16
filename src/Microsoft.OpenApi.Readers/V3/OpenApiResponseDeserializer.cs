@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -55,7 +56,11 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                return mapNode.GetReferencedObject<OpenApiResponse>(ReferenceType.Response, pointer);
+
+                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                
+                return mapNode.GetReferencedObject<OpenApiResponse>(ReferenceType.Response, pointer, summary, description);
             }
 
             var response = new OpenApiResponse();

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -67,9 +68,13 @@ namespace Microsoft.OpenApi.Readers.V3
         /// </summary>
         /// <param name="reference">The URL of the reference</param>
         /// <param name="type">The type of object refefenced based on the context of the reference</param>
+        /// <param name="summary">The summary of the reference</param>
+        /// <param name="description">A reference description</param>
         public OpenApiReference ConvertToOpenApiReference(
             string reference,
-            ReferenceType? type)
+            ReferenceType? type,
+            string summary = null,
+            string description = null)
         {
             if (!string.IsNullOrWhiteSpace(reference))
             {
@@ -80,6 +85,8 @@ namespace Microsoft.OpenApi.Readers.V3
                     {
                         return new OpenApiReference
                         {
+                            Summary = summary,
+                            Description = description,
                             Type = type,
                             Id = reference
                         };
@@ -89,6 +96,8 @@ namespace Microsoft.OpenApi.Readers.V3
                     // or a simple string-style reference for tag and security scheme.
                     return new OpenApiReference
                     {
+                        Summary = summary,
+                        Description = description,
                         Type = type,
                         ExternalResource = segments[0]
                     };
@@ -100,7 +109,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         // "$ref": "#/components/schemas/Pet"
                         try
                         {
-                            return ParseLocalReference(segments[1]);
+                            return ParseLocalReference(segments[1], summary, description);
                         }
                         catch (OpenApiException ex)
                         {
@@ -131,6 +140,8 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     return new OpenApiReference
                     {
+                        Summary = summary,
+                        Description = description,
                         ExternalResource = segments[0],
                         Type = type,
                         Id = id
@@ -151,7 +162,22 @@ namespace Microsoft.OpenApi.Readers.V3
             return (T)_loaders[typeof(T)](node);
         }
 
-        private OpenApiReference ParseLocalReference(string localReference)
+
+        /// <inheritdoc />
+        public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
+        {
+            if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
+                .Select(static x => x.Value).OfType<ValueNode>().FirstOrDefault();
+
+                return valueNode.GetScalarValue();
+            }
+
+            return null;
+        }
+
+        private OpenApiReference ParseLocalReference(string localReference, string summary = null, string description = null)
         {
             if (string.IsNullOrWhiteSpace(localReference))
             {
@@ -170,7 +196,16 @@ namespace Microsoft.OpenApi.Readers.V3
                     {
                         refId = "/" + segments[3];
                     };
-                    return new OpenApiReference { Type = referenceType, Id = refId };
+
+                    var parsedReference = new OpenApiReference
+                    {
+                        Summary = summary,
+                        Description = description,
+                        Type = referenceType,
+                        Id = refId
+                    };
+                    
+                    return parsedReference;
                 }
             }
 

@@ -504,31 +504,51 @@ namespace Microsoft.OpenApi.Models
                 switch (reference.Type)
                 {
                     case ReferenceType.Schema:
-                        return this.Components.Schemas[reference.Id];
+                        var resolvedSchema = this.Components.Schemas[reference.Id];
+                        resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
+                        return resolvedSchema;
                         
                     case ReferenceType.PathItem:
-                        return this.Components.PathItems[reference.Id];
+                        var resolvedPathItem = this.Components.PathItems[reference.Id];
+                        resolvedPathItem.Description = reference.Description != null ? reference.Description : resolvedPathItem.Description;
+                        resolvedPathItem.Summary = reference.Summary != null ? reference.Summary : resolvedPathItem.Summary;
+                        return resolvedPathItem;
                         
                     case ReferenceType.Response:
-                        return this.Components.Responses[reference.Id];
+                        var resolvedResponse = this.Components.Responses[reference.Id];
+                        resolvedResponse.Description = reference.Description != null ? reference.Description : resolvedResponse.Description;
+                        return resolvedResponse;
 
                     case ReferenceType.Parameter:
-                        return this.Components.Parameters[reference.Id];
+                        var resolvedParameter = this.Components.Parameters[reference.Id];
+                        resolvedParameter.Description = reference.Description != null ? reference.Description : resolvedParameter.Description;
+                        return resolvedParameter;
 
                     case ReferenceType.Example:
-                        return this.Components.Examples[reference.Id];
+                        var resolvedExample = this.Components.Examples[reference.Id];
+                        resolvedExample.Summary = reference.Summary != null ? reference.Summary : resolvedExample.Summary;
+                        resolvedExample.Description = reference.Description != null ? reference.Description : resolvedExample.Description;
+                        return resolvedExample;
 
                     case ReferenceType.RequestBody:
-                        return this.Components.RequestBodies[reference.Id];
-
+                        var resolvedRequestBody = this.Components.RequestBodies[reference.Id];
+                        resolvedRequestBody.Description = reference.Description != null ? reference.Description : resolvedRequestBody.Description;
+                        return resolvedRequestBody;
+                        
                     case ReferenceType.Header:
-                        return this.Components.Headers[reference.Id];
-
+                        var resolvedHeader = this.Components.Headers[reference.Id];
+                        resolvedHeader.Description = reference.Description != null ? reference.Description : resolvedHeader.Description;
+                        return resolvedHeader;
+                        
                     case ReferenceType.SecurityScheme:
-                        return this.Components.SecuritySchemes[reference.Id];
-
+                        var resolvedSecurityScheme = this.Components.SecuritySchemes[reference.Id];
+                        resolvedSecurityScheme.Description = reference.Description != null ? reference.Description : resolvedSecurityScheme.Description;
+                        return resolvedSecurityScheme;
+                        
                     case ReferenceType.Link:
-                        return this.Components.Links[reference.Id];
+                        var resolvedLink = this.Components.Links[reference.Id];
+                        resolvedLink.Description = reference.Description != null ? reference.Description : resolvedLink.Description;
+                        return resolvedLink;
 
                     case ReferenceType.Callback:
                         return this.Components.Callbacks[reference.Id];

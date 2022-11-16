@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -60,10 +61,13 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (pointer != null)
             {
+                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                
                 return new OpenApiPathItem()
                 {
                     UnresolvedReference = true,
-                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.PathItem)
+                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.PathItem, summary, description)
                 };
             }
 

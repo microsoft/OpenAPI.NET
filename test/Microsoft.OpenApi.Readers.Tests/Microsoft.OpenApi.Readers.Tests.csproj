@@ -128,6 +128,9 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\documentWithReusablePaths.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\documentWithSummaryAndDescriptionInReference.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDiscriminator\basicDiscriminator.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
