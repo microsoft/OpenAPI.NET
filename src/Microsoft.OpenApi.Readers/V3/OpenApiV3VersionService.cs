@@ -166,9 +166,7 @@ namespace Microsoft.OpenApi.Readers.V3
         /// <inheritdoc />
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {
-            var filteredList = mapNode.Where(x => x.Name != "$ref");
-
-            if (filteredList.Any())
+            if (mapNode.Any(static x => !"$ref".Equals(x.Name, StringComparison.OrdinalIgnoreCase)))
             {
                 var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
                 .Select(static x => x.Value).OfType<ValueNode>().FirstOrDefault();
