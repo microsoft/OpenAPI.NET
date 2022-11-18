@@ -71,7 +71,6 @@ namespace Microsoft.OpenApi.Readers.V3
             string reference,
             ReferenceType? type)
         {
-            var openApiReference = new OpenApiReference();
             if (!string.IsNullOrWhiteSpace(reference))
             {
                 var segments = reference.Split('#');
@@ -110,6 +109,8 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
                     string id = segments[1];
+                    var openApiReference = new OpenApiReference();
+
                     // $ref: externalSource.yaml#/Pet
                     if (id.StartsWith("/components/"))
                     {
