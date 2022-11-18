@@ -71,6 +71,7 @@ namespace Microsoft.OpenApi.Readers.V3
             string reference,
             ReferenceType? type)
         {
+            var openApiReference = new OpenApiReference();
             if (!string.IsNullOrWhiteSpace(reference))
             {
                 var segments = reference.Split('#');
@@ -127,13 +128,16 @@ namespace Microsoft.OpenApi.Readers.V3
                         }
                         id = localSegments[3];
                     }
-
-                    return new OpenApiReference
+                    else
                     {
-                        ExternalResource = segments[0],
-                        Type = type,
-                        Id = id
-                    };
+                        openApiReference.IsFragrament = true;
+                    }
+
+                    openApiReference.ExternalResource = segments[0];
+                    openApiReference.Type = type;
+                    openApiReference.Id = id;
+
+                    return openApiReference;
                 }
             }
 
