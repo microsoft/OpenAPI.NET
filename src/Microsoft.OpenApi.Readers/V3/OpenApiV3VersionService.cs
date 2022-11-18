@@ -109,6 +109,8 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
                     string id = segments[1];
+                    var openApiReference = new OpenApiReference();
+
                     // $ref: externalSource.yaml#/Pet
                     if (id.StartsWith("/components/"))
                     {
@@ -127,13 +129,16 @@ namespace Microsoft.OpenApi.Readers.V3
                         }
                         id = localSegments[3];
                     }
-
-                    return new OpenApiReference
+                    else
                     {
-                        ExternalResource = segments[0],
-                        Type = type,
-                        Id = id
-                    };
+                        openApiReference.IsFragrament = true;
+                    }
+
+                    openApiReference.ExternalResource = segments[0];
+                    openApiReference.Type = type;
+                    openApiReference.Id = id;
+
+                    return openApiReference;
                 }
             }
 

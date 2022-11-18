@@ -773,6 +773,7 @@ namespace Microsoft.OpenApi.Models
     }
     public class OpenApiReference : Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
     {
+        public bool IsFragrament;
         public OpenApiReference() { }
         public OpenApiReference(Microsoft.OpenApi.Models.OpenApiReference reference) { }
         public string ExternalResource { get; set; }
