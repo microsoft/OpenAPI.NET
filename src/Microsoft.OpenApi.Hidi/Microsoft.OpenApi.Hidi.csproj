@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <PackAsTool>true</PackAsTool>
     <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
@@ -15,7 +15,7 @@
     <PackageId>Microsoft.OpenApi.Hidi</PackageId>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.1.0-preview3</Version>
+    <Version>1.1.0</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
@@ -37,18 +37,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-    <PackageReference Include="Microsoft.OData.Edm" Version="7.12.4" />
-    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.2.0-preview5" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.12.5" />
+    <PackageReference Include="Microsoft.OpenApi.OData" Version="1.2.0-preview8" />
+    <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
     <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
   </ItemGroup>
+
+  <!-- Make internals available for Unit Testing -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Microsoft.OpenApi.Hidi.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+    <!-- End Unit test Internals -->
 
 </Project>
