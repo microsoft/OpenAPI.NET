@@ -349,7 +349,8 @@ namespace Microsoft.OpenApi.Hidi
                 ShowLinks = false,
                 ExpandDerivedTypesNavigationProperties = false,
                 EnableCount = true,
-                UseSuccessStatusCodeRange = true
+                UseSuccessStatusCodeRange = true,
+                EnableTypeDisambiguationForDefaultValueOfOdataTypeProperty = true
             };
             config.GetSection("OpenApiConvertSettings").Bind(settings);
             
