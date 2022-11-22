@@ -377,7 +377,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query)
+                if (this.In == ParameterLocation.Query && Schema?.Type == "array")
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {
