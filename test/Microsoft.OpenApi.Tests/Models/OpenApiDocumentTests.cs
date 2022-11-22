@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -1355,6 +1355,58 @@ paths: { }";
             Assert.NotNull(doc.Paths);
             Assert.Equal(2, doc.Paths.Count);
             Assert.NotNull(doc.Components);
+        }
+
+        [Fact]
+        public void SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()
+        {
+            // Arrange
+            var expected = @"swagger: '2.0'
+info: { }
+paths:
+  /foo:
+    get:
+      parameters:
+        - in: query
+          type: string
+      responses: { }";
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo(),
+                Paths = new OpenApiPaths
+                {                    
+                    ["/foo"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation> 
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Parameters = new List<OpenApiParameter>
+                                {
+                                    new OpenApiParameter
+                                    {
+                                        In = ParameterLocation.Query,
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Type = "string"
+                                        }
+                                    }
+                                },
+                                Responses = new OpenApiResponses()
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
     }
 }
