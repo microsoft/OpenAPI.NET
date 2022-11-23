@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -1326,6 +1327,25 @@ paths: {}",
                         }
                     });
             }
+        }
+
+        [Fact]
+        public void DoesNotChangeExternalReferences()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithExternalRefs.yaml"));
+            
+            // Act
+            var doc = new OpenApiStreamReader(
+                new OpenApiReaderSettings { ReferenceResolution = ReferenceResolutionSetting.DoNotResolveReferences})
+                .Read(stream, out var diagnostic);
+
+            var externalRef = doc.Components.Schemas["Nested"].Properties["AnyOf"].AnyOf.First().Reference.ReferenceV3;
+            var externalRef2 = doc.Components.Schemas["Nested"].Properties["AnyOf"].AnyOf.Last().Reference.ReferenceV3;
+
+            // Assert
+            Assert.Equal("file:///C:/MySchemas.json#/definitions/ArrayObject", externalRef);
+            Assert.Equal("../foo/schemas.yaml#/components/schemas/Number", externalRef2);
         }
     }
 }
