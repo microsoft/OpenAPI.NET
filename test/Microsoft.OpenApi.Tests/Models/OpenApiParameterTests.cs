@@ -213,8 +213,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var expected = @"{
   ""name"": ""name1"",
-  ""in"": ""path"",
-  ""style"": ""simple""
+  ""in"": ""path""
 }";
 
             // Act
