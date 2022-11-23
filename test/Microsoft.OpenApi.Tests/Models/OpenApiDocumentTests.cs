@@ -1356,5 +1356,94 @@ paths: { }";
             Assert.Equal(2, doc.Paths.Count);
             Assert.NotNull(doc.Components);
         }
+
+        [Fact]
+        public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
+        {
+            // Arrange
+            var expected = @"openapi: 3.0.1
+info:
+  title: magic style
+  version: 1.0.0
+paths:
+  /foo:
+    get:
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: object
+            additionalProperties:
+              type: integer
+      responses:
+        '200':
+          description: foo
+          content:
+            text/plain:
+              schema:
+                type: string";
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "magic style",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths
+                {
+                    ["/foo"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Parameters = new List<OpenApiParameter>
+                                {
+                                    new OpenApiParameter
+                                    {
+                                        Name = "id",
+                                        In = ParameterLocation.Query,
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Type = "object",
+                                            AdditionalProperties = new OpenApiSchema
+                                            {
+                                                Type = "integer"
+                                            }
+                                        }
+                                    }
+                                },
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse
+                                    {
+                                        Description = "foo",
+                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        {
+                                            ["text/plain"] = new OpenApiMediaType
+                                            {
+                                                Schema = new OpenApiSchema
+                                                {
+                                                    Type = "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        }
     }
 }
