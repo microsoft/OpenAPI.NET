@@ -1,5 +1,4 @@
 {
   "name": "name1",
-  "in": "path",
-  "style": "simple"
+  "in": "path"
 }
