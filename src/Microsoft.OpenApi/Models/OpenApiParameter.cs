@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -239,9 +239,12 @@ namespace Microsoft.OpenApi.Models
 
             // allowEmptyValue
             writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
-
+            
             // style
-            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+            if (_style.HasValue)
+            {
+                writer.WriteProperty(OpenApiConstants.Style, Style.Value.GetDisplayName());
+            }
 
             // explode
             writer.WriteProperty(OpenApiConstants.Explode, Explode, Style.HasValue && Style.Value == ParameterStyle.Form);
