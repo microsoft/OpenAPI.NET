@@ -988,7 +988,6 @@ namespace Microsoft.OpenApi.Tests.Models
 
         [Theory]
         [InlineData(true)]
-        [InlineData(false)]
         public async Task SerializeAdvancedDocumentAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
