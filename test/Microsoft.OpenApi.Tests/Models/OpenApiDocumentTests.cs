@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -598,7 +599,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiSchema ErrorModelSchema = AdvancedComponents.Schemas["errorModel"];
 
-        public static OpenApiDocument AdvancedDocument = new OpenApiDocument
+        public OpenApiDocument AdvancedDocument = new OpenApiDocument
         {
             Info = new OpenApiInfo
             {
