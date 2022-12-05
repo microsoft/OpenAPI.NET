@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Validations
         private readonly IList<OpenApiValidatorWarning> _warnings = new List<OpenApiValidatorWarning>();
 
         /// <summary>
-        /// Create a vistor that will validate an OpenAPIDocument
+        /// Create a visitor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
         public OpenApiValidator(ValidationRuleSet ruleSet)
@@ -197,6 +197,100 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         /// <param name="items">The object to be validated</param>
         public override void Visit(IList<OpenApiExample> items) => Validate(items, items.GetType());
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiPathItem"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiPathItem item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiServerVariable"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiServerVariable item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiSecurityScheme"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiSecurityScheme item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiSecurityRequirement"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiSecurityRequirement item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiRequestBody"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiRequestBody item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiPaths"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiPaths item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiLink"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiLink item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiExample"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiExample item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiOperation"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiOperation item) => Validate(item);
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{OperationType, OpenApiOperation}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<OperationType, OpenApiOperation> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiHeader}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiHeader> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiCallback}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiCallback> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiMediaType}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiMediaType> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiExample}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiExample> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiLink}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiLink> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiServerVariable}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiServerVariable> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiEncoding}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiEncoding> item) => Validate(item, item.GetType());
 
         private void Validate<T>(T item)
         {
