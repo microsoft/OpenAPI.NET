@@ -479,6 +479,8 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             Assert.Equal("string", actualSchema.Type);
+            Assert.Equal("date", actualSchema.Format);
+            Assert.True(actualSchema.Nullable);
         }
     }
 }
