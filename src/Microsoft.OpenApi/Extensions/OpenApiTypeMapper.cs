@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Extensions
             [typeof(DateTimeOffset?)] = () => new OpenApiSchema { Type = "string", Format = "date-time", Nullable = true },
             [typeof(Guid?)] = () => new OpenApiSchema { Type = "string", Format = "uuid", Nullable = true },
             [typeof(char?)] = () => new OpenApiSchema { Type = "string", Nullable = true },
-            
+
             [typeof(Uri)] = () => new OpenApiSchema { Type = "string" }, // Uri is treated as simple string
             [typeof(string)] = () => new OpenApiSchema { Type = "string" },
             [typeof(object)] = () => new OpenApiSchema { Type = "object" }
@@ -80,6 +80,51 @@ namespace Microsoft.OpenApi.Extensions
             return _simpleTypeToOpenApiSchema.TryGetValue(type, out var result)
                 ? result()
                 : new OpenApiSchema { Type = "string" };
+        }
+
+        /// <summary>
+        /// Maps an OpenAPI data type and format to a simple type.
+        /// </summary>
+        /// <param name="schema">The OpenApi data type</param>
+        /// <returns>The simple type</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Type MapOpenApiPrimitiveTypeToSimpleType(this OpenApiSchema schema)
+        {
+            if (schema == null)
+            {
+                throw new ArgumentNullException(nameof(schema));
+            }
+
+            var type = (schema.Type, schema.Format, schema.Nullable) switch
+            {
+                ("boolean", null, false) => typeof(bool),
+                ("integer", "int32", false) => typeof(int),
+                ("integer", "int64", false) => typeof(long),
+                ("number", "float", false) => typeof(float),
+                ("number", "double", false) => typeof(double),
+                ("number", "decimal", false) => typeof(decimal),
+                ("string", "byte", false) => typeof(byte),
+                ("string", "date-time", false) => typeof(DateTimeOffset),
+                ("string", "uuid", false) => typeof(Guid),
+                ("string", "duration", false) => typeof(TimeSpan),
+                ("string", "char", false) => typeof(char),
+                ("string", null, false) => typeof(string),
+                ("object", null, false) => typeof(object),
+                ("string", "uri", false) => typeof(Uri),
+                ("integer", "int32", true) => typeof(int?),
+                ("integer", "int64", true) => typeof(long?),
+                ("number", "float", true) => typeof(float?),
+                ("number", "double", true) => typeof(double?),
+                ("number", "decimal", true) => typeof(decimal?),
+                ("string", "byte", true) => typeof(byte?),
+                ("string", "date-time", true) => typeof(DateTimeOffset?),
+                ("string", "uuid", true) => typeof(Guid?),
+                ("string", "char", true) => typeof(char?),
+                ("boolean", null, true) => typeof(bool?),
+                _ => typeof(string),
+            };
+            
+            return type;
         }
     }
 }

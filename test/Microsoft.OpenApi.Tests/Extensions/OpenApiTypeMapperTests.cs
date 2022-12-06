@@ -12,6 +12,24 @@ namespace Microsoft.OpenApi.Tests.Extensions
 {
     public class OpenApiTypeMapperTests
     {
+        public static IEnumerable<object[]> PrimitiveTypeData => new List<object[]>
+        {
+            new object[] { typeof(int), new OpenApiSchema { Type = "integer", Format = "int32" } },
+            new object[] { typeof(string), new OpenApiSchema { Type = "string" } },
+            new object[] { typeof(double), new OpenApiSchema { Type = "number", Format = "double" } },
+            new object[] { typeof(float?), new OpenApiSchema { Type = "number", Format = "float", Nullable = true } },
+            new object[] { typeof(DateTimeOffset), new OpenApiSchema { Type = "string", Format = "date-time" } }
+        };
+
+        public static IEnumerable<object[]> OpenApiDataTypes => new List<object[]>
+        {
+            new object[] { new OpenApiSchema { Type = "integer", Format = "int32"}, typeof(int) },
+            new object[] { new OpenApiSchema { Type = "string" }, typeof(string) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "double" }, typeof(double) },
+            new object[] { new OpenApiSchema { Type = "number", Format = "float", Nullable = true }, typeof(float?) },
+            new object[] { new OpenApiSchema { Type = "string", Format = "date-time" }, typeof(DateTimeOffset) }
+        };
+        
         [Theory]
         [MemberData(nameof(PrimitiveTypeData))]
         public void MapTypeToOpenApiPrimitiveTypeShouldSucceed(Type type, OpenApiSchema expected)
@@ -23,13 +41,15 @@ namespace Microsoft.OpenApi.Tests.Extensions
             actual.Should().BeEquivalentTo(expected);
         }
 
-        public static IEnumerable<object[]> PrimitiveTypeData => new List<object[]>
+        [Theory]
+        [MemberData(nameof(OpenApiDataTypes))]
+        public void MapOpenApiSchemaTypeToSimpleTypeShouldSucceed(OpenApiSchema schema, Type expected)
         {
-            new object[] { typeof(int), new OpenApiSchema { Type = "integer", Format = "int32" } },
-            new object[] { typeof(string), new OpenApiSchema { Type = "string" } },
-            new object[] { typeof(double), new OpenApiSchema { Type = "number", Format = "double" } },
-            new object[] { typeof(float?), new OpenApiSchema { Type = "number", Format = "float", Nullable = true } },
-            new object[] { typeof(DateTimeOffset), new OpenApiSchema { Type = "string", Format = "date-time" } }
-        };
+            // Arrange & Act
+            var actual = OpenApiTypeMapper.MapOpenApiPrimitiveTypeToSimpleType(schema);
+
+            // Assert
+            actual.Should().Be(expected);
+        }
     }
 }
