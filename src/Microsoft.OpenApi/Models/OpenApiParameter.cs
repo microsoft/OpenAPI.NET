@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Runtime;
 using Microsoft.OpenApi.Any;
@@ -238,9 +239,12 @@ namespace Microsoft.OpenApi.Models
 
             // allowEmptyValue
             writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
-
+            
             // style
-            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+            if (_style.HasValue)
+            {
+                writer.WriteProperty(OpenApiConstants.Style, Style.Value.GetDisplayName());
+            }
 
             // explode
             writer.WriteProperty(OpenApiConstants.Explode, Explode, Style.HasValue && Style.Value == ParameterStyle.Form);
@@ -377,7 +381,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query)
+                if (this.In == ParameterLocation.Query && "array".Equals(Schema?.Type, StringComparison.OrdinalIgnoreCase))
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {

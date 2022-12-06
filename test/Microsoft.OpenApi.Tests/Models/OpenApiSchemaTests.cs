@@ -463,5 +463,24 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             Assert.Equal(expectedV2Schema, v2Schema);
         }
+
+        [Fact]
+        public void OpenApiSchemaCopyConstructorSucceeds()
+        {
+            var baseSchema = new OpenApiSchema()
+            {
+                Type = "string",
+                Format = "date"
+            };
+
+            var actualSchema = new OpenApiSchema(baseSchema)
+            {
+                Nullable = true
+            };
+
+            Assert.Equal("string", actualSchema.Type);
+            Assert.Equal("date", actualSchema.Format);
+            Assert.True(actualSchema.Nullable);
+        }
     }
 }
