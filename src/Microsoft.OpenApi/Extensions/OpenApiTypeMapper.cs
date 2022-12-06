@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Extensions
                 throw new ArgumentNullException(nameof(schema));
             }
 
-            var type = (schema.Type, schema.Format, schema.Nullable) switch
+            var type = (schema.Type?.ToLowerInvariant(), schema.Format.ToLowerInvariant(), schema.Nullable) switch
             {
                 ("boolean", null, false) => typeof(bool),
                 ("integer", "int32", false) => typeof(int),
