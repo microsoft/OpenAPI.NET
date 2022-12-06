@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Extensions
             [typeof(Guid?)] = () => new OpenApiSchema { Type = "string", Format = "uuid", Nullable = true },
             [typeof(char?)] = () => new OpenApiSchema { Type = "string", Nullable = true },
 
-            [typeof(Uri)] = () => new OpenApiSchema { Type = "string" }, // Uri is treated as simple string
+            [typeof(Uri)] = () => new OpenApiSchema { Type = "string", Format = "uri"}, // Uri is treated as simple string
             [typeof(string)] = () => new OpenApiSchema { Type = "string" },
             [typeof(object)] = () => new OpenApiSchema { Type = "object" }
         };
