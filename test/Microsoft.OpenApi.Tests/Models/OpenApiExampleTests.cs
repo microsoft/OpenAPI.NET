@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 },
-                ["aDate"] = new OpenApiDate(DateTime.MinValue)
+                ["aDate"] = new OpenApiDate(DateTime.Parse("12/12/2022 00:00:00"))
             }
         };
 
