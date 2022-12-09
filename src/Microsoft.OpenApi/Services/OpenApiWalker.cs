@@ -310,7 +310,7 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(openApiExtensible);
 
-            if (openApiExtensible != null)
+            if (openApiExtensible.Extensions != null)
             {
                 foreach (var item in openApiExtensible.Extensions)
                 {
