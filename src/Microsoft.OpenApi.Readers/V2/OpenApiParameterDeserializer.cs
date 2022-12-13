@@ -82,13 +82,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "minimum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
+                        GetOrCreateSchema(o).Minimum = double.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {
                     "maximum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
+                        GetOrCreateSchema(o).Maximum = double.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
                     }
                 },
                 {

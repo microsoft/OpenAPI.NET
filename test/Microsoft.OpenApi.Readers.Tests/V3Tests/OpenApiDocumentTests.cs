@@ -164,8 +164,8 @@ paths: {}",
                                     ["sampleProperty"] = new OpenApiSchema()
                                     {
                                         Type = "double",
-                                        Minimum = (decimal)100.54,
-                                        Maximum = (decimal)60000000.35,
+                                        Minimum = (double)100.54,
+                                        Maximum = (double)60000000.35,
                                         ExclusiveMaximum = true,
                                         ExclusiveMinimum = false
                                     }

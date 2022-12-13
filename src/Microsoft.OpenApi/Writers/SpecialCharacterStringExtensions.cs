@@ -187,10 +187,12 @@ namespace Microsoft.OpenApi.Writers
                 return $"'{input}'";
             }
 
-            // If string can be mistaken as a number, c-style hexadecimal notation, a boolean, or a timestamp,
-            // wrap it in quote to indicate that this is indeed a string, not a number, c-style hexadecimal notation, a boolean, or a timestamp
-            if (decimal.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out var _) ||
-                IsHexadecimalNotation(input) ||
+            // If string can be mistaken as a number, c-style hexa
+            //
+            // notation, a boolean, or a timestamp,
+            // wrap it in quote to indicate that this is indeed a string, not a number, c-style hexadouble notation, a boolean, or a timestamp
+            if (double.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out var _) ||
+                IsHexadoubleNotation(input) ||
                 bool.TryParse(input, out var _) ||
                 DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out var _))
             {
@@ -227,7 +229,7 @@ namespace Microsoft.OpenApi.Writers
             return $"\"{value}\"";
         }
 
-        internal static bool IsHexadecimalNotation(string input)
+        internal static bool IsHexadoubleNotation(string input)
         {
             return input.StartsWith("0x") && int.TryParse(input.Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var _);
         }

@@ -28,13 +28,13 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.MultipleOf = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture); 
+                    o.MultipleOf = double.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture); 
                 }
             },
             {
                 "maximum", (o, n) =>
                 {
-                    o.Maximum = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture);
+                    o.Maximum = double.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "minimum", (o, n) =>
                 {
-                    o.Minimum = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture);
+                    o.Minimum = double.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture);
                 }
             },
             {

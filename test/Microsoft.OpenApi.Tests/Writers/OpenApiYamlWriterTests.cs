@@ -256,7 +256,7 @@ property4: value4"
         {
             if (value == null
                 || value.GetType().IsPrimitive
-                || value is decimal
+                || value is double
                 || value is string
                 || value is DateTimeOffset
                 || value is DateTime)

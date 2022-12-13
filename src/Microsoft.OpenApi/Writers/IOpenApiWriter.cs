@@ -39,9 +39,9 @@ namespace Microsoft.OpenApi.Writers
         void WriteValue(string value);
 
         /// <summary>
-        /// Write the decimal value.
+        /// Write the double value.
         /// </summary>
-        void WriteValue(decimal value);
+        void WriteValue(double value);
 
         /// <summary>
         /// Write the int value.

@@ -862,12 +862,13 @@ namespace Microsoft.OpenApi.Models
         public int? MaxItems { get; set; }
         public int? MaxLength { get; set; }
         public int? MaxProperties { get; set; }
-        public decimal? Maximum { get; set; }
+        public 
+        ? Maximum { get; set; }
         public int? MinItems { get; set; }
         public int? MinLength { get; set; }
         public int? MinProperties { get; set; }
-        public decimal? Minimum { get; set; }
-        public decimal? MultipleOf { get; set; }
+        public double? Minimum { get; set; }
+        public double? MultipleOf { get; set; }
         public Microsoft.OpenApi.Models.OpenApiSchema Not { get; set; }
         public bool Nullable { get; set; }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Models.OpenApiSchema> OneOf { get; set; }
@@ -1417,7 +1418,7 @@ namespace Microsoft.OpenApi.Writers
         void WriteStartArray();
         void WriteStartObject();
         void WriteValue(bool value);
-        void WriteValue(decimal value);
+        void WriteValue(double value);
         void WriteValue(int value);
         void WriteValue(object value);
         void WriteValue(string value);
@@ -1480,7 +1481,7 @@ namespace Microsoft.OpenApi.Writers
         public virtual void WriteValue(bool value) { }
         public virtual void WriteValue(System.DateTime value) { }
         public virtual void WriteValue(System.DateTimeOffset value) { }
-        public virtual void WriteValue(decimal value) { }
+        public virtual void WriteValue(double value) { }
         public virtual void WriteValue(double value) { }
         public virtual void WriteValue(int value) { }
         public virtual void WriteValue(long value) { }

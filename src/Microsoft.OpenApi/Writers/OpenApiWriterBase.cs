@@ -148,9 +148,11 @@ namespace Microsoft.OpenApi.Writers
         }
 
         /// <summary>
-        /// Write decimal value.
+        /// Write 
+        /// 
+        /// value.
         /// </summary>
-        /// <param name="value">The decimal value.</param>
+        /// <param name="value">The double value.</param>
         public virtual void WriteValue(decimal value)
         {
             WriteValueSeparator();
