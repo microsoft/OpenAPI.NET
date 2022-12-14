@@ -1429,6 +1429,7 @@ paths: { }";
             Assert.NotNull(doc.Components);
         }
 
+<<<<<<< HEAD
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -1449,10 +1450,15 @@ paths: { }";
 
         [Fact]
         public void SerializeDocumentWithWebhooksAsV3YamlWorks()
+=======
+        [Fact]
+        public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
+>>>>>>> 3eb4f02c (Add test to validate)
         {
             // Arrange
             var expected = @"openapi: 3.0.1
 info:
+<<<<<<< HEAD
   title: Webhook Example
   version: 1.0.0
 paths: { }
@@ -1485,11 +1491,93 @@ components:
             
             // Act
             var actual = DocumentWithWebhooks.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+=======
+  title: magic style
+  version: 1.0.0
+paths:
+  /foo:
+    get:
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: object
+            additionalProperties:
+              type: integer
+      responses:
+        '200':
+          description: foo
+          content:
+            text/plain:
+              schema:
+                type: string";
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "magic style",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths
+                {
+                    ["/foo"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Parameters = new List<OpenApiParameter>
+                                {
+                                    new OpenApiParameter
+                                    {
+                                        Name = "id",
+                                        In = ParameterLocation.Query,
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Type = "object",
+                                            AdditionalProperties = new OpenApiSchema
+                                            {
+                                                Type = "integer"
+                                            }
+                                        }
+                                    }
+                                },
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse
+                                    {
+                                        Description = "foo",
+                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        {
+                                            ["text/plain"] = new OpenApiMediaType
+                                            {
+                                                Schema = new OpenApiSchema
+                                                {
+                                                    Type = "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+>>>>>>> 3eb4f02c (Add test to validate)
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
+<<<<<<< HEAD
             Assert.Equal(expected, actual);
+=======
+            actual.Should().Be(expected);
+>>>>>>> 3eb4f02c (Add test to validate)
         }
     }
 }
