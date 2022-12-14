@@ -59,6 +59,11 @@ namespace Microsoft.OpenApi.Models
         public bool IsLocal => ExternalResource == null;
 
         /// <summary>
+        /// Gets a flag indicating whether a file is a valid OpenAPI document or a fragment
+        /// </summary>
+        public bool IsFragrament = false;
+
+        /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
         public OpenApiDocument HostDocument { get; set; } = null;
@@ -217,7 +222,12 @@ namespace Microsoft.OpenApi.Models
         {
             if (Id != null)
             {
-                    return ExternalResource + "#/components/" + Type.GetDisplayName() + "/"+ Id;
+                if (IsFragrament)
+                {
+                    return ExternalResource + "#" + Id;
+                }
+                
+                return ExternalResource + "#/components/" + Type.GetDisplayName() + "/"+ Id;
             }
 
             return ExternalResource;
