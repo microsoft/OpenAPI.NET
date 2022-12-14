@@ -158,6 +158,9 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\petStoreWithTagAndSecurity.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\documentWithExternalRefs.yaml">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\securedApi.yaml" />
       <EmbeddedResource Include="V3Tests\Samples\OpenApiEncoding\advancedEncoding.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
