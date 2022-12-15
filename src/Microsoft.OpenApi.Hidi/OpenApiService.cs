@@ -333,8 +333,7 @@ namespace Microsoft.OpenApi.Hidi
                 ShowLinks = false,
                 ExpandDerivedTypesNavigationProperties = false,
                 EnableCount = true,
-                UseSuccessStatusCodeRange = true,
-                EnableTypeDisambiguationForDefaultValueOfOdataTypeProperty = true
+                UseSuccessStatusCodeRange = true
             };
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
