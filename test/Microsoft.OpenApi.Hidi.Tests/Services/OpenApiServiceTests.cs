@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
             var fileInput = new FileInfo(filePath);
             var csdlStream = fileInput.OpenRead();
-
+            
             // Act
             var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);

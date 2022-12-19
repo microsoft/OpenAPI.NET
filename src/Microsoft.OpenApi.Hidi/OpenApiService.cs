@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Hidi
                             stream.Position = 0;
                         }
 
-                        document = await ConvertCsdlToOpenApi(stream, settingsFile);
+                        document = await ConvertCsdlToOpenApi(stream, settingsFile, cancellationToken);
                         stopwatch.Stop();
                         logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                     }
@@ -216,6 +216,10 @@ namespace Microsoft.OpenApi.Hidi
                     textWriter.Flush();
                 }
             }
+            catch(TaskCanceledException)
+            {
+                Console.Error.WriteLine("CTRL+C pressed, aborting the operation.");
+            }            
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Could not transform the document, reason: {ex.Message}", ex);
@@ -324,12 +328,12 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string settingsFile = null)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string settingsFile = null, CancellationToken token = default)
         {
             using var reader = new StreamReader(csdl);
-            var csdlText = await reader.ReadToEndAsync();
+            var csdlText = await reader.ReadToEndAsync(token);
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
-            
+
             var config = GetConfiguration(settingsFile);
             var settings = new OpenApiConvertSettings()
             {
@@ -353,9 +357,8 @@ namespace Microsoft.OpenApi.Hidi
                 EnableTypeDisambiguationForDefaultValueOfOdataTypeProperty = true
             };
             config.GetSection("OpenApiConvertSettings").Bind(settings);
-            
-            OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
 
+            OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
             document = FixReferences(document);
 
             return document;

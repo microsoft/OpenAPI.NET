@@ -1,15 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.CommandLine;
-using System.CommandLine.Builder;
-using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
-
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Handlers;
 
@@ -18,9 +16,8 @@ namespace Microsoft.OpenApi.Hidi
     static class Program
     {
         static async Task Main(string[] args)
-        {
-            var rootCommand = new RootCommand() {
-            };
+        {            
+            var rootCommand = new RootCommand() {};
 
             // command option parameters and aliases
             var descriptionOption = new Option<string>("--openapi", "Input OpenAPI description file path or URL");
@@ -120,12 +117,12 @@ namespace Microsoft.OpenApi.Hidi
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
-
+            
             // Parse the incoming args and invoke the handler
             await rootCommand.InvokeAsync(args);
 
             //// Wait for logger to write messages to the console before exiting
             await Task.Delay(10);
-        }
+        }        
     }
 }
