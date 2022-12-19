@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Hidi
                             stream.Position = 0;
                         }
 
-                        document = await ConvertCsdlToOpenApi(stream, cancellationToken, settingsFile);
+                        document = await ConvertCsdlToOpenApi(stream, settingsFile, cancellationToken);
                         stopwatch.Stop();
                         logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                     }
@@ -328,7 +328,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, CancellationToken token, string settingsFile = null)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string settingsFile = null, CancellationToken token = default)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync(token);

@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var csdlStream = fileInput.OpenRead();
 
             // Act
-            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream, CancellationToken.None);
+            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
             var expectedPathCount = 5;
 
             // Assert
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var csdlStream = fileInput.OpenRead();
             
             // Act
-            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream, CancellationToken.None);
+            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(openApiDoc, predicate);
 
