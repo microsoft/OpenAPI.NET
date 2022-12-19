@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var csdlStream = fileInput.OpenRead();
 
             // Act
-            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
+            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream, CancellationToken.None);
             var expectedPathCount = 5;
 
             // Assert
@@ -39,9 +39,9 @@ namespace Microsoft.OpenApi.Tests.Services
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
             var fileInput = new FileInfo(filePath);
             var csdlStream = fileInput.OpenRead();
-
+            
             // Act
-            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
+            var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream, CancellationToken.None);
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
             var subsetOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(openApiDoc, predicate);
 
