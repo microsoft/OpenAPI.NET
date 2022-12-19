@@ -16,12 +16,8 @@ namespace Microsoft.OpenApi.Hidi
     static class Program
     {
         static async Task Main(string[] args)
-        {
-            // subscribe to CancelKeyPress event to listen for termination requests from users through Ctrl+C or Ctrl+Break keys
-            Console.CancelKeyPress += new ConsoleCancelEventHandler(Console_CancelKeyPressEvent);
-
-            var rootCommand = new RootCommand() {
-            };
+        {            
+            var rootCommand = new RootCommand() {};
 
             // command option parameters and aliases
             var descriptionOption = new Option<string>("--openapi", "Input OpenAPI description file path or URL");
@@ -121,36 +117,12 @@ namespace Microsoft.OpenApi.Hidi
 
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
-
+            
             // Parse the incoming args and invoke the handler
             await rootCommand.InvokeAsync(args);
 
             //// Wait for logger to write messages to the console before exiting
             await Task.Delay(10);
-        }
-
-        /// <summary>
-        /// This event is raised when the user presses either of the two breaking key combinations: Ctrl+C or Ctrl+Break keys.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="eventArgs"></param>
-        private static void Console_CancelKeyPressEvent(object sender, ConsoleCancelEventArgs eventArgs)
-        {
-            if ((eventArgs.SpecialKey == ConsoleSpecialKey.ControlC) || (eventArgs.SpecialKey == ConsoleSpecialKey.ControlBreak))
-            {
-                Console.WriteLine("CTRL+C pressed, aborting current process...");
-                Thread.Sleep(5000);
-                
-                if (Process.GetCurrentProcess().HasExited)
-                {
-                    Console.WriteLine("Process has already exited.");
-                }
-                else
-                {
-                    Console.WriteLine("Process has not exited, attempting to kill process...");
-                    Process.GetCurrentProcess().Kill();                    
-                }
-            }
         }        
     }
 }
