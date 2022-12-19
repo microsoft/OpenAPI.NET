@@ -51,7 +51,6 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             string filterbytags = context.ParseResult.GetValueForOption(FilterByTagsOption);
             string filterbycollection = context.ParseResult.GetValueForOption(FilterByCollectionOption);
 
-            var console = context.Console;
             CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
 
             using var loggerFactory = Logger.ConfigureLogger(logLevel);
