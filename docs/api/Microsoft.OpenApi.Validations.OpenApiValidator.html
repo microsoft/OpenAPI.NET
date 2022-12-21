@@ -1,0 +1,1700 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class OpenApiValidator
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class OpenApiValidator
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator">
+  
+  
+  <h1 id="Microsoft_OpenApi_Validations_OpenApiValidator" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator" class="text-break">Class OpenApiValidator
+  </h1>
+  <div class="markdown level0 summary"><p>Class containing dispatchers to execute validation rules on for Open API document.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html">OpenApiVisitorBase</a></div>
+    <div class="level2"><span class="xref">OpenApiValidator</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Microsoft.OpenApi.Validations.IValidationContext.html">IValidationContext</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_CurrentKeys">OpenApiVisitorBase.CurrentKeys</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Enter_System_String_">OpenApiVisitorBase.Enter(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Exit">OpenApiVisitorBase.Exit()</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_PathString">OpenApiVisitorBase.PathString</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiServer__">OpenApiVisitorBase.Visit(IList&lt;OpenApiServer&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiParameter__">OpenApiVisitorBase.Visit(IList&lt;OpenApiParameter&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiTag__">OpenApiVisitorBase.Visit(IList&lt;OpenApiTag&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiSecurityRequirement__">OpenApiVisitorBase.Visit(IList&lt;OpenApiSecurityRequirement&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiReferenceable_">OpenApiVisitorBase.Visit(IOpenApiReferenceable)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Microsoft.OpenApi.Validations.html">Microsoft.OpenApi.Validations</a></h6>
+  <h6><strong>Assembly</strong>: Microsoft.OpenApi.dll</h6>
+  <h5 id="Microsoft_OpenApi_Validations_OpenApiValidator_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class OpenApiValidator : OpenApiVisitorBase, IValidationContext</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator__ctor_Microsoft_OpenApi_Validations_ValidationRuleSet_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.%23ctor(Microsoft.OpenApi.Validations.ValidationRuleSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L26">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator__ctor_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.#ctor*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator__ctor_Microsoft_OpenApi_Validations_ValidationRuleSet_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.#ctor(Microsoft.OpenApi.Validations.ValidationRuleSet)">OpenApiValidator(ValidationRuleSet)</h4>
+  <div class="markdown level1 summary"><p>Create a visitor that will validate an OpenAPIDocument</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiValidator(ValidationRuleSet ruleSet)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Validations.ValidationRuleSet.html">ValidationRuleSet</a></td>
+        <td><span class="parametername">ruleSet</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Errors.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Errors%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L34">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Errors_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Errors*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Errors" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Errors">Errors</h4>
+  <div class="markdown level1 summary"><p>Gets the validation errors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;OpenApiValidatorError&gt; Errors { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Microsoft.OpenApi.Validations.OpenApiValidatorError.html">OpenApiValidatorError</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Warnings.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Warnings%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L45">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Warnings_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Warnings*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Warnings" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Warnings">Warnings</h4>
+  <div class="markdown level1 summary"><p>Gets the validation warnings.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;OpenApiValidatorWarning&gt; Warnings { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Microsoft.OpenApi.Validations.OpenApiValidatorWarning.html">OpenApiValidatorWarning</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_AddError_Microsoft_OpenApi_Validations_OpenApiValidatorError_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.AddError(Microsoft.OpenApi.Validations.OpenApiValidatorError)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L57">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_AddError_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.AddError*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_AddError_Microsoft_OpenApi_Validations_OpenApiValidatorError_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.AddError(Microsoft.OpenApi.Validations.OpenApiValidatorError)">AddError(OpenApiValidatorError)</h4>
+  <div class="markdown level1 summary"><p>Register an error with the validation context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddError(OpenApiValidatorError error)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Validations.OpenApiValidatorError.html">OpenApiValidatorError</a></td>
+        <td><span class="parametername">error</span></td>
+        <td><p>Error to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_AddWarning_Microsoft_OpenApi_Validations_OpenApiValidatorWarning_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.AddWarning(Microsoft.OpenApi.Validations.OpenApiValidatorWarning)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L71">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_AddWarning_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.AddWarning*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_AddWarning_Microsoft_OpenApi_Validations_OpenApiValidatorWarning_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.AddWarning(Microsoft.OpenApi.Validations.OpenApiValidatorWarning)">AddWarning(OpenApiValidatorWarning)</h4>
+  <div class="markdown level1 summary"><p>Register an error with the validation context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddWarning(OpenApiValidatorWarning warning)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Validations.OpenApiValidatorWarning.html">OpenApiValidatorWarning</a></td>
+        <td><span class="parametername">warning</span></td>
+        <td><p>Error to register.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtensible_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L187">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtensible_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible)">Visit(IOpenApiExtensible)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtensible.html">IOpenApiExtensible</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IOpenApiExtensible item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtensible.html">IOpenApiExtensible</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtensible_">OpenApiVisitorBase.Visit(IOpenApiExtensible)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtension_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L193">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtension_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension)">Visit(IOpenApiExtension)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtension.html">IOpenApiExtension</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IOpenApiExtension item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtension.html">IOpenApiExtension</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtension_">OpenApiVisitorBase.Visit(IOpenApiExtension)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiCallback_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiCallback)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L181">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiCallback_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiCallback)">Visit(OpenApiCallback)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiCallback.html">OpenApiCallback</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiCallback item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiCallback.html">OpenApiCallback</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiCallback_">OpenApiVisitorBase.Visit(OpenApiCallback)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiComponents_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiComponents)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L103">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiComponents_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiComponents)">Visit(OpenApiComponents)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiComponents.html">OpenApiComponents</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiComponents item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiComponents.html">OpenApiComponents</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiComponents_">OpenApiVisitorBase.Visit(OpenApiComponents)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiContact_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiContact)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L97">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiContact_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiContact)">Visit(OpenApiContact)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiContact.html">OpenApiContact</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiContact item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiContact.html">OpenApiContact</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiContact_">OpenApiVisitorBase.Visit(OpenApiContact)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiDocument_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiDocument)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L85">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiDocument_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiDocument)">Visit(OpenApiDocument)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiDocument.html">OpenApiDocument</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiDocument item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiDocument.html">OpenApiDocument</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiDocument_">OpenApiVisitorBase.Visit(OpenApiDocument)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiEncoding_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiEncoding)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L175">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiEncoding_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiEncoding)">Visit(OpenApiEncoding)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiEncoding.html">OpenApiEncoding</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiEncoding item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiEncoding.html">OpenApiEncoding</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiEncoding_">OpenApiVisitorBase.Visit(OpenApiEncoding)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiExample_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiExample)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L247">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiExample_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiExample)">Visit(OpenApiExample)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiExample item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiExample_">OpenApiVisitorBase.Visit(OpenApiExample)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiExternalDocs_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiExternalDocs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L133">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiExternalDocs_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiExternalDocs)">Visit(OpenApiExternalDocs)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiExternalDocs.html">OpenApiExternalDocs</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiExternalDocs item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiExternalDocs.html">OpenApiExternalDocs</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiExternalDocs_">OpenApiVisitorBase.Visit(OpenApiExternalDocs)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiHeader_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiHeader)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L109">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiHeader_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiHeader)">Visit(OpenApiHeader)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiHeader.html">OpenApiHeader</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiHeader item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiHeader.html">OpenApiHeader</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiHeader_">OpenApiVisitorBase.Visit(OpenApiHeader)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiInfo_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiInfo)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L91">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiInfo_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiInfo)">Visit(OpenApiInfo)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiInfo.html">OpenApiInfo</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiInfo item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiInfo.html">OpenApiInfo</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiInfo_">OpenApiVisitorBase.Visit(OpenApiInfo)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiLicense_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiLicense)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L139">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiLicense_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiLicense)">Visit(OpenApiLicense)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiLicense.html">OpenApiLicense</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiLicense item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiLicense.html">OpenApiLicense</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiLicense_">OpenApiVisitorBase.Visit(OpenApiLicense)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiLink_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiLink)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L241">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiLink_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiLink)">Visit(OpenApiLink)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiLink.html">OpenApiLink</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiLink item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiLink.html">OpenApiLink</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiLink_">OpenApiVisitorBase.Visit(OpenApiLink)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiMediaType_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiMediaType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L121">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiMediaType_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiMediaType)">Visit(OpenApiMediaType)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiMediaType.html">OpenApiMediaType</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiMediaType item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiMediaType.html">OpenApiMediaType</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiMediaType_">OpenApiVisitorBase.Visit(OpenApiMediaType)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiOAuthFlow_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiOAuthFlow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L145">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiOAuthFlow_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiOAuthFlow)">Visit(OpenApiOAuthFlow)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiOAuthFlow.html">OpenApiOAuthFlow</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiOAuthFlow item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiOAuthFlow.html">OpenApiOAuthFlow</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiOAuthFlow_">OpenApiVisitorBase.Visit(OpenApiOAuthFlow)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiOperation_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiOperation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L253">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiOperation_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiOperation)">Visit(OpenApiOperation)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiOperation.html">OpenApiOperation</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiOperation item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiOperation.html">OpenApiOperation</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiOperation_">OpenApiVisitorBase.Visit(OpenApiOperation)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiParameter_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiParameter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L157">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiParameter_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiParameter)">Visit(OpenApiParameter)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiParameter.html">OpenApiParameter</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiParameter item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiParameter.html">OpenApiParameter</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiParameter_">OpenApiVisitorBase.Visit(OpenApiParameter)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiPathItem_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiPathItem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L205">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiPathItem_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiPathItem)">Visit(OpenApiPathItem)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiPathItem.html">OpenApiPathItem</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiPathItem item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiPathItem.html">OpenApiPathItem</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiPathItem_">OpenApiVisitorBase.Visit(OpenApiPathItem)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiPaths_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiPaths)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L235">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiPaths_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiPaths)">Visit(OpenApiPaths)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiPaths.html">OpenApiPaths</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiPaths item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiPaths.html">OpenApiPaths</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiPaths_">OpenApiVisitorBase.Visit(OpenApiPaths)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiRequestBody_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiRequestBody)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L229">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiRequestBody_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiRequestBody)">Visit(OpenApiRequestBody)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiRequestBody.html">OpenApiRequestBody</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiRequestBody item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiRequestBody.html">OpenApiRequestBody</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiRequestBody_">OpenApiVisitorBase.Visit(OpenApiRequestBody)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiResponse_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiResponse)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L115">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiResponse_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiResponse)">Visit(OpenApiResponse)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponse.html">OpenApiResponse</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiResponse item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponse.html">OpenApiResponse</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiResponse_">OpenApiVisitorBase.Visit(OpenApiResponse)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiResponses_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiResponses)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L127">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiResponses_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiResponses)">Visit(OpenApiResponses)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponses.html">OpenApiResponses</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiResponses item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponses.html">OpenApiResponses</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiResponses_">OpenApiVisitorBase.Visit(OpenApiResponses)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiSchema_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiSchema)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L163">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiSchema_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiSchema)">Visit(OpenApiSchema)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiSchema.html">OpenApiSchema</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiSchema item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiSchema.html">OpenApiSchema</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSchema_">OpenApiVisitorBase.Visit(OpenApiSchema)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiSecurityRequirement_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiSecurityRequirement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L223">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiSecurityRequirement_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiSecurityRequirement)">Visit(OpenApiSecurityRequirement)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityRequirement.html">OpenApiSecurityRequirement</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiSecurityRequirement item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityRequirement.html">OpenApiSecurityRequirement</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSecurityRequirement_">OpenApiVisitorBase.Visit(OpenApiSecurityRequirement)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiSecurityScheme_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiSecurityScheme)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L217">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiSecurityScheme_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiSecurityScheme)">Visit(OpenApiSecurityScheme)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityScheme.html">OpenApiSecurityScheme</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiSecurityScheme item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityScheme.html">OpenApiSecurityScheme</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSecurityScheme_">OpenApiVisitorBase.Visit(OpenApiSecurityScheme)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiServer_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiServer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L169">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiServer_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiServer)">Visit(OpenApiServer)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiServer.html">OpenApiServer</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiServer item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiServer.html">OpenApiServer</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiServer_">OpenApiVisitorBase.Visit(OpenApiServer)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiServerVariable_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiServerVariable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L211">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiServerVariable_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiServerVariable)">Visit(OpenApiServerVariable)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <a class="xref" href="Microsoft.OpenApi.Models.OpenApiServerVariable.html">OpenApiServerVariable</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiServerVariable item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiServerVariable.html">OpenApiServerVariable</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiServerVariable_">OpenApiVisitorBase.Visit(OpenApiServerVariable)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiTag_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiTag)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L151">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_Microsoft_OpenApi_Models_OpenApiTag_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(Microsoft.OpenApi.Models.OpenApiTag)">Visit(OpenApiTag)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against an <a class="xref" href="Microsoft.OpenApi.Models.OpenApiTag.html">OpenApiTag</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(OpenApiTag item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiTag.html">OpenApiTag</a></td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiTag_">OpenApiVisitorBase.Visit(OpenApiTag)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_Microsoft_OpenApi_Models_OperationType_Microsoft_OpenApi_Models_OpenApiOperation__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary%7BMicrosoft.OpenApi.Models.OperationType%2CMicrosoft.OpenApi.Models.OpenApiOperation%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L258">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_Microsoft_OpenApi_Models_OperationType_Microsoft_OpenApi_Models_OpenApiOperation__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary{Microsoft.OpenApi.Models.OperationType,Microsoft.OpenApi.Models.OpenApiOperation})">Visit(IDictionary&lt;OperationType, OpenApiOperation&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IDictionary&lt;OperationType, OpenApiOperation&gt; item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="Microsoft.OpenApi.Models.OperationType.html">OperationType</a>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiOperation.html">OpenApiOperation</a>&gt;</td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_Microsoft_OpenApi_Models_OperationType_Microsoft_OpenApi_Models_OpenApiOperation__">OpenApiVisitorBase.Visit(IDictionary&lt;OperationType, OpenApiOperation&gt;)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiCallback__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiCallback%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L268">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiCallback__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiCallback})">Visit(IDictionary&lt;String, OpenApiCallback&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IDictionary&lt;string, OpenApiCallback&gt; item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiCallback.html">OpenApiCallback</a>&gt;</td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiCallback__">OpenApiVisitorBase.Visit(IDictionary&lt;String, OpenApiCallback&gt;)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiEncoding__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiEncoding%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L293">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiEncoding__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiEncoding})">Visit(IDictionary&lt;String, OpenApiEncoding&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IDictionary&lt;string, OpenApiEncoding&gt; item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiEncoding.html">OpenApiEncoding</a>&gt;</td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiEncoding__">OpenApiVisitorBase.Visit(IDictionary&lt;String, OpenApiEncoding&gt;)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiExample__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiExample%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L278">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiExample__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiExample})">Visit(IDictionary&lt;String, OpenApiExample&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IDictionary&lt;string, OpenApiExample&gt; item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a>&gt;</td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiExample__">OpenApiVisitorBase.Visit(IDictionary&lt;String, OpenApiExample&gt;)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiHeader__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiHeader%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L263">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiHeader__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiHeader})">Visit(IDictionary&lt;String, OpenApiHeader&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IDictionary&lt;string, OpenApiHeader&gt; item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiHeader.html">OpenApiHeader</a>&gt;</td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiHeader__">OpenApiVisitorBase.Visit(IDictionary&lt;String, OpenApiHeader&gt;)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiLink__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiLink%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L283">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiLink__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiLink})">Visit(IDictionary&lt;String, OpenApiLink&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IDictionary&lt;string, OpenApiLink&gt; item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiLink.html">OpenApiLink</a>&gt;</td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiLink__">OpenApiVisitorBase.Visit(IDictionary&lt;String, OpenApiLink&gt;)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiMediaType__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiMediaType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L273">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiMediaType__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiMediaType})">Visit(IDictionary&lt;String, OpenApiMediaType&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IDictionary&lt;string, OpenApiMediaType&gt; item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiMediaType.html">OpenApiMediaType</a>&gt;</td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiMediaType__">OpenApiVisitorBase.Visit(IDictionary&lt;String, OpenApiMediaType&gt;)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiServerVariable__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiServerVariable%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L288">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiServerVariable__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiServerVariable})">Visit(IDictionary&lt;String, OpenApiServerVariable&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IDictionary&lt;string, OpenApiServerVariable&gt; item)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiServerVariable.html">OpenApiServerVariable</a>&gt;</td>
+        <td><span class="parametername">item</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiServerVariable__">OpenApiVisitorBase.Visit(IDictionary&lt;String, OpenApiServerVariable&gt;)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiExample__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IList%7BMicrosoft.OpenApi.Models.OpenApiExample%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L199">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Validations_OpenApiValidator_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiExample__" data-uid="Microsoft.OpenApi.Validations.OpenApiValidator.Visit(System.Collections.Generic.IList{Microsoft.OpenApi.Models.OpenApiExample})">Visit(IList&lt;OpenApiExample&gt;)</h4>
+  <div class="markdown level1 summary"><p>Execute validation rules against a list of <a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Visit(IList&lt;OpenApiExample&gt; items)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a>&gt;</td>
+        <td><span class="parametername">items</span></td>
+        <td><p>The object to be validated</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Microsoft.OpenApi.Services.OpenApiVisitorBase.html#Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiExample__">OpenApiVisitorBase.Visit(IList&lt;OpenApiExample&gt;)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Validations.IValidationContext.html">IValidationContext</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Validations.ValidationContextExtensions.html#Microsoft_OpenApi_Validations_ValidationContextExtensions_CreateError_Microsoft_OpenApi_Validations_IValidationContext_System_String_System_String_">ValidationContextExtensions.CreateError(IValidationContext, String, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Validations.ValidationContextExtensions.html#Microsoft_OpenApi_Validations_ValidationContextExtensions_CreateWarning_Microsoft_OpenApi_Validations_IValidationContext_System_String_System_String_">ValidationContextExtensions.CreateWarning(IValidationContext, String, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Validations_OpenApiValidator.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Validations.OpenApiValidator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Validations/OpenApiValidator.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

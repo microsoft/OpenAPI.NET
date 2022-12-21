@@ -1,0 +1,1277 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class OpenApiWriterBase
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class OpenApiWriterBase
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase">
+  
+  
+  <h1 id="Microsoft_OpenApi_Writers_OpenApiWriterBase" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase" class="text-break">Class OpenApiWriterBase
+  </h1>
+  <div class="markdown level0 summary"><p>Base class for Open API writer.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">OpenApiWriterBase</span></div>
+      <div class="level2"><a class="xref" href="Microsoft.OpenApi.Writers.OpenApiJsonWriter.html">OpenApiJsonWriter</a></div>
+      <div class="level2"><a class="xref" href="Microsoft.OpenApi.Writers.OpenApiYamlWriter.html">OpenApiYamlWriter</a></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Microsoft.OpenApi.Writers.IOpenApiWriter.html">IOpenApiWriter</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Microsoft.OpenApi.Writers.html">Microsoft.OpenApi.Writers</a></h6>
+  <h6><strong>Assembly</strong>: Microsoft.OpenApi.dll</h6>
+  <h5 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class OpenApiWriterBase : IOpenApiWriter</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase__ctor_System_IO_TextWriter_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.%23ctor(System.IO.TextWriter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L43">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase__ctor_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.#ctor*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase__ctor_System_IO_TextWriter_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.#ctor(System.IO.TextWriter)">OpenApiWriterBase(TextWriter)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterBase.html">OpenApiWriterBase</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiWriterBase(TextWriter textWriter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IO.TextWriter</span></td>
+        <td><span class="parametername">textWriter</span></td>
+        <td><p>The text writer.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase__ctor_System_IO_TextWriter_Microsoft_OpenApi_Writers_OpenApiWriterSettings_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.%23ctor(System.IO.TextWriter%2CMicrosoft.OpenApi.Writers.OpenApiWriterSettings)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L52">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase__ctor_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.#ctor*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase__ctor_System_IO_TextWriter_Microsoft_OpenApi_Writers_OpenApiWriterSettings_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.#ctor(System.IO.TextWriter,Microsoft.OpenApi.Writers.OpenApiWriterSettings)">OpenApiWriterBase(TextWriter, OpenApiWriterSettings)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterBase.html">OpenApiWriterBase</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiWriterBase(TextWriter textWriter, OpenApiWriterSettings settings)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IO.TextWriter</span></td>
+        <td><span class="parametername">textWriter</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterSettings.html">OpenApiWriterSettings</a></td>
+        <td><span class="parametername">settings</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_IndentationString.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.IndentationString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L27">View Source</a>
+  </span>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IndentationString" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IndentationString">IndentationString</h4>
+  <div class="markdown level1 summary"><p>The indentation string to prepand to each line for each indentation level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected const string IndentationString = &quot;  &quot;</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_Scopes.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.Scopes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L32">View Source</a>
+  </span>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_Scopes" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.Scopes">Scopes</h4>
+  <div class="markdown level1 summary"><p>Scope of the Open API element - object, array, property.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected readonly Stack&lt;Scope&gt; Scopes</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Stack</span>&lt;<a class="xref" href="Microsoft.OpenApi.Writers.Scope.html">Scope</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_BaseIndentation.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.BaseIndentation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L69">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_BaseIndentation_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.BaseIndentation*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_BaseIndentation" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.BaseIndentation">BaseIndentation</h4>
+  <div class="markdown level1 summary"><p>Base Indentation Level.
+This denotes how many indentations are needed for the property in the base object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract int BaseIndentation { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_Settings.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.Settings%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L22">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_Settings_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.Settings*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_Settings" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.Settings">Settings</h4>
+  <div class="markdown level1 summary"><p>Settings for controlling how the OpenAPI document will be written out.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiWriterSettings Settings { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterSettings.html">OpenApiWriterSettings</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_Writer.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.Writer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L74">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_Writer_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.Writer*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_Writer" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.Writer">Writer</h4>
+  <div class="markdown level1 summary"><p>The text writer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected TextWriter Writer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IO.TextWriter</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_CurrentScope.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.CurrentScope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L307">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_CurrentScope_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.CurrentScope*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_CurrentScope" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.CurrentScope">CurrentScope()</h4>
+  <div class="markdown level1 summary"><p>Get current scope.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Scope CurrentScope()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.Scope.html">Scope</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_DecreaseIndentation.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.DecreaseIndentation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L275">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_DecreaseIndentation_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.DecreaseIndentation*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_DecreaseIndentation" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.DecreaseIndentation">DecreaseIndentation()</h4>
+  <div class="markdown level1 summary"><p>Decreases the level of indentation applied to the output.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void DecreaseIndentation()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_EndScope_Microsoft_OpenApi_Writers_ScopeType_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.EndScope(Microsoft.OpenApi.Writers.ScopeType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L335">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_EndScope_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.EndScope*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_EndScope_Microsoft_OpenApi_Writers_ScopeType_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.EndScope(Microsoft.OpenApi.Writers.ScopeType)">EndScope(ScopeType)</h4>
+  <div class="markdown level1 summary"><p>End the scope of the given scope type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Scope EndScope(ScopeType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.ScopeType.html">ScopeType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.Scope.html">Scope</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_Flush.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.Flush%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L119">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_Flush_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.Flush*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_Flush" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.Flush">Flush()</h4>
+  <div class="markdown level1 summary"><p>Flush the writer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Flush()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_IncreaseIndentation.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.IncreaseIndentation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L267">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IncreaseIndentation_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IncreaseIndentation*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IncreaseIndentation" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IncreaseIndentation">IncreaseIndentation()</h4>
+  <div class="markdown level1 summary"><p>Increases the level of indentation applied to the output.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void IncreaseIndentation()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_IsArrayScope.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.IsArrayScope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L374">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IsArrayScope_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IsArrayScope*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IsArrayScope" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IsArrayScope">IsArrayScope()</h4>
+  <div class="markdown level1 summary"><p>Whether the current scope is an array scope.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected bool IsArrayScope()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_IsObjectScope.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.IsObjectScope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L365">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IsObjectScope_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IsObjectScope*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IsObjectScope" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IsObjectScope">IsObjectScope()</h4>
+  <div class="markdown level1 summary"><p>Whether the current scope is an object scope.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected bool IsObjectScope()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_IsTopLevelScope.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.IsTopLevelScope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L357">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IsTopLevelScope_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IsTopLevelScope*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_IsTopLevelScope" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.IsTopLevelScope">IsTopLevelScope()</h4>
+  <div class="markdown level1 summary"><p>Whether the current scope is the top level (outermost) scope.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected bool IsTopLevelScope()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_StartScope_Microsoft_OpenApi_Writers_ScopeType_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.StartScope(Microsoft.OpenApi.Writers.ScopeType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L316">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_StartScope_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.StartScope*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_StartScope_Microsoft_OpenApi_Writers_ScopeType_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.StartScope(Microsoft.OpenApi.Writers.ScopeType)">StartScope(ScopeType)</h4>
+  <div class="markdown level1 summary"><p>Start the scope given the scope type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Scope StartScope(ScopeType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.ScopeType.html">ScopeType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The scope type to start.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.Scope.html">Scope</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_VerifyCanWritePropertyName_System_String_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.VerifyCanWritePropertyName(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L394">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_VerifyCanWritePropertyName_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.VerifyCanWritePropertyName*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_VerifyCanWritePropertyName_System_String_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.VerifyCanWritePropertyName(System.String)">VerifyCanWritePropertyName(String)</h4>
+  <div class="markdown level1 summary"><p>Verifies whether a property name can be written based on whether
+the property name is a valid string and whether the current scope is an object scope.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void VerifyCanWritePropertyName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>property name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteEndArray.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteEndArray%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L94">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteEndArray_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteEndArray*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteEndArray" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteEndArray">WriteEndArray()</h4>
+  <div class="markdown level1 summary"><p>Write end array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void WriteEndArray()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteEndObject.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteEndObject%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L84">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteEndObject_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteEndObject*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteEndObject" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteEndObject">WriteEndObject()</h4>
+  <div class="markdown level1 summary"><p>Write end object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void WriteEndObject()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteIndentation.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteIndentation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L295">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteIndentation_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteIndentation*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteIndentation" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteIndentation">WriteIndentation()</h4>
+  <div class="markdown level1 summary"><p>Write the indentation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteIndentation()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteNull.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteNull%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L109">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteNull_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteNull*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteNull" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteNull">WriteNull()</h4>
+  <div class="markdown level1 summary"><p>Write null value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void WriteNull()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WritePropertyName_System_String_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WritePropertyName(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L99">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WritePropertyName_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WritePropertyName*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WritePropertyName_System_String_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WritePropertyName(System.String)">WritePropertyName(String)</h4>
+  <div class="markdown level1 summary"><p>Write the start property.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void WritePropertyName(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteRaw_System_String_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteRaw(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L114">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteRaw_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteRaw*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteRaw_System_String_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteRaw(System.String)">WriteRaw(String)</h4>
+  <div class="markdown level1 summary"><p>Write content raw value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void WriteRaw(string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteStartArray.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteStartArray%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L89">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteStartArray_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteStartArray*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteStartArray" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteStartArray">WriteStartArray()</h4>
+  <div class="markdown level1 summary"><p>Write start array.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void WriteStartArray()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteStartObject.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteStartObject%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L79">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteStartObject_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteStartObject*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteStartObject" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteStartObject">WriteStartObject()</h4>
+  <div class="markdown level1 summary"><p>Write start object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void WriteStartObject()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Boolean_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L202">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Boolean_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Boolean)">WriteValue(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Write boolean value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(bool value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The boolean value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_DateTime_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.DateTime)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L184">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_DateTime_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.DateTime)">WriteValue(DateTime)</h4>
+  <div class="markdown level1 summary"><p>Write DateTime value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(DateTime value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.DateTime</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The DateTime value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_DateTimeOffset_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.DateTimeOffset)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L193">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_DateTimeOffset_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.DateTimeOffset)">WriteValue(DateTimeOffset)</h4>
+  <div class="markdown level1 summary"><p>Write DateTimeOffset value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(DateTimeOffset value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.DateTimeOffset</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The DateTimeOffset value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Decimal_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L154">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Decimal_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Decimal)">WriteValue(Decimal)</h4>
+  <div class="markdown level1 summary"><p>Write decimal value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(decimal value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The decimal value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Double_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L144">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Double_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Double)">WriteValue(Double)</h4>
+  <div class="markdown level1 summary"><p>Write double value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(double value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The double value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Int32_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L164">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Int32_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Int32)">WriteValue(Int32)</h4>
+  <div class="markdown level1 summary"><p>Write integer value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(int value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The integer value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Int64_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L174">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Int64_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Int64)">WriteValue(Int64)</h4>
+  <div class="markdown level1 summary"><p>Write long value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(long value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int64</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The long value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Object_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L212">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Object_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Object)">WriteValue(Object)</h4>
+  <div class="markdown level1 summary"><p>Write object value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(object value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The object value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Single_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L134">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_Single_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.Single)">WriteValue(Single)</h4>
+  <div class="markdown level1 summary"><p>Write float value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void WriteValue(float value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Single</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The float value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_String_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L128">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValue_System_String_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValue(System.String)">WriteValue(String)</h4>
+  <div class="markdown level1 summary"><p>Write string value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void WriteValue(string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The string value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValueSeparator.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValueSeparator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L104">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValueSeparator_" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValueSeparator*"></a>
+  <h4 id="Microsoft_OpenApi_Writers_OpenApiWriterBase_WriteValueSeparator" data-uid="Microsoft.OpenApi.Writers.OpenApiWriterBase.WriteValueSeparator">WriteValueSeparator()</h4>
+  <div class="markdown level1 summary"><p>Writes a separator of a value if it's needed for the next value to be written.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract void WriteValueSeparator()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.IOpenApiWriter.html">IOpenApiWriter</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterAnyExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterAnyExtensions_WriteExtensions_Microsoft_OpenApi_Writers_IOpenApiWriter_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Interfaces_IOpenApiExtension__Microsoft_OpenApi_OpenApiSpecVersion_">OpenApiWriterAnyExtensions.WriteExtensions(IOpenApiWriter, IDictionary&lt;String, IOpenApiExtension&gt;, OpenApiSpecVersion)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterAnyExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterAnyExtensions_WriteAny__1_Microsoft_OpenApi_Writers_IOpenApiWriter___0_">OpenApiWriterAnyExtensions.WriteAny&lt;T&gt;(IOpenApiWriter, T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteProperty_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_String_">OpenApiWriterExtensions.WriteProperty(IOpenApiWriter, String, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteRequiredProperty_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_String_">OpenApiWriterExtensions.WriteRequiredProperty(IOpenApiWriter, String, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteProperty_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Boolean_System_Boolean_">OpenApiWriterExtensions.WriteProperty(IOpenApiWriter, String, Boolean, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteProperty_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Nullable_System_Boolean__System_Boolean_">OpenApiWriterExtensions.WriteProperty(IOpenApiWriter, String, Nullable&lt;Boolean&gt;, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteProperty__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Nullable___0__">OpenApiWriterExtensions.WriteProperty&lt;T&gt;(IOpenApiWriter, String, Nullable&lt;T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteProperty__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String___0_">OpenApiWriterExtensions.WriteProperty&lt;T&gt;(IOpenApiWriter, String, T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteOptionalObject__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String___0_System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter___0__">OpenApiWriterExtensions.WriteOptionalObject&lt;T&gt;(IOpenApiWriter, String, T, Action&lt;IOpenApiWriter, T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteRequiredObject__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String___0_System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter___0__">OpenApiWriterExtensions.WriteRequiredObject&lt;T&gt;(IOpenApiWriter, String, T, Action&lt;IOpenApiWriter, T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteOptionalCollection_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Collections_Generic_IEnumerable_System_String__System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String__">OpenApiWriterExtensions.WriteOptionalCollection(IOpenApiWriter, String, IEnumerable&lt;String&gt;, Action&lt;IOpenApiWriter, String&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteOptionalCollection__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Collections_Generic_IEnumerable___0__System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter___0__">OpenApiWriterExtensions.WriteOptionalCollection&lt;T&gt;(IOpenApiWriter, String, IEnumerable&lt;T&gt;, Action&lt;IOpenApiWriter, T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteRequiredCollection__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Collections_Generic_IEnumerable___0__System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter___0__">OpenApiWriterExtensions.WriteRequiredCollection&lt;T&gt;(IOpenApiWriter, String, IEnumerable&lt;T&gt;, Action&lt;IOpenApiWriter, T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteOptionalMap_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Collections_Generic_IDictionary_System_String_System_String__System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String__">OpenApiWriterExtensions.WriteOptionalMap(IOpenApiWriter, String, IDictionary&lt;String, String&gt;, Action&lt;IOpenApiWriter, String&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteRequiredMap_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Collections_Generic_IDictionary_System_String_System_String__System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String__">OpenApiWriterExtensions.WriteRequiredMap(IOpenApiWriter, String, IDictionary&lt;String, String&gt;, Action&lt;IOpenApiWriter, String&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteOptionalMap__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Collections_Generic_IDictionary_System_String___0__System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter___0__">OpenApiWriterExtensions.WriteOptionalMap&lt;T&gt;(IOpenApiWriter, String, IDictionary&lt;String, T&gt;, Action&lt;IOpenApiWriter, T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteOptionalMap__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Collections_Generic_IDictionary_System_String___0__System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String___0__">OpenApiWriterExtensions.WriteOptionalMap&lt;T&gt;(IOpenApiWriter, String, IDictionary&lt;String, T&gt;, Action&lt;IOpenApiWriter, String, T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html#Microsoft_OpenApi_Writers_OpenApiWriterExtensions_WriteRequiredMap__1_Microsoft_OpenApi_Writers_IOpenApiWriter_System_String_System_Collections_Generic_IDictionary_System_String___0__System_Action_Microsoft_OpenApi_Writers_IOpenApiWriter___0__">OpenApiWriterExtensions.WriteRequiredMap&lt;T&gt;(IOpenApiWriter, String, IDictionary&lt;String, T&gt;, Action&lt;IOpenApiWriter, T&gt;)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Writers_OpenApiWriterBase.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Writers.OpenApiWriterBase%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Writers/OpenApiWriterBase.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

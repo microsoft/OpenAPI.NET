@@ -1,0 +1,508 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ParsingContext
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ParsingContext
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Microsoft.OpenApi.Readers.ParsingContext">
+  
+  
+  <h1 id="Microsoft_OpenApi_Readers_ParsingContext" data-uid="Microsoft.OpenApi.Readers.ParsingContext" class="text-break">Class ParsingContext
+  </h1>
+  <div class="markdown level0 summary"><p>The Parsing Context holds temporary state needed whilst parsing an OpenAPI Document</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">ParsingContext</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Microsoft.OpenApi.Readers.html">Microsoft.OpenApi.Readers</a></h6>
+  <h6><strong>Assembly</strong>: Microsoft.OpenApi.Readers.dll</h6>
+  <h5 id="Microsoft_OpenApi_Readers_ParsingContext_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ParsingContext</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext__ctor_Microsoft_OpenApi_Readers_OpenApiDiagnostic_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.%23ctor(Microsoft.OpenApi.Readers.OpenApiDiagnostic)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L42">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext__ctor_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.#ctor*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext__ctor_Microsoft_OpenApi_Readers_OpenApiDiagnostic_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.#ctor(Microsoft.OpenApi.Readers.OpenApiDiagnostic)">ParsingContext(OpenApiDiagnostic)</h4>
+  <div class="markdown level1 summary"><p>Create Parsing Context</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ParsingContext(OpenApiDiagnostic diagnostic)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Readers.OpenApiDiagnostic.html">OpenApiDiagnostic</a></td>
+        <td><span class="parametername">diagnostic</span></td>
+        <td><p>Provide instance for diagnotic object for collecting and accessing information about the parsing.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext_Diagnostic.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.Diagnostic%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L36">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext_Diagnostic_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.Diagnostic*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext_Diagnostic" data-uid="Microsoft.OpenApi.Readers.ParsingContext.Diagnostic">Diagnostic</h4>
+  <div class="markdown level1 summary"><p>Diagnostic object that returns metadata about the parsing process.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiDiagnostic Diagnostic { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Readers.OpenApiDiagnostic.html">OpenApiDiagnostic</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext_EndObject.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.EndObject%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L134">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext_EndObject_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.EndObject*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext_EndObject" data-uid="Microsoft.OpenApi.Readers.ParsingContext.EndObject">EndObject()</h4>
+  <div class="markdown level1 summary"><p>End the current object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void EndObject()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext_GetFromTempStorage__1_System_String_System_Object_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.GetFromTempStorage%60%601(System.String%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L150">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext_GetFromTempStorage_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.GetFromTempStorage*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext_GetFromTempStorage__1_System_String_System_Object_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.GetFromTempStorage``1(System.String,System.Object)">GetFromTempStorage&lt;T&gt;(String, Object)</h4>
+  <div class="markdown level1 summary"><p>Gets the value from the temporary storage matching the given key.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T GetFromTempStorage&lt;T&gt;(string key, object scope = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">scope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext_GetLocation.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.GetLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L142">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext_GetLocation_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.GetLocation*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext_GetLocation" data-uid="Microsoft.OpenApi.Readers.ParsingContext.GetLocation">GetLocation()</h4>
+  <div class="markdown level1 summary"><p>Get the current location as string representing JSON pointer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GetLocation()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext_PopLoop_System_String_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.PopLoop(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L239">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext_PopLoop_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.PopLoop*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext_PopLoop_System_String_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.PopLoop(System.String)">PopLoop(String)</h4>
+  <div class="markdown level1 summary"><p>Exit from the context in cycle detection</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void PopLoop(string loopid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">loopid</span></td>
+        <td><p>Identifier of loop</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext_PushLoop_System_String_System_String_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.PushLoop(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L206">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext_PushLoop_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.PushLoop*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext_PushLoop_System_String_System_String_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.PushLoop(System.String,System.String)">PushLoop(String, String)</h4>
+  <div class="markdown level1 summary"><p>Maintain history of traversals to avoid stack overflows from cycles</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool PushLoop(string loopId, string key)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">loopId</span></td>
+        <td><p>Any unique identifier for a stack.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td><p>Identifier used for current context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>If method returns false a loop was detected and the key is not added.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext_SetTempStorage_System_String_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.SetTempStorage(System.String%2CSystem.Object%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L169">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext_SetTempStorage_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.SetTempStorage*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext_SetTempStorage_System_String_System_Object_System_Object_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.SetTempStorage(System.String,System.Object,System.Object)">SetTempStorage(String, Object, Object)</h4>
+  <div class="markdown level1 summary"><p>Sets the temporary storge for this key and value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetTempStorage(string key, object value, object scope = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">key</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">value</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">scope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext_StartObject_System_String_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext.StartObject(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L195">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_ParsingContext_StartObject_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.StartObject*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_ParsingContext_StartObject_System_String_" data-uid="Microsoft.OpenApi.Readers.ParsingContext.StartObject(System.String)">StartObject(String)</h4>
+  <div class="markdown level1 summary"><p>Starts an object with the given object name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void StartObject(string objectName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">objectName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_ParsingContext.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.ParsingContext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/ParsingContext.cs/#L22" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

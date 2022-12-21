@@ -1,0 +1,538 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class OpenApiExtensibleDictionary&lt;T&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class OpenApiExtensibleDictionary&lt;T&gt;
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1">
+  
+  
+  <h1 id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1" class="text-break">Class OpenApiExtensibleDictionary&lt;T&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>Generic dictionary type for Open API dictionary element.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, T&gt;</div>
+    <div class="level2"><span class="xref">OpenApiExtensibleDictionary&lt;T&gt;</span></div>
+      <div class="level3"><a class="xref" href="Microsoft.OpenApi.Models.OpenApiPaths.html">OpenApiPaths</a></div>
+      <div class="level3"><a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponses.html">OpenApiResponses</a></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, T&gt;</div>
+    <div><span class="xref">System.Collections.Generic.ICollection</span>&lt;<span class="xref">System.Collections.Generic.KeyValuePair</span>&lt;<span class="xref">System.String</span>, T&gt;&gt;</div>
+    <div><span class="xref">System.Collections.Generic.IReadOnlyDictionary</span>&lt;<span class="xref">System.String</span>, T&gt;</div>
+    <div><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<span class="xref">System.Collections.Generic.KeyValuePair</span>&lt;<span class="xref">System.String</span>, T&gt;&gt;</div>
+    <div><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Collections.Generic.KeyValuePair</span>&lt;<span class="xref">System.String</span>, T&gt;&gt;</div>
+    <div><span class="xref">System.Collections.IDictionary</span></div>
+    <div><span class="xref">System.Collections.ICollection</span></div>
+    <div><span class="xref">System.Collections.IEnumerable</span></div>
+    <div><span class="xref">System.Runtime.Serialization.IDeserializationCallback</span></div>
+    <div><span class="xref">System.Runtime.Serialization.ISerializable</span></div>
+    <div><a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiSerializable.html">IOpenApiSerializable</a></div>
+    <div><a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtensible.html">IOpenApiExtensible</a></div>
+    <div><a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiElement.html">IOpenApiElement</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.get_Item(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.set_Item(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.Add(System.String, T)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.Clear()</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.ContainsKey(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.ContainsValue(T)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.GetEnumerator()</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.OnDeserialization(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.Remove(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.ICollection&lt;System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;&gt;.Add(System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.ICollection&lt;System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;&gt;.Contains(System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.ICollection&lt;System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;&gt;.CopyTo(System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;[], System.Int32)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.ICollection&lt;System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;&gt;.Remove(System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.IEnumerable&lt;System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;&gt;.GetEnumerator()</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.ICollection.CopyTo(System.Array, System.Int32)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.Add(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.Contains(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.GetEnumerator()</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.Remove(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IEnumerable.GetEnumerator()</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.TryGetValue(System.String, T)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.Comparer</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.Count</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.Item[System.String]</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.Keys</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.ICollection&lt;System.Collections.Generic.KeyValuePair&lt;System.String, T&gt;&gt;.IsReadOnly</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.IDictionary&lt;System.String, T&gt;.Keys</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.IDictionary&lt;System.String, T&gt;.Values</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.IReadOnlyDictionary&lt;System.String, T&gt;.Keys</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.Generic.IReadOnlyDictionary&lt;System.String, T&gt;.Values</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.ICollection.IsSynchronized</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.ICollection.SyncRoot</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.IsFixedSize</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.IsReadOnly</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.Item[System.Object]</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.Keys</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.System.Collections.IDictionary.Values</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.Generic.Dictionary&lt;System.String, T&gt;.Values</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Microsoft.OpenApi.Models.html">Microsoft.OpenApi.Models</a></h6>
+  <h6><strong>Assembly</strong>: Microsoft.OpenApi.dll</h6>
+  <h5 id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class OpenApiExtensibleDictionary&lt;T&gt; : Dictionary&lt;string, T&gt;, IDictionary&lt;string, T&gt;, ICollection&lt;KeyValuePair&lt;string, T&gt;&gt;, IReadOnlyDictionary&lt;string, T&gt;, IReadOnlyCollection&lt;KeyValuePair&lt;string, T&gt;&gt;, IEnumerable&lt;KeyValuePair&lt;string, T&gt;&gt;, IDictionary, ICollection, IEnumerable, IDeserializationCallback, ISerializable, IOpenApiSerializable, IOpenApiExtensible, IOpenApiElement where T : IOpenApiSerializable</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The Open API element, <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiElement.html">IOpenApiElement</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1__ctor.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Models.OpenApiExtensibleDictionary%601.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Models/OpenApiExtensibleDictionary.cs/#L22">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1__ctor_" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.#ctor*"></a>
+  <h4 id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1__ctor" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.#ctor">OpenApiExtensibleDictionary()</h4>
+  <div class="markdown level1 summary"><p>Parameterless constructor</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected OpenApiExtensibleDictionary()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1__ctor_System_Collections_Generic_Dictionary_System_String__0__System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Interfaces_IOpenApiExtension__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Models.OpenApiExtensibleDictionary%601.%23ctor(System.Collections.Generic.Dictionary%7BSystem.String%2C%600%7D%2CSystem.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Interfaces.IOpenApiExtension%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Models/OpenApiExtensibleDictionary.cs/#L29">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1__ctor_" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.#ctor*"></a>
+  <h4 id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1__ctor_System_Collections_Generic_Dictionary_System_String__0__System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Interfaces_IOpenApiExtension__" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.#ctor(System.Collections.Generic.Dictionary{System.String,`0},System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Interfaces.IOpenApiExtension})">OpenApiExtensibleDictionary(Dictionary&lt;String, T&gt;, IDictionary&lt;String, IOpenApiExtension&gt;)</h4>
+  <div class="markdown level1 summary"><p>Initializes a copy of <a class="xref" href="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary-1.html">OpenApiExtensibleDictionary&lt;T&gt;</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected OpenApiExtensibleDictionary(Dictionary&lt;string, T&gt; dictionary = null, IDictionary&lt;string, IOpenApiExtension&gt; extensions = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, T&gt;</td>
+        <td><span class="parametername">dictionary</span></td>
+        <td><p>The generic dictionary.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtension.html">IOpenApiExtension</a>&gt;</td>
+        <td><span class="parametername">extensions</span></td>
+        <td><p>The dictionary of <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtension.html">IOpenApiExtension</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_Extensions.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Models.OpenApiExtensibleDictionary%601.Extensions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Models/OpenApiExtensibleDictionary.cs/#L39">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_Extensions_" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.Extensions*"></a>
+  <h4 id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_Extensions" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.Extensions">Extensions</h4>
+  <div class="markdown level1 summary"><p>This object MAY be extended with Specification Extensions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;string, IOpenApiExtension&gt; Extensions { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtension.html">IOpenApiExtension</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_SerializeAsV2_Microsoft_OpenApi_Writers_IOpenApiWriter_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Models.OpenApiExtensibleDictionary%601.SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Models/OpenApiExtensibleDictionary.cs/#L66">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_SerializeAsV2_" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.SerializeAsV2*"></a>
+  <h4 id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_SerializeAsV2_Microsoft_OpenApi_Writers_IOpenApiWriter_" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter)">SerializeAsV2(IOpenApiWriter)</h4>
+  <div class="markdown level1 summary"><p>Serialize to Open Api v2.0</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SerializeAsV2(IOpenApiWriter writer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.IOpenApiWriter.html">IOpenApiWriter</a></td>
+        <td><span class="parametername">writer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_SerializeAsV3_Microsoft_OpenApi_Writers_IOpenApiWriter_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Models.OpenApiExtensibleDictionary%601.SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Models/OpenApiExtensibleDictionary.cs/#L44">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_SerializeAsV3_" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.SerializeAsV3*"></a>
+  <h4 id="Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1_SerializeAsV3_Microsoft_OpenApi_Writers_IOpenApiWriter_" data-uid="Microsoft.OpenApi.Models.OpenApiExtensibleDictionary`1.SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter)">SerializeAsV3(IOpenApiWriter)</h4>
+  <div class="markdown level1 summary"><p>Serialize to Open Api v3.0</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SerializeAsV3(IOpenApiWriter writer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Writers.IOpenApiWriter.html">IOpenApiWriter</a></td>
+        <td><span class="parametername">writer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.Generic.ICollection&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyDictionary&lt;TKey, TValue&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.Generic.IReadOnlyCollection&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.IDictionary</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.ICollection</span>
+  </div>
+  <div>
+      <span class="xref">System.Collections.IEnumerable</span>
+  </div>
+  <div>
+      <span class="xref">System.Runtime.Serialization.IDeserializationCallback</span>
+  </div>
+  <div>
+      <span class="xref">System.Runtime.Serialization.ISerializable</span>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiSerializable.html">IOpenApiSerializable</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtensible.html">IOpenApiExtensible</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiElement.html">IOpenApiElement</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiElementExtensions.html#Microsoft_OpenApi_Extensions_OpenApiElementExtensions_Validate_Microsoft_OpenApi_Interfaces_IOpenApiElement_Microsoft_OpenApi_Validations_ValidationRuleSet_">OpenApiElementExtensions.Validate(IOpenApiElement, ValidationRuleSet)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiExtensibleExtensions.html#Microsoft_OpenApi_Extensions_OpenApiExtensibleExtensions_AddExtension__1___0_System_String_Microsoft_OpenApi_Interfaces_IOpenApiExtension_">OpenApiExtensibleExtensions.AddExtension&lt;T&gt;(T, String, IOpenApiExtension)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html#Microsoft_OpenApi_Extensions_OpenApiSerializableExtensions_SerializeAsJson__1___0_System_IO_Stream_Microsoft_OpenApi_OpenApiSpecVersion_">OpenApiSerializableExtensions.SerializeAsJson&lt;T&gt;(T, Stream, OpenApiSpecVersion)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html#Microsoft_OpenApi_Extensions_OpenApiSerializableExtensions_SerializeAsYaml__1___0_System_IO_Stream_Microsoft_OpenApi_OpenApiSpecVersion_">OpenApiSerializableExtensions.SerializeAsYaml&lt;T&gt;(T, Stream, OpenApiSpecVersion)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html#Microsoft_OpenApi_Extensions_OpenApiSerializableExtensions_Serialize__1___0_System_IO_Stream_Microsoft_OpenApi_OpenApiSpecVersion_Microsoft_OpenApi_OpenApiFormat_">OpenApiSerializableExtensions.Serialize&lt;T&gt;(T, Stream, OpenApiSpecVersion, OpenApiFormat)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html#Microsoft_OpenApi_Extensions_OpenApiSerializableExtensions_Serialize__1___0_System_IO_Stream_Microsoft_OpenApi_OpenApiSpecVersion_Microsoft_OpenApi_OpenApiFormat_Microsoft_OpenApi_Writers_OpenApiWriterSettings_">OpenApiSerializableExtensions.Serialize&lt;T&gt;(T, Stream, OpenApiSpecVersion, OpenApiFormat, OpenApiWriterSettings)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html#Microsoft_OpenApi_Extensions_OpenApiSerializableExtensions_Serialize__1___0_Microsoft_OpenApi_Writers_IOpenApiWriter_Microsoft_OpenApi_OpenApiSpecVersion_">OpenApiSerializableExtensions.Serialize&lt;T&gt;(T, IOpenApiWriter, OpenApiSpecVersion)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html#Microsoft_OpenApi_Extensions_OpenApiSerializableExtensions_SerializeAsJson__1___0_Microsoft_OpenApi_OpenApiSpecVersion_">OpenApiSerializableExtensions.SerializeAsJson&lt;T&gt;(T, OpenApiSpecVersion)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html#Microsoft_OpenApi_Extensions_OpenApiSerializableExtensions_SerializeAsYaml__1___0_Microsoft_OpenApi_OpenApiSpecVersion_">OpenApiSerializableExtensions.SerializeAsYaml&lt;T&gt;(T, OpenApiSpecVersion)</a>
+  </div>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html#Microsoft_OpenApi_Extensions_OpenApiSerializableExtensions_Serialize__1___0_Microsoft_OpenApi_OpenApiSpecVersion_Microsoft_OpenApi_OpenApiFormat_">OpenApiSerializableExtensions.Serialize&lt;T&gt;(T, OpenApiSpecVersion, OpenApiFormat)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Models_OpenApiExtensibleDictionary_1.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Models.OpenApiExtensibleDictionary%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Models/OpenApiExtensibleDictionary.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

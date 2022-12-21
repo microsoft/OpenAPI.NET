@@ -1,0 +1,2220 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Users/v-makim/source/repos/OpenAPI.NET/docfx_project",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.AnyType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.AnyType.html",
+          "hash": "jjt5cMKUmXtl1Xe6diJY0rq6m3mwcjw1XOzLg6OHBhA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.IOpenApiAny.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.IOpenApiAny.html",
+          "hash": "yDKCxS6vc1htTbZyI/wyVjZQQkURQaQENKfYPONkhDE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.IOpenApiPrimitive.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.IOpenApiPrimitive.html",
+          "hash": "ribnftlFcLhYafNPyhEdL70rhk1JflpOdHRWiHNKv+k="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiAnyCloneHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiAnyCloneHelper.html",
+          "hash": "ZGRhys2gLKPgQrkkTJ/vpa/9OUv4AQA1W2g6Tynt74Q="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiArray.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiArray.html",
+          "hash": "cjI7zuKh4nRMvRAGsTA4kZeeiq5Ng7OpkouBuwh+BzU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiBinary.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiBinary.html",
+          "hash": "QuUDhZa9jCU39RHaOmKycvXf6TxghSFBEkUh8TWYHRg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiBoolean.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiBoolean.html",
+          "hash": "D/By+FX8m9Hkv38ycHs/+Zr65pGhMd7Oj1jWc8BOeYA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiByte.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiByte.html",
+          "hash": "xc3owSWN1GXtUDpk8Ag3eeZZXj/J0XLnFJ7PFpA9IL8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiDate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiDate.html",
+          "hash": "tR+y4R4tCx/QT+AvNCTBsg3eqswGqmSUxj8t7+VhIH4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiDateTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiDateTime.html",
+          "hash": "6ljoHSZOFE1fi3E0PXBnNhzASsT9/xLRnxOuOhmW2GI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiDouble.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiDouble.html",
+          "hash": "EXmFKa/kx4iuqGcaHHYsHmpaX20tKPRPto/NO2RWTT0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiFloat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiFloat.html",
+          "hash": "X5A7zYNsqEbss8RU413VOWGzXdSWTHMdI1lCgY8MVm4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiInteger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiInteger.html",
+          "hash": "8VL/MeiPUhfLuE/YO0Ny7oAGULy5Om55vq2Fii64wPw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiLong.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiLong.html",
+          "hash": "StjLfQM1TxrY0BNS4cz/Fb5Qa356v919ISkZmQzuRtQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiNull.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiNull.html",
+          "hash": "K+bGU/tHHVN2nCddL0jMYm/j3gfFDVOyo1gEIEhAmEE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiObject.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiObject.html",
+          "hash": "LBOHgx/3Y2K5RVaGH38l2lklV0ILDlHAhDQw5E1DJGM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiPassword.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiPassword.html",
+          "hash": "s3cAwrtN/q/IBBWN1WXFexf+HgjhfvoejeuSoVBaPOk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiPrimitive-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiPrimitive-1.html",
+          "hash": "W25sTpNKs1CJUlzIkw/9SuDSDfbogT0w3sejwaJgJCU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.OpenApiString.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.OpenApiString.html",
+          "hash": "jejG1h+r6vu4s+PUcPd0dP5F9exxWiE+zBqCb7YlXIM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.PrimitiveType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.PrimitiveType.html",
+          "hash": "Dr8p7Iq5QG3NM7w3/rYs41SQiqkHFNKDP44382JRJeM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Any.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Any.html",
+          "hash": "Jf2bBX6W1M61z/KK9rrC99keLVNOxPD/cNN3wiL+5b8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Attributes.DisplayAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Attributes.DisplayAttribute.html",
+          "hash": "uRAJyV/Y+ElxAUgpM/Iw57/9MyVArPZZruQ6SWkW08g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Attributes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Attributes.html",
+          "hash": "SHmunIfxcQMEcRrHTR9415vTTYPqHsfM+lr/DBVztjU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Exceptions.OpenApiException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Exceptions.OpenApiException.html",
+          "hash": "DU7ZP21e1AxkXX0XH/ZGecgbbhF2OL5nMolFjHs3LrE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Exceptions.OpenApiWriterException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Exceptions.OpenApiWriterException.html",
+          "hash": "ZO982E8AFhiGUbaA/o+BZ+Rkcs4NoKvUF1rvyS1B1V0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Exceptions.html",
+          "hash": "9NFZms6M47k22eoEvZWkd9xOxhc1bPRWlsLxU8v1qKg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.BodyExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.BodyExpression.html",
+          "hash": "KDwWjQbZIAWI7VZ5caG0NoB1H+pRpX19OWgumk3+sBA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.CompositeExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.CompositeExpression.html",
+          "hash": "uSM5M+KKYb7XZgSgWSVnHq4UPas3lhQj5J8wG/8Yn3c="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.HeaderExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.HeaderExpression.html",
+          "hash": "4az3b0gjA7wWym/6j6Pqy8iOgGUxng5xcCMNEwWzTck="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.MethodExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.MethodExpression.html",
+          "hash": "hZG82e99/d8qHLH6hmGetPcE3s6zIA2rc8jFu/Pa7tE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.PathExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.PathExpression.html",
+          "hash": "Q2bWEvpM3w/GXIYdNV2gJ7P1IYoqTdQVXzzdhPQSGAk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.QueryExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.QueryExpression.html",
+          "hash": "VyN1li90kSVMk+KFR/F7SaRlFkbJEev/+EUE8Obil1c="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.RequestExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.RequestExpression.html",
+          "hash": "wsSxN7CJiOSzsAgiFxPPdwfb0VTBrvbcnD/hNg7KWRI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.ResponseExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.ResponseExpression.html",
+          "hash": "ECEx4zkRGXSaA/lP3vu8KzEvtLWI2DGc9kCWbCx0rmo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.RuntimeExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.RuntimeExpression.html",
+          "hash": "FFtrtn8xopxngSIlYaK27Yo2bxiiQsL9l3qrrMiYThE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.SourceExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.SourceExpression.html",
+          "hash": "K1I7dqAesS3ZUXWKxHtN7qr1JRCqPN1QGceV2l5YJLU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.StatusCodeExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.StatusCodeExpression.html",
+          "hash": "F6xIxTiSUC/qqf5G7VUaUm+B+TmIbgfMCj7PJqZBDwo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.UrlExpression.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.UrlExpression.html",
+          "hash": "cGlVSkUfA9Z93xH2qQKHYYigmTM6BIKsYjUtGNxUbF0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Expressions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Expressions.html",
+          "hash": "oehWilT3x5LAid/K6jjM8JMd3StLMiJVzogcXp3s0ss="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Extensions.EnumExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Extensions.EnumExtensions.html",
+          "hash": "ApdrgcDCKU8YrIukpxlWEE7+q1h8/JcNP6EV/JzduF8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiElementExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiElementExtensions.html",
+          "hash": "Y28A4HsAzOKB55gGStAJb8CAF22tQagreovs7W05MGM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiExtensibleExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiExtensibleExtensions.html",
+          "hash": "sGQJvnZkEi7pPfLCoW9AQKMBQdPfs9lLWbhMYbj306g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiReferencableExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiReferencableExtensions.html",
+          "hash": "XrZFSjjsZmkd2HnnGB+wozaMo8vwUGykku6BaxJFywY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions.html",
+          "hash": "JHML0vGnC++0QT9h0OTKRLajRkdyFJNH0WbWKj4W37U="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiTypeMapper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Extensions.OpenApiTypeMapper.html",
+          "hash": "JtmS3Z9Sa24qkTRSnge4acZn+E2iMtI+BcKHMPkw90k="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Extensions.StringExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Extensions.StringExtensions.html",
+          "hash": "xVlHd1SYrZ1ogl4WQhzAqCQk9LQ78S6yLvy580c0/Rs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Extensions.html",
+          "hash": "j8aXWBDZiL9thqaH74WuWY8K9PT6iEunZncgrqZPjJQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Hidi.Logger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Hidi.Logger.html",
+          "hash": "oW49vFwCmsA053XGheeQ8lodSrV5ELNvJSIIlmaGcsA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Hidi.OpenApiService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Hidi.OpenApiService.html",
+          "hash": "oMhChlkJgaybhSxKolorHnV0Z63Yl4qAhGbJS1HN4jQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper.html",
+          "hash": "osSNguOgIBF9QPNY/I5o5b2EtFSSsijEUMEafOKJ7O8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Hidi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Hidi.html",
+          "hash": "QGeJ1OoZgbYsr37rAZqHP+JWErKqopwIlyXSDzeXxyk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Interfaces.IEffective-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Interfaces.IEffective-1.html",
+          "hash": "mZ7GDL5BQ/zIkU2EHo5EqcaYLUClUBbH/kSzUfPZKDw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiElement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiElement.html",
+          "hash": "T0lLCRoZWV9zJvKjsecBMCQyRpCBEVlU/Ly22q41XdU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiExtensible.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiExtensible.html",
+          "hash": "m9OGMEHhGWTb0vLWITFtkIkl7IF7URWiP3eG7NWbMB4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiExtension.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiExtension.html",
+          "hash": "qgVV06oVSYKKciLydUwT2nW7dNM31I0qqN6XJhXHu2w="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiReferenceable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiReferenceable.html",
+          "hash": "S8xh5N4I0usfMdi+sWaAWzHDtAPReE/nSq6KRh2ZPRM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiSerializable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Interfaces.IOpenApiSerializable.html",
+          "hash": "RyfQmhHl7jbCHhEdbPM0PhTbM7taQPjv/8ablRYdGTQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Interfaces.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Interfaces.html",
+          "hash": "51GDJ3TeJbiIkDO4j6AWAP6TiDSUJz9dpFx1BqLeyJs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.JsonPointer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.JsonPointer.html",
+          "hash": "hX7EejtrO3Ah7AGJji14DcrGzXoHsopw7XQ/2vDvIrI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiCallback.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiCallback.html",
+          "hash": "LJePHJZS09YuWx/rMCuQ+8S2fVZLl0GCoi0MGIroTy4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiComponents.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiComponents.html",
+          "hash": "uo3Tv6MyEFMp0AHPtsWGp/y2rI9jFluXljD3N3qHDX8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiConstants.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiConstants.html",
+          "hash": "OiJdsjQZb24pLOqwHSgkvNyMuB7ZSeHY3yuHZt4Vrxs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiContact.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiContact.html",
+          "hash": "IjiR1J7/q+uMJo3Y0nc8kq1xhXYJEFOy3anE8Q2Oud4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiDiscriminator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiDiscriminator.html",
+          "hash": "i8o//VdAL7yhQNTTPFe9PdV4t4lKNdTx9QYm7vSY1Mo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiDocument.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiDocument.html",
+          "hash": "slkerQsase3WugerKiKwRi3D2ewwkQHaSs42EasA/rY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiEncoding.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiEncoding.html",
+          "hash": "uYUmEThWVVKdfyzE1Qfcsvnr2dbidwR2m1y2UyP03DQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiError.html",
+          "hash": "GoLUIygPsIYmUzMh3+TMLKX46sCQkQnkeq/pHkfqFrs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiExample.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiExample.html",
+          "hash": "WadeE8eWolahsw8QeFGAemLup6rPLFdvc47HtjQNXQQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiExtensibleDictionary-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiExtensibleDictionary-1.html",
+          "hash": "prm46KqnjAQjpaLSQZOiCIkmyWFAgbrd28867+RAb6I="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiExternalDocs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiExternalDocs.html",
+          "hash": "XrCPF3fArqJtGndKQSUDzxe5JXE/A4SjyDlMfRj916E="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiHeader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiHeader.html",
+          "hash": "mdLrUjV2n6DVpCCEaYe8yrI/urszlfXzFhplKbqJbNU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiInfo.html",
+          "hash": "GdTVHIYMLjHS12ZjcqjBqEh94FcEw+TBWcRJacdp1ng="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiLicense.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiLicense.html",
+          "hash": "0mgVqzTiIxW67wYvJgMCPoFmXq3crItztIGX5dIw2ZE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiLink.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiLink.html",
+          "hash": "ahgJbaQKqoxpIpIglNruNykQaoiUwelq1qEl//VXvYg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiMediaType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiMediaType.html",
+          "hash": "U/VL7/+rg36n+DWk9xdrbxGkZDtHA0FDP0MkhRF+UkA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiOAuthFlow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiOAuthFlow.html",
+          "hash": "e3+B5xaQE1C3B78dJRHQpQw4M0JLKdEslRW+STrtwqw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiOAuthFlows.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiOAuthFlows.html",
+          "hash": "QGGupNeaBkrE8VMVvbkipY219AnJMYNTx56+kvBFd9k="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiOperation.html",
+          "hash": "kR4D6uw8puMDeGoB/LGx7qpcN16/Md64CdtXjh01Aa8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiParameter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiParameter.html",
+          "hash": "GnajD6BNaLC52YS+1M0fJwCFJ07VyqHQOF8FHRNdbN8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiPathItem.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiPathItem.html",
+          "hash": "n+ruX+lqVAZVTCwwanTd4MtjNsTOMiNgj/z5QMLa3BQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiPaths.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiPaths.html",
+          "hash": "BegQBjCahrKLIE4++ZYZr5tbnThAckfJDiZs4rdVPY0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiReference.html",
+          "hash": "0c4bmbk9h8em+oaSQKnogMnHL5p49MYF5ZEeIfHCwJc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiRequestBody.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiRequestBody.html",
+          "hash": "4O9jvIVBKJVYTsl5TFUKj6zc5RK3d+wmUO3lzxLOcxM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiResponse.html",
+          "hash": "G2KE2mtOQHi8DQmFQnR3osgctHIJdATgIfE2/+D82vU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiResponses.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiResponses.html",
+          "hash": "gd6V/z3MzCUo31hvnvY9zIYEMcewCU7YoxsSTfNhiW4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiSchema.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiSchema.html",
+          "hash": "6u6e8RaSIW4rGlX21bY45Xix6ZVdAx3CkX/uYGBZ4AQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiSecurityRequirement.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiSecurityRequirement.html",
+          "hash": "c6T8OWbsSvrVIoUdVCbX3byTHkmoyB2y3LE3pg8mNwM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiSecurityScheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiSecurityScheme.html",
+          "hash": "TF94fntsgBn04POVCu1hYFV9HY9t0Hms1NSTTIUWCi4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiServer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiServer.html",
+          "hash": "H0QAIgNzt9SXc+GsH8iH9SG7sBJpqXOyD7v4j7UUahU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiServerVariable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiServerVariable.html",
+          "hash": "dEpusns9XykPNMwBuCaiYM+/3pT4a9cEXGXFjFQFKF0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiTag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiTag.html",
+          "hash": "I/73cmE+nuL6PU5STdIEmeM/I7ocJeqCzQ2GsaV2kdI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OpenApiXml.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OpenApiXml.html",
+          "hash": "a7EMwjNmkfYjE5qA6G2OnVX1faGl8Xc4WHa1H5dmxkE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.OperationType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.OperationType.html",
+          "hash": "3E3H5A6hYxJTRC5+HSr1alinsL6kf5oaERARNDD/3d8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.ParameterLocation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.ParameterLocation.html",
+          "hash": "Hni2OO4rLuOKdIdPlMQTh9tQV6loyXtLsoL8GSXvU28="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.ParameterStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.ParameterStyle.html",
+          "hash": "i6AGIqwz8Uoxt5YmLBxQoSc5Aws/AcKt8uFnnChiDSw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.ReferenceType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.ReferenceType.html",
+          "hash": "QfDCxxhKSlUwLNywqYVKNiEIXecmPhVG8aQX7QYb98U="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.RuntimeExpressionAnyWrapper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.RuntimeExpressionAnyWrapper.html",
+          "hash": "YJu68e1l32vbHUxr7XgLVxJwOHB8pw5SI3LYsW4Cz84="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.SecuritySchemeType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.SecuritySchemeType.html",
+          "hash": "TsdoddZUgED0aLi7KQ8nLwP/hobC+PUk+VBDln3Q+UE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Models.html",
+          "hash": "D/4TRUIRnlWmTibxNM1ZSfetnNO6G0lcv6KFzeSeoRY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.OpenApiFormat.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.OpenApiFormat.html",
+          "hash": "MTmc1wB+5+k2JrueM8xXnA6HRWEgqJhW0Gl1QJn7ZmU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.OpenApiSpecVersion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.OpenApiSpecVersion.html",
+          "hash": "ryv2UnyCB17aLliaRBkOE3Aj8uPd+2y0X/CHaM+F/h8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.Exceptions.OpenApiReaderException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.Exceptions.OpenApiReaderException.html",
+          "hash": "vHA+b1iuq52kr5WTusPARVNwOQPn3YR/E+7GnAEF1Hw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.Exceptions.OpenApiUnsupportedSpecVersionException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.Exceptions.OpenApiUnsupportedSpecVersionException.html",
+          "hash": "cT4w/FZiVZp3Nzs5LcjgVWIs6rHyI6by1o/pgyws5xk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.Exceptions.html",
+          "hash": "qqpkT6Z7ZGqcQw4uQqMiA7TRDYenrB4x9eTh8t04tsI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.Interface.IDiagnostic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.Interface.IDiagnostic.html",
+          "hash": "1cSuDUYyLEqQsrUKbUta9lRaoB3JUXkndpXmZehQlqg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.Interface.IOpenApiReader-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.Interface.IOpenApiReader-2.html",
+          "hash": "sIn7e/9PryRxjDyxFHYZcXsmL0rKmetcKefMQQH4A9w="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.Interface.IStreamLoader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.Interface.IStreamLoader.html",
+          "hash": "nmNsP6JEmGOUJF4qz+DOC56ses2j3eg1oYGtPJqZYos="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.Interface.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.Interface.html",
+          "hash": "rDoW8Ab7jLWM0tSoOql8QrElARt25g/d6WADBX1fGU4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.OpenApiDiagnostic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.OpenApiDiagnostic.html",
+          "hash": "gn3EMreULce25XO/66xsJCq+zp861pIT9Qs8mKvxhCU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.OpenApiReaderSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.OpenApiReaderSettings.html",
+          "hash": "oo+Ip5olF7mX8ArVQWR/jFmRU8UrhNZUIfZ3QCZbUPE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.OpenApiStreamReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.OpenApiStreamReader.html",
+          "hash": "Ucbjun3wg+/1tuVGya4dZ30EY4wLzP45LE5eh9iJJVk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.OpenApiStringReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.OpenApiStringReader.html",
+          "hash": "nGOi3vGHPbgVl5+X/YRhRu/NBFZCjOSZRi5kBOdDrok="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.OpenApiTextReaderReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.OpenApiTextReaderReader.html",
+          "hash": "Kz3/9iJRYh7uqLhZvUVJu2DPpsUtiaXCDWOSXmSYckM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.ParseNodes.JsonPointerExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.ParseNodes.JsonPointerExtensions.html",
+          "hash": "CHFY7Ywmhkh0Y3glyWy8HikBP7h1QVriY1bKGx4j0QA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.ParseNodes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.ParseNodes.html",
+          "hash": "9icrWJG9gRI/RSmfw8kmVYNvl2esY/T2fku1T94fC74="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.ParsingContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.ParsingContext.html",
+          "hash": "xHUt9SjHWRykBDyjAmM1rLe1qsVhG1cH230/if/XJUk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.ReadResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.ReadResult.html",
+          "hash": "/+2X0hzQUNH9xDMQ0do5cz498xMmBnuKuPQ8PKwDkrQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.ReferenceResolutionSetting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.ReferenceResolutionSetting.html",
+          "hash": "VZqgGf7sZKMK4rNVdtijHaDX+I9D2IAr3LjWShAjvwI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Readers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Readers.html",
+          "hash": "ZgKp1Hbkx3J8qv4hlXoiMK+/q5Xff+wItb5yvChVEl8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.CurrentKeys.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.CurrentKeys.html",
+          "hash": "+mhFfeidLf/Cfo+I+a7dnWx1BQReSxOfVBcPoiOq5ko="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.OpenApiFilterService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.OpenApiFilterService.html",
+          "hash": "Ro05Iwo3yb43dWljz7l01e3srEaya6tMo+sxfLtGSnc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.OpenApiReferenceError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.OpenApiReferenceError.html",
+          "hash": "yPiNKYQWVH/SwfHzriI3Chm0lJItOkRocHjv/WuK6w8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.OpenApiReferenceResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.OpenApiReferenceResolver.html",
+          "hash": "Uyz44Zdpn5Vir2s7GHspxUyruaut4eLuMwWJHV+vKaM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.OpenApiUrlTreeNode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.OpenApiUrlTreeNode.html",
+          "hash": "9RQoHl32tS9Ujv7NnD1taBUxHv3yoCthENiT6LbqdCo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.OpenApiVisitorBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.OpenApiVisitorBase.html",
+          "hash": "Tdu36QEfME9vxnWPxferU3VowsnQP68qBtwAdDwn+o0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.OpenApiWalker.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.OpenApiWalker.html",
+          "hash": "RKD3VndyRMuvQDnXbUysqEDD6r+koGGIZ52SO46xa/g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.OpenApiWorkspace.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.OpenApiWorkspace.html",
+          "hash": "cgzRxNqTXH4jS9e98U4s61KyZsRzdTwhyrKuAko3EBo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.OperationSearch.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.OperationSearch.html",
+          "hash": "iUJvIZgtE5kzeU2S82+0QzVszPRB4p7EQ13xUam85CM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.SearchResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.SearchResult.html",
+          "hash": "QdlA8NeU0T5gX3Wwq1sCL7ngPFMbW5x1R+/Hsr7FKnc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Services.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Services.html",
+          "hash": "RXRc84TfPrbnUDZGQuaU8E2MMQVPcOfsgbVoLPq5eoM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.IValidationContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.IValidationContext.html",
+          "hash": "uY1r2DSyF0kzsmWp/gGzppGwJam1bXUta7d6TQijnq8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.OpenApiValidator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.OpenApiValidator.html",
+          "hash": "Ab/LyZDFZUzfW7v9VioHBo2UJooteGNbgxQAM2TbSAw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.OpenApiValidatorError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.OpenApiValidatorError.html",
+          "hash": "kBCSEcB1jkcxfxWPxo59T9287hr1IKtZ1+YY/JFdS3Q="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.OpenApiValidatorWarning.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.OpenApiValidatorWarning.html",
+          "hash": "NwUHCdv83C8yCwmHoMGERLoAZooXBpP/yr6kKGP+Lmw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiComponentsRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiComponentsRules.html",
+          "hash": "irjuxrgY4DNcckfyiPuugsw7jmVeYizKfNE6QKVkPjY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiContactRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiContactRules.html",
+          "hash": "aBLSZAt6udpYMqntH8QCBPVBCGY980Lx0KYopFep0ds="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiDocumentRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiDocumentRules.html",
+          "hash": "CKQUo7eP5tCuJRMHqzjEdutpgD/D+NPIv2t0LcREqSo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiExtensibleRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiExtensibleRules.html",
+          "hash": "mWWp6D4P5kbZXbZ5Yu7dQH1D+x6Sr3sQdRO6HTCCAMA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiExternalDocsRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiExternalDocsRules.html",
+          "hash": "O0F6yu3EW4Yh4Qz6kcHO/QwdiXScbCc0NHEo5Nfow1o="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiHeaderRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiHeaderRules.html",
+          "hash": "sv3YizuQeJmlaSwbWarKoxYkAWyMthV7aaYhPquUof4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiInfoRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiInfoRules.html",
+          "hash": "U9EqmgUtu3fn4QmJ3lM9ieNLJ1hVm69QZc32arvO0Cg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiLicenseRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiLicenseRules.html",
+          "hash": "E6rM/N4NrJq8D4IW7rugdG0spJxvnDR9ALB8OyGjkPI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiMediaTypeRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiMediaTypeRules.html",
+          "hash": "uZMu5Q0SN0UwBfRTJus7Ox9fo2DO1yqpSMTCe/dBcD0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiOAuthFlowRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiOAuthFlowRules.html",
+          "hash": "oSDLFnQjxq3M2NL6p+0MZgUoWn7tjMYVGwkQ9IAfEOU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiParameterRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiParameterRules.html",
+          "hash": "PrNytGAp5SlnLi1KUDAAd6KISpkDRnqBOy4evi0N/mI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiPathsRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiPathsRules.html",
+          "hash": "Hwp9nxCFtLKpKlbL05CdaY0gZBOucYB2QMB5dwAfpWk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiResponseRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiResponseRules.html",
+          "hash": "LnUp4KFvWhO4y7dTzhOJEfmNEHkMj1torXcGqtU/RCw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiResponsesRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiResponsesRules.html",
+          "hash": "WMJ61cWwSxB1uC05kacSjaVHzaCIfRAYcXl/1Yh4WGY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiRuleAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiRuleAttribute.html",
+          "hash": "Og/hjMXe9iDwqAvxRsZ6Nu6VduoBMC6kskvMWzIdZ7s="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiSchemaRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiSchemaRules.html",
+          "hash": "u2B4wJDqCSUUHGJ83d56FK6fPTzmOxLBAeen78UaZeE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiServerRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiServerRules.html",
+          "hash": "35N6o4uRiOeBMNo0dcAXO9lJh6PPAmM7pdF978nAJrs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiTagRules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.OpenApiTagRules.html",
+          "hash": "vGgbMQ1ptIN70/JgcF3OWgbFK1oJQLuUrqpC+KU5MKQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.Rules.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.Rules.html",
+          "hash": "hmLn69cqG8+1M/KT/2YWzI5G0olRIAGpE8Ke2tLMQnQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.ValidationContextExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.ValidationContextExtensions.html",
+          "hash": "IAmk9n8IwuNJoQFgznRgPOqmh/MkJXSSzq/d9eLunU4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.ValidationRule-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.ValidationRule-1.html",
+          "hash": "cVu+0sqtpR14qfjELswoON42UEo/DvIX/XgrPnkFXfU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.ValidationRule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.ValidationRule.html",
+          "hash": "l/pewELQxj8iqxgezOU3b4pi6idTqnEXxuOBn8L8IM4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.ValidationRuleSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.ValidationRuleSet.html",
+          "hash": "6rvj1qcCzEGD9haH40aFdKAPaZdGuNpbF1WXPNratuc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Validations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Validations.html",
+          "hash": "eDJW1h31FqbV58wuvmmSrkiy2qcQ6vhJ47N+hf2/fe4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.FormattingStreamWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.FormattingStreamWriter.html",
+          "hash": "kpG5TXmJosZVeAHJJFJ0UZ9FzZ0yhzkf+5TL6amnpE4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.IOpenApiWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.IOpenApiWriter.html",
+          "hash": "x2Z/yZFw5kqeeKrBQhICEnrmsL1INqwjD7F9Ybsiqvo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.OpenApiJsonWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.OpenApiJsonWriter.html",
+          "hash": "HtTjLcZE1Xjm5lLquHOtRDqd5RdS+wxzHZCC8ZAG12Y="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.OpenApiJsonWriterSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.OpenApiJsonWriterSettings.html",
+          "hash": "nCoS53tslAEJ58fQeslxOLckPLtNSzoeZAuwvVp9u3M="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.OpenApiWriterAnyExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.OpenApiWriterAnyExtensions.html",
+          "hash": "UvGcsgQesJMpJIdBf62Fg4LBCsiKeJDbsROHkSXBDuc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.OpenApiWriterBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.OpenApiWriterBase.html",
+          "hash": "UHuH5q+uNNc1/10Uh2KZvv8nOvKwCCm+/PBoSvC9Ucc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.OpenApiWriterExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.OpenApiWriterExtensions.html",
+          "hash": "TMwWXE1l8/X8OWojNx7IWzqPOsO+h0jos0wKwub438g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.OpenApiWriterSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.OpenApiWriterSettings.html",
+          "hash": "cIQDuUNHkGGRDYjAc/UxoLStqZEtNooSvxBgOtt79n4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.OpenApiYamlWriter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.OpenApiYamlWriter.html",
+          "hash": "eK6jhtp2rthVbXakuLmWw45EHPyj2hJEJNy7vjo8VfA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.ReferenceInlineSetting.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.ReferenceInlineSetting.html",
+          "hash": "Dm3b7n+g0Wr87Acc9k1mBnS5pZwLRoKFSqTe/omyuPA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.Scope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.Scope.html",
+          "hash": "BxDOsVbW0TvFSUEVnM/kEZFBMIS1SpZ34qQcbjaSkwE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.ScopeType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.ScopeType.html",
+          "hash": "fAFMsgkeaZmu/Apt7mU6gBRpycOxRBOuNlOf3eQtNcc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.SpecialCharacterStringExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.SpecialCharacterStringExtensions.html",
+          "hash": "XBuIXAVheswZ5ie4iSDyZ+BmoRioRb1e/RL9t35o5Tc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.Writers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.Writers.html",
+          "hash": "fIULEgk4jHpoDVdciAlKKD+TKs0aes7CohLT6JddOWU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Microsoft.OpenApi.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Microsoft.OpenApi.html",
+          "hash": "xCWK15F3219BFGjzjrCO+oHim1yRHGphHhwDU/usOZ0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "mWDI+GqqxG9HUCTzECEYVN6bpn1c3wWP0qzS/jw54YI="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "NkO3Qj8EGKmEuDJ35tO7p9T+UBIadE+pxX5mjbqanJc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/intro.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/intro.html",
+          "hash": "kQm115y45kQIha6+k6HQpn5wmEUH/nvN18K6u+E9Wu4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "BlPxk5mtl2kgfcZUgkEguqiSAR/EUyUTT4EdebwkQvs="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/oainet.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/oainet.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "ZXeP6L/2rpTJZKiUQdfFN50+e5ykv9QicJke9mKxFys="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "qlX9wmiuRC39NYjXlIfBsnk8ta7BV+1C4rTDYE+OSBc="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": true,
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 3,
+          "skipped_file_count": 2
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 173,
+          "skipped_file_count": 173
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

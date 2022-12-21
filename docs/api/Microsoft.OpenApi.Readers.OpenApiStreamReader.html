@@ -1,0 +1,385 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class OpenApiStreamReader
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class OpenApiStreamReader
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader">
+  
+  
+  <h1 id="Microsoft_OpenApi_Readers_OpenApiStreamReader" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader" class="text-break">Class OpenApiStreamReader
+  </h1>
+  <div class="markdown level0 summary"><p>Service class for converting streams into OpenApiDocument instances</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">OpenApiStreamReader</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Microsoft.OpenApi.Readers.Interface.IOpenApiReader-2.html">IOpenApiReader</a>&lt;<span class="xref">System.IO.Stream</span>, <a class="xref" href="Microsoft.OpenApi.Readers.OpenApiDiagnostic.html">OpenApiDiagnostic</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Microsoft.OpenApi.Readers.html">Microsoft.OpenApi.Readers</a></h6>
+  <h6><strong>Assembly</strong>: Microsoft.OpenApi.Readers.dll</h6>
+  <h5 id="Microsoft_OpenApi_Readers_OpenApiStreamReader_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class OpenApiStreamReader : IOpenApiReader&lt;Stream, OpenApiDiagnostic&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_OpenApiStreamReader__ctor_Microsoft_OpenApi_Readers_OpenApiReaderSettings_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.OpenApiStreamReader.%23ctor(Microsoft.OpenApi.Readers.OpenApiReaderSettings)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/OpenApiStreamReader.cs/#L24">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_OpenApiStreamReader__ctor_" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader.#ctor*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_OpenApiStreamReader__ctor_Microsoft_OpenApi_Readers_OpenApiReaderSettings_" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader.#ctor(Microsoft.OpenApi.Readers.OpenApiReaderSettings)">OpenApiStreamReader(OpenApiReaderSettings)</h4>
+  <div class="markdown level1 summary"><p>Create stream reader with custom settings if desired.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiStreamReader(OpenApiReaderSettings settings = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Readers.OpenApiReaderSettings.html">OpenApiReaderSettings</a></td>
+        <td><span class="parametername">settings</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_OpenApiStreamReader_Read_System_IO_Stream_Microsoft_OpenApi_Readers_OpenApiDiagnostic__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.OpenApiStreamReader.Read(System.IO.Stream%2CMicrosoft.OpenApi.Readers.OpenApiDiagnostic%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/OpenApiStreamReader.cs/#L41">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_OpenApiStreamReader_Read_" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader.Read*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_OpenApiStreamReader_Read_System_IO_Stream_Microsoft_OpenApi_Readers_OpenApiDiagnostic__" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader.Read(System.IO.Stream,Microsoft.OpenApi.Readers.OpenApiDiagnostic@)">Read(Stream, out OpenApiDiagnostic)</h4>
+  <div class="markdown level1 summary"><p>Reads the stream input and parses it into an Open API document.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public OpenApiDocument Read(Stream input, out OpenApiDiagnostic diagnostic)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IO.Stream</span></td>
+        <td><span class="parametername">input</span></td>
+        <td><p>Stream containing OpenAPI description to parse.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Readers.OpenApiDiagnostic.html">OpenApiDiagnostic</a></td>
+        <td><span class="parametername">diagnostic</span></td>
+        <td><p>Returns diagnostic object containing errors detected during parsing.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiDocument.html">OpenApiDocument</a></td>
+        <td><p>Instance of newly created OpenApiDocument.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_OpenApiStreamReader_ReadAsync_System_IO_Stream_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.OpenApiStreamReader.ReadAsync(System.IO.Stream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/OpenApiStreamReader.cs/#L58">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_OpenApiStreamReader_ReadAsync_" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader.ReadAsync*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_OpenApiStreamReader_ReadAsync_System_IO_Stream_" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader.ReadAsync(System.IO.Stream)">ReadAsync(Stream)</h4>
+  <div class="markdown level1 summary"><p>Reads the stream input and parses it into an Open API document.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public async Task&lt;ReadResult&gt; ReadAsync(Stream input)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IO.Stream</span></td>
+        <td><span class="parametername">input</span></td>
+        <td><p>Stream containing OpenAPI description to parse.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<a class="xref" href="Microsoft.OpenApi.Readers.ReadResult.html">ReadResult</a>&gt;</td>
+        <td><p>Instance result containing newly created OpenApiDocument and diagnostics object from the process</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_OpenApiStreamReader_ReadFragment__1_System_IO_Stream_Microsoft_OpenApi_OpenApiSpecVersion_Microsoft_OpenApi_Readers_OpenApiDiagnostic__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.OpenApiStreamReader.ReadFragment%60%601(System.IO.Stream%2CMicrosoft.OpenApi.OpenApiSpecVersion%2CMicrosoft.OpenApi.Readers.OpenApiDiagnostic%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/OpenApiStreamReader.cs/#L86">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Readers_OpenApiStreamReader_ReadFragment_" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader.ReadFragment*"></a>
+  <h4 id="Microsoft_OpenApi_Readers_OpenApiStreamReader_ReadFragment__1_System_IO_Stream_Microsoft_OpenApi_OpenApiSpecVersion_Microsoft_OpenApi_Readers_OpenApiDiagnostic__" data-uid="Microsoft.OpenApi.Readers.OpenApiStreamReader.ReadFragment``1(System.IO.Stream,Microsoft.OpenApi.OpenApiSpecVersion,Microsoft.OpenApi.Readers.OpenApiDiagnostic@)">ReadFragment&lt;T&gt;(Stream, OpenApiSpecVersion, out OpenApiDiagnostic)</h4>
+  <div class="markdown level1 summary"><p>Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T ReadFragment&lt;T&gt;(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic)
+    where T : IOpenApiReferenceable</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IO.Stream</span></td>
+        <td><span class="parametername">input</span></td>
+        <td><p>Stream containing OpenAPI description to parse.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.OpenApiSpecVersion.html">OpenApiSpecVersion</a></td>
+        <td><span class="parametername">version</span></td>
+        <td><p>Version of the OpenAPI specification that the fragment conforms to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Readers.OpenApiDiagnostic.html">OpenApiDiagnostic</a></td>
+        <td><span class="parametername">diagnostic</span></td>
+        <td><p>Returns diagnostic object containing errors detected during parsing</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><p>Instance of newly created OpenApiDocument</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Microsoft.OpenApi.Readers.Interface.IOpenApiReader-2.html">IOpenApiReader&lt;TInput, TDiagnostic&gt;</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Readers_OpenApiStreamReader.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Readers.OpenApiStreamReader%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi.Readers/OpenApiStreamReader.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

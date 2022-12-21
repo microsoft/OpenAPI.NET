@@ -1,0 +1,1662 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class OpenApiVisitorBase
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class OpenApiVisitorBase
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase">
+  
+  
+  <h1 id="Microsoft_OpenApi_Services_OpenApiVisitorBase" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase" class="text-break">Class OpenApiVisitorBase
+  </h1>
+  <div class="markdown level0 summary"><p>Open API visitor base provides common logic for concrete visitors</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">OpenApiVisitorBase</span></div>
+      <div class="level2"><a class="xref" href="Microsoft.OpenApi.Services.OpenApiReferenceResolver.html">OpenApiReferenceResolver</a></div>
+      <div class="level2"><a class="xref" href="Microsoft.OpenApi.Services.OperationSearch.html">OperationSearch</a></div>
+      <div class="level2"><a class="xref" href="Microsoft.OpenApi.Validations.OpenApiValidator.html">OpenApiValidator</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Microsoft.OpenApi.Services.html">Microsoft.OpenApi.Services</a></h6>
+  <h6><strong>Assembly</strong>: Microsoft.OpenApi.dll</h6>
+  <h5 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class OpenApiVisitorBase</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_CurrentKeys.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.CurrentKeys%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L22">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_CurrentKeys_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.CurrentKeys*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_CurrentKeys" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.CurrentKeys">CurrentKeys</h4>
+  <div class="markdown level1 summary"><p>Properties available to identify context of where an object is within OpenAPI Document</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CurrentKeys CurrentKeys { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Services.CurrentKeys.html">CurrentKeys</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_PathString.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.PathString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L44">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_PathString_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.PathString*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_PathString" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.PathString">PathString</h4>
+  <div class="markdown level1 summary"><p>Pointer to source of validation error in document</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string PathString { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Enter_System_String_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Enter(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L28">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Enter_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Enter*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Enter_System_String_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Enter(System.String)">Enter(String)</h4>
+  <div class="markdown level1 summary"><p>Allow Rule to indicate validation error occured at a deeper context level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Enter(string segment)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">segment</span></td>
+        <td><p>Identifier for context</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Exit.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Exit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L36">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Exit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Exit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Exit" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Exit">Exit()</h4>
+  <div class="markdown level1 summary"><p>Exit from path context elevel.  Enter and Exit calls should be matched.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Exit()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtensible_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L310">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtensible_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtensible)">Visit(IOpenApiExtensible)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtensible.html">IOpenApiExtensible</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IOpenApiExtensible openApiExtensible)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtensible.html">IOpenApiExtensible</a></td>
+        <td><span class="parametername">openApiExtensible</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtension_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L317">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiExtension_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Interfaces.IOpenApiExtension)">Visit(IOpenApiExtension)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtension.html">IOpenApiExtension</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IOpenApiExtension openApiExtension)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiExtension.html">IOpenApiExtension</a></td>
+        <td><span class="parametername">openApiExtension</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiReferenceable_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Interfaces.IOpenApiReferenceable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L347">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Interfaces_IOpenApiReferenceable_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Interfaces.IOpenApiReferenceable)">Visit(IOpenApiReferenceable)</h4>
+  <div class="markdown level1 summary"><p>Visits IOpenApiReferenceable instances that are references and not in components</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IOpenApiReferenceable referenceable)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Interfaces.IOpenApiReferenceable.html">IOpenApiReferenceable</a></td>
+        <td><span class="parametername">referenceable</span></td>
+        <td><p>referenced object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiCallback_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiCallback)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L247">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiCallback_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiCallback)">Visit(OpenApiCallback)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiCallback.html">OpenApiCallback</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiCallback callback)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiCallback.html">OpenApiCallback</a></td>
+        <td><span class="parametername">callback</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiComponents_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiComponents)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L211">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiComponents_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiComponents)">Visit(OpenApiComponents)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiComponents.html">OpenApiComponents</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiComponents components)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiComponents.html">OpenApiComponents</a></td>
+        <td><span class="parametername">components</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiContact_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiContact)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L69">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiContact_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiContact)">Visit(OpenApiContact)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiContact.html">OpenApiContact</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiContact contact)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiContact.html">OpenApiContact</a></td>
+        <td><span class="parametername">contact</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiDocument_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiDocument)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L55">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiDocument_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiDocument)">Visit(OpenApiDocument)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiDocument.html">OpenApiDocument</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiDocument doc)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiDocument.html">OpenApiDocument</a></td>
+        <td><span class="parametername">doc</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiEncoding_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiEncoding)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L197">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiEncoding_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiEncoding)">Visit(OpenApiEncoding)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiEncoding.html">OpenApiEncoding</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiEncoding encoding)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiEncoding.html">OpenApiEncoding</a></td>
+        <td><span class="parametername">encoding</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiExample_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiExample)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L289">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiExample_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiExample)">Visit(OpenApiExample)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiExample example)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a></td>
+        <td><span class="parametername">example</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiExternalDocs_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiExternalDocs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L219">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiExternalDocs_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiExternalDocs)">Visit(OpenApiExternalDocs)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiComponents.html">OpenApiComponents</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiExternalDocs externalDocs)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiExternalDocs.html">OpenApiExternalDocs</a></td>
+        <td><span class="parametername">externalDocs</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiHeader_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiHeader)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L261">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiHeader_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiHeader)">Visit(OpenApiHeader)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiHeader.html">OpenApiHeader</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiHeader tag)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiHeader.html">OpenApiHeader</a></td>
+        <td><span class="parametername">tag</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiInfo_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiInfo)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L62">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiInfo_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiInfo)">Visit(OpenApiInfo)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiInfo.html">OpenApiInfo</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiInfo info)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiInfo.html">OpenApiInfo</a></td>
+        <td><span class="parametername">info</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiLicense_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiLicense)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L77">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiLicense_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiLicense)">Visit(OpenApiLicense)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiLicense.html">OpenApiLicense</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiLicense license)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiLicense.html">OpenApiLicense</a></td>
+        <td><span class="parametername">license</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiLink_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiLink)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L240">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiLink_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiLink)">Visit(OpenApiLink)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiLink.html">OpenApiLink</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiLink link)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiLink.html">OpenApiLink</a></td>
+        <td><span class="parametername">link</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiMediaType_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiMediaType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L190">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiMediaType_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiMediaType)">Visit(OpenApiMediaType)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiMediaType.html">OpenApiMediaType</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiMediaType mediaType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiMediaType.html">OpenApiMediaType</a></td>
+        <td><span class="parametername">mediaType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiOAuthFlow_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiOAuthFlow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L268">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiOAuthFlow_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiOAuthFlow)">Visit(OpenApiOAuthFlow)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiOAuthFlow.html">OpenApiOAuthFlow</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiOAuthFlow openApiOAuthFlow)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiOAuthFlow.html">OpenApiOAuthFlow</a></td>
+        <td><span class="parametername">openApiOAuthFlow</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiOperation_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiOperation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L126">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiOperation_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiOperation)">Visit(OpenApiOperation)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiOperation.html">OpenApiOperation</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiOperation operation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiOperation.html">OpenApiOperation</a></td>
+        <td><span class="parametername">operation</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiParameter_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiParameter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L140">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiParameter_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiParameter)">Visit(OpenApiParameter)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiParameter.html">OpenApiParameter</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiParameter parameter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiParameter.html">OpenApiParameter</a></td>
+        <td><span class="parametername">parameter</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiPathItem_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiPathItem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L105">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiPathItem_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiPathItem)">Visit(OpenApiPathItem)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiPathItem.html">OpenApiPathItem</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiPathItem pathItem)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiPathItem.html">OpenApiPathItem</a></td>
+        <td><span class="parametername">pathItem</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiPaths_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiPaths)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L98">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiPaths_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiPaths)">Visit(OpenApiPaths)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiPaths.html">OpenApiPaths</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiPaths paths)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiPaths.html">OpenApiPaths</a></td>
+        <td><span class="parametername">paths</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiRequestBody_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiRequestBody)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L147">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiRequestBody_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiRequestBody)">Visit(OpenApiRequestBody)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiRequestBody.html">OpenApiRequestBody</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiRequestBody requestBody)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiRequestBody.html">OpenApiRequestBody</a></td>
+        <td><span class="parametername">requestBody</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiResponse_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiResponse)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L169">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiResponse_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiResponse)">Visit(OpenApiResponse)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponse.html">OpenApiResponse</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiResponse response)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponse.html">OpenApiResponse</a></td>
+        <td><span class="parametername">response</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiResponses_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiResponses)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L176">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiResponses_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiResponses)">Visit(OpenApiResponses)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponses.html">OpenApiResponses</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiResponses response)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiResponses.html">OpenApiResponses</a></td>
+        <td><span class="parametername">response</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSchema_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiSchema)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L226">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSchema_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiSchema)">Visit(OpenApiSchema)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiSchema.html">OpenApiSchema</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiSchema schema)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiSchema.html">OpenApiSchema</a></td>
+        <td><span class="parametername">schema</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSecurityRequirement_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiSecurityRequirement)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L275">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSecurityRequirement_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiSecurityRequirement)">Visit(OpenApiSecurityRequirement)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityRequirement.html">OpenApiSecurityRequirement</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiSecurityRequirement securityRequirement)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityRequirement.html">OpenApiSecurityRequirement</a></td>
+        <td><span class="parametername">securityRequirement</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSecurityScheme_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiSecurityScheme)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L282">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiSecurityScheme_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiSecurityScheme)">Visit(OpenApiSecurityScheme)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityScheme.html">OpenApiSecurityScheme</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiSecurityScheme securityScheme)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityScheme.html">OpenApiSecurityScheme</a></td>
+        <td><span class="parametername">securityScheme</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiServer_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiServer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L91">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiServer_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiServer)">Visit(OpenApiServer)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiServer.html">OpenApiServer</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiServer server)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiServer.html">OpenApiServer</a></td>
+        <td><span class="parametername">server</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiServerVariable_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiServerVariable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L112">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiServerVariable_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiServerVariable)">Visit(OpenApiServerVariable)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiServerVariable.html">OpenApiServerVariable</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiServerVariable serverVariable)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiServerVariable.html">OpenApiServerVariable</a></td>
+        <td><span class="parametername">serverVariable</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiTag_.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiTag)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L254">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_Microsoft_OpenApi_Models_OpenApiTag_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(Microsoft.OpenApi.Models.OpenApiTag)">Visit(OpenApiTag)</h4>
+  <div class="markdown level1 summary"><p>Visits <a class="xref" href="Microsoft.OpenApi.Models.OpenApiTag.html">OpenApiTag</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(OpenApiTag tag)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Microsoft.OpenApi.Models.OpenApiTag.html">OpenApiTag</a></td>
+        <td><span class="parametername">tag</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_Microsoft_OpenApi_Models_OperationType_Microsoft_OpenApi_Models_OpenApiOperation__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary%7BMicrosoft.OpenApi.Models.OperationType%2CMicrosoft.OpenApi.Models.OpenApiOperation%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L119">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_Microsoft_OpenApi_Models_OperationType_Microsoft_OpenApi_Models_OpenApiOperation__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary{Microsoft.OpenApi.Models.OperationType,Microsoft.OpenApi.Models.OpenApiOperation})">Visit(IDictionary&lt;OperationType, OpenApiOperation&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits the operations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IDictionary&lt;OperationType, OpenApiOperation&gt; operations)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="Microsoft.OpenApi.Models.OperationType.html">OperationType</a>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiOperation.html">OpenApiOperation</a>&gt;</td>
+        <td><span class="parametername">operations</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiCallback__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiCallback%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L162">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiCallback__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiCallback})">Visit(IDictionary&lt;String, OpenApiCallback&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits callbacks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IDictionary&lt;string, OpenApiCallback&gt; callbacks)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiCallback.html">OpenApiCallback</a>&gt;</td>
+        <td><span class="parametername">callbacks</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiEncoding__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiEncoding%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L339">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiEncoding__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiEncoding})">Visit(IDictionary&lt;String, OpenApiEncoding&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits a dictionary of encodings</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IDictionary&lt;string, OpenApiEncoding&gt; encodings)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiEncoding.html">OpenApiEncoding</a>&gt;</td>
+        <td><span class="parametername">encodings</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiExample__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiExample%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L204">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiExample__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiExample})">Visit(IDictionary&lt;String, OpenApiExample&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits the examples.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IDictionary&lt;string, OpenApiExample&gt; examples)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a>&gt;</td>
+        <td><span class="parametername">examples</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiHeader__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiHeader%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L155">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiHeader__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiHeader})">Visit(IDictionary&lt;String, OpenApiHeader&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits headers.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IDictionary&lt;string, OpenApiHeader&gt; headers)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiHeader.html">OpenApiHeader</a>&gt;</td>
+        <td><span class="parametername">headers</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiLink__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiLink%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L233">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiLink__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiLink})">Visit(IDictionary&lt;String, OpenApiLink&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits the links.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IDictionary&lt;string, OpenApiLink&gt; links)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiLink.html">OpenApiLink</a>&gt;</td>
+        <td><span class="parametername">links</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiMediaType__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiMediaType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L183">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiMediaType__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiMediaType})">Visit(IDictionary&lt;String, OpenApiMediaType&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits media type content.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IDictionary&lt;string, OpenApiMediaType&gt; content)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiMediaType.html">OpenApiMediaType</a>&gt;</td>
+        <td><span class="parametername">content</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiServerVariable__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary%7BSystem.String%2CMicrosoft.OpenApi.Models.OpenApiServerVariable%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L331">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IDictionary_System_String_Microsoft_OpenApi_Models_OpenApiServerVariable__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IDictionary{System.String,Microsoft.OpenApi.Models.OpenApiServerVariable})">Visit(IDictionary&lt;String, OpenApiServerVariable&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits a dictionary of server variables</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IDictionary&lt;string, OpenApiServerVariable&gt; serverVariables)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Microsoft.OpenApi.Models.OpenApiServerVariable.html">OpenApiServerVariable</a>&gt;</td>
+        <td><span class="parametername">serverVariables</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiExample__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList%7BMicrosoft.OpenApi.Models.OpenApiExample%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L324">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiExample__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList{Microsoft.OpenApi.Models.OpenApiExample})">Visit(IList&lt;OpenApiExample&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits list of <a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IList&lt;OpenApiExample&gt; example)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Microsoft.OpenApi.Models.OpenApiExample.html">OpenApiExample</a>&gt;</td>
+        <td><span class="parametername">example</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiParameter__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList%7BMicrosoft.OpenApi.Models.OpenApiParameter%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L133">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiParameter__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList{Microsoft.OpenApi.Models.OpenApiParameter})">Visit(IList&lt;OpenApiParameter&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits list of <a class="xref" href="Microsoft.OpenApi.Models.OpenApiParameter.html">OpenApiParameter</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IList&lt;OpenApiParameter&gt; parameters)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Microsoft.OpenApi.Models.OpenApiParameter.html">OpenApiParameter</a>&gt;</td>
+        <td><span class="parametername">parameters</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiSecurityRequirement__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList%7BMicrosoft.OpenApi.Models.OpenApiSecurityRequirement%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L303">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiSecurityRequirement__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList{Microsoft.OpenApi.Models.OpenApiSecurityRequirement})">Visit(IList&lt;OpenApiSecurityRequirement&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits list of <a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityRequirement.html">OpenApiSecurityRequirement</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IList&lt;OpenApiSecurityRequirement&gt; openApiSecurityRequirements)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Microsoft.OpenApi.Models.OpenApiSecurityRequirement.html">OpenApiSecurityRequirement</a>&gt;</td>
+        <td><span class="parametername">openApiSecurityRequirements</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiServer__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList%7BMicrosoft.OpenApi.Models.OpenApiServer%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L84">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiServer__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList{Microsoft.OpenApi.Models.OpenApiServer})">Visit(IList&lt;OpenApiServer&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits list of <a class="xref" href="Microsoft.OpenApi.Models.OpenApiServer.html">OpenApiServer</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IList&lt;OpenApiServer&gt; servers)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Microsoft.OpenApi.Models.OpenApiServer.html">OpenApiServer</a>&gt;</td>
+        <td><span class="parametername">servers</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiTag__.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList%7BMicrosoft.OpenApi.Models.OpenApiTag%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L296">View Source</a>
+  </span>
+  <a id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit*"></a>
+  <h4 id="Microsoft_OpenApi_Services_OpenApiVisitorBase_Visit_System_Collections_Generic_IList_Microsoft_OpenApi_Models_OpenApiTag__" data-uid="Microsoft.OpenApi.Services.OpenApiVisitorBase.Visit(System.Collections.Generic.IList{Microsoft.OpenApi.Models.OpenApiTag})">Visit(IList&lt;OpenApiTag&gt;)</h4>
+  <div class="markdown level1 summary"><p>Visits list of <a class="xref" href="Microsoft.OpenApi.Models.OpenApiTag.html">OpenApiTag</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Visit(IList&lt;OpenApiTag&gt; openApiTags)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Microsoft.OpenApi.Models.OpenApiTag.html">OpenApiTag</a>&gt;</td>
+        <td><span class="parametername">openApiTags</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/new/mk/setup-docFX/apiSpec/new?filename=Microsoft_OpenApi_Services_OpenApiVisitorBase.md&amp;value=---%0Auid%3A%20Microsoft.OpenApi.Services.OpenApiVisitorBase%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/microsoft/OpenAPI.NET/blob/mk/setup-docFX/src/Microsoft.OpenApi/Services/OpenApiVisitorBase.cs/#L15" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
