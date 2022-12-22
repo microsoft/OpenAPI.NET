@@ -2088,7 +2088,7 @@
           "hash": "mWDI+GqqxG9HUCTzECEYVN6bpn1c3wWP0qzS/jw54YI="
         }
       },
-      "is_incremental": false,
+      "is_incremental": true,
       "version": ""
     },
     {
@@ -2176,7 +2176,7 @@
           "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 3,
-          "skipped_file_count": 2
+          "skipped_file_count": 3
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
