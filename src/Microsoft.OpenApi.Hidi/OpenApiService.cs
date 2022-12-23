@@ -535,5 +535,119 @@ namespace Microsoft.OpenApi.Hidi
                     .SetMinimumLevel(loglevel);
             });
         }
+
+        internal static async Task ShowOpenApiDocument(string openapi, FileInfo output, LogLevel logLevel, CancellationToken cancellationToken)
+        {
+            using var loggerFactory = Logger.ConfigureLogger(logLevel);
+            var logger = loggerFactory.CreateLogger<OpenApiService>();
+            try
+            {
+                if (string.IsNullOrEmpty(openapi))
+                {
+                    throw new ArgumentNullException(nameof(openapi));
+                }
+                var stream = await GetStream(openapi, logger, cancellationToken);
+
+                OpenApiDocument document;
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                using (logger.BeginScope($"Parsing OpenAPI: {openapi}", openapi))
+                {
+                    stopwatch.Start();
+
+                    var result = await new OpenApiStreamReader(new OpenApiReaderSettings
+                    {
+                        RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                    }
+                    ).ReadAsync(stream);
+
+                    logger.LogTrace("{timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
+
+                    document = result.OpenApiDocument;
+                    var context = result.OpenApiDiagnostic;
+                    if (context.Errors.Count != 0)
+                    {
+                        using (logger.BeginScope("Detected errors"))
+                        {
+                            foreach (var error in context.Errors)
+                            {
+                                logger.LogError(error.ToString());
+                            }
+                        }
+                    }
+                    stopwatch.Stop();
+                }
+
+                using (logger.BeginScope("Creating diagram"))
+                {
+                    // Create OpenApiUrlTree from document
+
+                    using var file = new FileStream(output.FullName, FileMode.Create);
+                    var writer = new StreamWriter(file);
+                    WriteTreeDocument(openapi, document, writer);
+                    writer.Flush();
+
+                    logger.LogTrace("Finished walking through the OpenApi document. ");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Could not generate the document, reason: {ex.Message}", ex);
+            }
+        }
+
+        private static void WriteTreeDocument(string openapi, OpenApiDocument document, StreamWriter writer)
+        {
+            var rootNode = OpenApiUrlTreeNode.Create(document, "main");
+
+            writer.WriteLine("# " + document.Info.Title);
+            writer.WriteLine();
+            writer.WriteLine("OpenAPI: " + openapi);
+            writer.Write(@"<div>
+<span style=""padding:2px;background-color:lightSteelBlue"">GET</span>
+<span style=""padding:2px;background-color:SteelBlue"">POST</span>
+<span style=""padding:2px;background-color:forestGreen"">GET POST</span>
+<span style=""padding:2px;background-color:yellowGreen"">GET PATCH DELETE</span>
+<span style=""padding:2px;background-color:olive"">GET PUT DELETE</span>
+<span style=""padding:2px;background-color:darkseagreen"">GET DELETE</span>
+<span style=""padding:2px;background-color:tomato"">DELETE</span>
+</div>
+");
+            writer.WriteLine();
+            writer.WriteLine("```mermaid");
+            writer.WriteLine("graph LR");
+            writer.WriteLine("classDef GET fill:lightSteelBlue,stroke:#333,stroke-width:2px;");
+            writer.WriteLine("classDef POST fill:SteelBlue,stroke:#333,stroke-width:2px;");
+            writer.WriteLine("classDef GETPOST fill:forestGreen,stroke:#333,stroke-width:2px;");
+            writer.WriteLine("classDef DELETEGETPATCH fill:yellowGreen,stroke:#333,stroke-width:2px;");
+            writer.WriteLine("classDef DELETEGETPUT fill:olive,stroke:#333,stroke-width:2px;");
+            writer.WriteLine("classDef DELETEGET fill:DarkSeaGreen,stroke:#333,stroke-width:2px;");
+            writer.WriteLine("classDef DELETE fill:tomato,stroke:#333,stroke-width:2px;");
+            writer.WriteLine("classDef OTHER fill:white,stroke:#333,stroke-width:2px;");
+
+            ProcessNode(rootNode, writer);
+            writer.WriteLine("```");
+        }
+
+        private static void ProcessNode(OpenApiUrlTreeNode node, StreamWriter writer)
+        {
+            var path = string.IsNullOrEmpty(node.Path) ? "/" : Sanitize(node.Path);
+            foreach (var child in node.Children)
+            {
+                writer.WriteLine($"{Sanitize(path)} --> {Sanitize(child.Value.Path)}[{Sanitize(child.Key)}]");
+                ProcessNode(child.Value, writer);
+            }
+            var methods = String.Join("", node.PathItems.SelectMany(p => p.Value.Operations.Select(o => o.Key))
+                .Distinct()
+                .Select(o => o.ToString().ToUpper())
+                .OrderBy(o => o)
+                .ToList());
+            if (String.IsNullOrEmpty(methods)) methods = "OTHER";
+            writer.WriteLine($"class {path} {methods}");
+        }
+        
+        private static string Sanitize(string token)
+        {
+            return token.Replace("\\", "/").Replace("{", ":").Replace("}", "");
+        }
     }
 }

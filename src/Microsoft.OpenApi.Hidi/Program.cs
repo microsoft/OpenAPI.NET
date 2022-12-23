@@ -115,6 +115,22 @@ namespace Microsoft.OpenApi.Hidi
                 InlineExternalOption = inlineExternalOption
             };
 
+            var showCommand = new Command("show")
+            {
+                descriptionOption,
+                logLevelOption,
+                outputOption,
+                cleanOutputOption
+            };
+
+            showCommand.Handler = new ShowCommandHandler 
+            {
+                DescriptionOption = descriptionOption,
+                OutputOption = outputOption,
+                LogLevelOption = logLevelOption
+            };
+
+            rootCommand.Add(showCommand);
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
             
