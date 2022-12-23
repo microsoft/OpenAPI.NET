@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 
@@ -234,6 +235,64 @@ namespace Microsoft.OpenApi.Services
                     AdditionalData.Add(item.Key, item.Value);
                 }
             }
+        }
+
+        /// <summary>
+        /// Write tree as Mermaid syntax
+        /// </summary>
+        /// <param name="writer">StreamWriter to write the Mermaid content to</param>
+        public void WriteMermaid(StreamWriter writer)
+        {
+            writer.WriteLine("graph LR");
+            foreach (var color in MermaidColorScheme)
+            {
+                writer.WriteLine($"classDef {color.Key} fill:{color.Value},stroke:#333,stroke-width:4px");
+            }
+
+            ProcessNode(this, writer);
+        }
+
+        /// <summary>
+        /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, uppercased, concatenated HTTP methods.
+        /// </summary>
+        public static Dictionary<string, string> MermaidColorScheme = new Dictionary<string, string>
+        {
+            { "GET", "lightSteelBlue" },
+            { "POST", "SteelBlue" },
+            { "GET_POST", "forestGreen" },
+            { "DELETE_GET_PATCH", "yellowGreen" },
+            { "DELETE_GET_PUT", "olive" },
+            { "DELETE_GET", "DarkSeaGreen" },
+            { "DELETE", "tomato" },
+            { "OTHER", "white" }
+        };
+        
+        private static void ProcessNode(OpenApiUrlTreeNode node, StreamWriter writer)
+        {
+            var path = string.IsNullOrEmpty(node.Path) ? "/" : SanitizeMermaidNode(node.Path);
+            foreach (var child in node.Children)
+            {
+                writer.WriteLine($"{path} --> {SanitizeMermaidNode(child.Value.Path)}[\"{child.Key}\"]");
+                ProcessNode(child.Value, writer);
+            }
+            var methods = String.Join("_", node.PathItems.SelectMany(p => p.Value.Operations.Select(o => o.Key))
+                .Distinct()
+                .Select(o => o.ToString().ToUpper())
+                .OrderBy(o => o)
+                .ToList());
+            if (String.IsNullOrEmpty(methods)) methods = "OTHER";
+            writer.WriteLine($"class {path} {methods}");
+        }
+
+        private static string SanitizeMermaidNode(string token)
+        {
+            return token.Replace("\\", "/")
+                    .Replace("{", ":")
+                    .Replace("}", "")
+                    .Replace(".", "_")
+                    .Replace(";", "_")
+                    .Replace("-", "_")
+                    .Replace("default", "def_ault");  // default is a reserved word for classes
         }
     }
 }
