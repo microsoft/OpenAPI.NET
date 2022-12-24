@@ -605,11 +605,11 @@ namespace Microsoft.OpenApi.Hidi
 
             writer.WriteLine(@"<div>");
             // write a span for each mermaidcolorscheme
-            foreach (var color in OpenApiUrlTreeNode.MermaidColorScheme)
+            foreach (var style in OpenApiUrlTreeNode.MermaidNodeStyles)
             {
-                writer.WriteLine($"<span style=\"padding:2px;background-color:{color.Value}\">{color.Key.Replace("_"," ")}</span>");
+                writer.WriteLine($"<span style=\"padding:2px;background-color:{style.Value.Color};border: 2px solid\">{style.Key.Replace("_"," ")}</span>");
             }
-            writer.WriteLine("/div");
+            writer.WriteLine("</div>");
             writer.WriteLine();
             writer.WriteLine("```mermaid");
             rootNode.WriteMermaid(writer);
