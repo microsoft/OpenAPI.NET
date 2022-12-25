@@ -265,7 +265,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     throw new ArgumentNullException(nameof(openapi));
                 }
-                var stream = await GetStream(openapi, logger, cancellationToken);
+                using var stream = await GetStream(openapi, logger, cancellationToken);
 
                 OpenApiDocument document;
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -546,7 +546,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     throw new ArgumentNullException(nameof(openapi));
                 }
-                var stream = await GetStream(openapi, logger, cancellationToken);
+                using var stream = await GetStream(openapi, logger, cancellationToken);
 
                 OpenApiDocument document;
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -584,7 +584,6 @@ namespace Microsoft.OpenApi.Hidi
                     using var file = new FileStream(output.FullName, FileMode.Create);
                     using var writer = new StreamWriter(file);
                     WriteTreeDocument(openapi, document, writer);
-                    writer.Flush();
 
                     logger.LogTrace("Finished walking through the OpenApi document. ");
                 }
