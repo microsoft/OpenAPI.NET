@@ -582,7 +582,7 @@ namespace Microsoft.OpenApi.Hidi
                     // Create OpenApiUrlTree from document
 
                     using var file = new FileStream(output.FullName, FileMode.Create);
-                    var writer = new StreamWriter(file);
+                    using var writer = new StreamWriter(file);
                     WriteTreeDocument(openapi, document, writer);
                     writer.Flush();
 
