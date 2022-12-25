@@ -288,8 +288,8 @@ namespace Microsoft.OpenApi.Services
         {
             return String.Join("_", node.PathItems.SelectMany(p => p.Value.Operations.Select(o => o.Key))
                 .Distinct()
-                .Select(static o => o.ToString().ToUpper())
-                .Order()
+                .Select(o => o.ToString().ToUpper())
+                .OrderBy(o => o)
                 .ToList());
         }
 
