@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, uppercased, concatenated HTTP methods.
         /// </summary>
-        public static Dictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>
+        public static Dictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>(StringComparer.OrdinalIgnoreCase)
         {
             { "GET", new MermaidNodeStyle("lightSteelBlue", MermaidNodeShape.SquareCornerRectangle) },
             { "POST", new MermaidNodeStyle("Lightcoral", MermaidNodeShape.OddShape) },
