@@ -299,7 +299,7 @@ namespace Microsoft.OpenApi.Services
             if (MermaidNodeStyles.TryGetValue(methods, out var style))
             {
                 //switch on shape
-                switch (MermaidNodeStyles[methods].Shape)
+                switch (style.Shape)
                 {
                     case MermaidNodeShape.Circle:
                         return ("((", "))");
