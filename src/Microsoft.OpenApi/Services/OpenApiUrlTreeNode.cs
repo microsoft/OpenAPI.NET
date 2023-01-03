@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -255,7 +256,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Dictionary that maps a set of HTTP methods to HTML color.  Keys are sorted, uppercased, concatenated HTTP methods.
         /// </summary>
-        public static Dictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>(StringComparer.OrdinalIgnoreCase)
+        public readonly static IReadOnlyDictionary<string, MermaidNodeStyle> MermaidNodeStyles = new Dictionary<string, MermaidNodeStyle>(StringComparer.OrdinalIgnoreCase)
         {
             { "GET", new MermaidNodeStyle("lightSteelBlue", MermaidNodeShape.SquareCornerRectangle) },
             { "POST", new MermaidNodeStyle("Lightcoral", MermaidNodeShape.OddShape) },
@@ -341,7 +342,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="color"></param>
         /// <param name="shape"></param>
-        public MermaidNodeStyle(string color, MermaidNodeShape shape)
+        internal MermaidNodeStyle(string color, MermaidNodeShape shape)
         {
             Color = color;
             Shape = shape;
