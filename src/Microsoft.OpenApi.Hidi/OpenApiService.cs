@@ -29,6 +29,7 @@ using System.Xml;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using System.Runtime.CompilerServices;
+using System.Reflection.Metadata;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -110,43 +111,13 @@ namespace Microsoft.OpenApi.Hidi
                 else
                 {
                     stream = await GetStream(openapi, logger, cancellationToken);
-
-                    using (logger.BeginScope($"Parse OpenAPI: {openapi}",openapi))
-                    {
-                        stopwatch.Restart();
-                        var result = await new OpenApiStreamReader(new OpenApiReaderSettings
-                        {
-                            RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
-                            LoadExternalRefs = inlineExternal,
-                            BaseUrl = openapi.StartsWith("http") ? new Uri(openapi) : new Uri("file:" + new FileInfo(openapi).DirectoryName + "\\")
-                        }
-                        ).ReadAsync(stream);
-
-                        document = result.OpenApiDocument;
-
-                        var context = result.OpenApiDiagnostic;
-                        if (context.Errors.Count > 0)
-                        {
-                            logger.LogTrace("{timestamp}ms: Parsed OpenAPI with errors. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
-
-                            var errorReport = new StringBuilder();
-
-                            foreach (var error in context.Errors)
-                            {
-                                logger.LogError("OpenApi Parsing error: {message}", error.ToString());
-                                errorReport.AppendLine(error.ToString());
-                            }
-                            logger.LogError($"{stopwatch.ElapsedMilliseconds}ms: OpenApi Parsing errors {string.Join(Environment.NewLine, context.Errors.Select(e => e.Message).ToArray())}");
-                        }
-                        else
-                        {
-                            logger.LogTrace("{timestamp}ms: Parsed OpenApi successfully. {count} paths found.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
-                        }
-
-                        openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
-                        openApiVersion = version != null ? TryParseOpenApiSpecVersion(version) : result.OpenApiDiagnostic.SpecificationVersion;
-                        stopwatch.Stop();
-                    }
+                    stopwatch.Restart();
+                    var result = await ParseOpenApi(openapi, logger, stream);
+                    document = result.OpenApiDocument;
+                    
+                    openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
+                    openApiVersion = version != null ? TryParseOpenApiSpecVersion(version) : result.OpenApiDiagnostic.SpecificationVersion;
+                    stopwatch.Stop();
                 }
 
                 using (logger.BeginScope("Filter"))
@@ -267,40 +238,13 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 using var stream = await GetStream(openapi, logger, cancellationToken);
 
-                OpenApiDocument document;
-                Stopwatch stopwatch = Stopwatch.StartNew();
-                using (logger.BeginScope($"Parsing OpenAPI: {openapi}", openapi))
-                {
-                    stopwatch.Start();
-
-                    var result = await new OpenApiStreamReader(new OpenApiReaderSettings
-                    {
-                        RuleSet = ValidationRuleSet.GetDefaultRuleSet()
-                    }
-                    ).ReadAsync(stream);
-                    
-                    logger.LogTrace("{timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
-
-                    document = result.OpenApiDocument;
-                    var context = result.OpenApiDiagnostic;
-                    if (context.Errors.Count != 0)
-                    {
-                        using (logger.BeginScope("Detected errors"))
-                        {
-                            foreach (var error in context.Errors)
-                            {
-                                logger.LogError(error.ToString());
-                            }
-                        }
-                    } 
-                    stopwatch.Stop();
-                }
+                var result = await ParseOpenApi(openapi, logger, stream);
 
                 using (logger.BeginScope("Calculating statistics"))
                 {
                     var statsVisitor = new StatsVisitor();
                     var walker = new OpenApiWalker(statsVisitor);
-                    walker.Walk(document);
+                    walker.Walk(result.OpenApiDocument);
 
                     logger.LogTrace("Finished walking through the OpenApi document. Generating a statistics report..");
                     logger.LogInformation(statsVisitor.GetStatisticsReport());
@@ -310,6 +254,29 @@ namespace Microsoft.OpenApi.Hidi
             {
                 throw new InvalidOperationException($"Could not validate the document, reason: {ex.Message}", ex);
             }
+        }
+
+        private static async Task<ReadResult> ParseOpenApi(string openApiFile, ILogger<OpenApiService> logger, Stream stream)
+        {
+            ReadResult result;
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            using (logger.BeginScope($"Parsing OpenAPI: {openApiFile}", openApiFile))
+            {
+                stopwatch.Start();
+
+                result = await new OpenApiStreamReader(new OpenApiReaderSettings
+                {
+                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                }
+                ).ReadAsync(stream);
+
+                logger.LogTrace("{timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
+
+                LogErrors(logger, result);
+                stopwatch.Stop();
+            }
+        
+            return result;
         }
 
         internal static IConfiguration GetConfiguration(string settingsFile)
@@ -548,34 +515,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 using var stream = await GetStream(openapi, logger, cancellationToken);
 
-                OpenApiDocument document;
-                Stopwatch stopwatch = Stopwatch.StartNew();
-                using (logger.BeginScope($"Parsing OpenAPI: {openapi}", openapi))
-                {
-                    stopwatch.Start();
-
-                    var result = await new OpenApiStreamReader(new OpenApiReaderSettings
-                    {
-                        RuleSet = ValidationRuleSet.GetDefaultRuleSet()
-                    }
-                    ).ReadAsync(stream);
-
-                    logger.LogTrace("{timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
-
-                    document = result.OpenApiDocument;
-                    var context = result.OpenApiDiagnostic;
-                    if (context.Errors.Count != 0)
-                    {
-                        using (logger.BeginScope("Detected errors"))
-                        {
-                            foreach (var error in context.Errors)
-                            {
-                                logger.LogError(error.ToString());
-                            }
-                        }
-                    }
-                    stopwatch.Stop();
-                }
+                var result = await ParseOpenApi(openapi, logger, stream);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
@@ -583,7 +523,7 @@ namespace Microsoft.OpenApi.Hidi
 
                     using var file = new FileStream(output.FullName, FileMode.Create);
                     using var writer = new StreamWriter(file);
-                    WriteTreeDocument(openapi, document, writer);
+                    WriteTreeDocument(openapi, result.OpenApiDocument, writer);
 
                     logger.LogTrace("Finished walking through the OpenApi document. ");
                 }
@@ -591,6 +531,21 @@ namespace Microsoft.OpenApi.Hidi
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Could not generate the document, reason: {ex.Message}", ex);
+            }
+        }
+
+        private static void LogErrors(ILogger<OpenApiService> logger, ReadResult result)
+        {
+            var context = result.OpenApiDiagnostic;
+            if (context.Errors.Count != 0)
+            {
+                using (logger.BeginScope("Detected errors"))
+                {
+                    foreach (var error in context.Errors)
+                    {
+                        logger.LogError(error.ToString());
+                    }
+                }
             }
         }
 
