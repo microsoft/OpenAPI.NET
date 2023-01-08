@@ -549,13 +549,13 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static void WriteTreeDocument(string openapi, OpenApiDocument document, StreamWriter writer)
+        internal static void WriteTreeDocument(string openapiUrl, OpenApiDocument document, StreamWriter writer)
         {
             var rootNode = OpenApiUrlTreeNode.Create(document, "main");
 
             writer.WriteLine("# " + document.Info.Title);
             writer.WriteLine();
-            writer.WriteLine("OpenAPI: " + openapi);
+            writer.WriteLine("OpenAPI: " + openapiUrl);
 
             writer.WriteLine(@"<div>");
             // write a span for each mermaidcolorscheme

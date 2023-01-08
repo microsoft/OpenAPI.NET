@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Services
         /// Write tree as Mermaid syntax
         /// </summary>
         /// <param name="writer">StreamWriter to write the Mermaid content to</param>
-        public void WriteMermaid(StreamWriter writer)
+        public void WriteMermaid(TextWriter writer)
         {
             writer.WriteLine("graph LR");
             foreach (var style in MermaidNodeStyles)
@@ -269,7 +269,7 @@ namespace Microsoft.OpenApi.Services
             { "OTHER", new MermaidNodeStyle("White", MermaidNodeShape.SquareCornerRectangle) },
         };
         
-        private static void ProcessNode(OpenApiUrlTreeNode node, StreamWriter writer)
+        private static void ProcessNode(OpenApiUrlTreeNode node, TextWriter writer)
         {
             var path = string.IsNullOrEmpty(node.Path) ? "/" : SanitizeMermaidNode(node.Path);
             var methods = GetMethods(node);

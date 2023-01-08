@@ -1,10 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Services;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
@@ -70,6 +74,25 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Assert.NotNull(settings);
             }
+        }
+
+        [Fact]
+        public void ShowCommandGeneratesMermaidDiagram()
+        {
+            var openApiDoc = new OpenApiDocument();
+            openApiDoc.Info = new OpenApiInfo
+            {
+                Title = "Test",
+                Version = "1.0.0"
+            };
+            var stream = new MemoryStream();
+            using var writer = new StreamWriter(stream);
+            OpenApiService.WriteTreeDocument("https://example.org/openapi.json", openApiDoc, writer);
+            writer.Flush();
+            stream.Position = 0;
+            using var reader = new StreamReader(stream);
+            var output = reader.ReadToEnd();
+            Assert.Contains("graph LR", output);
         }
     }
 }

@@ -1118,7 +1118,7 @@ namespace Microsoft.OpenApi.Services
         public void Attach(Microsoft.OpenApi.Models.OpenApiDocument doc, string label) { }
         public Microsoft.OpenApi.Services.OpenApiUrlTreeNode Attach(string path, Microsoft.OpenApi.Models.OpenApiPathItem pathItem, string label) { }
         public bool HasOperations(string label) { }
-        public void WriteMermaid(System.IO.StreamWriter writer) { }
+        public void WriteMermaid(System.IO.TextWriter writer) { }
         public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create() { }
         public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create(Microsoft.OpenApi.Models.OpenApiDocument doc, string label) { }
     }
