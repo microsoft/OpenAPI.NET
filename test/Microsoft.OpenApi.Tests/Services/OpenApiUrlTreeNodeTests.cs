@@ -19,9 +19,27 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             Paths = new OpenApiPaths()
             {
-                ["/"] = new OpenApiPathItem(),
-                ["/houses"] = new OpenApiPathItem(),
+                ["/"] = new OpenApiPathItem() {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    {
+                        [OperationType.Get] = new OpenApiOperation(),
+                    }
+                },
+                ["/houses"] = new OpenApiPathItem()
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    {
+                        [OperationType.Get] = new OpenApiOperation(),
+                        [OperationType.Post] = new OpenApiOperation()
+                    }
+                },
                 ["/cars"] = new OpenApiPathItem()
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    {
+                        [OperationType.Post] = new OpenApiOperation()
+                    }
+                }
             }
         };
 

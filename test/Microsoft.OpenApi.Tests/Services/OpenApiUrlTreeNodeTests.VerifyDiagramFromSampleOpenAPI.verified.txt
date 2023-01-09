@@ -8,8 +8,8 @@ classDef DELETE_GET_PUT fill:olive,stroke:#333,stroke-width:2px
 classDef DELETE_GET fill:DarkSeaGreen,stroke:#333,stroke-width:2px
 classDef DELETE fill:Tomato,stroke:#333,stroke-width:2px
 classDef OTHER fill:White,stroke:#333,stroke-width:2px
-/["/"] --> /houses["houses"]
-class /houses OTHER
-/["/"] --> /cars["cars"]
-class /cars OTHER
-class / OTHER
+/["/"] --> /houses("houses")
+class /houses GET_POST
+/["/"] --> /cars>"cars"]
+class /cars POST
+class / GET
