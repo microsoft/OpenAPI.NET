@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Hidi
                         if (!string.IsNullOrEmpty(csdlFilter))
                         {
                             XslCompiledTransform transform = GetFilterTransform();
-                            stream = ApplyFilter(csdl, csdlFilter, transform);
+                            stream = csdl.StartsWith("http") ? ApplyFilter(stream, csdlFilter, transform) : ApplyFilter(csdl, csdlFilter, transform);
                             stream.Position = 0;
                         }
 
@@ -235,10 +235,9 @@ namespace Microsoft.OpenApi.Hidi
             return transform;
         }
 
-        private static Stream ApplyFilter(string csdl, string entitySetOrSingleton, XslCompiledTransform transform)
+        private static Stream ApplyFilterForStreamReader(StreamReader inputReader, string entitySetOrSingleton, XslCompiledTransform transform)
         {
             Stream stream;
-            StreamReader inputReader = new(csdl);
             XmlReader inputXmlReader = XmlReader.Create(inputReader);
             MemoryStream filteredStream = new();
             StreamWriter writer = new(filteredStream);
@@ -246,7 +245,20 @@ namespace Microsoft.OpenApi.Hidi
             args.AddParam("entitySetOrSingleton", "", entitySetOrSingleton);
             transform.Transform(inputXmlReader, args, writer);
             stream = filteredStream;
+
             return stream;
+        }
+
+        private static Stream ApplyFilter(string csdl, string entitySetOrSingleton, XslCompiledTransform transform)
+        {
+            StreamReader inputReader = new(csdl);
+            return ApplyFilterForStreamReader(inputReader, entitySetOrSingleton, transform);
+        }
+
+        private static Stream ApplyFilter(Stream csdlStream, string entitySetOrSingleton, XslCompiledTransform transform)
+        {
+            StreamReader inputReader = new(csdlStream);
+            return ApplyFilterForStreamReader(inputReader, entitySetOrSingleton, transform);
         }
 
         /// <summary>
