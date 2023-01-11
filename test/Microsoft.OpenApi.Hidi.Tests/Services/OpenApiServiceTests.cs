@@ -94,5 +94,15 @@ namespace Microsoft.OpenApi.Tests.Services
             var output = reader.ReadToEnd();
             Assert.Contains("graph LR", output);
         }
+
+        [Fact]
+        public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
+        {
+            var fileinfo = new FileInfo("sample.md");
+            await OpenApiService.ShowOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", fileinfo, LogLevel.Information, new CancellationToken());
+
+            var output = File.ReadAllText(fileinfo.FullName);
+            Assert.Contains("graph LR", output);
+        }
     }
 }
