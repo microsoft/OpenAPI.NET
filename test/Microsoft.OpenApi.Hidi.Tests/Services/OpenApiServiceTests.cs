@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
-        public async Task InvokeShowCommand()
+        public void InvokeShowCommand()
         {
             var rootCommand = Program.CreateRootCommand();
             var args = new string[] { "show", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.md" };
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
             var context = new InvocationContext(parseResult);
 
-            await handler.InvokeAsync(context);
+            handler.Invoke(context);
 
             var output = File.ReadAllText("sample.md");
             Assert.Contains("graph LR", output);
