@@ -16,8 +16,19 @@ namespace Microsoft.OpenApi.Hidi
     static class Program
     {
         static async Task Main(string[] args)
-        {            
-            var rootCommand = new RootCommand() {};
+        {
+            var rootCommand = CreateRootCommand();
+
+            // Parse the incoming args and invoke the handler
+            await rootCommand.InvokeAsync(args);
+
+            //// Wait for logger to write messages to the console before exiting
+            await Task.Delay(10);
+        }
+
+        internal static RootCommand CreateRootCommand()
+        {
+            var rootCommand = new RootCommand() { };
 
             // command option parameters and aliases
             var descriptionOption = new Option<string>("--openapi", "Input OpenAPI description file path or URL");
@@ -46,7 +57,7 @@ namespace Microsoft.OpenApi.Hidi
 
             var settingsFileOption = new Option<string>("--settings-path", "The configuration file with CSDL conversion settings.");
             settingsFileOption.AddAlias("--sp");
-            
+
             var logLevelOption = new Option<LogLevel>("--log-level", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
             logLevelOption.AddAlias("--ll");
 
@@ -71,7 +82,7 @@ namespace Microsoft.OpenApi.Hidi
                 logLevelOption
             };
 
-            validateCommand.Handler = new ValidateCommandHandler 
+            validateCommand.Handler = new ValidateCommandHandler
             {
                 DescriptionOption = descriptionOption,
                 LogLevelOption = logLevelOption
@@ -88,7 +99,7 @@ namespace Microsoft.OpenApi.Hidi
                 formatOption,
                 terseOutputOption,
                 settingsFileOption,
-                logLevelOption,               
+                logLevelOption,
                 filterByOperationIdsOption,
                 filterByTagsOption,
                 filterByCollectionOption,
@@ -123,7 +134,7 @@ namespace Microsoft.OpenApi.Hidi
                 cleanOutputOption
             };
 
-            showCommand.Handler = new ShowCommandHandler 
+            showCommand.Handler = new ShowCommandHandler
             {
                 DescriptionOption = descriptionOption,
                 OutputOption = outputOption,
@@ -133,12 +144,7 @@ namespace Microsoft.OpenApi.Hidi
             rootCommand.Add(showCommand);
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
-            
-            // Parse the incoming args and invoke the handler
-            await rootCommand.InvokeAsync(args);
-
-            //// Wait for logger to write messages to the console before exiting
-            await Task.Delay(10);
-        }        
+            return rootCommand;
+        }
     }
 }
