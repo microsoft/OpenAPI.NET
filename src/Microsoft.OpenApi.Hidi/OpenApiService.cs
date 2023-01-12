@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     stream = await GetStream(openapi, logger, cancellationToken);
                     stopwatch.Restart();
-                    var result = await ParseOpenApi(openapi, logger, stream);
+                    var result = await ParseOpenApi(openapi, inlineExternal, logger, stream);
                     document = result.OpenApiDocument;
                     
                     openApiFormat = format ?? GetOpenApiFormat(openapi, logger);
@@ -238,7 +238,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 using var stream = await GetStream(openapi, logger, cancellationToken);
 
-                var result = await ParseOpenApi(openapi, logger, stream);
+                var result = await ParseOpenApi(openapi, false, logger, stream);
 
                 using (logger.BeginScope("Calculating statistics"))
                 {
@@ -256,7 +256,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static async Task<ReadResult> ParseOpenApi(string openApiFile, ILogger<OpenApiService> logger, Stream stream)
+        private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger<OpenApiService> logger, Stream stream)
         {
             ReadResult result;
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -266,7 +266,9 @@ namespace Microsoft.OpenApi.Hidi
 
                 result = await new OpenApiStreamReader(new OpenApiReaderSettings
                 {
-                    RuleSet = ValidationRuleSet.GetDefaultRuleSet()
+                    RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
+                    LoadExternalRefs = inlineExternal,
+                    BaseUrl = openApiFile.StartsWith("http") ? new Uri(openApiFile) : new Uri("file:" + new FileInfo(openApiFile).DirectoryName + "\\")
                 }
                 ).ReadAsync(stream);
 
@@ -515,7 +517,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 using var stream = await GetStream(openapi, logger, cancellationToken);
 
-                var result = await ParseOpenApi(openapi, logger, stream);
+                var result = await ParseOpenApi(openapi, false, logger, stream);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
