@@ -42,7 +42,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-    <PackageReference Include="Microsoft.OData.Edm" Version="7.13.0" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.14.0" />
     <PackageReference Include="Microsoft.OpenApi.OData" Version="1.2.0-preview9" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
   </ItemGroup>
