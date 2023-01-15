@@ -80,6 +80,7 @@ namespace Microsoft.OpenApi.Tests.Services
             }
         }
 
+
         [Fact]
         public void ShowCommandGeneratesMermaidDiagramAsMarkdown()
         {
@@ -129,6 +130,22 @@ namespace Microsoft.OpenApi.Tests.Services
             var output = File.ReadAllText(fileinfo.FullName);
             Assert.Contains("graph LR", output);
         }
+
+        [Fact]
+        public void InvokeTransformCommand()
+        {
+            var rootCommand = Program.CreateRootCommand();
+            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json" };
+            var parseResult = rootCommand.Parse(args);
+            var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
+            var context = new InvocationContext(parseResult);
+
+            handler.Invoke(context);
+
+            var output = File.ReadAllText("sample.json");
+            Assert.NotEmpty(output);
+        }
+
 
         [Fact]
         public void InvokeShowCommand()

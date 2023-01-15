@@ -515,9 +515,15 @@ namespace Microsoft.OpenApi.Hidi
                     // If output is null, create a HTML file in the user's temporary directory
                     if (output == null)
                     {
-                        var tempPath = Path.GetTempPath();
+                        var tempPath = Path.GetTempPath() + "/hidi/";
+                        if(!File.Exists(tempPath))
+                        {
+                            Directory.CreateDirectory(tempPath);
+                        }                                                
+                        
+                        var fileName = Path.GetRandomFileName();
 
-                        output = new FileInfo(Path.Combine(tempPath, "apitree.html"));
+                        output = new FileInfo(Path.Combine(tempPath, fileName + ".html"));
                         using (var file = new FileStream(output.FullName, FileMode.Create))
                         {
                             using var writer = new StreamWriter(file);
@@ -526,7 +532,7 @@ namespace Microsoft.OpenApi.Hidi
                         logger.LogTrace("Created Html document with diagram ");
 
                         // Launch a browser to display the output html file
-                        var process = new Process();
+                        using var process = new Process();
                         process.StartInfo.FileName = output.FullName;
                         process.StartInfo.UseShellExecute = true;
                         process.Start();
