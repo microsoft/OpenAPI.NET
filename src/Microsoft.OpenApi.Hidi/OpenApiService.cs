@@ -567,7 +567,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     foreach (var error in context.Errors)
                     {
-                        logger.LogError(error.ToString());
+                        logger.LogError($"Detected error during parsing: {error}",error.ToString());
                     }
                 }
             }
