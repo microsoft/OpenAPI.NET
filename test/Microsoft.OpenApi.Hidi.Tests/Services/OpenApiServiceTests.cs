@@ -131,6 +131,18 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.Contains("graph LR", output);
         }
 
+
+        [Fact]
+        public async Task TransformCommandConvertsOpenApi()
+        {
+            var fileinfo = new FileInfo("sample.json");
+            // create a dummy ILogger instance for testing
+            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml",null, null,  fileinfo, true, null, null,false,null,false,false,null,null,null,new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+
+            var output = File.ReadAllText("sample.json");
+            Assert.NotEmpty(output);
+        }
+
         [Fact]
         public void InvokeTransformCommand()
         {
