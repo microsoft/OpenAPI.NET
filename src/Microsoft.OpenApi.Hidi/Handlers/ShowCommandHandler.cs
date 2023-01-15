@@ -16,6 +16,9 @@ namespace Microsoft.OpenApi.Hidi.Handlers
         public Option<string> DescriptionOption { get; set; }
         public Option<FileInfo> OutputOption { get; set; }
         public Option<LogLevel> LogLevelOption { get; set; }
+        public Option<string> CsdlOption { get; set; }
+        public Option<string> CsdlFilterOption { get; set; }
+
 
         public int Invoke(InvocationContext context)
         {
@@ -26,13 +29,15 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             string openapi = context.ParseResult.GetValueForOption(DescriptionOption);
             FileInfo output = context.ParseResult.GetValueForOption(OutputOption);
             LogLevel logLevel = context.ParseResult.GetValueForOption(LogLevelOption);
+            string csdlFilter = context.ParseResult.GetValueForOption(CsdlFilterOption);
+            string csdl = context.ParseResult.GetValueForOption(CsdlOption);
             CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
 
             using var loggerFactory = Logger.ConfigureLogger(logLevel);
             var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
-                await OpenApiService.ShowOpenApiDocument(openapi, output, logLevel, cancellationToken);
+                await OpenApiService.ShowOpenApiDocument(openapi, csdl, csdlFilter, output, logger, cancellationToken);
 
                 return 0;
             }

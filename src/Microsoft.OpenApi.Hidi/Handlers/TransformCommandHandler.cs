@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
-                await OpenApiService.TransformOpenApiDocument(openapi, csdl, csdlFilter, output, cleanOutput, version, format, terseOutput, settingsFile, logLevel, inlineLocal, inlineExternal, filterbyoperationids, filterbytags, filterbycollection, cancellationToken);
+                await OpenApiService.TransformOpenApiDocument(openapi, csdl, csdlFilter, output, cleanOutput, version, format, terseOutput, settingsFile, inlineLocal, inlineExternal, filterbyoperationids, filterbytags, filterbycollection, logger, cancellationToken);
 
                 return 0;
             }

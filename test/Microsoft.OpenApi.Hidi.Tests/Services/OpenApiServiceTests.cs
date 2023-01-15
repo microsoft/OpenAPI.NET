@@ -4,6 +4,7 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Text;
+using Castle.Core.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi;
@@ -80,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
-        public void ShowCommandGeneratesMermaidDiagram()
+        public void ShowCommandGeneratesMermaidDiagramAsMarkdown()
         {
             var openApiDoc = new OpenApiDocument();
             openApiDoc.Info = new OpenApiInfo
@@ -90,7 +91,7 @@ namespace Microsoft.OpenApi.Tests.Services
             };
             var stream = new MemoryStream();
             using var writer = new StreamWriter(stream);
-            OpenApiService.WriteTreeDocument("https://example.org/openapi.json", openApiDoc, writer);
+            OpenApiService.WriteTreeDocumentAsMarkdown("https://example.org/openapi.json", openApiDoc, writer);
             writer.Flush();
             stream.Position = 0;
             using var reader = new StreamReader(stream);
@@ -99,10 +100,31 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
+        public void ShowCommandGeneratesMermaidDiagramAsHtml ()
+        {
+            var openApiDoc = new OpenApiDocument();
+            openApiDoc.Info = new OpenApiInfo
+            {
+                Title = "Test",
+                Version = "1.0.0"
+            };
+            var stream = new MemoryStream();
+            using var writer = new StreamWriter(stream);
+            OpenApiService.WriteTreeDocumentAsHtml("https://example.org/openapi.json", openApiDoc, writer);
+            writer.Flush();
+            stream.Position = 0;
+            using var reader = new StreamReader(stream);
+            var output = reader.ReadToEnd();
+            Assert.Contains("graph LR", output);
+        }
+
+
+        [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
         {
             var fileinfo = new FileInfo("sample.md");
-            await OpenApiService.ShowOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", fileinfo, LogLevel.Information, new CancellationToken());
+            // create a dummy ILogger instance for testing
+            await OpenApiService.ShowOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, fileinfo, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
             var output = File.ReadAllText(fileinfo.FullName);
             Assert.Contains("graph LR", output);
@@ -120,6 +142,22 @@ namespace Microsoft.OpenApi.Tests.Services
             handler.Invoke(context);
 
             var output = File.ReadAllText("sample.md");
+            Assert.Contains("graph LR", output);
+        }
+
+
+        [Fact]
+        public void InvokeShowCommandWithoutOutput()
+        {
+            var rootCommand = Program.CreateRootCommand();
+            var args = new string[] { "show", "-d", ".\\UtilityFiles\\SampleOpenApi.yml" };
+            var parseResult = rootCommand.Parse(args);
+            var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
+            var context = new InvocationContext(parseResult);
+
+            handler.Invoke(context);
+
+            var output = File.ReadAllText(Path.Combine(Path.GetTempPath(), "apitree.html"));
             Assert.Contains("graph LR", output);
         }
 

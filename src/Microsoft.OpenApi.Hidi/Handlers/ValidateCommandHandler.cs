@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
-                await OpenApiService.ValidateOpenApiDocument(openapi, logLevel, cancellationToken);
+                await OpenApiService.ValidateOpenApiDocument(openapi, logger, cancellationToken);
                 return 0;
             }
             catch (Exception ex)
