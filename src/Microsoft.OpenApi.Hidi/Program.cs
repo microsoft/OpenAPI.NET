@@ -22,8 +22,6 @@ namespace Microsoft.OpenApi.Hidi
             // Parse the incoming args and invoke the handler
             await rootCommand.InvokeAsync(args);
 
-            //// Wait for logger to write messages to the console before exiting
-            await Task.Delay(10);
         }
 
         internal static RootCommand CreateRootCommand()
@@ -129,6 +127,8 @@ namespace Microsoft.OpenApi.Hidi
             var showCommand = new Command("show")
             {
                 descriptionOption,
+                csdlOption,
+                csdlFilterOption,
                 logLevelOption,
                 outputOption,
                 cleanOutputOption
@@ -137,6 +137,8 @@ namespace Microsoft.OpenApi.Hidi
             showCommand.Handler = new ShowCommandHandler
             {
                 DescriptionOption = descriptionOption,
+                CsdlOption = csdlOption,
+                CsdlFilterOption = csdlFilterOption,
                 OutputOption = outputOption,
                 LogLevelOption = logLevelOption
             };
