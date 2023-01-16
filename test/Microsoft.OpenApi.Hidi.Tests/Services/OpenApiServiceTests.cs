@@ -143,18 +143,36 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
+        public async Task ThrowIfOpenApiUrlIsNotProvidedWhenValidating()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                await OpenApiService.ValidateOpenApiDocument("", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+        }
+
+
+        [Fact]
         public async Task ThrowIfURLIsNotResolvableWhenValidating()
         {
-            var message = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 await OpenApiService.ValidateOpenApiDocument("https://example.org/itdoesnmatter", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
         }
 
         [Fact]
         public async Task ThrowIfFileDoesNotExistWhenValidating()
         {
-            var message = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
                 await OpenApiService.ValidateOpenApiDocument("aFileThatBetterNotExist.fake", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
         }
+
+        [Fact]
+        public async Task ValidateCommandProcessesOpenApi()
+        {
+            // create a dummy ILogger instance for testing
+            await OpenApiService.ValidateOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+
+            Assert.True(true);
+        }
+
 
         [Fact]
         public async Task TransformCommandConvertsOpenApi()
@@ -165,6 +183,14 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var output = File.ReadAllText("sample.json");
             Assert.NotEmpty(output);
+        }
+
+        [Fact]
+        public async Task ThrowTransformCommandIfOpenApiAndCsdlAreEmpty()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
+                await OpenApiService.TransformOpenApiDocument(null, null, null, null, true, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+
         }
 
         [Fact]

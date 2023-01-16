@@ -55,18 +55,19 @@ namespace Microsoft.OpenApi.Hidi
             CancellationToken cancellationToken
            )
         {
+            if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
+            {
+                throw new ArgumentException("Please input a file path or URL");
+            }
 
             try
             {
-                if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
-                {
-                    throw new ArgumentException("Please input a file path or URL");
-                }
                 if (output == null)
                 {
                     var inputExtension = GetInputPathExtension(openapi, csdl);
                     output = new FileInfo($"./output{inputExtension}");
                 };
+
                 if (cleanoutput && output.Exists)
                 {
                     output.Delete();
@@ -87,7 +88,11 @@ namespace Microsoft.OpenApi.Hidi
             catch (TaskCanceledException)
             {
                 Console.Error.WriteLine("CTRL+C pressed, aborting the operation.");
-            }            
+            }
+            catch (IOException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Could not transform the document, reason: {ex.Message}", ex);
@@ -239,12 +244,13 @@ namespace Microsoft.OpenApi.Hidi
             ILogger logger, 
             CancellationToken cancellationToken)
         {
+            if (string.IsNullOrEmpty(openapi))
+            {
+                throw new ArgumentNullException(nameof(openapi));
+            }
+
             try
             {
-                if (string.IsNullOrEmpty(openapi))
-                {
-                    throw new ArgumentNullException(nameof(openapi));
-                }
                 using var stream = await GetStream(openapi, logger, cancellationToken);
 
                 var result = await ParseOpenApi(openapi, false, logger, stream);
