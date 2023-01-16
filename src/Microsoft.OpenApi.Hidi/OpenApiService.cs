@@ -225,7 +225,7 @@ namespace Microsoft.OpenApi.Hidi
         private static Stream ApplyFilterToCsdl(Stream csdlStream, string entitySetOrSingleton, XslCompiledTransform transform)
         {
             Stream stream;
-            StreamReader inputReader = new(csdlStream);
+            using StreamReader inputReader = new(csdlStream, leaveOpen: true);
             XmlReader inputXmlReader = XmlReader.Create(inputReader);
             MemoryStream filteredStream = new();
             StreamWriter writer = new(filteredStream);
