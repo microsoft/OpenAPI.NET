@@ -131,6 +131,30 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.Contains("graph LR", output);
         }
 
+        [Fact]
+        public async Task ShowCommandGeneratesMermaidMarkdownFileFromCsdlWithMermaidDiagram()
+        {
+            var fileinfo = new FileInfo("sample.md");
+            // create a dummy ILogger instance for testing
+            await OpenApiService.ShowOpenApiDocument(null, "UtilityFiles\\Todo.xml", "todos", fileinfo, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+
+            var output = File.ReadAllText(fileinfo.FullName);
+            Assert.Contains("graph LR", output);
+        }
+
+        [Fact]
+        public async Task ThrowIfURLIsNotResolvableWhenValidating()
+        {
+            var message = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+                await OpenApiService.ValidateOpenApiDocument("https://example.org/itdoesnmatter", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+        }
+
+        [Fact]
+        public async Task ThrowIfFileDoesNotExistWhenValidating()
+        {
+            var message = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+                await OpenApiService.ValidateOpenApiDocument("aFileThatBetterNotExist.fake", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+        }
 
         [Fact]
         public async Task TransformCommandConvertsOpenApi()
@@ -173,8 +197,6 @@ namespace Microsoft.OpenApi.Tests.Services
             var output = File.ReadAllText("sample.md");
             Assert.Contains("graph LR", output);
         }
-
-
 
 
         // Relatively useless test to keep the code coverage metrics happy
