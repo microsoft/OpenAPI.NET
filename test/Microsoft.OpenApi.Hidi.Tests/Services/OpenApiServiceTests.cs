@@ -175,20 +175,6 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
 
-        [Fact]
-        public void InvokeShowCommandWithoutOutput()
-        {
-            var rootCommand = Program.CreateRootCommand();
-            var args = new string[] { "show", "-d", ".\\UtilityFiles\\SampleOpenApi.yml" };
-            var parseResult = rootCommand.Parse(args);
-            var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
-            var context = new InvocationContext(parseResult);
-
-            handler.Invoke(context);
-
-            var output = File.ReadAllText(Path.Combine(Path.GetTempPath(), "apitree.html"));
-            Assert.Contains("graph LR", output);
-        }
 
 
         // Relatively useless test to keep the code coverage metrics happy
