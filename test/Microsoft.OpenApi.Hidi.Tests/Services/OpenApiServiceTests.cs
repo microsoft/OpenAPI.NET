@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void InvokeTransformCommand()
         {
             var rootCommand = Program.CreateRootCommand();
-            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json" };
+            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json","--co" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
             var context = new InvocationContext(parseResult);
