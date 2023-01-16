@@ -341,7 +341,7 @@ namespace Microsoft.OpenApi.Services
     public class MermaidNodeStyle
     {
         /// <summary>
-        /// 
+        /// Create a style that defines the color and shape of a diagram element
         /// </summary>
         /// <param name="color"></param>
         /// <param name="shape"></param>
@@ -352,18 +352,18 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// 
+        /// The CSS color name of the diagram element
         /// </summary>
         public string Color { get;  }
 
         /// <summary>
-        /// 
+        /// The shape of the diagram element
         /// </summary>
         public MermaidNodeShape Shape { get;  }
     }
 
     /// <summary>
-    /// 
+    /// Shapes supported by Mermaid diagrams
     /// </summary>
     public enum MermaidNodeShape
     {
