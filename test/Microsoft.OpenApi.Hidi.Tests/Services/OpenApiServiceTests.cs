@@ -84,11 +84,13 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void ShowCommandGeneratesMermaidDiagramAsMarkdown()
         {
-            var openApiDoc = new OpenApiDocument();
-            openApiDoc.Info = new OpenApiInfo
+            var openApiDoc = new OpenApiDocument
             {
-                Title = "Test",
-                Version = "1.0.0"
+                Info = new OpenApiInfo
+                {
+                    Title = "Test",
+                    Version = "1.0.0"
+                }
             };
             var stream = new MemoryStream();
             using var writer = new StreamWriter(stream);
@@ -101,13 +103,15 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
-        public void ShowCommandGeneratesMermaidDiagramAsHtml ()
+        public void ShowCommandGeneratesMermaidDiagramAsHtml()
         {
-            var openApiDoc = new OpenApiDocument();
-            openApiDoc.Info = new OpenApiInfo
+            var openApiDoc = new OpenApiDocument
             {
-                Title = "Test",
-                Version = "1.0.0"
+                Info = new OpenApiInfo
+                {
+                    Title = "Test",
+                    Version = "1.0.0"
+                }
             };
             var stream = new MemoryStream();
             using var writer = new StreamWriter(stream);
@@ -118,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var output = reader.ReadToEnd();
             Assert.Contains("graph LR", output);
         }
-
+        
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
@@ -129,6 +133,13 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var output = File.ReadAllText(fileinfo.FullName);
             Assert.Contains("graph LR", output);
+        }
+
+        [Fact]
+        public async Task ShowCommandGeneratesMermaidHtmlFileWithMermaidDiagram()
+        {
+            var filePath = await OpenApiService.ShowOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            Assert.True(File.Exists(filePath));
         }
 
         [Fact]
@@ -185,11 +196,22 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(output);
         }
 
+        
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputname()
         {
             // create a dummy ILogger instance for testing
             await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+
+            var output = File.ReadAllText("output.yml");
+            Assert.NotEmpty(output);
+        }
+
+        [Fact]
+        public async Task TransformCommandConvertsCsdlWithDefaultOutputname()
+        {
+            // create a dummy ILogger instance for testing
+            await OpenApiService.TransformOpenApiDocument(null, "UtilityFiles\\Todo.xml", null, null, true, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
             var output = File.ReadAllText("output.yml");
             Assert.NotEmpty(output);

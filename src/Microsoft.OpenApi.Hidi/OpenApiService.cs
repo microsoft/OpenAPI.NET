@@ -505,7 +505,7 @@ namespace Microsoft.OpenApi.Hidi
             return extension;
         }
 
-        internal static async Task ShowOpenApiDocument(string openapi, string csdl, string csdlFilter, FileInfo output, ILogger logger, CancellationToken cancellationToken)
+        internal static async Task<string> ShowOpenApiDocument(string openapi, string csdl, string csdlFilter, FileInfo output, ILogger logger, CancellationToken cancellationToken)
         {
             try
             {
@@ -542,6 +542,8 @@ namespace Microsoft.OpenApi.Hidi
                         process.StartInfo.FileName = output.FullName;
                         process.StartInfo.UseShellExecute = true;
                         process.Start();
+                        
+                        return output.FullName;
                     }
                     else  // Write diagram as Markdown document to output file
                     {
@@ -551,6 +553,7 @@ namespace Microsoft.OpenApi.Hidi
                             WriteTreeDocumentAsMarkdown(openapi ?? csdl, document, writer);
                         }
                         logger.LogTrace("Created markdown document with diagram ");
+                        return output.FullName;
                     }                      
                 }
             }
@@ -562,6 +565,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 throw new InvalidOperationException($"Could not generate the document, reason: {ex.Message}", ex);
             }
+            return null;
         }
 
         private static void LogErrors(ILogger logger, ReadResult result)
