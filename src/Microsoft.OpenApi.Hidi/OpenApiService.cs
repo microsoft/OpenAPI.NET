@@ -103,8 +103,8 @@ namespace Microsoft.OpenApi.Hidi
         {
             using (logger.BeginScope("Output"))
             {
-                using var outputStream = output?.Create();
-                var textWriter = outputStream != null ? new StreamWriter(outputStream) : Console.Out;
+                using var outputStream = output.Create();
+                var textWriter = new StreamWriter(outputStream);
 
                 var settings = new OpenApiWriterSettings()
                 {

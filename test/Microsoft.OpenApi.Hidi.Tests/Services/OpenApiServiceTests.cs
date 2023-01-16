@@ -186,6 +186,26 @@ namespace Microsoft.OpenApi.Tests.Services
         }
 
         [Fact]
+        public async Task TransformCommandConvertsOpenApiWithDefaultOutputname()
+        {
+            // create a dummy ILogger instance for testing
+            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+
+            var output = File.ReadAllText("output.yml");
+            Assert.NotEmpty(output);
+        }
+
+        [Fact]
+        public async Task TransformCommandConvertsOpenApiWithDefaultOutputnameAndSwitchFormat()
+        {
+            // create a dummy ILogger instance for testing
+            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, "3.0", OpenApiFormat.Yaml, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+
+            var output = File.ReadAllText("output.yml");
+            Assert.NotEmpty(output);
+        }
+
+        [Fact]
         public async Task ThrowTransformCommandIfOpenApiAndCsdlAreEmpty()
         {
             await Assert.ThrowsAsync<ArgumentException>(async () =>
