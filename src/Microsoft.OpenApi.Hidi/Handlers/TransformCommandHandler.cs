@@ -50,13 +50,14 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             string filterbyoperationids = context.ParseResult.GetValueForOption(FilterByOperationIdsOption);
             string filterbytags = context.ParseResult.GetValueForOption(FilterByTagsOption);
             string filterbycollection = context.ParseResult.GetValueForOption(FilterByCollectionOption);
+
             CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
 
             using var loggerFactory = Logger.ConfigureLogger(logLevel);
             var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
-                await OpenApiService.TransformOpenApiDocument(openapi, csdl, csdlFilter, output, cleanOutput, version, format, terseOutput, settingsFile, logLevel, inlineLocal, inlineExternal, filterbyoperationids, filterbytags, filterbycollection, cancellationToken);
+                await OpenApiService.TransformOpenApiDocument(openapi, csdl, csdlFilter, output, cleanOutput, version, format, terseOutput, settingsFile, inlineLocal, inlineExternal, filterbyoperationids, filterbytags, filterbycollection, logger, cancellationToken);
 
                 return 0;
             }

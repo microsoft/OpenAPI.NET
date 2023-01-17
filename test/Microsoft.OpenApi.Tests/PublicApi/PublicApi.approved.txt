@@ -282,6 +282,11 @@ namespace Microsoft.OpenApi.Extensions
         public static void SerializeAsYaml<T>(this T element, System.IO.Stream stream, Microsoft.OpenApi.OpenApiSpecVersion specVersion)
             where T : Microsoft.OpenApi.Interfaces.IOpenApiSerializable { }
     }
+    public static class OpenApiTypeMapper
+    {
+        public static System.Type MapOpenApiPrimitiveTypeToSimpleType(this Microsoft.OpenApi.Models.OpenApiSchema schema) { }
+        public static Microsoft.OpenApi.Models.OpenApiSchema MapTypeToOpenApiPrimitiveType(this System.Type type) { }
+    }
     public static class StringExtensions
     {
         public static T GetEnumFromDisplayName<T>(this string displayName) { }
@@ -1057,6 +1062,19 @@ namespace Microsoft.OpenApi.Services
         public string Response { get; set; }
         public string ServerVariable { get; }
     }
+    public enum MermaidNodeShape
+    {
+        SquareCornerRectangle = 0,
+        RoundedCornerRectangle = 1,
+        Circle = 2,
+        Rhombus = 3,
+        OddShape = 4,
+    }
+    public class MermaidNodeStyle
+    {
+        public string Color { get; }
+        public Microsoft.OpenApi.Services.MermaidNodeShape Shape { get; }
+    }
     public static class OpenApiFilterService
     {
         public static Microsoft.OpenApi.Models.OpenApiDocument CreateFilteredDocument(Microsoft.OpenApi.Models.OpenApiDocument source, System.Func<string, Microsoft.OpenApi.Models.OperationType?, Microsoft.OpenApi.Models.OpenApiOperation, bool> predicate) { }
@@ -1089,6 +1107,7 @@ namespace Microsoft.OpenApi.Services
     }
     public class OpenApiUrlTreeNode
     {
+        public static readonly System.Collections.Generic.IReadOnlyDictionary<string, Microsoft.OpenApi.Services.MermaidNodeStyle> MermaidNodeStyles;
         public System.Collections.Generic.IDictionary<string, System.Collections.Generic.List<string>> AdditionalData { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Services.OpenApiUrlTreeNode> Children { get; }
         public bool IsParameter { get; }
@@ -1099,6 +1118,7 @@ namespace Microsoft.OpenApi.Services
         public void Attach(Microsoft.OpenApi.Models.OpenApiDocument doc, string label) { }
         public Microsoft.OpenApi.Services.OpenApiUrlTreeNode Attach(string path, Microsoft.OpenApi.Models.OpenApiPathItem pathItem, string label) { }
         public bool HasOperations(string label) { }
+        public void WriteMermaid(System.IO.TextWriter writer) { }
         public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create() { }
         public static Microsoft.OpenApi.Services.OpenApiUrlTreeNode Create(Microsoft.OpenApi.Models.OpenApiDocument doc, string label) { }
     }

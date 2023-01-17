@@ -60,10 +60,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedHeader.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -78,10 +77,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedHeader.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -99,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -114,10 +112,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedHeader.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -132,10 +129,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedHeader.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -150,10 +146,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedHeader.SerializeAsV2WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

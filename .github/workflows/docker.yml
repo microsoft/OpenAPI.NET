@@ -30,13 +30,13 @@ jobs:
         id: getversion
       - name: Push to GitHub Packages - Nightly
         if: ${{ github.ref == 'refs/heads/vnext' }}
-        uses: docker/build-push-action@v3.2.0
+        uses: docker/build-push-action@v3.3.0
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:nightly
       - name: Push to GitHub Packages - Release
         if: ${{ github.ref == 'refs/heads/master' }}
-        uses: docker/build-push-action@v3.2.0
+        uses: docker/build-push-action@v3.3.0
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.getversion.outputs.version }}

@@ -1,15 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.CommandLine;
-using System.CommandLine.Builder;
-using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
-
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Handlers;
 
@@ -19,8 +17,16 @@ namespace Microsoft.OpenApi.Hidi
     {
         static async Task Main(string[] args)
         {
-            var rootCommand = new RootCommand() {
-            };
+            var rootCommand = CreateRootCommand();
+
+            // Parse the incoming args and invoke the handler
+            await rootCommand.InvokeAsync(args);
+
+        }
+
+        internal static RootCommand CreateRootCommand()
+        {
+            var rootCommand = new RootCommand() { };
 
             // command option parameters and aliases
             var descriptionOption = new Option<string>("--openapi", "Input OpenAPI description file path or URL");
@@ -49,7 +55,7 @@ namespace Microsoft.OpenApi.Hidi
 
             var settingsFileOption = new Option<string>("--settings-path", "The configuration file with CSDL conversion settings.");
             settingsFileOption.AddAlias("--sp");
-            
+
             var logLevelOption = new Option<LogLevel>("--log-level", () => LogLevel.Information, "The log level to use when logging messages to the main output.");
             logLevelOption.AddAlias("--ll");
 
@@ -74,7 +80,7 @@ namespace Microsoft.OpenApi.Hidi
                 logLevelOption
             };
 
-            validateCommand.Handler = new ValidateCommandHandler 
+            validateCommand.Handler = new ValidateCommandHandler
             {
                 DescriptionOption = descriptionOption,
                 LogLevelOption = logLevelOption
@@ -91,7 +97,7 @@ namespace Microsoft.OpenApi.Hidi
                 formatOption,
                 terseOutputOption,
                 settingsFileOption,
-                logLevelOption,               
+                logLevelOption,
                 filterByOperationIdsOption,
                 filterByTagsOption,
                 filterByCollectionOption,
@@ -118,14 +124,29 @@ namespace Microsoft.OpenApi.Hidi
                 InlineExternalOption = inlineExternalOption
             };
 
+            var showCommand = new Command("show")
+            {
+                descriptionOption,
+                csdlOption,
+                csdlFilterOption,
+                logLevelOption,
+                outputOption,
+                cleanOutputOption
+            };
+
+            showCommand.Handler = new ShowCommandHandler
+            {
+                DescriptionOption = descriptionOption,
+                CsdlOption = csdlOption,
+                CsdlFilterOption = csdlFilterOption,
+                OutputOption = outputOption,
+                LogLevelOption = logLevelOption
+            };
+
+            rootCommand.Add(showCommand);
             rootCommand.Add(transformCommand);
             rootCommand.Add(validateCommand);
-
-            // Parse the incoming args and invoke the handler
-            await rootCommand.InvokeAsync(args);
-
-            //// Wait for logger to write messages to the console before exiting
-            await Task.Delay(10);
+            return rootCommand;
         }
     }
 }
