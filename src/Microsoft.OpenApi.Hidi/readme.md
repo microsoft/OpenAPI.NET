@@ -1,24 +1,26 @@
-# Overview 
+# Overview
 
 Hidi is a command line tool that makes it easy to work with and transform OpenAPI documents. The tool enables you validate and apply transformations to and from different file formats using various commands to do different actions on the files.
 
 ## Capabilities
+
 Hidi has these key capabilities that enable you to build different scenarios off the tool
 
 	• Validation of OpenAPI files 
 	• Conversion of OpenAPI files into different file formats: convert files from JSON to YAML, YAML to JSON
 	• Slice or filter OpenAPI documents to smaller subsets using operationIDs and tags
+    • Generate a Mermaid diagram of the API from an OpenAPI document
 
- 
-## Installation 
+## Installation
 
 Install [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi/1.0.0-preview4) package from NuGet by running the following command:  
  
-### .NET CLI(Global)  
+### .NET CLI(Global)
+
 	1. dotnet tool install --global Microsoft.OpenApi.Hidi --prerelease
 
  
-### .NET CLI(local) 
+### .NET CLI(local)
  
 	1. dotnet new tool-manifest #if you are setting up the OpenAPI.NET repo 
 	2. dotnet tool install --local Microsoft.OpenApi.Hidi --prerelease 
@@ -27,14 +29,17 @@ Install [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenAp
  
  
 ## How to use Hidi
+
 Once you've installed the package locally, you can invoke the Hidi by running: hidi [command]. 
 You can access the list of command options we have by running hidi -h 
 The tool avails the following commands: 
 
 	• Validate  
 	• Transform 
+	• Show
 	 
-### Validate 
+### Validate
+
 This command option accepts an OpenAPI document as an input parameter, visits multiple OpenAPI elements within the document and returns statistics count report on the following elements: 
 
 	• Path Items  
@@ -54,9 +59,10 @@ It accepts the following command:
 
 **Example:** `hidi.exe validate --openapi C:\OpenApidocs\Mail.yml --loglevel trace` 
 
-Run validate -h to see the options available. 
- 
-### Transform 
+Run validate -h to see the options available.
+
+### Transform
+
 Used to convert file formats from JSON to YAML and vice versa and performs slicing of OpenAPI documents. 
 
 This command accepts the following parameters:
@@ -90,3 +96,11 @@ This command accepts the following parameters:
 	hidi transform -cs dataverse.csdl --csdlFilter "appointments,opportunities" -o appointmentsAndOpportunities.yaml -ll trace 
 	 
 Run transform -h to see all the available usage options. 
+
+### Show
+
+This command accepts an OpenAPI document as an input parameter and generates a Markdown file that contains a diagram of the API using Mermaid syntax.
+
+**Examples:**
+
+    1. hidi show -d files\People.yml -o People.md -ll trace

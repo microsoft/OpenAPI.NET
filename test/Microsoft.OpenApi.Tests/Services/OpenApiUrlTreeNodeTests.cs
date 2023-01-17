@@ -3,21 +3,43 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
+using VerifyXunit;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
+    [UsesVerify]
     public class OpenApiUrlTreeNodeTests
     {
         private OpenApiDocument OpenApiDocumentSample_1 => new OpenApiDocument()
         {
             Paths = new OpenApiPaths()
             {
-                ["/"] = new OpenApiPathItem(),
-                ["/houses"] = new OpenApiPathItem(),
+                ["/"] = new OpenApiPathItem() {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    {
+                        [OperationType.Get] = new OpenApiOperation(),
+                    }
+                },
+                ["/houses"] = new OpenApiPathItem()
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    {
+                        [OperationType.Get] = new OpenApiOperation(),
+                        [OperationType.Post] = new OpenApiOperation()
+                    }
+                },
                 ["/cars"] = new OpenApiPathItem()
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    {
+                        [OperationType.Post] = new OpenApiOperation()
+                    }
+                }
             }
         };
 
@@ -442,6 +464,22 @@ namespace Microsoft.OpenApi.Tests.Services
             var rootNode = OpenApiUrlTreeNode.Create(doc, label);
 
             Assert.Throws<ArgumentNullException>(() => rootNode.AddAdditionalData(null));
+        }
+
+        [Fact]
+        public async Task VerifyDiagramFromSampleOpenAPI()
+        {
+            var doc1 = OpenApiDocumentSample_1;
+
+            var label1 = "personal";
+            var rootNode = OpenApiUrlTreeNode.Create(doc1, label1);
+
+            var writer = new StringWriter();
+            rootNode.WriteMermaid(writer);
+            writer.Flush();
+            var diagram = writer.GetStringBuilder().ToString();
+
+            await Verifier.Verify(diagram);
         }
     }
 }
