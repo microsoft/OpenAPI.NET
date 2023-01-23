@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
             if (writer == null)
             {
@@ -293,8 +293,10 @@ namespace Microsoft.OpenApi.Models
                     }
                 });
             
-            // pathItems
-            writer.WriteOptionalMap(
+            // pathItems - only present in v3.1
+            if(version == OpenApiSpecVersion.OpenApi3_1)
+            {
+                writer.WriteOptionalMap(
                 OpenApiConstants.PathItems,
                 PathItems,
                 (w, key, component) =>
@@ -310,9 +312,10 @@ namespace Microsoft.OpenApi.Models
                         component.SerializeAsV3(w);
                     }
                 });
-            
+            }
+
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }

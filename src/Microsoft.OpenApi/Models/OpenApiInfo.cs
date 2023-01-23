@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
             if (writer == null)
             {
@@ -88,9 +88,12 @@ namespace Microsoft.OpenApi.Models
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
 
-            // summary
-            writer.WriteProperty(OpenApiConstants.Summary, Summary);
-            
+            // summary - present in 3.1
+            if (version == OpenApiSpecVersion.OpenApi3_1)
+            {
+                writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            }
+           
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
 

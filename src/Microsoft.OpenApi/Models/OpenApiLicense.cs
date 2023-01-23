@@ -53,9 +53,9 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            WriteInternal(writer, version);
         }
 
         /// <summary>
@@ -78,8 +78,11 @@ namespace Microsoft.OpenApi.Models
             // name
             writer.WriteProperty(OpenApiConstants.Name, Name);
 
-            // identifier
-            writer.WriteProperty(OpenApiConstants.Identifier, Identifier);
+            // identifier - present in v3.1
+            if (specVersion == OpenApiSpecVersion.OpenApi3_1)
+            {
+                writer.WriteProperty(OpenApiConstants.Identifier, Identifier);
+            }
 
             // url
             writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);

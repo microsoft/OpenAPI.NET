@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
             if (writer == null)
             {
@@ -169,11 +169,11 @@ namespace Microsoft.OpenApi.Models
 
             writer.WriteStartObject();
             
-            // summary
-            writer.WriteProperty(OpenApiConstants.Summary, Summary);
-            
-            // description
-            writer.WriteProperty(OpenApiConstants.Description, Description);
+            if (version == OpenApiSpecVersion.OpenApi3_1)
+            {
+                writer.WriteProperty(OpenApiConstants.Summary, Summary);
+                writer.WriteProperty(OpenApiConstants.Description, Description);
+            }            
 
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
