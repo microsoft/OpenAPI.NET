@@ -1439,7 +1439,7 @@ paths: { }";
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            DocumentWithWebhooks.SerializeAsV3(writer);
+            DocumentWithWebhooks.SerializeAsV3(writer, OpenApiSpecVersion.OpenApi3_1);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -1451,7 +1451,7 @@ paths: { }";
         public void SerializeDocumentWithWebhooksAsV3YamlWorks()
         {
             // Arrange
-            var expected = @"openapi: 3.0.1
+            var expected = @"openapi: '3.1.0'
 info:
   title: Webhook Example
   version: 1.0.0
@@ -1484,12 +1484,40 @@ components:
           type: string";
             
             // Act
-            var actual = DocumentWithWebhooks.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = DocumentWithWebhooks.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void SerializeDocumentWithRootJsonSchemaDialectPropertyWorks()
+        {
+            // Arrange
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "JsonSchemaDialectTest",
+                    Version = "1.0.0"
+                },
+                JsonSchemaDialect = "http://json-schema.org/draft-07/schema#"
+            };
+
+            var expected = @"openapi: '3.1.0'
+info:
+  title: JsonSchemaDialectTest
+  version: 1.0.0
+jsonSchemaDialect: http://json-schema.org/draft-07/schema#
+paths: { }";
+
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
+
+            // Assert
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

@@ -1559,7 +1559,7 @@ paths: {}",
             };
 
             // Assert
-            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
             actual.Should().BeEquivalentTo(expected);
         }
 
@@ -1769,6 +1769,7 @@ paths: {}",
                     Title = "Webhook Example",
                     Version = "1.0.0"
                 },
+                JsonSchemaDialect = "http://json-schema.org/draft-07/schema#",
                 Webhooks = components.PathItems,
                 Components = components
             };
@@ -1776,7 +1777,7 @@ paths: {}",
             // Assert
             actual.Should().BeEquivalentTo(expected);
             context.Should().BeEquivalentTo(
-    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1});
 
         }
 

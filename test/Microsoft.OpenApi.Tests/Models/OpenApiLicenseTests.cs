@@ -141,7 +141,7 @@ x-copyright: Abc";
 }";
 
             // Act
-            var actual = LicenseWithIdentifier.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = LicenseWithIdentifier.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
@@ -155,7 +155,7 @@ x-copyright: Abc";
 identifier: Apache-2.0";
 
             // Act
-            var actual = LicenseWithIdentifier.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = LicenseWithIdentifier.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());

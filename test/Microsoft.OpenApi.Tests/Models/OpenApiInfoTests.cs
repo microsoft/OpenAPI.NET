@@ -215,7 +215,7 @@ description: This is a sample server for a pet store.
 version: '1.1.1'";
 
             // Act
-            var actual = InfoWithSummary.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = InfoWithSummary.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -235,7 +235,7 @@ version: '1.1.1'";
 }";
             
             // Act
-            var actual = InfoWithSummary.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = InfoWithSummary.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
