@@ -30,6 +30,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiInfo Info { get; set; }
 
         /// <summary>
+        /// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
+        /// </summary>
+        public string JsonSchemaDialect { get; set; }
+
+        /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
         public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
@@ -89,6 +94,7 @@ namespace Microsoft.OpenApi.Models
         {
             Workspace = document?.Workspace != null ? new(document?.Workspace) : null;
             Info = document?.Info != null ? new(document?.Info) : null;
+            JsonSchemaDialect = document?.JsonSchemaDialect ?? JsonSchemaDialect;
             Servers = document?.Servers != null ? new List<OpenApiServer>(document.Servers) : null;
             Paths = document?.Paths != null ? new(document?.Paths) : null;
             Webhooks = document?.Webhooks != null ? new Dictionary<string, OpenApiPathItem>(document.Webhooks) : null;
@@ -102,7 +108,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
             if (writer == null)
             {
@@ -112,10 +118,25 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // openapi
-            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-
+            switch (version)
+            {
+                case OpenApiSpecVersion.OpenApi3_1:
+                    writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.0");
+                    break;
+                case OpenApiSpecVersion.OpenApi3_0:
+                    writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
+                    break;
+                default:
+                    writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
+                    break;
+            }
+            
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV3(w));
+
+            // jsonSchemaDialect
+            if(version == OpenApiSpecVersion.OpenApi3_1)
+                writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
 
             // servers
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
@@ -124,7 +145,9 @@ namespace Microsoft.OpenApi.Models
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV3(w));
 
             // webhooks
-            writer.WriteOptionalMap(
+            if (version == OpenApiSpecVersion.OpenApi3_1)
+            {
+                writer.WriteOptionalMap(
                 OpenApiConstants.Webhooks,
                 Webhooks,
                 (w, key, component) =>
@@ -140,6 +163,7 @@ namespace Microsoft.OpenApi.Models
                         component.SerializeAsV3(w);
                     }
                 });
+            }                
 
             // components
             writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => c.SerializeAsV3(w));
@@ -157,7 +181,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }
