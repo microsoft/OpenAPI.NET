@@ -47,11 +47,11 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            WriteInternal(writer, version);
         }
-
+        
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v2.0.
         /// </summary>

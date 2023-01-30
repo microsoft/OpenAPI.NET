@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
             if (writer == null)
             {
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Models
                 (w, o) => o.SerializeAsV3(w));
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }

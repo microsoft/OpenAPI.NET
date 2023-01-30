@@ -19,6 +19,11 @@ namespace Microsoft.OpenApi.Models
         /// Field: Info
         /// </summary>
         public const string Info = "info";
+       
+        /// <summary>
+        /// Field: JsonSchemaDialect
+        /// </summary>
+        public const string JsonSchemaDialect = "jsonSchemaDialect";
 
         /// <summary>
         /// Field: Webhooks

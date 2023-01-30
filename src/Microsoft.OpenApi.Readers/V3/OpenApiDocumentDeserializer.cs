@@ -21,6 +21,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
+            {"jsonSchemaDialect", (o, n) => o.JsonSchemaDialect = n.GetScalarValue() },
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
             {"webhooks", (o, n) => o.Webhooks = LoadPaths(n)},

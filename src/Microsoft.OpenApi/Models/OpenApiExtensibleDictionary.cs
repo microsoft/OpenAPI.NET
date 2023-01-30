@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
         {
             if (writer == null)
             {
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.SerializeAsV3(w));
             }
 
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }
