@@ -287,7 +287,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
                     LoadExternalRefs = inlineExternal,
-                    BaseUrl = openApiFile.StartsWith("http") ? new Uri(openApiFile) : new Uri("file:" + new FileInfo(openApiFile).DirectoryName + "\\")
+                    BaseUrl = openApiFile.StartsWith("http") ? new Uri(openApiFile) : new Uri("file:" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 }
                 ).ReadAsync(stream);
 
