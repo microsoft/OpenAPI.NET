@@ -15,13 +15,12 @@ namespace Microsoft.OpenApi.Hidi
 {
     static class Program
     {
-        static async Task Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
             var rootCommand = CreateRootCommand();
 
             // Parse the incoming args and invoke the handler
-            await rootCommand.InvokeAsync(args);
-
+            return await rootCommand.InvokeAsync(args);
         }
 
         internal static RootCommand CreateRootCommand()
