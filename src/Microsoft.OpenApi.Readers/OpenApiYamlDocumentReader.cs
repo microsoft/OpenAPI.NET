@@ -193,7 +193,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the element
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count() > 0)
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Any())
             {
                 var errors = element.Validate(_settings.RuleSet);
                 foreach (var item in errors)
