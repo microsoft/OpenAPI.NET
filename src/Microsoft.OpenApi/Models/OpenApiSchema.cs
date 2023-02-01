@@ -536,6 +536,11 @@ namespace Microsoft.OpenApi.Models
             }
 
             target.SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
+           
+            if (Reference != null)
+            {
+                settings.LoopDetector.PopLoop<OpenApiSchema>();
+            }
         }
 
         /// <summary>
