@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Validations
         {
             get
             {
-                return _rules.Values.SelectMany(v => v).ToList();
+                return _rules.Values.SelectMany(v => v);
             }
         }
 
