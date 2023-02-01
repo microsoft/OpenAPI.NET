@@ -285,9 +285,10 @@ namespace Microsoft.OpenApi.Hidi
 
                 result = await new OpenApiStreamReader(new OpenApiReaderSettings
                 {
-                    RuleSet = ValidationRuleSet.GetDefaultRuleSet(),
                     LoadExternalRefs = inlineExternal,
-                    BaseUrl = openApiFile.StartsWith("http") ? new Uri(openApiFile) : new Uri("file:" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
+                    BaseUrl = openApiFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? 
+                        new Uri(openApiFile) :
+                        new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 }
                 ).ReadAsync(stream);
 
