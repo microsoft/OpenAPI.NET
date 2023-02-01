@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the document
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count() > 0)
             {
                 var openApiErrors = document.Validate(_settings.RuleSet);
                 foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the document
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count() > 0)
             {
                 var openApiErrors = document.Validate(_settings.RuleSet);
                 foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())
@@ -193,7 +193,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the element
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count > 0)
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count() > 0)
             {
                 var errors = element.Validate(_settings.RuleSet);
                 foreach (var item in errors)
