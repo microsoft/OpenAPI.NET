@@ -1262,7 +1262,7 @@ namespace Microsoft.OpenApi.Validations
         public ValidationRuleSet() { }
         public ValidationRuleSet(Microsoft.OpenApi.Validations.ValidationRuleSet ruleSet) { }
         public ValidationRuleSet(System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.ValidationRule> rules) { }
-        public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> Rules { get; }
+        public System.Collections.Generic.IEnumerable<Microsoft.OpenApi.Validations.ValidationRule> Rules { get; }
         public void Add(Microsoft.OpenApi.Validations.ValidationRule rule) { }
         public System.Collections.Generic.IList<Microsoft.OpenApi.Validations.ValidationRule> FindRules(System.Type type) { }
         public System.Collections.Generic.IEnumerator<Microsoft.OpenApi.Validations.ValidationRule> GetEnumerator() { }
