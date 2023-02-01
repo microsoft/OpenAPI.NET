@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the rules in this rule set.
         /// </summary>
-        public IList<ValidationRule> Rules
+        public IEnumerable<ValidationRule> Rules
         {
             get
             {
