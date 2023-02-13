@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiSecurityScheme() {}
+        public OpenApiSecurityScheme() { }
 
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiSecurityScheme"/> object
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
             Scheme = securityScheme?.Scheme ?? Scheme;
             BearerFormat = securityScheme?.BearerFormat ?? BearerFormat;
             Flows = securityScheme?.Flows != null ? new(securityScheme?.Flows) : null;
-            OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString) : null;
+            OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = securityScheme?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
             UnresolvedReference = securityScheme?.UnresolvedReference ?? UnresolvedReference;
             Reference = securityScheme?.Reference != null ? new(securityScheme?.Reference) : null;
@@ -107,8 +107,8 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-           
-            if (Reference != null) 
+
+            if (Reference != null)
             {
                 Reference.SerializeAsV3(writer);
                 return;

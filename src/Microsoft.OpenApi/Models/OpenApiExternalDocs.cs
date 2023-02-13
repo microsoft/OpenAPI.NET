@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiExternalDocs() {}
+        public OpenApiExternalDocs() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiExternalDocs"/> object
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiExternalDocs(OpenApiExternalDocs externalDocs)
         {
             Description = externalDocs?.Description ?? Description;
-            Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString) : null;
+            Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = externalDocs?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions) : null;
         }
 
