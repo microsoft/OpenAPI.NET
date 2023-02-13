@@ -618,7 +618,12 @@ definitions:
     type: object
     properties:
       children:
-        $ref: '#/definitions/thing'
+        type: object
+        properties:
+          children:
+            $ref: '#/definitions/thing'
+          related:
+            type: integer
       related:
         type: integer";
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
