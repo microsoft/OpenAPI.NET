@@ -328,22 +328,13 @@ namespace Microsoft.OpenApi.Hidi
             {
                 AddSingleQuotesForStringParameters = true,
                 AddEnumDescriptionExtension = true,
-                DeclarePathParametersOnPathItem = true,
                 EnableKeyAsSegment = true,
                 EnableOperationId = true,
-                ErrorResponsesAsDefault = false,
                 PrefixEntityTypeNameBeforeKey = true,
                 TagDepth = 2,
                 EnablePagination = true,
-                EnableDiscriminatorValue = true,
                 EnableDerivedTypesReferencesForRequestBody = false,
                 EnableDerivedTypesReferencesForResponses = false,
-                ShowRootPath = false,
-                ShowLinks = false,
-                ExpandDerivedTypesNavigationProperties = false,
-                EnableCount = true,
-                UseSuccessStatusCodeRange = true,
-                EnableTypeDisambiguationForDefaultValueOfOdataTypeProperty = true
             };
             config.GetSection("OpenApiConvertSettings").Bind(settings);
 
