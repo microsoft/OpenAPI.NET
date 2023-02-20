@@ -1439,7 +1439,7 @@ paths: { }";
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            DocumentWithWebhooks.SerializeAsV3(writer, OpenApiSpecVersion.OpenApi3_1);
+            DocumentWithWebhooks.SerializeAsV31(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
