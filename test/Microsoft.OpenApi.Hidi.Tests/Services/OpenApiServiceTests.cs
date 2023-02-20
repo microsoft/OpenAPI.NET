@@ -36,9 +36,9 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(openApiDoc.Paths);
             Assert.Equal(expectedPathCount, openApiDoc.Paths.Count);
         }
-        
+
         [Theory]
-        [InlineData("Todos.Todo.UpdateTodo",null, 1)]
+        [InlineData("Todos.Todo.UpdateTodo", null, 1)]
         [InlineData("Todos.Todo.ListTodo", null, 1)]
         [InlineData(null, "Todos.Todo", 4)]
         public async Task ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string operationIds, string tags, int expectedPathCount)
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }
-        
+
         [Theory]
         [InlineData("UtilityFiles/appsettingstest.json")]
         [InlineData(null)]
@@ -78,6 +78,47 @@ namespace Microsoft.OpenApi.Tests.Services
             {
                 Assert.NotNull(settings);
             }
+        }
+
+        [Theory]
+        [InlineData("UtilityFiles/appsettingstest.json")]
+        public void ReturnBoundOpenAPiConvertSettingsWhenSettingsFileIsProvided(string filePath)
+        {
+            // Arrange
+            var settings = new OpenApiConvertSettings()
+            {
+                AddSingleQuotesForStringParameters = true,
+                AddEnumDescriptionExtension = true,
+                DeclarePathParametersOnPathItem = true,
+                EnableKeyAsSegment = true,
+                EnableOperationId = true,
+                ErrorResponsesAsDefault = false,
+                PrefixEntityTypeNameBeforeKey = true,
+                TagDepth = 2,
+                EnablePagination = true,
+                EnableDiscriminatorValue = true,
+                EnableDerivedTypesReferencesForRequestBody = false,
+                EnableDerivedTypesReferencesForResponses = false,
+                ShowRootPath = false,
+                ShowLinks = false,
+                ExpandDerivedTypesNavigationProperties = false,
+                EnableCount = false,
+                UseSuccessStatusCodeRange = true,
+                EnableTypeDisambiguationForDefaultValueOfOdataTypeProperty = true
+            };
+            
+            // Act
+            var config = OpenApiService.GetConfiguration(filePath);
+            config.GetSection("OpenApiConvertSettings").Bind(settings);
+            
+            // Assert
+            Assert.NotNull(settings);
+            Assert.True(settings.TagDepth == 2);
+            Assert.True(settings.ShowLinks);
+            Assert.True(settings.DeclarePathParametersOnPathItem);
+            Assert.False(settings.ErrorResponsesAsDefault);
+            Assert.True(settings.EnableCount);
+            Assert.True(!settings.UseSuccessStatusCodeRange);
         }
 
 
@@ -122,7 +163,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var output = reader.ReadToEnd();
             Assert.Contains("graph LR", output);
         }
-        
+
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
@@ -190,13 +231,13 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var fileinfo = new FileInfo("sample.json");
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml",null, null,  fileinfo, true, null, null,false,null,false,false,null,null,null,new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, fileinfo, true, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
             var output = File.ReadAllText("sample.json");
             Assert.NotEmpty(output);
         }
 
-        
+
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputname()
         {
@@ -239,7 +280,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void InvokeTransformCommand()
         {
             var rootCommand = Program.CreateRootCommand();
-            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json","--co" };
+            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json", "--co" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
             var context = new InvocationContext(parseResult);
