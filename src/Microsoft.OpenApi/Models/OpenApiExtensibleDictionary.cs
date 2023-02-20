@@ -38,15 +38,31 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
+
+        /// <summary>
+        /// Serialize to Open Api v3.1
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            Serialize(writer);
+        }
+
         /// <summary>
         /// Serialize to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        /// <param name="writer"></param>
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Serialize(writer);
+        }
+        
+        /// <summary>
+        /// Serialize to Open Api v3.0
+        /// </summary>
+        public void Serialize(IOpenApiWriter writer)
+        {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 
@@ -55,7 +71,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.SerializeAsV3(w));
             }
 
-            writer.WriteExtensions(Extensions, version);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }

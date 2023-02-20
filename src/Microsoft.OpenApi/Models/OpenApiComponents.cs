@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
@@ -95,14 +96,50 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
+        /// Serialize <see cref="OpenApiComponents"/> to Open API v3.1.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
-        {
-            if (writer == null)
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {            
+            Serialize(writer);
+            
+            // pathItems - only present in v3.1
+            writer.WriteOptionalMap(
+            OpenApiConstants.PathItems,
+            PathItems,
+            (w, key, component) =>
             {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+                if (component.Reference != null &&
+                    component.Reference.Type == ReferenceType.Schema &&
+                    component.Reference.Id == key)
+                {
+                    component.SerializeAsV3WithoutReference(w);
+                }
+                else
+                {
+                    component.SerializeAsV3(w);
+                }
+            });
+            
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/> to v3.0
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV3(IOpenApiWriter writer)
+        {
+            Serialize(writer);
+            writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiComponents"/>.
+        /// </summary>
+        public void Serialize(IOpenApiWriter writer)
+        {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             // If references have been inlined we don't need the to render the components section
             // however if they have cycles, then we will need a component rendered
@@ -293,31 +330,8 @@ namespace Microsoft.OpenApi.Models
                     }
                 });
             
-            // pathItems - only present in v3.1
-            if(version == OpenApiSpecVersion.OpenApi3_1)
-            {
-                writer.WriteOptionalMap(
-                OpenApiConstants.PathItems,
-                PathItems,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV3WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV3(w);
-                    }
-                });
-            }
-
             // extensions
-            writer.WriteExtensions(Extensions, version);
-
-            writer.WriteEndObject();
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
         }
 
         /// <summary>

@@ -106,64 +106,74 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.
+        /// Serialize <see cref="OpenApiDocument"/> to Open API v3.1 document.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
-
-            // openapi
-            switch (version)
-            {
-                case OpenApiSpecVersion.OpenApi3_1:
-                    writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.0");
-                    break;
-                case OpenApiSpecVersion.OpenApi3_0:
-                    writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-                    break;
-                default:
-                    writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-                    break;
-            }
             
+            // openApi;
+            writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.0");
+            
+            // jsonSchemaDialect
+            writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
+
+            Serialize(writer);
+            
+            // webhooks
+            writer.WriteOptionalMap(
+            OpenApiConstants.Webhooks,
+            Webhooks,
+            (w, key, component) =>
+            {
+                if (component.Reference != null &&
+                    component.Reference.Type == ReferenceType.PathItem &&
+                    component.Reference.Id == key)
+                {
+                    component.SerializeAsV3WithoutReference(w);
+                }
+                else
+                {
+                    component.SerializeAsV31(w);
+                }
+            });
+
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/> to the latest patch of OpenAPI object V3.0.
+        /// </summary>
+        public void SerializeAsV3(IOpenApiWriter writer)
+        {
+
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+
+            writer.WriteStartObject();
+            
+            // openapi
+            writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
+            Serialize(writer);
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDocument"/>
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Serialize(IOpenApiWriter writer)
+        {            
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV3(w));
-
-            // jsonSchemaDialect
-            if(version == OpenApiSpecVersion.OpenApi3_1)
-                writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
 
             // servers
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
 
             // paths
             writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV3(w));
-
-            // webhooks
-            if (version == OpenApiSpecVersion.OpenApi3_1)
-            {
-                writer.WriteOptionalMap(
-                OpenApiConstants.Webhooks,
-                Webhooks,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.PathItem &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV3WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV3(w);
-                    }
-                });
-            }                
 
             // components
             writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => c.SerializeAsV3(w));
@@ -181,9 +191,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
 
             // extensions
-            writer.WriteExtensions(Extensions, version);
-
-            writer.WriteEndObject();
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
         }
 
         /// <summary>

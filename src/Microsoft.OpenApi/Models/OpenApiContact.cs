@@ -52,13 +52,22 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
+        /// Serialize <see cref="OpenApiContact"/> to Open Api v3.1
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
         {
-            WriteInternal(writer, version);
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_1);
         }
         
+        /// <summary>
+        /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
+        /// </summary>
+        public void SerializeAsV3(IOpenApiWriter writer)
+        {
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+        }
+
         /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v2.0
         /// </summary>
@@ -69,10 +78,7 @@ namespace Microsoft.OpenApi.Models
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 

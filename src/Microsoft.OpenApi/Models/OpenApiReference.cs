@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -144,14 +145,34 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiReference"/> to Open Api v3.1.
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            Serialize(writer);
+
+            // summary and description are in 3.1 but not in 3.0
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            writer.WriteProperty(OpenApiConstants.Description, Description);
+            
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiReference"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        public void SerializeAsV3(IOpenApiWriter writer)
+        {            
+            Serialize(writer);
+            writer.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiReference"/>
+        /// </summary>
+        public void Serialize(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             if (Type == ReferenceType.Tag)
             {
@@ -167,18 +188,10 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            writer.WriteStartObject();
-            
-            if (version == OpenApiSpecVersion.OpenApi3_1)
-            {
-                writer.WriteProperty(OpenApiConstants.Summary, Summary);
-                writer.WriteProperty(OpenApiConstants.Description, Description);
-            }            
+            writer.WriteStartObject();          
 
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);
-
-            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -186,10 +199,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             if (Type == ReferenceType.Tag)
             {

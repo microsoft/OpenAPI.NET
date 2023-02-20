@@ -75,16 +75,32 @@ namespace Microsoft.OpenApi.Models
 
             PathItems.Add(expression, pathItem);
         }
-
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiCallback"/> to Open Api v3.1
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            Serialize(writer);
+        }
+        
         /// <summary>
         /// Serialize <see cref="OpenApiCallback"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Serialize(writer);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiCallback"/>
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Serialize(IOpenApiWriter writer)
+        {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             var target = this;
 

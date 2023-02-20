@@ -168,16 +168,29 @@ namespace Microsoft.OpenApi.Models
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
             Deprecated = parameter?.Deprecated ?? Deprecated;
         }
-
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.1
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            Serialize(writer);
+        }
+        
         /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Serialize(writer);
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiParameter"/>
+        /// </summary>
+        public void Serialize(IOpenApiWriter writer)
+        {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             var target = this;
 

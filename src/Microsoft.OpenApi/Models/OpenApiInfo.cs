@@ -72,27 +72,39 @@ namespace Microsoft.OpenApi.Models
             License = info?.License != null ? new(info?.License) : null;
             Extensions = info?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(info.Extensions) : null;
         }
-
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.1
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {            
+            Serialize(writer);
+            
+            // summary - present in 3.1
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            writer.WriteEndObject();
+        }
+        
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        public void SerializeAsV3(IOpenApiWriter writer)
+        {            
+            Serialize(writer);
+            
+            writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
+        /// </summary>
+        public void Serialize(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
             writer.WriteStartObject();
 
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
-
-            // summary - present in 3.1
-            if (version == OpenApiSpecVersion.OpenApi3_1)
-            {
-                writer.WriteProperty(OpenApiConstants.Summary, Summary);
-            }
            
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
@@ -111,8 +123,6 @@ namespace Microsoft.OpenApi.Models
 
             // specification extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
         }
 
         /// <summary>

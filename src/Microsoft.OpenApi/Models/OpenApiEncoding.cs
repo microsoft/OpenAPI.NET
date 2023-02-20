@@ -70,16 +70,31 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
             Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
         }
-
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiEncoding"/> to Open Api v3.1
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            Serialize(writer);
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiEncoding"/> to Open Api v3.0
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV3(IOpenApiWriter writer)
+        {
+            Serialize(writer);
+        }
+        
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        public void Serialize(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull("writer");
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 
@@ -99,7 +114,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // extensions
-            writer.WriteExtensions(Extensions, version);
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }
