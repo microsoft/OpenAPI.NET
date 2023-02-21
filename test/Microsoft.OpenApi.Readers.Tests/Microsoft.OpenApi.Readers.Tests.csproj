@@ -262,6 +262,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="JsonSchema.Net" Version="4.0.0-beta2" />
+        <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0-beta1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
         <PackageReference Include="FluentAssertions" Version="6.7.0">
         </PackageReference>
@@ -319,6 +321,9 @@
         <EmbeddedResource Include="V3Tests\Samples\OpenApiSchema\basicSchemaWithReference.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Update="V31Tests\Samples\schema.yaml">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="V3Tests\Samples\CompleteHeader.yaml">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

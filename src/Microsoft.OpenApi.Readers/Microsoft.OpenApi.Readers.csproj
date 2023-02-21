@@ -35,6 +35,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="JsonSchema.Net" Version="4.0.0-beta2" />
+        <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0-beta1" />
         <PackageReference Include="SharpYaml" Version="2.1.0" />
     </ItemGroup>
 
