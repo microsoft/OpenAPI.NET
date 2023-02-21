@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Hidi
             else
             {
                 stream = await GetStream(openapi, logger, cancellationToken);
-                var result = await ParseOpenApi(openapi, inlineExternal, logger, stream);
+                var result = await ParseOpenApi(openapi, inlineExternal, logger, stream, cancellationToken);
                 document = result.OpenApiDocument;
             }
 
@@ -253,7 +253,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 using var stream = await GetStream(openapi, logger, cancellationToken);
 
-                var result = await ParseOpenApi(openapi, false, logger, stream);
+                var result = await ParseOpenApi(openapi, false, logger, stream, cancellationToken);
 
                 using (logger.BeginScope("Calculating statistics"))
                 {
@@ -275,7 +275,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream)
+        private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken)
         {
             ReadResult result;
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Hidi
                         new Uri(openApiFile) :
                         new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 }
-                ).ReadAsync(stream);
+                ).ReadAsync(stream, cancellationToken);
 
                 logger.LogTrace("{timestamp}ms: Completed parsing.", stopwatch.ElapsedMilliseconds);
 
