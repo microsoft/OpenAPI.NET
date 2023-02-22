@@ -206,7 +206,7 @@ version: '2017-03-01'";
         }
 
         [Fact]
-        public void SerializeInfoObjectWithSummaryAsV3YamlWorks()
+        public void SerializeInfoObjectWithSummaryAsV31YamlWorks()
         {
             // Arrange
             var expected = @"title: Sample Pet Store App
@@ -224,7 +224,7 @@ version: '1.1.1'";
         }
 
         [Fact]
-        public void SerializeInfoObjectWithSummaryAsV3JsonWorks()
+        public void SerializeInfoObjectWithSummaryAsV31JsonWorks()
         {
             // Arrange
             var expected = @"{
