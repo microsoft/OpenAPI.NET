@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -146,10 +146,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             var target = this;
 

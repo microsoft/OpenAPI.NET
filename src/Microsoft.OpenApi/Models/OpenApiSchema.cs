@@ -510,10 +510,7 @@ namespace Microsoft.OpenApi.Models
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             var settings = writer.GetSettings();
             var target = this;
