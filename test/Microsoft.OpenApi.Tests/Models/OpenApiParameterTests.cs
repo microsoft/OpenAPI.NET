@@ -110,6 +110,20 @@ namespace Microsoft.OpenApi.Tests.Models
             }
 
         };
+        
+        public static OpenApiParameter QueryParameterWithMissingStyle = new OpenApiParameter
+        {            
+            Name = "id",
+            In = ParameterLocation.Query,
+            Schema = new OpenApiSchema
+            {
+                Type = "object",
+                AdditionalProperties = new OpenApiSchema
+                {
+                    Type = "integer"
+                }                
+            }
+        };    
 
         public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter
         {
@@ -186,7 +200,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act & Assert
             parameter.Explode.Should().Be(expectedExplode);
-        }
+        }        
 
         [Theory]
         [InlineData(ParameterLocation.Path, ParameterStyle.Simple)]
@@ -197,6 +211,8 @@ namespace Microsoft.OpenApi.Tests.Models
         public void WhenStyleAndInIsNullTheDefaultValueOfStyleShouldBeSimple(ParameterLocation? inValue, ParameterStyle expectedStyle)
         {
             // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = false });
             var parameter = new OpenApiParameter
             {
                 Name = "name1",
@@ -204,7 +220,28 @@ namespace Microsoft.OpenApi.Tests.Models
             };
 
             // Act & Assert
+            parameter.SerializeAsV3(writer);
+            writer.Flush();
+            
             parameter.Style.Should().Be(expectedStyle);
+        }
+
+        [Fact]
+        public void SerializeQueryParameterWithMissingStyleSucceeds()
+        {
+            // Arrange
+            var expected = @"name: id
+in: query
+schema:
+  type: object
+  additionalProperties:
+    type: integer";
+
+            // Act
+            var actual = QueryParameterWithMissingStyle.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual.MakeLineBreaksEnvironmentNeutral().Should().Be(expected.MakeLineBreaksEnvironmentNeutral());
         }
 
         [Fact]
