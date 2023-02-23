@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
     {
         private bool? _explode;
-        public ParameterStyle? _style;
+        private ParameterStyle? _style;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -76,8 +76,8 @@ namespace Microsoft.OpenApi.Models
         /// for cookie - form.
         /// </summary>
         public ParameterStyle? Style
-        { 
-            get => _style ?? SetDefaultStyleValue();
+        {
+            get => _style ?? GetDefaultStyleValue();
             set => _style = value;
         }
 
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Models
 
             // allowEmptyValue
             writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
-            
+
             // style
             if (_style.HasValue)
             {
@@ -405,7 +405,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private ParameterStyle? SetDefaultStyleValue()
+        private ParameterStyle? GetDefaultStyleValue()
         {
             Style = In switch
             {
@@ -415,7 +415,7 @@ namespace Microsoft.OpenApi.Models
                 ParameterLocation.Cookie => (ParameterStyle?)ParameterStyle.Form,
                 _ => (ParameterStyle?)ParameterStyle.Simple,
             };
-
+            
             return Style;
         }
 
