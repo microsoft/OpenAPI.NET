@@ -210,9 +210,9 @@ version: '2017-03-01'";
         {
             // Arrange
             var expected = @"title: Sample Pet Store App
-summary: This is a sample server for a pet store.
 description: This is a sample server for a pet store.
-version: '1.1.1'";
+version: '1.1.1'
+summary: This is a sample server for a pet store.";
 
             // Act
             var actual = InfoWithSummary.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
@@ -229,9 +229,9 @@ version: '1.1.1'";
             // Arrange
             var expected = @"{
   ""title"": ""Sample Pet Store App"",
-  ""summary"": ""This is a sample server for a pet store."",
   ""description"": ""This is a sample server for a pet store."",
-  ""version"": ""1.1.1""
+  ""version"": ""1.1.1"",
+  ""summary"": ""This is a sample server for a pet store.""
 }";
             
             // Act
