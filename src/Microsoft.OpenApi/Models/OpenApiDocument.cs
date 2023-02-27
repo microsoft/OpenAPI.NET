@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Models
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
 
-            Serialize(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
             
             // webhooks
             writer.WriteOptionalMap(
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Models
                     component.Reference.Type == ReferenceType.PathItem &&
                     component.Reference.Id == key)
                 {
-                    component.SerializeAsV3WithoutReference(w);
+                    component.SerializeAsV3WithoutReference(w, OpenApiSpecVersion.OpenApi3_1);
                 }
                 else
                 {
@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Models
             
             // openapi
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-            Serialize(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
             writer.WriteEndObject();
         }
 
@@ -164,7 +164,8 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiDocument"/>
         /// </summary>
         /// <param name="writer"></param>
-        public void Serialize(IOpenApiWriter writer)
+        /// <param name="version"></param>
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
         {            
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV3(w));
@@ -185,7 +186,7 @@ namespace Microsoft.OpenApi.Models
                 (w, s) => s.SerializeAsV3(w));
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV3WithoutReference(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV3WithoutReference(w, version));
 
             // external docs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));

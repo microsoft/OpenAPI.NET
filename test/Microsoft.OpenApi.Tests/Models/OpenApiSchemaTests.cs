@@ -379,7 +379,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
 
             // Act
-            ReferencedSchema.SerializeAsV3WithoutReference(writer);
+            ReferencedSchema.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 

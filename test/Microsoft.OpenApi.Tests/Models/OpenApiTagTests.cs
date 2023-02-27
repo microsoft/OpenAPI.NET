@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            BasicTag.SerializeAsV3WithoutReference(writer);
+            BasicTag.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var expected = "{ }";
 
             // Act
-            BasicTag.SerializeAsV3WithoutReference(writer);
+            BasicTag.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            AdvancedTag.SerializeAsV3WithoutReference(writer);
+            AdvancedTag.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -172,7 +172,7 @@ externalDocs:
 x-tag-extension: ";
 
             // Act
-            AdvancedTag.SerializeAsV3WithoutReference(writer);
+            AdvancedTag.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 

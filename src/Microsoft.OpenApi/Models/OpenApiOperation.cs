@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            Serialize(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
         }
         
         /// <summary>
@@ -144,13 +144,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            Serialize(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiOperation"/> to Open Api v3.0.
         /// </summary>
-        public void Serialize(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
 
             // specification extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions,version);
             
             writer.WriteEndObject();
         }

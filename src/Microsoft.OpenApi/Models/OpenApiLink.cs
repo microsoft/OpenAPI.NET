@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            Serialize(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
         }
         
         /// <summary>
@@ -95,13 +95,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            Serialize(writer);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiLink"/>
         /// </summary>
-        public void Serialize(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Models
                     target = GetEffective(Reference.HostDocument);
                 }
             }
-            target.SerializeAsV3WithoutReference(writer);
+            target.SerializeAsV3WithoutReference(writer, version);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             writer.WriteStartObject();
 

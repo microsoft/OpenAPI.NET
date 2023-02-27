@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     InlineLocalReferences = true
                 });
-                element.SerializeAsV3WithoutReference(writer);
+                element.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
                 writer.Flush();
                 stream.Position = 0;
 

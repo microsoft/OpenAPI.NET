@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            Serialize(writer);
+            SerializeInternal(writer);
         }
 
         /// <summary>
@@ -50,14 +50,14 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            Serialize(writer);
+            SerializeInternal(writer);
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
         /// </summary>
         /// <param name="writer"></param>
-        public void Serialize(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 

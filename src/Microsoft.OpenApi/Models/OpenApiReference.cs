@@ -149,7 +149,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            Serialize(writer);
+            SerializeInternal(writer);
 
             // summary and description are in 3.1 but not in 3.0
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -163,14 +163,14 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {            
-            Serialize(writer);
+            SerializeInternal(writer);
             writer.WriteEndObject();
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiReference"/>
         /// </summary>
-        public void Serialize(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 

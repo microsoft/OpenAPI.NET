@@ -334,7 +334,7 @@ in: query";
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedSecurityScheme.SerializeAsV3WithoutReference(writer);
+            ReferencedSecurityScheme.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
