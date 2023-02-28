@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -101,7 +102,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {            
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV3(writer));
             
             // pathItems - only present in v3.1
             writer.WriteOptionalMap(
@@ -113,7 +114,7 @@ namespace Microsoft.OpenApi.Models
                     component.Reference.Type == ReferenceType.Schema &&
                     component.Reference.Id == key)
                 {
-                    component.SerializeAsV3WithoutReference(w, OpenApiSpecVersion.OpenApi3_1);
+                    component.SerializeAsV3WithoutReference(w, OpenApiSpecVersion.OpenApi3_1, callback: (w, e) => e.SerializeAsV3(w));
                 }
                 else
                 {
@@ -130,14 +131,14 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
             writer.WriteEndObject();
         }
         
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/>.
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
@@ -156,7 +157,7 @@ namespace Microsoft.OpenApi.Models
                        OpenApiConstants.Schemas,
                        Schemas,
                        (w, key, component) => {
-                           component.SerializeAsV3WithoutReference(w, version);
+                           component.SerializeAsV3WithoutReference(w, version, callback);
                            });
                 }
                 writer.WriteEndObject();
@@ -178,11 +179,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.Schema &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -196,11 +197,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.Response &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -214,11 +215,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.Parameter &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -232,11 +233,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.Example &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -250,11 +251,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.RequestBody &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -268,11 +269,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.Header &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -286,11 +287,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.SecurityScheme &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -304,11 +305,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.Link &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
 
@@ -322,11 +323,11 @@ namespace Microsoft.OpenApi.Models
                         component.Reference.Type == ReferenceType.Callback &&
                         component.Reference.Id == key)
                     {
-                        component.SerializeAsV3WithoutReference(w, version);
+                        component.SerializeAsV3WithoutReference(w, version, callback);
                     }
                     else
                     {
-                        component.SerializeAsV3(w);
+                        callback(w, component);
                     }
                 });
             

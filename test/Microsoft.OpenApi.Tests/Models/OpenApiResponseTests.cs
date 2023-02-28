@@ -310,7 +310,7 @@ headers:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedResponse.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
+            ReferencedResponse.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, callback: (w, e) => e.SerializeAsV3(writer));
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 

@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Models
             // summary and description are in 3.1 but not in 3.0
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
             writer.WriteProperty(OpenApiConstants.Description, Description);
-            
+
             writer.WriteEndObject();
         }
 
@@ -188,7 +188,7 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            writer.WriteStartObject();          
+            writer.WriteStartObject();
 
             // $ref
             writer.WriteProperty(OpenApiConstants.DollarRef, ReferenceV3);

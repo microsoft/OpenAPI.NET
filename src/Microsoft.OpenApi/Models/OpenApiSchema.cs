@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -297,7 +298,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
         
         /// <summary>
@@ -305,13 +306,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
         
         /// <summary>
         /// Serialize <see cref="OpenApiSchema"/> to Open Api v3.0
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
@@ -322,7 +323,7 @@ namespace Microsoft.OpenApi.Models
             {
                 if (!settings.ShouldInlineReference(Reference))
                 {
-                    Reference.SerializeAsV3(writer);
+                    callback(writer, Reference);
                     return;
                 }
                 else
@@ -337,12 +338,12 @@ namespace Microsoft.OpenApi.Models
                 if (!settings.LoopDetector.PushLoop<OpenApiSchema>(this))
                 {
                     settings.LoopDetector.SaveLoop(this);
-                    Reference.SerializeAsV3(writer);
+                    callback(writer, Reference);
                     return;
                 }
             }
 
-            target.SerializeAsV3WithoutReference(writer, version);
+            target.SerializeAsV3WithoutReference(writer, version, callback);
 
             if (Reference != null)
             {
@@ -353,7 +354,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
         {
 
             writer.WriteStartObject();
@@ -410,22 +411,22 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => callback(w, s));
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => callback(w, s));
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => callback(w, s));
 
             // not
-            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => callback(w, s));
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => callback(w, s));
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => callback(w, s));
 
             // additionalProperties
             if (AdditionalPropertiesAllowed)
@@ -433,7 +434,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(
                     OpenApiConstants.AdditionalProperties,
                     AdditionalProperties,
-                    (w, s) => s.SerializeAsV3(w));
+                    (w, s) => callback(w, s));
             }
             else
             {
@@ -453,7 +454,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
 
             // discriminator
-            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => callback(w, s));
 
             // readOnly
             writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
@@ -465,7 +466,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => callback(w, s));
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));

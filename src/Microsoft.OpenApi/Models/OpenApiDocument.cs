@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -121,7 +122,7 @@ namespace Microsoft.OpenApi.Models
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
 
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w));
             
             // webhooks
             writer.WriteOptionalMap(
@@ -133,7 +134,7 @@ namespace Microsoft.OpenApi.Models
                     component.Reference.Type == ReferenceType.PathItem &&
                     component.Reference.Id == key)
                 {
-                    component.SerializeAsV3WithoutReference(w, OpenApiSpecVersion.OpenApi3_1);
+                    component.SerializeAsV3WithoutReference(w, OpenApiSpecVersion.OpenApi3_1, callback: (w, e) => e.SerializeAsV3(w));
                 }
                 else
                 {
@@ -156,7 +157,7 @@ namespace Microsoft.OpenApi.Models
             
             // openapi
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
             writer.WriteEndObject();
         }
 
@@ -165,31 +166,32 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="version"></param>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
+        /// <param name="callback"></param>
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
         {            
             // info
-            writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => i.SerializeAsV3(w));
+            writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => callback(w, i));
 
             // servers
-            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => callback(w, s));
 
             // paths
-            writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => p.SerializeAsV3(w));
+            writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => callback(w, p));
 
             // components
-            writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => c.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => callback(w, c));
 
             // security
             writer.WriteOptionalCollection(
                 OpenApiConstants.Security,
                 SecurityRequirements,
-                (w, s) => s.SerializeAsV3(w));
+                (w, s) => callback(w, s));
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV3WithoutReference(w, version));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV3WithoutReference(w, version, callback));
 
             // external docs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => callback(w, e));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);

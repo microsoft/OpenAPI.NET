@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -61,7 +62,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
         
         /// <summary>
@@ -69,35 +70,35 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/>
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 
             // implicit
-            writer.WriteOptionalObject(OpenApiConstants.Implicit, Implicit, (w, o) => o.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Implicit, Implicit, (w, o) => callback(w, o));
 
             // password
-            writer.WriteOptionalObject(OpenApiConstants.Password, Password, (w, o) => o.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Password, Password, (w, o) => callback(w, o));
 
             // clientCredentials
             writer.WriteOptionalObject(
                 OpenApiConstants.ClientCredentials,
                 ClientCredentials,
-                (w, o) => o.SerializeAsV3(w));
+                (w, o) => callback(w, o));
 
             // authorizationCode
             writer.WriteOptionalObject(
                 OpenApiConstants.AuthorizationCode,
                 AuthorizationCode,
-                (w, o) => o.SerializeAsV3(w));
+                (w, o) => callback(w, o));
 
             // extensions
             writer.WriteExtensions(Extensions, version);

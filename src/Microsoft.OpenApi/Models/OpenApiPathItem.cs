@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -90,7 +91,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <summary>
@@ -98,13 +99,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
         
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
             var target = this;
@@ -113,7 +114,7 @@ namespace Microsoft.OpenApi.Models
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {
-                    Reference.SerializeAsV3(writer);
+                    callback(writer, Reference);
                     return;
                 } 
                 else
@@ -121,7 +122,7 @@ namespace Microsoft.OpenApi.Models
                     target = GetEffective(Reference.HostDocument);
                 }
             }
-            target.SerializeAsV3WithoutReference(writer, version);
+            target.SerializeAsV3WithoutReference(writer, version, callback);
         }
 
         /// <summary>
@@ -208,7 +209,9 @@ namespace Microsoft.OpenApi.Models
         /// Serialize inline PathItem in OpenAPI V3
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
+        /// <param name="version"></param>
+        /// <param name="callback"></param>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
         {
 
             writer.WriteStartObject();
@@ -225,14 +228,14 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(
                     operation.Key.GetDisplayName(),
                     operation.Value,
-                    (w, o) => o.SerializeAsV3(w));
+                    (w, o) => callback(w, o));
             }
 
             // servers
-            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => s.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => callback(w, s));
 
             // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => p.SerializeAsV3(w));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => callback(w, p));
 
             // specification extensions
             writer.WriteExtensions(Extensions, version);

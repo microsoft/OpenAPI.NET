@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -66,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer);
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
         }
         
         /// <summary>
@@ -74,19 +75,19 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer);
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
         }
         
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer, SerializeDelegate callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             if (Reference != null)
             {
-                Reference.SerializeAsV3(writer);
+                callback(writer, Reference);
                 return;
             }
 
@@ -96,7 +97,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
         {
             writer.WriteStartObject();
 
@@ -107,7 +108,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // external docs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => callback(w, e));
 
             // extensions.
             writer.WriteExtensions(Extensions, version);

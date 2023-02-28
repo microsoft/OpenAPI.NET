@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -33,7 +34,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer);
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
         }
         
         /// <summary>
@@ -41,13 +42,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer);
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
         }
 
         /// <summary>
         /// Serialize <see cref="OpenApiSecurityRequirement"/> 
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer)
+        private void SerializeInternal(IOpenApiWriter writer, SerializeDelegate callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
@@ -66,7 +67,7 @@ namespace Microsoft.OpenApi.Models
                     continue;
                 }
 
-                securityScheme.SerializeAsV3(writer);
+                callback(writer, securityScheme);
 
                 writer.WriteStartArray();
 

@@ -316,7 +316,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ReferencedParameter.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
+            ReferencedParameter.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, callback: (w, e) => e.SerializeAsV3(writer));
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -406,7 +406,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ParameterWithFormStyleAndExplodeFalse.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
+            ParameterWithFormStyleAndExplodeFalse.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, callback: (w, e) => e.SerializeAsV3(writer));
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -424,7 +424,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            ParameterWithFormStyleAndExplodeTrue.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
+            ParameterWithFormStyleAndExplodeTrue.SerializeAsV3WithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, callback: (w, e) => e.SerializeAsV3(writer));
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
