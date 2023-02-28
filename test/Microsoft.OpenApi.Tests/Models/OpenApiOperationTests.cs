@@ -334,13 +334,11 @@ namespace Microsoft.OpenApi.Tests.Models
   ""parameters"": [
     {
       ""name"": ""parameter1"",
-      ""in"": ""path"",
-      ""style"": ""simple""
+      ""in"": ""path""
     },
     {
       ""name"": ""parameter2"",
-      ""in"": ""header"",
-      ""style"": ""simple""
+      ""in"": ""header""
     }
   ],
   ""requestBody"": {
@@ -409,13 +407,11 @@ namespace Microsoft.OpenApi.Tests.Models
   ""parameters"": [
     {
       ""name"": ""parameter1"",
-      ""in"": ""path"",
-      ""style"": ""simple""
+      ""in"": ""path""
     },
     {
       ""name"": ""parameter2"",
-      ""in"": ""header"",
-      ""style"": ""simple""
+      ""in"": ""header""
     }
   ],
   ""requestBody"": {
@@ -505,7 +501,6 @@ namespace Microsoft.OpenApi.Tests.Models
       ""in"": ""path"",
       ""description"": ""ID of pet that needs to be updated"",
       ""required"": true,
-      ""style"": ""simple"",
       ""schema"": {
         ""type"": ""string""
       }

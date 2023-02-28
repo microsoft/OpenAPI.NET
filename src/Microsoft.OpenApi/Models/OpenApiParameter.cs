@@ -240,7 +240,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
             // style
-            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+            if (_style.HasValue)
+            {
+                writer.WriteProperty(OpenApiConstants.Style, Style.Value.GetDisplayName());
+            }
 
             // explode
             writer.WriteProperty(OpenApiConstants.Explode, Explode, Style.HasValue && Style.Value == ParameterStyle.Form);

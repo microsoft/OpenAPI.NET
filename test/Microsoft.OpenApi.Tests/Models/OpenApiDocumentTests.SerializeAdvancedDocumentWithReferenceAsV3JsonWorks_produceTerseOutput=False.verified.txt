@@ -30,7 +30,6 @@
             "name": "tags",
             "in": "query",
             "description": "tags to filter by",
-            "style": "form",
             "schema": {
               "type": "array",
               "items": {
@@ -42,7 +41,6 @@
             "name": "limit",
             "in": "query",
             "description": "maximum number of results to return",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -151,7 +149,6 @@
             "in": "path",
             "description": "ID of pet to fetch",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
@@ -205,7 +202,6 @@
             "in": "path",
             "description": "ID of pet to delete",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int64"
