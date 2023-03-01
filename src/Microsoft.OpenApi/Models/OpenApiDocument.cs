@@ -122,7 +122,8 @@ namespace Microsoft.OpenApi.Models
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
 
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w),
+                (w, element) => element.SerializeAsV31WithoutReference(w));
             
             // webhooks
             writer.WriteOptionalMap(
@@ -134,7 +135,7 @@ namespace Microsoft.OpenApi.Models
                     component.Reference.Type == ReferenceType.PathItem &&
                     component.Reference.Id == key)
                 {
-                    component.SerializeAsV3WithoutReference(w, OpenApiSpecVersion.OpenApi3_1, callback: (w, e) => e.SerializeAsV3(w));
+                    component.SerializeAsV31WithoutReference(w);
                 }
                 else
                 {
@@ -157,7 +158,8 @@ namespace Microsoft.OpenApi.Models
             
             // openapi
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w), 
+                (w, element) => element.SerializeAsV3WithoutReference(w));
             writer.WriteEndObject();
         }
 
@@ -167,7 +169,10 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         /// <param name="version"></param>
         /// <param name="callback"></param>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
+        /// <param name="action"></param>
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+            Action<IOpenApiWriter, IOpenApiSerializable> callback, 
+            Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {            
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => callback(w, i));
@@ -188,13 +193,13 @@ namespace Microsoft.OpenApi.Models
                 (w, s) => callback(w, s));
 
             // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV3WithoutReference(w, version, callback));
+            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => action(w, t));
 
             // external docs
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => callback(w, e));
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
         }
 
         /// <summary>

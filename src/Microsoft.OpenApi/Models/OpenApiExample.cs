@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -80,7 +81,8 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), 
+                (writer, element) => element.SerializeAsV31WithoutReference(writer));
         }
 
         /// <summary>
@@ -89,13 +91,12 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
+                (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
 
-        /// <summary>
-        /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
-        /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+            Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
@@ -113,7 +114,7 @@ namespace Microsoft.OpenApi.Models
                     target = GetEffective(Reference.HostDocument);
                 }
             }
-            target.SerializeAsV3WithoutReference(writer, version, callback);
+            action(writer, target);
         }
 
         /// <summary>
@@ -134,9 +135,22 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
+        /// Serialize to OpenAPI V31 example without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
+        public void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1);
+        }
+
+        /// <summary>
+        /// Serialize to OpenAPI V3 example without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
+        }
+        
+        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             writer.WriteStartObject();
 

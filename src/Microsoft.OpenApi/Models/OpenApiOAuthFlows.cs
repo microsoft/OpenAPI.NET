@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -76,7 +77,8 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlows"/>
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+            Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 

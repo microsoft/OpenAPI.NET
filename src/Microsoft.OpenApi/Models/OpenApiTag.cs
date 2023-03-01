@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -81,7 +82,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiTag"/> to Open Api v3.0
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, SerializeDelegate callback)
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
@@ -97,7 +98,23 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, SerializeDelegate callback)
+        public void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, 
+                (writer, element) => element.SerializeAsV31(writer));
+        }
+        
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
+                (writer, element) => element.SerializeAsV3(writer));
+        }
+
+        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, 
+            Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
 

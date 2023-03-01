@@ -15,8 +15,6 @@ namespace Microsoft.OpenApi.Extensions
     /// </summary>
     public static class OpenApiSerializableExtensions
     {
-        public delegate void SerializeDelegate(IOpenApiWriter writer, IOpenApiSerializable element);
-
         /// <summary>
         /// Serialize the <see cref="IOpenApiSerializable"/> to the Open API document (JSON) using the given stream and specification version.
         /// </summary>
