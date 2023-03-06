@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.ContentType, ContentType);
 
             // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => callback(w, h));
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, callback);
 
             // style
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());

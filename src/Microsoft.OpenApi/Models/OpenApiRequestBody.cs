@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // content
-            writer.WriteRequiredMap(OpenApiConstants.Content, Content, (w, c) => callback(w, c));
+            writer.WriteRequiredMap(OpenApiConstants.Content, Content, callback);
 
             // required
             writer.WriteProperty(OpenApiConstants.Required, Required, false);

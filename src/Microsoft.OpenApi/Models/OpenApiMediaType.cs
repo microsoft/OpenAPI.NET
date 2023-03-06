@@ -89,16 +89,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
             
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => callback(w, s));
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // examples
-            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => callback(w, e));
+            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
 
             // encoding
-            writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, (w, e) => callback(w, e));
+            writer.WriteOptionalMap(OpenApiConstants.Encoding, Encoding, callback);
 
             // extensions
             writer.WriteExtensions(Extensions, version);

@@ -169,7 +169,7 @@ namespace Microsoft.OpenApi.Models
             // path items
             foreach (var item in PathItems)
             {
-                writer.WriteRequiredObject(item.Key.Expression, item.Value, (w, p) => callback(w, p));
+                writer.WriteRequiredObject(item.Key.Expression, item.Value, callback);
             }
 
             // extensions

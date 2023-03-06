@@ -428,22 +428,22 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
             // allOf
-            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, (w, s) => callback(w, s));
+            writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
 
             // anyOf
-            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, (w, s) => callback(w, s));
+            writer.WriteOptionalCollection(OpenApiConstants.AnyOf, AnyOf, callback);
 
             // oneOf
-            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, (w, s) => callback(w, s));
+            writer.WriteOptionalCollection(OpenApiConstants.OneOf, OneOf, callback);
 
             // not
-            writer.WriteOptionalObject(OpenApiConstants.Not, Not, (w, s) => callback(w, s));
+            writer.WriteOptionalObject(OpenApiConstants.Not, Not, callback);
 
             // items
-            writer.WriteOptionalObject(OpenApiConstants.Items, Items, (w, s) => callback(w, s));
+            writer.WriteOptionalObject(OpenApiConstants.Items, Items, callback);
 
             // properties
-            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, (w, s) => callback(w, s));
+            writer.WriteOptionalMap(OpenApiConstants.Properties, Properties, callback);
 
             // additionalProperties
             if (AdditionalPropertiesAllowed)
@@ -451,7 +451,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(
                     OpenApiConstants.AdditionalProperties,
                     AdditionalProperties,
-                    (w, s) => callback(w, s));
+                    callback);
             }
             else
             {
@@ -471,7 +471,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
 
             // discriminator
-            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, (w, s) => callback(w, s));
+            writer.WriteOptionalObject(OpenApiConstants.Discriminator, Discriminator, callback);
 
             // readOnly
             writer.WriteProperty(OpenApiConstants.ReadOnly, ReadOnly, false);
@@ -483,7 +483,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Xml, Xml, (w, s) => s.SerializeAsV2(w));
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => callback(w, s));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));

@@ -246,14 +246,14 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalObject(
                     operation.Key.GetDisplayName(),
                     operation.Value,
-                    (w, o) => callback(w, o));
+                    callback);
             }
 
             // servers
-            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => callback(w, s));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, callback);
 
             // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => callback(w, p));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, callback);
 
             // specification extensions
             writer.WriteExtensions(Extensions, version);

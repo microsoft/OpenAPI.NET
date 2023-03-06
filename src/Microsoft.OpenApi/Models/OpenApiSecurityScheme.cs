@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Models
                 case SecuritySchemeType.OAuth2:
                     // This property apply to oauth2 type only.
                     // flows
-                    writer.WriteOptionalObject(OpenApiConstants.Flows, Flows, (w, o) => callback(w, o));
+                    writer.WriteOptionalObject(OpenApiConstants.Flows, Flows, callback);
                     break;
                 case SecuritySchemeType.OpenIdConnect:
                     // This property apply to openIdConnect only.

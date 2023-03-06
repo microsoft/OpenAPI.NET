@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // variables
-            writer.WriteOptionalMap(OpenApiConstants.Variables, Variables, (w, v) => callback(w, v));
+            writer.WriteOptionalMap(OpenApiConstants.Variables, Variables, callback);
 
             // specification extensions
             writer.WriteExtensions(Extensions, version);

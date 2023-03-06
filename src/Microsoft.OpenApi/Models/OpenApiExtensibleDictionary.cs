@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Models
 
             foreach (var item in this)
             {
-                writer.WriteRequiredObject(item.Key, item.Value, (w, p) => callback(w, p));
+                writer.WriteRequiredObject(item.Key, item.Value, callback);
             }
 
             writer.WriteExtensions(Extensions, version);

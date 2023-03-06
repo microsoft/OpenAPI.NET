@@ -156,13 +156,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
             // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => callback(w, h));
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, callback);
 
             // content
-            writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => callback(w, c));
+            writer.WriteOptionalMap(OpenApiConstants.Content, Content, callback);
 
             // links
-            writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, l) => callback(w, l));
+            writer.WriteOptionalMap(OpenApiConstants.Links, Links, callback);
 
             // extension
             writer.WriteExtensions(Extensions, version);

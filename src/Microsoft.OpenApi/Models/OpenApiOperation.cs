@@ -161,10 +161,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
                 Tags,
-                (w, t) =>
-                {
-                    callback(w, t);
-                });
+                callback);
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -173,31 +170,31 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => callback(w, e));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
             // operationId
             writer.WriteProperty(OpenApiConstants.OperationId, OperationId);
 
             // parameters
-            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, (w, p) => callback(w, p));
+            writer.WriteOptionalCollection(OpenApiConstants.Parameters, Parameters, callback);
 
             // requestBody
-            writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, (w, r) => callback(w, r));
+            writer.WriteOptionalObject(OpenApiConstants.RequestBody, RequestBody, callback);
 
             // responses
-            writer.WriteRequiredObject(OpenApiConstants.Responses, Responses, (w, r) => callback(w, r));
+            writer.WriteRequiredObject(OpenApiConstants.Responses, Responses, callback);
 
             // callbacks
-            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, (w, c) => callback(w, c));
+            writer.WriteOptionalMap(OpenApiConstants.Callbacks, Callbacks, callback);
 
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
             // security
-            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, (w, s) => callback(w, s));
+            writer.WriteOptionalCollection(OpenApiConstants.Security, Security, callback);
 
             // servers
-            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => callback(w, s));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, callback);
 
             // specification extensions
             writer.WriteExtensions(Extensions,version);

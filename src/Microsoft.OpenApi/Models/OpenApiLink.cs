@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // server
-            writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => callback(w, s));
+            writer.WriteOptionalObject(OpenApiConstants.Server, Server, callback);
 
             writer.WriteEndObject();
         }

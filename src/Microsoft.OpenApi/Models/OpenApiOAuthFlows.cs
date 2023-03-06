@@ -85,22 +85,22 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // implicit
-            writer.WriteOptionalObject(OpenApiConstants.Implicit, Implicit, (w, o) => callback(w, o));
+            writer.WriteOptionalObject(OpenApiConstants.Implicit, Implicit, callback);
 
             // password
-            writer.WriteOptionalObject(OpenApiConstants.Password, Password, (w, o) => callback(w, o));
+            writer.WriteOptionalObject(OpenApiConstants.Password, Password, callback);
 
             // clientCredentials
             writer.WriteOptionalObject(
                 OpenApiConstants.ClientCredentials,
                 ClientCredentials,
-                (w, o) => callback(w, o));
+                callback);
 
             // authorizationCode
             writer.WriteOptionalObject(
                 OpenApiConstants.AuthorizationCode,
                 AuthorizationCode,
-                (w, o) => callback(w, o));
+                callback);
 
             // extensions
             writer.WriteExtensions(Extensions, version);

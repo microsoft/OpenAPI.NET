@@ -114,10 +114,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => callback(w, c));
+            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, callback);
 
             // license object
-            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => callback(w, l));
+            writer.WriteOptionalObject(OpenApiConstants.License, License, callback);
 
             // version
             writer.WriteProperty(OpenApiConstants.Version, Version);

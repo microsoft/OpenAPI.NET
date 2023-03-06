@@ -279,16 +279,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => callback(w, s));
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
 
             // examples
-            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, (w, e) => callback(w, e));
+            writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
 
             // content
-            writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => callback(w, c));
+            writer.WriteOptionalMap(OpenApiConstants.Content, Content, callback);
 
             // extensions
             writer.WriteExtensions(Extensions, version);

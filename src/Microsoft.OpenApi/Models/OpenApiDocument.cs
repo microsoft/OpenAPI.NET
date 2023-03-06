@@ -175,28 +175,28 @@ namespace Microsoft.OpenApi.Models
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {            
             // info
-            writer.WriteRequiredObject(OpenApiConstants.Info, Info, (w, i) => callback(w, i));
+            writer.WriteRequiredObject(OpenApiConstants.Info, Info, callback);
 
             // servers
-            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, (w, s) => callback(w, s));
+            writer.WriteOptionalCollection(OpenApiConstants.Servers, Servers, callback);
 
             // paths
-            writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, (w, p) => callback(w, p));
+            writer.WriteRequiredObject(OpenApiConstants.Paths, Paths, callback);
 
             // components
-            writer.WriteOptionalObject(OpenApiConstants.Components, Components, (w, c) => callback(w, c));
+            writer.WriteOptionalObject(OpenApiConstants.Components, Components, callback);
 
             // security
             writer.WriteOptionalCollection(
                 OpenApiConstants.Security,
                 SecurityRequirements,
-                (w, s) => callback(w, s));
+                callback);
 
             // tags
             writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => action(w, t));
 
             // external docs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => callback(w, e));
+            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
             // extensions
             writer.WriteExtensions(Extensions, version);
