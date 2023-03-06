@@ -324,27 +324,7 @@ namespace Microsoft.OpenApi.Hidi
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
 
             var config = GetConfiguration(settingsFile);
-            var settings = new OpenApiConvertSettings()
-            {
-                AddSingleQuotesForStringParameters = true,
-                AddEnumDescriptionExtension = true,
-                DeclarePathParametersOnPathItem = true,
-                EnableKeyAsSegment = true,
-                EnableOperationId = true,
-                ErrorResponsesAsDefault = false,
-                PrefixEntityTypeNameBeforeKey = true,
-                TagDepth = 2,
-                EnablePagination = true,
-                EnableDiscriminatorValue = true,
-                EnableDerivedTypesReferencesForRequestBody = false,
-                EnableDerivedTypesReferencesForResponses = false,
-                ShowRootPath = false,
-                ShowLinks = false,
-                ExpandDerivedTypesNavigationProperties = false,
-                EnableCount = true,
-                UseSuccessStatusCodeRange = true,
-                EnableTypeDisambiguationForDefaultValueOfOdataTypeProperty = true
-            };
+            var settings = new OpenApiConvertSettings();
             config.GetSection("OpenApiConvertSettings").Bind(settings);
 
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
