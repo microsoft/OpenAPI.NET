@@ -102,9 +102,18 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer),
-               (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
+            // If references have been inlined we don't need the to render the components section
+            // however if they have cycles, then we will need a component rendered
+            if (writer.GetSettings().InlineLocalReferences)
+            {
+                RenderComponents(writer);
+                return;
+            }
+
+            writer.WriteStartObject();
+            
             // pathItems - only present in v3.1
             writer.WriteOptionalMap(
             OpenApiConstants.PathItems,
@@ -122,8 +131,9 @@ namespace Microsoft.OpenApi.Models
                     component.SerializeAsV31(w);
                 }
             });
-            
-            writer.WriteEndObject();
+
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer),
+               (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));          
         }
 
         /// <summary>
@@ -132,9 +142,19 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+
+            // If references have been inlined we don't need the to render the components section
+            // however if they have cycles, then we will need a component rendered
+            if (writer.GetSettings().InlineLocalReferences)
+            {
+                RenderComponents(writer);
+                return;
+            }
+
+            writer.WriteStartObject();
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer),
                 (writer, referenceElement) => referenceElement.SerializeAsV3WithoutReference(writer));
-            writer.WriteEndObject();
         }
         
         /// <summary>
@@ -143,32 +163,6 @@ namespace Microsoft.OpenApi.Models
         private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
-            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-
-            // If references have been inlined we don't need the to render the components section
-            // however if they have cycles, then we will need a component rendered
-            if (writer.GetSettings().InlineLocalReferences)
-            {
-                var loops = writer.GetSettings().LoopDetector.Loops;
-                writer.WriteStartObject();
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
-                {
-                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
-                        .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
-
-                    writer.WriteOptionalMap(
-                       OpenApiConstants.Schemas,
-                       Schemas,
-                       (w, key, component) => {
-                           action(w, component);
-                           });
-                }
-                writer.WriteEndObject();
-                return;  
-            }
-
-            writer.WriteStartObject();
-
             // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
             // If the reference exists but points to other objects, the object is serialized to just that reference.
 
@@ -180,7 +174,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (component.Reference != null &&
                         component.Reference.Type == ReferenceType.Schema &&
-                        component.Reference.Id == key)
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
                     {
                         action(w, component);
                     }
@@ -198,7 +192,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (component.Reference != null &&
                         component.Reference.Type == ReferenceType.Response &&
-                        component.Reference.Id == key)
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
                     {
                         action(w, component);
                     }
@@ -216,7 +210,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (component.Reference != null &&
                         component.Reference.Type == ReferenceType.Parameter &&
-                        component.Reference.Id == key)
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
                     {
                         action(w, component);
                     }
@@ -234,7 +228,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (component.Reference != null &&
                         component.Reference.Type == ReferenceType.Example &&
-                        component.Reference.Id == key)
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
                     {
                         action(writer, component);
                     }
@@ -251,8 +245,9 @@ namespace Microsoft.OpenApi.Models
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.RequestBody &&
-                        component.Reference.Id == key)
+                        component.Reference.Type == ReferenceType.RequestBody && 
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+                        
                     {
                         action(w, component);
                     }
@@ -270,7 +265,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (component.Reference != null &&
                         component.Reference.Type == ReferenceType.Header &&
-                        component.Reference.Id == key)
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
                     {
                         action(w, component);
                     }
@@ -288,7 +283,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (component.Reference != null &&
                         component.Reference.Type == ReferenceType.SecurityScheme &&
-                        component.Reference.Id == key)
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
                     {
                         action(w, component);
                     }
@@ -306,7 +301,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (component.Reference != null &&
                         component.Reference.Type == ReferenceType.Link &&
-                        component.Reference.Id == key)
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
                     {
                         action(w, component);
                     }
@@ -324,7 +319,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     if (component.Reference != null &&
                         component.Reference.Type == ReferenceType.Callback &&
-                        component.Reference.Id == key)
+                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
                     {
                         action(w, component);
                     }
@@ -336,8 +331,28 @@ namespace Microsoft.OpenApi.Models
             
             // extensions
             writer.WriteExtensions(Extensions, version);
+            writer.WriteEndObject();
         }
 
+        private void RenderComponents(IOpenApiWriter writer)
+        {
+            var loops = writer.GetSettings().LoopDetector.Loops;
+            writer.WriteStartObject();
+            if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+            {
+                var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
+                    .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
+
+                writer.WriteOptionalMap(
+                   OpenApiConstants.Schemas,
+                   Schemas,
+                   (w, key, component) => {
+                       component.SerializeAsV31WithoutReference(w);
+                   });
+            }
+            writer.WriteEndObject();
+        }
+        
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
         /// </summary>
