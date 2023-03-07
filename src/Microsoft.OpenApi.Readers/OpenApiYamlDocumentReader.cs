@@ -166,7 +166,6 @@ namespace Microsoft.OpenApi.Readers
             }
         }
 
-
         /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>
