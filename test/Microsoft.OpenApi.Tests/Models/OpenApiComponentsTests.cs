@@ -669,25 +669,6 @@ securitySchemes:
         {
             // Arrange
             var expected = @"{
-  ""schemas"": {
-    ""schema1"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        },
-        ""property3"": {
-          ""$ref"": ""#/components/schemas/schema2""
-        }
-      }
-    },
-    ""schema2"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        }
-      }
-    }
-  },
   ""pathItems"": {
     ""/pets"": {
       ""post"": {
@@ -708,10 +689,29 @@ securitySchemes:
         }
       }
     }
+  },
+  ""schemas"": {
+    ""schema1"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        },
+        ""property3"": {
+          ""$ref"": ""#/components/schemas/schema2""
+        }
+      }
+    },
+    ""schema2"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        }
+      }
+    }
   }
 }";
             // Act
-            var actual = ComponentsWithPathItem.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+            var actual = ComponentsWithPathItem.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
@@ -723,18 +723,7 @@ securitySchemes:
         public void SerializeComponentsWithPathItemsAsYamlWorks()
         {
             // Arrange
-        var expected = @"schemas:
-  schema1:
-    properties:
-      property2:
-        type: integer
-      property3:
-        $ref: '#/components/schemas/schema2'
-  schema2:
-    properties:
-      property2:
-        type: integer
-pathItems:
+        var expected = @"pathItems:
   /pets:
     post:
       requestBody:
@@ -745,10 +734,21 @@ pathItems:
               $ref: '#/components/schemas/schema1'
       responses:
         '200':
-          description: Return a 200 status to indicate that the data was received successfully";
+          description: Return a 200 status to indicate that the data was received successfully
+schemas:
+  schema1:
+    properties:
+      property2:
+        type: integer
+      property3:
+        $ref: '#/components/schemas/schema2'
+  schema2:
+    properties:
+      property2:
+        type: integer";
 
             // Act
-            var actual = ComponentsWithPathItem.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var actual = ComponentsWithPathItem.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();

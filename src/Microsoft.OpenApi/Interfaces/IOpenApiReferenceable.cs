@@ -3,6 +3,7 @@
 
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Interfaces
 {
@@ -21,7 +22,12 @@ namespace Microsoft.OpenApi.Interfaces
         /// Reference object.
         /// </summary>
         OpenApiReference Reference { get; set; }
-
+        
+        /// <summary>
+        /// Serialize to OpenAPI V31 document without using reference.
+        /// </summary>
+        void SerializeAsV31WithoutReference(IOpenApiWriter writer);
+        
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>

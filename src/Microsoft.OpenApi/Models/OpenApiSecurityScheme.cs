@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -77,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiSecurityScheme() {}
+        public OpenApiSecurityScheme() { }
 
         /// <summary>
         /// Initializes a copy of <see cref="OpenApiSecurityScheme"/> object
@@ -98,29 +99,58 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.1
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), SerializeAsV31WithoutReference);
+        }
+        
+        /// <summary>
         /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), SerializeAsV3WithoutReference);
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiSecurityScheme"/> to Open Api v3.0
+        /// </summary>
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+            Action<IOpenApiWriter> action)
+        {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
            
             if (Reference != null) 
             {
-                Reference.SerializeAsV3(writer);
+                callback(writer, Reference);
                 return;
             }
+            
+            action(writer);
+        }
 
-            SerializeAsV3WithoutReference(writer);
+        /// <summary>
+        /// Serialize to OpenAPI V31 document without using reference.
+        /// </summary>
+        public void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, 
+                (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
+                (writer, element) => element.SerializeAsV3(writer));
+        }
+
+        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, 
+            Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
 
@@ -149,7 +179,7 @@ namespace Microsoft.OpenApi.Models
                 case SecuritySchemeType.OAuth2:
                     // This property apply to oauth2 type only.
                     // flows
-                    writer.WriteOptionalObject(OpenApiConstants.Flows, Flows, (w, o) => o.SerializeAsV3(w));
+                    writer.WriteOptionalObject(OpenApiConstants.Flows, Flows, callback);
                     break;
                 case SecuritySchemeType.OpenIdConnect:
                     // This property apply to openIdConnect only.
@@ -159,7 +189,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }
@@ -169,10 +199,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             if (Reference != null)
             {

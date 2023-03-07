@@ -49,13 +49,24 @@ namespace Microsoft.OpenApi.Models
             Url = license?.Url != null ? new Uri(license.Url.OriginalString) : null;
             Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
         }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.1
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_1);
+            writer.WriteProperty(OpenApiConstants.Identifier, Identifier);
+            writer.WriteEndObject();
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiLicense"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
-        {
-            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
+        {            
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);            
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -64,30 +75,22 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi2_0);
+            writer.WriteEndObject();
         }
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
             writer.WriteStartObject();
-
+            
             // name
             writer.WriteProperty(OpenApiConstants.Name, Name);
-
-            // identifier
-            writer.WriteProperty(OpenApiConstants.Identifier, Identifier);
 
             // url
             writer.WriteProperty(OpenApiConstants.Url, Url?.OriginalString);
 
             // specification extensions
             writer.WriteExtensions(Extensions, specVersion);
-
-            writer.WriteEndObject();
         }
     }
 }

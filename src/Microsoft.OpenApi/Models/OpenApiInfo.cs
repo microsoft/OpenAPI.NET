@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -72,25 +73,40 @@ namespace Microsoft.OpenApi.Models
             License = info?.License != null ? new(info?.License) : null;
             Extensions = info?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(info.Extensions) : null;
         }
-
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.1
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {            
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
+            
+            // summary - present in 3.1
+            writer.WriteProperty(OpenApiConstants.Summary, Summary);
+            writer.WriteEndObject();
+        }
+        
         /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
+        {            
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
+            
+            writer.WriteEndObject();
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
+        /// </summary>
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
             writer.WriteStartObject();
 
             // title
             writer.WriteProperty(OpenApiConstants.Title, Title);
-
-            // summary
-            writer.WriteProperty(OpenApiConstants.Summary, Summary);
-            
+           
             // description
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
@@ -98,18 +114,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.TermsOfService, TermsOfService?.OriginalString);
 
             // contact object
-            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, (w, c) => c.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.Contact, Contact, callback);
 
             // license object
-            writer.WriteOptionalObject(OpenApiConstants.License, License, (w, l) => l.SerializeAsV3(w));
+            writer.WriteOptionalObject(OpenApiConstants.License, License, callback);
 
             // version
             writer.WriteProperty(OpenApiConstants.Version, Version);
 
             // specification extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
-
-            writer.WriteEndObject();
+            writer.WriteExtensions(Extensions, version);
         }
 
         /// <summary>
@@ -117,10 +131,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 
