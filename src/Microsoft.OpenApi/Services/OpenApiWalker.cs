@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -116,7 +116,18 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
             });
-
+            
+            Walk(OpenApiConstants.SecuritySchemes, () =>
+            {
+                if (components.SecuritySchemes != null)
+                {
+                    foreach (var item in components.SecuritySchemes)
+                    {
+                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
+                    }
+                }
+            });
+            
             Walk(OpenApiConstants.Callbacks, () =>
             {
                 if (components.Callbacks != null)
@@ -996,9 +1007,9 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiSecurityScheme"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiSecurityScheme securityScheme)
+        internal void Walk(OpenApiSecurityScheme securityScheme, bool isComponent = false)
         {
-            if (securityScheme == null || ProcessAsReference(securityScheme))
+            if (securityScheme == null || ProcessAsReference(securityScheme, isComponent))
             {
                 return;
             }
