@@ -15,7 +15,7 @@
     <PackageId>Microsoft.OpenApi.Hidi</PackageId>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.2.3</Version>
+    <Version>1.2.4</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
