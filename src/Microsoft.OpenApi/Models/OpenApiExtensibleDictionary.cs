@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -38,21 +40,38 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
+
+        /// <summary>
+        /// Serialize to Open Api v3.1
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
+        }
+
         /// <summary>
         /// Serialize to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        /// <param name="writer"></param>
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
+        }
+        
+        /// <summary>
+        /// Serialize to Open Api v3.0
+        /// </summary>
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+            Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 
             foreach (var item in this)
             {
-                writer.WriteRequiredObject(item.Key, item.Value, (w, p) => p.SerializeAsV3(w));
+                writer.WriteRequiredObject(item.Key, item.Value, callback);
             }
 
             writer.WriteExtensions(Extensions, version);
@@ -65,10 +84,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 

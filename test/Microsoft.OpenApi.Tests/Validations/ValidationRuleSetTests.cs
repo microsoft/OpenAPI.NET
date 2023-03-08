@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -43,7 +44,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             Assert.NotEmpty(rules);
 
             // Update the number if you add new default rule(s).
-            Assert.Equal(22, rules.Count);
+            Assert.Equal(22, rules.Count());
         }
     }
 }

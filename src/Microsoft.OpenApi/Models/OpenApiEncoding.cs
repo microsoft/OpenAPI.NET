@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -70,16 +72,32 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
             Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
         }
-
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiEncoding"/> to Open Api v3.1
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
+        }
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiEncoding"/> to Open Api v3.0
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV3(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
+        }
+        
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+            Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull("writer");
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 
@@ -87,7 +105,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.ContentType, ContentType);
 
             // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, callback);
 
             // style
             writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());

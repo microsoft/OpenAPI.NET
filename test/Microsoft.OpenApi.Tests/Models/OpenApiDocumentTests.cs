@@ -12,9 +12,11 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
+using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -1439,7 +1441,7 @@ paths: { }";
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            DocumentWithWebhooks.SerializeAsV3(writer, OpenApiSpecVersion.OpenApi3_1);
+            DocumentWithWebhooks.SerializeAsV31(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
@@ -1456,18 +1458,6 @@ info:
   title: Webhook Example
   version: 1.0.0
 paths: { }
-webhooks:
-  newPet:
-    post:
-      requestBody:
-        description: Information about a new pet in the system
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Pet'
-      responses:
-        '200':
-          description: Return a 200 status to indicate that the data was received successfully
 components:
   schemas:
     Pet:
@@ -1481,7 +1471,19 @@ components:
         name:
           type: string
         tag:
-          type: string";
+          type: string
+webhooks:
+  newPet:
+    post:
+      requestBody:
+        description: Information about a new pet in the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Return a 200 status to indicate that the data was received successfully";
             
             // Act
             var actual = DocumentWithWebhooks.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
@@ -1507,10 +1509,10 @@ components:
             };
 
             var expected = @"openapi: '3.1.0'
+jsonSchemaDialect: http://json-schema.org/draft-07/schema#
 info:
   title: JsonSchemaDialectTest
   version: 1.0.0
-jsonSchemaDialect: http://json-schema.org/draft-07/schema#
 paths: { }";
 
             // Act

@@ -43,13 +43,21 @@ namespace Microsoft.OpenApi.Models
             Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString) : null;
             Extensions = externalDocs?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions) : null;
         }
-
+        
+        /// <summary>
+        /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.1.
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_1);
+        }
+        
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            WriteInternal(writer, version);
+            WriteInternal(writer, OpenApiSpecVersion.OpenApi3_0);
         }
         
         /// <summary>
@@ -62,10 +70,7 @@ namespace Microsoft.OpenApi.Models
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 

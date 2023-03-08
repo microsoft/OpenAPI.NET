@@ -2,6 +2,7 @@
 info:
   title: Webhook Example
   version: 1.0.0
+jsonSchemaDialect: "http://json-schema.org/draft-07/schema#"
 webhooks:
   /pets:
     "$ref": '#/components/pathItems/pets'

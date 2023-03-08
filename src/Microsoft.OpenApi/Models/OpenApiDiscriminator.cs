@@ -37,14 +37,29 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.1
+        /// </summary>
+        /// <param name="writer"></param>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer);
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            SerializeInternal(writer);
+        }
+
+        /// <summary>
+        /// Serialize <see cref="OpenApiDiscriminator"/> to Open Api v3.0
+        /// </summary>
+        /// <param name="writer"></param>
+        private void SerializeInternal(IOpenApiWriter writer)
+        {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
 
@@ -53,8 +68,6 @@ namespace Microsoft.OpenApi.Models
 
             // mapping
             writer.WriteOptionalMap(OpenApiConstants.Mapping, Mapping, (w, s) => w.WriteValue(s));
-
-            writer.WriteEndObject();
         }
 
         /// <summary>

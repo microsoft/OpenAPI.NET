@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -71,14 +73,27 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
+        /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.1
+        /// </summary>
+        public void SerializeAsV31(IOpenApiWriter writer)
+        {
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), 
+                (writer, element) => element.SerializeAsV31WithoutReference(writer));
+        }
+        
+        /// <summary>
         /// Serialize <see cref="OpenApiResponse"/> to Open Api v3.0.
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer, OpenApiSpecVersion version = OpenApiSpecVersion.OpenApi3_0)
+        public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
+                (writer, element) => element.SerializeAsV3WithoutReference(writer));
+        }
+
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback, 
+            Action<IOpenApiWriter, IOpenApiReferenceable> action)
+        {
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             var target = this;
 
@@ -86,7 +101,7 @@ namespace Microsoft.OpenApi.Models
             {
                 if (!writer.GetSettings().ShouldInlineReference(Reference))
                 {
-                    Reference.SerializeAsV3(writer);
+                    callback(writer, Reference);
                     return;
                 }
                 else
@@ -94,7 +109,7 @@ namespace Microsoft.OpenApi.Models
                     target = GetEffective(Reference.HostDocument);
                 }
             }
-            target.SerializeAsV3WithoutReference(writer);
+            action(writer, target);
         }
 
         /// <summary>
@@ -113,11 +128,27 @@ namespace Microsoft.OpenApi.Models
                 return this;
             }
         }
+        
+        /// <summary>
+        /// Serialize to OpenAPI V3 document without using reference.
+        /// </summary>
+        public void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, 
+                (writer, element) => element.SerializeAsV31(writer));
+        }
 
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
+                (writer, element) => element.SerializeAsV3(writer));
+        }
+
+        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, 
+            Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
 
@@ -125,16 +156,16 @@ namespace Microsoft.OpenApi.Models
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
             // headers
-            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, (w, h) => h.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Headers, Headers, callback);
 
             // content
-            writer.WriteOptionalMap(OpenApiConstants.Content, Content, (w, c) => c.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Content, Content, callback);
 
             // links
-            writer.WriteOptionalMap(OpenApiConstants.Links, Links, (w, l) => l.SerializeAsV3(w));
+            writer.WriteOptionalMap(OpenApiConstants.Links, Links, callback);
 
             // extension
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
+            writer.WriteExtensions(Extensions, version);
 
             writer.WriteEndObject();
         }
@@ -144,10 +175,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             var target = this;
 

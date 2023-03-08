@@ -206,13 +206,13 @@ version: '2017-03-01'";
         }
 
         [Fact]
-        public void SerializeInfoObjectWithSummaryAsV3YamlWorks()
+        public void SerializeInfoObjectWithSummaryAsV31YamlWorks()
         {
             // Arrange
             var expected = @"title: Sample Pet Store App
-summary: This is a sample server for a pet store.
 description: This is a sample server for a pet store.
-version: '1.1.1'";
+version: '1.1.1'
+summary: This is a sample server for a pet store.";
 
             // Act
             var actual = InfoWithSummary.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
@@ -224,14 +224,14 @@ version: '1.1.1'";
         }
 
         [Fact]
-        public void SerializeInfoObjectWithSummaryAsV3JsonWorks()
+        public void SerializeInfoObjectWithSummaryAsV31JsonWorks()
         {
             // Arrange
             var expected = @"{
   ""title"": ""Sample Pet Store App"",
-  ""summary"": ""This is a sample server for a pet store."",
   ""description"": ""This is a sample server for a pet store."",
-  ""version"": ""1.1.1""
+  ""version"": ""1.1.1"",
+  ""summary"": ""This is a sample server for a pet store.""
 }";
             
             // Act
