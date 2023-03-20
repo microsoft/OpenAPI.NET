@@ -1,17 +1,17 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
-
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
-namespace Microsoft.OpenApi.Readers.V3
+namespace Microsoft.OpenApi.Readers.V31
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V3 document into
+    /// Class containing logic to deserialize Open API V31 document into
     /// runtime Open API object model.
     /// </summary>
-    internal static partial class OpenApiV3Deserializer
+    internal static partial class OpenApiV31Deserializer
     {
         private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
@@ -21,8 +21,10 @@ namespace Microsoft.OpenApi.Readers.V3
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
+            {"jsonSchemaDialect", (o, n) => o.JsonSchemaDialect = n.GetScalarValue() },
             {"servers", (o, n) => o.Servers = n.CreateList(LoadServer)},
             {"paths", (o, n) => o.Paths = LoadPaths(n)},
+            {"webhooks", (o, n) => o.Webhooks = LoadPaths(n)},
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
