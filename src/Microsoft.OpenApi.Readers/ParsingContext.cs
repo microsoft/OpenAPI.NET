@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
 using Microsoft.OpenApi.Readers.V3;
+using Microsoft.OpenApi.Readers.V31;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
@@ -101,6 +102,10 @@ namespace Microsoft.OpenApi.Readers
 
                 case OpenApiSpecVersion.OpenApi3_0:
                     this.VersionService = new OpenApiV3VersionService(Diagnostic);
+                    element = this.VersionService.LoadElement<T>(node);
+                    break;
+                case OpenApiSpecVersion.OpenApi3_1:
+                    this.VersionService = new OpenApiV31VersionService(Diagnostic);
                     element = this.VersionService.LoadElement<T>(node);
                     break;
             }
