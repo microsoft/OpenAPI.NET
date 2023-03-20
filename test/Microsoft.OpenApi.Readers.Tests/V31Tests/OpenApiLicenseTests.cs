@@ -9,13 +9,14 @@ using System.IO;
 using Xunit;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.OpenApi.Readers.V31;
 
-namespace Microsoft.OpenApi.Readers.Tests.V3Tests
+namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
 
     public class OpenApiLicenseTests
     {
-        private const string SampleFolderPath = "V3Tests/Samples/OpenApiLicense/";
+        private const string SampleFolderPath = "V31Tests/Samples/OpenApiLicense/";
 
         [Fact]
         public void ParseLicenseWithSpdxIdentifierShouldSucceed()
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
             // Act
-            var license = OpenApiV3Deserializer.LoadLicense(node);
+            var license = OpenApiV31Deserializer.LoadLicense(node);
 
             // Assert
             license.Should().BeEquivalentTo(
