@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Json.Schema;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
+using Microsoft.OpenApi.Readers.V31;
 using SharpYaml.Serialization;
 using Xunit;
 
@@ -17,36 +11,40 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
     public class OpenApiSchemaTests
     {
-        private const string SampleFolderPath = "V31Tests/Samples/";
+        private const string SampleFolderPath = "V31Tests/Samples/OpenApiSchema/";
 
         [Fact]
-        public void ParseV3SchemaShouldSucceed()
+        public void ParseV31SchemaShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "schema.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "schema.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
-                // Act
-                var schema = OpenApiV31Deserializer.LoadSchema(node);
+            // Act
+            var schema = OpenApiV31Deserializer.LoadSchema(node);
+            var jsonString = @"{
+   ""type"": ""object"",
+   ""properties"": {
+      ""one"": {
+         ""description"": ""type array"",
+         ""type"": [
+            ""integer"",
+            ""string""
+         ]
+      }
+   }
+}";
+            var expectedSchema = JsonSchema.FromText(jsonString);
 
-                // Assert
-                //diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
-
-                //schema.Should().BeEquivalentTo(
-                //    new OpenApiSchema
-                //    {
-                //        Type = "string",
-                //        Format = "email"
-                //    });
-            }
-        }
+            // Assert
+            schema.Should().BeEquivalentTo(expectedSchema);
+        }        
 
         [Fact]
         public void ParseStandardSchemaExampleSucceeds()
