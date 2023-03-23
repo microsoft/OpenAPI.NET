@@ -1,6 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text.Json.Nodes;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Extensions;
@@ -8,254 +13,252 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using JsonSchema = Json.Schema.JsonSchema;
 
-namespace Microsoft.OpenApi.Readers.V3
+namespace Microsoft.OpenApi.Readers.V31
 {
     /// <summary>
-    /// Class containing logic to deserialize Open API V3 document into
+    /// Class containing logic to deserialize Open API V31 document into
     /// runtime Open API object model.
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static readonly FixedFieldMap<JsonSchemaBuilder> _schemaFixedFields = new FixedFieldMap<JsonSchemaBuilder>
+        private static readonly FixedFieldMap<JsonSchemaBuilder> _schemaFixedFields = new()
         {
             {
                 "title", (o, n) =>
                 {
-                    o.Title(o.Get<TitleKeyword>().Value);
+                    o.Title(n.GetScalarValue());
                 }
             },
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.MultipleOf(o.Get<MultipleOfKeyword>().Value);
+                    o.MultipleOf(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "maximum", (o, n) =>
                 {
-                    o.Maximum(o.Get<MaximumKeyword>().Value);
+                    o.Maximum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.ExclusiveMaximum(o.Get<ExclusiveMaximumKeyword>().Value);
+                    o.ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minimum", (o, n) =>
                 {
-                    o.Minimum(o.Get<MinimumKeyword>().Value);
+                    o.Minimum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.ExclusiveMinimum(o.Get<ExclusiveMaximumKeyword>().Value);
+                    o.ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
                 }
             },
             {
                 "maxLength", (o, n) =>
                 {
-                    o.MaxLength(o.Get<MaxLengthKeyword>().Value);
+                    o.MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minLength", (o, n) =>
                 {
-                    o.MinLength(o.Get<MinLengthKeyword>().Value);
+                    o.MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "pattern", (o, n) =>
                 {
-                    o.Pattern(o.Get<PatternKeyword>().Value);
+                    o.Pattern(n.GetScalarValue());
                 }
             },
             {
                 "maxItems", (o, n) =>
                 {
-                    o.MaxItems(o.Get<MaxItemsKeyword>().Value);
+                    o.MaxItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minItems", (o, n) =>
                 {
-                    o.MinItems(o.Get<MinItemsKeyword>().Value);
+                    o.MinItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "uniqueItems", (o, n) =>
                 {
-                    o.UniqueItems(o.Get<UniqueItemsKeyword>().Value);
+                    o.UniqueItems(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
                 "maxProperties", (o, n) =>
                 {
-                    o.MaxProperties(o.Get<MaxPropertiesKeyword>().Value);
+                    o.MaxProperties(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minProperties", (o, n) =>
                 {
-                    o.MinProperties(o.Get<MinPropertiesKeyword>().Value);
+                    o.MinProperties(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "required", (o, n) =>
                 {
-                    o.Required(o.Get<RequiredKeyword>().Properties);
+                    o.Required(new HashSet<string>(n.CreateSimpleList(n2 => n2.GetScalarValue())));
                 }
             },
             {
                 "enum", (o, n) =>
                 {
-                    o.Enum(o.Get<EnumKeyword>().Values);
+                    o.Enum((IEnumerable<JsonNode>)n.CreateListOfAny());
                 }
             },
             {
                 "type", (o, n) =>
                 {
-                    o.Type(o.Get<TypeKeyword>().Type);
+                    if(n is ListNode)
+                    {                        
+                        o.Type(n.CreateSimpleList(s => ConvertToSchemaValueType(s.GetScalarValue())));
+                    }
+                    else
+                    {
+                        o.Type(ConvertToSchemaValueType(n.GetScalarValue()));
+                    }                    
                 }
             },
             {
                 "allOf", (o, n) =>
                 {
-                    o.AllOf(o.Get<AllOfKeyword>().Schemas);
+                    o.AllOf(n.CreateList(LoadSchema));
                 }
             },
             {
                 "oneOf", (o, n) =>
                 {
-                    o.OneOf(o.Get<OneOfKeyword>().Schemas);
+                    o.OneOf(n.CreateList(LoadSchema));
                 }
             },
             {
                 "anyOf", (o, n) =>
                 {
-                    o.AnyOf(o.Get<AnyOfKeyword>().Schemas);
+                    o.AnyOf(n.CreateList(LoadSchema));
                 }
             },
             {
                 "not", (o, n) =>
                 {
-                    o.Not(o.Get<NotKeyword>().Schema);
+                    o.Not(LoadSchema(n));
                 }
             },
             {
                 "items", (o, n) =>
                 {
-                    o.Items(o.Get<ItemsKeyword>().SingleSchema);
+                    o.Items(LoadSchema(n));
                 }
             },
             {
                 "properties", (o, n) =>
                 {
-                    o.Properties(o.Get<PropertiesKeyword>().Properties);
+                    o.Properties(n.CreateMap(LoadSchema));
                 }
             },
             {
                 "additionalProperties", (o, n) =>
                 {
-                    o.AdditionalProperties(o.Get<AdditionalPropertiesKeyword>().Schema);
+                    if (n is ValueNode)
+                    {
+                        o.AdditionalProperties(bool.Parse(n.GetScalarValue()));
+                    }
+                    else
+                    {
+                        o.AdditionalProperties(LoadSchema(n));
+                    }
                 }
             },
             {
                 "description", (o, n) =>
                 {
-                    o.Description(o.Get<DescriptionKeyword>().Value);
+                    o.Description(n.GetScalarValue());
                 }
             },
             {
                 "format", (o, n) =>
                 {
-                    o.Format(o.Get<FormatKeyword>().Value);
+                    o.Format(n.GetScalarValue());
                 }
             },
             {
                 "default", (o, n) =>
                 {
-                    o.Default(o.Get<DefaultKeyword>().Value);
+                    o.Default((JsonNode)n.CreateAny());
                 }
             },            
             {
                 "discriminator", (o, n) =>
                 {
-                    //o.Discriminator(o.Get<DiscriminatorKeyword>().Mapping);
+                    var discriminator = LoadDiscriminator(n);
+                    o.Discriminator(discriminator.PropertyName, (IReadOnlyDictionary<string, string>)discriminator.Mapping, 
+                        (IReadOnlyDictionary<string, JsonNode>)discriminator.Extensions);
                 }
             },
             {
                 "readOnly", (o, n) =>
                 {
-                    o.ReadOnly(o.Get<ReadOnlyKeyword>().Value);
+                    o.ReadOnly(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
                 "writeOnly", (o, n) =>
                 {
-                    o.WriteOnly(o.Get<WriteOnlyKeyword>().Value);
+                    o.WriteOnly(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
                 "xml", (o, n) =>
                 {
-                    //o.Xml(o.Get<XmlKeyword>());
+                    var xml = LoadXml(n);
+                    o.Xml(xml.Namespace, xml.Name, xml.Prefix, xml.Attribute, xml.Wrapped, 
+                        (IReadOnlyDictionary<string, JsonNode>)xml.Extensions);
                 }
             },
             {
                 "externalDocs", (o, n) =>
                 {
-                   // o.ExternalDocs(o.Get<ExternalDocsKeyword>());
+                   var externalDocs = LoadExternalDocs(n);
+                   o.ExternalDocs(externalDocs.Url, externalDocs.Description, 
+                       (IReadOnlyDictionary<string, JsonNode>)externalDocs.Extensions);                
                 }
             },
             {
-                "example", (o, n) =>
+                "examples", (o, n) =>
                 {
-                    o.Example(o.Get<ExampleKeyword>().Value);
+                    if(n is ListNode)
+                    {
+                        o.Examples(n.CreateSimpleList(s => (JsonNode)s.GetScalarValue()));
+                    }
+                    else
+                    {
+                        o.Examples((JsonNode)n.CreateAny());
+                    }
                 }
             },
             {
                 "deprecated", (o, n) =>
                 {
-                    o.Deprecated(o.Get<DeprecatedKeyword>().Value);
+                    o.Deprecated(bool.Parse(n.GetScalarValue()));
                 }
             },
         };
 
-        private static readonly PatternFieldMap<OpenApiSchema> _schemaPatternFields = new PatternFieldMap<OpenApiSchema>
+        private static readonly PatternFieldMap<JsonSchemaBuilder> _schemaPatternFields = new PatternFieldMap<JsonSchemaBuilder>
         {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
-        };
-
-        private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new AnyFieldMap<OpenApiSchema>
-        {
-            {
-                OpenApiConstants.Default,
-                new AnyFieldMapParameter<OpenApiSchema>(
-                    s => s.Default,
-                    (s, v) => s.Default = v,
-                    s => s)
-            },
-            {
-                 OpenApiConstants.Example,
-                new AnyFieldMapParameter<OpenApiSchema>(
-                    s => s.Example,
-                    (s, v) => s.Example = v,
-                    s => s)
-            }
-        };
-
-        private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new AnyListFieldMap<OpenApiSchema>
-        {
-            {
-                OpenApiConstants.Enum,
-                new AnyListFieldMapParameter<OpenApiSchema>(
-                    s => s.Enum,
-                    (s, v) => s.Enum = v,
-                    s => s)
-            }
+            //{s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
         public static JsonSchema LoadSchema(ParseNode node)
@@ -265,17 +268,16 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
+                //var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
+                //var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
 
-                return new OpenApiSchema
-                {
-                    UnresolvedReference = true,
-                    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema, summary, description)
-                };
+                //return new OpenApiSchema
+                //{
+                //    UnresolvedReference = true,
+                //    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema, summary, description)
+                //};
             }
 
-            //var schema = new OpenApiSchema();
             var builder = new JsonSchemaBuilder();
 
             foreach (var propertyNode in mapNode)
@@ -283,10 +285,26 @@ namespace Microsoft.OpenApi.Readers.V3
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
             }
 
-            OpenApiV3Deserializer.ProcessAnyFields(mapNode, builder, _schemaAnyFields);
-            OpenApiV3Deserializer.ProcessAnyListFields(mapNode, builder, _schemaAnyListFields);
+            //OpenApiV31Deserializer.ProcessAnyFields(mapNode, builder, _schemaAnyFields);
+            //OpenApiV31Deserializer.ProcessAnyListFields(mapNode, builder, _schemaAnyListFields);
 
             return builder.Build();
         }
+
+        private static SchemaValueType ConvertToSchemaValueType(string value)
+        {
+            return value switch
+            {
+                "string" => SchemaValueType.String,
+                "number" => SchemaValueType.Number,
+                "integer" => SchemaValueType.Integer,
+                "boolean" => SchemaValueType.Boolean,
+                "array" => SchemaValueType.Array,
+                "object" => SchemaValueType.Object,
+                "null" => SchemaValueType.Null,
+                _ => throw new NotSupportedException(),
+            };
+        }
     }
+
 }
