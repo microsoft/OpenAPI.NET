@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -67,6 +68,11 @@ namespace Microsoft.OpenApi.Models
         /// The schema defining the type used for the header.
         /// </summary>
         public OpenApiSchema Schema { get; set; }
+
+        /// <summary>
+        /// The schema defining the type used for the header.
+        /// </summary>
+        public JsonSchema Schema31 { get; set; }
 
         /// <summary>
         /// Example of the media type.

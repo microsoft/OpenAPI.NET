@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.V31
                 {
                     OpenApiConstants.Schema, (o, n) =>
                     {
-                        //o.Schema = LoadSchema(n);
+                        o.Schema31 = LoadSchema(n);
                     }
                 },
                 {

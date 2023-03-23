@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -108,6 +109,11 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiSchema Schema { get; set; }
 
+        /// <summary>
+        /// The schema defining the type used for the request body.
+        /// </summary>
+        public JsonSchema Schema31 { get; set; }
+        
         /// <summary>
         /// Examples of the media type. Each example SHOULD contain a value
         /// in the correct format as specified in the parameter encoding.
