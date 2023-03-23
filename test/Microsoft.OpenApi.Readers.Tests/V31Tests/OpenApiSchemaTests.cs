@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text.Json;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
       }
    }
 }";
-            var expectedSchema = JsonSchema.FromText(jsonString);
+            var expectedSchema = JsonSerializer.Deserialize<JsonSchema>(jsonString);
 
             // Assert
             Assert.Equal(schema, expectedSchema);
@@ -128,7 +129,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
       }
    }
 }";
-            var expectedSchema = JsonSchema.FromText(jsonString);
+            var expectedSchema = JsonSerializer.Deserialize<JsonSchema>(jsonString);
 
             // Assert
             schema.Should().BeEquivalentTo(expectedSchema);
