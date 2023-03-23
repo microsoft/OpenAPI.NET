@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -10,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Discriminator object.
     /// </summary>
-    public class OpenApiDiscriminator : IOpenApiSerializable
+    public class OpenApiDiscriminator : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The name of the property in the payload that will hold the discriminator value.
@@ -21,6 +23,11 @@ namespace Microsoft.OpenApi.Models
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
         public IDictionary<string, string> Mapping { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>
+        /// This object MAY be extended with Specification Extensions.
+        /// </summary>
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -34,6 +41,7 @@ namespace Microsoft.OpenApi.Models
         {
             PropertyName = discriminator?.PropertyName ?? PropertyName;
             Mapping = discriminator?.Mapping != null ? new Dictionary<string, string>(discriminator.Mapping) : null;
+            Extensions = discriminator?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(discriminator.Extensions) : null;
         }
 
         /// <summary>
@@ -43,6 +51,11 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer);
+
+            // extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_1);
+
+            writer.WriteEndObject();
         }
 
         /// <summary>
@@ -51,6 +64,8 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer);
+
+            writer.WriteEndObject();
         }
 
         /// <summary>

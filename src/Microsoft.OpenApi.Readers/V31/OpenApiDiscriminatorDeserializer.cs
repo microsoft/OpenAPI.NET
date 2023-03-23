@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -26,11 +26,14 @@ namespace Microsoft.OpenApi.Readers.V31
                     {
                         o.Mapping = n.CreateSimpleMap(LoadString);
                     }
-                }
+                }                
             };
 
         private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields =
-            new PatternFieldMap<OpenApiDiscriminator>();
+            new()
+            {
+                {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            };
 
         public static OpenApiDiscriminator LoadDiscriminator(ParseNode node)
         {
