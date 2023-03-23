@@ -161,7 +161,6 @@ namespace Microsoft.OpenApi.Readers.V31
             return (T)_loaders[typeof(T)](node);
         }
 
-
         /// <inheritdoc />
         public string GetReferenceScalarValues(MapNode mapNode, string scalarValue)
         {

@@ -43,9 +43,97 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var expectedSchema = JsonSchema.FromText(jsonString);
 
             // Assert
-            schema.Should().BeEquivalentTo(expectedSchema);
-        }        
+            Assert.Equal(schema, expectedSchema);
+        }
 
+        [Fact]
+        public void ParseAdvancedV31SchemaShouldSucceed()
+        {
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedSchema.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
+
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
+
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
+
+            // Act
+            var schema = OpenApiV31Deserializer.LoadSchema(node);
+            var jsonString = @"{
+   ""type"": ""object"",
+   ""properties"": {
+      ""one"": {
+         ""description"": ""type array"",
+         ""type"": [
+            ""integer"",
+            ""string""
+         ]
+      },
+      ""two"": {
+         ""description"": ""type 'null'"",
+         ""type"": ""null""
+      },
+      ""three"": {
+         ""description"": ""type array including 'null'"",
+         ""type"": [
+            ""string"",
+            ""null""
+         ]
+      },
+      ""four"": {
+         ""description"": ""array with no items"",
+         ""type"": ""array""
+      },
+      ""five"": {
+         ""description"": ""singular example"",
+         ""type"": ""string"",
+         ""examples"": [
+            ""exampleValue""
+         ]
+      },
+      ""six"": {
+         ""description"": ""exclusiveMinimum true"",
+         ""exclusiveMinimum"": 10
+      },
+      ""seven"": {
+         ""description"": ""exclusiveMinimum false"",
+         ""minimum"": 10
+      },
+      ""eight"": {
+         ""description"": ""exclusiveMaximum true"",
+         ""exclusiveMaximum"": 20
+      },
+      ""nine"": {
+         ""description"": ""exclusiveMaximum false"",
+         ""maximum"": 20
+      },
+      ""ten"": {
+         ""description"": ""nullable string"",
+         ""type"": [
+            ""string"",
+            ""null""
+         ]
+      },
+      ""eleven"": {
+         ""description"": ""x-nullable string"",
+         ""type"": [
+            ""string"",
+            ""null""
+         ]
+      },
+      ""twelve"": {
+         ""description"": ""file/binary""
+      }
+   }
+}";
+            var expectedSchema = JsonSchema.FromText(jsonString);
+
+            // Assert
+            schema.Should().BeEquivalentTo(expectedSchema);
+        }
+        
         [Fact]
         public void ParseStandardSchemaExampleSucceeds()
         {
