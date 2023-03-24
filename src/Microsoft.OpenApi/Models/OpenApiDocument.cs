@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IBaseDocument
     {
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
@@ -599,6 +600,13 @@ namespace Microsoft.OpenApi.Models
                 throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
         }
+
+        public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Uri BaseUri { get; }
     }
 
     internal class FindSchemaReferences : OpenApiVisitorBase

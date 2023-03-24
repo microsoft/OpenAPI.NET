@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -50,7 +51,12 @@ namespace Microsoft.OpenApi.Readers
                 return new OpenApiDocument();
             }
 
-            return new OpenApiYamlDocumentReader(this._settings).Read(yamlDocument, out diagnostic);
+            var asJsonNode = yamlDocument.ToJsonNode();
+
+            diagnostic = null; // TBD
+            return asJsonNode.Deserialize<OpenApiDocument>();
+
+            //return new OpenApiYamlDocumentReader(this._settings).Read(yamlDocument, out diagnostic);
         }
 
         /// <summary>
