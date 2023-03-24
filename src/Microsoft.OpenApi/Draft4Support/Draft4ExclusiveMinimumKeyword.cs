@@ -13,10 +13,14 @@ namespace Microsoft.OpenApi.Draft4Support
     {
         public const string Name = "exclusiveMinimum";
 
+        private readonly ExclusiveMinimumKeyword _numberSupport;
+
         /// <summary>
         /// The ID.
         /// </summary>
-        public bool Value { get; }
+        public bool? BoolValue { get; }
+
+        public decimal? NumberValue => _numberSupport?.Value;
 
         /// <summary>
         /// Creates a new <see cref="IdKeyword"/>.
@@ -24,36 +28,48 @@ namespace Microsoft.OpenApi.Draft4Support
         /// <param name="value">Whether the `minimum` value should be considered exclusive.</param>
         public Draft4ExclusiveMinimumKeyword(bool value)
         {
-            Value = value;
+            BoolValue = value;
+        }
+
+        public Draft4ExclusiveMinimumKeyword(decimal value)
+        {
+            _numberSupport = new ExclusiveMinimumKeyword(value);
         }
 
         public void Evaluate(EvaluationContext context)
         {
             context.EnterKeyword(Name);
-            if (!Value)
+            if (BoolValue.HasValue)
             {
-                context.NotApplicable(() => "exclusiveMinimum is false; minimum validation is sufficient");
-                return;
-            }
+                if (!BoolValue.Value)
+                {
+                    context.NotApplicable(() => "exclusiveMinimum is false; minimum validation is sufficient");
+                    return;
+                }
 
-            var limit = context.LocalSchema.GetMinimum();
-            if (!limit.HasValue)
+                var limit = context.LocalSchema.GetMinimum();
+                if (!limit.HasValue)
+                {
+                    context.NotApplicable(() => "minimum not present");
+                    return;
+                }
+
+                var schemaValueType = context.LocalInstance.GetSchemaValueType();
+                if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
+                {
+                    context.WrongValueKind(schemaValueType);
+                    return;
+                }
+
+                var number = context.LocalInstance!.AsValue().GetNumber();
+
+                if (limit == number)
+                    context.LocalResult.Fail(Name, ErrorMessages.ExclusiveMaximum, ("received", number), ("limit", BoolValue));
+            }
+            else
             {
-                context.NotApplicable(() => "minimum not present");
-                return;
+                _numberSupport.Evaluate(context);
             }
-
-            var schemaValueType = context.LocalInstance.GetSchemaValueType();
-            if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer))
-            {
-                context.WrongValueKind(schemaValueType);
-                return;
-            }
-
-            var number = context.LocalInstance!.AsValue().GetNumber();
-
-            if (limit == number)
-                context.LocalResult.Fail(Name, ErrorMessages.ExclusiveMaximum, ("received", number), ("limit", Value));
             context.ExitKeyword(Name, context.LocalResult.IsValid);
         }
 
@@ -64,7 +80,7 @@ namespace Microsoft.OpenApi.Draft4Support
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(Value, other.Value);
+            return Equals(BoolValue, other.BoolValue);
         }
 
         /// <summary>Determines whether the specified object is equal to the current object.</summary>
@@ -79,7 +95,7 @@ namespace Microsoft.OpenApi.Draft4Support
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return Value.GetHashCode();
+            return BoolValue.GetHashCode();
         }
     }
 
@@ -87,17 +103,20 @@ namespace Microsoft.OpenApi.Draft4Support
     {
         public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType is not JsonTokenType.True or JsonTokenType.False)
-                throw new JsonException("Expected boolean");
-
-            var value = reader.GetBoolean();
-
-            return new Draft4ExclusiveMinimumKeyword(value);
+            return reader.TokenType switch
+            {
+                JsonTokenType.True or JsonTokenType.False => new Draft4ExclusiveMinimumKeyword(reader.GetBoolean()),
+                JsonTokenType.Number => new Draft4ExclusiveMinimumKeyword(reader.GetDecimal()),
+                _ => throw new JsonException("Expected boolean or number")
+            };
         }
 
         public override void Write(Utf8JsonWriter writer, Draft4ExclusiveMinimumKeyword value, JsonSerializerOptions options)
         {
-            writer.WriteBoolean(Draft4ExclusiveMinimumKeyword.Name, value.Value);
+            if (value.BoolValue.HasValue)
+                writer.WriteBoolean(Draft4ExclusiveMinimumKeyword.Name, value.BoolValue.Value);
+            else
+                writer.WriteNumber(Draft4ExclusiveMinimumKeyword.Name, value.NumberValue.Value);
         }
     }
 }
