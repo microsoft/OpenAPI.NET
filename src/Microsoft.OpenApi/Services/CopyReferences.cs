@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -28,10 +29,10 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiSchema schema:
                     EnsureComponentsExists();
                     EnsureSchemasExists();
-                    if (!Components.Schemas.ContainsKey(schema.Reference.Id))
-                    {
-                        Components.Schemas.Add(schema.Reference.Id, schema);
-                    }
+                    //if (!Components.Schemas.ContainsKey(schema.Reference.Id))
+                    //{
+                    //    Components.Schemas.Add(schema.Reference.Id, schema);
+                    //}
                     break;
 
                 case OpenApiParameter parameter:
@@ -69,10 +70,10 @@ namespace Microsoft.OpenApi.Services
             {
                 EnsureComponentsExists();
                 EnsureSchemasExists();
-                if (!Components.Schemas.ContainsKey(schema.Reference.Id))
-                {
-                    Components.Schemas.Add(schema.Reference.Id, schema);
-                }
+                //if (!Components.Schemas.ContainsKey(schema.Reference.Id))
+                //{
+                //    Components.Schemas.Add(schema.Reference.Id, schema);
+                //}
             }
             base.Visit(schema);
         }
@@ -89,7 +90,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (_target.Components.Schemas == null)
             {
-                _target.Components.Schemas = new Dictionary<string, OpenApiSchema>();
+                _target.Components.Schemas = new Dictionary<string, JsonSchema>();
             }
         }
 

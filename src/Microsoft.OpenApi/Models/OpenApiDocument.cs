@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
@@ -19,6 +21,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
+    //[JsonConverter(typeof(OpenApiDocumentConverter))]
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IBaseDocument
     {
         /// <summary>
@@ -254,22 +257,22 @@ namespace Microsoft.OpenApi.Models
                 // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
                 // If the reference exists but points to other objects, the object is serialized to just that reference.
                 // definitions
-                writer.WriteOptionalMap(
-                    OpenApiConstants.Definitions,
-                    Components?.Schemas,
-                    (w, key, component) =>
-                    {
-                        if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.Schema &&
-                            component.Reference.Id == key)
-                        {
-                            component.SerializeAsV2WithoutReference(w);
-                        }
-                        else
-                        {
-                            component.SerializeAsV2(w);
-                        }
-                    });
+                //writer.WriteOptionalMap(
+                //    OpenApiConstants.Definitions,
+                //    Components?.Schemas,
+                //    (w, key, component) =>
+                //    {
+                //        if (component.Reference != null &&
+                //            component.Reference.Type == ReferenceType.Schema &&
+                //            component.Reference.Id == key)
+                //        {
+                //            component.SerializeAsV2WithoutReference(w);
+                //        }
+                //        else
+                //        {
+                //            component.SerializeAsV2(w);
+                //        }
+                //    });
             }
             // parameters
             var parameters = Components?.Parameters != null 
@@ -541,10 +544,10 @@ namespace Microsoft.OpenApi.Models
             {
                 switch (reference.Type)
                 {
-                    case ReferenceType.Schema:
-                        var resolvedSchema = this.Components.Schemas[reference.Id];
-                        resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
-                        return resolvedSchema;
+                    //case ReferenceType.Schema:
+                    //    var resolvedSchema = this.Components.Schemas[reference.Id];
+                    //    resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
+                    //    return resolvedSchema;
                         
                     case ReferenceType.PathItem:
                         var resolvedPathItem = this.Components.PathItems[reference.Id];

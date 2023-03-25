@@ -736,27 +736,27 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                 },
                 Components = new OpenApiComponents
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>
-                    {
-                        {
-                            "microsoft.graph.networkInterface", new OpenApiSchema
-                            {
-                                Title = "networkInterface",
-                                Type = "object",
-                                Properties = new Dictionary<string, OpenApiSchema>
-                                {
-                                    {
-                                        "description", new OpenApiSchema
-                                        {
-                                            Type = "string",
-                                            Description = "Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).",
-                                            Nullable = true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    //Schemas = new Dictionary<string, OpenApiSchema>
+                    //{
+                    //    {
+                    //        "microsoft.graph.networkInterface", new OpenApiSchema
+                    //        {
+                    //            Title = "networkInterface",
+                    //            Type = "object",
+                    //            Properties = new Dictionary<string, OpenApiSchema>
+                    //            {
+                    //                {
+                    //                    "description", new OpenApiSchema
+                    //                    {
+                    //                        Type = "string",
+                    //                        Description = "Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).",
+                    //                        Nullable = true
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
             };
             return document;

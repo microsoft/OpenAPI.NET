@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
+        public IDictionary<string, JsonSchema> Schemas { get; set; } = new Dictionary<string, JsonSchema>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
@@ -83,7 +84,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
+            Schemas = components?.Schemas != null ? new Dictionary<string, JsonSchema>(components.Schemas) : null;
             Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
             Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
             Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
@@ -167,22 +168,22 @@ namespace Microsoft.OpenApi.Models
             // If the reference exists but points to other objects, the object is serialized to just that reference.
 
             // schemas
-            writer.WriteOptionalMap(
-                OpenApiConstants.Schemas,
-                Schemas,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
-                    {
-                        action(w, component);
-                    }
-                    else
-                    {
-                        callback(w, component);
-                    }
-                });
+            //writer.WriteOptionalMap(
+            //    OpenApiConstants.Schemas,
+            //    Schemas,
+            //    (w, key, component) =>
+            //    {
+            //        if (component.Reference != null &&
+            //            component.Reference.Type == ReferenceType.Schema &&
+            //            string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+            //        {
+            //            action(w, component);
+            //        }
+            //        else
+            //        {
+            //            callback(w, component);
+            //        }
+            //    });
 
             // responses
             writer.WriteOptionalMap(
@@ -338,16 +339,16 @@ namespace Microsoft.OpenApi.Models
         {
             var loops = writer.GetSettings().LoopDetector.Loops;
             writer.WriteStartObject();
-            if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
-            {
+            //if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+            //{
 
-                writer.WriteOptionalMap(
-                   OpenApiConstants.Schemas,
-                   Schemas,
-                   static (w, key, component) => {
-                       component.SerializeAsV31WithoutReference(w);
-                   });
-            }
+            //    writer.WriteOptionalMap(
+            //       OpenApiConstants.Schemas,
+            //       Schemas,
+            //       static (w, key, component) => {
+            //           component.SerializeAsV31WithoutReference(w);
+            //       });
+            //}
             writer.WriteEndObject();
         }
         

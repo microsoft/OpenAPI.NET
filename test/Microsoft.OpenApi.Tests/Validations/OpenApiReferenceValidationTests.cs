@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -34,9 +35,9 @@ namespace Microsoft.OpenApi.Tests.Validations
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>()
+                Schemas = new Dictionary<string, JsonSchema>()
                 {
-                    [sharedSchema.Reference.Id] = sharedSchema
+                    //[sharedSchema.Reference.Id] = sharedSchema
                 }
             };
 
@@ -91,9 +92,9 @@ namespace Microsoft.OpenApi.Tests.Validations
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>()
+                Schemas = new Dictionary<string, JsonSchema>()
                 {
-                    [sharedSchema.Reference.Id] = sharedSchema
+                    //[sharedSchema.Reference.Id] = sharedSchema
                 }
             };
 

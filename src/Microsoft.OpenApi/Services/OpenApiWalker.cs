@@ -107,16 +107,16 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            Walk(OpenApiConstants.Schemas, () =>
-            {
-                if (components.Schemas != null)
-                {
-                    foreach (var item in components.Schemas)
-                    {
-                        Walk(item.Key, () => Walk(item.Value, isComponent: true));
-                    }
-                }
-            });
+            //Walk(OpenApiConstants.Schemas, () =>
+            //{
+            //    if (components.Schemas != null)
+            //    {
+            //        foreach (var item in components.Schemas)
+            //        {
+            //            Walk(item.Key, () => Walk(item.Value, isComponent: true));
+            //        }
+            //    }
+            //});
 
             Walk(OpenApiConstants.Callbacks, () =>
             {

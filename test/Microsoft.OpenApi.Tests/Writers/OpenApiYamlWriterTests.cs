@@ -465,7 +465,8 @@ paths:
                 Components = new OpenApiComponents
                 {
                     Schemas = {
-                        ["thing"] = thingSchema}
+                        //["thing"] = thingSchema
+                    }
                 }
             };
             thingSchema.Reference.HostDocument = doc;
@@ -580,7 +581,8 @@ components:
                 Components = new OpenApiComponents
                 {
                     Schemas = {
-                        ["thing"] = thingSchema}
+                        //["thing"] = thingSchema
+                    }
                 }
             };
             thingSchema.Reference.HostDocument = doc;

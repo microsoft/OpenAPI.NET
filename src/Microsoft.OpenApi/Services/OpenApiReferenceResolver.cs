@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Services
             ResolveMap(components.Links);
             ResolveMap(components.Callbacks);
             ResolveMap(components.Examples);
-            ResolveMap(components.Schemas);
+            //ResolveMap(components.Schemas);
             ResolveMap(components.PathItems);
             ResolveMap(components.SecuritySchemes);
             ResolveMap(components.Headers);

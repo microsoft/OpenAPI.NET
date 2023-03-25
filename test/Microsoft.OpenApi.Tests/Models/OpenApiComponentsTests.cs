@@ -16,24 +16,24 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiComponents AdvancedComponents = new OpenApiComponents
         {
-            Schemas = new Dictionary<string, OpenApiSchema>
-            {
-                ["schema1"] = new OpenApiSchema
-                {
-                    Properties = new Dictionary<string, OpenApiSchema>
-                    {
-                        ["property2"] = new OpenApiSchema
-                        {
-                            Type = "integer"
-                        },
-                        ["property3"] = new OpenApiSchema
-                        {
-                            Type = "string",
-                            MaxLength = 15
-                        }
-                    },
-                },
-            },
+            //Schemas = new Dictionary<string, OpenApiSchema>
+            //{
+            //    ["schema1"] = new OpenApiSchema
+            //    {
+            //        Properties = new Dictionary<string, OpenApiSchema>
+            //        {
+            //            ["property2"] = new OpenApiSchema
+            //            {
+            //                Type = "integer"
+            //            },
+            //            ["property3"] = new OpenApiSchema
+            //            {
+            //                Type = "string",
+            //                MaxLength = 15
+            //            }
+            //        },
+            //    },
+            //},
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
                 ["securityScheme1"] = new OpenApiSecurityScheme
@@ -65,42 +65,42 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents AdvancedComponentsWithReference = new OpenApiComponents
         {
-            Schemas = new Dictionary<string, OpenApiSchema>
-            {
-                ["schema1"] = new OpenApiSchema
-                {
-                    Properties = new Dictionary<string, OpenApiSchema>
-                    {
-                        ["property2"] = new OpenApiSchema
-                        {
-                            Type = "integer"
-                        },
-                        ["property3"] = new OpenApiSchema
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.Schema,
-                                Id = "schema2"
-                            }
-                        }
-                    },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
-                    }
-                },
-                ["schema2"] = new OpenApiSchema
-                {
-                    Properties = new Dictionary<string, OpenApiSchema>
-                    {
-                        ["property2"] = new OpenApiSchema
-                        {
-                            Type = "integer"
-                        }
-                    }
-                },
-            },
+            //Schemas = new Dictionary<string, OpenApiSchema>
+            //{
+            //    ["schema1"] = new OpenApiSchema
+            //    {
+            //        Properties = new Dictionary<string, OpenApiSchema>
+            //        {
+            //            ["property2"] = new OpenApiSchema
+            //            {
+            //                Type = "integer"
+            //            },
+            //            ["property3"] = new OpenApiSchema
+            //            {
+            //                Reference = new OpenApiReference
+            //                {
+            //                    Type = ReferenceType.Schema,
+            //                    Id = "schema2"
+            //                }
+            //            }
+            //        },
+            //        Reference = new OpenApiReference
+            //        {
+            //            Type = ReferenceType.Schema,
+            //            Id = "schema1"
+            //        }
+            //    },
+            //    ["schema2"] = new OpenApiSchema
+            //    {
+            //        Properties = new Dictionary<string, OpenApiSchema>
+            //        {
+            //            ["property2"] = new OpenApiSchema
+            //            {
+            //                Type = "integer"
+            //            }
+            //        }
+            //    },
+            //},
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
                 ["securityScheme1"] = new OpenApiSecurityScheme
@@ -144,55 +144,55 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents BrokenComponents = new OpenApiComponents
         {
-            Schemas = new Dictionary<string, OpenApiSchema>
-            {
-                ["schema1"] = new OpenApiSchema
-                {
-                    Type = "string"
-                },
-                ["schema2"] = null,
-                ["schema3"] = null,
-                ["schema4"] = new OpenApiSchema
-                {
-                    Type = "string",
-                    AllOf = new List<OpenApiSchema>
-                    {
-                        null,
-                        null,
-                        new OpenApiSchema
-                        {
-                            Type = "string"
-                        },
-                        null,
-                        null
-                    }
-                }
-            }
+            //Schemas = new Dictionary<string, OpenApiSchema>
+            //{
+            //    ["schema1"] = new OpenApiSchema
+            //    {
+            //        Type = "string"
+            //    },
+            //    ["schema2"] = null,
+            //    ["schema3"] = null,
+            //    ["schema4"] = new OpenApiSchema
+            //    {
+            //        Type = "string",
+            //        AllOf = new List<OpenApiSchema>
+            //        {
+            //            null,
+            //            null,
+            //            new OpenApiSchema
+            //            {
+            //                Type = "string"
+            //            },
+            //            null,
+            //            null
+            //        }
+            //    }
+            //}
         };
 
         public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
             Schemas =
             {
-                ["schema1"] = new OpenApiSchema
-                {
-                    Reference = new OpenApiReference()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema2"
-                    }
-                },
-                ["schema2"] = new OpenApiSchema
-                {
-                    Type = "object",
-                    Properties =
-                    {
-                        ["property1"] = new OpenApiSchema()
-                        {
-                            Type = "string"
-                        }
-                    }
-                },
+                //["schema1"] = new OpenApiSchema
+                //{
+                //    Reference = new OpenApiReference()
+                //    {
+                //        Type = ReferenceType.Schema,
+                //        Id = "schema2"
+                //    }
+                //},
+                //["schema2"] = new OpenApiSchema
+                //{
+                //    Type = "object",
+                //    Properties =
+                //    {
+                //        ["property1"] = new OpenApiSchema()
+                //        {
+                //            Type = "string"
+                //        }
+                //    }
+                //},
             }
         };
 
@@ -200,33 +200,33 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new OpenApiSchema
-                {
-                    Type = "object",
-                    Properties =
-                    {
-                        ["property1"] = new OpenApiSchema()
-                        {
-                            Type = "string"
-                        }
-                    },
-                    Reference = new OpenApiReference()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
-                    }
-                },
-                ["schema2"] = new OpenApiSchema
-                {
-                    Type = "object",
-                    Properties =
-                    {
-                        ["property1"] = new OpenApiSchema()
-                        {
-                            Type = "string"
-                        }
-                    }
-                },
+                //["schema1"] = new OpenApiSchema
+                //{
+                //    Type = "object",
+                //    Properties =
+                //    {
+                //        ["property1"] = new OpenApiSchema()
+                //        {
+                //            Type = "string"
+                //        }
+                //    },
+                //    Reference = new OpenApiReference()
+                //    {
+                //        Type = ReferenceType.Schema,
+                //        Id = "schema1"
+                //    }
+                //},
+                //["schema2"] = new OpenApiSchema
+                //{
+                //    Type = "object",
+                //    Properties =
+                //    {
+                //        ["property1"] = new OpenApiSchema()
+                //        {
+                //            Type = "string"
+                //        }
+                //    }
+                //},
             }
         };
 
@@ -234,55 +234,55 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new OpenApiSchema
-                {
-                    Reference = new OpenApiReference()
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
-                    }
-                }
+                //["schema1"] = new OpenApiSchema
+                //{
+                //    Reference = new OpenApiReference()
+                //    {
+                //        Type = ReferenceType.Schema,
+                //        Id = "schema1"
+                //    }
+                //}
             }
         };
 
         public static OpenApiComponents ComponentsWithPathItem = new OpenApiComponents
         {
-            Schemas = new Dictionary<string, OpenApiSchema>
-            {
-                ["schema1"] = new OpenApiSchema
-                {
-                    Properties = new Dictionary<string, OpenApiSchema>
-                    {
-                        ["property2"] = new OpenApiSchema
-                        {
-                            Type = "integer"
-                        },
-                        ["property3"] = new OpenApiSchema
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.Schema,
-                                Id = "schema2"
-                            }
-                        }
-                    },
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "schema1"
-                    }
-                },
-                ["schema2"] = new OpenApiSchema
-                {
-                    Properties = new Dictionary<string, OpenApiSchema>
-                    {
-                        ["property2"] = new OpenApiSchema
-                        {
-                            Type = "integer"
-                        }
-                    }
-                },
-            },
+            //Schemas = new Dictionary<string, OpenApiSchema>
+            //{
+            //    ["schema1"] = new OpenApiSchema
+            //    {
+            //        Properties = new Dictionary<string, OpenApiSchema>
+            //        {
+            //            ["property2"] = new OpenApiSchema
+            //            {
+            //                Type = "integer"
+            //            },
+            //            ["property3"] = new OpenApiSchema
+            //            {
+            //                Reference = new OpenApiReference
+            //                {
+            //                    Type = ReferenceType.Schema,
+            //                    Id = "schema2"
+            //                }
+            //            }
+            //        },
+            //        Reference = new OpenApiReference
+            //        {
+            //            Type = ReferenceType.Schema,
+            //            Id = "schema1"
+            //        }
+            //    },
+            //    ["schema2"] = new OpenApiSchema
+            //    {
+            //        Properties = new Dictionary<string, OpenApiSchema>
+            //        {
+            //            ["property2"] = new OpenApiSchema
+            //            {
+            //                Type = "integer"
+            //            }
+            //        }
+            //    },
+            //},
             PathItems = new Dictionary<string, OpenApiPathItem>
             {
                 ["/pets"] = new OpenApiPathItem

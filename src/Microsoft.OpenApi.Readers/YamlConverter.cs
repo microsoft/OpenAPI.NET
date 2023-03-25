@@ -59,6 +59,7 @@ namespace Microsoft.OpenApi.Readers
         {
             return json switch
             {
+                null => null,
                 JsonObject obj => obj.ToYamlMapping(),
                 JsonArray arr => arr.ToYamlSequence(),
                 JsonValue val => val.ToYamlScalar(),

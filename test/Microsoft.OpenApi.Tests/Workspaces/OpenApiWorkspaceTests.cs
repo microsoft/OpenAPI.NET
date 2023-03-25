@@ -68,10 +68,10 @@ namespace Microsoft.OpenApi.Tests
                 Components = new OpenApiComponents()
                 {
                     Schemas = {
-                        ["test"] = new OpenApiSchema() {
-                            Type = "string",
-                            Description = "The referenced one"
-                        }
+                        //["test"] = new OpenApiSchema() {
+                        //    Type = "string",
+                        //    Description = "The referenced one"
+                        //}
                     }
                 }
             });
@@ -210,10 +210,10 @@ namespace Microsoft.OpenApi.Tests
                 Components = new OpenApiComponents()
                 {
                     Schemas = {
-                        ["test"] = new OpenApiSchema() {
-                            Type = "string",
-                            Description = "The referenced one"
-                        }
+                        //["test"] = new OpenApiSchema() {
+                        //    Type = "string",
+                        //    Description = "The referenced one"
+                        //}
                     }
                 }
             };

@@ -240,15 +240,15 @@ namespace Microsoft.OpenApi.Validations.Tests
             var components = new OpenApiComponents
             {
                 Schemas = {
-                    {
-                        "schema1",
-                        new OpenApiSchema
-                        {
-                            Type = "object",
-                            Discriminator = new OpenApiDiscriminator { PropertyName = "property1" },
-                            Reference = new OpenApiReference { Id = "schema1" }
-                        }
-                    }
+                    //{
+                    //    "schema1",
+                    //    new OpenApiSchema
+                    //    {
+                    //        Type = "object",
+                    //        Discriminator = new OpenApiDiscriminator { PropertyName = "property1" },
+                    //        Reference = new OpenApiReference { Id = "schema1" }
+                    //    }
+                    //}
                 }
             };
             // Act
@@ -277,39 +277,39 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Schemas = 
                 {
-                    {
-                        "Person",
-                        new OpenApiSchema
-                        {
-                            Type = "array",
-                            Discriminator = new OpenApiDiscriminator
-                            {
-                                PropertyName = "type"
-                            },
-                            OneOf = new List<OpenApiSchema>
-                            {
-                                new OpenApiSchema
-                                {
-                                    Properties =
-                                    {
-                                        {
-                                            "type",
-                                            new OpenApiSchema
-                                            {
-                                                Type = "array"
-                                            }
-                                        }
-                                    },
-                                    Reference = new OpenApiReference
-                                    {
-                                        Type = ReferenceType.Schema,
-                                        Id = "Person"
-                                    }
-                                }
-                            },
-                            Reference = new OpenApiReference { Id = "Person" }
-                        }
-                    }                    
+                    //{
+                    //    "Person",
+                    //    new OpenApiSchema
+                    //    {
+                    //        Type = "array",
+                    //        Discriminator = new OpenApiDiscriminator
+                    //        {
+                    //            PropertyName = "type"
+                    //        },
+                    //        OneOf = new List<OpenApiSchema>
+                    //        {
+                    //            new OpenApiSchema
+                    //            {
+                    //                Properties =
+                    //                {
+                    //                    {
+                    //                        "type",
+                    //                        new OpenApiSchema
+                    //                        {
+                    //                            Type = "array"
+                    //                        }
+                    //                    }
+                    //                },
+                    //                Reference = new OpenApiReference
+                    //                {
+                    //                    Type = ReferenceType.Schema,
+                    //                    Id = "Person"
+                    //                }
+                    //            }
+                    //        },
+                    //        Reference = new OpenApiReference { Id = "Person" }
+                    //    }
+                    //}                    
                 }
             };
 
