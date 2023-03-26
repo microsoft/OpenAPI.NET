@@ -22,22 +22,16 @@ namespace Microsoft.OpenApi.Tests.Validations
         {
             // Arrange
 
-            var sharedSchema = new OpenApiSchema
-            {
-                Type = "string",
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = false
-            };
+            var sharedSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.String)
+                .Ref("test");
 
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
                 Schemas = new Dictionary<string, JsonSchema>()
                 {
-                    //[sharedSchema.Reference.Id] = sharedSchema
+                    ["test"] = sharedSchema
                 }
             };
 
@@ -57,7 +51,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                                     {
                                         ["application/json"] = new OpenApiMediaType()
                                         {
-                                            Schema = sharedSchema
+                                            //Schema = sharedSchema
                                         }
                                     }
                                 }
@@ -79,22 +73,16 @@ namespace Microsoft.OpenApi.Tests.Validations
         public void UnresolvedReferenceSchemaShouldNotBeValidated()
         {
             // Arrange
-            var sharedSchema = new OpenApiSchema
-            {
-                Type = "string",
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = true
-            };
+            var sharedSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.String)
+                .Ref("test");
 
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
                 Schemas = new Dictionary<string, JsonSchema>()
                 {
-                    //[sharedSchema.Reference.Id] = sharedSchema
+                    ["test"] = sharedSchema
                 }
             };
 

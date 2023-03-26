@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Xunit;
@@ -68,10 +69,9 @@ namespace Microsoft.OpenApi.Tests
                 Components = new OpenApiComponents()
                 {
                     Schemas = {
-                        //["test"] = new OpenApiSchema() {
-                        //    Type = "string",
-                        //    Description = "The referenced one"
-                        //}
+                        ["test"] = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.String)
+                            .Description("The referenced one")
                     }
                 }
             });
@@ -210,10 +210,9 @@ namespace Microsoft.OpenApi.Tests
                 Components = new OpenApiComponents()
                 {
                     Schemas = {
-                        //["test"] = new OpenApiSchema() {
-                        //    Type = "string",
-                        //    Description = "The referenced one"
-                        //}
+                        ["test"] = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.String)
+                            .Description("The referenced one")
                     }
                 }
             };

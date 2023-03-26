@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Json.Schema;
+using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -240,15 +242,13 @@ namespace Microsoft.OpenApi.Validations.Tests
             var components = new OpenApiComponents
             {
                 Schemas = {
-                    //{
-                    //    "schema1",
-                    //    new OpenApiSchema
-                    //    {
-                    //        Type = "object",
-                    //        Discriminator = new OpenApiDiscriminator { PropertyName = "property1" },
-                    //        Reference = new OpenApiReference { Id = "schema1" }
-                    //    }
-                    //}
+                    {
+                        "schema1",
+                        new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Object)
+                            .Discriminator("property1", null, null) // TODO (GSD): Looks like I need to default these properties or provide an overload
+                            .Ref("#/components/schemas/schema1")
+                    }
                 }
             };
             // Act
@@ -277,39 +277,20 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Schemas = 
                 {
-                    //{
-                    //    "Person",
-                    //    new OpenApiSchema
-                    //    {
-                    //        Type = "array",
-                    //        Discriminator = new OpenApiDiscriminator
-                    //        {
-                    //            PropertyName = "type"
-                    //        },
-                    //        OneOf = new List<OpenApiSchema>
-                    //        {
-                    //            new OpenApiSchema
-                    //            {
-                    //                Properties =
-                    //                {
-                    //                    {
-                    //                        "type",
-                    //                        new OpenApiSchema
-                    //                        {
-                    //                            Type = "array"
-                    //                        }
-                    //                    }
-                    //                },
-                    //                Reference = new OpenApiReference
-                    //                {
-                    //                    Type = ReferenceType.Schema,
-                    //                    Id = "Person"
-                    //                }
-                    //            }
-                    //        },
-                    //        Reference = new OpenApiReference { Id = "Person" }
-                    //    }
-                    //}                    
+                    {
+                        "Person",
+                        new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Array)
+                            .Discriminator("type", null, null)
+                            .OneOf(
+                                new JsonSchemaBuilder()
+                                    .Properties(
+                                        ("type", new JsonSchemaBuilder().Type(SchemaValueType.Array))
+                                    )
+                                    .Ref("#/components/schemas/Person")
+                            )
+                            .Ref("Person")
+                    }
                 }
             };
 

@@ -160,7 +160,6 @@ components:
               format: int64
 
     NewPet:
-      id: '#newpet'
       type: object
       required:
         - name  

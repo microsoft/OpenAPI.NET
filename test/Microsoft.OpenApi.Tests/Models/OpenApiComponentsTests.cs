@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -16,24 +17,17 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiComponents AdvancedComponents = new OpenApiComponents
         {
-            //Schemas = new Dictionary<string, OpenApiSchema>
-            //{
-            //    ["schema1"] = new OpenApiSchema
-            //    {
-            //        Properties = new Dictionary<string, OpenApiSchema>
-            //        {
-            //            ["property2"] = new OpenApiSchema
-            //            {
-            //                Type = "integer"
-            //            },
-            //            ["property3"] = new OpenApiSchema
-            //            {
-            //                Type = "string",
-            //                MaxLength = 15
-            //            }
-            //        },
-            //    },
-            //},
+            Schemas = new Dictionary<string, JsonSchema>
+            {
+                ["schema1"] = new JsonSchemaBuilder()
+                    .Properties(
+                        ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+                        ("property3", new JsonSchemaBuilder()
+                            .Type(SchemaValueType.String)
+                            .MaxLength(15)
+                        )
+                    )
+            },
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
                 ["securityScheme1"] = new OpenApiSecurityScheme
@@ -65,42 +59,20 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents AdvancedComponentsWithReference = new OpenApiComponents
         {
-            //Schemas = new Dictionary<string, OpenApiSchema>
-            //{
-            //    ["schema1"] = new OpenApiSchema
-            //    {
-            //        Properties = new Dictionary<string, OpenApiSchema>
-            //        {
-            //            ["property2"] = new OpenApiSchema
-            //            {
-            //                Type = "integer"
-            //            },
-            //            ["property3"] = new OpenApiSchema
-            //            {
-            //                Reference = new OpenApiReference
-            //                {
-            //                    Type = ReferenceType.Schema,
-            //                    Id = "schema2"
-            //                }
-            //            }
-            //        },
-            //        Reference = new OpenApiReference
-            //        {
-            //            Type = ReferenceType.Schema,
-            //            Id = "schema1"
-            //        }
-            //    },
-            //    ["schema2"] = new OpenApiSchema
-            //    {
-            //        Properties = new Dictionary<string, OpenApiSchema>
-            //        {
-            //            ["property2"] = new OpenApiSchema
-            //            {
-            //                Type = "integer"
-            //            }
-            //        }
-            //    },
-            //},
+            Schemas = new Dictionary<string, JsonSchema>
+            {
+                ["schema1"] = new JsonSchemaBuilder()
+                    .Properties(
+                        ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+                        ("property3", new JsonSchemaBuilder()
+                            .Ref("#/components/schemas/schema2") // TODO: This could be pulled into a factory.
+                        )
+                    ),
+                ["schema2"] = new JsonSchemaBuilder()
+                    .Properties(
+                        ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+                    )
+            },
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
                 ["securityScheme1"] = new OpenApiSecurityScheme
@@ -144,55 +116,34 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents BrokenComponents = new OpenApiComponents
         {
-            //Schemas = new Dictionary<string, OpenApiSchema>
-            //{
-            //    ["schema1"] = new OpenApiSchema
-            //    {
-            //        Type = "string"
-            //    },
-            //    ["schema2"] = null,
-            //    ["schema3"] = null,
-            //    ["schema4"] = new OpenApiSchema
-            //    {
-            //        Type = "string",
-            //        AllOf = new List<OpenApiSchema>
-            //        {
-            //            null,
-            //            null,
-            //            new OpenApiSchema
-            //            {
-            //                Type = "string"
-            //            },
-            //            null,
-            //            null
-            //        }
-            //    }
-            //}
+            Schemas = new Dictionary<string, JsonSchema>
+            {
+                ["schema1"] = new JsonSchemaBuilder().Type(SchemaValueType.Integer),
+                ["schema2"] = null,
+                ["schema3"] = null,
+                ["schema3"] = new JsonSchemaBuilder()
+                    .Type(SchemaValueType.String)
+                    .AllOf(
+                        null, // These nulls are invalid for allOf; I'm not sure what they're trying to achieve.
+                        null,
+                        new JsonSchemaBuilder().Type(SchemaValueType.String),
+                        null,
+                        null
+                    )
+            }
         };
 
         public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
             Schemas =
             {
-                //["schema1"] = new OpenApiSchema
-                //{
-                //    Reference = new OpenApiReference()
-                //    {
-                //        Type = ReferenceType.Schema,
-                //        Id = "schema2"
-                //    }
-                //},
-                //["schema2"] = new OpenApiSchema
-                //{
-                //    Type = "object",
-                //    Properties =
-                //    {
-                //        ["property1"] = new OpenApiSchema()
-                //        {
-                //            Type = "string"
-                //        }
-                //    }
-                //},
+                ["schema1"] = new JsonSchemaBuilder()
+                    .Ref("#/components/schemas/schema2"),
+                ["schema2"] = new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Object)
+                    .Properties(
+                        ("property1", new JsonSchemaBuilder().Type(SchemaValueType.String))
+                    )
             }
         };
 
@@ -200,33 +151,17 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                //["schema1"] = new OpenApiSchema
-                //{
-                //    Type = "object",
-                //    Properties =
-                //    {
-                //        ["property1"] = new OpenApiSchema()
-                //        {
-                //            Type = "string"
-                //        }
-                //    },
-                //    Reference = new OpenApiReference()
-                //    {
-                //        Type = ReferenceType.Schema,
-                //        Id = "schema1"
-                //    }
-                //},
-                //["schema2"] = new OpenApiSchema
-                //{
-                //    Type = "object",
-                //    Properties =
-                //    {
-                //        ["property1"] = new OpenApiSchema()
-                //        {
-                //            Type = "string"
-                //        }
-                //    }
-                //},
+                ["schema1"] = new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Object)
+                    .Properties(
+                        ("property1", new JsonSchemaBuilder().Type(SchemaValueType.String))
+                    )
+                    .Ref("#/components/schemas/schema1"),
+                ["schema2"] = new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Object)
+                    .Properties(
+                        ("property1", new JsonSchemaBuilder().Type(SchemaValueType.String))
+                    )
             }
         };
 
@@ -234,55 +169,28 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                //["schema1"] = new OpenApiSchema
-                //{
-                //    Reference = new OpenApiReference()
-                //    {
-                //        Type = ReferenceType.Schema,
-                //        Id = "schema1"
-                //    }
-                //}
+                ["schema1"] = new JsonSchemaBuilder()
+                    .Ref("#/components/schemas/schema1")
             }
         };
 
         public static OpenApiComponents ComponentsWithPathItem = new OpenApiComponents
         {
-            //Schemas = new Dictionary<string, OpenApiSchema>
-            //{
-            //    ["schema1"] = new OpenApiSchema
-            //    {
-            //        Properties = new Dictionary<string, OpenApiSchema>
-            //        {
-            //            ["property2"] = new OpenApiSchema
-            //            {
-            //                Type = "integer"
-            //            },
-            //            ["property3"] = new OpenApiSchema
-            //            {
-            //                Reference = new OpenApiReference
-            //                {
-            //                    Type = ReferenceType.Schema,
-            //                    Id = "schema2"
-            //                }
-            //            }
-            //        },
-            //        Reference = new OpenApiReference
-            //        {
-            //            Type = ReferenceType.Schema,
-            //            Id = "schema1"
-            //        }
-            //    },
-            //    ["schema2"] = new OpenApiSchema
-            //    {
-            //        Properties = new Dictionary<string, OpenApiSchema>
-            //        {
-            //            ["property2"] = new OpenApiSchema
-            //            {
-            //                Type = "integer"
-            //            }
-            //        }
-            //    },
-            //},
+            Schemas = new Dictionary<string, JsonSchema>
+            {
+                ["schema1"] = new JsonSchemaBuilder()
+                    .Properties(
+                        ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+                        ("property3",new JsonSchemaBuilder()
+                            .Ref("#/components/schemas/schema2")
+                        )
+                    )
+                    .Ref("#/components/schemas/schema1"),
+                ["schema2"] = new JsonSchemaBuilder()
+                    .Properties(
+                        ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+                    )
+            },
             PathItems = new Dictionary<string, OpenApiPathItem>
             {
                 ["/pets"] = new OpenApiPathItem
