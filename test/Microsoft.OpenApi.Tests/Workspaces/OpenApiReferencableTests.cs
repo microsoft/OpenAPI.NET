@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -20,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiLink _linkFragment = new OpenApiLink();
         private static readonly OpenApiHeader _headerFragment = new OpenApiHeader()
         {
-            Schema = new OpenApiSchema(),
+            Schema = JsonSchema.Empty,
             Examples = new Dictionary<string, OpenApiExample>
             {
                 { "example1", new OpenApiExample() }
@@ -28,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         };
         private static readonly OpenApiParameter _parameterFragment = new OpenApiParameter
         {
-            Schema = new OpenApiSchema(),
+            Schema = JsonSchema.Empty,
             Examples = new Dictionary<string, OpenApiExample>
             {
                 { "example1", new OpenApiExample() }

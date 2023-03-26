@@ -107,12 +107,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the parameter.
         /// </summary>
-        public OpenApiSchema Schema { get; set; }
-
-        /// <summary>
-        /// The schema defining the type used for the request body.
-        /// </summary>
-        public JsonSchema Schema31 { get; set; }
+        public JsonSchema Schema { get; set; }
         
         /// <summary>
         /// Examples of the media type. Each example SHOULD contain a value
@@ -168,7 +163,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter?.Style ?? Style;
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
-            Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
+            Schema = parameter?.Schema;
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
@@ -288,7 +283,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
+            //writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
@@ -367,68 +362,68 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (this is OpenApiBodyParameter)
             {
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
+                //writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
             else
-            if (Schema?.UnresolvedReference == true || Schema?.Type == "object")
-            {
-                writer.WriteProperty(OpenApiConstants.Type, "string");
-            }
-            else
-            {
-                // type
-                // format
-                // items
-                // collectionFormat
-                // default
-                // maximum
-                // exclusiveMaximum
-                // minimum
-                // exclusiveMinimum
-                // maxLength
-                // minLength
-                // pattern
-                // maxItems
-                // minItems
-                // uniqueItems
-                // enum
-                // multipleOf
-                if (Schema != null)
-                {
-                    Schema.WriteAsItemsProperties(writer);
+            //if (Schema?.UnresolvedReference == true || Schema?.Type == "object")
+            //{
+            //    writer.WriteProperty(OpenApiConstants.Type, "string");
+            //}
+            //else
+            //{
+            //    // type
+            //    // format
+            //    // items
+            //    // collectionFormat
+            //    // default
+            //    // maximum
+            //    // exclusiveMaximum
+            //    // minimum
+            //    // exclusiveMinimum
+            //    // maxLength
+            //    // minLength
+            //    // pattern
+            //    // maxItems
+            //    // minItems
+            //    // uniqueItems
+            //    // enum
+            //    // multipleOf
+            //    if (Schema != null)
+            //    {
+            //        Schema.WriteAsItemsProperties(writer);
 
-                    if (Schema.Extensions != null)
-                    {
-                        foreach (var key in Schema.Extensions.Keys)
-                        {
-                            // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
-                            // so remove it from the cloned collection so we don't write it again.
-                            extensionsClone.Remove(key);
-                        }
-                    }
-                }
+            //        if (Schema.Extensions != null)
+            //        {
+            //            foreach (var key in Schema.Extensions.Keys)
+            //            {
+            //                // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
+            //                // so remove it from the cloned collection so we don't write it again.
+            //                extensionsClone.Remove(key);
+            //            }
+            //        }
+            //    }
 
-                // allowEmptyValue
-                writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
+            //    // allowEmptyValue
+            //    writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query)
-                {
-                    if (this.Style == ParameterStyle.Form && this.Explode == true)
-                    {
-                        writer.WriteProperty("collectionFormat", "multi");
-                    }
-                    else if (this.Style == ParameterStyle.PipeDelimited)
-                    {
-                        writer.WriteProperty("collectionFormat", "pipes");
-                    }
-                    else if (this.Style == ParameterStyle.SpaceDelimited)
-                    {
-                        writer.WriteProperty("collectionFormat", "ssv");
-                    }
-                }
-            }
+            //    if (this.In == ParameterLocation.Query)
+            //    {
+            //        if (this.Style == ParameterStyle.Form && this.Explode == true)
+            //        {
+            //            writer.WriteProperty("collectionFormat", "multi");
+            //        }
+            //        else if (this.Style == ParameterStyle.PipeDelimited)
+            //        {
+            //            writer.WriteProperty("collectionFormat", "pipes");
+            //        }
+            //        else if (this.Style == ParameterStyle.SpaceDelimited)
+            //        {
+            //            writer.WriteProperty("collectionFormat", "ssv");
+            //        }
+            //    }
+            //}
 
 
             // extensions

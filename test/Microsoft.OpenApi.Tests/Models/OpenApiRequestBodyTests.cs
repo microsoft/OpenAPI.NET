@@ -4,6 +4,7 @@
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -24,10 +25,8 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new OpenApiMediaType
                 {
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
                 }
             }
         };
@@ -45,10 +44,8 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new OpenApiMediaType
                 {
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
                 }
             }
         };

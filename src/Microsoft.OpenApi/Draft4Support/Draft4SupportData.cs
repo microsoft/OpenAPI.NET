@@ -8,7 +8,8 @@ namespace Microsoft.OpenApi.Draft4Support
     {
         // This is kind of a hack since SpecVersion is an enum.
         // Maybe it should be defined as string constants.
-        public const SpecVersion Draft4Version = (SpecVersion)(1 << 10);
+        public const SpecVersion Draft4Version = (SpecVersion)(-1);
+        public const SchemaValueType FileDataType = (SchemaValueType)(-1);
 
         public static readonly JsonSchema Draft4MetaSchema =
             new JsonSchemaBuilder()

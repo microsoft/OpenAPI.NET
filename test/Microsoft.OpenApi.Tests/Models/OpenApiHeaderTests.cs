@@ -4,6 +4,7 @@
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -19,11 +20,9 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiHeader AdvancedHeader = new OpenApiHeader
         {
             Description = "sampleHeader",
-            Schema = new OpenApiSchema
-            {
-                Type = "integer",
-                Format = "int32"
-            }
+            Schema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Integer)
+                .Format("int32")
         };
 
         public static OpenApiHeader ReferencedHeader = new OpenApiHeader
@@ -34,11 +33,9 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "example1",
             },
             Description = "sampleHeader",
-            Schema = new OpenApiSchema
-            {
-                Type = "integer",
-                Format = "int32"
-            }
+            Schema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Integer)
+                .Format("int32")
         };
 
         private readonly ITestOutputHelper _output;

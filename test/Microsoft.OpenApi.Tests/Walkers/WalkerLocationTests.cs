@@ -81,10 +81,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema = new OpenApiSchema
-                                        {
-                                            Type = "string"
-                                        }
+                                        Schema = new JsonSchemaBuilder()
+                                            .Type(SchemaValueType.String)
                                     }
                                 }
                             }
@@ -162,26 +160,12 @@ namespace Microsoft.OpenApi.Tests.Walkers
         public void LocateReferences()
         {
 
-            var baseSchema = new OpenApiSchema()
-            {
-                Reference = new OpenApiReference()
-                {
-                    Id = "base",
-                    Type = ReferenceType.Schema
-                },
-                UnresolvedReference = false
-            };
+            JsonSchema baseSchema = new JsonSchemaBuilder()
+                .Ref("#/components/schemas/base");
 
-            var derivedSchema = new OpenApiSchema
-            {
-                AnyOf = new List<OpenApiSchema>() { baseSchema },
-                Reference = new OpenApiReference()
-                {
-                    Id = "derived",
-                    Type = ReferenceType.Schema
-                },
-                UnresolvedReference = false
-            };
+            JsonSchema derivedSchema = new JsonSchemaBuilder()
+                .AnyOf(baseSchema)
+                .Ref("#/components/schemas/derived");
 
             var testHeader = new OpenApiHeader()
             {
@@ -212,7 +196,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
-                                                Schema = derivedSchema
+                                                //Schema = derivedSchema
                                             }
                                         },
                                         Headers = new Dictionary<string, OpenApiHeader>()

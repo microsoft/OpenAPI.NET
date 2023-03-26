@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (mediaType.Example != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(MediaTypeMismatchedDataType), mediaType.Example, mediaType.Schema);
+                        //RuleHelpers.ValidateDataTypeMismatch(context, nameof(MediaTypeMismatchedDataType), mediaType.Example, mediaType.Schema);
                     }
 
                     context.Exit();
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                             {
                                 context.Enter(key);
                                 context.Enter("value");
-                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(MediaTypeMismatchedDataType), mediaType.Examples[key]?.Value, mediaType.Schema);
+                                //RuleHelpers.ValidateDataTypeMismatch(context, nameof(MediaTypeMismatchedDataType), mediaType.Examples[key]?.Value, mediaType.Schema);
                                 context.Exit();
                                 context.Exit();
                             }

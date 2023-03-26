@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -424,16 +425,9 @@ paths:
         private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
         {
             // Arrange
-            var thingSchema = new OpenApiSchema()
-            {
-                Type = "object",
-                UnresolvedReference = false,
-                Reference = new OpenApiReference
-                {
-                    Id = "thing",
-                    Type = ReferenceType.Schema
-                }
-            };
+            var thingSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .Ref("thing");
 
             var doc = new OpenApiDocument()
             {
@@ -469,7 +463,7 @@ paths:
                     }
                 }
             };
-            thingSchema.Reference.HostDocument = doc;
+            //thingSchema.Reference.HostDocument = doc;
 
             return doc;
         }
@@ -532,24 +526,16 @@ components:
 
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
         {
-            var thingSchema = new OpenApiSchema()
-            {
-                Type = "object",
-                UnresolvedReference = false,
-                Reference = new OpenApiReference
-                {
-                    Id = "thing",
-                    Type = ReferenceType.Schema
-                }
-            };
-            thingSchema.Properties["children"] = thingSchema;
-
-            var relatedSchema = new OpenApiSchema()
-            {
-                Type = "integer",
-            };
-
-            thingSchema.Properties["related"] = relatedSchema;
+            var relatedSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Integer);
+            var thingSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .Ref("thing");
+            // TODO (GSD): I don't think I've tested doing this, but I do support circular references, so maybe?
+            thingSchema.Properties(
+                ("children", thingSchema),
+                ("related", relatedSchema)
+            );
 
             var doc = new OpenApiDocument()
             {
@@ -581,11 +567,11 @@ components:
                 Components = new OpenApiComponents
                 {
                     Schemas = {
-                        //["thing"] = thingSchema
+                        ["thing"] = thingSchema
                     }
                 }
             };
-            thingSchema.Reference.HostDocument = doc;
+            //thingSchema.Reference.HostDocument = doc;
             return doc;
         }
 

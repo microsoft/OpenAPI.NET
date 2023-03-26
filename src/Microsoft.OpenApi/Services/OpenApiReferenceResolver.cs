@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="mediaType"></param>
         public override void Visit(OpenApiMediaType mediaType)
         {
-            ResolveObject(mediaType.Schema, r => mediaType.Schema = r);
+            //ResolveObject(mediaType.Schema, r => mediaType.Schema = r);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public override void Visit(OpenApiParameter parameter)
         {
-            ResolveObject(parameter.Schema, r => parameter.Schema = r);
+            //ResolveObject(parameter.Schema, r => parameter.Schema = r);
             ResolveMap(parameter.Examples);
         }
 

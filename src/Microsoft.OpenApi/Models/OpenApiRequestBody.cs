@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -185,7 +186,7 @@ namespace Microsoft.OpenApi.Models
                 // V2 spec actually allows the body to have custom name.
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
-                Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
+                Schema = Content.Values.FirstOrDefault()?.Schema ?? JsonSchema.Empty,
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
@@ -202,22 +203,23 @@ namespace Microsoft.OpenApi.Models
             if (Content == null || !Content.Any())
                 yield break;
 
-            foreach (var property in Content.First().Value.Schema.Properties)
+            foreach (var property in Content.First().Value.Schema.GetProperties())
             {
                 var paramSchema = property.Value;
-                if ("string".Equals(paramSchema.Type, StringComparison.OrdinalIgnoreCase)
-                    && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
-                    || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
+                if (paramSchema.GetJsonType() == SchemaValueType.String
+                    && ("binary".Equals(paramSchema.GetFormat().Key, StringComparison.OrdinalIgnoreCase)
+                    || "base64".Equals(paramSchema.GetFormat().Key, StringComparison.OrdinalIgnoreCase)))
                 {
-                    paramSchema.Type = "file";
-                    paramSchema.Format = null;
+                    // TODO (GSD): JsonSchema is immutable; these can't be set
+                    //paramSchema.Type = "file";
+                    //paramSchema.Format = null;
                 }
                 yield return new OpenApiFormDataParameter
                 {
-                    Description = property.Value.Description,
+                    Description = property.Value.GetDescription(),
                     Name = property.Key,
                     Schema = property.Value,
-                    Required = Content.First().Value.Schema.Required.Contains(property.Key) 
+                    Required = Content.First().Value.Schema.GetRequired()?.Contains(property.Key) ?? false
                 };
             }
         }

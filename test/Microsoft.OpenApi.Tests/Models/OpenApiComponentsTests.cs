@@ -206,14 +206,8 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema = new OpenApiSchema
-                                        {
-                                            Reference = new OpenApiReference
-                                            {
-                                                Id = "schema1",
-                                                Type = ReferenceType.Schema
-                                            }
-                                        }
+                                        Schema = new JsonSchemaBuilder()
+                                            .Ref("#/components/schemas/schema1")
                                     }
                                 }
                             },

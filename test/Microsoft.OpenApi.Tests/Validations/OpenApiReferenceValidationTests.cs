@@ -98,14 +98,8 @@ namespace Microsoft.OpenApi.Tests.Validations
         {
             // Arrange
 
-            var sharedSchema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = true
-            };
+            var sharedSchema = new JsonSchemaBuilder()
+                .Ref("test");
 
             OpenApiDocument document = new OpenApiDocument();
 

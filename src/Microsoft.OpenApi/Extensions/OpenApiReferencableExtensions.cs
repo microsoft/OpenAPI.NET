@@ -59,8 +59,8 @@ namespace Microsoft.OpenApi.Extensions
         {
             switch (propertyName)
             {
-                case OpenApiConstants.Schema:
-                    return headerElement.Schema;
+                //case OpenApiConstants.Schema:
+                //    return headerElement.Schema;
                 case OpenApiConstants.Examples when mapKey != null:
                     return headerElement.Examples[mapKey];
                 default:
@@ -76,8 +76,8 @@ namespace Microsoft.OpenApi.Extensions
         {
             switch (propertyName)
             {
-                case OpenApiConstants.Schema:
-                    return parameterElement.Schema;
+                //case OpenApiConstants.Schema:
+                //    return parameterElement.Schema;
                 case OpenApiConstants.Examples when mapKey != null:
                     return parameterElement.Examples[mapKey];
                 default:

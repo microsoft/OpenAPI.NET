@@ -580,7 +580,7 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(parameter);
-            Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
+            //Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
             Walk(OpenApiConstants.Content, () => Walk(parameter.Content));
             Walk(OpenApiConstants.Examples, () => Walk(parameter.Examples));
 
@@ -729,7 +729,7 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(mediaType);
 
             Walk(OpenApiConstants.Example, () => Walk(mediaType.Examples));
-            Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
+            //Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
             Walk(OpenApiConstants.Encoding, () => Walk(mediaType.Encoding));
             Walk(mediaType as IOpenApiExtensible);
         }
@@ -1011,7 +1011,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Content, () => Walk(header.Content));
             Walk(OpenApiConstants.Example, () => Walk(header.Example));
             Walk(OpenApiConstants.Examples, () => Walk(header.Examples));
-            Walk(OpenApiConstants.Schema, () => Walk(header.Schema));
+            //Walk(OpenApiConstants.Schema, () => Walk(header.Schema));
             Walk(header as IOpenApiExtensible);
         }
 

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -47,16 +48,16 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema = new OpenApiSchema
-            {
-                Title = "title2",
-                Description = "description2",
-                OneOf = new List<OpenApiSchema>
-                {
-                    new OpenApiSchema { Type = "number", Format = "double" },
-                    new OpenApiSchema { Type = "string" }                        
-                }
-            },
+            Schema = new JsonSchemaBuilder()
+                .Title("title2")
+                .Description("description2")
+                .OneOf(
+                    new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Number)
+                        .Format("double"),
+                    new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
+                ),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
@@ -74,19 +75,11 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Style = ParameterStyle.Form,
             Explode = false,
-            Schema = new OpenApiSchema
-            {
-                Type = "array",
-                Items = new OpenApiSchema
-                {
-                    Enum = new List<IOpenApiAny>
-                    {
-                        new OpenApiString("value1"),
-                        new OpenApiString("value2")
-                    }
-                }
-            }
-
+            Schema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Array)
+                .Items(new JsonSchemaBuilder()
+                    .Enum("value1", "value2")
+                )
         };
 
         public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
@@ -96,33 +89,22 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Style = ParameterStyle.Form,
             Explode = true,
-            Schema = new OpenApiSchema
-            {
-                Type = "array",
-                Items = new OpenApiSchema
-                {
-                    Enum = new List<IOpenApiAny>
-                    {
-                        new OpenApiString("value1"),
-                        new OpenApiString("value2")
-                    }
-                }
-            }
-
+            Schema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Array)
+                .Items(new JsonSchemaBuilder()
+                    .Enum("value1", "value2")
+                )
         };
         
         public static OpenApiParameter QueryParameterWithMissingStyle = new OpenApiParameter
         {            
             Name = "id",
             In = ParameterLocation.Query,
-            Schema = new OpenApiSchema
-            {
-                Type = "object",
-                AdditionalProperties = new OpenApiSchema
-                {
-                    Type = "integer"
-                }                
-            }
+            Schema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .AdditionalProperties(new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Integer)
+                )
         };    
 
         public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter
@@ -135,15 +117,8 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "schemaObject1"
-                },
-                UnresolvedReference = true
-            },
+            Schema = new JsonSchemaBuilder()
+                .Ref("schemaObject1"),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
@@ -164,10 +139,8 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema = new OpenApiSchema
-            {
-                Type = "object"
-            },
+            Schema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
