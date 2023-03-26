@@ -160,6 +160,7 @@ components:
               format: int64
 
     NewPet:
+      id: '#newpet'
       type: object
       required:
         - name  
@@ -178,6 +179,8 @@ components:
         code:
           type: integer
           format: int32
+          minimum: 0
+          exclusiveMinimum: true
         message:
           type: string";
 
@@ -194,12 +197,13 @@ components:
 
             // We can serialize back to node and translate back to YAML,
             // but this is sufficient to show it works.
-            _testOutputHelper.WriteLine(JsonSerializer.Serialize(openApiDoc, new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            }));
+            _testOutputHelper.WriteLine(JsonSerializer.Serialize(openApiDoc,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                }));
         }
 
         static YamlDocument LoadYamlDocument(TextReader input)
@@ -208,6 +212,5 @@ components:
             yamlStream.Load(input);
             return yamlStream.Documents.First();
         }
-
     }
 }

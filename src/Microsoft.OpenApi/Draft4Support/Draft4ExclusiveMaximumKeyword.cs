@@ -8,6 +8,7 @@ namespace Microsoft.OpenApi.Draft4Support
 {
     [SchemaKeyword(Name)]
     [SchemaSpecVersion(Draft4SupportData.Draft4Version)]
+    [SchemaSpecVersion(SpecVersion.Draft202012)]
     [JsonConverter(typeof(Draft4ExclusiveMaximumKeywordJsonConverter))]
     internal class Draft4ExclusiveMaximumKeyword : IJsonSchemaKeyword, IEquatable<Draft4ExclusiveMaximumKeyword>
     {
@@ -38,9 +39,10 @@ namespace Microsoft.OpenApi.Draft4Support
 
         public void Evaluate(EvaluationContext context)
         {
-            context.EnterKeyword(Name);
+            // TODO: do we need to validate that the right version of the keyword is being used?
             if (BoolValue.HasValue)
             {
+                context.EnterKeyword(Name);
                 if (!BoolValue.Value)
                 {
                     context.NotApplicable(() => "exclusiveMinimum is false; minimum validation is sufficient");
@@ -65,12 +67,12 @@ namespace Microsoft.OpenApi.Draft4Support
 
                 if (limit == number)
                     context.LocalResult.Fail(Name, ErrorMessages.ExclusiveMaximum, ("received", number), ("limit", BoolValue));
+                context.ExitKeyword(Name, context.LocalResult.IsValid);
             }
             else
             {
                 _numberSupport.Evaluate(context);
             }
-            context.ExitKeyword(Name, context.LocalResult.IsValid);
         }
 
         /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>

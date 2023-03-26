@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Security.Policy;
+using Json.Schema;
+using Microsoft.OpenApi.Draft4Support;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -736,27 +738,21 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                 },
                 Components = new OpenApiComponents
                 {
-                    //Schemas = new Dictionary<string, OpenApiSchema>
-                    //{
-                    //    {
-                    //        "microsoft.graph.networkInterface", new OpenApiSchema
-                    //        {
-                    //            Title = "networkInterface",
-                    //            Type = "object",
-                    //            Properties = new Dictionary<string, OpenApiSchema>
-                    //            {
-                    //                {
-                    //                    "description", new OpenApiSchema
-                    //                    {
-                    //                        Type = "string",
-                    //                        Description = "Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).",
-                    //                        Nullable = true
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //}
+                    Schemas = new Dictionary<string, JsonSchema>
+                    {
+                        {
+                            "microsoft.graph.networkInterface", new JsonSchemaBuilder()
+                                .Title("networkInterface")
+                                .Type(SchemaValueType.Object)
+                                .Properties(
+                                    ("description", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.String)
+                                        .Description("Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).")
+                                        .Nullable(true)
+                                    )
+                                )
+                        }
+                    }
                 }
             };
             return document;

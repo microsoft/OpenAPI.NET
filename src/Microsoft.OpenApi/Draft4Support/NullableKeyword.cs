@@ -6,42 +6,45 @@ using Json.Schema;
 namespace Microsoft.OpenApi.Draft4Support
 {
     [SchemaKeyword(Name)]
-    [SchemaPriority(int.MinValue + 1)]
     [SchemaSpecVersion(Draft4SupportData.Draft4Version)]
-    [JsonConverter(typeof(Draft4IdKeywordJsonConverter))]
-    internal class Draft4IdKeyword : IIdKeyword, IEquatable<Draft4IdKeyword>
+    [JsonConverter(typeof(NullableKeywordJsonConverter))]
+    internal class NullableKeyword : IJsonSchemaKeyword, IEquatable<NullableKeyword>
     {
-        public const string Name = "id";
+        public const string Name = "nullable";
 
         /// <summary>
         /// The ID.
         /// </summary>
-        public Uri Id { get; }
+        public bool Value { get; }
 
         /// <summary>
         /// Creates a new <see cref="IdKeyword"/>.
         /// </summary>
-        /// <param name="id">The ID.</param>
-        public Draft4IdKeyword(Uri id)
+        /// <param name="value">Whether the `minimum` value should be considered exclusive.</param>
+        public NullableKeyword(bool value)
         {
-            Id = id ?? throw new ArgumentNullException(nameof(id));
+            Value = value;
         }
 
         public void Evaluate(EvaluationContext context)
         {
             context.EnterKeyword(Name);
-            context.Log(() => "Nothing to do");
-            context.ExitKeyword(Name, true);
+            var schemaValueType = context.LocalInstance.GetSchemaValueType();
+            if (schemaValueType == SchemaValueType.Null && !Value)
+            {
+                context.LocalResult.Fail(Name, "nulls are not allowed"); // TODO: localize error message
+            }
+            context.ExitKeyword(Name, context.LocalResult.IsValid);
         }
 
         /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
         /// <param name="other">An object to compare with this object.</param>
         /// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-        public bool Equals(Draft4IdKeyword other)
+        public bool Equals(NullableKeyword other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(Id, other.Id);
+            return Equals(Value, other.Value);
         }
 
         /// <summary>Determines whether the specified object is equal to the current object.</summary>
@@ -49,34 +52,32 @@ namespace Microsoft.OpenApi.Draft4Support
         /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
         public override bool Equals(object obj)
         {
-            return Equals(obj as Draft4IdKeyword);
+            return Equals(obj as NullableKeyword);
         }
 
         /// <summary>Serves as the default hash function.</summary>
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return Value.GetHashCode();
         }
     }
 
-    internal class Draft4IdKeywordJsonConverter : JsonConverter<Draft4IdKeyword>
+    internal class NullableKeywordJsonConverter : JsonConverter<NullableKeyword>
     {
-        public override Draft4IdKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override NullableKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType != JsonTokenType.String)
-                throw new JsonException("Expected string");
+            if (reader.TokenType is not (JsonTokenType.True or JsonTokenType.False))
+            {
+                throw new JsonException("Expected boolean");
+            }
 
-            var uriString = reader.GetString();
-            if (!Uri.TryCreate(uriString, UriKind.RelativeOrAbsolute, out var uri))
-                throw new JsonException("Expected URI");
-
-            return new Draft4IdKeyword(uri);
+            return new NullableKeyword(reader.GetBoolean());
         }
 
-        public override void Write(Utf8JsonWriter writer, Draft4IdKeyword value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, NullableKeyword value, JsonSerializerOptions options)
         {
-            writer.WriteString(Draft4IdKeyword.Name, value.Id.OriginalString);
+            writer.WriteBoolean(NullableKeyword.Name, value.Value);
         }
     }
 }

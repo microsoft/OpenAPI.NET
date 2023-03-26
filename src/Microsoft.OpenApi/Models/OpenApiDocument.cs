@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Schema;
+using Microsoft.OpenApi.Draft4Support;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -86,6 +87,15 @@ namespace Microsoft.OpenApi.Models
         /// The unique hash code of the generated OpenAPI document
         /// </summary>
         public string HashCode => GenerateHashValue(this);
+
+        static OpenApiDocument()
+        {
+            SchemaKeywordRegistry.Register<Draft4ExclusiveMaximumKeyword>();
+            SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
+            SchemaKeywordRegistry.Register<Draft4IdKeyword>();
+            SchemaKeywordRegistry.Register<NullableKeyword>();
+            SchemaKeywordRegistry.Register<Draft4TypeKeyword>();
+        }
 
         /// <summary>
         /// Parameter-less constructor
