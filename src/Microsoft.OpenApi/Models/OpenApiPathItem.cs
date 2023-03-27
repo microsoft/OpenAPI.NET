@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -13,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiSerializable, IOpenApiExtensible, IOpenApiReferenceable, IEffective<OpenApiPathItem>
+    public class OpenApiPathItem : Dictionary<OperationType, OpenApiOperation>, IOpenApiSerializable, IOpenApiExtensible, IOpenApiReferenceable, IEffective<OpenApiPathItem>
     {
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
@@ -29,27 +31,27 @@ namespace Microsoft.OpenApi.Models
         /// Gets the definition of operations on this path.
         /// </summary>
         public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
-            = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>
         /// An alternative server array to service all operations in this path.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiServer> Servers { get; set; }
 
         /// <summary>
         /// A list of parameters that are applicable for all the operations described under this path.
         /// These parameters can be overridden at the operation level, but cannot be removed there.
         /// </summary>
-        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        public IList<OpenApiParameter> Parameters { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
+        [JsonIgnore]
         public bool UnresolvedReference { get; set; }
 
         /// <summary>

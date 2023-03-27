@@ -27,12 +27,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An enumeration of string values to be used if the substitution options are from a limited set.
         /// </summary>
-        public List<string> Enum { get; set; } = new List<string>();
+        public List<string> Enum { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

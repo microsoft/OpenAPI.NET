@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime;
+using System.Text.Json.Serialization;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -24,6 +25,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
+        [JsonIgnore]
         public bool UnresolvedReference { get; set; }
 
         /// <summary>
@@ -116,7 +118,7 @@ namespace Microsoft.OpenApi.Models
         /// Furthermore, if referencing a schema which contains an example,
         /// the examples value SHALL override the example provided by the schema.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public IDictionary<string, OpenApiExample> Examples { get; set; }
 
         /// <summary>
         /// Example of the media type. The example SHOULD match the specified schema and encoding properties
@@ -137,12 +139,12 @@ namespace Microsoft.OpenApi.Models
         /// When example or examples are provided in conjunction with the schema object,
         /// the example MUST follow the prescribed serialization strategy for the parameter.
         /// </summary>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType> Content { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// A parameterless constructor

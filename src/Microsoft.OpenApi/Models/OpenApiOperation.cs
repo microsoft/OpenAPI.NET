@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models
         /// A list of tags for API documentation control.
         /// Tags can be used for logical grouping of operations by resources or any other qualifier.
         /// </summary>
-        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTag> Tags { get; set; }
 
         /// <summary>
         /// A short summary of what the operation does.
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         /// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
         /// The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
         /// </summary>
-        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        public IList<OpenApiParameter> Parameters { get; set; }
 
         /// <summary>
         /// The request body applicable for this operation.
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. The list of possible responses as they are returned from executing this operation.
         /// </summary>
-        public OpenApiResponses Responses { get; set; } = new OpenApiResponses();
+        public OpenApiResponses Responses { get; set; }
 
         /// <summary>
         /// A map of possible out-of band callbacks related to the parent operation.
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Models
         /// The key value used to identify the callback object is an expression, evaluated at runtime,
         /// that identifies a URL to use for the callback operation.
         /// </summary>
-        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public IDictionary<string, OpenApiCallback> Callbacks { get; set; }
 
         /// <summary>
         /// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation.
@@ -93,19 +93,19 @@ namespace Microsoft.OpenApi.Models
         /// This definition overrides any declared top-level security.
         /// To remove a top-level security declaration, an empty array can be used.
         /// </summary>
-        public IList<OpenApiSecurityRequirement> Security { get; set; } = new List<OpenApiSecurityRequirement>();
+        public IList<OpenApiSecurityRequirement> Security { get; set; }
 
         /// <summary>
         /// An alternative server array to service this operation.
         /// If an alternative server object is specified at the Path Item Object or Root level,
         /// it will be overridden by this value.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiServer> Servers { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

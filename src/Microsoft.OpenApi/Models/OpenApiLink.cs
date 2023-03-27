@@ -30,8 +30,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
         /// </summary>
-        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
-            new Dictionary<string, RuntimeExpressionAnyWrapper>();
+        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; }
 
         /// <summary>
         /// A literal value or {expression} to use as a request body when calling the target operation.
@@ -51,7 +50,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data

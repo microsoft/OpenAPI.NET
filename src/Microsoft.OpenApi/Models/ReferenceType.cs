@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.ComponentModel;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Attributes;
 
 namespace Microsoft.OpenApi.Models
@@ -8,61 +10,62 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The reference type.
     /// </summary>
+    [JsonConverter(typeof(Json.More.EnumStringConverter<ReferenceType>))]
     public enum ReferenceType
     {
         /// <summary>
         /// Schema item.
         /// </summary>
-        [Display("schemas")] Schema,
+        [Description("schemas")] Schema,
 
         /// <summary>
         /// Responses item.
         /// </summary>
-        [Display("responses")] Response,
+        [Description("responses")] Response,
 
         /// <summary>
         /// Parameters item.
         /// </summary>
-        [Display("parameters")] Parameter,
+        [Description("parameters")] Parameter,
 
         /// <summary>
         /// Examples item.
         /// </summary>
-        [Display("examples")] Example,
+        [Description("examples")] Example,
 
         /// <summary>
         /// RequestBodies item.
         /// </summary>
-        [Display("requestBodies")] RequestBody,
+        [Description("requestBodies")] RequestBody,
 
         /// <summary>
         /// Headers item.
         /// </summary>
-        [Display("headers")] Header,
+        [Description("headers")] Header,
 
         /// <summary>
         /// SecuritySchemes item.
         /// </summary>
-        [Display("securitySchemes")] SecurityScheme,
+        [Description("securitySchemes")] SecurityScheme,
 
         /// <summary>
         /// Links item.
         /// </summary>
-        [Display("links")] Link,
+        [Description("links")] Link,
 
         /// <summary>
         /// Callbacks item.
         /// </summary>
-        [Display("callbacks")] Callback,
+        [Description("callbacks")] Callback,
 
         /// <summary>
         /// Tags item.
         /// </summary>
-        [Display("tags")] Tag,
+        [Description("tags")] Tag,
 
         /// <summary>
         /// Path item.
         /// </summary>
-        [Display("pathItems")] PathItem
+        [Description("pathItems")] PathItem
     }
 }

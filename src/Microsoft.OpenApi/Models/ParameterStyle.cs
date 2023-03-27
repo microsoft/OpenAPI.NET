@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.ComponentModel;
+using System.Text.Json.Serialization;
 using Microsoft.OpenApi.Attributes;
 
 namespace Microsoft.OpenApi.Models
@@ -8,41 +10,42 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// The style of the parameter.
     /// </summary>
+    [JsonConverter(typeof(Json.More.EnumStringConverter<ParameterStyle>))]
     public enum ParameterStyle
     {
         /// <summary>
         /// Path-style parameters.
         /// </summary>
-        [Display("matrix")] Matrix,
+        [Description("matrix")] Matrix,
 
         /// <summary>
         /// Label style parameters.
         /// </summary>
-        [Display("label")] Label,
+        [Description("label")] Label,
 
         /// <summary>
         /// Form style parameters.
         /// </summary>
-        [Display("form")] Form,
+        [Description("form")] Form,
 
         /// <summary>
         /// Simple style parameters.
         /// </summary>
-        [Display("simple")] Simple,
+        [Description("simple")] Simple,
 
         /// <summary>
         /// Space separated array values.
         /// </summary>
-        [Display("spaceDelimited")] SpaceDelimited,
+        [Description("spaceDelimited")] SpaceDelimited,
 
         /// <summary>
         /// Pipe separated array values.
         /// </summary>
-        [Display("pipeDelimited")] PipeDelimited,
+        [Description("pipeDelimited")] PipeDelimited,
 
         /// <summary>
         /// Provides a simple way of rendering nested objects using form parameters.
         /// </summary>
-        [Display("deepObject")] DeepObject
+        [Description("deepObject")] DeepObject
     }
 }

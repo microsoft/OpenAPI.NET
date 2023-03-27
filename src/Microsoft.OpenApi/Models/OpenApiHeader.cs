@@ -77,17 +77,17 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Examples of the media type.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public IDictionary<string, OpenApiExample> Examples { get; set; }
 
         /// <summary>
         /// A map containing the representations for the header.
         /// </summary>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType> Content { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

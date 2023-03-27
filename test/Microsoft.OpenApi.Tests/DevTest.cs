@@ -1,12 +1,14 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using SharpYaml.Serialization;
 using Xunit;
 using Xunit.Abstractions;
-using YamlDocument = SharpYaml.Serialization.YamlDocument;
 
 namespace Microsoft.OpenApi.Tests
 {
@@ -184,7 +186,24 @@ components:
           type: string";
 
             using var textReader = new StringReader(documentText);
-            var yamlDoc = LoadYamlDocument(textReader); // borrowed from the Readers project
+
+            // technically deserializing from JsonNode serializes and deserializes again,
+            // but the performance hit is negligible.
+            var openApiDoc = ReadDocument(textReader);
+
+            _testOutputHelper.WriteLine(WriteDocumentToYaml(openApiDoc));
+        }
+
+        static YamlDocument LoadYamlDocument(TextReader input)
+        {
+            var yamlStream = new YamlStream();
+            yamlStream.Load(input);
+            return yamlStream.Documents.First();
+        }
+
+        static OpenApiDocument ReadDocument(TextReader reader)
+        {
+            var yamlDoc = LoadYamlDocument(reader); // borrowed from the Readers project
             var asJsonNode = yamlDoc.ToJsonNode();
 
             // technically deserializing from JsonNode serializes and deserializes again,
@@ -194,22 +213,26 @@ components:
                 PropertyNameCaseInsensitive = true
             });
 
-            // We can serialize back to node and translate back to YAML,
-            // but this is sufficient to show it works.
-            _testOutputHelper.WriteLine(JsonSerializer.Serialize(openApiDoc,
+            return openApiDoc;
+        }
+
+        static string WriteDocumentToYaml(OpenApiDocument document)
+        {
+            var asJsonNode = JsonSerializer.SerializeToNode(document,
                 new JsonSerializerOptions
                 {
                     WriteIndented = true,
                     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                }));
-        }
+                });
+            var asYaml = asJsonNode.ToYamlNode();
 
-        static YamlDocument LoadYamlDocument(TextReader input)
-        {
-            var yamlStream = new SharpYaml.Serialization.YamlStream();
-            yamlStream.Load(input);
-            return yamlStream.Documents.First();
+            var yamlStream = new YamlStream(new YamlDocument(asYaml));
+            var buffer = new StringBuilder();
+            using var writer = new StringWriter(buffer);
+            yamlStream.Save(writer);
+
+            return writer.ToString();
         }
     }
 }

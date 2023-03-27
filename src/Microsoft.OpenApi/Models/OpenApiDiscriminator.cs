@@ -22,12 +22,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold mappings between payload values and schema names or references.
         /// </summary>
-        public IDictionary<string, string> Mapping { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, string> Mapping { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

@@ -34,12 +34,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// REQUIRED. A map between the scope name and a short description for it.
         /// </summary>
-        public IDictionary<string, string> Scopes { get; set; } = new Dictionary<string, string>();
+        public IDictionary<string, string> Scopes { get; set; }
 
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Parameterless constructor

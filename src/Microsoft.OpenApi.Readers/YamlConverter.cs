@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Json.More;
 using SharpYaml;
 using SharpYaml.Serialization;
 
@@ -124,7 +125,9 @@ namespace Microsoft.OpenApi.Readers
 
         private static YamlScalarNode ToYamlScalar(this JsonValue val)
         {
-            return new YamlScalarNode(val.ToJsonString());
+            return val.TryGetValue(out string s)
+                ? new YamlScalarNode(s)
+                : new YamlScalarNode(val.AsJsonString());
         }
     }
 }

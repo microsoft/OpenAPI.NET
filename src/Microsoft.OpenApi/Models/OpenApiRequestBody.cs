@@ -42,12 +42,12 @@ namespace Microsoft.OpenApi.Models
         /// REQUIRED. The content of the request body. The key is a media type or media type range and the value describes it.
         /// For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
         /// </summary>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public IDictionary<string, OpenApiMediaType> Content { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

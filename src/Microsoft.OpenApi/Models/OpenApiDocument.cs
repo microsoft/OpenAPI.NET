@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An array of Server Objects, which provide connectivity information to a target server.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public IList<OpenApiServer> Servers { get; set; }
 
         /// <summary>
         /// REQUIRED. The available paths and operations for the API.
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Models
         /// A map of requests initiated other than by an API call, for example by an out of band registration. 
         /// The key name is a unique string to refer to each webhook, while the (optionally referenced) Path Item Object describes a request that may be initiated by the API provider and the expected responses
         /// </summary>
-        public IDictionary<string, OpenApiPathItem> Webhooks { get; set; } = new Dictionary<string, OpenApiPathItem>();
+        public IDictionary<string, OpenApiPathItem> Webhooks { get; set; }
 
         /// <summary>
         /// An element to hold various schemas for the specification.
@@ -65,13 +65,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A declaration of which security mechanisms can be used across the API.
         /// </summary>
-        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; } =
-            new List<OpenApiSecurityRequirement>();
+        public IList<OpenApiSecurityRequirement> SecurityRequirements { get; set; }
 
         /// <summary>
         /// A list of tags used by the specification with additional metadata.
         /// </summary>
-        public IList<OpenApiTag> Tags { get; set; } = new List<OpenApiTag>();
+        public IList<OpenApiTag> Tags { get; set; }
 
         /// <summary>
         /// Additional external documentation.
@@ -81,12 +80,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// The unique hash code of the generated OpenAPI document
         /// </summary>
-        public string HashCode => GenerateHashValue(this);
+        [JsonIgnore]
+        public string HashCode => GetHashCode().ToString(); // GenerateHashValue(this);
 
         static OpenApiDocument()
         {

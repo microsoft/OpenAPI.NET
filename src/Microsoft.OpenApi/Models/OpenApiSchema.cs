@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -113,19 +113,19 @@ namespace Microsoft.OpenApi.Models
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
         /// </summary>
-        public IList<OpenApiSchema> AllOf { get; set; } = new List<OpenApiSchema>();
+        public IList<OpenApiSchema> AllOf { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
         /// </summary>
-        public IList<OpenApiSchema> OneOf { get; set; } = new List<OpenApiSchema>();
+        public IList<OpenApiSchema> OneOf { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// Inline or referenced schema MUST be of a Schema Object and not a standard JSON Schema.
         /// </summary>
-        public IList<OpenApiSchema> AnyOf { get; set; } = new List<OpenApiSchema>();
+        public IList<OpenApiSchema> AnyOf { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public ISet<string> Required { get; set; } = new HashSet<string>();
+        public ISet<string> Required { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public IList<IOpenApiAny> Enum { get; set; } = new List<IOpenApiAny>();
+        public IList<IOpenApiAny> Enum { get; set; }
 
         /// <summary>
         /// Allows sending a null value for the defined schema. Default value is false.
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; }
 
         /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
