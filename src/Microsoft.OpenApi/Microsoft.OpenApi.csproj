@@ -34,7 +34,7 @@
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="JsonSchema.Net" Version="4.0.0" />
+      <PackageReference Include="JsonSchema.Net" Version="4.0.1" />
     </ItemGroup>
 
     <ItemGroup>

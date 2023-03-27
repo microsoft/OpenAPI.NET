@@ -95,6 +95,8 @@ namespace Microsoft.OpenApi.Models
             SchemaKeywordRegistry.Register<Draft4IdKeyword>();
             SchemaKeywordRegistry.Register<NullableKeyword>();
             SchemaKeywordRegistry.Register<Draft4TypeKeyword>();
+
+            SchemaRegistry.Global.Register(Draft4SupportData.Draft4MetaSchema);
         }
 
         /// <summary>
