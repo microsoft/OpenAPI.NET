@@ -3,7 +3,9 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Nodes;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -57,10 +59,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
                 });
         }
 
@@ -85,14 +85,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
-                    },
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Array)
+                        .Items(new JsonSchemaBuilder()
+                            .Type(SchemaValueType.String)
+                        ),
                     Style = ParameterStyle.Form,
                     Explode = true
                 });
@@ -140,32 +137,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "integer",
-                            Format = "int64",
-                            Enum = new List<IOpenApiAny>
-                            {
-                                new OpenApiLong(1),
-                                new OpenApiLong(2),
-                                new OpenApiLong(3),
-                                new OpenApiLong(4),
-                            }
-                        },
-                        Default = new OpenApiArray() {
-                            new OpenApiLong(1),
-                            new OpenApiLong(2)
-                        },
-                        Enum = new List<IOpenApiAny>
-                        {
-                            new OpenApiArray() { new OpenApiLong(1), new OpenApiLong(2) },
-                            new OpenApiArray() { new OpenApiLong(2), new OpenApiLong(3) },
-                            new OpenApiArray() { new OpenApiLong(3), new OpenApiLong(4) }
-                        }
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Array)
+                        .Items(new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Integer)
+                            .Format("int64")
+                            .Enum(1,2,3,4)
+                        )
+                        .Default(new JsonArray{1,2})
+                        .Enum(
+                            new JsonArray{1,2},
+                            new JsonArray{2,3},
+                            new JsonArray{3,4}
+                        )
                 });
         }
 
@@ -192,32 +176,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "string",
-                            Format = "date-time",
-                            Enum = new List<IOpenApiAny>
-                            {
-                                new OpenApiString("1"),
-                                new OpenApiString("2"),
-                                new OpenApiString("3"),
-                                new OpenApiString("4"),
-                            }
-                        },
-                        Default = new OpenApiArray() {
-                            new OpenApiString("1"),
-                            new OpenApiString("2")
-                        },
-                        Enum = new List<IOpenApiAny>
-                        {
-                            new OpenApiArray() { new OpenApiString("1"), new OpenApiString("2") },
-                            new OpenApiArray() { new OpenApiString("2"), new OpenApiString("3") },
-                            new OpenApiArray() { new OpenApiString("3"), new OpenApiString("4") }
-                        }
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Array)
+                        .Items(new JsonSchemaBuilder()
+                            .Type(SchemaValueType.String)
+                            .Format(Formats.DateTime)
+                            .Enum("1", "2", "3", "4")
+                        )
+                        .Default(new JsonArray { "1", "2" })
+                        .Enum(
+                            new JsonArray { "1", "2" },
+                            new JsonArray { "2", "3" },
+                            new JsonArray { "3", "4" }
+                        )
                 });
         }
 
@@ -242,10 +213,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
                 });
         }
 
@@ -270,10 +239,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
                 });
         }
 
@@ -322,10 +289,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.String)
                 });
         }
 
@@ -350,12 +315,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "number",
-                        Format = "float",
-                        Default = new OpenApiFloat(5)
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Number)
+                        .Format("float")
+                        .Default(5)
                 });
         }
 
@@ -380,17 +343,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "number",
-                        Format = "float",
-                        Enum =
-                        {
-                            new OpenApiFloat(7),
-                            new OpenApiFloat(8),
-                            new OpenApiFloat(9)
-                        }
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Number)
+                        .Format("float")
+                        .Enum(7, 8, 9)
                 });
         }
     }

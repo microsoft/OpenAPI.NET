@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Json.Schema;
@@ -1232,7 +1234,16 @@ paths: { }";
         {
             // Read in the input yaml file
             using FileStream stream = File.OpenRead(filePath);
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var reader = new StreamReader(stream);
+            var yamlStream = new SharpYaml.Serialization.YamlStream();
+            yamlStream.Load(reader);
+            var yamlDoc = yamlStream.Documents.First();
+            var asJsonNode = yamlDoc.ToJsonNode();
+
+            var openApiDoc = asJsonNode.Deserialize<OpenApiDocument>(new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
             return openApiDoc;
         }

@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.V31
                 {
                     OpenApiConstants.Schema, (o, n) =>
                     {
-                        o.Schema31 = LoadSchema(n);
+                        //o.Schema31 = LoadSchema(n);
                     }
                 },
                 {
@@ -50,27 +50,27 @@ namespace Microsoft.OpenApi.Readers.V31
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields = new AnyFieldMap<OpenApiMediaType>
         {
-            {
-                OpenApiConstants.Example,
-                new AnyFieldMapParameter<OpenApiMediaType>(
-                    s => s.Example,
-                    (s, v) => s.Example = v,
-                    s => s.Schema)
-            }
+            //{
+            //    OpenApiConstants.Example,
+            //    new AnyFieldMapParameter<OpenApiMediaType>(
+            //        s => s.Example,
+            //        (s, v) => s.Example = v,
+            //        s => s.Schema)
+            //}
         };
 
 
         private static readonly AnyMapFieldMap<OpenApiMediaType, OpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
             new AnyMapFieldMap<OpenApiMediaType, OpenApiExample>
         {
-            {
-                OpenApiConstants.Examples,
-                new AnyMapFieldMapParameter<OpenApiMediaType, OpenApiExample>(
-                    m => m.Examples,
-                    e => e.Value,
-                    (e, v) => e.Value = v,
-                    m => m.Schema)
-            }
+            //{
+            //    OpenApiConstants.Examples,
+            //    new AnyMapFieldMapParameter<OpenApiMediaType, OpenApiExample>(
+            //        m => m.Examples,
+            //        e => e.Value,
+            //        (e, v) => e.Value = v,
+            //        m => m.Schema)
+            //}
         };
 
         public static OpenApiMediaType LoadMediaType(ParseNode node)

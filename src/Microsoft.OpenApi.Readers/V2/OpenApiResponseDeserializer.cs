@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -51,13 +52,13 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
             new AnyFieldMap<OpenApiMediaType>
             {
-                {
-                    OpenApiConstants.Example,
-                    new AnyFieldMapParameter<OpenApiMediaType>(
-                        m => m.Example,
-                        (m, v) => m.Example = v,
-                        m => m.Schema)
-                }
+                //{
+                //    OpenApiConstants.Example,
+                //    new AnyFieldMapParameter<OpenApiMediaType>(
+                //        m => m.Example,
+                //        (m, v) => m.Example = v,
+                //        m => m.Schema)
+                //}
             };
 
         private static void ProcessProduces(MapNode mapNode, OpenApiResponse response, ParsingContext context)
@@ -78,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 foreach (var produce in produces)
                 {
-                    var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+                    var schema = context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response);
 
                     if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
                     {
@@ -131,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 mediaTypeObject = new OpenApiMediaType
                 {
-                    Schema = node.Context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response)
+                    Schema = node.Context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response)
                 };
                 response.Content.Add(mediaType, mediaTypeObject);
             }

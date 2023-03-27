@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -130,7 +131,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "schema", (o, n) =>
                     {
-                        o.Schema = LoadSchema(n);
+                        //o.Schema = LoadSchema(n);
                     }
                 },
             };
@@ -144,35 +145,35 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields =
             new AnyFieldMap<OpenApiParameter>
             {
-                {
-                    OpenApiConstants.Default,
-                    new AnyFieldMapParameter<OpenApiParameter>(
-                        p => p.Schema?.Default,
-                        (p, v) => {
-                            if (p.Schema != null || v != null)
-                            {
-                                GetOrCreateSchema(p).Default = v;
-                            }
-                        },
-                        p => p.Schema)
-                }
+                //{
+                //    OpenApiConstants.Default,
+                //    new AnyFieldMapParameter<OpenApiParameter>(
+                //        p => p.Schema?.Default,
+                //        (p, v) => {
+                //            if (p.Schema != null || v != null)
+                //            {
+                //                GetOrCreateSchema(p).Default = v;
+                //            }
+                //        },
+                //        p => p.Schema)
+                //}
             };
 
         private static readonly AnyListFieldMap<OpenApiParameter> _parameterAnyListFields =
             new AnyListFieldMap<OpenApiParameter>
             {
-                {
-                    OpenApiConstants.Enum,
-                    new AnyListFieldMapParameter<OpenApiParameter>(
-                        p => p.Schema?.Enum,
-                        (p, v) => {
-                            if (p.Schema != null || v != null && v.Count > 0)
-                            {
-                                GetOrCreateSchema(p).Enum = v;
-                            }
-                        },
-                        p => p.Schema)
-                },
+                //{
+                //    OpenApiConstants.Enum,
+                //    new AnyListFieldMapParameter<OpenApiParameter>(
+                //        p => p.Schema?.Enum,
+                //        (p, v) => {
+                //            if (p.Schema != null || v != null && v.Count > 0)
+                //            {
+                //                GetOrCreateSchema(p).Enum = v;
+                //            }
+                //        },
+                //        p => p.Schema)
+                //},
             };
 
         private static void LoadStyle(OpenApiParameter p, string v)
@@ -208,20 +209,20 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             if (p.Schema == null)
             {
-                p.Schema = new OpenApiSchema();
+                p.Schema = JsonSchema.Empty;
             }
 
-            return p.Schema;
+            return new OpenApiSchema();
         }
 
         private static OpenApiSchema GetOrCreateSchema(OpenApiHeader p)
         {
             if (p.Schema == null)
             {
-                p.Schema = new OpenApiSchema();
+                p.Schema = JsonSchema.Empty;
             }
 
-            return p.Schema;
+            return new OpenApiSchema();
         }
 
         private static void ProcessIn(OpenApiParameter o, ParseNode n)
@@ -284,7 +285,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
             if (schema != null)
             {
-                parameter.Schema = schema;
+                //parameter.Schema = schema;
                 node.Context.SetTempStorage("schema", null);
             }
 

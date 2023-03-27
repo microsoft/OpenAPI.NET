@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using Json.Schema;
+using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Draft4Support;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -346,88 +349,44 @@ get:
                 {
                     Schemas =
                     {
-                            ["ErrorModel"] = new OpenApiSchema
-                            {
-                                Type = "object",
-                                Properties =
-                                {
-                                    ["code"] = new OpenApiSchema
-                                    {
-                                        Type = "integer",
-                                        Minimum = 100,
-                                        Maximum = 600
-                                    },
-                                    ["message"] = new OpenApiSchema
-                                    {
-                                        Type = "string"
-                                    }
-                                },
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.Schema,
-                                    Id = "ErrorModel",
-                                    HostDocument = openApiDoc
-                                },
-                                Required =
-                                {
-                                    "message",
-                                    "code"
-                                }
-                            },
-                            ["ExtendedErrorModel"] = new OpenApiSchema
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.Schema,
-                                    Id = "ExtendedErrorModel",
-                                    HostDocument = openApiDoc
-                                },
-                                AllOf =
-                                {
-                                    new OpenApiSchema
-                                    {
-                                        Reference = new OpenApiReference
-                                        {
-                                            Type = ReferenceType.Schema,
-                                            Id = "ErrorModel",
-                                            HostDocument = openApiDoc
-                                        },
-                                        // Schema should be dereferenced in our model, so all the properties
-                                        // from the ErrorModel above should be propagated here.
-                                        Type = "object",
-                                        Properties =
-                                        {
-                                            ["code"] = new OpenApiSchema
-                                            {
-                                                Type = "integer",
-                                                Minimum = 100,
-                                                Maximum = 600
-                                            },
-                                            ["message"] = new OpenApiSchema
-                                            {
-                                                Type = "string"
-                                            }
-                                        },
-                                        Required =
-                                        {
-                                            "message",
-                                            "code"
-                                        }
-                                    },
-                                    new OpenApiSchema
-                                    {
-                                        Type = "object",
-                                        Required = {"rootCause"},
-                                        Properties =
-                                        {
-                                            ["rootCause"] = new OpenApiSchema
-                                            {
-                                                Type = "string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                        ["ErrorModel"] = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.Object)
+                            .Properties(
+                                ("code", new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Integer)
+                                    .Minimum(100)
+                                    .Maximum(600)
+                                ),
+                                ("message", new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.String))
+                            )
+                            .Ref("#/components/schemas/ErrorModel")
+                            .Required("message", "code"),
+                        ["ExtendedErrorModel"] = new JsonSchemaBuilder()
+                            .Ref("#/components/schemas/ExtendedErrorModel")
+                            .AllOf(
+                                new JsonSchemaBuilder()
+                                    .Ref("#/components/schemas/ErrorModel")
+                                    .Type(SchemaValueType.Object)
+                                    .Properties(
+                                        ("code", new JsonSchemaBuilder()
+                                            .Type(SchemaValueType.Integer)
+                                            .Minimum(100)
+                                            .Maximum(600)
+                                        ),
+                                        ("message", new JsonSchemaBuilder()
+                                            .Type(SchemaValueType.String))
+                                    )
+                                    .Required("message", "code"),
+                                new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Object)
+                                    .Required("rootCause")
+                                    .Properties(
+                                        ("rootCause", new JsonSchemaBuilder()
+                                            .Type(SchemaValueType.String)
+                                        )
+                                    )
+                            )
                     }
                 }, options => options.Excluding(m => m.Name == "HostDocument"));
         }
@@ -457,162 +416,77 @@ get:
                 {
                     Schemas =
                     {
-                            ["Pet"] = new OpenApiSchema
-                            {
-                                Type = "object",
-                                Discriminator = new OpenApiDiscriminator
-                                {
-                                    PropertyName = "petType"
-                                },
-                                Properties =
-                                {
-                                    ["name"] = new OpenApiSchema
-                                    {
-                                        Type = "string"
-                                    },
-                                    ["petType"] = new OpenApiSchema
-                                    {
-                                        Type = "string"
-                                    }
-                                },
-                                Required =
-                                {
-                                    "name",
-                                    "petType"
-                                },
-                                Reference = new OpenApiReference()
-                                {
-                                    Id= "Pet",
-                                    Type = ReferenceType.Schema,
-                                    HostDocument = openApiDoc
-                                }
-                            },
-                            ["Cat"] = new OpenApiSchema
-                            {
-                                Description = "A representation of a cat",
-                                AllOf =
-                                {
-                                    new OpenApiSchema
-                                    {
-                                        Reference = new OpenApiReference
-                                        {
-                                            Type = ReferenceType.Schema,
-                                            Id = "Pet",
-                                            HostDocument = openApiDoc
-                                        },
-                                        // Schema should be dereferenced in our model, so all the properties
-                                        // from the Pet above should be propagated here.
-                                        Type = "object",
-                                        Discriminator = new OpenApiDiscriminator
-                                        {
-                                            PropertyName = "petType"
-                                        },
-                                        Properties =
-                                        {
-                                            ["name"] = new OpenApiSchema
-                                            {
-                                                Type = "string"
-                                            },
-                                            ["petType"] = new OpenApiSchema
-                                            {
-                                                Type = "string"
-                                            }
-                                        },
-                                        Required =
-                                        {
-                                            "name",
-                                            "petType"
-                                        }
-                                    },
-                                    new OpenApiSchema
-                                    {
-                                        Type = "object",
-                                        Required = {"huntingSkill"},
-                                        Properties =
-                                        {
-                                            ["huntingSkill"] = new OpenApiSchema
-                                            {
-                                                Type = "string",
-                                                Description = "The measured skill for hunting",
-                                                Enum =
-                                                {
-                                                    new OpenApiString("clueless"),
-                                                    new OpenApiString("lazy"),
-                                                    new OpenApiString("adventurous"),
-                                                    new OpenApiString("aggressive")
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                Reference = new OpenApiReference()
-                                {
-                                    Id= "Cat",
-                                    Type = ReferenceType.Schema,
-                                    HostDocument = openApiDoc
-                                }
-                            },
-                            ["Dog"] = new OpenApiSchema
-                            {
-                                Description = "A representation of a dog",
-                                AllOf =
-                                {
-                                    new OpenApiSchema
-                                    {
-                                        Reference = new OpenApiReference
-                                        {
-                                            Type = ReferenceType.Schema,
-                                            Id = "Pet",
-                                            HostDocument = openApiDoc
-                                        },
-                                        // Schema should be dereferenced in our model, so all the properties
-                                        // from the Pet above should be propagated here.
-                                        Type = "object",
-                                        Discriminator = new OpenApiDiscriminator
-                                        {
-                                            PropertyName = "petType"
-                                        },
-                                        Properties =
-                                        {
-                                            ["name"] = new OpenApiSchema
-                                            {
-                                                Type = "string"
-                                            },
-                                            ["petType"] = new OpenApiSchema
-                                            {
-                                                Type = "string"
-                                            }
-                                        },
-                                        Required =
-                                        {
-                                            "name",
-                                            "petType"
-                                        }
-                                    },
-                                    new OpenApiSchema
-                                    {
-                                        Type = "object",
-                                        Required = {"packSize"},
-                                        Properties =
-                                        {
-                                            ["packSize"] = new OpenApiSchema
-                                            {
-                                                Type = "integer",
-                                                Format = "int32",
-                                                Description = "the size of the pack the dog is from",
-                                                Default = new OpenApiInteger(0),
-                                                Minimum = 0
-                                            }
-                                        }
-                                    }
-                                },
-                                Reference = new OpenApiReference()
-                                {
-                                    Id= "Dog",
-                                    Type = ReferenceType.Schema,
-                                    HostDocument = openApiDoc
-                                }
-                            }
+                            ["Pet"] = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Discriminator("petType", null, null)
+                                .Properties(
+                                    ("name", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.String)
+                                    ),
+                                    ("petType", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.String)
+                                    )
+                                )
+                                .Required("name", "petType")
+                                .Ref("#/components/schemas/Pet"),
+                            ["Cat"] = new JsonSchemaBuilder()
+                                .Description("A representation of a cat")
+                                .AllOf(
+                                    new JsonSchemaBuilder()
+                                        .Ref("#/components/schemas/Pet")
+                                        .Type(SchemaValueType.Object)
+                                        .Discriminator("petType", null, null)
+                                        .Properties(
+                                            ("name", new JsonSchemaBuilder()
+                                                .Type(SchemaValueType.String)
+                                            ),
+                                            ("petType", new JsonSchemaBuilder()
+                                                .Type(SchemaValueType.String)
+                                            )
+                                        )
+                                        .Required("name", "petType"),
+                                    new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.Object)
+                                        .Required("huntingSkill")
+                                        .Properties(
+                                            ("huntingSkill", new JsonSchemaBuilder()
+                                                .Type(SchemaValueType.String)
+                                                .Description("The measured skill for hunting")
+                                                .Enum("clueless", "lazy", "adventurous", "aggressive")
+                                            )
+                                        )
+                                )
+                                .Ref("#/components/schemas/Cat"),
+                            ["Dog"] = new JsonSchemaBuilder()
+                                .Description("A representation of a dog")
+                                .AllOf(
+                                    new JsonSchemaBuilder()
+                                        .Ref("#/components/schemas/Pet")
+                                        .Type(SchemaValueType.Object)
+                                        .Discriminator("petType", null, null)
+                                        .Properties(
+                                            ("name", new JsonSchemaBuilder()
+                                                .Type(SchemaValueType.String)
+                                            ),
+                                            ("petType", new JsonSchemaBuilder()
+                                                .Type(SchemaValueType.String)
+                                            )
+                                        )
+                                        .Required("name", "petType"),
+                                    new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.Object)
+                                        .Required("packSize")
+                                        .Properties(
+                                            ("packSize", new JsonSchemaBuilder()
+                                                .Type(SchemaValueType.Integer)
+                                                .Format("int32")
+                                                .Description("the size of the pack the dog is from")
+                                                .Default(0)
+                                                .Minimum(0)
+                                            )
+                                        )
+                                )
+                                .Ref("#/components/schemas/Dog")
                     }
                 }, options => options.Excluding(m => m.Name == "HostDocument"));
         }
@@ -638,36 +512,53 @@ get:
                         }
                 });
 
-            var schemaExtension = new OpenApiSchema()
-            {
-                AllOf = { new OpenApiSchema()
-                    {
-                        Title = "schemaExtension",
-                        Type = "object",
-                        Properties = {
-                                        ["description"] = new OpenApiSchema() { Type = "string", Nullable = true},
-                                        ["targetTypes"] = new OpenApiSchema() {
-                                            Type = "array",
-                                            Items = new OpenApiSchema() {
-                                                Type = "string"
-                                            }
-                                        },
-                                        ["status"] = new OpenApiSchema() { Type = "string"},
-                                        ["owner"] = new OpenApiSchema() { Type = "string"},
-                                        ["child"] = null
-                                    }
-                        }
-                    },
-                Reference = new OpenApiReference()
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "microsoft.graph.schemaExtension"
-                }
-            };
+            var schemaExtension = new JsonSchemaBuilder()
+                .AllOf(
+                    new JsonSchemaBuilder()
+                        .Title("schemaExtension")
+                        .Type(SchemaValueType.Object)
+                        .Properties(
+                            ("description", new JsonSchemaBuilder().Type(SchemaValueType.String).Nullable(true)),
+                            ("targetTypes", new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Array)
+                                .Items(new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.String)
+                                )
+                            ),
+                            ("status", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                            ("owner", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                            ("child", null) // TODO (GSD): this isn't valid
+                        )
+                );
+            //{
+            //    AllOf = { new OpenApiSchema()
+            //        {
+            //            Title = "schemaExtension",
+            //            Type = "object",
+            //            Properties = {
+            //                            ["description"] = new OpenApiSchema() { Type = "string", Nullable = true},
+            //                            ["targetTypes"] = new OpenApiSchema() {
+            //                                Type = "array",
+            //                                Items = new OpenApiSchema() {
+            //                                    Type = "string"
+            //                                }
+            //                            },
+            //                            ["status"] = new OpenApiSchema() { Type = "string"},
+            //                            ["owner"] = new OpenApiSchema() { Type = "string"},
+            //                            ["child"] = null
+            //                        }
+            //            }
+            //        },
+            //    Reference = new OpenApiReference()
+            //    {
+            //        Type = ReferenceType.Schema,
+            //        Id = "microsoft.graph.schemaExtension"
+            //    }
+            //};
 
-            schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
+            //schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
 
-            components.Schemas["microsoft.graph.schemaExtension"].Should().BeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].AllOf[0].Properties["child"]);
+            components.Schemas["microsoft.graph.schemaExtension"].Should().BeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].GetAllOf().ElementAt(0).GetProperties()["child"]);
         }
     }
 }

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -34,12 +35,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema = new OpenApiSchema()
-                    {
-                        Type = "number",
-                        Format = "float",
-                        Default = new OpenApiFloat(5)
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Number)
+                        .Format("float")
+                        .Default(5)
                 });
         }
 
@@ -60,17 +59,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema = new OpenApiSchema()
-                    {
-                        Type = "number",
-                        Format = "float",
-                        Enum =
-                        {
-                            new OpenApiFloat(7),
-                            new OpenApiFloat(8),
-                            new OpenApiFloat(9)
-                        }
-                    }
+                    Schema = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Number)
+                        .Format("float")
+                        .Enum(7, 8, 9)
                 });
         }
     }

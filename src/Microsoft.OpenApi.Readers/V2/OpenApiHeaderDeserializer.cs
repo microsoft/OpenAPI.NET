@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -136,33 +136,33 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly AnyFieldMap<OpenApiHeader> _headerAnyFields =
             new AnyFieldMap<OpenApiHeader>
             {
-                {
-                    OpenApiConstants.Default,
-                    new AnyFieldMapParameter<OpenApiHeader>(
-                        p => p.Schema?.Default,
-                        (p, v) => 
-                        {
-                            if(p.Schema == null) return;
-                            p.Schema.Default = v; 
-                        },
-                        p => p.Schema)
-                }
+                //{
+                //    OpenApiConstants.Default,
+                //    new AnyFieldMapParameter<OpenApiHeader>(
+                //        p => p.Schema?.Default,
+                //        (p, v) => 
+                //        {
+                //            if(p.Schema == null) return;
+                //            p.Schema.Default = v; 
+                //        },
+                //        p => p.Schema)
+                //}
             };
 
         private static readonly AnyListFieldMap<OpenApiHeader> _headerAnyListFields =
             new AnyListFieldMap<OpenApiHeader>
             {
-                {
-                    OpenApiConstants.Enum,
-                    new AnyListFieldMapParameter<OpenApiHeader>(
-                        p => p.Schema?.Enum,
-                        (p, v) =>
-                        {
-                            if(p.Schema == null) return;
-                            p.Schema.Enum = v; 
-                        },
-                        p => p.Schema)
-                },
+                //{
+                //    OpenApiConstants.Enum,
+                //    new AnyListFieldMapParameter<OpenApiHeader>(
+                //        p => p.Schema?.Enum,
+                //        (p, v) =>
+                //        {
+                //            if(p.Schema == null) return;
+                //            p.Schema.Enum = v; 
+                //        },
+                //        p => p.Schema)
+                //},
             };
 
         public static OpenApiHeader LoadHeader(ParseNode node)
@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
             if (schema != null)
             {
-                header.Schema = schema;
+                //header.Schema = schema;
                 node.Context.SetTempStorage("schema", null);
             }
 

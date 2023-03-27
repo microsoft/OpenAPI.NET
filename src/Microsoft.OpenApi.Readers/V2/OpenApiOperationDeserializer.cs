@@ -163,19 +163,19 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema
-                {
-                    Properties = formParameters.ToDictionary(
-                        k => k.Name,
-                        v =>
-                        {
-                            var schema = v.Schema;
-                            schema.Description = v.Description;
-                            schema.Extensions = v.Extensions;
-                            return schema;
-                        }),
-                    Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
-                }
+                //Schema = new OpenApiSchema
+                //{
+                //    Properties = formParameters.ToDictionary(
+                //        k => k.Name,
+                //        v =>
+                //        {
+                //            var schema = v.Schema;
+                //            schema.Description = v.Description;
+                //            schema.Extensions = v.Extensions;
+                //            return schema;
+                //        }),
+                //    Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
+                //}
             };
 
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??

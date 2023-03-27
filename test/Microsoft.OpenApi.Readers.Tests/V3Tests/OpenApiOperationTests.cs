@@ -4,6 +4,7 @@
 using System.IO;
 using System.Linq;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -66,10 +67,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Name = "username",
                         Description = "The user name for login",
                         Required = true,
-                        Schema = new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
+                        Schema = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.String)
                     },
                     new OpenApiParameter
                     {
@@ -77,10 +76,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Description = "The password for login in clear text",
                         In = ParameterLocation.Query,
                         Required = true,
-                        Schema = new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
+                        Schema = new JsonSchemaBuilder()
+                            .Type(SchemaValueType.String)
                     }
                 }
             });
