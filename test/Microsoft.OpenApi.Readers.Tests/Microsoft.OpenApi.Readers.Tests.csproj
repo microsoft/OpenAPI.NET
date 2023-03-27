@@ -271,8 +271,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JsonSchema.Net" Version="4.0.0" />
-        <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0-beta3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
         <PackageReference Include="FluentAssertions" Version="6.7.0">
         </PackageReference>
