@@ -1344,12 +1344,18 @@ paths: { }";
             // Arrange & Act
             var doc = new OpenApiDocument(AdvancedDocument);
 
+            // Change value of operation id for a given url
+            // doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
+            var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
+            var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
+
             // Assert
             Assert.NotNull(doc.Info);
             Assert.NotNull(doc.Servers);
             Assert.NotNull(doc.Paths);
             Assert.Equal(2, doc.Paths.Count);
             Assert.NotNull(doc.Components);
+            Assert.NotEqual(docOpId, advancedDocOpId);
         }
 
         [Fact]
