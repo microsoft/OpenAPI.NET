@@ -1345,7 +1345,6 @@ paths: { }";
             var doc = new OpenApiDocument(AdvancedDocument);
 
             // Change value of operation id for a given url
-            // doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
             var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
             var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
 
