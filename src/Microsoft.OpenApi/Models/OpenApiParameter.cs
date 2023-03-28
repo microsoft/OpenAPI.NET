@@ -243,11 +243,11 @@ namespace Microsoft.OpenApi.Models
             // style
             if (_style.HasValue)
             {
-                writer.WriteProperty(OpenApiConstants.Style, Style.Value.GetDisplayName());
+                writer.WriteProperty(OpenApiConstants.Style, _style.Value.GetDisplayName());
             }
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, Style.HasValue && Style.Value == ParameterStyle.Form);
+            writer.WriteProperty(OpenApiConstants.Explode, _explode, _style.HasValue && _style.Value == ParameterStyle.Form);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
