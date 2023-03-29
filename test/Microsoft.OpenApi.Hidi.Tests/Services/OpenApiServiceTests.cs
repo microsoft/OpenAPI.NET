@@ -38,9 +38,9 @@ namespace Microsoft.OpenApi.Tests.Services
         }
         
         [Theory]
-        [InlineData("Todos.Todo.UpdateTodo",null, 1)]
+        [InlineData("Todos.Todo.UpdateTodo", null, 1)]
         [InlineData("Todos.Todo.ListTodo", null, 1)]
-        [InlineData(null, "Todos.Todo", 4)]
+        [InlineData(null, "Todos.Todo", 5)]
         public async Task ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string operationIds, string tags, int expectedPathCount)
         {
             // Arrange
