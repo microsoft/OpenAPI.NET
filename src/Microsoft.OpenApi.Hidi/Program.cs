@@ -46,9 +46,12 @@ namespace Microsoft.OpenApi.Hidi
             var versionOption = new Option<string?>("--version", "OpenAPI specification version");
             versionOption.AddAlias("-v");
 
+            var metadataVersionOption = new Option<string?>("--metadata-version", "Graph metadata version to use. Defaults to v1.0");
+            metadataVersionOption.AddAlias("--mv");
+
             var formatOption = new Option<OpenApiFormat?>("--format", "File format");
             formatOption.AddAlias("-f");
-
+            
             var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
             terseOutputOption.AddAlias("--to");
 
@@ -93,6 +96,7 @@ namespace Microsoft.OpenApi.Hidi
                 outputOption,
                 cleanOutputOption,
                 versionOption,
+                metadataVersionOption,
                 formatOption,
                 terseOutputOption,
                 settingsFileOption,
@@ -112,6 +116,7 @@ namespace Microsoft.OpenApi.Hidi
                 OutputOption = outputOption,
                 CleanOutputOption = cleanOutputOption,
                 VersionOption = versionOption,
+                MetadataVersionOption = metadataVersionOption,
                 FormatOption = formatOption,
                 TerseOutputOption = terseOutputOption,
                 SettingsFileOption = settingsFileOption,
