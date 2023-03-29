@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Hidi
             var versionOption = new Option<string?>("--version", "OpenAPI specification version");
             versionOption.AddAlias("-v");
 
-            var metadataVersionOption = new Option<string?>("--metadata-version", "Graph metadata version to use. Defaults to v1.0");
+            var metadataVersionOption = new Option<string?>("--metadata-version", "Graph metadata version to use.");
             metadataVersionOption.AddAlias("--mv");
 
             var formatOption = new Option<OpenApiFormat?>("--format", "File format");
