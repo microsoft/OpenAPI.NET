@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiOperation(OpenApiOperation operation)
         {
-            Tags = operation.Tags != null ? new List<OpenApiTag>(operation?.Tags) : null;
+            Tags = operation?.Tags != null ? new List<OpenApiTag>(operation?.Tags) : null;
             Summary = operation?.Summary ?? Summary;
             Description = operation?.Description ?? Description;
             ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;
