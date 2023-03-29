@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security;
@@ -20,7 +19,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
-using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Writers;
 using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
 using System.Threading;
@@ -43,6 +41,7 @@ namespace Microsoft.OpenApi.Hidi
             FileInfo output,
             bool cleanoutput,
             string? version,
+            string metadataVersion,
             OpenApiFormat? format,
             bool terseOutput,
             string settingsFile,
@@ -81,7 +80,7 @@ namespace Microsoft.OpenApi.Hidi
                 OpenApiFormat openApiFormat = format ?? (!string.IsNullOrEmpty(openapi) ? GetOpenApiFormat(openapi, logger) : OpenApiFormat.Yaml);
                 OpenApiSpecVersion openApiVersion = version != null ? TryParseOpenApiSpecVersion(version) : OpenApiSpecVersion.OpenApi3_0;
 
-                OpenApiDocument document = await GetOpenApi(openapi, csdl, csdlFilter, settingsFile, inlineExternal, logger, cancellationToken);
+                OpenApiDocument document = await GetOpenApi(openapi, csdl, csdlFilter, settingsFile, inlineExternal, logger, cancellationToken, metadataVersion);
                 document = await FilterOpenApiDocument(filterbyoperationids, filterbytags, filterbycollection, document, logger, cancellationToken);
                 WriteOpenApi(output, terseOutput, inlineLocal, inlineExternal, openApiFormat, openApiVersion, document, logger);
             }
@@ -132,11 +131,11 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL 
-        private static async Task<OpenApiDocument> GetOpenApi(string openapi, string csdl, string csdlFilter, string settingsFile, bool inlineExternal, ILogger logger, CancellationToken cancellationToken)
+        private static async Task<OpenApiDocument> GetOpenApi(string openapi, string csdl, string csdlFilter, string settingsFile, bool inlineExternal, ILogger logger, CancellationToken cancellationToken, string metadataVersion = null)
         {
             OpenApiDocument document;
             Stream stream;
-
+            
             if (!string.IsNullOrEmpty(csdl))
             {
                 var stopwatch = new Stopwatch();
@@ -154,7 +153,7 @@ namespace Microsoft.OpenApi.Hidi
                         stream = null;
                     }
 
-                    document = await ConvertCsdlToOpenApi(filteredStream ?? stream, settingsFile, cancellationToken);
+                    document = await ConvertCsdlToOpenApi(filteredStream ?? stream, metadataVersion, settingsFile, cancellationToken);
                     stopwatch.Stop();
                     logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                 }
@@ -317,7 +316,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string settingsFile = null, CancellationToken token = default)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string metadataVersion = null, string settingsFile = null, CancellationToken token = default)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync(token);
@@ -325,6 +324,12 @@ namespace Microsoft.OpenApi.Hidi
 
             var config = GetConfiguration(settingsFile);
             var settings = new OpenApiConvertSettings();
+
+            if (!string.IsNullOrEmpty(metadataVersion))
+            {
+                settings.SemVerVersion = metadataVersion;
+            }
+                               
             config.GetSection("OpenApiConvertSettings").Bind(settings);
 
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
