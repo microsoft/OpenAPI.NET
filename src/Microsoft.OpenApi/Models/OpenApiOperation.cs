@@ -116,13 +116,13 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiOperation(OpenApiOperation operation)
         {
-            Tags = new List<OpenApiTag>(operation?.Tags);
+            Tags = operation?.Tags != null ? new List<OpenApiTag>(operation?.Tags) : null;
             Summary = operation?.Summary ?? Summary;
             Description = operation?.Description ?? Description;
             ExternalDocs = operation?.ExternalDocs != null ? new(operation?.ExternalDocs) : null;
             OperationId = operation?.OperationId ?? OperationId;
             Parameters = operation?.Parameters != null ? new List<OpenApiParameter>(operation.Parameters) : null;
-            RequestBody = new(operation?.RequestBody);
+            RequestBody = operation?.RequestBody != null ? new(operation?.RequestBody) : null;
             Responses = operation?.Responses != null ? new(operation?.Responses) : null;
             Callbacks = operation?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(operation.Callbacks) : null;
             Deprecated = operation?.Deprecated ?? Deprecated;
