@@ -21,7 +21,7 @@ pool:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)' 
+  ProductBinPath: '$(Build.SourcesDirectory)\src\Microsoft.OpenApi\bin\$(BuildConfiguration)'
 
 
 stages:
@@ -31,22 +31,22 @@ stages:
     - job: build
       steps:
       - task: UseDotNet@2
-        displayName: 'Use .NET 2' # needed for ESRP signing
+        displayName: 'Use .NET 6' # needed for ESRP signing
         inputs:
-          version: 2.x
+          version: 6.x
 
       - task: UseDotNet@2
         displayName: 'Use .NET 7'
         inputs:
           version: 7.x
 
-      - task: PoliCheck@1
+      - task: PoliCheck@2
         displayName: 'Run PoliCheck "/src"'
         inputs:
           inputType: CmdLine
           cmdLineArgs: '/F:$(Build.SourcesDirectory)/src /T:9 /Sev:"1|2" /PE:2 /O:poli_result_src.xml'
 
-      - task: PoliCheck@1
+      - task: PoliCheck@2
         displayName: 'Run PoliCheck "/test"'
         inputs:
           inputType: CmdLine
@@ -75,14 +75,14 @@ stages:
           arguments: '--configuration $(BuildConfiguration) --no-build'
 
       # CredScan
-      - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+      - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
         displayName: 'Run CredScan - Src'
         inputs:
           toolMajorVersion: 'V2'
           scanFolder: '$(Build.SourcesDirectory)\src'
           debugMode: false
 
-      - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+      - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
         displayName: 'Run CredScan - Test'
         inputs:
           toolMajorVersion: 'V2'
@@ -95,7 +95,7 @@ stages:
           FileDirPath: '$(ProductBinPath)'
         enabled: false
 
-      - task: BinSkim@3
+      - task: BinSkim@4
         displayName: 'Run BinSkim - Product Binaries'
         inputs:
           InputType: Basic
@@ -105,24 +105,28 @@ stages:
           AnalyzeHashes: true
           AnalyzeEnvironment: true
 
-      - task: PublishSecurityAnalysisLogs@2
+      - task: PublishSecurityAnalysisLogs@3
         displayName: 'Publish Security Analysis Logs'
         inputs:
           ArtifactName: SecurityLogs
 
-      - task: PostAnalysis@1
+      - task: PostAnalysis@2
         displayName: 'Post Analysis'
         inputs:
           BinSkim: true
           CredScan: true
           PoliCheck: true
 
-      - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+      - task: EsrpCodeSigning@2
         displayName: 'ESRP CodeSigning'
         inputs:
           ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
           FolderPath: src
           signConfigType: inlineSignParams
+          UseMinimatch: true
+              Pattern: |
+                **\*.exe
+                **\*.dll
           inlineOperation: |
             [
                 {
@@ -162,26 +166,27 @@ stages:
                 }
             ]
           SessionTimeout: 20
-           
+
       # Pack
       - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi/Microsoft.OpenApi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
         displayName: 'pack OpenAPI'
-      
+
       # Pack
       - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Readers/Microsoft.OpenApi.Readers.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
         displayName: 'pack Readers'
 
       # Pack
       - pwsh: dotnet pack $(Build.SourcesDirectory)/src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj -o $(Build.ArtifactStagingDirectory) --configuration $(BuildConfiguration) --no-build --include-symbols --include-source /p:SymbolPackageFormat=snupkg
-        displayName: 'pack Hidi'     
-      
-      - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+        displayName: 'pack Hidi'
+
+      - task: EsrpCodeSigning@2
         displayName: 'ESRP CodeSigning Nuget Packages'
         inputs:
           ConnectedServiceName: 'microsoftgraph ESRP CodeSign DLL and NuGet (AKV)'
           FolderPath: '$(Build.ArtifactStagingDirectory)'
           Pattern: '*.nupkg'
           signConfigType: inlineSignParams
+          UseMinimatch: true
           inlineOperation: |
             [
                 {
@@ -209,7 +214,7 @@ stages:
               $xml = [Xml] (Get-Content .\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj)
               $version = $xml.Project.PropertyGroup.Version
               echo $version
-              echo "##vso[task.setvariable variable=hidiversion]$version"  
+              echo "##vso[task.setvariable variable=hidiversion]$version"
 
       # publish hidi as an .exe
       - task: DotNetCoreCLI@2
@@ -219,7 +224,7 @@ stages:
           arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)
           projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
           publishWebProjects: False
-          zipAfterPublish: false 
+          zipAfterPublish: false
 
       - task: CopyFiles@2
         displayName: Prepare staging folder for upload
@@ -236,7 +241,7 @@ stages:
 
       - task: PublishBuildArtifacts@1
         displayName: 'Publish Artifact: Hidi'
-        inputs: 
+        inputs:
           ArtifactName: Microsoft.OpenApi.Hidi-v$(hidiversion)
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)'
 
@@ -295,8 +300,8 @@ stages:
                   { "label" : "enhancement", "V2-Enhancement", "displayName" : "Enhancements", "state" : "closed" },
                   { "label" : "bug", "bug-fix", "displayName" : "Bugs", "state" : "closed" },
                   { "label" : "documentation", "doc", "displayName" : "Documentation", "state" : "closed"},
-                  { "label" : "dependencies", "displayName" : "Package Updates", "state" : "closed" }]'                
-    
+                  { "label" : "dependencies", "displayName" : "Package Updates", "state" : "closed" }]'
+
     - deployment: deploy_lib
       dependsOn: []
       environment: nuget-org
