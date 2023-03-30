@@ -124,9 +124,9 @@ stages:
           FolderPath: src
           signConfigType: inlineSignParams
           UseMinimatch: true
-              Pattern: |
-                **\*.exe
-                **\*.dll
+          Pattern: |
+            **\*.exe
+            **\*.dll
           inlineOperation: |
             [
                 {
