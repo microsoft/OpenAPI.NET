@@ -99,7 +99,7 @@ stages:
         displayName: 'Run BinSkim - Product Binaries'
         inputs:
           InputType: Basic
-          AnalyzeTarget: '$(ProductBinPath)\**\Microsoft.OpenApi.dll'
+          AnalyzeTargetGlob: '$(ProductBinPath)\**\Microsoft.OpenApi.dll'
           AnalyzeSymPath: '$(ProductBinPath)'
           AnalyzeVerbose: true
           AnalyzeHashes: true
