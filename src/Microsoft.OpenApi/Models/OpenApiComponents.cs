@@ -1,10 +1,9 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -78,15 +77,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
-            Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
-            Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
-            Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
-            RequestBodies = components?.RequestBodies != null ? new Dictionary<string, OpenApiRequestBody>(components.RequestBodies) : null;
-            Headers = components?.Headers != null ? new Dictionary<string, OpenApiHeader>(components.Headers) : null;
-            SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
-            Links = components?.Links != null ? new Dictionary<string, OpenApiLink>(components.Links) : null;
-            Callbacks = components?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(components.Callbacks) : null;
+            Schemas = components?.Schemas != null ? DictionaryCloneHelper.Clone(components.Schemas) : null;
+            Responses = components?.Responses != null ? DictionaryCloneHelper.Clone(components.Responses) : null;
+            Parameters = components?.Parameters != null ? DictionaryCloneHelper.Clone(components.Parameters) : null;
+            Examples = components?.Examples != null ? DictionaryCloneHelper.Clone(components.Examples) : null;
+            RequestBodies = components?.RequestBodies != null ? DictionaryCloneHelper.Clone(components.RequestBodies) : null;
+            Headers = components?.Headers != null ? DictionaryCloneHelper.Clone(components.Headers) : null;
+            SecuritySchemes = components?.SecuritySchemes != null ? DictionaryCloneHelper.Clone(components.SecuritySchemes) : null;
+            Links = components?.Links != null ? DictionaryCloneHelper.Clone(components.Links) : null;
+            Callbacks = components?.Callbacks != null ? DictionaryCloneHelper.Clone(components.Callbacks) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 
