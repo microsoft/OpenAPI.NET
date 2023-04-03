@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -62,10 +63,10 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponse(OpenApiResponse response)
         {
             Description = response?.Description ?? Description;
-            Headers = response?.Headers != null ? new Dictionary<string, OpenApiHeader>(response.Headers) : null;
-            Content = response?.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
-            Links = response?.Links != null ? new Dictionary<string, OpenApiLink>(response.Links) : null;
-            Extensions = response?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
+            Headers = response?.Headers != null ? DictionaryCloneHelper.Clone(response.Headers) : null;
+            Content = response?.Content != null ? DictionaryCloneHelper.Clone(response.Content) : null;
+            Links = response?.Links != null ? DictionaryCloneHelper.Clone(response.Links) : null;
+            Extensions = response?.Extensions != null ? DictionaryCloneHelper.Clone(response.Extensions) : null;
             UnresolvedReference = response?.UnresolvedReference ?? UnresolvedReference;
             Reference = response?.Reference != null ? new(response?.Reference) : null;
         }

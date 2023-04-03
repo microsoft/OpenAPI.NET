@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -68,7 +69,7 @@ namespace Microsoft.OpenApi.Models
             Description = example?.Description ?? Description;
             Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor(example?.Value);
             ExternalValue = example?.ExternalValue ?? ExternalValue;
-            Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
+            Extensions = example?.Extensions != null ? DictionaryCloneHelper.Clone(example.Extensions) : null;
             Reference = example?.Reference != null ? new(example?.Reference) : null;
             UnresolvedReference = example?.UnresolvedReference ?? UnresolvedReference;
         }
