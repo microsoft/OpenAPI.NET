@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -77,7 +79,7 @@ namespace Microsoft.OpenApi.Models
         {
             Summary = pathItem?.Summary ?? Summary;
             Description = pathItem?.Description ?? Description;
-            Operations = pathItem?.Operations != null ? new Dictionary<OperationType, OpenApiOperation>(pathItem.Operations) : null;
+            Operations = pathItem?.Operations != null ? DictionaryCloneHelper.Clone(pathItem?.Operations) : null;
             Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
             Parameters = pathItem?.Parameters != null ? new List<OpenApiParameter>(pathItem.Parameters) : null;
             Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using Microsoft.OpenApi.Helpers;
+
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
@@ -17,6 +19,6 @@ namespace Microsoft.OpenApi.Models
         /// Initializes a copy of <see cref="OpenApiResponses"/> object
         /// </summary>
         /// <param name="openApiResponses">The <see cref="OpenApiResponses"/></param>
-        public OpenApiResponses(OpenApiResponses openApiResponses) : base(dictionary: openApiResponses) {}
+        public OpenApiResponses(OpenApiResponses openApiResponses) : base(DictionaryCloneHelper.Clone(openApiResponses)) {}
     }
 }
