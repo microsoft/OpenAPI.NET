@@ -1347,8 +1347,8 @@ paths: { }";
 
             var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
             var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
-            var docResponse = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Description = "MyPet";
-            var advancedDocResponse = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Description;
+            var responseSchemaTypeCopy = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type = "object";
+            var advancedDocResponseSchemaType = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type;
 
             // Assert
             Assert.NotNull(doc.Info);
@@ -1357,7 +1357,7 @@ paths: { }";
             Assert.Equal(2, doc.Paths.Count);
             Assert.NotNull(doc.Components);
             Assert.NotEqual(docOpId, advancedDocOpId);
-            Assert.NotEqual(docResponse, advancedDocResponse);
+            Assert.NotEqual(responseSchemaTypeCopy, advancedDocResponseSchemaType);
         }
 
         [Fact]
