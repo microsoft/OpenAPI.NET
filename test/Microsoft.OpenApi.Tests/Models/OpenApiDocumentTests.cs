@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -1344,9 +1345,10 @@ paths: { }";
             // Arrange & Act
             var doc = new OpenApiDocument(AdvancedDocument);
 
-            // Change value of operation id for a given url
             var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
             var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
+            var docResponse = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Description = "MyPet";
+            var advancedDocResponse = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Description;
 
             // Assert
             Assert.NotNull(doc.Info);
@@ -1355,6 +1357,7 @@ paths: { }";
             Assert.Equal(2, doc.Paths.Count);
             Assert.NotNull(doc.Components);
             Assert.NotEqual(docOpId, advancedDocOpId);
+            Assert.NotEqual(docResponse, advancedDocResponse);
         }
 
         [Fact]

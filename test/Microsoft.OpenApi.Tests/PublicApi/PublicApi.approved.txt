@@ -292,6 +292,14 @@ namespace Microsoft.OpenApi.Extensions
         public static T GetEnumFromDisplayName<T>(this string displayName) { }
     }
 }
+namespace Microsoft.OpenApi.Helpers
+{
+    public class DictionaryCloneHelper
+    {
+        public DictionaryCloneHelper() { }
+        public static System.Collections.Generic.Dictionary<T, U> Clone<T, U>(System.Collections.Generic.IDictionary<T, U> dictionary) { }
+    }
+}
 namespace Microsoft.OpenApi.Interfaces
 {
     public interface IEffective<T>
@@ -587,6 +595,7 @@ namespace Microsoft.OpenApi.Models
     {
         protected OpenApiExtensibleDictionary() { }
         protected OpenApiExtensibleDictionary(System.Collections.Generic.Dictionary<string, T> dictionary = null, System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> extensions = null) { }
+        public System.Collections.Generic.IDictionary<string, T> Dictionary { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV3(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
