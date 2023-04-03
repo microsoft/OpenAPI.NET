@@ -14,10 +14,10 @@ namespace Microsoft.OpenApi.Helpers
         /// <summary>
         /// Deep clone key value pairs in a dictionary.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="U"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the key of the dictionary.</typeparam>
+        /// <typeparam name="U">The type of the value of the dictionary.</typeparam>
+        /// <param name="dictionary">The target dictionary to clone.</param>
+        /// <returns>The cloned dictionary.</returns>
         public static Dictionary<T, U> Clone<T, U>(IDictionary<T, U> dictionary)
         {
             var clonedDictionary = new Dictionary<T, U>();
