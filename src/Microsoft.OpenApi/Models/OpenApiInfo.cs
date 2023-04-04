@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -66,7 +65,7 @@ namespace Microsoft.OpenApi.Models
             TermsOfService = info?.TermsOfService ?? TermsOfService;
             Contact = info?.Contact != null ? new(info?.Contact) : null;
             License = info?.License != null ? new(info?.License) : null;
-            Extensions = info?.Extensions != null ? DictionaryCloneHelper.Clone(info.Extensions) : null;
+            Extensions = info?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(info.Extensions) : null;
         }
 
         /// <summary>

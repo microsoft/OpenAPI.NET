@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Models
             SecuritySchemes = components?.SecuritySchemes != null ? DictionaryCloneHelper.Clone(components.SecuritySchemes) : null;
             Links = components?.Links != null ? DictionaryCloneHelper.Clone(components.Links) : null;
             Callbacks = components?.Callbacks != null ? DictionaryCloneHelper.Clone(components.Callbacks) : null;
-            Extensions = components?.Extensions != null ? DictionaryCloneHelper.Clone(components.Extensions) : null;
+            Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 
         /// <summary>

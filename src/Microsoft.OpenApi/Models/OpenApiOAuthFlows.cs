@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -54,7 +53,7 @@ namespace Microsoft.OpenApi.Models
             Password = oAuthFlows?.Password != null ? new(oAuthFlows?.Password) : null;
             ClientCredentials = oAuthFlows?.ClientCredentials != null ? new(oAuthFlows?.ClientCredentials) : null;
             AuthorizationCode = oAuthFlows?.AuthorizationCode != null ? new(oAuthFlows?.AuthorizationCode) : null;
-            Extensions = oAuthFlows?.Extensions != null ? DictionaryCloneHelper.Clone(oAuthFlows.Extensions) : null;
+            Extensions = oAuthFlows?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlows.Extensions) : null;
         }
 
         /// <summary>

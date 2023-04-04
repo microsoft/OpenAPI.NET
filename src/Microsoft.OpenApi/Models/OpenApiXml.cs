@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -62,7 +61,7 @@ namespace Microsoft.OpenApi.Models
             Prefix = xml?.Prefix ?? Prefix;
             Attribute = xml?.Attribute ?? Attribute;
             Wrapped = xml?.Wrapped ?? Wrapped;
-            Extensions = xml?.Extensions != null ? DictionaryCloneHelper.Clone(xml.Extensions) : null;
+            Extensions = xml?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(xml.Extensions) : null;
         }
 
         /// <summary>

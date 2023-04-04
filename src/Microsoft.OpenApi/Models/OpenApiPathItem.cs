@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Models
             Operations = pathItem?.Operations != null ? DictionaryCloneHelper.Clone(pathItem?.Operations) : null;
             Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
             Parameters = pathItem?.Parameters != null ? new List<OpenApiParameter>(pathItem.Parameters) : null;
-            Extensions = pathItem?.Extensions != null ? DictionaryCloneHelper.Clone(pathItem.Extensions) : null;
+            Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;
             UnresolvedReference = pathItem?.UnresolvedReference ?? UnresolvedReference;
             Reference = pathItem?.Reference != null ? new(pathItem?.Reference) : null;
         }

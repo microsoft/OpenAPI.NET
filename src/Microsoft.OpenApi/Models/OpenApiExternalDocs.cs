@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -42,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         {
             Description = externalDocs?.Description ?? Description;
             Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
-            Extensions = externalDocs?.Extensions != null ? DictionaryCloneHelper.Clone(externalDocs.Extensions) : null;
+            Extensions = externalDocs?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions) : null;
         }
 
         /// <summary>
