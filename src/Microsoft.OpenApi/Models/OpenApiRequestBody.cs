@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Models
             Description = requestBody?.Description ?? Description;
             Required = requestBody?.Required ?? Required;
             Content = requestBody?.Content != null ? DictionaryCloneHelper.Clone(requestBody.Content) : null;
-            Extensions = requestBody?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
+            Extensions = requestBody?.Extensions != null ? DictionaryCloneHelper.Clone(requestBody.Extensions) : null;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Models
         {
             Name = license?.Name ?? Name;
             Url = license?.Url != null ? new Uri(license.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
-            Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
+            Extensions = license?.Extensions != null ? DictionaryCloneHelper.Clone(license.Extensions) : null;
         }
 
         /// <summary>

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -47,7 +48,7 @@ namespace Microsoft.OpenApi.Models
             Description = serverVariable?.Description;
             Default = serverVariable?.Default;
             Enum = serverVariable?.Enum != null ? new List<string>(serverVariable?.Enum) : serverVariable?.Enum;
-            Extensions = serverVariable?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(serverVariable?.Extensions) : serverVariable?.Extensions;
+            Extensions = serverVariable?.Extensions != null ? DictionaryCloneHelper.Clone(serverVariable?.Extensions) : serverVariable?.Extensions;
         }
 
         /// <summary>

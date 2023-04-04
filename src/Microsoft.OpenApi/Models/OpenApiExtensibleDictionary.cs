@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -30,7 +31,7 @@ namespace Microsoft.OpenApi.Models
             Dictionary<string, T> dictionary = null,
             IDictionary<string, IOpenApiExtension> extensions = null) : base (dictionary)
         {
-            Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : null;
+            Extensions = extensions != null ? DictionaryCloneHelper.Clone(extensions) : null;
         }       
 
         /// <summary>
