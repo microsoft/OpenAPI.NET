@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -276,7 +277,7 @@ namespace Microsoft.OpenApi.Models
             MaxItems = schema?.MaxItems ?? MaxItems;
             MinItems = schema?.MinItems ?? MinItems;
             UniqueItems = schema?.UniqueItems ?? UniqueItems;
-            Properties = schema?.Properties != null ? new Dictionary<string, OpenApiSchema>(schema.Properties) : null;
+            Properties = schema?.Properties != null ? DictionaryCloneHelper.Clone(schema.Properties) : null;
             MaxProperties = schema?.MaxProperties ?? MaxProperties;
             MinProperties = schema?.MinProperties ?? MinProperties;
             AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
