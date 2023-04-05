@@ -3,11 +3,12 @@
 
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
-using SharpYaml;
+//using SharpYaml;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
@@ -36,21 +37,21 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public OpenApiDocument Read(TextReader input, out OpenApiDiagnostic diagnostic)
         {
-            YamlDocument yamlDocument;
+            JsonDocument jsonDocument;
 
             // Parse the YAML/JSON text in the TextReader into the YamlDocument
             try
             {
-                yamlDocument = LoadYamlDocument(input);
+                jsonDocument = LoadJsonDocument(input);
             }
-            catch (YamlException ex)
+            catch (JsonException ex)
             {
                 diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
+                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", ex.Message));
                 return new OpenApiDocument();
             }
 
-            return new OpenApiYamlDocumentReader(this._settings).Read(yamlDocument, out diagnostic);
+            return new OpenApiYamlDocumentReader(this._settings).Read(jsonDocument, out diagnostic);
         }
 
         /// <summary>
@@ -60,17 +61,17 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>A ReadResult instance that contains the resulting OpenApiDocument and a diagnostics instance.</returns>
         public async Task<ReadResult> ReadAsync(TextReader input)
         {
-            YamlDocument yamlDocument;
+            JsonDocument yamlDocument;
 
             // Parse the YAML/JSON text in the TextReader into the YamlDocument
             try
             {
-                yamlDocument = LoadYamlDocument(input);
+                yamlDocument = LoadJsonDocument(input);
             }
-            catch (YamlException ex)
+            catch (JsonException ex)
             {
                 var diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
+                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", ex.Message));
                 return new ReadResult
                 {
                     OpenApiDocument = null,
@@ -91,21 +92,21 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public T ReadFragment<T>(TextReader input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
         {
-            YamlDocument yamlDocument;
+            JsonDocument jsonDocument;
 
             // Parse the YAML/JSON
             try
             {
-                yamlDocument = LoadYamlDocument(input);
+                jsonDocument = LoadJsonDocument(input);
             }
-            catch (YamlException ex)
+            catch (JsonException ex)
             {
                 diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
+                diagnostic.Errors.Add(new OpenApiError($"#line={ex.LineNumber}", ex.Message));
                 return default(T);
             }
 
-            return new OpenApiYamlDocumentReader(this._settings).ReadFragment<T>(yamlDocument, version, out diagnostic);
+            return new OpenApiYamlDocumentReader(this._settings).ReadFragment<T>(jsonDocument, version, out diagnostic);
         }
 
         /// <summary>
@@ -113,11 +114,11 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         /// <param name="input">Stream containing YAML formatted text</param>
         /// <returns>Instance of a YamlDocument</returns>
-        static YamlDocument LoadYamlDocument(TextReader input)
+        static JsonDocument LoadJsonDocument(TextReader input)
         {
-            var yamlStream = new YamlStream();
-            yamlStream.Load(input);
-            return yamlStream.Documents.First();
+            string jsonString = input.ReadToEnd();
+            var jsonDocument = JsonDocument.Parse(jsonString);
+            return jsonDocument;
         }
     }
 }

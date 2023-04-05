@@ -5,31 +5,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Readers.Exceptions;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal class ListNode : ParseNode, IEnumerable<ParseNode>
     {
-        private readonly YamlSequenceNode _nodeList;
+        private readonly JsonArray _nodeList;
 
-        public ListNode(ParsingContext context, YamlSequenceNode sequenceNode) : base(
+        public ListNode(ParsingContext context, JsonArray jsonArray) : base(
             context)
         {
-            _nodeList = sequenceNode;
+            _nodeList = jsonArray;
         }
 
         public override List<T> CreateList<T>(Func<MapNode, T> map)
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException(
-                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
+                //throw new OpenApiReaderException($"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList.Select(n => map(new MapNode(Context, n as YamlMappingNode)))
+            return _nodeList.Select(n => map(new MapNode(Context, n as JsonObject)))
                 .Where(i => i != null)
                 .ToList();
         }
@@ -45,8 +43,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException(
-                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
+                //throw new OpenApiReaderException($"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
             }
 
             return _nodeList.Select(n => map(new ValueNode(Context, n))).ToList();

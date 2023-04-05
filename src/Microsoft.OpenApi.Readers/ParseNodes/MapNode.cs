@@ -5,50 +5,51 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
-using SharpYaml.Schemas;
-using SharpYaml.Serialization;
+//using SharpYaml.Schemas;
+//using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     /// <summary>
-    /// Abstraction of a Map to isolate semantic parsing from details of
+    /// Abstraction of a Map to isolate semantic parsing from details of JSON DOM
     /// </summary>
     internal class MapNode : ParseNode, IEnumerable<PropertyNode>
     {
-        private readonly YamlMappingNode _node;
+        private readonly JsonObject _node;
         private readonly List<PropertyNode> _nodes;
 
-        public MapNode(ParsingContext context, string yamlString) :
-            this(context, (YamlMappingNode)YamlHelper.ParseYamlString(yamlString))
+        public MapNode(ParsingContext context, string jsonString) :
+            this(context, YamlHelper.ParseJsonString(jsonString))
         {
         }
-
-        public MapNode(ParsingContext context, YamlNode node) : base(
+        public MapNode(ParsingContext context, JsonNode node) : base(
             context)
         {
-            if (!(node is YamlMappingNode mapNode))
+            if (!(node is JsonObject mapNode))
             {
                 throw new OpenApiReaderException("Expected map.", Context);
             }
 
-            this._node = mapNode;
+            //_node = mapNode;
+            _nodes = _node.Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
 
-            _nodes = this._node.Children
-                .Select(kvp => new PropertyNode(Context, kvp.Key.GetScalarValue(), kvp.Value))
-                .Cast<PropertyNode>()
-                .ToList();
+            //_nodes = this._node.Children
+            //    .Select(kvp => new PropertyNode(Context, kvp.Key.GetScalarValue(), kvp.Value))
+            //    .Cast<PropertyNode>()
+            //    .ToList();
         }
 
         public PropertyNode this[string key]
         {
             get
             {
-                YamlNode node;
-                if (this._node.Children.TryGetValue(new YamlScalarNode(key), out node))
+                if (_node.TryGetPropertyValue(key, out var node))
                 {
                     return new PropertyNode(Context, key, node);
                 }
@@ -59,23 +60,18 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override Dictionary<string, T> CreateMap<T>(Func<MapNode, T> map)
         {
-            var yamlMap = _node;
-            if (yamlMap == null)
-            {
-                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
-            }
-
-            var nodes = yamlMap.Select(
+            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
+            var nodes = jsonMap.Select(
                 n => {
                     
-                    var key = n.Key.GetScalarValue();
+                    var key = n.Key;
                     T value;
                     try
                     {
                         Context.StartObject(key);
-                        value = n.Value as YamlMappingNode == null
-                          ? default(T)
-                          : map(new MapNode(Context, n.Value as YamlMappingNode));
+                        value = n.Value as JsonObject == null
+                          ? default
+                          : map(new MapNode(Context, n.Value as JsonObject));
                     } 
                     finally
                     {
@@ -83,8 +79,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     }
                     return new
                     {
-                        key = key,
-                        value = value
+                        key,
+                        value
                     };
                 });
 
@@ -95,23 +91,18 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             ReferenceType referenceType,
             Func<MapNode, T> map) 
         {
-            var yamlMap = _node;
-            if (yamlMap == null)
-            {
-                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
-            }
+            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);            
 
-            var nodes = yamlMap.Select(
+            var nodes = jsonMap.Select(
                 n =>
                 {
-                    var key = n.Key.GetScalarValue();
+                    var key = n.Key;
                     (string key, T value) entry;
                     try
                     {
                         Context.StartObject(key);
-                        entry = (
-                            key: key,
-                            value: map(new MapNode(Context, (YamlMappingNode)n.Value))
+                        entry = (key,
+                            value: map(new MapNode(Context, (JsonObject)n.Value))
                         );
                         if (entry.value == null)
                         {
@@ -139,29 +130,27 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override Dictionary<string, T> CreateSimpleMap<T>(Func<ValueNode, T> map)
         {
-            var yamlMap = _node;
-            if (yamlMap == null)
-            { 
-                throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
-            }
-
-            var nodes = yamlMap.Select(
+            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
+            var nodes = jsonMap.Select(
                 n =>
                 {
-                    var key = n.Key.GetScalarValue();
+                    var key = n.Key;
                     try
                     {
                         Context.StartObject(key);
-                        YamlScalarNode scalarNode = n.Value as YamlScalarNode;
-                        if (scalarNode == null)
+                        JsonValue valueNode = n.Value as JsonValue;
+                        
+                        if (valueNode == null)
                         {
                             throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);
                         }
-                        return (key, value: map(new ValueNode(Context, (YamlScalarNode)n.Value)));
+                        
+                        return (key, value: map(new ValueNode(Context, (JsonValue)n.Value)));
                     } finally {
                         Context.EndObject();
                     }
                 });
+            
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
@@ -177,8 +166,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override string GetRaw()
         {
-            var x = new Serializer(new SerializerSettings(new JsonSchema()) { EmitJsonComptible = true });
-            return x.Serialize(_node);
+            var x = JsonSerializer.Serialize(_node); // (new SerializerSettings(new JsonSchema()) { EmitJsonComptible = true });
+            return x;
         }
 
         public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId, string summary = null, string description = null)
@@ -193,9 +182,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public string GetReferencePointer()
         {
-            YamlNode refNode;
-
-            if (!_node.Children.TryGetValue(new YamlScalarNode("$ref"), out refNode))
+            if (!_node.TryGetPropertyValue("$ref", out JsonNode refNode))
             {
                 return null;
             }
@@ -205,13 +192,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public string GetScalarValue(ValueNode key)
         {
-            var scalarNode = _node.Children[new YamlScalarNode(key.GetScalarValue())] as YamlScalarNode;
+            var scalarNode = _node[key.GetScalarValue()] as JsonValue;
             if (scalarNode == null)
             {
-                throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
+                //throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
             }
 
-            return scalarNode.Value;
+            return scalarNode.GetValue<string>();
         }
 
         /// <summary>

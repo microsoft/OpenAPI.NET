@@ -3,13 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -32,20 +30,19 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return mapNode;
         }
 
-        public static ParseNode Create(ParsingContext context, YamlNode node)
+        public static ParseNode Create(ParsingContext context, JsonNode node)
         {
-
-            if (node is YamlSequenceNode listNode)
+            if (node is JsonArray listNode)
             {
                 return new ListNode(context, listNode);
             }
 
-            if (node is YamlMappingNode mapNode)
+            if (node is JsonObject mapNode)
             {
                 return new MapNode(context, mapNode);
             }
 
-            return new ValueNode(context, node as YamlScalarNode);
+            return new ValueNode(context, node as JsonValue);
         }
 
         public virtual List<T> CreateList<T>(Func<MapNode, T> map)

@@ -1,38 +1,40 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     /// <summary>
-    /// Wrapper class around YamlDocument to isolate semantic parsing from details of Yaml DOM.
+    /// Wrapper class around JsonDocument to isolate semantic parsing from details of Json DOM.
     /// </summary>
     internal class RootNode : ParseNode
     {
-        private readonly YamlDocument _yamlDocument;
+        private readonly JsonDocument _jsonDocument;
 
         public RootNode(
             ParsingContext context,
-            YamlDocument yamlDocument) : base(context)
+            JsonDocument jsonDocument) : base(context)
         {
-            _yamlDocument = yamlDocument;
+            _jsonDocument = jsonDocument;
         }
 
         public ParseNode Find(JsonPointer referencePointer)
         {
-            var yamlNode = referencePointer.Find(_yamlDocument.RootNode);
-            if (yamlNode == null)
+            var jsonNode = referencePointer.Find(_jsonDocument.RootElement);
+            if (jsonNode == null)
             {
                 return null;
             }
 
-            return Create(Context, yamlNode);
+            return Create(Context, jsonNode);
         }
 
         public MapNode GetMap()
         {
-            return new MapNode(Context, (YamlMappingNode)_yamlDocument.RootNode);
+            return new MapNode(Context, _jsonDocument.RootElement);
         }
     }
 }
