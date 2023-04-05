@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Models
             PathItems = callback?.PathItems != null ? new(callback?.PathItems) : null;
             UnresolvedReference = callback?.UnresolvedReference ?? UnresolvedReference;
             Reference = callback?.Reference != null ? new(callback?.Reference) : null;
-            Extensions = callback?.Extensions != null ? DictionaryCloneHelper.Clone(callback.Extensions) : null;
+            Extensions = callback?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(callback.Extensions) : null;
         }
 
         /// <summary>
