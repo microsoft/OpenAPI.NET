@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Models
             Parameters = operation?.Parameters != null ? new List<OpenApiParameter>(operation.Parameters) : null;
             RequestBody = new(operation?.RequestBody);
             Responses = operation?.Responses != null ? new(operation?.Responses) : null;
-            Callbacks = DictionaryCloneHelper.Clone(operation.Callbacks);
+            Callbacks = DictionaryCloneHelper.Clone(operation?.Callbacks);
             Deprecated = operation?.Deprecated ?? Deprecated;
             Security = operation?.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
             Servers = operation?.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;

@@ -77,15 +77,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas = DictionaryCloneHelper.Clone(components.Schemas);
-            Responses = DictionaryCloneHelper.Clone(components.Responses);
-            Parameters = DictionaryCloneHelper.Clone(components.Parameters);
-            Examples = DictionaryCloneHelper.Clone(components.Examples);
-            RequestBodies = DictionaryCloneHelper.Clone(components.RequestBodies);
-            Headers = DictionaryCloneHelper.Clone(components.Headers);
-            SecuritySchemes = DictionaryCloneHelper.Clone(components.SecuritySchemes);
-            Links = DictionaryCloneHelper.Clone(components.Links);
-            Callbacks = DictionaryCloneHelper.Clone(components.Callbacks);
+            Schemas = DictionaryCloneHelper.Clone(components?.Schemas);
+            Responses = DictionaryCloneHelper.Clone(components?.Responses);
+            Parameters = DictionaryCloneHelper.Clone(components?.Parameters);
+            Examples = DictionaryCloneHelper.Clone(components?.Examples);
+            RequestBodies = DictionaryCloneHelper.Clone(components?.RequestBodies);
+            Headers = DictionaryCloneHelper.Clone(components?.Headers);
+            SecuritySchemes = DictionaryCloneHelper.Clone(components?.SecuritySchemes);
+            Links = DictionaryCloneHelper.Clone(components?.Links);
+            Callbacks = DictionaryCloneHelper.Clone(components?.Callbacks);
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 

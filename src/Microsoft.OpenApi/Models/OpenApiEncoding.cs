@@ -65,11 +65,11 @@ namespace Microsoft.OpenApi.Models
         public OpenApiEncoding(OpenApiEncoding encoding)
         {
             ContentType = encoding?.ContentType ?? ContentType;
-            Headers = DictionaryCloneHelper.Clone(encoding.Headers);
+            Headers = DictionaryCloneHelper.Clone(encoding?.Headers);
             Style = encoding?.Style ?? Style;
             Explode = encoding?.Explode ?? Explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
-            Extensions = DictionaryCloneHelper.Clone(encoding.Extensions);
+            Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
         }
 
         /// <summary>

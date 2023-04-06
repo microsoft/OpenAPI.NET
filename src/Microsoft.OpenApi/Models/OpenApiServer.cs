@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Models
         {
             Description = server?.Description ?? Description;
             Url = server?.Url ?? Url;
-            Variables = DictionaryCloneHelper.Clone(server.Variables);
+            Variables = DictionaryCloneHelper.Clone(server?.Variables);
             Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
         }
 

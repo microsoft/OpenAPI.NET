@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Models
             Reference = requestBody?.Reference != null ? new(requestBody?.Reference) : null;
             Description = requestBody?.Description ?? Description;
             Required = requestBody?.Required ?? Required;
-            Content = DictionaryCloneHelper.Clone(requestBody.Content);
+            Content = DictionaryCloneHelper.Clone(requestBody?.Content);
             Extensions = requestBody?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
         }
 

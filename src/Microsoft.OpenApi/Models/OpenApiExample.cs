@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
             Description = example?.Description ?? Description;
             Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor(example?.Value);
             ExternalValue = example?.ExternalValue ?? ExternalValue;
-            Extensions = DictionaryCloneHelper.Clone(example.Extensions);
+            Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null; ;
             Reference = example?.Reference != null ? new(example?.Reference) : null;
             UnresolvedReference = example?.UnresolvedReference ?? UnresolvedReference;
         }
