@@ -20,7 +20,8 @@ namespace Microsoft.OpenApi.Helpers
         /// <returns>The cloned dictionary.</returns>
         internal static Dictionary<T, U> Clone<T, U>(IDictionary<T, U> dictionary)
         {            
-            var clonedDictionary = dictionary is null ? null : new Dictionary<T, U>();
+            if (dictionary is null) return null;
+            var clonedDictionary = new Dictionary<T, U>();
 
             if (dictionary != null)
             {
