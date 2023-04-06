@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -163,9 +163,9 @@ namespace Microsoft.OpenApi.Models
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
             Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
-            Examples = parameter?.Examples != null ? DictionaryCloneHelper.Clone(parameter.Examples) : null;
+            Examples = DictionaryCloneHelper.Clone(parameter.Examples);
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
-            Content = parameter?.Content != null ? DictionaryCloneHelper.Clone(parameter.Content) : null;
+            Content = DictionaryCloneHelper.Clone(parameter.Content);
             Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
             Deprecated = parameter?.Deprecated ?? Deprecated;

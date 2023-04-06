@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Models
         {
             Summary = pathItem?.Summary ?? Summary;
             Description = pathItem?.Description ?? Description;
-            Operations = pathItem?.Operations != null ? DictionaryCloneHelper.Clone(pathItem?.Operations) : null;
+            Operations = DictionaryCloneHelper.Clone(pathItem?.Operations);
             Servers = pathItem?.Servers != null ? new List<OpenApiServer>(pathItem.Servers) : null;
             Parameters = pathItem?.Parameters != null ? new List<OpenApiParameter>(pathItem.Parameters) : null;
             Extensions = pathItem?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(pathItem.Extensions) : null;

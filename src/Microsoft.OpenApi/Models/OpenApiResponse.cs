@@ -63,10 +63,10 @@ namespace Microsoft.OpenApi.Models
         public OpenApiResponse(OpenApiResponse response)
         {
             Description = response?.Description ?? Description;
-            Headers = response?.Headers != null ? DictionaryCloneHelper.Clone(response.Headers) : null;
-            Content = response?.Content != null ? DictionaryCloneHelper.Clone(response.Content) : null;
-            Links = response?.Links != null ? DictionaryCloneHelper.Clone(response.Links) : null;
-            Extensions = response?.Extensions != null ? DictionaryCloneHelper.Clone(response.Extensions) : null;
+            Headers = DictionaryCloneHelper.Clone(response.Headers);
+            Content = DictionaryCloneHelper.Clone(response.Content);
+            Links = DictionaryCloneHelper.Clone(response.Links);
+            Extensions = response?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
             UnresolvedReference = response?.UnresolvedReference ?? UnresolvedReference;
             Reference = response?.Reference != null ? new(response?.Reference) : null;
         }

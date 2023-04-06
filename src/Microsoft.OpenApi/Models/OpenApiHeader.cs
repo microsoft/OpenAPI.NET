@@ -108,9 +108,9 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = header?.AllowReserved ?? AllowReserved;
             Schema = header?.Schema != null ? new(header?.Schema) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header?.Example);
-            Examples = header?.Examples != null ? DictionaryCloneHelper.Clone(header.Examples) : null;
-            Content = header?.Content != null ? DictionaryCloneHelper.Clone(header.Content) : null;
-            Extensions = header?.Extensions != null ? DictionaryCloneHelper.Clone(header.Extensions) : null;
+            Examples = DictionaryCloneHelper.Clone(header.Examples);
+            Content = DictionaryCloneHelper.Clone(header.Content);
+            Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
 
         /// <summary>

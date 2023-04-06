@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Helpers
     /// <summary>
     /// Helper class for deep cloning dictionaries.
     /// </summary>
-    public class DictionaryCloneHelper
+    internal class DictionaryCloneHelper
     {
         /// <summary>
         /// Deep clone key value pairs in a dictionary.
@@ -18,9 +18,9 @@ namespace Microsoft.OpenApi.Helpers
         /// <typeparam name="U">The type of the value of the dictionary.</typeparam>
         /// <param name="dictionary">The target dictionary to clone.</param>
         /// <returns>The cloned dictionary.</returns>
-        public static Dictionary<T, U> Clone<T, U>(IDictionary<T, U> dictionary)
-        {
-            var clonedDictionary = new Dictionary<T, U>();
+        internal static Dictionary<T, U> Clone<T, U>(IDictionary<T, U> dictionary)
+        {            
+            var clonedDictionary = dictionary is null ? null : new Dictionary<T, U>();
 
             if (dictionary != null)
             {

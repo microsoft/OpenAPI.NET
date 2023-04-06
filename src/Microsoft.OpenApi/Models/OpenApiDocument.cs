@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Models
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
-            Extensions = document?.Extensions != null ? DictionaryCloneHelper.Clone(document.Extensions) : null;
+            Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
         }
 
         /// <summary>
