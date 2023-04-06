@@ -292,14 +292,6 @@ namespace Microsoft.OpenApi.Extensions
         public static T GetEnumFromDisplayName<T>(this string displayName) { }
     }
 }
-namespace Microsoft.OpenApi.Helpers
-{
-    public class DictionaryCloneHelper
-    {
-        public DictionaryCloneHelper() { }
-        public static System.Collections.Generic.Dictionary<T, U> Clone<T, U>(System.Collections.Generic.IDictionary<T, U> dictionary) { }
-    }
-}
 namespace Microsoft.OpenApi.Interfaces
 {
     public interface IEffective<T>
