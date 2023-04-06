@@ -21,16 +21,14 @@ namespace Microsoft.OpenApi.Helpers
         internal static Dictionary<T, U> Clone<T, U>(IDictionary<T, U> dictionary)
         {            
             if (dictionary is null) return null;
-            var clonedDictionary = new Dictionary<T, U>();
-
-            if (dictionary != null)
+            var clonedDictionary = new Dictionary<T, U>(dictionary.Keys.Count);
+            
+            foreach (var kvp in dictionary)
             {
-                foreach (var kvp in dictionary)
-                {
-                    // Create instance of the specified type using the constructor matching the specified parameter types.
-                    clonedDictionary[kvp.Key] = (U)Activator.CreateInstance(kvp.Value.GetType(), kvp.Value);
-                }
+                // Create instance of the specified type using the constructor matching the specified parameter types.
+                clonedDictionary[kvp.Key] = (U)Activator.CreateInstance(kvp.Value.GetType(), kvp.Value);
             }
+            
 
             return clonedDictionary;
         }

@@ -277,7 +277,7 @@ namespace Microsoft.OpenApi.Models
             MaxItems = schema?.MaxItems ?? MaxItems;
             MinItems = schema?.MinItems ?? MinItems;
             UniqueItems = schema?.UniqueItems ?? UniqueItems;
-            Properties = DictionaryCloneHelper.Clone(schema.Properties);
+            Properties = DictionaryCloneHelper.Clone(schema?.Properties);
             MaxProperties = schema?.MaxProperties ?? MaxProperties;
             MinProperties = schema?.MinProperties ?? MinProperties;
             AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
