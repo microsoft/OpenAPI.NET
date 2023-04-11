@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -55,8 +56,8 @@ namespace Microsoft.OpenApi.Models
         {
             Schema = mediaType?.Schema != null ? new(mediaType?.Schema) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(mediaType?.Example);
-            Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
-            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
+            Examples = DictionaryCloneHelper.Clone(mediaType?.Examples);
+            Encoding = DictionaryCloneHelper.Clone(mediaType?.Encoding);
             Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
         }
 

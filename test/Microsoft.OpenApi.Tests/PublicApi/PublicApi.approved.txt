@@ -1111,7 +1111,7 @@ namespace Microsoft.OpenApi.Services
         public System.Collections.Generic.IDictionary<string, System.Collections.Generic.List<string>> AdditionalData { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Services.OpenApiUrlTreeNode> Children { get; }
         public bool IsParameter { get; }
-        public string Path { get; }
+        public string Path { get; set; }
         public System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiPathItem> PathItems { get; }
         public string Segment { get; }
         public void AddAdditionalData(System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> additionalData) { }

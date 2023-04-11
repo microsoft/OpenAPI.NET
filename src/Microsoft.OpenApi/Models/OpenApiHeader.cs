@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -107,8 +108,8 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = header?.AllowReserved ?? AllowReserved;
             Schema = header?.Schema != null ? new(header?.Schema) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header?.Example);
-            Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
-            Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
+            Examples = DictionaryCloneHelper.Clone(header?.Examples);
+            Content = DictionaryCloneHelper.Clone(header?.Content);
             Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
 
