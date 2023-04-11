@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// The relative directory path of the current node from the root node.
         /// </summary>
-        public string Path { get; private set; } = "";
+        public string Path { get; set; } = "";
 
         /// <summary>
         /// Dictionary of labels and Path Item objects that describe the operations available on a node.
