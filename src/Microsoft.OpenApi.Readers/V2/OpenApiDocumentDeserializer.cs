@@ -139,6 +139,12 @@ namespace Microsoft.OpenApi.Readers.V2
             var schemes = context.GetFromTempStorage<List<string>>("schemes");
             Uri defaultUrl = rootNode.Context.BaseUrl;
 
+            // so we don't default to the document path when a host is provided
+            if (string.IsNullOrEmpty(basePath) && !string.IsNullOrEmpty(host))
+            {
+                basePath = "/";
+            }
+
             // If nothing is provided, don't create a server
             if (host == null && basePath == null && schemes == null)
             {

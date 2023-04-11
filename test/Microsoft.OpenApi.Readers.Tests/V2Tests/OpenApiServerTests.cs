@@ -75,6 +75,31 @@ paths: {}
         }
 
         [Fact]
+        public void NoBasePath()
+        {
+            var input = @"
+swagger: 2.0
+info: 
+  title: test
+  version: 1.0.0
+host: www.foo.com
+schemes:
+  - http
+paths: {}
+";
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            {
+                BaseUrl = new Uri("https://www.foo.com/spec.yaml")
+            });
+
+            var doc = reader.Read(input, out var diagnostic);
+
+            var server = doc.Servers.First();
+            Assert.Equal(1, doc.Servers.Count);
+            Assert.Equal("http://www.foo.com", server.Url);
+        }
+
+        [Fact]
         public void JustBasePathNoDefault()
         {
             var input = @"
@@ -203,14 +228,14 @@ paths: {}
 ";
             var reader = new OpenApiStringReader(new OpenApiReaderSettings()
             {
-                BaseUrl = new Uri("https://dev.bing.com/api")
+                BaseUrl = new Uri("https://dev.bing.com/api/description.yaml")
             });
 
             var doc = reader.Read(input, out var diagnostic);
 
             var server = doc.Servers.First();
             Assert.Equal(1, doc.Servers.Count);
-            Assert.Equal("https://prod.bing.com/api", server.Url);
+            Assert.Equal("https://prod.bing.com", server.Url);
         }
 
         [Fact]
