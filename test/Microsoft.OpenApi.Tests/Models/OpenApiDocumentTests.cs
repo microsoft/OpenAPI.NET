@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -1344,12 +1345,19 @@ paths: { }";
             // Arrange & Act
             var doc = new OpenApiDocument(AdvancedDocument);
 
+            var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
+            var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
+            var responseSchemaTypeCopy = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type = "object";
+            var advancedDocResponseSchemaType = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type;
+
             // Assert
             Assert.NotNull(doc.Info);
             Assert.NotNull(doc.Servers);
             Assert.NotNull(doc.Paths);
             Assert.Equal(2, doc.Paths.Count);
             Assert.NotNull(doc.Components);
+            Assert.NotEqual(docOpId, advancedDocOpId);
+            Assert.NotEqual(responseSchemaTypeCopy, advancedDocResponseSchemaType);
         }
 
         [Fact]

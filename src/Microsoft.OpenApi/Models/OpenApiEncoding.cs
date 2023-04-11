@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -64,7 +65,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiEncoding(OpenApiEncoding encoding)
         {
             ContentType = encoding?.ContentType ?? ContentType;
-            Headers = encoding?.Headers != null ? new Dictionary<string, OpenApiHeader>(encoding.Headers) : null;
+            Headers = DictionaryCloneHelper.Clone(encoding?.Headers);
             Style = encoding?.Style ?? Style;
             Explode = encoding?.Explode ?? Explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;

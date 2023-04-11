@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -61,7 +62,7 @@ namespace Microsoft.OpenApi.Models
             Reference = requestBody?.Reference != null ? new(requestBody?.Reference) : null;
             Description = requestBody?.Description ?? Description;
             Required = requestBody?.Required ?? Required;
-            Content = requestBody?.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
+            Content = DictionaryCloneHelper.Clone(requestBody?.Content);
             Extensions = requestBody?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
         }
 
