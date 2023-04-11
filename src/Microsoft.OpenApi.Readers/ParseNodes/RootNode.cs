@@ -12,18 +12,18 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     /// </summary>
     internal class RootNode : ParseNode
     {
-        private readonly JsonDocument _jsonDocument;
+        private readonly JsonNode _jsonNode;
 
         public RootNode(
             ParsingContext context,
-            JsonDocument jsonDocument) : base(context)
+            JsonNode jsonNode) : base(context)
         {
-            _jsonDocument = jsonDocument;
+            _jsonNode = jsonNode;
         }
 
         public ParseNode Find(JsonPointer referencePointer)
         {
-            var jsonNode = referencePointer.Find(_jsonDocument.RootElement);
+            var jsonNode = referencePointer.Find(_jsonNode);
             if (jsonNode == null)
             {
                 return null;
@@ -34,7 +34,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public MapNode GetMap()
         {
-            return new MapNode(Context, _jsonDocument.RootElement);
+            var jsonNode = _jsonNode;
+            return new MapNode(Context, jsonNode);
         }
     }
 }

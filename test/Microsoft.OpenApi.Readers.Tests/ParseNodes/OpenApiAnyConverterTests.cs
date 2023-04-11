@@ -34,8 +34,9 @@ aDate: 2017-01-02
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+            
             var anyMap = node.CreateAny();
 
             var schema = new OpenApiSchema()
@@ -120,8 +121,9 @@ aDate: 2017-01-02
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+            
             var anyMap = node.CreateAny();
 
             var schema = new OpenApiSchema()
@@ -300,8 +302,9 @@ aDate: 2017-01-02
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+            
             var anyMap = node.CreateAny();
 
             var schema = new OpenApiSchema()
@@ -455,8 +458,9 @@ aDate: 2017-01-02
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+            
             var anyMap = node.CreateAny();
 
             anyMap = OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap);

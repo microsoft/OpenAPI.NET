@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Readers
     /// <summary>
     /// Service class for converting contents of TextReader into OpenApiDocument instances
     /// </summary>
-    internal class OpenApiYamlDocumentReader : IOpenApiReader<JsonDocument, OpenApiDiagnostic>
+    internal class OpenApiYamlDocumentReader : IOpenApiReader<JsonNode, OpenApiDiagnostic>
     {
         private readonly OpenApiReaderSettings _settings;
 
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
         /// <returns>Instance of newly created OpenApiDocument</returns>
-        public OpenApiDocument Read(JsonDocument input, out OpenApiDiagnostic diagnostic)
+        public OpenApiDocument Read(JsonNode input, out OpenApiDiagnostic diagnostic)
         {
             diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)
@@ -85,7 +86,7 @@ namespace Microsoft.OpenApi.Readers
             return document;
         }
 
-        public async Task<ReadResult> ReadAsync(JsonDocument input)
+        public async Task<ReadResult> ReadAsync(JsonNode input)
         {
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)
@@ -174,7 +175,7 @@ namespace Microsoft.OpenApi.Readers
         /// <param name="version">Version of the OpenAPI specification that the fragment conforms to.</param>
         /// <param name="diagnostic">Returns diagnostic object containing errors detected during parsing</param>
         /// <returns>Instance of newly created OpenApiDocument</returns>
-        public T ReadFragment<T>(JsonDocument input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
+        public T ReadFragment<T>(JsonNode input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
         {
             diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)

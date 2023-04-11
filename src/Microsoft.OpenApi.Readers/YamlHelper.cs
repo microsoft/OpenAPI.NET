@@ -14,18 +14,28 @@ namespace Microsoft.OpenApi.Readers
     {
         public static string GetScalarValue(this JsonNode node)
         {
+
+            var scalarNode = node as JsonValue;
             if (node == null)
             {
                 //throw new OpenApiException($"Expected scalar at line {node.Start.Line}");
             }
 
-            return node.GetValue<string>();
+            return scalarNode.ToString();
         }
-
-        public static JsonObject ParseJsonString(string jsonString)
+        
+        public static JsonNode ParseJsonString(string yamlString)
         {
-            var jsonNode = JsonDocument.Parse(jsonString);
-            return (JsonObject)jsonNode.Root;
+            //var jsonDoc = JsonDocument.Parse(jsonString);
+            //var node = jsonDoc.RootElement.Deserialize<JsonObject>();
+            //return node;
+
+            var reader = new StringReader(yamlString);
+            var yamlStream = new YamlStream();
+            yamlStream.Load(reader);
+
+            var yamlDocument = yamlStream.Documents.First();
+            return yamlDocument.RootNode.ToJsonNode();
         }
     }
 }

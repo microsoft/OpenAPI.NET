@@ -30,8 +30,9 @@ aDateTime: 2017-01-01
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+            
             var anyMap = node.CreateAny();
 
             diagnostic.Errors.Should().BeEmpty();
@@ -57,13 +58,13 @@ aDateTime: 2017-01-01
                 ";
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
-            var yamlNode = yamlStream.Documents.First().RootNode;
+            var yamlNode = (YamlSequenceNode)yamlStream.Documents.First().RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new ListNode(context, (YamlSequenceNode)yamlNode);
-
+            var node = new ListNode(context, yamlNode.ToJsonArray());
+            
             var any = node.CreateAny();
 
             diagnostic.Errors.Should().BeEmpty();
@@ -89,9 +90,9 @@ aDateTime: 2017-01-01
             var yamlNode = yamlStream.Documents.First().RootNode;
 
             var diagnostic = new OpenApiDiagnostic();
-            var context = new ParsingContext(diagnostic);
+            var context = new ParsingContext(diagnostic);            
 
-            var node = new ValueNode(context, (YamlScalarNode)yamlNode);
+            var node = new ValueNode(context, yamlNode.ToJsonNode());
 
             var any = node.CreateAny();
 
@@ -115,7 +116,7 @@ aDateTime: 2017-01-01
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new ValueNode(context, (YamlScalarNode)yamlNode);
+            var node = new ValueNode(context, yamlNode.ToJsonNode());
 
             var any = node.CreateAny();
 

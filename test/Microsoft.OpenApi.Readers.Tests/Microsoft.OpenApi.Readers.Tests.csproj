@@ -275,6 +275,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Yaml2JsonNode" Version="1.1.0" />
+        <PackageReference Include="YamlDotNet" Version="13.0.2" />
     </ItemGroup>
 
     <ItemGroup>

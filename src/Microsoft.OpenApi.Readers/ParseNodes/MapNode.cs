@@ -31,18 +31,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public MapNode(ParsingContext context, JsonNode node) : base(
             context)
         {
-            if (!(node is JsonObject mapNode))
+            if (node is not JsonObject mapNode)
             {
                 throw new OpenApiReaderException("Expected map.", Context);
             }
 
-            //_node = mapNode;
+            _node = mapNode;
             _nodes = _node.Select(p => new PropertyNode(Context, p.Key, p.Value)).ToList();
-
-            //_nodes = this._node.Children
-            //    .Select(kvp => new PropertyNode(Context, kvp.Key.GetScalarValue(), kvp.Value))
-            //    .Cast<PropertyNode>()
-            //    .ToList();
         }
 
         public PropertyNode this[string key]
@@ -198,7 +193,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 //throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
             }
 
-            return scalarNode.GetValue<string>();
+            return scalarNode.ToString();
         }
 
         /// <summary>
