@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Helpers
     /// <summary>
     /// Helper class for deep cloning dictionaries.
     /// </summary>
-    internal class DictionaryCloneHelper
+    internal static class DictionaryCloneHelper
     {
         /// <summary>
         /// Deep clone key value pairs in a dictionary.
@@ -21,14 +21,26 @@ namespace Microsoft.OpenApi.Helpers
         internal static Dictionary<T, U> Clone<T, U>(IDictionary<T, U> dictionary)
         {            
             if (dictionary is null) return null;
+            
             var clonedDictionary = new Dictionary<T, U>(dictionary.Keys.Count);
+            var clonedObjects = new Dictionary<object, object>();
             
-            foreach (var kvp in dictionary)
+            foreach (var keyValuePair in dictionary)
             {
-                // Create instance of the specified type using the constructor matching the specified parameter types.
-                clonedDictionary[kvp.Key] = (U)Activator.CreateInstance(kvp.Value.GetType(), kvp.Value);
-            }
-            
+                // If the object has already been cloned, use the cloned object instead of cloning it again
+                if (clonedObjects.TryGetValue(keyValuePair.Value, out var clonedValue))
+                {
+                    clonedDictionary[keyValuePair.Key] = (U)clonedValue;
+                }
+                else
+                {
+                    // Create instance of the specified type using the constructor matching the specified parameter types.
+                    clonedDictionary[keyValuePair.Key] = (U)Activator.CreateInstance(keyValuePair.Value.GetType(), keyValuePair.Value);
+                    
+                    // Add the cloned object to the dictionary of cloned objects
+                    clonedObjects.Add(keyValuePair.Value, clonedDictionary[keyValuePair.Key]);
+                }                
+            }            
 
             return clonedDictionary;
         }
