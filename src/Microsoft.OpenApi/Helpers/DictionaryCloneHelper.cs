@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi.Helpers
     /// <summary>
     /// Helper class for deep cloning dictionaries.
     /// </summary>
-    internal class DictionaryCloneHelper
+    internal static class DictionaryCloneHelper
     {
         /// <summary>
         /// Deep clone key value pairs in a dictionary.
