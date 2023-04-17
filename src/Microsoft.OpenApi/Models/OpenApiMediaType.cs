@@ -56,8 +56,8 @@ namespace Microsoft.OpenApi.Models
         {
             Schema = mediaType?.Schema != null ? new(mediaType?.Schema) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(mediaType?.Example);
-            Examples = DictionaryCloneHelper.Clone(mediaType?.Examples);
-            Encoding = DictionaryCloneHelper.Clone(mediaType?.Encoding);
+            Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
+            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
             Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
         }
 

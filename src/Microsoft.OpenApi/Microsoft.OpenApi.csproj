@@ -33,6 +33,9 @@
     <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="System.Text.Json" Version="7.0.0" />
+    </ItemGroup>
 
     <ItemGroup>
         <Compile Update="Properties\SRResource.Designer.cs">

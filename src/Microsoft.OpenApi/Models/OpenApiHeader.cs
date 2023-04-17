@@ -108,8 +108,8 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = header?.AllowReserved ?? AllowReserved;
             Schema = header?.Schema != null ? new(header?.Schema) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header?.Example);
-            Examples = DictionaryCloneHelper.Clone(header?.Examples);
-            Content = DictionaryCloneHelper.Clone(header?.Content);
+            Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
+            Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
             Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
 

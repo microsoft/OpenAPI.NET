@@ -2,6 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Reflection;
+using Microsoft.OpenApi.Helpers;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Microsoft.OpenApi.Any
 {
@@ -27,7 +30,7 @@ namespace Microsoft.OpenApi.Any
                     {
                         return (IOpenApiAny)ci.Invoke(new object[] { obj });
                     }
-                }
+                }                
             }
 
             return obj;

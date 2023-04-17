@@ -163,9 +163,9 @@ namespace Microsoft.OpenApi.Models
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
             Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
-            Examples = DictionaryCloneHelper.Clone(parameter?.Examples);
+            Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
-            Content = DictionaryCloneHelper.Clone(parameter?.Content);
+            Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
             Deprecated = parameter?.Deprecated ?? Deprecated;

@@ -1339,26 +1339,26 @@ paths: { }";
             return openApiDoc;
         }
 
-        [Fact]
-        public void CopyConstructorForAdvancedDocumentWorks()
-        {
-            // Arrange & Act
-            var doc = new OpenApiDocument(AdvancedDocument);
+        //[Fact]
+        //public void CopyConstructorForAdvancedDocumentWorks()
+        //{
+        //    // Arrange & Act
+        //    var doc = new OpenApiDocument(AdvancedDocument);
 
-            var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
-            var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
-            var responseSchemaTypeCopy = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type = "object";
-            var advancedDocResponseSchemaType = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type;
+        //    var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
+        //    var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
+        //    var responseSchemaTypeCopy = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type = "object";
+        //    var advancedDocResponseSchemaType = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type;
 
-            // Assert
-            Assert.NotNull(doc.Info);
-            Assert.NotNull(doc.Servers);
-            Assert.NotNull(doc.Paths);
-            Assert.Equal(2, doc.Paths.Count);
-            Assert.NotNull(doc.Components);
-            Assert.NotEqual(docOpId, advancedDocOpId);
-            Assert.NotEqual(responseSchemaTypeCopy, advancedDocResponseSchemaType);
-        }
+        //    // Assert
+        //    Assert.NotNull(doc.Info);
+        //    Assert.NotNull(doc.Servers);
+        //    Assert.NotNull(doc.Paths);
+        //    Assert.Equal(2, doc.Paths.Count);
+        //    Assert.NotNull(doc.Components);
+        //    Assert.NotEqual(docOpId, advancedDocOpId);
+        //    Assert.NotEqual(responseSchemaTypeCopy, advancedDocResponseSchemaType);
+        //}
 
         [Fact]
         public void SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()

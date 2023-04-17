@@ -19,12 +19,12 @@ namespace Microsoft.OpenApi.Helpers
         /// <param name="dictionary">The target dictionary to clone.</param>
         /// <returns>The cloned dictionary.</returns>
         internal static Dictionary<T, U> Clone<T, U>(IDictionary<T, U> dictionary)
-        {            
+        {
             if (dictionary is null) return null;
-            
+
             var clonedDictionary = new Dictionary<T, U>(dictionary.Keys.Count);
             var clonedObjects = new Dictionary<object, object>();
-            
+
             foreach (var keyValuePair in dictionary)
             {
                 // If the object has already been cloned, use the cloned object instead of cloning it again
@@ -36,11 +36,11 @@ namespace Microsoft.OpenApi.Helpers
                 {
                     // Create instance of the specified type using the constructor matching the specified parameter types.
                     clonedDictionary[keyValuePair.Key] = (U)Activator.CreateInstance(keyValuePair.Value.GetType(), keyValuePair.Value);
-                    
+
                     // Add the cloned object to the dictionary of cloned objects
                     clonedObjects.Add(keyValuePair.Value, clonedDictionary[keyValuePair.Key]);
-                }                
-            }            
+                }
+            }
 
             return clonedDictionary;
         }
