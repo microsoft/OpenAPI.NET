@@ -2,8 +2,6 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -49,7 +47,7 @@ namespace Microsoft.OpenApi.Models
         {
             Description = server?.Description ?? Description;
             Url = server?.Url ?? Url;
-            Variables = DictionaryCloneHelper.Clone(server?.Variables);
+            Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server.Variables) : null;
             Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
         }
 
