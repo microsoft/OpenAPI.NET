@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 

@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Reflection;
-using Microsoft.OpenApi.Helpers;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 
 namespace Microsoft.OpenApi.Any
 {

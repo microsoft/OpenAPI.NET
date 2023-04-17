@@ -1,11 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Microsoft.OpenApi.Helpers;
-
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
