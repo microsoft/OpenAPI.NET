@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -125,7 +123,7 @@ namespace Microsoft.OpenApi.Models
             Parameters = operation?.Parameters != null ? new List<OpenApiParameter>(operation.Parameters) : null;
             RequestBody = operation?.RequestBody != null ? new(operation?.RequestBody) : null;
             Responses = operation?.Responses != null ? new(operation?.Responses) : null;
-            Callbacks = DictionaryCloneHelper.Clone(operation?.Callbacks);
+            Callbacks = operation?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(operation.Callbacks) : null;
             Deprecated = operation?.Deprecated ?? Deprecated;
             Security = operation?.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
             Servers = operation?.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;

@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -77,15 +76,15 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas = DictionaryCloneHelper.Clone(components?.Schemas);
-            Responses = DictionaryCloneHelper.Clone(components?.Responses);
-            Parameters = DictionaryCloneHelper.Clone(components?.Parameters);
-            Examples = DictionaryCloneHelper.Clone(components?.Examples);
-            RequestBodies = DictionaryCloneHelper.Clone(components?.RequestBodies);
-            Headers = DictionaryCloneHelper.Clone(components?.Headers);
-            SecuritySchemes = DictionaryCloneHelper.Clone(components?.SecuritySchemes);
-            Links = DictionaryCloneHelper.Clone(components?.Links);
-            Callbacks = DictionaryCloneHelper.Clone(components?.Callbacks);
+            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
+            Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
+            Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
+            Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
+            RequestBodies = components?.RequestBodies != null ? new Dictionary<string, OpenApiRequestBody>(components.RequestBodies) : null;
+            Headers = components?.Headers != null ? new Dictionary<string, OpenApiHeader>(components.Headers) : null;
+            SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
+            Links = components?.Links != null ? new Dictionary<string, OpenApiLink>(components.Links) : null;
+            Callbacks = components?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(components.Callbacks) : null;
             Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
         }
 

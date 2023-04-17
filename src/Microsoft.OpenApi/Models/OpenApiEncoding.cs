@@ -2,9 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -65,7 +63,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiEncoding(OpenApiEncoding encoding)
         {
             ContentType = encoding?.ContentType ?? ContentType;
-            Headers = DictionaryCloneHelper.Clone(encoding?.Headers);
+            Headers = encoding?.Headers != null ? new Dictionary<string, OpenApiHeader>(encoding.Headers) : null;
             Style = encoding?.Style ?? Style;
             Explode = encoding?.Explode ?? Explode;
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
