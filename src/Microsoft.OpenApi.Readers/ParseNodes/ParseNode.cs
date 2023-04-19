@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -72,8 +73,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             throw new OpenApiReaderException("Cannot create simple map from this type of node.", Context);
         }
-
-        public virtual IOpenApiAny CreateAny()
+        
+        public virtual JsonArray CreateAny()
         {
             throw new OpenApiReaderException("Cannot create an Any object this type of node.", Context);
         }
@@ -87,8 +88,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             throw new OpenApiReaderException("Cannot create a scalar value from this type of node.", Context);
         }
-
-        public virtual List<IOpenApiAny> CreateListOfAny()
+        
+        public virtual List<JsonArray> CreateListOfAny()
         {
             throw new OpenApiReaderException("Cannot create a list from this type of node.", Context);
         }

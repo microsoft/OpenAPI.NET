@@ -3,9 +3,8 @@
 
 using System;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -13,17 +12,17 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     internal static class OpenApiAnyConverter
     {
         /// <summary>
-        /// Converts the <see cref="OpenApiString"/>s in the given <see cref="IOpenApiAny"/>
-        /// into the appropriate <see cref="IOpenApiPrimitive"/> type based on the given <see cref="OpenApiSchema"/>.
+        /// Converts the <see cref="JsonValue"/>s in the given <see cref="JsonValue"/>
+        /// into the appropriate <see cref="JsonNode"/> type based on the given <see cref="OpenApiSchema"/>.
         /// For those strings that the schema does not specify the type for, convert them into
         /// the most specific type based on the value.
         /// </summary>
-        public static IOpenApiAny GetSpecificOpenApiAny(IOpenApiAny openApiAny, OpenApiSchema schema = null)
+        public static JsonNode GetSpecificOpenApiAny(JsonNode jsonNode, OpenApiSchema schema = null)
         {
-            if (openApiAny is OpenApiArray openApiArray)
+            if (jsonNode is JsonArray jsonArray)
             {
-                var newArray = new OpenApiArray();
-                foreach (var element in openApiArray)
+                var newArray = new JsonArray();
+                foreach (var element in jsonArray)
                 {
                     newArray.Add(GetSpecificOpenApiAny(element, schema?.Items));
                 }
@@ -31,42 +30,41 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return newArray;
             }
 
-            if (openApiAny is OpenApiObject openApiObject)
+            if (jsonNode is JsonObject jsonObject)
             {
-                var newObject = new OpenApiObject();
-
-                foreach (var key in openApiObject.Keys.ToList())
+                var newObject = new JsonObject();
+                foreach (var property in jsonObject)
                 {
-                    if (schema?.Properties != null && schema.Properties.TryGetValue(key, out var property))
+                    if (schema?.Properties != null && schema.Properties.TryGetValue(property.Key, out var propertySchema))
                     {
-                        newObject[key] = GetSpecificOpenApiAny(openApiObject[key], property);
+                        newObject[property.Key] = GetSpecificOpenApiAny(jsonObject[property.Key], propertySchema);
                     }
                     else
                     {
-                        newObject[key] = GetSpecificOpenApiAny(openApiObject[key], schema?.AdditionalProperties);
+                        newObject[property.Key] = GetSpecificOpenApiAny(jsonObject[property.Key], schema?.AdditionalProperties);
                     }
                 }
-
+                
                 return newObject;
             }
 
-            if (!(openApiAny is OpenApiString))
+            if (!(jsonNode is JsonValue jsonValue))
             {
-                return openApiAny;
+                return jsonNode;
             }
 
-            var value = ((OpenApiString)openApiAny).Value;
+            var value = jsonValue.ToJsonString();
             var type = schema?.Type;
             var format = schema?.Format;
 
-            if (((OpenApiString)openApiAny).IsExplicit())
+            if (value.StartsWith("\"") && value.EndsWith("\""))
             {
                 // More narrow type detection for explicit strings, only check types that are passed as strings
                 if (schema == null)
                 {
                     if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
                     {
-                        return new OpenApiDateTime(dateTimeValue);
+                        return dateTimeValue;
                     }
                 }
                 else if (type == "string")
@@ -75,7 +73,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     {
                         try
                         {
-                            return new OpenApiByte(Convert.FromBase64String(value));
+                            
+                            var base64String = Convert.FromBase64String(value);
+                            return JsonNode.Parse(base64String);
                         }
                         catch (FormatException)
                         { }
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     {
                         try
                         {
-                            return new OpenApiBinary(Encoding.UTF8.GetBytes(value));
+                            return JsonNode.Parse(Encoding.UTF8.GetBytes(value));
                         }
                         catch (EncoderFallbackException)
                         { }
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     {
                         if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateValue))
                         {
-                            return new OpenApiDate(dateValue.Date);
+                            return dateValue.Date;
                         }
                     }
 
@@ -103,54 +103,54 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     {
                         if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
                         {
-                            return new OpenApiDateTime(dateTimeValue);
+                            return dateTimeValue;
                         }
                     }
 
                     if (format == "password")
                     {
-                        return new OpenApiPassword(value);
+                        return value;
                     }
                 }
 
-                return openApiAny;
+                return jsonNode;
             }
 
             if (value == null || value == "null")
             {
-                return new OpenApiNull();
+                return null;
             }
 
             if (schema?.Type == null)
             {
                 if (value == "true")
                 {
-                    return new OpenApiBoolean(true);
+                    return true;
                 }
 
                 if (value == "false")
                 {
-                    return new OpenApiBoolean(false);
+                    return false;
                 }
 
                 if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
                 {
-                    return new OpenApiInteger(intValue);
+                    return intValue;
                 }
 
                 if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue))
                 {
-                    return new OpenApiLong(longValue);
+                    return longValue;
                 }
 
                 if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
                 {
-                    return new OpenApiDouble(doubleValue);
+                    return doubleValue;
                 }
 
                 if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
                 {
-                    return new OpenApiDateTime(dateTimeValue);
+                    return dateTimeValue;
                 }
             }
             else
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
                     {
-                        return new OpenApiInteger(intValue);
+                        return intValue;
                     }
                 }
 
@@ -167,7 +167,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var longValue))
                     {
-                        return new OpenApiLong(longValue);
+                        return longValue;
                     }
                 }
 
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intValue))
                     {
-                        return new OpenApiInteger(intValue);
+                        return intValue;
                     }
                 }
 
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (float.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var floatValue))
                     {
-                        return new OpenApiFloat(floatValue);
+                        return floatValue;
                     }
                 }
 
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
                     {
-                        return new OpenApiDouble(doubleValue);
+                        return doubleValue;
                     }
                 }
 
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (double.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var doubleValue))
                     {
-                        return new OpenApiDouble(doubleValue);
+                        return doubleValue;
                     }
                 }
 
@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     try
                     {
-                        return new OpenApiByte(Convert.FromBase64String(value));
+                        return JsonNode.Parse(Convert.FromBase64String(value));
                     }
                     catch (FormatException)
                     { }
@@ -218,7 +218,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     try
                     {
-                        return new OpenApiBinary(Encoding.UTF8.GetBytes(value));
+                        return JsonNode.Parse(Encoding.UTF8.GetBytes(value));
                     }
                     catch (EncoderFallbackException)
                     { }
@@ -228,7 +228,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateValue))
                     {
-                        return new OpenApiDate(dateValue.Date);
+                        return dateValue.Date;
                     }
                 }
 
@@ -236,25 +236,25 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeValue))
                     {
-                        return new OpenApiDateTime(dateTimeValue);
+                        return dateTimeValue;
                     }
                 }
 
                 if (type == "string" && format == "password")
                 {
-                    return new OpenApiPassword(value);
+                    return value;
                 }
 
                 if (type == "string")
                 {
-                    return openApiAny;
+                    return jsonNode;
                 }
 
                 if (type == "boolean")
                 {
                     if (bool.TryParse(value, out var booleanValue))
                     {
-                        return new OpenApiBoolean(booleanValue);
+                        return booleanValue;
                     }
                 }
             }
@@ -262,7 +262,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             // If data conflicts with the given type, return a string.
             // This converter is used in the parser, so it does not perform any validations, 
             // but the validator can be used to validate whether the data and given type conflicts.
-            return openApiAny;
+            return jsonNode;
         }
     }
 }

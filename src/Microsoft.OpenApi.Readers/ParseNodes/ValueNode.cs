@@ -2,10 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Readers.Exceptions;
-using SharpYaml;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -23,16 +20,16 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             _node = scalarNode;
         }
 
-        public override string GetScalarValue() => _node.ToString();
+        public override string GetScalarValue() => _node.GetValue<string>();
 
         /// <summary>
-        /// Create a <see cref="IOpenApiPrimitive"/>
+        /// Create a <see cref="JsonNode"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override IOpenApiAny CreateAny()
+        public override JsonNode CreateAny()
         {
             var value = GetScalarValue();
-            return new OpenApiString(value);
+            return value;
         }
     }
 }

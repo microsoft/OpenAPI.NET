@@ -7,12 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
-//using SharpYaml.Schemas;
-//using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -197,12 +194,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         }
 
         /// <summary>
-        /// Create a <see cref="OpenApiObject"/>
+        /// Create a <see cref="JsonObject"/>
         /// </summary>
-        /// <returns>The created Any object.</returns>
-        public override IOpenApiAny CreateAny()
+        /// <returns>The created Json object.</returns>
+        public override JsonNode CreateAny()
         {
-            var apiObject = new OpenApiObject();
+            var apiObject = new JsonObject();
             foreach (var node in this)
             {
                 apiObject.Add(node.Name, node.Value.CreateAny());

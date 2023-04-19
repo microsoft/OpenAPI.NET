@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -32,13 +31,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 .ToList();
         }
 
-        public override List<IOpenApiAny> CreateListOfAny()
+        public override List<JsonNode> CreateListOfAny()
         {
-            return _nodeList.Select(n => ParseNode.Create(Context, n).CreateAny())
+            return _nodeList.Select(n => Create(Context, n).CreateAny())
                 .Where(i => i != null)
                 .ToList();
         }
-
+        
         public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
             if (_nodeList == null)
@@ -60,12 +59,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         }
 
         /// <summary>
-        /// Create a <see cref="OpenApiArray"/>
+        /// Create a <see cref="JsonArray"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override IOpenApiAny CreateAny()
+        public override JsonNode CreateAny()
         {
-            var array = new OpenApiArray();
+            var array = new JsonArray();
             foreach (var node in this)
             {
                 array.Add(node.CreateAny());
