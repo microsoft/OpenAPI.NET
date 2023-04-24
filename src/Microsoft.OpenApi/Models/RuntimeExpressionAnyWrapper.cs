@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -9,11 +8,11 @@ using Microsoft.OpenApi.Writers;
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// The wrapper either for <see cref="IOpenApiAny"/> or <see cref="RuntimeExpression"/>
+    /// The wrapper for <see cref="RuntimeExpression"/>
     /// </summary>
     public class RuntimeExpressionAnyWrapper : IOpenApiElement
     {
-        private IOpenApiAny _any;
+        //private IOpenApiAny _any;
         private RuntimeExpression _expression;
 
         /// <summary>
@@ -26,24 +25,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public RuntimeExpressionAnyWrapper(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper)
         {
-            Any = OpenApiAnyCloneHelper.CloneFromCopyConstructor(runtimeExpressionAnyWrapper?.Any);
             Expression = runtimeExpressionAnyWrapper?.Expression;
-        }
-
-        /// <summary>
-        /// Gets/Sets the <see cref="IOpenApiAny"/>
-        /// </summary>
-        public IOpenApiAny Any
-        {
-            get
-            {
-                return _any;
-            }
-            set
-            {
-                _expression = null;
-                _any = value;
-            }
         }
 
         /// <summary>
@@ -57,7 +39,6 @@ namespace Microsoft.OpenApi.Models
             }
             set
             {
-                _any = null;
                 _expression = value;
             }
         }
@@ -72,11 +53,7 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (_any != null)
-            {
-                writer.WriteAny(_any);
-            }
-            else if (_expression != null)
+            if (_expression != null)
             {
                 writer.WriteValue(_expression.Expression);
             }

@@ -3,10 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -31,7 +30,7 @@ namespace Microsoft.OpenApi.Models
         /// exclusive. To represent examples of media types that cannot naturally represented
         /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
         /// </summary>
-        public IOpenApiAny Value { get; set; }
+        public JsonNode Value { get; set; }
 
         /// <summary>
         /// A URL that points to the literal example.
@@ -68,7 +67,7 @@ namespace Microsoft.OpenApi.Models
         {
             Summary = example?.Summary ?? Summary;
             Description = example?.Description ?? Description;
-            Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor(example?.Value);
+            Value = example?.Value != null ? new JsonNode(example.Value) : null;
             ExternalValue = example?.ExternalValue ?? ExternalValue;
             Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
             Reference = example?.Reference != null ? new(example?.Reference) : null;

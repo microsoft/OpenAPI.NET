@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             throw new OpenApiReaderException("Cannot create simple map from this type of node.", Context);
         }
         
-        public virtual JsonArray CreateAny()
+        public virtual JsonNode CreateAny()
         {
             throw new OpenApiReaderException("Cannot create an Any object this type of node.", Context);
         }
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             throw new OpenApiReaderException("Cannot create a scalar value from this type of node.", Context);
         }
         
-        public virtual List<JsonArray> CreateListOfAny()
+        public virtual List<JsonNode> CreateListOfAny()
         {
             throw new OpenApiReaderException("Cannot create a list from this type of node.", Context);
         }

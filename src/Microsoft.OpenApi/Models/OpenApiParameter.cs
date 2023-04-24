@@ -3,12 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -125,7 +123,7 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
         /// a string value can contain the example with escaping where necessary.
         /// </summary>
-        public IOpenApiAny Example { get; set; }
+        public JsonNode Example { get; set; }
 
         /// <summary>
         /// A map containing the representations for the parameter.

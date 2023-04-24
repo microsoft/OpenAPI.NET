@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
@@ -157,13 +158,13 @@ namespace Microsoft.OpenApi.Readers.V3
                 };
             }
 
-            return new RuntimeExpressionAnyWrapper
-            {
-                Any = OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny())
-            };
+            //return new RuntimeExpressionAnyWrapper
+            //{
+            //    Any = OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny())
+            //};
         }
-
-        public static IOpenApiAny LoadAny(ParseNode node)
+        
+        public static JsonNode LoadAny(ParseNode node)
         {
             return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
         }
@@ -172,13 +173,11 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
-                return parser(
-                    OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()),
-                    OpenApiSpecVersion.OpenApi3_0);
+                return parser(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()), OpenApiSpecVersion.OpenApi3_0);
             }
             else
             {
-                return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
+                return (IOpenApiExtension)OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
             }
         }
 

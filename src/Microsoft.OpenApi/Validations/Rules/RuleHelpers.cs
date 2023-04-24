@@ -2,7 +2,8 @@
 // Licensed under the MIT license. 
 
 using System;
-using Microsoft.OpenApi.Any;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -42,14 +43,14 @@ namespace Microsoft.OpenApi.Validations.Rules
         public static void ValidateDataTypeMismatch(
             IValidationContext context,
             string ruleName,
-            IOpenApiAny value,
+            JsonNode value,
             OpenApiSchema schema)
         {
             if (schema == null)
             {
                 return;
             }
-
+            
             var type = schema.Type;
             var format = schema.Format;
             var nullable = schema.Nullable;
@@ -58,7 +59,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             // If so and the data given is also null, this is allowed for any type.
             if (nullable)
             {
-                if (value is OpenApiNull)
+                if (value.ValueKind is JsonValueKind.Null)
                 {
                     return;
                 }
@@ -69,13 +70,13 @@ namespace Microsoft.OpenApi.Validations.Rules
                 // It is not against the spec to have a string representing an object value.
                 // To represent examples of media types that cannot naturally be represented in JSON or YAML,
                 // a string value can contain the example with escaping where necessary
-                if (value is OpenApiString)
+                if (value.ValueKind is JsonValueKind.String)
                 {
                     return;
                 }
 
                 // If value is not a string and also not an object, there is a data mismatch.
-                if (!(value is OpenApiObject))
+                if (value.ValueKind is not JsonValueKind.Object)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -83,19 +84,19 @@ namespace Microsoft.OpenApi.Validations.Rules
                     return;
                 }
 
-                var anyObject = (OpenApiObject)value;
+                var anyObject = value as JsonObject;
 
-                foreach (var key in anyObject.Keys)
+                foreach (var property in anyObject)
                 {
-                    context.Enter(key);
+                    context.Enter(property.Key);
 
-                    if (schema.Properties != null && schema.Properties.ContainsKey(key))
+                    if (schema.Properties != null && schema.Properties.ContainsKey(property.Key))
                     {
-                        ValidateDataTypeMismatch(context, ruleName, anyObject[key], schema.Properties[key]);
+                        ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], schema.Properties[property.Key]);
                     }
                     else
                     {
-                        ValidateDataTypeMismatch(context, ruleName, anyObject[key], schema.AdditionalProperties);
+                        ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], schema.AdditionalProperties);
                     }
 
                     context.Exit();
@@ -115,7 +116,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 // If value is not a string and also not an array, there is a data mismatch.
-                if (!(value is OpenApiArray))
+                if (!(value is JsonArray))
                 {
                     context.CreateWarning(
                         ruleName,
@@ -123,7 +124,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     return;
                 }
 
-                var anyArray = (OpenApiArray)value;
+                var anyArray = value as JsonArray;
 
                 for (int i = 0; i < anyArray.Count; i++)
                 {

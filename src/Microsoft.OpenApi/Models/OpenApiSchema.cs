@@ -4,10 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -87,7 +86,7 @@ namespace Microsoft.OpenApi.Models
         /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
         /// For example, if type is string, then default can be "foo" but cannot be 1.
         /// </summary>
-        public IOpenApiAny Default { get; set; }
+        public JsonNode Default { get; set; }
 
         /// <summary>
         /// Relevant only for Schema "properties" definitions. Declares the property as "read only".
@@ -200,12 +199,12 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples that cannot be naturally represented in JSON or YAML,
         /// a string value can be used to contain the example with escaping where necessary.
         /// </summary>
-        public IOpenApiAny Example { get; set; }
+        public JsonNode Example { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public IList<IOpenApiAny> Enum { get; set; } = new List<IOpenApiAny>();
+        public IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
 
         /// <summary>
         /// Allows sending a null value for the defined schema. Default value is false.

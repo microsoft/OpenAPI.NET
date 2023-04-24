@@ -3,10 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -24,7 +23,7 @@ namespace Microsoft.OpenApi.Models
         /// Example of the media type.
         /// The example object SHOULD be in the correct format as specified by the media type.
         /// </summary>
-        public IOpenApiAny Example { get; set; }
+        public JsonNode Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.

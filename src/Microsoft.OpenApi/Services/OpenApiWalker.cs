@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -864,9 +864,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="IOpenApiAny"/> and child objects
+        /// Visits <see cref="JsonNode"/> and child objects
         /// </summary>
-        internal void Walk(IOpenApiAny example)
+        internal void Walk(JsonNode example)
         {
             if (example == null)
             {

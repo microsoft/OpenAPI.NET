@@ -4,9 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -14,7 +12,6 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
 using Microsoft.OpenApi.Readers.V3;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -27,7 +24,7 @@ namespace Microsoft.OpenApi.Readers
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new Dictionary<object, Dictionary<string, object>>();
         private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
-        internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
+        internal Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
         internal Uri BaseUrl { get; set; }
@@ -49,7 +46,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
-        /// <param name="jsonNode">Yaml document to parse.</param>
+        /// <param name="jsonNode">Set of Json nodes to parse.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal OpenApiDocument Parse(JsonNode jsonNode)
         {
