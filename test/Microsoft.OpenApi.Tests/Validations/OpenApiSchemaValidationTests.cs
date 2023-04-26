@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema()
             {
-                Default = new OpenApiInteger(55),
+                Default = 55,
                 Type = "string",
             };
 
@@ -55,8 +55,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema()
             {
-                Example = new OpenApiLong(55),
-                Default = new OpenApiPassword("1234"),
+                Example = 55.0,
+                Default = "1234",
                 Type = "string",
             };
 
@@ -91,21 +91,18 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Enum =
                 {
-                    new OpenApiString("1"),
-                    new OpenApiObject()
+                    "1",
+                    new JsonObject()
                     {
-                        ["x"] = new OpenApiInteger(2),
-                        ["y"] = new OpenApiString("20"),
-                        ["z"] = new OpenApiString("200")
+                        ["x"] = 2,
+                        ["y"] = "20",
+                        ["z"] = "200"
                     },
-                    new OpenApiArray()
+                    new JsonArray(){3},                    
+                    new JsonObject()
                     {
-                        new OpenApiInteger(3)
-                    },
-                    new OpenApiObject()
-                    {
-                        ["x"] = new OpenApiInteger(4),
-                        ["y"] = new OpenApiInteger(40),
+                        ["x"] = 4,
+                        ["y"] = 40,
                     },
                 },
                 Type = "object",
@@ -182,26 +179,26 @@ namespace Microsoft.OpenApi.Validations.Tests
                         Type = "string"
                     }
                 },
-                Default = new OpenApiObject()
+                Default = new JsonObject()
                 {
-                    ["property1"] = new OpenApiArray()
+                    ["property1"] = new JsonArray()
                     {
-                        new OpenApiInteger(12),
-                        new OpenApiLong(13),
-                        new OpenApiString("1"),
+                        12,
+                        13,
+                        "1",
                     },
-                    ["property2"] = new OpenApiArray()
+                    ["property2"] = new JsonArray()
                     {
-                        new OpenApiInteger(2),
-                        new OpenApiObject()
+                        2,
+                        new JsonObject()
                         {
-                            ["x"] = new OpenApiBoolean(true),
-                            ["y"] = new OpenApiBoolean(false),
-                            ["z"] = new OpenApiString("1234"),
+                            ["x"] = true,
+                            ["y"] = false,
+                            ["z"] = "1234",
                         }
                     },
-                    ["property3"] = new OpenApiPassword("123"),
-                    ["property4"] = new OpenApiDateTime(DateTime.UtcNow)
+                    ["property3"] = "123",
+                    ["property4"] = DateTime.UtcNow
                 }
             };
 

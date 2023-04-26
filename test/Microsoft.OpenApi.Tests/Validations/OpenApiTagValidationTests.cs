@@ -4,11 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
-using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -44,7 +43,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Name = "tag"
             };
-            tag.Extensions.Add("tagExt", new OpenApiString("value"));
+            tag.Extensions.Add("tagExt", new ExtensionTypeCaster<string>("value"));
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());

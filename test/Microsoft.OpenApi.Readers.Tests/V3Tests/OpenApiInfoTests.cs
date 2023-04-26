@@ -4,8 +4,9 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -51,31 +52,31 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Email = "example@example.com",
                         Extensions =
                         {
-                                ["x-twitter"] = new OpenApiString("@exampleTwitterHandler")
+                                ["x-twitter"] = new ExtensionTypeCaster<string>("@exampleTwitterHandler")
                         },
                         Name = "John Doe",
                         Url = new Uri("http://www.example.com/url1")
                     },
                     License = new OpenApiLicense
                     {
-                        Extensions = { ["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer") },
+                        Extensions = { ["x-disclaimer"] = new ExtensionTypeCaster<string>("Sample Extension String Disclaimer") },
                         Name = "licenseName",
                         Url = new Uri("http://www.example.com/url2")
                     },
                     Extensions =
                     {
-                            ["x-something"] = new OpenApiString("Sample Extension String Something"),
-                            ["x-contact"] = new OpenApiObject
+                            ["x-something"] = new ExtensionTypeCaster<string>("Sample Extension String Something"),
+                            ["x-contact"] = new ExtensionTypeCaster<JsonObject>(new JsonObject
                             {
-                                ["name"] = new OpenApiString("John Doe"),
-                                ["url"] = new OpenApiString("http://www.example.com/url3"),
-                                ["email"] = new OpenApiString("example@example.com")
-                            },
-                            ["x-list"] = new OpenApiArray
+                                ["name"] = "John Doe",
+                                ["url"] = "http://www.example.com/url3",
+                                ["email"] = "example@example.com"
+                            }),
+                            ["x-list"] = new ExtensionTypeCaster<JsonArray>(new JsonArray
                             {
-                                new OpenApiString("1"),
-                                new OpenApiString("2")
-                            }
+                                "1",
+                                "2"
+                            })
                     }
                 });
         }

@@ -3,7 +3,6 @@
 
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -297,7 +296,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Example = new OpenApiFloat(5),
+                    Example = (float)5.0,
                     Schema = new OpenApiSchema
                     {
                         Type = "number",
@@ -305,7 +304,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     }
                 });
         }
-
+        
         [Fact]
         public void ParseParameterWithExamplesShouldSucceed()
         {
@@ -331,11 +330,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["example1"] = new OpenApiExample()
                         {
-                            Value = new OpenApiFloat(5),
+                            Value = 5.0,
                         },
                         ["example2"] = new OpenApiExample()
                         {
-                            Value = new OpenApiFloat((float)7.5),
+                            Value = (float)7.5,
                         }
                     },
                     Schema = new OpenApiSchema

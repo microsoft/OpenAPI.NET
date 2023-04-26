@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -27,9 +28,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteOpenApiNullAsJsonWorks(bool produceTerseOutput)
         {
             // Arrange
-            var nullValue = new OpenApiNull();
-
-            var json = WriteAsJson(nullValue, produceTerseOutput);
+            var json = WriteAsJson(null, produceTerseOutput);
 
             // Assert
             json.Should().Be("null");
@@ -55,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteOpenApiIntegerAsJsonWorks(int input, bool produceTerseOutput)
         {
             // Arrange
-            var intValue = new OpenApiInteger(input);
+            var intValue = input;
 
             var json = WriteAsJson(intValue, produceTerseOutput);
 
@@ -83,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteOpenApiLongAsJsonWorks(long input, bool produceTerseOutput)
         {
             // Arrange
-            var longValue = new OpenApiLong(input);
+            var longValue = input;
 
             var json = WriteAsJson(longValue, produceTerseOutput);
 
@@ -111,7 +110,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteOpenApiFloatAsJsonWorks(float input, bool produceTerseOutput)
         {
             // Arrange
-            var floatValue = new OpenApiFloat(input);
+            var floatValue = input;
 
             var json = WriteAsJson(floatValue, produceTerseOutput);
 
@@ -139,7 +138,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteOpenApiDoubleAsJsonWorks(double input, bool produceTerseOutput)
         {
             // Arrange
-            var doubleValue = new OpenApiDouble(input);
+            var doubleValue = input;
 
             var json = WriteAsJson(doubleValue, produceTerseOutput);
 
@@ -169,7 +168,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             // Arrange
             var input = DateTimeOffset.Parse(inputString, CultureInfo.InvariantCulture);
-            var dateTimeValue = new OpenApiDateTime(input);
+            var dateTimeValue = input;
 
             var json = WriteAsJson(dateTimeValue, produceTerseOutput);
             var expectedJson = "\"" + input.ToString("o") + "\"";
@@ -194,7 +193,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteOpenApiBooleanAsJsonWorks(bool input, bool produceTerseOutput)
         {
             // Arrange
-            var boolValue = new OpenApiBoolean(input);
+            var boolValue = input;
 
             var json = WriteAsJson(boolValue, produceTerseOutput);
 
@@ -208,15 +207,15 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiObjectAsJsonWorks(bool produceTerseOutput)
         {
             // Arrange
-            var openApiObject = new OpenApiObject
+            var openApiObject = new JsonObject
             {
-                {"stringProp", new OpenApiString("stringValue1")},
-                {"objProp", new OpenApiObject()},
+                {"stringProp", "stringValue1"},
+                {"objProp", new JsonObject()},
                 {
                     "arrayProp",
-                    new OpenApiArray
+                    new JsonArray
                     {
-                        new OpenApiBoolean(false)
+                        false
                     }
                 }
             };
@@ -233,24 +232,24 @@ namespace Microsoft.OpenApi.Tests.Writers
         public async Task WriteOpenApiArrayAsJsonWorks(bool produceTerseOutput)
         {
             // Arrange
-            var openApiObject = new OpenApiObject
+            var openApiObject = new JsonObject
             {
-                {"stringProp", new OpenApiString("stringValue1")},
-                {"objProp", new OpenApiObject()},
+                {"stringProp", "stringValue1"},
+                {"objProp", new JsonObject()},
                 {
                     "arrayProp",
-                    new OpenApiArray
+                    new JsonArray
                     {
-                        new OpenApiBoolean(false)
+                        false
                     }
                 }
             };
 
-            var array = new OpenApiArray
+            var array = new JsonArray
             {
-                new OpenApiBoolean(false),
+                false,
                 openApiObject,
-                new OpenApiString("stringValue2")
+                "stringValue2"
             };
 
             var actualJson = WriteAsJson(array, produceTerseOutput);
@@ -259,7 +258,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             await Verifier.Verify(actualJson).UseParameters(produceTerseOutput);
         }
 
-        private static string WriteAsJson(IOpenApiAny any, bool produceTerseOutput = false)
+        private static string WriteAsJson(JsonNode any, bool produceTerseOutput = false)
         {
             // Arrange (continued)
             var stream = new MemoryStream();
@@ -273,13 +272,17 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Act
             var value = new StreamReader(stream).ReadToEnd();
+            var element = JsonSerializer.Deserialize<JsonElement>(any);
 
-            if (any.AnyType == AnyType.Primitive || any.AnyType == AnyType.Null)
+            return element.ValueKind switch
             {
-                return value;
-            }
-
-            return value.MakeLineBreaksEnvironmentNeutral();
+                JsonValueKind.String => value,
+                JsonValueKind.Number => value,
+                JsonValueKind.Null => value,
+                JsonValueKind.False => value,
+                JsonValueKind.True => value,
+                _ => value.MakeLineBreaksEnvironmentNeutral(),
+            };
         }
     }
 }

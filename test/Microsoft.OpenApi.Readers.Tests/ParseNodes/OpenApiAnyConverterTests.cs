@@ -5,8 +5,8 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using SharpYaml.Serialization;
@@ -74,16 +74,31 @@ aDate: 2017-01-02
             anyMap = OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema);
 
             diagnostic.Errors.Should().BeEmpty();
-
-            anyMap.Should().BeEquivalentTo(
-                new OpenApiObject
-                {
-                    ["aString"] = new OpenApiString("fooBar"),
-                    ["aInteger"] = new OpenApiInteger(10),
-                    ["aDouble"] = new OpenApiDouble(2.34),
-                    ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)),
-                    ["aDate"] = new OpenApiDate(DateTimeOffset.Parse("2017-01-02", CultureInfo.InvariantCulture).Date),
-                });
+            anyMap.Should().BeEquivalentTo(@"{
+  ""aString"": {
+    ""type"": ""string"",
+    ""value"": ""fooBar""
+  },
+  ""aInteger"": {
+    ""type"": ""integer"",
+    ""value"": 10
+  },
+  ""aDouble"": {
+    ""type"": ""number"",
+    ""format"": ""double"",
+    ""value"": 2.34
+  },
+  ""aDateTime"": {
+    ""type"": ""string"",
+    ""format"": ""date-time"",
+    ""value"": ""2017-01-01T00:00:00+00:00""
+  },
+  ""aDate"": {
+    ""type"": ""string"",
+    ""format"": ""date"",
+    ""value"": ""2017-01-02""
+  }
+}");
         }
 
 
@@ -217,54 +232,86 @@ aDate: 2017-01-02
             diagnostic.Errors.Should().BeEmpty();
 
             anyMap.Should().BeEquivalentTo(
-                new OpenApiObject
-                {
-                    ["aString"] = new OpenApiString("fooBar"),
-                    ["aInteger"] = new OpenApiInteger(10),
-                    ["aArray"] = new OpenApiArray()
-                    {
-                        new OpenApiLong(1),
-                        new OpenApiLong(2),
-                        new OpenApiLong(3),
-                    },
-                    ["aNestedArray"] = new OpenApiArray()
-                    {
-                        new OpenApiObject()
-                        {
-                            ["aFloat"] = new OpenApiFloat(1),
-                            ["aPassword"] = new OpenApiPassword("1234"),
-                            ["aArray"] = new OpenApiArray()
-                            {
-                                new OpenApiString("abc"),
-                                new OpenApiString("def")
-                            },
-                            ["aDictionary"] = new OpenApiObject()
-                            {
-                                ["arbitraryProperty"] = new OpenApiLong(1),
-                                ["arbitraryProperty2"] = new OpenApiLong(2),
-                            }
-                        },
-                        new OpenApiObject()
-                        {
-                            ["aFloat"] = new OpenApiFloat((float)1.6),
-                            ["aArray"] = new OpenApiArray()
-                            {
-                                new OpenApiString("123"),
-                            },
-                            ["aDictionary"] = new OpenApiObject()
-                            {
-                                ["arbitraryProperty"] = new OpenApiLong(1),
-                                ["arbitraryProperty3"] = new OpenApiLong(20),
-                            }
-                        }
-                    },
-                    ["aObject"] = new OpenApiObject()
-                    {
-                        ["aDate"] = new OpenApiDate(DateTimeOffset.Parse("2017-02-03", CultureInfo.InvariantCulture).Date)
-                    },
-                    ["aDouble"] = new OpenApiDouble(2.34),
-                    ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))
-                });
+                @"{
+  ""aString"": {
+    ""value"": ""fooBar""
+  },
+  ""aInteger"": {
+    ""value"": 10
+  },
+  ""aArray"": {
+    ""items"": [
+      {
+        ""value"": 1
+      },
+      {
+        ""value"": 2
+      },
+      {
+        ""value"": 3
+      }
+    ]
+  },
+  ""aNestedArray"": [
+    {
+      ""aFloat"": {
+        ""value"": 1
+      },
+      ""aPassword"": {
+        ""value"": ""1234""
+      },
+      ""aArray"": {
+        ""items"": [
+          {
+            ""value"": ""abc""
+          },
+          {
+            ""value"": ""def""
+          }
+        ]
+      },
+      ""aDictionary"": {
+        ""arbitraryProperty"": {
+          ""value"": 1
+        },
+        ""arbitraryProperty2"": {
+          ""value"": 2
+        }
+      }
+    },
+    {
+      ""aFloat"": {
+        ""value"": 1.6
+      },
+      ""aArray"": {
+        ""items"": [
+          {
+            ""value"": ""123""
+          }
+        ]
+      },
+      ""aDictionary"": {
+        ""arbitraryProperty"": {
+          ""value"": 1
+        },
+        ""arbitraryProperty3"": {
+          ""value"": 20
+        }
+      }
+    }
+  ],
+  ""aObject"": {
+    ""aDate"": {
+      ""value"": ""2017-02-03T00:00:00Z""
+    }
+  },
+  ""aDouble"": {
+    ""value"": 2.34
+  },
+  ""aDateTime"": {
+    ""value"": ""2017-01-01T00:00:00Z""
+  }
+}");
         }
 
 
@@ -374,54 +421,86 @@ aDate: 2017-01-02
             diagnostic.Errors.Should().BeEmpty();
 
             anyMap.Should().BeEquivalentTo(
-                new OpenApiObject
-                {
-                    ["aString"] = new OpenApiString("fooBar"),
-                    ["aInteger"] = new OpenApiInteger(10),
-                    ["aArray"] = new OpenApiArray()
-                    {
-                            new OpenApiInteger(1),
-                            new OpenApiInteger(2),
-                            new OpenApiInteger(3),
-                    },
-                    ["aNestedArray"] = new OpenApiArray()
-                    {
-                            new OpenApiObject()
-                            {
-                                ["aFloat"] = new OpenApiInteger(1),
-                                ["aPassword"] = new OpenApiInteger(1234),
-                                ["aArray"] = new OpenApiArray()
-                                {
-                                    new OpenApiString("abc"),
-                                    new OpenApiString("def")
-                                },
-                                ["aDictionary"] = new OpenApiObject()
-                                {
-                                    ["arbitraryProperty"] = new OpenApiInteger(1),
-                                    ["arbitraryProperty2"] = new OpenApiInteger(2),
-                                }
-                            },
-                            new OpenApiObject()
-                            {
-                                ["aFloat"] = new OpenApiDouble(1.6),
-                                ["aArray"] = new OpenApiArray()
-                                {
-                                    new OpenApiString("123"),
-                                },
-                                ["aDictionary"] = new OpenApiObject()
-                                {
-                                    ["arbitraryProperty"] = new OpenApiInteger(1),
-                                    ["arbitraryProperty3"] = new OpenApiInteger(20),
-                                }
-                            }
-                    },
-                    ["aObject"] = new OpenApiObject()
-                    {
-                        ["aDate"] = new OpenApiString("2017-02-03")
-                    },
-                    ["aDouble"] = new OpenApiDouble(2.34),
-                    ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))
-                });
+                @"{
+  ""aString"": {
+    ""value"": ""fooBar""
+  },
+  ""aInteger"": {
+    ""value"": 10
+  },
+  ""aArray"": {
+    ""items"": [
+      {
+        ""value"": 1
+      },
+      {
+        ""value"": 2
+      },
+      {
+        ""value"": 3
+      }
+    ]
+  },
+  ""aNestedArray"": [
+    {
+      ""aFloat"": {
+        ""value"": 1
+      },
+      ""aPassword"": {
+        ""value"": 1234
+      },
+      ""aArray"": {
+        ""items"": [
+          {
+            ""value"": ""abc""
+          },
+          {
+            ""value"": ""def""
+          }
+        ]
+      },
+      ""aDictionary"": {
+        ""arbitraryProperty"": {
+          ""value"": 1
+        },
+        ""arbitraryProperty2"": {
+          ""value"": 2
+        }
+      }
+    },
+    {
+      ""aFloat"": {
+        ""value"": 1.6
+      },
+      ""aArray"": {
+        ""items"": [
+          {
+            ""value"": ""123""
+          }
+        ]
+      },
+      ""aDictionary"": {
+        ""arbitraryProperty"": {
+          ""value"": 1
+        },
+        ""arbitraryProperty3"": {
+          ""value"": 20
+        }
+      }
+    }
+  ],
+  ""aObject"": {
+    ""aDate"": {
+      ""value"": ""2017-02-03""
+    }
+  },
+  ""aDouble"": {
+    ""value"": 2.34
+  },
+  ""aDateTime"": {
+    ""value"": ""2017-01-01T00:00:00Z""
+  }
+}");
         }
 
         [Fact]
@@ -468,54 +547,44 @@ aDate: 2017-01-02
             diagnostic.Errors.Should().BeEmpty();
 
             anyMap.Should().BeEquivalentTo(
-                new OpenApiObject
-                {
-                    ["aString"] = new OpenApiString("fooBar"),
-                    ["aInteger"] = new OpenApiInteger(10),
-                    ["aArray"] = new OpenApiArray()
-                    {
-                            new OpenApiInteger(1),
-                            new OpenApiInteger(2),
-                            new OpenApiInteger(3),
-                    },
-                    ["aNestedArray"] = new OpenApiArray()
-                    {
-                            new OpenApiObject()
-                            {
-                                ["aFloat"] = new OpenApiInteger(1),
-                                ["aPassword"] = new OpenApiInteger(1234),
-                                ["aArray"] = new OpenApiArray()
-                                {
-                                    new OpenApiString("abc"),
-                                    new OpenApiString("def")
-                                },
-                                ["aDictionary"] = new OpenApiObject()
-                                {
-                                    ["arbitraryProperty"] = new OpenApiInteger(1),
-                                    ["arbitraryProperty2"] = new OpenApiInteger(2),
-                                }
-                            },
-                            new OpenApiObject()
-                            {
-                                ["aFloat"] = new OpenApiDouble(1.6),
-                                ["aArray"] = new OpenApiArray()
-                                {
-                                    new OpenApiInteger(123),
-                                },
-                                ["aDictionary"] = new OpenApiObject()
-                                {
-                                    ["arbitraryProperty"] = new OpenApiInteger(1),
-                                    ["arbitraryProperty3"] = new OpenApiInteger(20),
-                                }
-                            }
-                    },
-                    ["aObject"] = new OpenApiObject()
-                    {
-                        ["aDate"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-02-03", CultureInfo.InvariantCulture))
-                    },
-                    ["aDouble"] = new OpenApiDouble(2.34),
-                    ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))
-                });
+                @"{
+  ""aString"": ""fooBar"",
+  ""aInteger"": 10,
+  ""aArray"": [
+    1,
+    2,
+    3
+  ],
+  ""aNestedArray"": [
+    {
+      ""aFloat"": 1,
+      ""aPassword"": 1234,
+      ""aArray"": [
+        ""abc"",
+        ""def""
+      ],
+      ""aDictionary"": {
+        ""arbitraryProperty"": 1,
+        ""arbitraryProperty2"": 2
+      }
+    },
+    {
+      ""aFloat"": 1.6,
+      ""aArray"": [
+        123
+      ],
+      ""aDictionary"": {
+        ""arbitraryProperty"": 1,
+        ""arbitraryProperty3"": 20
+      }
+    }
+  ],
+  ""aObject"": {
+    ""aDate"": ""2017-02-03T00:00:00+00:00""
+  },
+  ""aDouble"": 2.34,
+  ""aDateTime"": ""2017-01-01T00:00:00+00:00""
+}");
         }
     }
 }

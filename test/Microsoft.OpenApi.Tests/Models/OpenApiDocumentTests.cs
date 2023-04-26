@@ -1001,12 +1001,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = "integer",
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
-                                            ["my-extension"] = new Any.OpenApiInteger(4),
+                                            ["my-extension"] = new ExtensionTypeCaster<int>(4),
                                         }
                                     },
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
-                                        ["my-extension"] = new Any.OpenApiInteger(4),
+                                        ["my-extension"] = new ExtensionTypeCaster<int>(4),
                                     }
                                 },
                                 new OpenApiParameter
@@ -1020,12 +1020,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = "integer",
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
-                                            ["my-extension"] = new Any.OpenApiInteger(4),
+                                            ["my-extension"] = new ExtensionTypeCaster<int>(4),
                                         }
                                     },
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
-                                        ["my-extension"] = new Any.OpenApiInteger(4),
+                                        ["my-extension"] = new ExtensionTypeCaster<int>(4),
                                     }
                                 },
                             },

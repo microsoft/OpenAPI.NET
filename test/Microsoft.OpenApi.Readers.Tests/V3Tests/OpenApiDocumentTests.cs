@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
@@ -16,8 +15,6 @@ using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -1303,7 +1300,7 @@ paths: {}",
                         AllowReserved = true,
                         Style = ParameterStyle.Simple,
                         Explode = true,
-                        Example = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
+                        Example = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721",
                         Schema = new OpenApiSchema()
                         {
                             Type = "string",
@@ -1332,12 +1329,12 @@ paths: {}",
                         {
                             { "uuid1", new OpenApiExample()
                                 {
-                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                    Value = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
                                 }
                             },
                             { "uuid2", new OpenApiExample()
                                 {
-                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                    Value = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
                                 }
                             }
                         },

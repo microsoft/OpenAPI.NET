@@ -3,8 +3,8 @@
 
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -30,9 +30,9 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             RequestBody = new RuntimeExpressionAnyWrapper
             {
-                Any = new OpenApiObject
+                Any = new JsonObject
                 {
-                    ["property1"] = new OpenApiBoolean(true)
+                    ["property1"] = true
                 }
             },
             Description = "description1",
@@ -59,9 +59,9 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             RequestBody = new RuntimeExpressionAnyWrapper
             {
-                Any = new OpenApiObject
+                Any = new JsonObject
                 {
-                    ["property1"] = new OpenApiBoolean(true)
+                    ["property1"] = true
                 }
             },
             Description = "description1",

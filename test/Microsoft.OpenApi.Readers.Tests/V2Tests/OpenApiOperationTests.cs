@@ -4,10 +4,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -183,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 },
                 Extensions = { 
-                    [OpenApiConstants.BodyName] = new OpenApiString("petObject") 
+                    [OpenApiConstants.BodyName] = new ExtensionTypeCaster<string>("petObject")
                 }
             },
             Responses = new OpenApiResponses
@@ -350,11 +349,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Format = "float"
                                         }
                                     },
-                                    Example = new OpenApiArray()
+                                    Example = new JsonArray()
                                     {
-                                        new OpenApiFloat(5),
-                                        new OpenApiFloat(6),
-                                        new OpenApiFloat(7),
+                                        5.0,
+                                        6.0,
+                                        7.0
                                     }
                                 },
                                 ["application/xml"] = new OpenApiMediaType()

@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -30,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Maximum = 42,
             ExclusiveMinimum = true,
             Minimum = 10,
-            Default = new OpenApiInteger(15),
+            Default = 15,
             Type = "integer",
 
             Nullable = true,
@@ -148,7 +147,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Maximum = 42,
             ExclusiveMinimum = true,
             Minimum = 10,
-            Default = new OpenApiInteger(15),
+            Default = 15,
             Type = "integer",
 
             Nullable = true,

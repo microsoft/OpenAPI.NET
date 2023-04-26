@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -26,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html"),
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-copyright", new OpenApiString("Abc")}
+                {"x-copyright", new ExtensionTypeCaster<string>("Abc")}
             }
         };
 
