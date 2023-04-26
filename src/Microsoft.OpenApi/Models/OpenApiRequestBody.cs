@@ -189,7 +189,7 @@ namespace Microsoft.OpenApi.Models
             };
             if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
             {
-                bodyParameter.Name = (Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
+                bodyParameter.Name = (Extensions[OpenApiConstants.BodyName].ToString()) ?? "body";
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
             }
             return bodyParameter;

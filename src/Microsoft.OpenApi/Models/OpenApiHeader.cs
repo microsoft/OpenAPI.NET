@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -107,7 +108,7 @@ namespace Microsoft.OpenApi.Models
             Explode = header?.Explode ?? Explode;
             AllowReserved = header?.AllowReserved ?? AllowReserved;
             Schema = header?.Schema != null ? new(header?.Schema) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header?.Example);
+            Example = JsonNodeCloneHelper.Clone(header?.Example);
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
             Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
@@ -219,7 +220,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
+            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, s) => w.WriteAny((JsonNode)s));
 
             // examples
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
@@ -289,7 +290,7 @@ namespace Microsoft.OpenApi.Models
             Schema?.WriteAsItemsProperties(writer);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
+            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, s) => w.WriteAny((JsonNode)s));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);

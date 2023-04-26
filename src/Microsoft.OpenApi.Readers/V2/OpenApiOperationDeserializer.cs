@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -213,10 +213,10 @@ namespace Microsoft.OpenApi.Readers.V2
                 Extensions = bodyParameter.Extensions
             };
 
-            requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiString(bodyParameter.Name);
+            requestBody.Extensions[OpenApiConstants.BodyName] = new ExtensionTypeCaster<string>(bodyParameter.Name);
             return requestBody;
         }
-
+        
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
             string tagName)

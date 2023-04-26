@@ -54,12 +54,13 @@ namespace Microsoft.OpenApi.Validations.Rules
             var type = schema.Type;
             var format = schema.Format;
             var nullable = schema.Nullable;
+            var jsonElement = JsonSerializer.Deserialize<JsonElement>(value);
 
             // Before checking the type, check first if the schema allows null.
             // If so and the data given is also null, this is allowed for any type.
             if (nullable)
             {
-                if (value.ValueKind is JsonValueKind.Null)
+                if (jsonElement.ValueKind is JsonValueKind.Null)
                 {
                     return;
                 }
@@ -70,13 +71,13 @@ namespace Microsoft.OpenApi.Validations.Rules
                 // It is not against the spec to have a string representing an object value.
                 // To represent examples of media types that cannot naturally be represented in JSON or YAML,
                 // a string value can contain the example with escaping where necessary
-                if (value.ValueKind is JsonValueKind.String)
+                if (jsonElement.ValueKind is JsonValueKind.String)
                 {
                     return;
                 }
 
                 // If value is not a string and also not an object, there is a data mismatch.
-                if (value.ValueKind is not JsonValueKind.Object)
+                if (jsonElement.ValueKind is not JsonValueKind.Object)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -110,7 +111,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 // It is not against the spec to have a string representing an array value.
                 // To represent examples of media types that cannot naturally be represented in JSON or YAML,
                 // a string value can contain the example with escaping where necessary
-                if (value is OpenApiString)
+                if (jsonElement.ValueKind is JsonValueKind.String)
                 {
                     return;
                 }
@@ -140,7 +141,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "integer" && format == "int32")
             {
-                if (!(value is OpenApiInteger))
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -152,7 +153,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "integer" && format == "int64")
             {
-                if (!(value is OpenApiLong))
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
                     context.CreateWarning(
                        ruleName,
@@ -162,9 +163,9 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && !(value is OpenApiInteger))
+            if (type == "integer" && jsonElement.ValueKind is not JsonValueKind.Number)
             {
-                if (!(value is OpenApiInteger))
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -176,7 +177,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number" && format == "float")
             {
-                if (!(value is OpenApiFloat))
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -188,7 +189,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number" && format == "double")
             {
-                if (!(value is OpenApiDouble))
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -200,7 +201,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number")
             {
-                if (!(value is OpenApiDouble))
+                if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -212,7 +213,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "byte")
             {
-                if (!(value is OpenApiByte))
+                if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -224,7 +225,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "date")
             {
-                if (!(value is OpenApiDate))
+                if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -236,7 +237,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "date-time")
             {
-                if (!(value is OpenApiDateTime))
+                if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -248,7 +249,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "password")
             {
-                if (!(value is OpenApiPassword))
+                if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -260,7 +261,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string")
             {
-                if (!(value is OpenApiString))
+                if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -272,7 +273,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "boolean")
             {
-                if (!(value is OpenApiBoolean))
+                if (jsonElement.ValueKind is not JsonValueKind.True and not JsonValueKind.False)
                 {
                     context.CreateWarning(
                         ruleName,

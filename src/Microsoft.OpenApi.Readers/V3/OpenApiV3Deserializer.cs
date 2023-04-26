@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
@@ -75,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 try
                 {
-                    var newProperty = new List<IOpenApiAny>();
+                    var newProperty = new List<JsonNode>();
 
                     mapNode.Context.StartObject(anyListFieldName);
 
@@ -158,12 +157,12 @@ namespace Microsoft.OpenApi.Readers.V3
                 };
             }
 
-            //return new RuntimeExpressionAnyWrapper
-            //{
-            //    Any = OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny())
-            //};
+            return new RuntimeExpressionAnyWrapper
+            {
+                //Any = OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny())
+            };
         }
-        
+
         public static JsonNode LoadAny(ParseNode node)
         {
             return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -67,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         {
             Summary = example?.Summary ?? Summary;
             Description = example?.Description ?? Description;
-            Value = example?.Value != null ? new JsonNode(example.Value) : null;
+            Value = JsonNodeCloneHelper.Clone(example?.Value);
             ExternalValue = example?.ExternalValue ?? ExternalValue;
             Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
             Reference = example?.Reference != null ? new(example?.Reference) : null;
@@ -160,7 +161,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // value
-            writer.WriteOptionalObject(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));
+            writer.WriteOptionalObject(OpenApiConstants.Value, (IOpenApiElement)Value, (w, v) => w.WriteAny((JsonNode)v));
 
             // externalValue
             writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);

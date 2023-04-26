@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return newObject;
             }
 
-            if (!(jsonNode is JsonValue jsonValue))
+            if (jsonNode is not JsonValue jsonValue)
             {
                 return jsonNode;
             }

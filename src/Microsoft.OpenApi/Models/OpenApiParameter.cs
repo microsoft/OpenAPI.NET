@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -162,7 +163,7 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
             Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
+            Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
@@ -283,7 +284,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
+            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, s) => w.WriteAny((JsonNode)s));
 
             // examples
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);

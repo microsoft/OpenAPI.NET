@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 try
                 {
-                    var newProperty = new List<IOpenApiAny>();
+                    var newProperty = new List<JsonNode>();
 
                     mapNode.Context.StartObject(anyListFieldName);
 
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
-        public static IOpenApiAny LoadAny(ParseNode node)
+        public static JsonNode LoadAny(ParseNode node)
         {
             return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
         }
@@ -158,7 +158,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
             else
             {
-                return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
+                return (IOpenApiExtension)OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
             }
         }
 

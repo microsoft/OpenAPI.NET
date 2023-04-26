@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -55,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
             Schema = mediaType?.Schema != null ? new(mediaType?.Schema) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(mediaType?.Example);
+            Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
             Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
@@ -91,7 +92,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
+            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, e) => w.WriteAny((JsonNode)e));
 
             // examples
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
