@@ -148,5 +148,26 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Assert
             actual.Should().Be(expected);
         }
+
+        [Theory]
+        [InlineData("1.8.0", " '1.8.0'", "en-US")]
+        [InlineData("1.8.0", " '1.8.0'", "en-GB")]
+        [InlineData("1.13.0", " '1.13.0'", "en-US")]
+        [InlineData("1.13.0", " '1.13.0'", "en-GB")]
+        public void WriteStringAsYamlDoesNotDependOnSystemCulture(string input, string expected, string culture)
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+            
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiYamlWriter(outputStringWriter);
+            
+            // Act
+            writer.WriteValue(input);
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+            actual.Should().Be(expected);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -95,7 +96,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             }
                         }
                     }
-                }
+                },
+                ["aDate"] = new OpenApiDate(DateTime.Parse("12/12/2022 00:00:00"))
             }
         };
 
@@ -118,10 +120,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedExample.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -136,10 +137,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedExample.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -154,10 +154,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedExample.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

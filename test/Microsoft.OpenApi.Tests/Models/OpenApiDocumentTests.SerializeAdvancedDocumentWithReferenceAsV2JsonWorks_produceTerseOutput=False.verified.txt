@@ -46,8 +46,7 @@
             "name": "limit",
             "description": "maximum number of results to return",
             "type": "integer",
-            "format": "int32",
-            "collectionFormat": "multi"
+            "format": "int32"
           }
         ],
         "responses": {

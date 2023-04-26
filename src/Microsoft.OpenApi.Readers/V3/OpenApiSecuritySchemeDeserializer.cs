@@ -76,7 +76,11 @@ namespace Microsoft.OpenApi.Readers.V3
         public static OpenApiSecurityScheme LoadSecurityScheme(ParseNode node)
         {
             var mapNode = node.CheckMapNode("securityScheme");
-
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                return mapNode.GetReferencedObject<OpenApiSecurityScheme>(ReferenceType.SecurityScheme, pointer);
+            }
             var securityScheme = new OpenApiSecurityScheme();
             foreach (var property in mapNode)
             {

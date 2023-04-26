@@ -1,0 +1,16 @@
+﻿    openapi: 3.0.1
+    info:
+      title: anyOf-oneOf
+      license:
+        name: MIT
+      version: 1.0.0
+    paths: { }
+    components:
+      schemas:
+        Nested:
+          type: object
+          properties:
+            AnyOf:
+              anyOf:
+                - $ref: file:///C:/MySchemas.json#/definitions/ArrayObject
+                - $ref: ../foo/schemas.yaml#/components/schemas/Number     

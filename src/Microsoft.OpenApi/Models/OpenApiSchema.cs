@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Models
             MaxProperties = schema?.MaxProperties ?? MaxProperties;
             MinProperties = schema?.MinProperties ?? MinProperties;
             AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
-            AdditionalProperties = new(schema?.AdditionalProperties);
+            AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
             Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
             Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Example);
             Enum = schema?.Enum != null ? new List<IOpenApiAny>(schema.Enum) : null;
@@ -564,6 +564,11 @@ namespace Microsoft.OpenApi.Models
             }
 
             target.SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
+           
+            if (Reference != null)
+            {
+                settings.LoopDetector.PopLoop<OpenApiSchema>();
+            }
         }
 
         /// <summary>
