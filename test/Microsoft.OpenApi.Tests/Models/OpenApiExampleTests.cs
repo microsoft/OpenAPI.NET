@@ -4,8 +4,8 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -20,36 +20,36 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiExample AdvancedExample = new OpenApiExample
         {
-            Value = new OpenApiObject
+            Value = new JsonObject
             {
-                ["versions"] = new OpenApiArray
+                ["versions"] = new JsonArray
                 {
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status1"),
-                        ["id"] = new OpenApiString("v1"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status1",
+                        ["id"] = "v1",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/1"),
-                                ["rel"] = new OpenApiString("sampleRel1"),
-                                ["bytes"] = new OpenApiByte(new byte[] { 1, 2, 3 }),
-                                ["binary"] = new OpenApiBinary(Encoding.UTF8.GetBytes("Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ"))
+                                ["href"] = "http://example.com/1",
+                                ["rel"] = "sampleRel1",
+                                ["bytes"] = JsonNode.Parse(new byte[] { 1, 2, 3 }),
+                                ["binary"] = JsonNode.Parse(Encoding.UTF8.GetBytes("Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ"))
                             }
                         }
                     },
 
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status2"),
-                        ["id"] = new OpenApiString("v2"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status2",
+                        ["id"] = "v2",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/2"),
-                                ["rel"] = new OpenApiString("sampleRel2")
+                                ["href"] = "http://example.com/2",
+                                ["rel"] = "sampleRel2"
                             }
                         }
                     }
@@ -64,34 +64,34 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = ReferenceType.Example,
                 Id = "example1",
             },
-            Value = new OpenApiObject
+            Value = new JsonObject
             {
-                ["versions"] = new OpenApiArray
+                ["versions"] = new JsonArray
                 {
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status1"),
-                        ["id"] = new OpenApiString("v1"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status1",
+                        ["id"] = "v1",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/1"),
-                                ["rel"] = new OpenApiString("sampleRel1")
+                                ["href"] = "http://example.com/1",
+                                ["rel"] = "sampleRel1"
                             }
                         }
                     },
 
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status2"),
-                        ["id"] = new OpenApiString("v2"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status2",
+                        ["id"] = "v2",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/2"),
-                                ["rel"] = new OpenApiString("sampleRel2")
+                                ["href"] = "http://example.com/2",
+                                ["rel"] = "sampleRel2"
                             }
                         }
                     }

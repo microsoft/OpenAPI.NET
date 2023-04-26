@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -27,10 +27,10 @@ paths: {}
             var settings = new OpenApiReaderSettings()
             {
                 ExtensionParsers = { { "x-foo", (a,v) => {
-                        var fooNode = (OpenApiObject)a;
+                        var fooNode = (JsonObject)a;
                         return new FooExtension() {
-                              Bar = (fooNode["bar"] as OpenApiString)?.Value,
-                              Baz = (fooNode["baz"] as OpenApiString)?.Value
+                              Bar = (fooNode["bar"].ToString()),
+                              Baz = (fooNode["baz"].ToString())
                         };
                 } } }
             };

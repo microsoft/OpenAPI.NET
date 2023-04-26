@@ -4,11 +4,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
@@ -97,7 +96,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Type = "integer",
                     Format = "int64",
-                    Default = new OpenApiLong(88)
+                    Default = 88
                 });
         }
 
@@ -113,19 +112,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
-
+            var openApiAny = reader.ReadFragment<IOpenApiElement>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
             openApiAny.Should().BeEquivalentTo(
-                new OpenApiObject
+                new JsonObject
                 {
-                    ["foo"] = new OpenApiString("bar"),
-                    ["baz"] = new OpenApiArray() {
-                        new OpenApiInteger(1),
-                        new OpenApiInteger(2)
-                    }
+                    ["foo"] = "bar",
+                    ["baz"] = new JsonArray() {1, 2}
                 });
         }
 
@@ -141,16 +137,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = reader.ReadFragment<IOpenApiElement>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
             openApiAny.Should().BeEquivalentTo(
-                new OpenApiArray
+                new JsonArray
                 {
-                    new OpenApiString("foo"),
-                    new OpenApiString("baz")
+                    "foo",
+                    "baz"
                 });
         }
 
@@ -318,10 +314,10 @@ get:
                         {
                             "name"
                         },
-                        Example = new OpenApiObject
+                        Example = new JsonObject
                         {
-                            ["name"] = new OpenApiString("Puma"),
-                            ["id"] = new OpenApiLong(1)
+                            ["name"] = "Puma",
+                            ["id"] = 1
                         }
                     });
             }
@@ -540,13 +536,7 @@ get:
                                             {
                                                 Type = "string",
                                                 Description = "The measured skill for hunting",
-                                                Enum =
-                                                {
-                                                    new OpenApiString("clueless"),
-                                                    new OpenApiString("lazy"),
-                                                    new OpenApiString("adventurous"),
-                                                    new OpenApiString("aggressive")
-                                                }
+                                                Enum = { "clueless", "lazy", "adventurous", "aggressive" }
                                             }
                                         }
                                     }
@@ -606,7 +596,7 @@ get:
                                                 Type = "integer",
                                                 Format = "int32",
                                                 Description = "the size of the pack the dog is from",
-                                                Default = new OpenApiInteger(0),
+                                                Default = 0,
                                                 Minimum = 0
                                             }
                                         }

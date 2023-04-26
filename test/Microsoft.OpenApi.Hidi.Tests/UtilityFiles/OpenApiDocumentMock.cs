@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using System.Security.Policy;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -599,7 +598,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Extensions = new Dictionary<string, IOpenApiExtension>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiString("call")
+                                                    "x-ms-docs-key-type", new ExtensionTypeCaster<string>("call")
                                                 }
                                             }
                                         }
@@ -616,7 +615,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         {
-                                            "x-ms-docs-operation-type", new OpenApiString("action")
+                                            "x-ms-docs-operation-type", new ExtensionTypeCaster<string>("action") 
                                         }
                                     }
                                 }
@@ -654,7 +653,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Extensions = new Dictionary<string, IOpenApiExtension>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiString("group")
+                                                    "x-ms-docs-key-type", new ExtensionTypeCaster<string>("group")
                                                 }
                                             }
                                         },
@@ -671,7 +670,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             Extensions = new Dictionary<string, IOpenApiExtension>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new OpenApiString("event")
+                                                    "x-ms-docs-key-type", new ExtensionTypeCaster<string>("event")
                                                 }
                                             }
                                         }
@@ -706,7 +705,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         {
-                                            "x-ms-docs-operation-type", new OpenApiString("function")
+                                            "x-ms-docs-operation-type", new ExtensionTypeCaster<string>("function")
                                         }
                                     }
                                 }

@@ -4,7 +4,6 @@
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using SharpYaml.Serialization;
 using Xunit;
@@ -37,14 +36,26 @@ aDateTime: 2017-01-01
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.Should().BeEquivalentTo(
-                new OpenApiObject
-                {
-                    ["aString"] = new OpenApiString("fooBar"),
-                    ["aInteger"] = new OpenApiString("10"),
-                    ["aDouble"] = new OpenApiString("2.34"),
-                    ["aDateTime"] = new OpenApiString("2017-01-01")
-                });
+            anyMap.Should().BeEquivalentTo(@"{
+  ""aString"": {
+    ""type"": ""string"",
+    ""value"": ""fooBar""
+  },
+  ""aInteger"": {
+    ""type"": ""integer"",
+    ""value"": 10
+  },
+  ""aDouble"": {
+    ""type"": ""number"",
+    ""format"": ""double"",
+    ""value"": 2.34
+  },
+  ""aDateTime"": {
+    ""type"": ""string"",
+    ""format"": ""date-time"",
+    ""value"": ""2017-01-01T00:00:00+00:00""
+  }
+}");
         }
 
         [Fact]
@@ -70,13 +81,12 @@ aDateTime: 2017-01-01
             diagnostic.Errors.Should().BeEmpty();
 
             any.Should().BeEquivalentTo(
-                new OpenApiArray
-                {
-                    new OpenApiString("fooBar"),
-                    new OpenApiString("10"),
-                    new OpenApiString("2.34"),
-                    new OpenApiString("2017-01-01")
-                });
+                @"[
+  ""fooBar"",
+  ""10"",
+  ""2.34"",
+  ""2017-01-01""
+]");
         }
 
         [Fact]
@@ -98,9 +108,7 @@ aDateTime: 2017-01-01
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.Should().BeEquivalentTo(
-                new OpenApiString("10")
-            );
+            any.Should().BeEquivalentTo(@"""10""");
         }
 
         [Fact]
@@ -122,9 +130,7 @@ aDateTime: 2017-01-01
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.Should().BeEquivalentTo(
-                new OpenApiString("2012-07-23T12:33:00")
-            );
+            any.Should().BeEquivalentTo(@"""2012-07-23T12:33:00""");
         }
     }
 }

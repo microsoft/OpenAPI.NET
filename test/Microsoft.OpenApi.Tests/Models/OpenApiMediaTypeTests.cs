@@ -2,8 +2,8 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType AdvanceMediaType = new OpenApiMediaType
         {
-            Example = new OpenApiInteger(42),
+            Example = 42,
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
@@ -27,34 +27,34 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithObjectExample = new OpenApiMediaType
         {
-            Example = new OpenApiObject
+            Example = new JsonObject
             {
-                ["versions"] = new OpenApiArray
+                ["versions"] = new JsonArray
                 {
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status1"),
-                        ["id"] = new OpenApiString("v1"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status1",
+                        ["id"] = "v1",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/1"),
-                                ["rel"] = new OpenApiString("sampleRel1")
+                                ["href"] = "http://example.com/1",
+                                ["rel"] = "sampleRel1"
                             }
                         }
                     },
 
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status2"),
-                        ["id"] = new OpenApiString("v2"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status2",
+                        ["id"] = "v2",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/2"),
-                                ["rel"] = new OpenApiString("sampleRel2")
+                                ["href"] = "http://example.com/2",
+                                ["rel"] = "sampleRel2"
                             }
                         }
                     }
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithXmlExample = new OpenApiMediaType
         {
-            Example = new OpenApiString("<xml>123</xml>"),
+            Example = "<xml>123</xml>",
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
@@ -80,34 +80,34 @@ namespace Microsoft.OpenApi.Tests.Models
             Examples = {
                 ["object1"] = new OpenApiExample
                 {
-                    Value = new OpenApiObject
+                    Value = new JsonObject
                     {
-                        ["versions"] = new OpenApiArray
+                        ["versions"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["status"] = new OpenApiString("Status1"),
-                                ["id"] = new OpenApiString("v1"),
-                                ["links"] = new OpenApiArray
+                                ["status"] = "Status1",
+                                ["id"] = "v1",
+                                ["links"] = new JsonArray
                                 {
-                                    new OpenApiObject
+                                    new JsonObject
                                     {
-                                        ["href"] = new OpenApiString("http://example.com/1"),
-                                        ["rel"] = new OpenApiString("sampleRel1")
+                                        ["href"] = "http://example.com/1",
+                                        ["rel"] = "sampleRel1"
                                     }
                                 }
                             },
 
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["status"] = new OpenApiString("Status2"),
-                                ["id"] = new OpenApiString("v2"),
-                                ["links"] = new OpenApiArray
+                                ["status"] = "Status2",
+                                ["id"] = "v2",
+                                ["links"] = new JsonArray
                                 {
-                                    new OpenApiObject
+                                    new JsonObject
                                     {
-                                        ["href"] = new OpenApiString("http://example.com/2"),
-                                        ["rel"] = new OpenApiString("sampleRel2")
+                                        ["href"] = "http://example.com/2",
+                                        ["rel"] = "sampleRel2"
                                     }
                                 }
                             }

@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
@@ -25,7 +22,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var header = new OpenApiHeader()
             {
                 Required = true,
-                Example = new OpenApiInteger(55),
+                Example = 55,
                 Schema = new OpenApiSchema()
                 {
                     Type = "string",
@@ -74,31 +71,28 @@ namespace Microsoft.OpenApi.Validations.Tests
                     {
                         ["example0"] = new OpenApiExample()
                         {
-                            Value = new OpenApiString("1"),
+                            Value = "1",
                         },
                         ["example1"] = new OpenApiExample()
                         {
-                           Value = new OpenApiObject()
+                           Value = new JsonObject()
                             {
-                                ["x"] = new OpenApiInteger(2),
-                                ["y"] = new OpenApiString("20"),
-                                ["z"] = new OpenApiString("200")
+                                ["x"] = 2,
+                                ["y"] = "20",
+                                ["z"] = "200"
                             }
                         },
                         ["example2"] = new OpenApiExample()
                         {
                             Value =
-                            new OpenApiArray()
-                            {
-                                new OpenApiInteger(3)
-                            }
+                            new JsonArray(){3}
                         },
                         ["example3"] = new OpenApiExample()
                         {
-                            Value = new OpenApiObject()
+                            Value = new JsonObject()
                             {
-                                ["x"] = new OpenApiInteger(4),
-                                ["y"] = new OpenApiInteger(40),
+                                ["x"] = 4,
+                                ["y"] = 40
                             }
                         },
                     }

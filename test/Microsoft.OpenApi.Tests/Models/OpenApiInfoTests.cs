@@ -4,11 +4,9 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using SharpYaml;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
@@ -26,7 +24,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Version = "1.1.1",
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-updated", new OpenApiString("metadata")}
+                {"x-updated", new ExtensionTypeCaster<string>("metadata")}
             }
         };
 

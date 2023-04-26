@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -38,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Default = new OpenApiFloat(5)
+                        Default = 5.0
                     }
                 });
         }
@@ -66,9 +64,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Format = "float",
                         Enum =
                         {
-                            new OpenApiFloat(7),
-                            new OpenApiFloat(8),
-                            new OpenApiFloat(9)
+                            7,
+                            8,
+                            9
                         }
                     }
                 });

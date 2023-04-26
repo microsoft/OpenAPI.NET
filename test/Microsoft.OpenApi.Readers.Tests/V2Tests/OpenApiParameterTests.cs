@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Nodes;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -147,23 +147,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             Type = "integer",
                             Format = "int64",
-                            Enum = new List<IOpenApiAny>
+                            Enum = new List<JsonNode>
                             {
-                                new OpenApiLong(1),
-                                new OpenApiLong(2),
-                                new OpenApiLong(3),
-                                new OpenApiLong(4),
+                                1,
+                                2,
+                                3,
+                                4,
                             }
                         },
-                        Default = new OpenApiArray() {
-                            new OpenApiLong(1),
-                            new OpenApiLong(2)
+                        Default = new JsonArray() {
+                            1,
+                            2
                         },
-                        Enum = new List<IOpenApiAny>
+                        Enum = new List<JsonNode>
                         {
-                            new OpenApiArray() { new OpenApiLong(1), new OpenApiLong(2) },
-                            new OpenApiArray() { new OpenApiLong(2), new OpenApiLong(3) },
-                            new OpenApiArray() { new OpenApiLong(3), new OpenApiLong(4) }
+                            new JsonArray() { 1, 2 },
+                            new JsonArray() { 2, 3 },
+                            new JsonArray() { 3, 4 }
                         }
                     }
                 });
@@ -199,23 +199,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             Type = "string",
                             Format = "date-time",
-                            Enum = new List<IOpenApiAny>
-                            {
-                                new OpenApiString("1"),
-                                new OpenApiString("2"),
-                                new OpenApiString("3"),
-                                new OpenApiString("4"),
-                            }
+                            Enum = { "1", "2", "3", "4" }
                         },
-                        Default = new OpenApiArray() {
-                            new OpenApiString("1"),
-                            new OpenApiString("2")
-                        },
-                        Enum = new List<IOpenApiAny>
+                        Default = new JsonArray() { "1", "2" },                    
+                        Enum = new List<JsonNode>
                         {
-                            new OpenApiArray() { new OpenApiString("1"), new OpenApiString("2") },
-                            new OpenApiArray() { new OpenApiString("2"), new OpenApiString("3") },
-                            new OpenApiArray() { new OpenApiString("3"), new OpenApiString("4") }
+                            new JsonArray() { "1", "2" },
+                            new JsonArray() { "2", "3"},
+                            new JsonArray() { "3", "4" }
                         }
                     }
                 });
@@ -354,7 +345,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Default = new OpenApiFloat(5)
+                        Default = 5.0
                     }
                 });
         }
@@ -384,12 +375,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Enum =
-                        {
-                            new OpenApiFloat(7),
-                            new OpenApiFloat(8),
-                            new OpenApiFloat(9)
-                        }
+                        Enum = {7.0, 8.0, 9.0 }
                     }
                 });
         }
