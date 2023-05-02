@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 //throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
             }
 
-            return scalarNode.ToString();
+            return scalarNode?.GetValue<string>();
         }
 
         /// <summary>

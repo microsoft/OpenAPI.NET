@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override string GetScalarValue()
         {
-            return _node.ToString();
+            return _node.GetValue<string>();
         }
 
         /// <summary>
