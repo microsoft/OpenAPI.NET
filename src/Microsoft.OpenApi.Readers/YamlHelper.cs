@@ -22,15 +22,11 @@ namespace Microsoft.OpenApi.Readers
                 //throw new OpenApiException($"Expected scalar at line {node.Start.Line}");
             }
 
-            return scalarNode.ToJsonString();
+            return scalarNode.ToString();
         }
         
         public static JsonNode ParseJsonString(string yamlString)
         {
-            //var jsonDoc = JsonDocument.Parse(jsonString);
-            //var node = jsonDoc.RootElement.Deserialize<JsonObject>();
-            //return node;
-
             var reader = new StringReader(yamlString);
             var yamlStream = new YamlStream();
             yamlStream.Load(reader);

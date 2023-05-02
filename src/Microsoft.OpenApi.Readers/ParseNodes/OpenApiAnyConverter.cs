@@ -4,7 +4,9 @@
 using System;
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -24,7 +26,16 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 var newArray = new JsonArray();
                 foreach (var element in jsonArray)
                 {
-                    newArray.Add(GetSpecificOpenApiAny(element, schema?.Items));
+                    if(element.Parent != null)
+                    {
+                        var newNode = element.Deserialize<JsonNode>();
+                        newArray.Add(GetSpecificOpenApiAny(newNode, schema?.Items));
+
+                    }
+                    else
+                    {
+                        newArray.Add(GetSpecificOpenApiAny(element, schema?.Items));
+                    }
                 }
 
                 return newArray;
@@ -37,11 +48,28 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if (schema?.Properties != null && schema.Properties.TryGetValue(property.Key, out var propertySchema))
                     {
-                        newObject[property.Key] = GetSpecificOpenApiAny(jsonObject[property.Key], propertySchema);
+                        if (jsonObject[property.Key].Parent != null)
+                        {
+                            var node = jsonObject[property.Key].Deserialize<JsonNode>();
+                            newObject.Add(property.Key, GetSpecificOpenApiAny(node, propertySchema));
+                        }
+                        else
+                        {
+                            newObject.Add(property.Key, GetSpecificOpenApiAny(property.Value, propertySchema));
+
+                        }
                     }
                     else
                     {
-                        newObject[property.Key] = GetSpecificOpenApiAny(jsonObject[property.Key], schema?.AdditionalProperties);
+                        if (jsonObject[property.Key].Parent != null)
+                        {
+                            var node = jsonObject[property.Key].Deserialize<JsonNode>();
+                            newObject[property.Key] = GetSpecificOpenApiAny(node, schema?.AdditionalProperties);
+                        }
+                        else
+                        {
+                            newObject[property.Key] = GetSpecificOpenApiAny(jsonObject[property.Key], schema?.AdditionalProperties);
+                        }
                     }
                 }
                 

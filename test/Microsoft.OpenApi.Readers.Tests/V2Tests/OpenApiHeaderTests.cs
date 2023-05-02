@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Default = 5.0
+                        Default = 5
                     }
                 });
         }

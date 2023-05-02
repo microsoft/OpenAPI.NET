@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Helpers;
@@ -422,7 +423,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
 
             // enum
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, (IEnumerable<string>)Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
+            var enumValues = Enum.Cast<JsonNode>().Select(node => node.ToString());
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValues, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
             writer.WriteProperty(OpenApiConstants.Type, Type);
@@ -645,7 +647,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
 
             // enum
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, (IEnumerable<string>)Enum, (w, s) => w.WriteAny(s));
+            var enumValues = Enum.Cast<JsonNode>().Select(static node => node.ToString());
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValues, (w, s) => w.WriteAny(s));
 
             // multipleOf
             writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
@@ -726,7 +729,8 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
 
             // enum
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, (IEnumerable<string>)Enum, (w, s) => w.WriteAny(s));
+            var enumValues = Enum.Cast<JsonNode>().Select(static node => node.ToString());
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValues, (w, s) => w.WriteAny(s));
 
             // type
             writer.WriteProperty(OpenApiConstants.Type, Type);

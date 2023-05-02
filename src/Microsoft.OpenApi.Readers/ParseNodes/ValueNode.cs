@@ -20,7 +20,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             _node = scalarNode;
         }
 
-        public override string GetScalarValue() => _node.GetScalarValue();
+        public override string GetScalarValue()
+        {
+            return _node.ToString();
+        }
 
         /// <summary>
         /// Create a <see cref="JsonNode"/>

@@ -79,12 +79,10 @@ paths: {}";
                                             .Operations[OperationType.Get]
                                             .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
                                             .Where(p => p.Name == "filter").FirstOrDefault();
-          
+
             Assert.Equal("string", referencedParameter.Schema.Type);
 
         }
-
-
     }
 
     public class MockLoader : IStreamLoader

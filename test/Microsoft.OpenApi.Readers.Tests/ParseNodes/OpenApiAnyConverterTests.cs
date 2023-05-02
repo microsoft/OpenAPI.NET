@@ -74,31 +74,15 @@ aDate: 2017-01-02
             anyMap = OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema);
 
             diagnostic.Errors.Should().BeEmpty();
-            anyMap.Should().BeEquivalentTo(@"{
-  ""aString"": {
-    ""type"": ""string"",
-    ""value"": ""fooBar""
-  },
-  ""aInteger"": {
-    ""type"": ""integer"",
-    ""value"": 10
-  },
-  ""aDouble"": {
-    ""type"": ""number"",
-    ""format"": ""double"",
-    ""value"": 2.34
-  },
-  ""aDateTime"": {
-    ""type"": ""string"",
-    ""format"": ""date-time"",
-    ""value"": ""2017-01-01T00:00:00+00:00""
-  },
-  ""aDate"": {
-    ""type"": ""string"",
-    ""format"": ""date"",
-    ""value"": ""2017-01-02""
-  }
-}");
+            anyMap.Should().BeEquivalentTo(
+                new JsonObject
+                {
+                    ["aString"] = "fooBar",
+                    ["aInteger"] = 10,
+                    ["aDouble"] = 2.34,
+                    ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture),
+                    ["aDate"] = DateTimeOffset.Parse("2017-01-02", CultureInfo.InvariantCulture).Date
+                });
         }
 
 
@@ -232,86 +216,52 @@ aDate: 2017-01-02
             diagnostic.Errors.Should().BeEmpty();
 
             anyMap.Should().BeEquivalentTo(
-                @"{
-  ""aString"": {
-    ""value"": ""fooBar""
-  },
-  ""aInteger"": {
-    ""value"": 10
-  },
-  ""aArray"": {
-    ""items"": [
-      {
-        ""value"": 1
-      },
-      {
-        ""value"": 2
-      },
-      {
-        ""value"": 3
-      }
-    ]
-  },
-  ""aNestedArray"": [
-    {
-      ""aFloat"": {
-        ""value"": 1
-      },
-      ""aPassword"": {
-        ""value"": ""1234""
-      },
-      ""aArray"": {
-        ""items"": [
-          {
-            ""value"": ""abc""
-          },
-          {
-            ""value"": ""def""
-          }
-        ]
-      },
-      ""aDictionary"": {
-        ""arbitraryProperty"": {
-          ""value"": 1
-        },
-        ""arbitraryProperty2"": {
-          ""value"": 2
-        }
-      }
-    },
-    {
-      ""aFloat"": {
-        ""value"": 1.6
-      },
-      ""aArray"": {
-        ""items"": [
-          {
-            ""value"": ""123""
-          }
-        ]
-      },
-      ""aDictionary"": {
-        ""arbitraryProperty"": {
-          ""value"": 1
-        },
-        ""arbitraryProperty3"": {
-          ""value"": 20
-        }
-      }
-    }
-  ],
-  ""aObject"": {
-    ""aDate"": {
-      ""value"": ""2017-02-03T00:00:00Z""
-    }
-  },
-  ""aDouble"": {
-    ""value"": 2.34
-  },
-  ""aDateTime"": {
-    ""value"": ""2017-01-01T00:00:00Z""
-  }
-}");
+                new JsonObject
+                {
+                    ["aString"] = "fooBar",
+                    ["aInteger"] = 10,
+                    ["aArray"] = new JsonArray()
+                    {
+                        1,2, 3
+                    },
+                    ["aNestedArray"] = new JsonArray()
+                    {
+                        new JsonObject()
+                        {
+                            ["aFloat"] = 1.0,
+                            ["aPassword"] = "1234",
+                            ["aArray"] = new JsonArray()
+                            {
+                                "abc",
+                                "def"
+                            },
+                            ["aDictionary"] = new JsonObject()
+                            {
+                                ["arbitraryProperty"] = 1,
+                                ["arbitraryProperty2"] = 2,
+                            }
+                        },
+                        new JsonObject()
+                        {
+                            ["aFloat"] = (float)1.6,
+                            ["aArray"] = new JsonArray()
+                            {
+                                "123",
+                            },
+                            ["aDictionary"] = new JsonObject()
+                            {
+                                ["arbitraryProperty"] = 1,
+                                ["arbitraryProperty3"] = 20,
+                            }
+                        }
+                    },
+                    ["aObject"] = new JsonObject()
+                    {
+                        ["aDate"] = DateTimeOffset.Parse("2017-02-03", CultureInfo.InvariantCulture).Date
+                    },
+                    ["aDouble"] = 2.34,
+                    ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
+                });
         }
 
 
@@ -421,86 +371,52 @@ aDate: 2017-01-02
             diagnostic.Errors.Should().BeEmpty();
 
             anyMap.Should().BeEquivalentTo(
-                @"{
-  ""aString"": {
-    ""value"": ""fooBar""
-  },
-  ""aInteger"": {
-    ""value"": 10
-  },
-  ""aArray"": {
-    ""items"": [
-      {
-        ""value"": 1
-      },
-      {
-        ""value"": 2
-      },
-      {
-        ""value"": 3
-      }
-    ]
-  },
-  ""aNestedArray"": [
-    {
-      ""aFloat"": {
-        ""value"": 1
-      },
-      ""aPassword"": {
-        ""value"": 1234
-      },
-      ""aArray"": {
-        ""items"": [
-          {
-            ""value"": ""abc""
-          },
-          {
-            ""value"": ""def""
-          }
-        ]
-      },
-      ""aDictionary"": {
-        ""arbitraryProperty"": {
-          ""value"": 1
-        },
-        ""arbitraryProperty2"": {
-          ""value"": 2
-        }
-      }
-    },
-    {
-      ""aFloat"": {
-        ""value"": 1.6
-      },
-      ""aArray"": {
-        ""items"": [
-          {
-            ""value"": ""123""
-          }
-        ]
-      },
-      ""aDictionary"": {
-        ""arbitraryProperty"": {
-          ""value"": 1
-        },
-        ""arbitraryProperty3"": {
-          ""value"": 20
-        }
-      }
-    }
-  ],
-  ""aObject"": {
-    ""aDate"": {
-      ""value"": ""2017-02-03""
-    }
-  },
-  ""aDouble"": {
-    ""value"": 2.34
-  },
-  ""aDateTime"": {
-    ""value"": ""2017-01-01T00:00:00Z""
-  }
-}");
+                new JsonObject
+                {
+                    ["aString"] = "fooBar",
+                    ["aInteger"] = 10,
+                    ["aArray"] = new JsonArray()
+                    {
+                            1, 2, 3
+                    },
+                    ["aNestedArray"] = new JsonArray()
+                    {
+                            new JsonObject()
+                            {
+                                ["aFloat"] = 1,
+                                ["aPassword"] = 1234,
+                                ["aArray"] = new JsonArray()
+                                {
+                                    "abc",
+                                    "def"
+                                },
+                                ["aDictionary"] = new JsonObject()
+                                {
+                                    ["arbitraryProperty"] = 1,
+                                    ["arbitraryProperty2"] = 2,
+                                }
+                            },
+                            new JsonObject()
+                            {
+                                ["aFloat"] = 1.6,
+                                ["aArray"] = new JsonArray()
+                                {
+                                    "123",
+                                },
+                                ["aDictionary"] = new JsonObject()
+                                {
+                                    ["arbitraryProperty"] = 1,
+                                    ["arbitraryProperty3"] = 20,
+                                }
+                            }
+                    },
+                    ["aObject"] = new JsonObject()
+                    {
+                        ["aDate"] = "2017-02-03"
+                    },
+                    ["aDouble"] = 2.34,
+                    ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
+                });
         }
 
         [Fact]
@@ -547,44 +463,52 @@ aDate: 2017-01-02
             diagnostic.Errors.Should().BeEmpty();
 
             anyMap.Should().BeEquivalentTo(
-                @"{
-  ""aString"": ""fooBar"",
-  ""aInteger"": 10,
-  ""aArray"": [
-    1,
-    2,
-    3
-  ],
-  ""aNestedArray"": [
-    {
-      ""aFloat"": 1,
-      ""aPassword"": 1234,
-      ""aArray"": [
-        ""abc"",
-        ""def""
-      ],
-      ""aDictionary"": {
-        ""arbitraryProperty"": 1,
-        ""arbitraryProperty2"": 2
-      }
-    },
-    {
-      ""aFloat"": 1.6,
-      ""aArray"": [
-        123
-      ],
-      ""aDictionary"": {
-        ""arbitraryProperty"": 1,
-        ""arbitraryProperty3"": 20
-      }
-    }
-  ],
-  ""aObject"": {
-    ""aDate"": ""2017-02-03T00:00:00+00:00""
-  },
-  ""aDouble"": 2.34,
-  ""aDateTime"": ""2017-01-01T00:00:00+00:00""
-}");
+                new JsonObject()
+                {
+                    ["aString"] = "fooBar",
+                    ["aInteger"] = 10,
+                    ["aArray"] = new JsonArray()
+                    {
+                        1, 2, 3
+                    },
+                    ["aNestedArray"] = new JsonArray()
+                    {
+                            new JsonObject()
+                            {
+                                ["aFloat"] = 1,
+                                ["aPassword"] = 1234,
+                                ["aArray"] = new JsonArray()
+                                {
+                                    "abc",
+                                    "def"
+                                },
+                                ["aDictionary"] = new JsonObject()
+                                {
+                                    ["arbitraryProperty"] = 1,
+                                    ["arbitraryProperty2"] = 2,
+                                }
+                            },
+                            new JsonObject()
+                            {
+                                ["aFloat"] = 1.6,
+                                ["aArray"] = new JsonArray()
+                                {
+                                    123,
+                                },
+                                ["aDictionary"] = new JsonObject()
+                                {
+                                    ["arbitraryProperty"] = 1,
+                                    ["arbitraryProperty3"] = 20,
+                                }
+                            }
+                    },
+                    ["aObject"] = new JsonObject()
+                    {
+                        ["aDate"] = DateTimeOffset.Parse("2017-02-03", CultureInfo.InvariantCulture)
+                    },
+                    ["aDouble"] = 2.34,
+                    ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
+                });
         }
     }
 }

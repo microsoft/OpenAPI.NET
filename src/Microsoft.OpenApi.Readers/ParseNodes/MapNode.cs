@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             {
                 apiObject.Add(node.Name, node.Value.CreateAny());
             }
-
+            
             return apiObject;
         }
     }

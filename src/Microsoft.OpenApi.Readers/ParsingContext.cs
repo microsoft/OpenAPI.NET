@@ -117,12 +117,12 @@ namespace Microsoft.OpenApi.Readers
 
             if (versionNode != null)
             {
-                return versionNode.GetScalarValue();
+                return versionNode.GetScalarValue().Replace("\"", "");
             }
 
             versionNode = rootNode.Find(new JsonPointer("/swagger"));
 
-            return versionNode?.GetScalarValue();
+            return versionNode?.GetScalarValue().Replace("\"", "");
         }
 
         /// <summary>

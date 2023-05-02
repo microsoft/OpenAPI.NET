@@ -1,8 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using SharpYaml.Serialization;
@@ -36,26 +39,13 @@ aDateTime: 2017-01-01
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.Should().BeEquivalentTo(@"{
-  ""aString"": {
-    ""type"": ""string"",
-    ""value"": ""fooBar""
-  },
-  ""aInteger"": {
-    ""type"": ""integer"",
-    ""value"": 10
-  },
-  ""aDouble"": {
-    ""type"": ""number"",
-    ""format"": ""double"",
-    ""value"": 2.34
-  },
-  ""aDateTime"": {
-    ""type"": ""string"",
-    ""format"": ""date-time"",
-    ""value"": ""2017-01-01T00:00:00+00:00""
-  }
-}");
+            anyMap.Should().BeEquivalentTo(new JsonObject
+            {
+                ["aString"] = "fooBar",
+                ["aInteger"] = 10,
+                ["aDouble"] = 2.34,
+                ["aDateTime"] = "2017-01-01"
+            });
         }
 
         [Fact]
@@ -81,12 +71,10 @@ aDateTime: 2017-01-01
             diagnostic.Errors.Should().BeEmpty();
 
             any.Should().BeEquivalentTo(
-                @"[
-  ""fooBar"",
-  ""10"",
-  ""2.34"",
-  ""2017-01-01""
-]");
+                new JsonArray
+                {
+                    "fooBar", "10", "2.34", "2017-01-01"
+                });
         }
 
         [Fact]
@@ -105,12 +93,14 @@ aDateTime: 2017-01-01
             var node = new ValueNode(context, yamlNode.ToJsonNode());
 
             var any = node.CreateAny();
-
+            var root = any.Root;
+            
             diagnostic.Errors.Should().BeEmpty();
+            var expected = JsonNode.Parse(input);
 
-            any.Should().BeEquivalentTo(@"""10""");
+            any.Should().BeEquivalentTo(expected);
         }
-
+        
         [Fact]
         public void ParseScalarDateTimeAsAnyShouldSucceed()
         {
@@ -125,12 +115,12 @@ aDateTime: 2017-01-01
             var context = new ParsingContext(diagnostic);
 
             var node = new ValueNode(context, yamlNode.ToJsonNode());
-
+            var expected = DateTimeOffset.Parse(input.Trim('"'));
             var any = node.CreateAny();
 
             diagnostic.Errors.Should().BeEmpty();
 
-            any.Should().BeEquivalentTo(@"""2012-07-23T12:33:00""");
+            any.Should().BeEquivalentTo(JsonNode.Parse(expected.ToString()));
         }
     }
 }
