@@ -6,6 +6,7 @@
 |--|--|
 |Models and Writers|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi/) |
 |Readers | [![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.Readers.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.Readers/) |
+|Hidi|[![nuget](https://img.shields.io/nuget/v/Microsoft.OpenApi.Hidi.svg)](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi/)
 
 
 The **OpenAPI.NET** SDK contains a useful object model for OpenAPI documents in .NET along with common serializers to extract raw OpenAPI JSON and YAML documents from the model.
@@ -89,6 +90,28 @@ var openApiDocument = new OpenApiStreamReader().Read(stream, out var diagnostic)
 var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json);
 
 ```
+
+# Validating/Testing OpenApi descriptions
+In order to test the validity of an OpenApi document, we avail the following tools:
+- [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi)
+
+    A commandline tool for validating and transforming OpenApi descriptions. [Installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET/blob/vnext/src/Microsoft.OpenApi.Hidi/readme.md)
+
+- Microsoft.OpenApi.Workbench
+
+    A workbench tool consisting of a GUI where you can test and convert OpenApi descriptions in both Json and Yaml from v2-->v3 and vice versa.
+
+    #### Installation guidelines:
+    1. Clone the repo locally by running this command:
+        `git clone https://github.com/microsoft/OpenAPI.NET.git`
+    2. Open the solution file `(.sln)` in the root of the project with Visual Studio
+    3. Navigate to the `src/Microsoft.OpenApi.Workbench` directory and set it as the startup project
+    4. Run the project and you'll see a GUI pop up resembling the one below:
+    
+    
+    <img src="https://user-images.githubusercontent.com/36787645/235884441-f45d2ef7-c27b-4e1a-a890-d6f7fbef87c3.png" width="700" height="500">
+    
+    5. Copy paste your OpenApi descriptions or paste the path to the descriptions file and click on `convert` to render the results.
 
 # Build Status
 
