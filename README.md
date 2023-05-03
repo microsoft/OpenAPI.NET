@@ -111,7 +111,7 @@ In order to test the validity of an OpenApi document, we avail the following too
     
     <img src="https://user-images.githubusercontent.com/36787645/235884441-f45d2ef7-c27b-4e1a-a890-d6f7fbef87c3.png" width="700" height="500">
     
-    5. Copy paste your OpenApi descriptions or paste the path to the descriptions file and click on `convert` to render the results.
+    5. Copy and paste your OpenApi descriptions in the **Input Content** window or paste the path to the descriptions file in the **Input File** textbox and click on `convert` to render the results.
 
 # Build Status
 
