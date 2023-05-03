@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Initiates the parsing process of a fragment.  Not thread safe and should only be called once on a parsing context
         /// </summary>
-        /// <param name="jsonDocument"></param>
+        /// <param name="jsonNode"></param>
         /// <param name="version">OpenAPI version of the fragment</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
         internal T ParseFragment<T>(JsonNode jsonNode, OpenApiSpecVersion version) where T : IOpenApiElement
