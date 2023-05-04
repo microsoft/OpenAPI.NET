@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Globalization;
+using System;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Readers.Exceptions;
 
@@ -22,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override string GetScalarValue()
         {
-            return _node.GetScalarValue();
+            return Convert.ToString(_node.GetValue<object>(), CultureInfo.InvariantCulture);
         }
 
         /// <summary>

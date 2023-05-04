@@ -371,8 +371,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }}
                     }
-                }
-            );
+                }, options => options.IgnoringCyclicReferences());
         }
     }
 }

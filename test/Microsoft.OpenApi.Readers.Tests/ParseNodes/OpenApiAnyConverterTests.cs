@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
@@ -72,20 +73,20 @@ aDate: 2017-01-02
             };
 
             anyMap = OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema);
-
+            var expected = new JsonObject
+            {
+                ["aString"] = "fooBar",
+                ["aInteger"] = 10,
+                ["aDouble"] = 2.34,
+                ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture),
+                ["aDate"] = DateTimeOffset.Parse("2017-01-02", CultureInfo.InvariantCulture).Date
+            };
+            
             diagnostic.Errors.Should().BeEmpty();
-            anyMap.Should().BeEquivalentTo(
-                new JsonObject
-                {
-                    ["aString"] = "fooBar",
-                    ["aInteger"] = 10,
-                    ["aDouble"] = 2.34,
-                    ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture),
-                    ["aDate"] = DateTimeOffset.Parse("2017-01-02", CultureInfo.InvariantCulture).Date
-                });
+            anyMap.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences());
         }
 
-
+        
         [Fact]
         public void ParseNestedObjectAsAnyShouldSucceed()
         {
@@ -261,7 +262,7 @@ aDate: 2017-01-02
                     },
                     ["aDouble"] = 2.34,
                     ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
 
 
@@ -416,7 +417,7 @@ aDate: 2017-01-02
                     },
                     ["aDouble"] = 2.34,
                     ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -508,7 +509,7 @@ aDate: 2017-01-02
                     },
                     ["aDouble"] = 2.34,
                     ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
     }
 }

@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Type = "integer",
                     Format = "int64",
                     Default = 88
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -319,7 +319,7 @@ get:
                             ["name"] = "Puma",
                             ["id"] = 1
                         }
-                    });
+                    }, options=>options.IgnoringCyclicReferences());
             }
         }
 
@@ -431,7 +431,8 @@ get:
                                 }
                             }
                     }
-                }, options => options.Excluding(m => m.Name == "HostDocument"));
+                }, options => options.Excluding(m => m.Name == "HostDocument")
+                                     .IgnoringCyclicReferences());
         }
 
         [Fact]

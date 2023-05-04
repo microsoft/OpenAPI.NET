@@ -34,8 +34,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Type = "number",
                     Format = "float",
-                    Default = 5.0
-                });
+                    Default = 5
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -57,8 +57,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Type = "number",
                     Format = "float",
-                    Example = 5.0
-                });
+                    Example = 5
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Type = "number",
                     Format = "float",
                     Enum = {7, 8, 9}                    
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
     }
 }

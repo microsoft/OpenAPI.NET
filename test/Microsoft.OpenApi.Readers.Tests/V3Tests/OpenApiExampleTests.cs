@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 }
                             }
                         }
-                    });
+                    }, options => options.IgnoringCyclicReferences());
             }
         }
 

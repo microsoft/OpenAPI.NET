@@ -1311,7 +1311,7 @@ paths: {}",
                             Type = ReferenceType.Header,
                             Id = "example-header"
                         }
-                    });
+                    }, options => options.IgnoringCyclicReferences());
 
                 var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
                 Assert.NotNull(examplesHeader);
@@ -1348,7 +1348,7 @@ paths: {}",
                             Type = ReferenceType.Header,
                             Id = "examples-header"
                         }
-                    });
+                    }, options => options.IgnoringCyclicReferences());
             }
         }
 

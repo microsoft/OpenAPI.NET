@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             new JsonArray() { 3, 4 }
                         }
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -209,7 +209,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             new JsonArray() { "3", "4" }
                         }
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -345,9 +345,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Default = 5.0
+                        Default = 5
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -375,9 +375,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Enum = {7.0, 8.0, 9.0 }
+                        Enum = {7, 8, 9 }
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Format = "float",
                         Default = 5
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             9
                         }
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
     }
 }

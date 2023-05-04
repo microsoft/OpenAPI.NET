@@ -302,7 +302,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = "number",
                         Format = "float"
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
         
         [Fact]
@@ -342,7 +342,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = "number",
                         Format = "float"
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
     }
 }

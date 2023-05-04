@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return jsonNode;
             }
 
-            var value = jsonValue.ToJsonString();
+            var value = jsonValue.GetScalarValue();
             var type = schema?.Type;
             var format = schema?.Format;
 
