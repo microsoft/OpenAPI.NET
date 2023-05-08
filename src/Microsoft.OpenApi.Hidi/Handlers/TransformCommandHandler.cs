@@ -29,6 +29,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
         public Option<string> FilterByCollectionOption { get; set; }
         public Option<bool> InlineLocalOption { get; set; }
         public Option<bool> InlineExternalOption { get; set; }
+        public Option<string?> LanguageFormatOption { get; set; }
 
         public int Invoke(InvocationContext context)
         {
@@ -49,6 +50,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             LogLevel logLevel = context.ParseResult.GetValueForOption(LogLevelOption);
             bool inlineLocal = context.ParseResult.GetValueForOption(InlineLocalOption);
             bool inlineExternal = context.ParseResult.GetValueForOption(InlineExternalOption);
+            string? languageFormatOption = context.ParseResult.GetValueForOption(LanguageFormatOption);
             string filterbyoperationids = context.ParseResult.GetValueForOption(FilterByOperationIdsOption);
             string filterbytags = context.ParseResult.GetValueForOption(FilterByTagsOption);
             string filterbycollection = context.ParseResult.GetValueForOption(FilterByCollectionOption);
@@ -59,7 +61,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
-                await OpenApiService.TransformOpenApiDocument(openapi, csdl, csdlFilter, output, cleanOutput, version, metadataVersion, format, terseOutput, settingsFile, inlineLocal, inlineExternal, filterbyoperationids, filterbytags, filterbycollection, logger, cancellationToken);
+                await OpenApiService.TransformOpenApiDocument(openapi, csdl, csdlFilter, output, cleanOutput, version, metadataVersion, format, terseOutput, settingsFile, inlineLocal, inlineExternal, languageFormatOption, filterbyoperationids, filterbytags, filterbycollection, logger, cancellationToken);
 
                 return 0;
             }

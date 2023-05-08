@@ -1,0 +1,210 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Humanizer;
+using Humanizer.Inflections;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Services;
+
+namespace Microsoft.OpenApi.Hidi.Formatters
+{
+    internal class PowerShellFormatter : OpenApiVisitorBase
+    {
+        private const string DefaultPutPrefix = ".Update";
+        private const string PowerShellPutPrefix = ".Set";
+        private readonly Stack<OpenApiSchema> _schemaLoop = new();
+        private static readonly Regex s_oDataCastRegex = new("(.*(?<=[a-z]))\\.(As(?=[A-Z]).*)", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
+        private static readonly Regex s_hashSuffixRegex = new(@"^[^-]+", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
+        private static readonly Regex s_oDataRefRegex = new("(?<=[a-z])Ref(?=[A-Z])", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
+
+        static PowerShellFormatter()
+        {
+            // Add singularization exclusions.
+            // TODO: Read exclusions from a user provided file.
+            Vocabularies.Default.AddSingular("(drive)s$", "$1"); // drives does not properly singularize to drive.               
+            Vocabularies.Default.AddSingular("(data)$", "$1"); // exclude the following from singularization.
+            Vocabularies.Default.AddSingular("(delta)$", "$1");
+            Vocabularies.Default.AddSingular("(quota)$", "$1");
+            Vocabularies.Default.AddSingular("(statistics)$", "$1");
+        }
+
+        //TODO: FHL for PS
+        // Fixes (Order matters):
+        // 1. Singularize operationId operationIdSegments.
+        // 2. Add '_' to verb in an operationId.
+        // 3. Fix odata cast operationIds.
+        // 4. Fix hash suffix in operationIds.
+        // 5. Fix Put operation id should have -> {xxx}_Set{Yyy}
+        // 5. Fix anyOf and oneOf schema.
+        // 6. Add AdditionalProperties to object schemas.
+
+        public override void Visit(OpenApiSchema schema)
+        {
+            AddAddtionalPropertiesToSchema(schema);
+            ResolveAnyOfSchema(schema);
+            ResolveOneOfSchema(schema);
+
+            base.Visit(schema);
+        }
+
+        public override void Visit(OpenApiPathItem pathItem)
+        {
+            if (pathItem.Operations.ContainsKey(OperationType.Put))
+            {
+                var operationId = pathItem.Operations[OperationType.Put].OperationId;
+                pathItem.Operations[OperationType.Put].OperationId = ResolvePutOperationId(operationId);
+            }
+
+            base.Visit(pathItem);
+        }
+
+        public override void Visit(OpenApiOperation operation)
+        {
+            if (operation.OperationId == null)
+                throw new ArgumentNullException(nameof(operation.OperationId), $"OperationId is required {PathString}");
+
+            var operationId = operation.OperationId;
+
+            operationId = RemoveHashSuffix(operationId);
+            operationId = ResolveODataCastOperationId(operationId);
+            operationId = ResolveByRefOperationId(operationId);
+
+
+            var operationIdSegments = operationId.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            operationId = SingularizeAndDeduplicateOperationId(operationIdSegments);
+
+            operation.OperationId = operationId;
+            base.Visit(operation);
+        }
+
+        private void AddAddtionalPropertiesToSchema(OpenApiSchema schema)
+        {
+            if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals(schema?.Type, StringComparison.OrdinalIgnoreCase))
+            {
+                schema.AdditionalProperties = new OpenApiSchema() { Type = "object" };
+
+                /* Because 'additionalProperties' are now being walked,
+                 * we need a way to keep track of visited schemas to avoid
+                 * endlessly creating and walking them in an infinite recursion.
+                 */
+                _schemaLoop.Push(schema.AdditionalProperties);
+            }
+        }
+
+        private static void ResolveOneOfSchema(OpenApiSchema schema)
+        {
+            if (schema.OneOf?.Any() ?? false)
+            {
+                var newSchema = schema.OneOf.FirstOrDefault();
+                schema.OneOf = null;
+                FlattenSchema(schema, newSchema);
+            }
+        }
+
+        private static void ResolveAnyOfSchema(OpenApiSchema schema)
+        {
+            if (schema.AnyOf?.Any() ?? false)
+            {
+                var newSchema = schema.AnyOf.FirstOrDefault();
+                schema.AnyOf = null;
+                FlattenSchema(schema, newSchema);
+            }
+        }
+
+        private static string ResolvePutOperationId(string operationId)
+        {
+            return operationId.Contains(DefaultPutPrefix) ?
+                operationId.Replace(DefaultPutPrefix, PowerShellPutPrefix) : operationId;
+        }
+
+        private static string ResolveByRefOperationId(string operationId)
+        {
+            // Update $ref path operationId name
+            // Ref key word is enclosed between lower-cased and upper-cased letters
+            // Ex.: applications_GetRefCreatedOnBehalfOf to applications_GetCreatedOnBehalfOfByRef
+            return s_oDataRefRegex.Match(operationId).Success ? $"{s_oDataRefRegex.Replace(operationId, string.Empty)}ByRef" : operationId;
+        }
+
+        private static string ResolveODataCastOperationId(string operationId)
+        {
+            var match = s_oDataCastRegex.Match(operationId);
+            return match.Success ? $"{match.Groups[1]}{match.Groups[2]}" : operationId;
+        }
+
+        private static string SingularizeAndDeduplicateOperationId(IList<string> operationIdSegments)
+        {
+            var segmentsCount = operationIdSegments.Count;
+            var lastSegmentIndex = segmentsCount - 1;
+            var singularizedSegments = new List<string>();
+
+            for (int x = 0; x < segmentsCount; x++)
+            {
+                var segment = operationIdSegments[x].Singularize(inputIsKnownToBePlural: false);
+
+                // If a segment name is contained in the previous segment, the latter is considered a duplicate.
+                // The last segment is ignored as a rule.
+                if ((x > 0 && x < lastSegmentIndex) && singularizedSegments.Last().Equals(segment, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                singularizedSegments.Add(segment);
+            }
+            return string.Join(".", singularizedSegments);
+        }
+
+        private static string RemoveHashSuffix(string operationId)
+        {
+            // Remove hash suffix values from OperationIds.
+            return s_hashSuffixRegex.Match(operationId).Value;
+        }
+
+        private static void FlattenSchema(OpenApiSchema schema, OpenApiSchema newSchema)
+        {
+            if (newSchema != null)
+            {
+                if (newSchema.Reference != null)
+                {
+                    schema.Reference = newSchema.Reference;
+                    schema.UnresolvedReference = true;
+                }
+                else
+                {
+                    // Copies schema properties based on https://github.com/microsoft/OpenAPI.NET.OData/pull/264.
+                    CopySchema(schema, newSchema);
+                }
+            }
+        }
+
+        private static void CopySchema(OpenApiSchema schema, OpenApiSchema newSchema)
+        {
+            schema.Title ??= newSchema.Title;
+            schema.Type ??= newSchema.Type;
+            schema.Format ??= newSchema.Format;
+            schema.Description ??= newSchema.Description;
+            schema.Maximum ??= newSchema.Maximum;
+            schema.ExclusiveMaximum ??= newSchema.ExclusiveMaximum;
+            schema.Minimum ??= newSchema.Minimum;
+            schema.ExclusiveMinimum ??= newSchema.ExclusiveMinimum;
+            schema.MaxLength ??= newSchema.MaxLength;
+            schema.MinLength ??= newSchema.MinLength;
+            schema.Pattern ??= newSchema.Pattern;
+            schema.MultipleOf ??= newSchema.MultipleOf;
+            schema.Not ??= newSchema.Not;
+            schema.Required ??= newSchema.Required;
+            schema.Items ??= newSchema.Items;
+            schema.MaxItems ??= newSchema.MaxItems;
+            schema.MinItems ??= newSchema.MinItems;
+            schema.UniqueItems ??= newSchema.UniqueItems;
+            schema.Properties ??= newSchema.Properties;
+            schema.MaxProperties ??= newSchema.MaxProperties;
+            schema.MinProperties ??= newSchema.MinProperties;
+            schema.Discriminator ??= newSchema.Discriminator;
+            schema.ExternalDocs ??= newSchema.ExternalDocs;
+            schema.Enum ??= newSchema.Enum;
+            schema.ReadOnly = !schema.ReadOnly ? newSchema.ReadOnly : schema.ReadOnly;
+            schema.WriteOnly = !schema.WriteOnly ? newSchema.WriteOnly : schema.WriteOnly;
+            schema.Nullable = !schema.Nullable ? newSchema.Nullable : schema.Nullable;
+            schema.Deprecated = !schema.Deprecated ? newSchema.Deprecated : schema.Deprecated;
+        }
+    }
+}

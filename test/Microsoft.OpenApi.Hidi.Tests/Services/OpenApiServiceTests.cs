@@ -3,16 +3,12 @@
 
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.Text;
-using Castle.Core.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi;
-using Microsoft.OpenApi.Hidi.Handlers;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Services;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Services
@@ -36,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(openApiDoc.Paths);
             Assert.Equal(expectedPathCount, openApiDoc.Paths.Count);
         }
-        
+
         [Theory]
         [InlineData("Todos.Todo.UpdateTodo", null, 1)]
         [InlineData("Todos.Todo.ListTodo", null, 1)]
@@ -47,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
             var fileInput = new FileInfo(filePath);
             var csdlStream = fileInput.OpenRead();
-            
+
             // Act
             var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
@@ -58,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }
-        
+
         [Theory]
         [InlineData("UtilityFiles/appsettingstest.json")]
         [InlineData(null)]
@@ -122,7 +118,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var output = reader.ReadToEnd();
             Assert.Contains("graph LR", output);
         }
-        
+
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
@@ -190,18 +186,18 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var fileinfo = new FileInfo("sample.json");
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml",null, null,  fileinfo, true, null, null, null,false,null,false,false,null,null,null,new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, fileinfo, true, null, null, null, false, null, false, false, null, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
             var output = File.ReadAllText("sample.json");
             Assert.NotEmpty(output);
         }
 
-        
+
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputname()
         {
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, null, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, null, null, null, false, null, false, false, null, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
             var output = File.ReadAllText("output.yml");
             Assert.NotEmpty(output);
@@ -211,7 +207,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public async Task TransformCommandConvertsCsdlWithDefaultOutputname()
         {
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument(null, "UtilityFiles\\Todo.xml", null, null, true, null, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(null, "UtilityFiles\\Todo.xml", null, null, true, null, null, null, false, null, false, false, null, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
             var output = File.ReadAllText("output.yml");
             Assert.NotEmpty(output);
@@ -221,7 +217,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputnameAndSwitchFormat()
         {
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, "3.0", null, OpenApiFormat.Yaml, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, "3.0", null, OpenApiFormat.Yaml, false, null, false, false, null, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
             var output = File.ReadAllText("output.yml");
             Assert.NotEmpty(output);
@@ -231,7 +227,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public async Task ThrowTransformCommandIfOpenApiAndCsdlAreEmpty()
         {
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await OpenApiService.TransformOpenApiDocument(null, null, null, null, true, null, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+                await OpenApiService.TransformOpenApiDocument(null, null, null, null, true, null, null, null, false, null, false, false, null, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
 
         }
 
@@ -239,7 +235,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void InvokeTransformCommand()
         {
             var rootCommand = Program.CreateRootCommand();
-            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json","--co" };
+            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json", "--co" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
             var context = new InvocationContext(parseResult);

@@ -26,6 +26,7 @@ using System.Xml.Xsl;
 using System.Xml;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Hidi.Formatters;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -47,6 +48,7 @@ namespace Microsoft.OpenApi.Hidi
             string settingsFile,
             bool inlineLocal,
             bool inlineExternal,
+            string? languageFormatOption,
             string filterbyoperationids,
             string filterbytags,
             string filterbycollection,
@@ -82,6 +84,13 @@ namespace Microsoft.OpenApi.Hidi
 
                 OpenApiDocument document = await GetOpenApi(openapi, csdl, csdlFilter, settingsFile, inlineExternal, logger, cancellationToken, metadataVersion);
                 document = await FilterOpenApiDocument(filterbyoperationids, filterbytags, filterbycollection, document, logger, cancellationToken);
+                if (!string.IsNullOrWhiteSpace(languageFormatOption) && languageFormatOption.Equals("PowerShell", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // PowerShell Walker.
+                    var powerShellFormatter = new PowerShellFormatter();
+                    var walker = new OpenApiWalker(powerShellFormatter);
+                    walker.Walk(document);
+                }
                 WriteOpenApi(output, terseOutput, inlineLocal, inlineExternal, openApiFormat, openApiVersion, document, logger);
             }
             catch (TaskCanceledException)
@@ -98,7 +107,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static void WriteOpenApi(FileInfo output, bool terseOutput, bool inlineLocal, bool inlineExternal,  OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger)
+        private static void WriteOpenApi(FileInfo output, bool terseOutput, bool inlineLocal, bool inlineExternal, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger)
         {
             using (logger.BeginScope("Output"))
             {
@@ -135,7 +144,7 @@ namespace Microsoft.OpenApi.Hidi
         {
             OpenApiDocument document;
             Stream stream;
-            
+
             if (!string.IsNullOrEmpty(csdl))
             {
                 var stopwatch = new Stopwatch();
@@ -168,7 +177,7 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static async Task<OpenApiDocument> FilterOpenApiDocument(string filterbyoperationids, string filterbytags, string filterbycollection,  OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
+        private static async Task<OpenApiDocument> FilterOpenApiDocument(string filterbyoperationids, string filterbytags, string filterbycollection, OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
         {
             using (logger.BeginScope("Filter"))
             {
@@ -239,8 +248,8 @@ namespace Microsoft.OpenApi.Hidi
         /// Implementation of the validate command
         /// </summary>
         public static async Task ValidateOpenApiDocument(
-            string openapi, 
-            ILogger logger, 
+            string openapi,
+            ILogger logger,
             CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(openapi))
@@ -285,7 +294,7 @@ namespace Microsoft.OpenApi.Hidi
                 result = await new OpenApiStreamReader(new OpenApiReaderSettings
                 {
                     LoadExternalRefs = inlineExternal,
-                    BaseUrl = openApiFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? 
+                    BaseUrl = openApiFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ?
                         new Uri(openApiFile) :
                         new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 }
@@ -296,7 +305,7 @@ namespace Microsoft.OpenApi.Hidi
                 LogErrors(logger, result);
                 stopwatch.Stop();
             }
-        
+
             return result;
         }
 
@@ -310,7 +319,7 @@ namespace Microsoft.OpenApi.Hidi
 
             return config;
         }
-        
+
         /// <summary>
         /// Converts CSDL to OpenAPI
         /// </summary>
@@ -329,7 +338,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 settings.SemVerVersion = metadataVersion;
             }
-                               
+
             config.GetSection("OpenApiConvertSettings").Bind(settings);
 
             OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
@@ -354,7 +363,7 @@ namespace Microsoft.OpenApi.Hidi
 
             return doc;
         }
-        
+
         /// <summary>
         /// Takes in a file stream, parses the stream into a JsonDocument and gets a list of paths and Http methods
         /// </summary>
@@ -377,13 +386,13 @@ namespace Microsoft.OpenApi.Hidi
         private static Dictionary<string, List<string>> EnumerateJsonDocument(JsonElement itemElement, Dictionary<string, List<string>> paths)
         {
             var itemsArray = itemElement.GetProperty("item");
-             
+
             foreach (var item in itemsArray.EnumerateArray())
             {
-                if(item.ValueKind == JsonValueKind.Object)
+                if (item.ValueKind == JsonValueKind.Object)
                 {
-                   if(item.TryGetProperty("request", out var request))
-                   {
+                    if (item.TryGetProperty("request", out var request))
+                    {
                         // Fetch list of methods and urls from collection, store them in a dictionary
                         var path = request.GetProperty("url").GetProperty("raw").ToString();
                         var method = request.GetProperty("method").ToString();
@@ -395,11 +404,11 @@ namespace Microsoft.OpenApi.Hidi
                         {
                             paths[path].Add(method);
                         }
-                   }
-                   else
-                   {
+                    }
+                    else
+                    {
                         EnumerateJsonDocument(item, paths);
-                   }
+                    }
                 }
                 else
                 {
@@ -508,11 +517,11 @@ namespace Microsoft.OpenApi.Hidi
                     if (output == null)
                     {
                         var tempPath = Path.GetTempPath() + "/hidi/";
-                        if(!File.Exists(tempPath))
+                        if (!File.Exists(tempPath))
                         {
                             Directory.CreateDirectory(tempPath);
-                        }                                                
-                        
+                        }
+
                         var fileName = Path.GetRandomFileName();
 
                         output = new FileInfo(Path.Combine(tempPath, fileName + ".html"));
@@ -528,7 +537,7 @@ namespace Microsoft.OpenApi.Hidi
                         process.StartInfo.FileName = output.FullName;
                         process.StartInfo.UseShellExecute = true;
                         process.Start();
-                        
+
                         return output.FullName;
                     }
                     else  // Write diagram as Markdown document to output file
@@ -540,7 +549,7 @@ namespace Microsoft.OpenApi.Hidi
                         }
                         logger.LogTrace("Created markdown document with diagram ");
                         return output.FullName;
-                    }                      
+                    }
                 }
             }
             catch (TaskCanceledException)
@@ -563,7 +572,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     foreach (var error in context.Errors)
                     {
-                        logger.LogError($"Detected error during parsing: {error}",error.ToString());
+                        logger.LogError($"Detected error during parsing: {error}", error.ToString());
                     }
                 }
             }
@@ -581,7 +590,7 @@ namespace Microsoft.OpenApi.Hidi
             // write a span for each mermaidcolorscheme
             foreach (var style in OpenApiUrlTreeNode.MermaidNodeStyles)
             {
-                writer.WriteLine($"<span style=\"padding:2px;background-color:{style.Value.Color};border: 2px solid\">{style.Key.Replace("_"," ")}</span>");
+                writer.WriteLine($"<span style=\"padding:2px;background-color:{style.Value.Color};border: 2px solid\">{style.Key.Replace("_", " ")}</span>");
             }
             writer.WriteLine("</div>");
             writer.WriteLine();
@@ -609,7 +618,7 @@ namespace Microsoft.OpenApi.Hidi
             writer.WriteLine("<h1>" + document.Info.Title + "</h1>");
             writer.WriteLine();
             writer.WriteLine($"<h3> API Description: <a href='{sourceUrl}'>{sourceUrl}</a></h3>");
-            
+
             writer.WriteLine(@"<div>");
             // write a span for each mermaidcolorscheme
             foreach (var style in OpenApiUrlTreeNode.MermaidNodeStyles)
@@ -622,8 +631,8 @@ namespace Microsoft.OpenApi.Hidi
             rootNode.WriteMermaid(writer);
             writer.WriteLine("</code>");
 
-                // Write script tag to include JS library for rendering markdown
-                writer.WriteLine(@"<script>
+            // Write script tag to include JS library for rendering markdown
+            writer.WriteLine(@"<script>
   var config = {
       startOnLoad:true,
       theme: 'forest',
@@ -635,8 +644,8 @@ namespace Microsoft.OpenApi.Hidi
   mermaid.initialize(config);
   window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
   </script>");
-                // Write script tag to include JS library for rendering mermaid
-                writer.WriteLine("</html");
+            // Write script tag to include JS library for rendering mermaid
+            writer.WriteLine("</html");
         }
     }
 }

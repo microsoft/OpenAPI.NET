@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Handlers;
@@ -51,7 +48,7 @@ namespace Microsoft.OpenApi.Hidi
 
             var formatOption = new Option<OpenApiFormat?>("--format", "File format");
             formatOption.AddAlias("-f");
-            
+
             var terseOutputOption = new Option<bool>("--terse-output", "Produce terse json output");
             terseOutputOption.AddAlias("--to");
 
@@ -75,6 +72,9 @@ namespace Microsoft.OpenApi.Hidi
 
             var inlineExternalOption = new Option<bool>("--inline-external", "Inline external $ref instances");
             inlineExternalOption.AddAlias("--ie");
+
+            // TODO: Move to settings file (--settings-path).
+            var languageFormatOption = new Option<string>("--language-style", "Language to format the OpenAPI document. e.g. powershell");
 
             var validateCommand = new Command("validate")
             {
@@ -105,7 +105,8 @@ namespace Microsoft.OpenApi.Hidi
                 filterByTagsOption,
                 filterByCollectionOption,
                 inlineLocalOption,
-                inlineExternalOption
+                inlineExternalOption,
+                languageFormatOption
             };
 
             transformCommand.Handler = new TransformCommandHandler
@@ -125,7 +126,8 @@ namespace Microsoft.OpenApi.Hidi
                 FilterByTagsOption = filterByTagsOption,
                 FilterByCollectionOption = filterByCollectionOption,
                 InlineLocalOption = inlineLocalOption,
-                InlineExternalOption = inlineExternalOption
+                InlineExternalOption = inlineExternalOption,
+                LanguageFormatOption = languageFormatOption
             };
 
             var showCommand = new Command("show")
