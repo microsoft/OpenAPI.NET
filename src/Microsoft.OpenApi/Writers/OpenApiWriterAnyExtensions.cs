@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Writers
                 return;
             }
 
-            JsonElement element = JsonSerializer.Deserialize<JsonElement>(node);
+            var element = JsonDocument.Parse(node.ToJsonString()).RootElement;
             switch (element.ValueKind)
             {
                 case JsonValueKind.Array: // Array
@@ -62,16 +62,13 @@ namespace Microsoft.OpenApi.Writers
                     writer.WriteObject(node as JsonObject);
                     break;                    
                 case JsonValueKind.String: // Primitive
-                    writer.WritePrimitive(node as JsonValue);
+                    writer.WritePrimitive(element);
                     break;
                 case JsonValueKind.Number: // Primitive
-                    writer.WritePrimitive(node as JsonValue);
+                    writer.WritePrimitive(element);
                     break;
-                case JsonValueKind.True: // Primitive
-                    writer.WritePrimitive(node as JsonValue);
-                    break;
-                case JsonValueKind.False: // Primitive
-                    writer.WritePrimitive(node as JsonValue);
+                case JsonValueKind.True or JsonValueKind.False: // Primitive
+                    writer.WritePrimitive(element);
                     break;
                 case JsonValueKind.Null: // null
                     writer.WriteNull();
@@ -126,22 +123,53 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteEndObject();
         }
 
-        private static void WritePrimitive(this IOpenApiWriter writer, JsonValue primitive)
+        private static void WritePrimitive(this IOpenApiWriter writer, JsonElement primitive)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (primitive == null)
+            if (primitive.ValueKind == JsonValueKind.String)
             {
-                throw Error.ArgumentNull(nameof(primitive));
+                // check whether string is actual string or date time object
+                if (primitive.TryGetDateTime(out var dateTime))
+                {
+                    writer.WriteValue(dateTime);
+                }
+                else if (primitive.TryGetDateTimeOffset(out var dateTimeOffset))
+                {
+                        writer.WriteValue(dateTimeOffset);
+                }
+                else
+                {
+                    writer.WriteValue(primitive.GetString());
+                }
             }
 
-            writer.WriteAny(primitive);
-            
-            // The Spec version is meaning for the Any type, so it's ok to use the latest one.
-            //primitive.Write(writer, OpenApiSpecVersion.OpenApi3_0);
+            if (primitive.ValueKind == JsonValueKind.Number)
+            {
+                if (primitive.TryGetDecimal(out var decimalValue))
+                {
+                    writer.WriteValue(decimalValue);
+                }
+                else if (primitive.TryGetDouble(out var doubleValue))
+                {
+                    writer.WriteValue(doubleValue);
+                }
+                else if (primitive.TryGetInt64(out var longValue))
+                {
+                    writer.WriteValue(longValue);
+                }
+                else if (primitive.TryGetInt32(out var intValue))
+                {
+                    writer.WriteValue(intValue);
+                }
+            }
+            if (primitive.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            {
+                writer.WriteValue(primitive.GetBoolean());
+            }
         }
     }
 }

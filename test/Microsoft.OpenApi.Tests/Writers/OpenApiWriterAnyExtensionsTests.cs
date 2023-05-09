@@ -272,8 +272,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             // Act
             var value = new StreamReader(stream).ReadToEnd();
-            var element = JsonSerializer.Deserialize<JsonElement>(any);
-
+            var element = JsonDocument.Parse(value).RootElement;
             return element.ValueKind switch
             {
                 JsonValueKind.String => value,
