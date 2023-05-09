@@ -91,15 +91,15 @@ var outputString = openApiDocument.Serialize(OpenApiSpecVersion.OpenApi2_0, Open
 
 ```
 
-# Validating/Testing OpenApi descriptions
+# Validating/Testing OpenAPI descriptions
 In order to test the validity of an OpenApi document, we avail the following tools:
 - [Microsoft.OpenApi.Hidi](https://www.nuget.org/packages/Microsoft.OpenApi.Hidi)
 
-    A commandline tool for validating and transforming OpenApi descriptions. [Installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET/blob/vnext/src/Microsoft.OpenApi.Hidi/readme.md)
+    A commandline tool for validating and transforming OpenAPI descriptions. [Installation guidelines and documentation](https://github.com/microsoft/OpenAPI.NET/blob/vnext/src/Microsoft.OpenApi.Hidi/readme.md)
 
 - Microsoft.OpenApi.Workbench
 
-    A workbench tool consisting of a GUI where you can test and convert OpenApi descriptions in both Json and Yaml from v2-->v3 and vice versa.
+    A workbench tool consisting of a GUI where you can test and convert OpenAPI descriptions in both JSON and YAML from v2-->v3 and vice versa.
 
     #### Installation guidelines:
     1. Clone the repo locally by running this command:
@@ -111,7 +111,7 @@ In order to test the validity of an OpenApi document, we avail the following too
     
     <img src="https://user-images.githubusercontent.com/36787645/235884441-f45d2ef7-c27b-4e1a-a890-d6f7fbef87c3.png" width="700" height="500">
     
-    5. Copy and paste your OpenApi descriptions in the **Input Content** window or paste the path to the descriptions file in the **Input File** textbox and click on `convert` to render the results.
+    5. Copy and paste your OpenAPI descriptions in the **Input Content** window or paste the path to the descriptions file in the **Input File** textbox and click on `Convert` to render the results.
 
 # Build Status
 
