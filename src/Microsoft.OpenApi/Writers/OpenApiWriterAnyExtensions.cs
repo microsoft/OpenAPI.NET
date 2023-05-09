@@ -32,7 +32,15 @@ namespace Microsoft.OpenApi.Writers
                 foreach (var item in extensions)
                 {
                     writer.WritePropertyName(item.Key);
-                    item.Value.Write(writer, specVersion);
+                    
+                    if (item.Value == null)
+                    {                        
+                        writer.WriteNull();
+                    }
+                    else
+                    {
+                        item.Value.Write(writer, specVersion);
+                    }
                 }
             }
         }
