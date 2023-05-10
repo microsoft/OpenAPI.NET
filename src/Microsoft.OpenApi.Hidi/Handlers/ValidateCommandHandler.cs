@@ -2,18 +2,22 @@
 // Licensed under the MIT license.
 
 using System;
-using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Hidi.Options;
 
 namespace Microsoft.OpenApi.Hidi.Handlers
 {
     internal class ValidateCommandHandler : ICommandHandler
     {
-        public Option<string> DescriptionOption { get; set; }
-        public Option<LogLevel> LogLevelOption { get; set; }
+        public CommandOptions CommandOptions { get; }
+
+        public ValidateCommandHandler(CommandOptions commandOptions)
+        {
+            CommandOptions = commandOptions;
+        }
 
         public int Invoke(InvocationContext context)
         {
@@ -21,16 +25,13 @@ namespace Microsoft.OpenApi.Hidi.Handlers
         }
         public async Task<int> InvokeAsync(InvocationContext context)
         {
-            string openapi = context.ParseResult.GetValueForOption(DescriptionOption);
-            LogLevel logLevel = context.ParseResult.GetValueForOption(LogLevelOption);
+            HidiOptions hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
             CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
-
-
-            using var loggerFactory = Logger.ConfigureLogger(logLevel);
+            using var loggerFactory = Logger.ConfigureLogger(hidiOptions.LogLevel);
             var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
-                await OpenApiService.ValidateOpenApiDocument(openapi, logger, cancellationToken);
+                await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken);
                 return 0;
             }
             catch (Exception ex)

@@ -25,73 +25,59 @@ using System.Threading;
 using System.Xml.Xsl;
 using System.Xml;
 using System.Reflection;
+using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Hidi.Formatters;
 
 namespace Microsoft.OpenApi.Hidi
 {
-    public class OpenApiService
+    internal class OpenApiService
     {
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
-        public static async Task TransformOpenApiDocument(
-            string openapi,
-            string csdl,
-            string csdlFilter,
-            FileInfo output,
-            bool cleanoutput,
-            string? version,
-            string metadataVersion,
-            OpenApiFormat? format,
-            bool terseOutput,
-            string settingsFile,
-            bool inlineLocal,
-            bool inlineExternal,
-            string? languageFormatOption,
-            string filterbyoperationids,
-            string filterbytags,
-            string filterbycollection,
-            ILogger logger,
-            CancellationToken cancellationToken
-           )
+        public static async Task TransformOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
+            if (string.IsNullOrEmpty(options.OpenApi) && string.IsNullOrEmpty(options.Csdl))
             {
                 throw new ArgumentException("Please input a file path or URL");
             }
 
             try
             {
-                if (output == null)
+                if (options.Output == null)
                 {
-                    var inputExtension = GetInputPathExtension(openapi, csdl);
-                    output = new FileInfo($"./output{inputExtension}");
+                    var inputExtension = GetInputPathExtension(options.OpenApi, options.Csdl);
+                    options.Output = new FileInfo($"./output{inputExtension}");
                 };
 
-                if (cleanoutput && output.Exists)
+                if (options.CleanOutput && options.Output.Exists)
                 {
-                    output.Delete();
+                    options.Output.Delete();
                 }
-                if (output.Exists)
+                if (options.Output.Exists)
                 {
-                    throw new IOException($"The file {output} already exists. Please input a new file path.");
+                    throw new IOException($"The file {options.Output} already exists. Please input a new file path.");
                 }
 
                 // Default to yaml and OpenApiVersion 3 during csdl to OpenApi conversion
-                OpenApiFormat openApiFormat = format ?? (!string.IsNullOrEmpty(openapi) ? GetOpenApiFormat(openapi, logger) : OpenApiFormat.Yaml);
-                OpenApiSpecVersion openApiVersion = version != null ? TryParseOpenApiSpecVersion(version) : OpenApiSpecVersion.OpenApi3_0;
+                OpenApiFormat openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
+                OpenApiSpecVersion openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_0;
 
-                OpenApiDocument document = await GetOpenApi(openapi, csdl, csdlFilter, settingsFile, inlineExternal, logger, cancellationToken, metadataVersion);
-                document = await FilterOpenApiDocument(filterbyoperationids, filterbytags, filterbycollection, document, logger, cancellationToken);
-                if (!string.IsNullOrWhiteSpace(languageFormatOption) && languageFormatOption.Equals("PowerShell", StringComparison.InvariantCultureIgnoreCase))
+                OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
+                if (options.FilterOptions != null)
+                    document = await FilterOpenApiDocument(options.FilterOptions.FilterByOperationIds, options.FilterOptions.FilterByTags, options.FilterOptions.FilterByCollection, document, logger, cancellationToken);
+                // TODO: Handle PS formating
+                var languageFormat = options.SettingsConfig.GetSection("LanguageFormat").Value;
+                if (!string.IsNullOrWhiteSpace(languageFormat) && languageFormat.Equals("PowerShell", StringComparison.InvariantCultureIgnoreCase))
                 {
                     // PowerShell Walker.
                     var powerShellFormatter = new PowerShellFormatter();
                     var walker = new OpenApiWalker(powerShellFormatter);
                     walker.Walk(document);
                 }
-                WriteOpenApi(output, terseOutput, inlineLocal, inlineExternal, openApiFormat, openApiVersion, document, logger);
+                WriteOpenApi(options.Output, options.TerseOutput, options.InlineLocal, options.InlineExternal, openApiFormat, openApiVersion, document, logger);
             }
             catch (TaskCanceledException)
             {
@@ -140,7 +126,7 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL 
-        private static async Task<OpenApiDocument> GetOpenApi(string openapi, string csdl, string csdlFilter, string settingsFile, bool inlineExternal, ILogger logger, CancellationToken cancellationToken, string metadataVersion = null)
+        private static async Task<OpenApiDocument> GetOpenApi(string openapi, string csdl, string csdlFilter, IConfiguration settings, bool inlineExternal, ILogger logger, CancellationToken cancellationToken, string metadataVersion = null)
         {
             OpenApiDocument document;
             Stream stream;
@@ -162,7 +148,7 @@ namespace Microsoft.OpenApi.Hidi
                         stream = null;
                     }
 
-                    document = await ConvertCsdlToOpenApi(filteredStream ?? stream, metadataVersion, settingsFile, cancellationToken);
+                    document = await ConvertCsdlToOpenApi(filteredStream ?? stream, metadataVersion, settings, cancellationToken);
                     stopwatch.Stop();
                     logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                 }
@@ -309,39 +295,19 @@ namespace Microsoft.OpenApi.Hidi
             return result;
         }
 
-        internal static IConfiguration GetConfiguration(string settingsFile)
-        {
-            settingsFile ??= "appsettings.json";
-
-            IConfiguration config = new ConfigurationBuilder()
-            .AddJsonFile(settingsFile, true)
-            .Build();
-
-            return config;
-        }
-
         /// <summary>
         /// Converts CSDL to OpenAPI
         /// </summary>
         /// <param name="csdl">The CSDL stream.</param>
         /// <returns>An OpenAPI document.</returns>
-        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string metadataVersion = null, string settingsFile = null, CancellationToken token = default)
+        public static async Task<OpenApiDocument> ConvertCsdlToOpenApi(Stream csdl, string metadataVersion = null, IConfiguration settings = null, CancellationToken token = default)
         {
             using var reader = new StreamReader(csdl);
             var csdlText = await reader.ReadToEndAsync(token);
             var edmModel = CsdlReader.Parse(XElement.Parse(csdlText).CreateReader());
+            settings ??= SettingsUtilities.GetConfiguration();
 
-            var config = GetConfiguration(settingsFile);
-            var settings = new OpenApiConvertSettings();
-
-            if (!string.IsNullOrEmpty(metadataVersion))
-            {
-                settings.SemVerVersion = metadataVersion;
-            }
-
-            config.GetSection("OpenApiConvertSettings").Bind(settings);
-
-            OpenApiDocument document = edmModel.ConvertToOpenApi(settings);
+            OpenApiDocument document = edmModel.ConvertToOpenApi(SettingsUtilities.GetOpenApiConvertSettings(settings, metadataVersion));
             document = FixReferences(document);
 
             return document;
