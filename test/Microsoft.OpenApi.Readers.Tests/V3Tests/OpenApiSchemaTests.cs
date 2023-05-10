@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
             var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
-
+            
             // Act
             var openApiAny = reader.ReadFragment<IOpenApiElement>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 

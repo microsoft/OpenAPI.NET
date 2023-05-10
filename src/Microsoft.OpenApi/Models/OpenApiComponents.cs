@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
@@ -71,7 +72,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -93,7 +94,7 @@ namespace Microsoft.OpenApi.Models
             Links = components?.Links != null ? new Dictionary<string, OpenApiLink>(components.Links) : null;
             Callbacks = components?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(components.Callbacks) : null;
             PathItems = components?.PathItems != null ? new Dictionary<string, OpenApiPathItem>(components.PathItems) : null;
-            Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
+            Extensions = components?.Extensions != null ? new Dictionary<string, JsonNode>(components.Extensions) : null;
         }
 
         /// <summary>

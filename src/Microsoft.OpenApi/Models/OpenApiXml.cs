@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -43,7 +44,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Parameterless constructor
@@ -60,7 +61,7 @@ namespace Microsoft.OpenApi.Models
             Prefix = xml?.Prefix ?? Prefix;
             Attribute = xml?.Attribute ?? Attribute;
             Wrapped = xml?.Wrapped ?? Wrapped;
-            Extensions = xml?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(xml.Extensions) : null;
+            Extensions = xml?.Extensions != null ? new Dictionary<string, JsonNode>(xml.Extensions) : null;
         }
 
         /// <summary>

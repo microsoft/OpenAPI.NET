@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Dictionary of parsers for converting extensions into strongly typed classes
         /// </summary>
-        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>();
+        public Dictionary<string, Func<JsonNode, OpenApiSpecVersion, JsonNode>> ExtensionParsers { get; set; } = new Dictionary<string, Func<JsonNode, OpenApiSpecVersion, JsonNode>>();
 
         /// <summary>
         /// Rules to use for validating OpenAPI specification.  If none are provided a default set of rules are applied.

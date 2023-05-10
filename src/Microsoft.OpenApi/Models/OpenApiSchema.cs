@@ -233,7 +233,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
@@ -291,6 +291,7 @@ namespace Microsoft.OpenApi.Models
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
             Deprecated = schema?.Deprecated ?? Deprecated;
             Xml = schema?.Xml != null ? new(schema?.Xml) : null;
+            Extensions = schema?.Xml != null ? new Dictionary<string, JsonNode>(schema.Extensions) : null;
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
         }

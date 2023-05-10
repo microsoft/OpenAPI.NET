@@ -595,10 +595,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = "string"
                                             },
-                                            Extensions = new Dictionary<string, IOpenApiExtension>
+                                            Extensions = new Dictionary<string, JsonNode>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new ExtensionTypeCaster<string>("call")
+                                                    "x-ms-docs-key-type", "call"
                                                 }
                                             }
                                         }
@@ -612,10 +612,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Extensions = new Dictionary<string, IOpenApiExtension>
+                                    Extensions = new Dictionary<string, JsonNode>
                                     {
                                         {
-                                            "x-ms-docs-operation-type", new ExtensionTypeCaster<string>("action") 
+                                            "x-ms-docs-operation-type", "action" 
                                         }
                                     }
                                 }
@@ -650,10 +650,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = "string"
                                             },
-                                            Extensions = new Dictionary<string, IOpenApiExtension>
+                                            Extensions = new Dictionary<string, JsonNode>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new ExtensionTypeCaster<string>("group")
+                                                    "x-ms-docs-key-type", "group"
                                                 }
                                             }
                                         },
@@ -667,10 +667,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = "string"
                                             },
-                                            Extensions = new Dictionary<string, IOpenApiExtension>
+                                            Extensions = new Dictionary<string, JsonNode>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", new ExtensionTypeCaster<string>("event")
+                                                    "x-ms-docs-key-type", "event"
                                                 }
                                             }
                                         }
@@ -702,10 +702,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Extensions = new Dictionary<string, IOpenApiExtension>
+                                    Extensions = new Dictionary<string, JsonNode>
                                     {
                                         {
-                                            "x-ms-docs-operation-type", new ExtensionTypeCaster<string>("function")
+                                            "x-ms-docs-operation-type", "function"
                                         }
                                     }
                                 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -23,9 +24,9 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Name = "Apache 2.0",
             Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html"),
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, JsonNode>
             {
-                {"x-copyright", new ExtensionTypeCaster<string>("Abc")}
+                {"x-copyright", "Abc"}
             }
         };
 

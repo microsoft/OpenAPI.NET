@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 },
                 Extensions = { 
-                    [OpenApiConstants.BodyName] = new ExtensionTypeCaster<string>("petObject")
+                    [OpenApiConstants.BodyName] = "petObject"
                 }
             },
             Responses = new OpenApiResponses
@@ -293,7 +293,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]

@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// A parameterless constructor
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Models
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
-            Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
+            Extensions = parameter?.Extensions != null ? new Dictionary<string, JsonNode>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
             Deprecated = parameter?.Deprecated ?? Deprecated;
         }
@@ -355,7 +355,7 @@ namespace Microsoft.OpenApi.Models
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
-            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+            var extensionsClone = new Dictionary<string, JsonNode>(Extensions);
 
             // schema
             if (this is OpenApiBodyParameter)

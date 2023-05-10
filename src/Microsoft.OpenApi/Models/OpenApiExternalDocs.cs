@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -26,7 +27,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Models
         {
             Description = externalDocs?.Description ?? Description;
             Url = externalDocs?.Url != null ? new Uri(externalDocs.Url.OriginalString) : null;
-            Extensions = externalDocs?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(externalDocs.Extensions) : null;
+            Extensions = externalDocs?.Extensions != null ? new Dictionary<string, JsonNode>(externalDocs.Extensions) : null;
         }
         
         /// <summary>

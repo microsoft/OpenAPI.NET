@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Interfaces;
@@ -27,11 +28,13 @@ paths: {}
             var settings = new OpenApiReaderSettings()
             {
                 ExtensionParsers = { { "x-foo", (a,v) => {
-                        var fooNode = (JsonObject)a;
-                        return new FooExtension() {
+                    var fooNode = (JsonObject)a;
+                    var fooExtension = new FooExtension() {
                               Bar = (fooNode["bar"].ToString()),
                               Baz = (fooNode["baz"].ToString())
                         };
+                    var jsonString = JsonSerializer.Serialize(fooExtension);
+                    return JsonNode.Parse(jsonString);
                 } } }
             };
 
@@ -40,7 +43,8 @@ paths: {}
             var diag = new OpenApiDiagnostic();
             var doc = reader.Read(description, out diag);
 
-            var fooExtension = doc.Info.Extensions["x-foo"] as FooExtension;
+            var fooExtensionNode = doc.Info.Extensions["x-foo"];
+            var fooExtension = JsonSerializer.Deserialize<FooExtension>(fooExtensionNode);
 
             fooExtension.Should().NotBeNull();
             fooExtension.Bar.Should().Be("hey");

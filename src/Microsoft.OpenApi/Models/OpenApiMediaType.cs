@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Parameterless constructor
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Models
             Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
-            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
+            Extensions = mediaType?.Extensions != null ? new Dictionary<string, JsonNode>(mediaType.Extensions) : null;
         }
 
         /// <summary>

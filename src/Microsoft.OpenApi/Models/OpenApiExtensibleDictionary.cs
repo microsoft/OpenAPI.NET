@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
@@ -30,15 +31,15 @@ namespace Microsoft.OpenApi.Models
         /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
         protected OpenApiExtensibleDictionary(
             Dictionary<string, T> dictionary = null,
-            IDictionary<string, IOpenApiExtension> extensions = null) : base (dictionary)
+            IDictionary<string, JsonNode> extensions = null) : base (dictionary)
         {
-            Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : null;
+            Extensions = extensions != null ? new Dictionary<string, JsonNode>(extensions) : null;
         }       
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
 
         /// <summary>

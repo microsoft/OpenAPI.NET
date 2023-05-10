@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Interfaces;
@@ -25,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, JsonNode>
             {
                 {"x-tag-extension", null}
             }
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, JsonNode>
             {
                 {"x-tag-extension", null}
             },

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -67,7 +68,7 @@ namespace Microsoft.OpenApi.Models
             Headers = response?.Headers != null ? new Dictionary<string, OpenApiHeader>(response.Headers) : null;
             Content = response?.Content != null ? new Dictionary<string, OpenApiMediaType>(response.Content) : null;
             Links = response?.Links != null ? new Dictionary<string, OpenApiLink>(response.Links) : null;
-            Extensions = response?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(response.Extensions) : null;
+            Extensions = response?.Extensions != null ? new Dictionary<string, JsonNode>(response.Extensions) : null;
             UnresolvedReference = response?.UnresolvedReference ?? UnresolvedReference;
             Reference = response?.Reference != null ? new(response?.Reference) : null;
         }
@@ -204,7 +205,7 @@ namespace Microsoft.OpenApi.Models
             // description
             writer.WriteRequiredProperty(OpenApiConstants.Description, Description);
 
-            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
+            var extensionsClone = new Dictionary<string, JsonNode>(Extensions);
 
             if (Content != null)
             {

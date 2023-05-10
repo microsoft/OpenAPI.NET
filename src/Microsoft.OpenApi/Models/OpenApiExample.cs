@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Reference object.
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Models
             Description = example?.Description ?? Description;
             Value = JsonNodeCloneHelper.Clone(example?.Value);
             ExternalValue = example?.ExternalValue ?? ExternalValue;
-            Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
+            Extensions = example?.Extensions != null ? new Dictionary<string, JsonNode>(example.Extensions) : null;
             Reference = example?.Reference != null ? new(example?.Reference) : null;
             UnresolvedReference = example?.UnresolvedReference ?? UnresolvedReference;
         }
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // value
-            writer.WriteOptionalObject(OpenApiConstants.Value, (IOpenApiElement)Value, (w, v) => w.WriteAny((JsonNode)v));
+            writer.WriteOptionalObject(OpenApiConstants.Value, (IOpenApiElement)Value, (w, v) => w.WriteAny((JsonValue)v));
 
             // externalValue
             writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);

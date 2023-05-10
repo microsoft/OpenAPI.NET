@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Interfaces
 {
@@ -13,6 +14,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Specification extensions.
         /// </summary>
-        IDictionary<string, IOpenApiExtension> Extensions { get; set; }
+        IDictionary<string, JsonNode> Extensions { get; set; }
     }
 }

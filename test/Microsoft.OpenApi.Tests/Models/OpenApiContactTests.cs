@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -21,9 +22,9 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "API Support",
             Url = new Uri("http://www.example.com/support"),
             Email = "support@example.com",
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, JsonNode>
             {
-                {"x-internal-id", new ExtensionTypeCaster<int>(42)}
+                {"x-internal-id", 42}
             }
         };
         

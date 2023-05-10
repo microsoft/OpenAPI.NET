@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -31,7 +32,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -56,7 +57,7 @@ namespace Microsoft.OpenApi.Models
             Name = tag?.Name ?? Name;
             Description = tag?.Description ?? Description;
             ExternalDocs = tag?.ExternalDocs != null ? new(tag?.ExternalDocs) : null;
-            Extensions = tag?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(tag.Extensions) : null;
+            Extensions = tag?.Extensions != null ? new Dictionary<string, JsonNode>(tag.Extensions) : null;
             UnresolvedReference = tag?.UnresolvedReference ?? UnresolvedReference;
             Reference = tag?.Reference != null ? new(tag?.Reference) : null;
         }

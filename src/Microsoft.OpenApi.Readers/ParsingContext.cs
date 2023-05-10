@@ -24,8 +24,8 @@ namespace Microsoft.OpenApi.Readers
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new Dictionary<object, Dictionary<string, object>>();
         private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
-        internal Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = 
-            new Dictionary<string, Func<JsonNode, OpenApiSpecVersion, IOpenApiExtension>>();
+        internal Dictionary<string, Func<JsonNode, OpenApiSpecVersion, JsonNode>> ExtensionParsers { get; set; } = 
+            new Dictionary<string, Func<JsonNode, OpenApiSpecVersion, JsonNode>>();
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
         internal Uri BaseUrl { get; set; }

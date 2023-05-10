@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -20,7 +21,7 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">The extensible Open API element. </param>
         /// <param name="name">The extension name.</param>
         /// <param name="any">The extension value.</param>
-        public static void AddExtension<T>(this T element, string name, IOpenApiExtension any)
+        public static void AddExtension<T>(this T element, string name, JsonNode any)
             where T : IOpenApiExtensible
         {
             if (element == null)

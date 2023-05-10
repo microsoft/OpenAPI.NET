@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 Extensions = bodyParameter.Extensions
             };
 
-            requestBody.Extensions[OpenApiConstants.BodyName] = new ExtensionTypeCaster<string>(bodyParameter.Name);
+            requestBody.Extensions[OpenApiConstants.BodyName] = bodyParameter.Name;
             return requestBody;
         }
         

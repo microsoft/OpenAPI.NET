@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -131,7 +133,9 @@ namespace Microsoft.OpenApi.Tests.Services
                 Baz = "baz"
             };
 
-            openApiDocument.Info.Extensions.Add("x-foo", fooExtension);
+            var extensionNode = JsonSerializer.Serialize(fooExtension);
+            var jsonNode = JsonNode.Parse(extensionNode);
+            openApiDocument.Info.Extensions.Add("x-foo", jsonNode);
 
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);

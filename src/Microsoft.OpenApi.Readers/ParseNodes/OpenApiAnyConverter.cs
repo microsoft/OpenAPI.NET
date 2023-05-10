@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var type = schema?.Type;
             var format = schema?.Format;
 
-            if (value.StartsWith("\"") && value.EndsWith("\""))
+            if (value.Contains("\""))
             {
                 // More narrow type detection for explicit strings, only check types that are passed as strings
                 if (schema == null)
@@ -275,9 +275,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
                 if (type == "string")
                 {
-                    return jsonNode;
+                    return value;
                 }
-
+                
                 if (type == "boolean")
                 {
                     if (bool.TryParse(value, out var booleanValue))
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             // If data conflicts with the given type, return a string.
             // This converter is used in the parser, so it does not perform any validations, 
             // but the validator can be used to validate whether the data and given type conflicts.
-            return jsonNode;
+            return value;
         }
     }
 }

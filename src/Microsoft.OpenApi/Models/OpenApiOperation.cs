@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -103,7 +104,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Parameterless constructor
@@ -127,7 +128,7 @@ namespace Microsoft.OpenApi.Models
             Deprecated = operation?.Deprecated ?? Deprecated;
             Security = operation?.Security != null ? new List<OpenApiSecurityRequirement>(operation.Security) : null;
             Servers = operation?.Servers != null ? new List<OpenApiServer>(operation.Servers) : null;
-            Extensions = operation?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(operation.Extensions) : null;
+            Extensions = operation?.Extensions != null ? new Dictionary<string, JsonNode>(operation.Extensions) : null;
         }
 
         /// <summary>

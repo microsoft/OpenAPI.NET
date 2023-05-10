@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Models
             Example = JsonNodeCloneHelper.Clone(header?.Example);
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
-            Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
+            Extensions = header?.Extensions != null ? new Dictionary<string, JsonNode>(header.Extensions) : null;
         }
         
         /// <summary>

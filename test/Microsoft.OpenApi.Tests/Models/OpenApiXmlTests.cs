@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -21,9 +22,9 @@ namespace Microsoft.OpenApi.Tests.Models
             Prefix = "sample",
             Wrapped = true,
             Attribute = true,
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, JsonNode>
             {
-                {"x-xml-extension",new ExtensionTypeCaster<int>(7)}
+                {"x-xml-extension", 7}
             }
         };
 

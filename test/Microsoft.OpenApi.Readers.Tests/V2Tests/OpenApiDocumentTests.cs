@@ -116,7 +116,7 @@ paths: {}",
                         Version = "0.9.1",
                         Extensions =
                         {
-                            ["x-extension"] = new ExtensionTypeCaster<double>(2.335)
+                            ["x-extension"] = 2.335
                         }
                     },
                     Components = new OpenApiComponents()
@@ -146,7 +146,7 @@ paths: {}",
                         }
                     },
                     Paths = new OpenApiPaths()
-                });
+                }, options => options.IgnoringCyclicReferences());
 
             context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() 

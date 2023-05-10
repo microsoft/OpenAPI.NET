@@ -168,7 +168,7 @@ namespace Microsoft.OpenApi.Readers.V3
             return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
         }
 
-        private static IOpenApiExtension LoadExtension(string name, ParseNode node)
+        private static JsonNode LoadExtension(string name, ParseNode node)
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
@@ -176,7 +176,7 @@ namespace Microsoft.OpenApi.Readers.V3
             }
             else
             {
-                return (IOpenApiExtension)OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
+                return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
             }
         }
 

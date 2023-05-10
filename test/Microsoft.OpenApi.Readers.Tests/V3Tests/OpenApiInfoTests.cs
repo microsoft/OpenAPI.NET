@@ -52,33 +52,33 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Email = "example@example.com",
                         Extensions =
                         {
-                                ["x-twitter"] = new ExtensionTypeCaster<string>("@exampleTwitterHandler")
+                                ["x-twitter"] = "@exampleTwitterHandler"
                         },
                         Name = "John Doe",
                         Url = new Uri("http://www.example.com/url1")
                     },
                     License = new OpenApiLicense
                     {
-                        Extensions = { ["x-disclaimer"] = new ExtensionTypeCaster<string>("Sample Extension String Disclaimer") },
+                        Extensions = { ["x-disclaimer"] = "Sample Extension String Disclaimer" },
                         Name = "licenseName",
                         Url = new Uri("http://www.example.com/url2")
                     },
                     Extensions =
                     {
-                            ["x-something"] = new ExtensionTypeCaster<string>("Sample Extension String Something"),
-                            ["x-contact"] = new ExtensionTypeCaster<JsonObject>(new JsonObject
+                            ["x-something"] = "Sample Extension String Something",
+                            ["x-contact"] = new JsonObject()
                             {
                                 ["name"] = "John Doe",
                                 ["url"] = "http://www.example.com/url3",
                                 ["email"] = "example@example.com"
-                            }),
-                            ["x-list"] = new ExtensionTypeCaster<JsonArray>(new JsonArray
+                            },
+                            ["x-list"] = new JsonArray
                             {
                                 "1",
                                 "2"
-                            })
+                            }
                     }
-                });
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]

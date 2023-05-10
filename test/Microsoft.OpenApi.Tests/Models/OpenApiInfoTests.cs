@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -22,9 +23,9 @@ namespace Microsoft.OpenApi.Tests.Models
             Contact = OpenApiContactTests.AdvanceContact,
             License = OpenApiLicenseTests.AdvanceLicense,
             Version = "1.1.1",
-            Extensions = new Dictionary<string, IOpenApiExtension>
+            Extensions = new Dictionary<string, JsonNode>
             {
-                {"x-updated", new ExtensionTypeCaster<string>("metadata")}
+                {"x-updated", "metadata"}
             }
         };
 
