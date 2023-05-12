@@ -52,6 +52,16 @@ namespace Microsoft.OpenApi.Services
                     }
                     break;
 
+                case OpenApiRequestBody requestBody:
+                    EnsureComponentsExists();
+                    EnsureResponsesExists();
+                    EnsurRequestBodiesExists();
+                    if (!Components.RequestBodies.ContainsKey(requestBody.Reference.Id))
+                    {
+                        Components.RequestBodies.Add(requestBody.Reference.Id, requestBody);
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -106,6 +116,14 @@ namespace Microsoft.OpenApi.Services
             if (_target.Components.Responses == null)
             {
                 _target.Components.Responses = new Dictionary<string, OpenApiResponse>();
+            }
+        }
+
+        private void EnsurRequestBodiesExists()
+        {
+            if (_target.Components.RequestBodies == null)
+            {
+                _target.Components.RequestBodies = new Dictionary<string, OpenApiRequestBody>();
             }
         }
     }

@@ -48,7 +48,6 @@ namespace Microsoft.OpenApi.Hidi
             string settingsFile,
             bool inlineLocal,
             bool inlineExternal,
-            string? languageFormatOption,
             string filterbyoperationids,
             string filterbytags,
             string filterbycollection,
@@ -84,7 +83,9 @@ namespace Microsoft.OpenApi.Hidi
 
                 OpenApiDocument document = await GetOpenApi(openapi, csdl, csdlFilter, settingsFile, inlineExternal, logger, cancellationToken, metadataVersion);
                 document = await FilterOpenApiDocument(filterbyoperationids, filterbytags, filterbycollection, document, logger, cancellationToken);
-                if (!string.IsNullOrWhiteSpace(languageFormatOption) && languageFormatOption.Equals("PowerShell", StringComparison.InvariantCultureIgnoreCase))
+
+                var languageFormat = GetConfiguration(settingsFile).GetSection("LanguageFormat").Value;
+                if (Extensions.StringExtensions.IsEquals(languageFormat, "PowerShell"))
                 {
                     // PowerShell Walker.
                     var powerShellFormatter = new PowerShellFormatter();

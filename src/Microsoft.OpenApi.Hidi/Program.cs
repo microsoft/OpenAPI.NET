@@ -73,9 +73,6 @@ namespace Microsoft.OpenApi.Hidi
             var inlineExternalOption = new Option<bool>("--inline-external", "Inline external $ref instances");
             inlineExternalOption.AddAlias("--ie");
 
-            // TODO: Move to settings file (--settings-path).
-            var languageFormatOption = new Option<string>("--language-style", "Language to format the OpenAPI document. e.g. powershell");
-
             var validateCommand = new Command("validate")
             {
                 descriptionOption,
@@ -105,8 +102,7 @@ namespace Microsoft.OpenApi.Hidi
                 filterByTagsOption,
                 filterByCollectionOption,
                 inlineLocalOption,
-                inlineExternalOption,
-                languageFormatOption
+                inlineExternalOption
             };
 
             transformCommand.Handler = new TransformCommandHandler
@@ -126,8 +122,7 @@ namespace Microsoft.OpenApi.Hidi
                 FilterByTagsOption = filterByTagsOption,
                 FilterByCollectionOption = filterByCollectionOption,
                 InlineLocalOption = inlineLocalOption,
-                InlineExternalOption = inlineExternalOption,
-                LanguageFormatOption = languageFormatOption
+                InlineExternalOption = inlineExternalOption
             };
 
             var showCommand = new Command("show")
