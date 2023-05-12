@@ -68,9 +68,9 @@ namespace Microsoft.OpenApi.Hidi
                 OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
                 if (options.FilterOptions != null)
                     document = await FilterOpenApiDocument(options.FilterOptions.FilterByOperationIds, options.FilterOptions.FilterByTags, options.FilterOptions.FilterByCollection, document, logger, cancellationToken);
-                // TODO: Handle PS formating
+
                 var languageFormat = options.SettingsConfig.GetSection("LanguageFormat").Value;
-                if (!string.IsNullOrWhiteSpace(languageFormat) && languageFormat.Equals("PowerShell", StringComparison.InvariantCultureIgnoreCase))
+                if (Extensions.StringExtensions.IsEquals(languageFormat, "PowerShell"))
                 {
                     // PowerShell Walker.
                     var powerShellFormatter = new PowerShellFormatter();

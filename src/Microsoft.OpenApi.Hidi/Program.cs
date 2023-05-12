@@ -32,7 +32,6 @@ namespace Microsoft.OpenApi.Hidi
 
             var transformCommand = new Command("transform");
             transformCommand.AddOptions(commandOptions.GetAllCommandOptions());
-
             transformCommand.Handler = new TransformCommandHandler(commandOptions);
 
             var showCommand = new Command("show");

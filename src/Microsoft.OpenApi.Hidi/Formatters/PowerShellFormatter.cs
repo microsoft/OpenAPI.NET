@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Humanizer;
 using Humanizer.Inflections;
+using Microsoft.OpenApi.Hidi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 
@@ -29,7 +31,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             Vocabularies.Default.AddSingular("(statistics)$", "$1");
         }
 
-        //TODO: FHL for PS
+        //TODO: FHL taks for PS
         // Fixes (Order matters):
         // 1. Singularize operationId operationIdSegments.
         // 2. Add '_' to verb in an operationId.
@@ -50,9 +52,9 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         public override void Visit(OpenApiPathItem pathItem)
         {
-            if (pathItem.Operations.ContainsKey(OperationType.Put))
+            if (pathItem.Operations.TryGetValue(OperationType.Put, out var value))
             {
-                var operationId = pathItem.Operations[OperationType.Put].OperationId;
+                var operationId = value.OperationId;
                 pathItem.Operations[OperationType.Put].OperationId = ResolvePutOperationId(operationId);
             }
 
@@ -61,55 +63,38 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         public override void Visit(OpenApiOperation operation)
         {
-            if (operation.OperationId == null)
+            if (string.IsNullOrWhiteSpace(operation.OperationId))
                 throw new ArgumentNullException(nameof(operation.OperationId), $"OperationId is required {PathString}");
 
             var operationId = operation.OperationId;
+            var operationTypeExtension = operation.Extensions.GetExtension("x-ms-docs-operation-type");
+            if (operationTypeExtension.IsEquals("function"))
+                operation.Parameters = ResolveFunctionParameters(operation.Parameters);
 
+            // Order matters. Resolve operationId.
             operationId = RemoveHashSuffix(operationId);
+            if (operationTypeExtension.IsEquals("action") || operationTypeExtension.IsEquals("function"))
+                operationId = RemoveKeyTypeSegment(operationId, operation.Parameters);
+            operationId = SingularizeAndDeduplicateOperationId(operationId.SplitByChar('.'));
             operationId = ResolveODataCastOperationId(operationId);
             operationId = ResolveByRefOperationId(operationId);
-
-
-            var operationIdSegments = operationId.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            operationId = SingularizeAndDeduplicateOperationId(operationIdSegments);
+            // Verb segment resolution should always be last. user.get -> user_Get
+            operationId = ResolveVerbSegmentInOpertationId(operationId);
 
             operation.OperationId = operationId;
             base.Visit(operation);
         }
 
-        private void AddAddtionalPropertiesToSchema(OpenApiSchema schema)
+        private static string ResolveVerbSegmentInOpertationId(string operationId)
         {
-            if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals(schema?.Type, StringComparison.OrdinalIgnoreCase))
-            {
-                schema.AdditionalProperties = new OpenApiSchema() { Type = "object" };
-
-                /* Because 'additionalProperties' are now being walked,
-                 * we need a way to keep track of visited schemas to avoid
-                 * endlessly creating and walking them in an infinite recursion.
-                 */
-                _schemaLoop.Push(schema.AdditionalProperties);
-            }
-        }
-
-        private static void ResolveOneOfSchema(OpenApiSchema schema)
-        {
-            if (schema.OneOf?.Any() ?? false)
-            {
-                var newSchema = schema.OneOf.FirstOrDefault();
-                schema.OneOf = null;
-                FlattenSchema(schema, newSchema);
-            }
-        }
-
-        private static void ResolveAnyOfSchema(OpenApiSchema schema)
-        {
-            if (schema.AnyOf?.Any() ?? false)
-            {
-                var newSchema = schema.AnyOf.FirstOrDefault();
-                schema.AnyOf = null;
-                FlattenSchema(schema, newSchema);
-            }
+            var charPos = operationId.LastIndexOf('.', operationId.Length - 1);
+            if (operationId.Contains('_') || charPos < 0)
+                return operationId;
+            // TODO: Optimize this call.
+            var newOperationId = new StringBuilder(operationId);
+            newOperationId[charPos] = '_';
+            operationId = newOperationId.ToString();
+            return operationId;
         }
 
         private static string ResolvePutOperationId(string operationId)
@@ -156,6 +141,79 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         {
             // Remove hash suffix values from OperationIds.
             return s_hashSuffixRegex.Match(operationId).Value;
+        }
+
+        private static string RemoveKeyTypeSegment(string operationId, IList<OpenApiParameter> parameters)
+        {
+            var segments = operationId.SplitByChar('.');
+            foreach (var parameter in parameters)
+            {
+                var keyTypeExtension = parameter.Extensions.GetExtension("x-ms-docs-key-type");
+                if (keyTypeExtension != null)
+                {
+                    if (operationId.Contains(keyTypeExtension))
+                    {
+                        segments.Remove(keyTypeExtension);
+                    }
+                }
+            }
+            return string.Join(".", segments);
+        }
+
+        private static IList<OpenApiParameter> ResolveFunctionParameters(IList<OpenApiParameter> parameters)
+        {
+            foreach (var parameter in parameters)
+            {
+                if (parameter.Content?.Any() ?? false)
+                {
+                    // Replace content with a schema object of type array
+                    // for structured or collection-valued function parameters
+                    parameter.Content = null;
+                    parameter.Schema = new OpenApiSchema
+                    {
+                        Type = "array",
+                        Items = new OpenApiSchema
+                        {
+                            Type = "string"
+                        }
+                    };
+                }
+            }
+            return parameters;
+        }
+
+        private void AddAddtionalPropertiesToSchema(OpenApiSchema schema)
+        {
+            if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals(schema?.Type, StringComparison.OrdinalIgnoreCase))
+            {
+                schema.AdditionalProperties = new OpenApiSchema() { Type = "object" };
+
+                /* Because 'additionalProperties' are now being walked,
+                 * we need a way to keep track of visited schemas to avoid
+                 * endlessly creating and walking them in an infinite recursion.
+                 */
+                _schemaLoop.Push(schema.AdditionalProperties);
+            }
+        }
+
+        private static void ResolveOneOfSchema(OpenApiSchema schema)
+        {
+            if (schema.OneOf?.Any() ?? false)
+            {
+                var newSchema = schema.OneOf.FirstOrDefault();
+                schema.OneOf = null;
+                FlattenSchema(schema, newSchema);
+            }
+        }
+
+        private static void ResolveAnyOfSchema(OpenApiSchema schema)
+        {
+            if (schema.AnyOf?.Any() ?? false)
+            {
+                var newSchema = schema.AnyOf.FirstOrDefault();
+                schema.AnyOf = null;
+                FlattenSchema(schema, newSchema);
+            }
         }
 
         private static void FlattenSchema(OpenApiSchema schema, OpenApiSchema newSchema)

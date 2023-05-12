@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     var apiVersion = source.Info.Version;
 
-                    var sources = new Dictionary<string, OpenApiDocument> {{ apiVersion, source}};
+                    var sources = new Dictionary<string, OpenApiDocument> { { apiVersion, source } };
                     var rootNode = CreateOpenApiUrlTreeNode(sources);
 
                     // Iterate through urls dictionary and fetch operations for each url
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Services
                     Extensions = source.Info.Extensions
                 },
 
-                Components = new OpenApiComponents {SecuritySchemes = source.Components.SecuritySchemes},
+                Components = new OpenApiComponents { SecuritySchemes = source.Components.SecuritySchemes },
                 SecurityRequirements = source.SecurityRequirements,
                 Servers = source.Servers
             };
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Services
             }
             return rootNode;
         }
-        
+
         private static IDictionary<OperationType, OpenApiOperation> GetOpenApiOperations(OpenApiUrlTreeNode rootNode, string relativeUrl, string label)
         {
             if (relativeUrl.Equals("/", StringComparison.Ordinal) && rootNode.HasOperations(label))
@@ -328,6 +328,15 @@ namespace Microsoft.OpenApi.Services
                     target.Responses.Add(item);
                 }
             }
+
+            foreach (var item in newComponents.RequestBodies)
+            {
+                if (!target.RequestBodies.ContainsKey(item.Key))
+                {
+                    moreStuff = true;
+                    target.RequestBodies.Add(item);
+                }
+            }
             return moreStuff;
         }
 
@@ -342,7 +351,7 @@ namespace Microsoft.OpenApi.Services
                     continue;
                 }
 
-                var urlComponents = url.Split(new[]{ serverUrl }, StringSplitOptions.None);
+                var urlComponents = url.Split(new[] { serverUrl }, StringSplitOptions.None);
                 queryPath = urlComponents[1];
             }
 
