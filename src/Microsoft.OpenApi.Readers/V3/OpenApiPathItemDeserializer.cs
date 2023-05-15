@@ -56,6 +56,13 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             var mapNode = node.CheckMapNode("PathItem");
 
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                var refObject = mapNode.GetReferencedObject<OpenApiPathItem>(ReferenceType.Path, pointer);
+                return refObject;
+            }
+
             var pathItem = new OpenApiPathItem();
 
             ParseMap(mapNode, pathItem, _pathItemFixedFields, _pathItemPatternFields);

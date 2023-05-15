@@ -129,6 +129,20 @@ namespace Microsoft.OpenApi.Readers.V3
                         }
                         id = localSegments[3];
                     }
+                    else if (id.StartsWith("/paths/"))
+                    {
+                        var localSegments = segments[1].Split('/');
+                        if (localSegments.Length == 3)
+                        {
+                            // The reference of a path may contain JSON escape character ~1 for the forward-slash character, replace this otherwise
+                            // the reference cannot be resolved.
+                            id = localSegments[2].Replace("~1", "/");
+                        }
+                        else
+                        {
+                            throw new OpenApiException("Referenced Path mismatch");
+                        }
+                    }
                     else
                     {
                         openApiReference.IsFragrament = true;
