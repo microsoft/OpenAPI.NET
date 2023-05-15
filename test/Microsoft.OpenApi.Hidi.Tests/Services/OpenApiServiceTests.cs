@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
             var context = new InvocationContext(parseResult);
 
-            handler.Invoke(context);
+            handler!.Invoke(context);
 
             var output = File.ReadAllText("sample.json");
             Assert.NotEmpty(output);
@@ -298,7 +298,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
             var context = new InvocationContext(parseResult);
 
-            handler.Invoke(context);
+            handler!.Invoke(context);
 
             var output = File.ReadAllText("sample.md");
             Assert.Contains("graph LR", output);

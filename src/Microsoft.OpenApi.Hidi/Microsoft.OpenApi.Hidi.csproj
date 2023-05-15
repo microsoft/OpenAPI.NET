@@ -51,6 +51,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
     <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
+    <ProjectReference Include="..\..\..\OpenApi.ApiManifest\src\lib\apimanifest.csproj" />
   </ItemGroup>
 
   <!-- Make internals available for Unit Testing -->

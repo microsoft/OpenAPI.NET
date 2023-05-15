@@ -1,0 +1,27 @@
+{
+    "publisher": {
+        "name": "Alice",
+        "contactEmail": "alice@example.org"
+    },
+    "apiDependencies": [
+        {
+            "apiDescripionUrl": "https://raw.githubusercontent.com/APIPatterns/Moostodon/main/spec/tsp-output/%40typespec/openapi3/openapi.yaml",
+            "baseUrl": "https://mastodon.example/",
+            "auth": {
+                "clientIdentifier": "some-uuid-here",
+                "access": [ "resourceA.ReadWrite",
+                "resourceB.ReadWrite","resourceB.Read"]
+            },
+            "requests": [
+                {
+                    "method": "GET",
+                    "uriTemplate": "/api/v1/accounts/search"
+                },
+                {
+                    "method": "GET",
+                    "uriTemplate": "/api/v1/accounts/{id}"
+                }
+            ]
+        }
+    ]
+}

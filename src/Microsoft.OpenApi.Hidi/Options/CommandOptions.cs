@@ -22,6 +22,7 @@ namespace Microsoft.OpenApi.Hidi.Options
         public Option<string> FilterByOperationIdsOption = new("--filter-by-operationids", "Filters OpenApiDocument by comma delimited list of OperationId(s) provided");
         public Option<string> FilterByTagsOption = new("--filter-by-tags", "Filters OpenApiDocument by comma delimited list of Tag(s) provided. Also accepts a single regex.");
         public Option<string> FilterByCollectionOption = new("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided. Provide path to collection file.");
+        public Option<string> FilterByApiManifestOption = new("--filter-by-manifest", "Filters OpenApiDocument by API Manifest provided. Provide path to API Manifest file.");
         public Option<bool> InlineLocalOption = new("--inline-local", "Inline local $ref instances");
         public Option<bool> InlineExternalOption = new("--inline-external", "Inline external $ref instances");
 
@@ -41,6 +42,7 @@ namespace Microsoft.OpenApi.Hidi.Options
             FilterByOperationIdsOption.AddAlias("--op");
             FilterByTagsOption.AddAlias("--t");
             FilterByCollectionOption.AddAlias("-c");
+            FilterByApiManifestOption.AddAlias("-m");
             InlineLocalOption.AddAlias("--il");
             InlineExternalOption.AddAlias("--ie");
         }
@@ -63,6 +65,7 @@ namespace Microsoft.OpenApi.Hidi.Options
                 FilterByOperationIdsOption,
                 FilterByTagsOption,
                 FilterByCollectionOption,
+                FilterByApiManifestOption,
                 InlineLocalOption,
                 InlineExternalOption
             };

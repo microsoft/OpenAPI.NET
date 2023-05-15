@@ -22,8 +22,11 @@ namespace Microsoft.OpenApi.Services
         /// <param name="requestUrls">A dictionary of requests from a postman collection.</param>
         /// <param name="source">The input OpenAPI document.</param>
         /// <returns>A predicate.</returns>
-        public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(string operationIds = null,
-            string tags = null, Dictionary<string, List<string>> requestUrls = null, OpenApiDocument source = null)
+        public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(
+                string operationIds = null,
+                string tags = null, 
+                Dictionary<string, List<string>> requestUrls = null, 
+                OpenApiDocument source = null)
         {
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
 

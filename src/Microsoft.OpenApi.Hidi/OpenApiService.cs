@@ -29,6 +29,8 @@ using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Hidi.Formatters;
+using Microsoft.OpenApi.ApiManifest;
+using System.Linq;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -39,7 +41,7 @@ namespace Microsoft.OpenApi.Hidi
         /// </summary>
         public static async Task TransformOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(options.OpenApi) && string.IsNullOrEmpty(options.Csdl))
+            if (string.IsNullOrEmpty(options.OpenApi) && string.IsNullOrEmpty(options.Csdl) && string.IsNullOrEmpty(options.FilterOptions?.FilterByApiManifest))
             {
                 throw new ArgumentException("Please input a file path or URL");
             }
@@ -65,11 +67,34 @@ namespace Microsoft.OpenApi.Hidi
                 OpenApiFormat openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
                 OpenApiSpecVersion openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_0;
 
-                OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
-                if (options.FilterOptions != null)
-                    document = await FilterOpenApiDocument(options.FilterOptions.FilterByOperationIds, options.FilterOptions.FilterByTags, options.FilterOptions.FilterByCollection, document, logger, cancellationToken);
+                // If API Manifest is provided, load it, use it get the OpenAPI path
+                ApiManifestDocument apiManifest = null;
+                if (!string.IsNullOrEmpty(options.FilterOptions?.FilterByApiManifest))
+                {
+                    using(var fileStream = await GetStream(options.FilterOptions.FilterByApiManifest, logger, cancellationToken)) {
+                        apiManifest = ApiManifestDocument.Load(JsonDocument.Parse(fileStream).RootElement);
+                    }
+                    options.OpenApi = apiManifest.ApiDependencies[0].ApiDescripionUrl;
+                }
 
-                var languageFormat = options.SettingsConfig.GetSection("LanguageFormat").Value;
+                // If Postman Collection is provided, load it
+                JsonDocument postmanCollection = null;
+                if (!String.IsNullOrEmpty(options.FilterOptions?.FilterByCollection))
+                {
+                    using (var collectionStream = await GetStream(options.FilterOptions.FilterByCollection, logger, cancellationToken)) {
+                        postmanCollection = JsonDocument.Parse(collectionStream);
+                    }
+                }
+
+                // Load OpenAPI document
+                OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
+
+                if (options.FilterOptions != null)
+                {
+                    document = ApplyFilters(options, logger, apiManifest, postmanCollection, document, cancellationToken);
+                }
+
+                var languageFormat = options.SettingsConfig?.GetSection("LanguageFormat")?.Value;
                 if (Extensions.StringExtensions.IsEquals(languageFormat, "PowerShell"))
                 {
                     // PowerShell Walker.
@@ -91,6 +116,38 @@ namespace Microsoft.OpenApi.Hidi
             {
                 throw new InvalidOperationException($"Could not transform the document, reason: {ex.Message}", ex);
             }
+        }
+
+        private static OpenApiDocument ApplyFilters(HidiOptions options, ILogger logger, ApiManifestDocument apiManifest, JsonDocument postmanCollection, OpenApiDocument document, CancellationToken cancellationToken)
+        {
+            Dictionary<string, List<string>> requestUrls = null;
+            if (apiManifest != null)
+            {
+                requestUrls = GetRequestUrlsFromManifest(apiManifest, document);
+            }
+            else if (postmanCollection != null)
+            {
+                requestUrls = EnumerateJsonDocument(postmanCollection.RootElement, requestUrls);
+                logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
+            }
+
+
+            logger.LogTrace("Creating predicate from filter options.");
+            var predicate = FilterOpenApiDocument(options.FilterOptions.FilterByOperationIds,
+                                                    options.FilterOptions.FilterByTags,
+                                                    requestUrls,
+                                                    document,
+                                                     logger, cancellationToken);
+            if (predicate != null)
+            {
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
+                stopwatch.Stop();
+                logger.LogTrace("{timestamp}ms: Creating filtered OpenApi document with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
+            }
+
+            return document;
         }
 
         private static void WriteOpenApi(FileInfo output, bool terseOutput, bool inlineLocal, bool inlineExternal, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger)
@@ -163,12 +220,12 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static async Task<OpenApiDocument> FilterOpenApiDocument(string filterbyoperationids, string filterbytags, string filterbycollection, OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
+        private static Func<string, OperationType?, OpenApiOperation, bool> FilterOpenApiDocument(string filterbyoperationids, string filterbytags, Dictionary<string, List<string>> requestUrls, OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
         {
-            using (logger.BeginScope("Filter"))
-            {
-                Func<string, OperationType?, OpenApiOperation, bool> predicate = null;
+            Func<string, OperationType?, OpenApiOperation, bool> predicate = null;
 
+            using (logger.BeginScope("Create Filter"))
+            {
                 // Check if filter options are provided, then slice the OpenAPI document
                 if (!string.IsNullOrEmpty(filterbyoperationids) && !string.IsNullOrEmpty(filterbytags))
                 {
@@ -186,25 +243,30 @@ namespace Microsoft.OpenApi.Hidi
                     predicate = OpenApiFilterService.CreatePredicate(tags: filterbytags);
 
                 }
-                if (!string.IsNullOrEmpty(filterbycollection))
+                if (requestUrls != null)
                 {
-                    var fileStream = await GetStream(filterbycollection, logger, cancellationToken);
-                    var requestUrls = ParseJsonCollectionFile(fileStream, logger);
-
                     logger.LogTrace("Creating predicate based on the paths and Http methods defined in the Postman collection.");
                     predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: document);
                 }
-                if (predicate != null)
-                {
-                    var stopwatch = new Stopwatch();
-                    stopwatch.Start();
-                    document = OpenApiFilterService.CreateFilteredDocument(document, predicate);
-                    stopwatch.Stop();
-                    logger.LogTrace("{timestamp}ms: Creating filtered OpenApi document with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
-                }
             }
 
-            return document;
+            return predicate;
+        }
+
+        private static Dictionary<string, List<string>> GetRequestUrlsFromManifest(ApiManifestDocument apiManifestDocument, OpenApiDocument document)
+        {
+            // Get the request URLs from the API Dependencies in the API manifest that have a baseURL that matches the server URL in the OpenAPI document
+            var serversUrls = document.Servers.Select(s => s.Url);
+            var requests = apiManifestDocument.ApiDependencies
+                    .Where(a => serversUrls.Any(s => s == a.BaseUrl))
+                    .SelectMany(ad => ad.Requests.Where(r => r.Exclude == false)
+                                .Select(r=> new { BaseUrl=ad.BaseUrl, UriTemplate= r.UriTemplate, Method=r.Method } ))
+                    .GroupBy(r => r.BaseUrl.TrimEnd('/') + r.UriTemplate)   // The OpenApiFilterService expects non-relative URLs.
+                    .ToDictionary(g => g.Key, g => g.Select(r => r.Method).ToList());
+            // This makes the assumption that the UriTemplate in the ApiManifest matches exactly the UriTemplate in the OpenAPI document
+            // This does not need to be the case.  The URI template in the API manifest could map to a set of OpenAPI paths.
+            // Additional logic will be required to handle this scenario.  I sugggest we build this into the OpenAPI.Net library at some point.
+            return requests;
         }
 
         private static XslCompiledTransform GetFilterTransform()

@@ -8,5 +8,6 @@ namespace Microsoft.OpenApi.Hidi.Options
         public string FilterByOperationIds { get; internal set; }
         public string FilterByTags { get; internal set; }
         public string FilterByCollection { get; internal set; }
+        public string FilterByApiManifest { get; internal set; }        
     }
 }
