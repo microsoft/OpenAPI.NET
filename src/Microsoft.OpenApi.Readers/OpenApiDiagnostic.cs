@@ -33,33 +33,18 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         /// <param name="diagnosticToAdd"></param>
         /// <param name="fileNameToAdd"></param>
-        public void AppendDiagnostic(OpenApiDiagnostic diagnosticToAdd, string fileNameToAdd)
+        public void AppendDiagnostic(OpenApiDiagnostic diagnosticToAdd, string fileNameToAdd = null)
         {
+            var fileNameIsSupplied = !string.IsNullOrEmpty(fileNameToAdd);
             foreach (var err in diagnosticToAdd.Errors)
             {
-                string errMsgWithFileName;
-                if (!(string.IsNullOrEmpty(fileNameToAdd) || string.IsNullOrWhiteSpace(fileNameToAdd)))
-                {
-                    errMsgWithFileName = $"[File: {fileNameToAdd}] {err.Message}";
-                }
-                else
-                {
-                    errMsgWithFileName = err.Message;
-                }
+                var errMsgWithFileName = fileNameIsSupplied ? $"[File: {fileNameToAdd}] {err.Message}" : err.Message;
                 Errors.Add(new OpenApiError(err.Pointer, errMsgWithFileName));
             }
             foreach (var warn in diagnosticToAdd.Warnings)
             {
-                string warnMsgWithFileName;
-                if (!(string.IsNullOrEmpty(fileNameToAdd) || string.IsNullOrWhiteSpace(fileNameToAdd)))
-                {
-                    warnMsgWithFileName = $"[File: {fileNameToAdd}] {warn.Message}";
-                }
-                else
-                {
-                    warnMsgWithFileName = warn.Message;
-                }
-                Errors.Add(new OpenApiError(warn.Pointer, warnMsgWithFileName));
+                var warnMsgWithFileName = fileNameIsSupplied ? $"[File: {fileNameToAdd}] {warn.Message}" : warn.Message;
+                Warnings.Add(new OpenApiError(warn.Pointer, warnMsgWithFileName));
             }
         }
     }
