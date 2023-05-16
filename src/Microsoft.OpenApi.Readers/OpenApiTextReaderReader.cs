@@ -11,7 +11,6 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using SharpYaml;
-//using SharpYaml;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers

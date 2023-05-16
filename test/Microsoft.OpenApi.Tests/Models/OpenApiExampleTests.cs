@@ -110,24 +110,6 @@ namespace Microsoft.OpenApi.Tests.Models
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeReferencedExampleAsV3JsonWorks(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
-
-            // Act
-            ReferencedExample.SerializeAsV3(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
-
-            // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
         public async Task SerializeAdvancedExampleAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
@@ -135,22 +117,30 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            try
-            {
-                AdvancedExample.SerializeAsV3(writer);
+            AdvancedExample.SerializeAsV3(writer);
             writer.Flush();
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+        }
+        
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedExampleAsV3JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
-                await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            // Act
+            AdvancedExample.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
 
-            }
-            catch (Exception e)
-            {
-                _output.WriteLine(e.Message);
-                throw;
-            }
+            // Assert
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
         [Theory]

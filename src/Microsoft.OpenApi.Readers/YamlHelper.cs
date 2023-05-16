@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using SharpYaml.Serialization;
+using Microsoft.OpenApi.Exceptions;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -19,11 +20,10 @@ namespace Microsoft.OpenApi.Readers
             var scalarNode = node as JsonValue;
             if (node == null)
             {
-                //throw new OpenApiException($"Expected scalar at line {node.Start.Line}");
+                throw new OpenApiException($"Expected scalar value.");
             }
 
-            return scalarNode?.GetValue<string>();
-            //return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
+            return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
         }
         
         public static JsonNode ParseJsonString(string yamlString)

@@ -73,7 +73,7 @@ aDate: 2017-01-02
                 }
             };
             
-            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap.Node, schema));
+            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema));
             var expected = new OpenApiAny(new JsonObject
             {
                 ["aString"] = "fooBar",
@@ -213,7 +213,7 @@ aDate: 2017-01-02
                     }
             };
 
-            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap.Node, schema));
+            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema));
 
             diagnostic.Errors.Should().BeEmpty();
             var expected = new OpenApiAny(
@@ -368,7 +368,7 @@ aDate: 2017-01-02
                         }
             };
 
-            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap.Node, schema));
+            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema));
 
             diagnostic.Errors.Should().BeEmpty();
 
@@ -460,7 +460,7 @@ aDate: 2017-01-02
             
             var anyMap = node.CreateAny();
 
-            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap.Node));
+            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap));
 
             diagnostic.Errors.Should().BeEmpty();
 

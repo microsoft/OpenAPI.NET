@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Readers.Exceptions;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -24,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (_nodeList == null)
             {
-                //throw new OpenApiReaderException($"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
             return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject)))
@@ -43,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (_nodeList == null)
             {
-                //throw new OpenApiReaderException($"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
             return _nodeList.Select(n => map(new ValueNode(Context, n))).ToList();

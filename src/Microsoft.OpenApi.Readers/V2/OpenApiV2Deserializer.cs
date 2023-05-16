@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     var anyFieldSchema = anyFieldMap[anyFieldName].SchemaGetter(domainObject);
                     
                     var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
-                        anyFieldValue, anyFieldSchema);
+                        new OpenApiAny(anyFieldValue), anyFieldSchema);
                     
                     if(convertedOpenApiAny == null)
                     {
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         {
                             newProperty.Add(new OpenApiAny(
                                 OpenApiAnyConverter.GetSpecificOpenApiAny(
-                                    propertyElement.Node,
+                                    propertyElement,
                                     anyListFieldMap[anyListFieldName].SchemaGetter(domainObject))));
                         }
                     }
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Readers.V2
                             var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
 
                             var newAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
-                                    any.Node,
+                                    any,
                                     anyMapFieldMap[anyMapFieldName].SchemaGetter(domainObject));
 
                             anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, new OpenApiAny(newAny));
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Readers.V2
         
         public static OpenApiAny LoadAny(ParseNode node)
         {
-            return new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny().Node));
+            return new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()));
         }
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
@@ -162,12 +162,12 @@ namespace Microsoft.OpenApi.Readers.V2
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
                 return parser(new OpenApiAny(
-                    OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny().Node)),
+                    OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny())),
                     OpenApiSpecVersion.OpenApi2_0);
             }
             else
             {
-                return new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny().Node));
+                return new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()));
             }
         }
 

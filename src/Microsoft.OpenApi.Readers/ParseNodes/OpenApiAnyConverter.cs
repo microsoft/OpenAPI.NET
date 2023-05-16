@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -18,9 +19,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// For those strings that the schema does not specify the type for, convert them into
         /// the most specific type based on the value.
         /// </summary>
-        public static JsonNode GetSpecificOpenApiAny(JsonNode jsonNode, OpenApiSchema schema = null)
+        public static JsonNode GetSpecificOpenApiAny(OpenApiAny any, OpenApiSchema schema = null)
         {
-            if(jsonNode == null)
+            var jsonNode = any?.Node;
+            if (jsonNode == null)
             {
                 return jsonNode;
             }
@@ -32,12 +34,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     if(element.Parent != null)
                     {
                         var newNode = element;
-                        newArray.Add(GetSpecificOpenApiAny(newNode, schema?.Items));
+                        newArray.Add(GetSpecificOpenApiAny(new OpenApiAny(newNode), schema?.Items));
 
                     }
                     else
                     {
-                        newArray.Add(GetSpecificOpenApiAny(element, schema?.Items));
+                        newArray.Add(GetSpecificOpenApiAny(new OpenApiAny(element), schema?.Items));
                     }
                 }
 
@@ -54,11 +56,11 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         if (jsonObject[property.Key].Parent != null)
                         {
                             var node = jsonObject[property.Key];
-                            newObject.Add(property.Key, GetSpecificOpenApiAny(node, propertySchema));
+                            newObject.Add(property.Key, GetSpecificOpenApiAny(new OpenApiAny(node), propertySchema));
                         }
                         else
                         {
-                            newObject.Add(property.Key, GetSpecificOpenApiAny(property.Value, propertySchema));
+                            newObject.Add(property.Key, GetSpecificOpenApiAny(new OpenApiAny(property.Value), propertySchema));
 
                         }
                     }
@@ -67,11 +69,11 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         if (jsonObject[property.Key].Parent != null)
                         {
                             var node = jsonObject[property.Key].Deserialize<JsonNode>();
-                            newObject[property.Key] = GetSpecificOpenApiAny(node, schema?.AdditionalProperties);
+                            newObject[property.Key] = GetSpecificOpenApiAny(new OpenApiAny(node), schema?.AdditionalProperties);
                         }
                         else
                         {
-                            newObject[property.Key] = GetSpecificOpenApiAny(jsonObject[property.Key], schema?.AdditionalProperties);
+                            newObject[property.Key] = GetSpecificOpenApiAny(new OpenApiAny(jsonObject[property.Key]), schema?.AdditionalProperties);
                         }
                     }
                 }
@@ -83,14 +85,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             {
                 return jsonNode;
             }
-
+            
             var value = jsonValue.GetScalarValue();
             var type = schema?.Type;
             var format = schema?.Format;
-            //var jsonElement = JsonSerializer.Deserialize<JsonElement>(value);
-            var valueType = value.GetType();
 
-            if (jsonValue.ToJsonString().StartsWith("\""))
+            if(value.StartsWith("\""))
             {
                 // More narrow type detection for explicit strings, only check types that are passed as strings
                 if (schema == null)

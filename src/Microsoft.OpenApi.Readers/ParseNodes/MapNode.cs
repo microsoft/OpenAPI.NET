@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -62,9 +63,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     try
                     {
                         Context.StartObject(key);
-                        value = n.Value as JsonObject == null
-                          ? default
-                          : map(new MapNode(Context, n.Value as JsonObject));
+                        value = n.Value is JsonObject jsonObject
+                          ? map(new MapNode(Context, jsonObject))
+                          : default;
                     } 
                     finally
                     {
@@ -159,7 +160,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override string GetRaw()
         {
-            var x = JsonSerializer.Serialize(_node); // (new SerializerSettings(new JsonSchema()) { EmitJsonComptible = true });
+            var x = JsonSerializer.Serialize(_node);
             return x;
         }
 
@@ -188,10 +189,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var scalarNode = _node[key.GetScalarValue()] as JsonValue;
             if (scalarNode == null)
             {
-                //throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
+                throw new OpenApiReaderException($"Expected scalar for key {key.GetScalarValue()}", Context);
             }
-
-            return scalarNode?.GetValue<string>();
+            
+            return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
         }
 
         /// <summary>
