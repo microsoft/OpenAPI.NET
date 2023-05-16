@@ -23,19 +23,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public ParseNode Find(JsonPointer referencePointer)
         {
-            var jsonNode = referencePointer.Find(_jsonNode);
-            if (jsonNode == null)
-            {
-                return null;
-            }
+            var jsonNode = referencePointer.Find(_jsonNode) is JsonNode node ? node : null;
 
             return Create(Context, jsonNode);
         }
 
         public MapNode GetMap()
         {
-            var jsonNode = _jsonNode;
-            return new MapNode(Context, jsonNode);
+            return new MapNode(Context, _jsonNode);
         }
     }
 }

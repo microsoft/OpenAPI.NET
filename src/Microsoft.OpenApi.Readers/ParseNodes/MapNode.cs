@@ -132,13 +132,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     try
                     {
                         Context.StartObject(key);
-                        JsonValue valueNode = n.Value as JsonValue;
-                        
-                        if (valueNode == null)
-                        {
-                            throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);
-                        }
-                        
+                        JsonValue valueNode = n.Value is JsonValue value ? value 
+                        : throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);                        
+                       
                         return (key, value: map(new ValueNode(Context, (JsonValue)n.Value)));
                     } finally {
                         Context.EndObject();
@@ -186,11 +182,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public string GetScalarValue(ValueNode key)
         {
-            var scalarNode = _node[key.GetScalarValue()] as JsonValue;
-            if (scalarNode == null)
-            {
-                throw new OpenApiReaderException($"Expected scalar for key {key.GetScalarValue()}", Context);
-            }
+            var scalarNode = _node[key.GetScalarValue()] is JsonValue jsonValue
+                ? jsonValue
+                : throw new OpenApiReaderException($"Expected scalar while parsing {key.GetScalarValue()}", Context);
             
             return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
         }

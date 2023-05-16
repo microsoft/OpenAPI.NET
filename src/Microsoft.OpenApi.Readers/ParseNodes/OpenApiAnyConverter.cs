@@ -90,7 +90,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var type = schema?.Type;
             var format = schema?.Format;
 
-            if(value.StartsWith("\""))
+            if(value.StartsWith("\"", StringComparison.OrdinalIgnoreCase))
             {
                 // More narrow type detection for explicit strings, only check types that are passed as strings
                 if (schema == null)

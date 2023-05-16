@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
-using System.Xml.Linq;
 using SharpYaml.Serialization;
 using Microsoft.OpenApi.Exceptions;
 
@@ -17,11 +16,7 @@ namespace Microsoft.OpenApi.Readers
         public static string GetScalarValue(this JsonNode node)
         {
 
-            var scalarNode = node as JsonValue;
-            if (node == null)
-            {
-                throw new OpenApiException($"Expected scalar value.");
-            }
+            var scalarNode = node is JsonValue value ? value : throw new OpenApiException($"Expected scalar value.");
 
             return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
         }
