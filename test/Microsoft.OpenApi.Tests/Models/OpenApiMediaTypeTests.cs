@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -18,7 +19,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType AdvanceMediaType = new OpenApiMediaType
         {
-            Example = 42,
+            Example = new OpenApiAny(42),
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
@@ -27,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithObjectExample = new OpenApiMediaType
         {
-            Example = new JsonObject
+            Example = new OpenApiAny(new JsonObject
             {
                 ["versions"] = new JsonArray
                 {
@@ -59,7 +60,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 }
-            },
+            }),
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
@@ -68,7 +69,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiMediaType MediaTypeWithXmlExample = new OpenApiMediaType
         {
-            Example = "<xml>123</xml>",
+            Example = new OpenApiAny("<xml>123</xml>"),
             Encoding = new Dictionary<string, OpenApiEncoding>
             {
                 {"testEncoding", OpenApiEncodingTests.AdvanceEncoding}
@@ -80,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Examples = {
                 ["object1"] = new OpenApiExample
                 {
-                    Value = new JsonObject
+                    Value = new OpenApiAny(new JsonObject
                     {
                         ["versions"] = new JsonArray
                         {
@@ -112,7 +113,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         }
-                    }
+                    })
                 }
             },
             Encoding = new Dictionary<string, OpenApiEncoding>

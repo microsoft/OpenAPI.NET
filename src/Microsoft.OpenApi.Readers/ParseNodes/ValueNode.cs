@@ -5,6 +5,7 @@ using System.Globalization;
 using System;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Readers.Exceptions;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -31,10 +32,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Create a <see cref="JsonNode"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override JsonNode CreateAny()
+        public override OpenApiAny CreateAny()
         {
             var value = GetScalarValue();
-            return value;
+            return new OpenApiAny(value);
         }
     }
 }

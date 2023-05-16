@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -45,7 +46,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -62,7 +63,7 @@ namespace Microsoft.OpenApi.Models
             Description = requestBody?.Description ?? Description;
             Required = requestBody?.Required ?? Required;
             Content = requestBody?.Content != null ? new Dictionary<string, OpenApiMediaType>(requestBody.Content) : null;
-            Extensions = requestBody?.Extensions != null ? new Dictionary<string, JsonNode>(requestBody.Extensions) : null;
+            Extensions = requestBody?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(requestBody.Extensions) : null;
         }
 
         /// <summary>
@@ -190,7 +191,8 @@ namespace Microsoft.OpenApi.Models
             };
             if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
             {
-                bodyParameter.Name = (Extensions[OpenApiConstants.BodyName].ToString()) ?? "body";
+                var bodyName = bodyParameter.Extensions[OpenApiConstants.BodyName] as OpenApiAny;
+                bodyParameter.Name = bodyName.Node.ToString() ?? "body";
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
             }
             return bodyParameter;

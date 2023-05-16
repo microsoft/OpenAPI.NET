@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -79,10 +80,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = "array",
                 Items = new OpenApiSchema
                 {
-                    Enum = new List<JsonNode>
+                    Enum = new List<OpenApiAny>
                     {
-                        "value1",
-                        "value2"
+                        new OpenApiAny("value1"),
+                        new OpenApiAny("value2")
                     }
                 }
             }
@@ -101,10 +102,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = "array",
                 Items = new OpenApiSchema
                 {
-                    Enum = new List<JsonNode>
+                    Enum = new List<OpenApiAny>
                     {
-                        "value1",
-                        "value2"
+                        new OpenApiAny("value1"),
+                        new OpenApiAny("value2")
                     }
                 }
             }

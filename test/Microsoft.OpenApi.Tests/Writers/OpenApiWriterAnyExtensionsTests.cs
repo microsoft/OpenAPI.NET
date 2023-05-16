@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
@@ -266,7 +267,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 new StreamWriter(stream),
                 new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
-            writer.WriteAny(any);
+            writer.WriteAny(new OpenApiAny(any));
             writer.Flush();
             stream.Position = 0;
 

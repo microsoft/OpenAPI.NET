@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Xml.Linq;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -21,6 +20,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// </summary>
         public static JsonNode GetSpecificOpenApiAny(JsonNode jsonNode, OpenApiSchema schema = null)
         {
+            if(jsonNode == null)
+            {
+                return jsonNode;
+            }
             if (jsonNode is JsonArray jsonArray)
             {
                 var newArray = new JsonArray();
@@ -28,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     if(element.Parent != null)
                     {
-                        var newNode = element.Deserialize<JsonNode>();
+                        var newNode = element;
                         newArray.Add(GetSpecificOpenApiAny(newNode, schema?.Items));
 
                     }
@@ -50,7 +53,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     {
                         if (jsonObject[property.Key].Parent != null)
                         {
-                            var node = jsonObject[property.Key].Deserialize<JsonNode>();
+                            var node = jsonObject[property.Key];
                             newObject.Add(property.Key, GetSpecificOpenApiAny(node, propertySchema));
                         }
                         else
@@ -84,8 +87,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var value = jsonValue.GetScalarValue();
             var type = schema?.Type;
             var format = schema?.Format;
+            //var jsonElement = JsonSerializer.Deserialize<JsonElement>(value);
+            var valueType = value.GetType();
 
-            if (value.Contains("\""))
+            if (jsonValue.ToJsonString().StartsWith("\""))
             {
                 // More narrow type detection for explicit strings, only check types that are passed as strings
                 if (schema == null)
@@ -141,7 +146,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     }
                 }
 
-                return jsonNode;
+                return value;
             }
 
             if (value == null || value == "null")
@@ -273,10 +278,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     return value;
                 }
 
-                if (type == "string")
-                {
-                    return value;
-                }
+                //if (type == "string")
+                //{
+                //    return new OpenApiAny(value);
+                //}
                 
                 if (type == "boolean")
                 {

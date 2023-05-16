@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -182,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 },
                 Extensions = { 
-                    [OpenApiConstants.BodyName] = "petObject"
+                    [OpenApiConstants.BodyName] = new OpenApiAny("petObject")
                 }
             },
             Responses = new OpenApiResponses
@@ -349,12 +350,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Format = "float"
                                         }
                                     },
-                                    Example = new JsonArray()
+                                    Example = new OpenApiAny(new JsonArray()
                                     {
                                         5.0,
                                         6.0,
                                         7.0
-                                    }
+                                    })
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {

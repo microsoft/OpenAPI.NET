@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Example of the media type.
         /// </summary>
-        public JsonNode Example { get; set; }
+        public OpenApiAny Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Models
             Example = JsonNodeCloneHelper.Clone(header?.Example);
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
-            Extensions = header?.Extensions != null ? new Dictionary<string, JsonNode>(header.Extensions) : null;
+            Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
         }
         
         /// <summary>
@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, s) => w.WriteAny((JsonNode)s));
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
 
             // examples
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Models
             Schema?.WriteAsItemsProperties(writer);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, s) => w.WriteAny((JsonNode)s));
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);

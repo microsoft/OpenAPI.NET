@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// The unique hash code of the generated OpenAPI document
@@ -104,8 +104,8 @@ namespace Microsoft.OpenApi.Models
             SecurityRequirements = document?.SecurityRequirements != null ? new List<OpenApiSecurityRequirement>(document.SecurityRequirements) : null;
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
-            Extensions = document?.Extensions != null ? new Dictionary<string, JsonNode>(document.Extensions) : null;
-        }
+            Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
+        }   
 
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to Open API v3.1 document.

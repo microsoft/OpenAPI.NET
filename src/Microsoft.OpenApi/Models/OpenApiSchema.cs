@@ -3,9 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -88,7 +87,7 @@ namespace Microsoft.OpenApi.Models
         /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
         /// For example, if type is string, then default can be "foo" but cannot be 1.
         /// </summary>
-        public JsonNode Default { get; set; }
+        public OpenApiAny Default { get; set; }
 
         /// <summary>
         /// Relevant only for Schema "properties" definitions. Declares the property as "read only".
@@ -201,12 +200,12 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples that cannot be naturally represented in JSON or YAML,
         /// a string value can be used to contain the example with escaping where necessary.
         /// </summary>
-        public JsonNode Example { get; set; }
+        public OpenApiAny Example { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public IList<JsonNode> Enum { get; set; } = new List<JsonNode>();
+        public IList<OpenApiAny> Enum { get; set; } = new List<OpenApiAny>();
 
         /// <summary>
         /// Allows sending a null value for the defined schema. Default value is false.
@@ -233,7 +232,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
@@ -286,12 +285,12 @@ namespace Microsoft.OpenApi.Models
             AdditionalProperties = new(schema?.AdditionalProperties);
             Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
             Example = JsonNodeCloneHelper.Clone(schema?.Example);
-            Enum = schema?.Enum != null ? new List<JsonNode>(schema.Enum) : null;
+            Enum = schema?.Enum != null ? new List<OpenApiAny>(schema.Enum) : null;
             Nullable = schema?.Nullable ?? Nullable;
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
             Deprecated = schema?.Deprecated ?? Deprecated;
             Xml = schema?.Xml != null ? new(schema?.Xml) : null;
-            Extensions = schema?.Xml != null ? new Dictionary<string, JsonNode>(schema.Extensions) : null;
+            Extensions = schema?.Xml != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
         }
@@ -375,7 +374,6 @@ namespace Microsoft.OpenApi.Models
         private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-
             writer.WriteStartObject();
 
             // title
@@ -424,8 +422,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
 
             // enum
-            var enumValues = Enum.Cast<JsonNode>().Select(node => node.ToString());
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValues, (nodeWriter, s) => nodeWriter.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (nodeWriter, s) => nodeWriter.WriteAny(s));
 
             // type
             writer.WriteProperty(OpenApiConstants.Type, Type);
@@ -468,7 +465,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // default
-            writer.WriteOptionalObject(OpenApiConstants.Default, (IOpenApiElement)Default, (w, d) => w.WriteAny((JsonNode)d));
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // nullable
             writer.WriteProperty(OpenApiConstants.Nullable, Nullable, false);
@@ -489,7 +486,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, callback);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, e) => w.WriteAny((JsonNode)e));
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
@@ -618,7 +615,7 @@ namespace Microsoft.OpenApi.Models
             // this property. This is not supported yet, so we will skip this property at the moment.
 
             // default
-            writer.WriteOptionalObject(OpenApiConstants.Default, (IOpenApiElement)Default, (w, d) => w.WriteAny((JsonNode)d));
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // maximum
             writer.WriteProperty(OpenApiConstants.Maximum, Maximum);
@@ -648,8 +645,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.MinItems, MinItems);
 
             // enum
-            var enumValues = Enum.Cast<JsonNode>().Select(static node => node.ToString());
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValues, (w, s) => w.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
 
             // multipleOf
             writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
@@ -685,7 +681,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // default
-            writer.WriteOptionalObject(OpenApiConstants.Default, (IOpenApiElement)Default, (w, d) => w.WriteAny((JsonNode)d));
+            writer.WriteOptionalObject(OpenApiConstants.Default, Default, (w, d) => w.WriteAny(d));
 
             // multipleOf
             writer.WriteProperty(OpenApiConstants.MultipleOf, MultipleOf);
@@ -730,8 +726,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(OpenApiConstants.Required, Required, (w, s) => w.WriteValue(s));
 
             // enum
-            var enumValues = Enum.Cast<JsonNode>().Select(static node => node.ToString());
-            writer.WriteOptionalCollection(OpenApiConstants.Enum, enumValues, (w, s) => w.WriteAny(s));
+            writer.WriteOptionalCollection(OpenApiConstants.Enum, Enum, (w, s) => w.WriteAny(s));
 
             // type
             writer.WriteProperty(OpenApiConstants.Type, Type);
@@ -791,7 +786,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, s) => s.SerializeAsV2(w));
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, e) => w.WriteAny((JsonNode)e));
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // extensions
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);

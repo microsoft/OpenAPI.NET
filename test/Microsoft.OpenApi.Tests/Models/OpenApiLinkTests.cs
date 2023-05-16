@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -30,10 +31,10 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             RequestBody = new RuntimeExpressionAnyWrapper
             {
-                Any = new JsonObject
+                Any = new OpenApiAny(new JsonObject
                 {
                     ["property1"] = true
-                }
+                })
             },
             Description = "description1",
             Server = new OpenApiServer
@@ -59,10 +60,10 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             RequestBody = new RuntimeExpressionAnyWrapper
             {
-                Any = new JsonObject
+                Any = new OpenApiAny(new JsonObject
                 {
                     ["property1"] = true
-                }
+                })
             },
             Description = "description1",
             Server = new OpenApiServer

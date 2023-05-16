@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Extensions;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -864,9 +865,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="JsonNode"/> and child objects
+        /// Visits <see cref="OpenApiAny"/> and child objects
         /// </summary>
-        internal void Walk(JsonNode example)
+        internal void Walk(OpenApiAny example)
         {
             if (example == null)
             {

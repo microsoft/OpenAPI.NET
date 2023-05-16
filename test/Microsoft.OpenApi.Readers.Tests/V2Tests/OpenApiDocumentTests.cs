@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -116,7 +117,7 @@ paths: {}",
                         Version = "0.9.1",
                         Extensions =
                         {
-                            ["x-extension"] = 2.335
+                            ["x-extension"] = new OpenApiAny(2.335)
                         }
                     },
                     Components = new OpenApiComponents()

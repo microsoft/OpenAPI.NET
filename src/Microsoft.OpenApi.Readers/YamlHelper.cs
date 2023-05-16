@@ -20,9 +20,10 @@ namespace Microsoft.OpenApi.Readers
             if (node == null)
             {
                 //throw new OpenApiException($"Expected scalar at line {node.Start.Line}");
-            } 
+            }
 
-            return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
+            return scalarNode?.GetValue<string>();
+            //return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
         }
         
         public static JsonNode ParseJsonString(string yamlString)

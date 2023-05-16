@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -85,7 +86,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
         }
 
-        public override JsonNode CreateAny()
+        public override OpenApiAny CreateAny()
         {
             throw new NotImplementedException();
         }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var header = new OpenApiHeader()
             {
                 Required = true,
-                Example = 55,
+                Example = new OpenApiAny(55),
                 Schema = new OpenApiSchema()
                 {
                     Type = "string",
@@ -71,29 +72,29 @@ namespace Microsoft.OpenApi.Validations.Tests
                     {
                         ["example0"] = new OpenApiExample()
                         {
-                            Value = "1",
+                            Value = new OpenApiAny("1"),
                         },
                         ["example1"] = new OpenApiExample()
                         {
-                           Value = new JsonObject()
+                           Value = new OpenApiAny(new JsonObject()
                             {
                                 ["x"] = 2,
                                 ["y"] = "20",
                                 ["z"] = "200"
-                            }
+                            })
                         },
                         ["example2"] = new OpenApiExample()
                         {
-                            Value =
-                            new JsonArray(){3}
+                            Value =new OpenApiAny(
+                            new JsonArray(){3})
                         },
                         ["example3"] = new OpenApiExample()
                         {
-                            Value = new JsonObject()
+                            Value = new OpenApiAny(new JsonObject()
                             {
                                 ["x"] = 4,
                                 ["y"] = 40
-                            }
+                            })
                         },
                     }
             };

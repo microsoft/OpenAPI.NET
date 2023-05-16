@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -595,10 +596,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = "string"
                                             },
-                                            Extensions = new Dictionary<string, JsonNode>
+                                            Extensions = new Dictionary<string, IOpenApiExtension>
                                             {
                                                 {
-                                                    "x-ms-docs-key-type", "call"
+                                                    "x-ms-docs-key-type", new OpenApiAny("call")
                                                 }
                                             }
                                         }
@@ -612,10 +613,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Extensions = new Dictionary<string, JsonNode>
+                                    Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         {
-                                            "x-ms-docs-operation-type", "action" 
+                                            "x-ms-docs-operation-type", new OpenApiAny("action")
                                         }
                                     }
                                 }
@@ -650,12 +651,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = "string"
                                             },
-                                            Extensions = new Dictionary<string, JsonNode>
-                                            {
-                                                {
-                                                    "x-ms-docs-key-type", "group"
-                                                }
-                                            }
+                                            Extensions = new Dictionary <string, IOpenApiExtension> { { "x-ms-docs-key-type", new OpenApiAny("group") } }
                                         },
                                         new OpenApiParameter()
                                         {
@@ -667,12 +663,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             {
                                                 Type = "string"
                                             },
-                                            Extensions = new Dictionary<string, JsonNode>
-                                            {
-                                                {
-                                                    "x-ms-docs-key-type", "event"
-                                                }
-                                            }
+                                            Extensions = new Dictionary <string, IOpenApiExtension> { { "x-ms-docs-key-type", new OpenApiAny("event") } }
                                         }
                                     },
                                     Responses = new OpenApiResponses()
@@ -702,10 +693,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                             }
                                         }
                                     },
-                                    Extensions = new Dictionary<string, JsonNode>
+                                    Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         {
-                                            "x-ms-docs-operation-type", "function"
+                                            "x-ms-docs-operation-type", new OpenApiAny("function")
                                         }
                                     }
                                 }

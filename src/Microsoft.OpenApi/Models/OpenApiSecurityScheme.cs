@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Models
             BearerFormat = securityScheme?.BearerFormat ?? BearerFormat;
             Flows = securityScheme?.Flows != null ? new(securityScheme?.Flows) : null;
             OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString) : null;
-            Extensions = securityScheme?.Extensions != null ? new Dictionary<string, JsonNode>(securityScheme.Extensions) : null;
+            Extensions = securityScheme?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
             UnresolvedReference = securityScheme?.UnresolvedReference ?? UnresolvedReference;
             Reference = securityScheme?.Reference != null ? new(securityScheme?.Reference) : null;
         }

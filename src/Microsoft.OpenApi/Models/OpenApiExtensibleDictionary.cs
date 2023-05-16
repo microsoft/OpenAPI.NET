@@ -31,15 +31,15 @@ namespace Microsoft.OpenApi.Models
         /// <param name="extensions">The dictionary of <see cref="IOpenApiExtension"/>.</param>
         protected OpenApiExtensibleDictionary(
             Dictionary<string, T> dictionary = null,
-            IDictionary<string, JsonNode> extensions = null) : base (dictionary)
+            IDictionary<string, IOpenApiExtension> extensions = null) : base (dictionary)
         {
-            Extensions = extensions != null ? new Dictionary<string, JsonNode>(extensions) : null;
+            Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : null;
         }       
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
 
         /// <summary>

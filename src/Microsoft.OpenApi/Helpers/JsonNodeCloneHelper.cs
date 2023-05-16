@@ -2,14 +2,14 @@
 // Licensed under the MIT license.
 
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Helpers
 {
     internal class JsonNodeCloneHelper
     {
-        internal static JsonNode Clone(JsonNode value)
+        internal static OpenApiAny Clone(OpenApiAny value)
         {
             if(value == null)
             {
@@ -21,8 +21,8 @@ namespace Microsoft.OpenApi.Helpers
                 ReferenceHandler = ReferenceHandler.IgnoreCycles
             };
 
-            var jsonString = JsonSerializer.Serialize(value, options);
-            var result = JsonSerializer.Deserialize<JsonNode>(jsonString, options);
+            var jsonString = JsonSerializer.Serialize(value.Node, options);
+            var result = JsonSerializer.Deserialize<OpenApiAny>(jsonString, options);
 
             return result;
         }

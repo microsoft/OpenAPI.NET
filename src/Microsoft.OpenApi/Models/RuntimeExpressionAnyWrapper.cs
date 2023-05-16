@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -14,7 +15,7 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class RuntimeExpressionAnyWrapper : IOpenApiElement
     {
-        private JsonNode _any;
+        private OpenApiAny _any;
         private RuntimeExpression _expression;
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Gets/Sets the <see cref="JsonNode"/>
         /// </summary>
-        public JsonNode Any
+        public OpenApiAny Any
         {
             get
             {

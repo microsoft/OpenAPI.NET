@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new Dictionary<string, JsonNode>
+            Extensions = new Dictionary<string, IOpenApiExtension>
             {
                 {"x-tag-extension", null}
             }
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Name = "pet",
             Description = "Pets operations",
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
-            Extensions = new Dictionary<string, JsonNode>
+            Extensions = new Dictionary<string, IOpenApiExtension>
             {
                 {"x-tag-extension", null}
             },

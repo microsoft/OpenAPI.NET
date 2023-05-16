@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -197,15 +198,16 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Create a <see cref="JsonObject"/>
         /// </summary>
         /// <returns>The created Json object.</returns>
-        public override JsonNode CreateAny()
+        public override OpenApiAny CreateAny()
         {
             var apiObject = new JsonObject();
             foreach (var node in this)
             {
-                apiObject.Add(node.Name, node.Value.CreateAny());
+                var jsonNode = node.Value.CreateAny().Node;
+                apiObject.Add(node.Name, jsonNode);
             }
             
-            return apiObject;
+            return new OpenApiAny(apiObject);
         }
     }
 }

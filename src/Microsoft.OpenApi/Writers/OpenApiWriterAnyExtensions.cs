@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
-    /// Extensions methods for writing the <see cref="JsonNode"/>
+    /// Extensions methods for writing the <see cref="OpenApiAny"/>
     /// </summary>
     public static class OpenApiWriterAnyExtensions
     {
@@ -20,7 +21,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer">The Open API writer.</param>
         /// <param name="extensions">The specification extensions.</param>
         /// <param name="specVersion">Version of the OpenAPI specification that that will be output.</param>
-        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, JsonNode> extensions, OpenApiSpecVersion specVersion)
+        public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions, OpenApiSpecVersion specVersion)
         {
             if (writer == null)
             {
@@ -32,15 +33,14 @@ namespace Microsoft.OpenApi.Writers
                 foreach (var item in extensions)
                 {
                     writer.WritePropertyName(item.Key);
-                    
+
                     if (item.Value == null)
-                    {                        
+                    {
                         writer.WriteNull();
                     }
                     else
                     {
-                        writer.WriteAny(item.Value);
-                        //item.Value.Write(writer, specVersion);
+                        item.Value.Write(writer, specVersion);
                     }
                 }
             }
@@ -50,17 +50,18 @@ namespace Microsoft.OpenApi.Writers
         /// Write the <see cref="JsonNode"/> value.
         /// </summary>
         /// <param name="writer">The Open API writer.</param>
-        /// <param name="node">The Any value</param>
-        public static void WriteAny(this IOpenApiWriter writer, JsonNode node)
+        /// <param name="any">The Any value</param>
+        public static void WriteAny(this IOpenApiWriter writer, OpenApiAny any)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
             
-            if (node == null)
+            if (any.Node == null)
             {
                 writer.WriteNull();
                 return;
             }
 
+            var node = any.Node;
             var element = JsonDocument.Parse(node.ToJsonString()).RootElement;
             switch (element.ValueKind)
             {
@@ -93,7 +94,7 @@ namespace Microsoft.OpenApi.Writers
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
-
+            
             if (array == null)
             {
                 throw Error.ArgumentNull(nameof(array));
@@ -103,7 +104,7 @@ namespace Microsoft.OpenApi.Writers
 
             foreach (var item in array)
             {
-                writer.WriteAny(item);
+                writer.WriteAny(new OpenApiAny(item));
             }
 
             writer.WriteEndArray();
@@ -126,7 +127,7 @@ namespace Microsoft.OpenApi.Writers
             foreach (var item in entity)
             {
                 writer.WritePropertyName(item.Key);
-                writer.WriteAny(item.Value);
+                writer.WriteAny(new OpenApiAny(item.Value));
             }
 
             writer.WriteEndObject();

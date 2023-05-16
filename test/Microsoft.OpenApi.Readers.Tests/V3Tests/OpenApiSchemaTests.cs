@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -96,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Type = "integer",
                     Format = "int64",
-                    Default = 88
+                    Default = new OpenApiAny(88)
                 }, options => options.IgnoringCyclicReferences());
         }
 
@@ -112,19 +113,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<IOpenApiElement>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = reader.ReadFragment<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
             
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.Should().BeEquivalentTo(
+            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
                 new JsonObject
                 {
                     ["foo"] = "bar",
                     ["baz"] = new JsonArray() {1, 2}
-                });
+                }), options => options.IgnoringCyclicReferences());
         }
-
+        
         [Fact]
         public void ParseEnumFragmentShouldSucceed()
         {
@@ -137,17 +138,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
             
             // Act
-            var openApiAny = reader.ReadFragment<IOpenApiElement>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = reader.ReadFragment<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.Should().BeEquivalentTo(
+            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
                 new JsonArray
                 {
                     "foo",
                     "baz"
-                });
+                }), options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -314,11 +315,7 @@ get:
                         {
                             "name"
                         },
-                        Example = new JsonObject
-                        {
-                            ["name"] = "Puma",
-                            ["id"] = 1
-                        }
+                        Example = new OpenApiAny(new JsonObject { ["name"] = "Puma", ["id"] = 1 })
                     }, options=>options.IgnoringCyclicReferences());
             }
         }
@@ -537,7 +534,13 @@ get:
                                             {
                                                 Type = "string",
                                                 Description = "The measured skill for hunting",
-                                                Enum = { "clueless", "lazy", "adventurous", "aggressive" }
+                                                Enum = 
+                                                { 
+                                                    new OpenApiAny("clueless"),
+                                                    new OpenApiAny("lazy"),
+                                                    new OpenApiAny("adventurous"),
+                                                    new OpenApiAny("aggressive")
+                                                }
                                             }
                                         }
                                     }
@@ -597,7 +600,7 @@ get:
                                                 Type = "integer",
                                                 Format = "int32",
                                                 Description = "the size of the pack the dog is from",
-                                                Default = 0,
+                                                Default = new OpenApiAny(0),
                                                 Minimum = 0
                                             }
                                         }

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -46,12 +47,20 @@ namespace Microsoft.OpenApi.Readers.V2
                 try
                 {
                     mapNode.Context.StartObject(anyFieldName);
-
+                    var anyFieldValue = anyFieldMap[anyFieldName].PropertyGetter(domainObject)?.Node;
+                    var anyFieldSchema = anyFieldMap[anyFieldName].SchemaGetter(domainObject);
+                    
                     var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
-                        anyFieldMap[anyFieldName].PropertyGetter(domainObject),
-                        anyFieldMap[anyFieldName].SchemaGetter(domainObject));
-
-                    anyFieldMap[anyFieldName].PropertySetter(domainObject, convertedOpenApiAny);
+                        anyFieldValue, anyFieldSchema);
+                    
+                    if(convertedOpenApiAny == null)
+                    {
+                        anyFieldMap[anyFieldName].PropertySetter(domainObject, null);
+                    }
+                    else
+                    {
+                        anyFieldMap[anyFieldName].PropertySetter(domainObject, new OpenApiAny(convertedOpenApiAny));
+                    }
                 }
                 catch (OpenApiException exception)
                 {
@@ -74,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 try
                 {
-                    var newProperty = new List<JsonNode>();
+                    var newProperty = new List<OpenApiAny>();
 
                     mapNode.Context.StartObject(anyListFieldName);
 
@@ -83,10 +92,10 @@ namespace Microsoft.OpenApi.Readers.V2
                     {
                         foreach (var propertyElement in list)
                         {
-                            newProperty.Add(
+                            newProperty.Add(new OpenApiAny(
                                 OpenApiAnyConverter.GetSpecificOpenApiAny(
-                                    propertyElement,
-                                    anyListFieldMap[anyListFieldName].SchemaGetter(domainObject)));
+                                    propertyElement.Node,
+                                    anyListFieldMap[anyListFieldName].SchemaGetter(domainObject))));
                         }
                     }
 
@@ -124,10 +133,10 @@ namespace Microsoft.OpenApi.Readers.V2
                             var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
 
                             var newAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
-                                    any,
+                                    any.Node,
                                     anyMapFieldMap[anyMapFieldName].SchemaGetter(domainObject));
 
-                            anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, newAny);
+                            anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, new OpenApiAny(newAny));
                         }
                     }
                 }
@@ -142,23 +151,23 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             }
         }
-
-        public static JsonNode LoadAny(ParseNode node)
+        
+        public static OpenApiAny LoadAny(ParseNode node)
         {
-            return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
+            return new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny().Node));
         }
 
-        private static JsonNode LoadExtension(string name, ParseNode node)
+        private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
-                return parser(
-                    OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()),
+                return parser(new OpenApiAny(
+                    OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny().Node)),
                     OpenApiSpecVersion.OpenApi2_0);
             }
             else
             {
-                return OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny());
+                return new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny().Node));
             }
         }
 

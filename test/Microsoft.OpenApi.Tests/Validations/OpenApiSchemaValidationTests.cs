@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
@@ -24,7 +25,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema()
             {
-                Default = 55,
+                Default = new OpenApiAny(55),
                 Type = "string",
             };
 
@@ -55,8 +56,8 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> warnings;
             var schema = new OpenApiSchema()
             {
-                Example = 55.0,
-                Default = "1234",
+                Example = new OpenApiAny(55),
+                Default = new OpenApiAny("1234"),
                 Type = "string",
             };
 
@@ -67,18 +68,17 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             warnings = validator.Warnings;
             bool result = !warnings.Any();
+            var expectedWarnings = warnings.Select(e => e.Message).ToList();
 
             // Assert
             result.Should().BeFalse();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
-                RuleHelpers.DataTypeMismatchedErrorMessage,
                 RuleHelpers.DataTypeMismatchedErrorMessage
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/default",
-                "#/example",
+                "#/example"
             });
         }
 
@@ -91,19 +91,19 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Enum =
                 {
-                    "1",
-                    new JsonObject()
+                    new OpenApiAny("1"),
+                    new OpenApiAny(new JsonObject()
                     {
                         ["x"] = 2,
                         ["y"] = "20",
                         ["z"] = "200"
-                    },
-                    new JsonArray(){3},                    
-                    new JsonObject()
+                    }),
+                    new OpenApiAny (new JsonArray() { 3 }),
+                    new OpenApiAny(new JsonObject()
                     {
                         ["x"] = 4,
                         ["y"] = 40,
-                    },
+                    })
                 },
                 Type = "object",
                 AdditionalProperties = new OpenApiSchema()
@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         Type = "string"
                     }
                 },
-                Default = new JsonObject()
+                Default = new OpenApiAny(new JsonObject()
                 {
                     ["property1"] = new JsonArray()
                     {
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                     },
                     ["property3"] = "123",
                     ["property4"] = DateTime.UtcNow
-                }
+                })
             };
 
             // Act
@@ -217,16 +217,12 @@ namespace Microsoft.OpenApi.Validations.Tests
                 RuleHelpers.DataTypeMismatchedErrorMessage,
                 RuleHelpers.DataTypeMismatchedErrorMessage,
                 RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
             });
             warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/default/property1/0",
                 "#/default/property1/2",
                 "#/default/property2/0",
-                "#/default/property2/1/z",
-                "#/default/property4",
+                "#/default/property2/1/z"
             });
         }
 

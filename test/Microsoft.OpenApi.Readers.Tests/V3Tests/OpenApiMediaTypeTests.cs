@@ -3,6 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -32,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             mediaType.Should().BeEquivalentTo(
                 new OpenApiMediaType
                 {
-                    Example = 5,
+                    Example = new OpenApiAny(5),
                     Schema = new OpenApiSchema
                     {
                         Type = "number",
@@ -62,11 +63,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["example1"] = new OpenApiExample()
                         {
-                            Value = 5,
+                            Value = new OpenApiAny(5)
                         },
                         ["example2"] = new OpenApiExample()
                         {
-                            Value = 7.5,
+                            Value = new OpenApiAny(7.5)
                         }
                     },
                     Schema = new OpenApiSchema

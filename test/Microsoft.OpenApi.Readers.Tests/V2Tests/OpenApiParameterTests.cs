@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -147,23 +148,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             Type = "integer",
                             Format = "int64",
-                            Enum = new List<JsonNode>
+                            Enum = new List<OpenApiAny>
                             {
-                                1,
-                                2,
-                                3,
-                                4,
+                                new OpenApiAny(1),
+                                new OpenApiAny(2),
+                                new OpenApiAny(3),
+                                new OpenApiAny(4)
                             }
                         },
-                        Default = new JsonArray() {
+                        Default = new OpenApiAny(new JsonArray() {
                             1,
                             2
-                        },
-                        Enum = new List<JsonNode>
+                        }),
+                        Enum = new List<OpenApiAny>
                         {
-                            new JsonArray() { 1, 2 },
-                            new JsonArray() { 2, 3 },
-                            new JsonArray() { 3, 4 }
+                            new OpenApiAny(new JsonArray() { 1, 2 }),
+                            new OpenApiAny(new JsonArray() { 2, 3 }),
+                            new OpenApiAny(new JsonArray() { 3, 4 })
                         }
                     }
                 }, options => options.IgnoringCyclicReferences());
@@ -181,7 +182,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Act
             var parameter = OpenApiV2Deserializer.LoadParameter(node);
+            var actualDefault = parameter.Schema.Default;
+            var actualEnum = parameter.Schema.Enum;
+            var expectedEnum = new List<OpenApiAny>
+            {
+                new OpenApiAny(new JsonArray() { 1, 2 }),
+                new OpenApiAny(new JsonArray() { 2, 3 }),
+                new OpenApiAny(new JsonArray() { 3, 4 })
+            };
+            var expectedDefault = new OpenApiAny(new JsonArray() { 1, 2 });
 
+            
             // Assert
             parameter.Should().BeEquivalentTo(
                 new OpenApiParameter
@@ -199,14 +210,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             Type = "string",
                             Format = "date-time",
-                            Enum = { "1", "2", "3", "4" }
+                            Enum = new List<OpenApiAny>{ 
+                                new OpenApiAny("1"),
+                                new OpenApiAny("2"),
+                                new OpenApiAny("3"),
+                                new OpenApiAny("4") }
                         },
-                        Default = new JsonArray() { "1", "2" },                    
-                        Enum = new List<JsonNode>
+                        Default = new OpenApiAny(new JsonArray() { "1", "2" }),                    
+                        Enum = new List<OpenApiAny>
                         {
-                            new JsonArray() { "1", "2" },
-                            new JsonArray() { "2", "3"},
-                            new JsonArray() { "3", "4" }
+                            new OpenApiAny(new JsonArray() { "1", "2" }),
+                            new OpenApiAny(new JsonArray() { "2", "3" }),
+                            new OpenApiAny(new JsonArray() { "3", "4" })
                         }
                     }
                 }, options => options.IgnoringCyclicReferences());
@@ -345,7 +360,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Default = 5
+                        Default = new OpenApiAny(5)
                     }
                 }, options => options.IgnoringCyclicReferences());
         }
@@ -375,7 +390,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Enum = {7, 8, 9 }
+                        Enum = 
+                        { 
+                            new OpenApiAny(7),
+                            new OpenApiAny(8),
+                            new OpenApiAny(9)
+                        }
                     }
                 }, options => options.IgnoringCyclicReferences());
         }

@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
         /// a string value can contain the example with escaping where necessary.
         /// </summary>
-        public JsonNode Example { get; set; }
+        public OpenApiAny Example { get; set; }
 
         /// <summary>
         /// A map containing the representations for the parameter.
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// A parameterless constructor
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Models
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
-            Extensions = parameter?.Extensions != null ? new Dictionary<string, JsonNode>(parameter.Extensions) : null;
+            Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
             Deprecated = parameter?.Deprecated ?? Deprecated;
         }
@@ -284,7 +284,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, s) => w.WriteAny((JsonNode)s));
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
 
             // examples
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
@@ -355,7 +355,7 @@ namespace Microsoft.OpenApi.Models
             // deprecated
             writer.WriteProperty(OpenApiConstants.Deprecated, Deprecated, false);
 
-            var extensionsClone = new Dictionary<string, JsonNode>(Extensions);
+            var extensionsClone = new Dictionary<string, IOpenApiExtension>(Extensions);
 
             // schema
             if (this is OpenApiBodyParameter)

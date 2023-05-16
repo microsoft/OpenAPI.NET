@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -52,31 +53,27 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Email = "example@example.com",
                         Extensions =
                         {
-                                ["x-twitter"] = "@exampleTwitterHandler"
+                                ["x-twitter"] = new OpenApiAny("@exampleTwitterHandler")
                         },
                         Name = "John Doe",
                         Url = new Uri("http://www.example.com/url1")
                     },
                     License = new OpenApiLicense
                     {
-                        Extensions = { ["x-disclaimer"] = "Sample Extension String Disclaimer" },
+                        Extensions = { ["x-disclaimer"] = new OpenApiAny("Sample Extension String Disclaimer") },
                         Name = "licenseName",
                         Url = new Uri("http://www.example.com/url2")
                     },
                     Extensions =
                     {
-                            ["x-something"] = "Sample Extension String Something",
-                            ["x-contact"] = new JsonObject()
+                            ["x-something"] = new OpenApiAny("Sample Extension String Something"),
+                            ["x-contact"] = new OpenApiAny(new JsonObject()
                             {
                                 ["name"] = "John Doe",
                                 ["url"] = "http://www.example.com/url3",
                                 ["email"] = "example@example.com"
-                            },
-                            ["x-list"] = new JsonArray
-                            {
-                                "1",
-                                "2"
-                            }
+                            }),
+                            ["x-list"] = new OpenApiAny (new JsonArray { "1", "2" })
                     }
                 }, options => options.IgnoringCyclicReferences());
         }

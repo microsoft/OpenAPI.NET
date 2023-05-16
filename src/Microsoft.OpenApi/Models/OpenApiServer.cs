@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Models
             Description = server?.Description ?? Description;
             Url = server?.Url ?? Url;
             Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server.Variables) : null;
-            Extensions = server?.Extensions != null ? new Dictionary<string, JsonNode>(server.Extensions) : null;
+            Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
         }
 
         /// <summary>

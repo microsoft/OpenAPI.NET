@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models
         /// exclusive. To represent examples of media types that cannot naturally represented
         /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
         /// </summary>
-        public JsonNode Value { get; set; }
+        public OpenApiAny Value { get; set; }
 
         /// <summary>
         /// A URL that points to the literal example.
@@ -44,7 +44,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Reference object.
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Models
             Description = example?.Description ?? Description;
             Value = JsonNodeCloneHelper.Clone(example?.Value);
             ExternalValue = example?.ExternalValue ?? ExternalValue;
-            Extensions = example?.Extensions != null ? new Dictionary<string, JsonNode>(example.Extensions) : null;
+            Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
             Reference = example?.Reference != null ? new(example?.Reference) : null;
             UnresolvedReference = example?.UnresolvedReference ?? UnresolvedReference;
         }
@@ -161,7 +161,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.Description, Description);
 
             // value
-            writer.WriteOptionalObject(OpenApiConstants.Value, (IOpenApiElement)Value, (w, v) => w.WriteAny((JsonValue)v));
+            writer.WriteOptionalObject(OpenApiConstants.Value, Value, (w, v) => w.WriteAny(v));
 
             // externalValue
             writer.WriteProperty(OpenApiConstants.ExternalValue, ExternalValue);

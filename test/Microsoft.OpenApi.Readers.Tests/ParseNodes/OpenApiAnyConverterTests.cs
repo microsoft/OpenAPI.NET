@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using SharpYaml.Serialization;
@@ -71,16 +72,16 @@ aDate: 2017-01-02
                     }
                 }
             };
-
-            anyMap = OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema);
-            var expected = new JsonObject
+            
+            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap.Node, schema));
+            var expected = new OpenApiAny(new JsonObject
             {
                 ["aString"] = "fooBar",
                 ["aInteger"] = 10,
                 ["aDouble"] = 2.34,
                 ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture),
                 ["aDate"] = DateTimeOffset.Parse("2017-01-02", CultureInfo.InvariantCulture).Date
-            };
+            });
             
             diagnostic.Errors.Should().BeEmpty();
             anyMap.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences());
@@ -212,11 +213,10 @@ aDate: 2017-01-02
                     }
             };
 
-            anyMap = OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema);
+            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap.Node, schema));
 
             diagnostic.Errors.Should().BeEmpty();
-
-            anyMap.Should().BeEquivalentTo(
+            var expected = new OpenApiAny(
                 new JsonObject
                 {
                     ["aString"] = "fooBar",
@@ -262,7 +262,8 @@ aDate: 2017-01-02
                     },
                     ["aDouble"] = 2.34,
                     ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
-                }, options => options.IgnoringCyclicReferences());
+                });
+            anyMap.Should().BeEquivalentTo(expected);
         }
 
 
@@ -274,7 +275,7 @@ aDate: 2017-01-02
         aInteger: 10
         aArray:
           - 1
-          - 2
+          - 2  
           - 3
         aNestedArray:
           - aFloat: 1
@@ -367,11 +368,11 @@ aDate: 2017-01-02
                         }
             };
 
-            anyMap = OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap, schema);
+            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap.Node, schema));
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.Should().BeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(new OpenApiAny(
                 new JsonObject
                 {
                     ["aString"] = "fooBar",
@@ -417,7 +418,7 @@ aDate: 2017-01-02
                     },
                     ["aDouble"] = 2.34,
                     ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
-                }, options => options.IgnoringCyclicReferences());
+                }), options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -459,11 +460,11 @@ aDate: 2017-01-02
             
             var anyMap = node.CreateAny();
 
-            anyMap = OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap);
+            anyMap = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(anyMap.Node));
 
             diagnostic.Errors.Should().BeEmpty();
 
-            anyMap.Should().BeEquivalentTo(
+            anyMap.Should().BeEquivalentTo(new OpenApiAny(
                 new JsonObject()
                 {
                     ["aString"] = "fooBar",
@@ -509,7 +510,7 @@ aDate: 2017-01-02
                     },
                     ["aDouble"] = 2.34,
                     ["aDateTime"] = DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture)
-                }, options => options.IgnoringCyclicReferences());
+                }), options => options.IgnoringCyclicReferences());
         }
     }
 }

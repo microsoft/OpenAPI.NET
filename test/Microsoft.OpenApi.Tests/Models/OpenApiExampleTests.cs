@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -21,7 +22,7 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiExample AdvancedExample = new OpenApiExample
         {
-            Value = new JsonObject
+            Value = new OpenApiAny(new JsonObject
             {
                 ["versions"] = new JsonArray
                 {
@@ -40,7 +41,6 @@ namespace Microsoft.OpenApi.Tests.Models
                             }
                         }
                     },
-
                     new JsonObject
                     {
                         ["status"] = "Status2",
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 }
-            }
+            })
         };
 
         public static OpenApiExample ReferencedExample = new OpenApiExample
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = ReferenceType.Example,
                 Id = "example1",
             },
-            Value = new JsonObject
+            Value = new OpenApiAny(new JsonObject
             {
                 ["versions"] = new JsonArray
                 {
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 }
-            }
+            })
         };
 
         private readonly ITestOutputHelper _output;
@@ -105,24 +105,6 @@ namespace Microsoft.OpenApi.Tests.Models
         public OpenApiExampleTests(ITestOutputHelper output)
         {
             _output = output;
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeAdvancedExampleAsV3JsonWorks(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
-
-            // Act
-            AdvancedExample.SerializeAsV3(writer);
-            writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
-
-            // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -141,6 +123,34 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeAdvancedExampleAsV3JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            try
+            {
+                AdvancedExample.SerializeAsV3(writer);
+            writer.Flush();
+            var actual = outputStringWriter.GetStringBuilder().ToString();
+
+            // Assert
+
+                await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+
+            }
+            catch (Exception e)
+            {
+                _output.WriteLine(e.Message);
+                throw;
+            }
         }
 
         [Theory]

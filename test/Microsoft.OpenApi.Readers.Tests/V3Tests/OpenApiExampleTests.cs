@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -40,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 example.Should().BeEquivalentTo(
                     new OpenApiExample
                     {
-                        Value = new JsonObject
+                        Value = new OpenApiAny(new JsonObject
                         {
                             ["versions"] = new JsonArray
                             {
@@ -72,7 +73,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                        }
+                        })
                     }, options => options.IgnoringCyclicReferences());
             }
         }

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
@@ -1300,7 +1301,7 @@ paths: {}",
                         AllowReserved = true,
                         Style = ParameterStyle.Simple,
                         Explode = true,
-                        Example = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721",
+                        Example = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
                         Schema = new OpenApiSchema()
                         {
                             Type = "string",
@@ -1329,12 +1330,12 @@ paths: {}",
                         {
                             { "uuid1", new OpenApiExample()
                                 {
-                                    Value = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+                                    Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
                                 }
                             },
                             { "uuid2", new OpenApiExample()
                                 {
-                                    Value = "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+                                    Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
                                 }
                             }
                         },

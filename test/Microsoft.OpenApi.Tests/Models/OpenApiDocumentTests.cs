@@ -8,6 +8,7 @@ using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -1000,14 +1001,14 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Schema = new OpenApiSchema
                                     {
                                         Type = "integer",
-                                        Extensions = new Dictionary<string, JsonNode>
+                                        Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
-                                            ["my-extension"] = 4,
+                                            ["my-extension"] = new OpenApiAny(4),
                                         }
                                     },
-                                    Extensions = new Dictionary<string, JsonNode>
+                                    Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
-                                        ["my-extension"] = 4,
+                                        ["my-extension"] = new OpenApiAny(4),
                                     }
                                 },
                                 new OpenApiParameter
@@ -1019,14 +1020,14 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Schema = new OpenApiSchema
                                     {
                                         Type = "integer",
-                                        Extensions = new Dictionary<string, JsonNode>
+                                        Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
-                                            ["my-extension"] = 4,
+                                            ["my-extension"] = new OpenApiAny(4),
                                         }
                                     },
-                                    Extensions = new Dictionary<string, JsonNode>
+                                    Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
-                                        ["my-extension"] = 4,
+                                        ["my-extension"] = new OpenApiAny(4),
                                     }
                                 },
                             },

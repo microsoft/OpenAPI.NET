@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         /// Example of the media type.
         /// The example object SHOULD be in the correct format as specified by the media type.
         /// </summary>
-        public JsonNode Example { get; set; }
+        public OpenApiAny Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        public IDictionary<string, JsonNode> Extensions { get; set; } = new Dictionary<string, JsonNode>();
+        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameterless constructor
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Models
             Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
-            Extensions = mediaType?.Extensions != null ? new Dictionary<string, JsonNode>(mediaType.Extensions) : null;
+            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
 
             // example
-            writer.WriteOptionalObject(OpenApiConstants.Example, (IOpenApiElement)Example, (w, e) => w.WriteAny((JsonNode)e));
+            writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
 
             // examples
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);

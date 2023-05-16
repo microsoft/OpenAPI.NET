@@ -14,6 +14,6 @@ namespace Microsoft.OpenApi.Interfaces
         /// <summary>
         /// Specification extensions.
         /// </summary>
-        IDictionary<string, JsonNode> Extensions { get; set; }
+        IDictionary<string, IOpenApiExtension> Extensions { get; set; }
     }
 }

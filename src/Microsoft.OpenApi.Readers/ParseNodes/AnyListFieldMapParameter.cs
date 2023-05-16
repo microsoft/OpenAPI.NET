@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -14,8 +15,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Constructor
         /// </summary>
         public AnyListFieldMapParameter(
-            Func<T, IList<JsonNode>> propertyGetter,
-            Action<T, IList<JsonNode>> propertySetter,
+            Func<T, IList<OpenApiAny>> propertyGetter,
+            Action<T, IList<OpenApiAny>> propertySetter,
             Func<T, OpenApiSchema> schemaGetter)
         {
             this.PropertyGetter = propertyGetter;
@@ -26,12 +27,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// <summary>
         /// Function to retrieve the value of the property.
         /// </summary>
-        public Func<T, IList<JsonNode>> PropertyGetter { get; }
+        public Func<T, IList<OpenApiAny>> PropertyGetter { get; }
 
         /// <summary>
         /// Function to set the value of the property.
         /// </summary>
-        public Action<T, IList<JsonNode>> PropertySetter { get; }
+        public Action<T, IList<OpenApiAny>> PropertySetter { get; }
 
         /// <summary>
         /// Function to get the schema to apply to the property.

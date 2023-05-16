@@ -3,6 +3,7 @@
 
 using System.IO;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -36,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Default = 5
+                        Default = new OpenApiAny(5)
                     }
                 }, options => options.IgnoringCyclicReferences());
         }
@@ -64,9 +65,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Format = "float",
                         Enum =
                         {
-                            7,
-                            8,
-                            9
+                            new OpenApiAny(7),
+                            new OpenApiAny(8),
+                            new OpenApiAny(9)
                         }
                     }
                 }, options => options.IgnoringCyclicReferences());

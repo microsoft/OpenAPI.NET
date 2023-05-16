@@ -28,13 +28,11 @@ paths: {}
             var settings = new OpenApiReaderSettings()
             {
                 ExtensionParsers = { { "x-foo", (a,v) => {
-                    var fooNode = (JsonObject)a;
-                    var fooExtension = new FooExtension() {
+                        var fooNode = (JsonObject)a.Node;
+                        return new FooExtension() {
                               Bar = (fooNode["bar"].ToString()),
                               Baz = (fooNode["baz"].ToString())
                         };
-                    var jsonString = JsonSerializer.Serialize(fooExtension);
-                    return JsonNode.Parse(jsonString);
                 } } }
             };
 
@@ -43,8 +41,8 @@ paths: {}
             var diag = new OpenApiDiagnostic();
             var doc = reader.Read(description, out diag);
 
-            var fooExtensionNode = doc.Info.Extensions["x-foo"];
-            var fooExtension = JsonSerializer.Deserialize<FooExtension>(fooExtensionNode);
+            var fooExtension = doc.Info.Extensions["x-foo"] as FooExtension;
+            //var fooExtension = JsonSerializer.Deserialize<FooExtension>(fooExtensionNode);
 
             fooExtension.Should().NotBeNull();
             fooExtension.Bar.Should().Be("hey");

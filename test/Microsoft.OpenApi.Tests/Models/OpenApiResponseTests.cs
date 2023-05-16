@@ -7,6 +7,7 @@ using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -38,10 +39,10 @@ namespace Microsoft.OpenApi.Tests.Models
                             Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
                         }
                     },
-                    Example = "Blabla",
-                    Extensions = new Dictionary<string, JsonNode>
+                    Example = new OpenApiAny("Blabla"),
+                    Extensions = new Dictionary<string, IOpenApiExtension>
                     {
-                        ["myextension"] = "myextensionvalue",
+                        ["myextension"] = new OpenApiAny("myextensionvalue"),
                     },
                 }
             },
