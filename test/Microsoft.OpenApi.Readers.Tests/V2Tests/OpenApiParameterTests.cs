@@ -167,64 +167,28 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             new OpenApiAny(new JsonArray() { 3, 4 })
                         }
                     }
-                }, options => options.IgnoringCyclicReferences());
-        }
-
-        [Fact]
-        public void ParseHeaderParameterWithIncorrectDataTypeShouldSucceed()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameterWithIncorrectDataType.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
-            var actualDefault = parameter.Schema.Default;
-            var actualEnum = parameter.Schema.Enum;
-            var expectedEnum = new List<OpenApiAny>
-            {
-                new OpenApiAny(new JsonArray() { 1, 2 }),
-                new OpenApiAny(new JsonArray() { 2, 3 }),
-                new OpenApiAny(new JsonArray() { 3, 4 })
-            };
-            var expectedDefault = new OpenApiAny(new JsonArray() { 1, 2 });
-
-            
-            // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Header,
-                    Name = "token",
-                    Description = "token to be passed as a header",
-                    Required = true,
-                    Style = ParameterStyle.Simple,
-
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "string",
-                            Format = "date-time",
-                            Enum = new List<OpenApiAny>{ 
-                                new OpenApiAny("1"),
-                                new OpenApiAny("2"),
-                                new OpenApiAny("3"),
-                                new OpenApiAny("4") }
-                        },
-                        Default = new OpenApiAny(new JsonArray() { "1", "2" }),                    
-                        Enum = new List<OpenApiAny>
-                        {
-                            new OpenApiAny(new JsonArray() { "1", "2" }),
-                            new OpenApiAny(new JsonArray() { "2", "3" }),
-                            new OpenApiAny(new JsonArray() { "3", "4" })
-                        }
-                    }
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Schema.Default.Node[0].Root)
+                .Excluding(p => p.Schema.Default.Node[0].Parent)
+                .Excluding(p => p.Schema.Default.Node[1].Parent)
+                .Excluding(p => p.Schema.Default.Node[1].Root)
+                .Excluding(p => p.Schema.Items.Enum[0].Node.Parent)
+                .Excluding(p => p.Schema.Items.Enum[1].Node.Parent)
+                .Excluding(p => p.Schema.Items.Enum[2].Node.Parent)
+                .Excluding(p => p.Schema.Items.Enum[3].Node.Parent)
+                .Excluding(p => p.Schema.Enum[0].Node[0].Parent)
+                .Excluding(p => p.Schema.Enum[0].Node[0].Root)
+                .Excluding(p => p.Schema.Enum[0].Node[1].Parent)
+                .Excluding(p => p.Schema.Enum[0].Node[1].Root)
+                .Excluding(p => p.Schema.Enum[1].Node[0].Parent)
+                .Excluding(p => p.Schema.Enum[1].Node[0].Root)
+                .Excluding(p => p.Schema.Enum[1].Node[1].Parent)
+                .Excluding(p => p.Schema.Enum[1].Node[1].Root)
+                .Excluding(p => p.Schema.Enum[2].Node[0].Parent)
+                .Excluding(p => p.Schema.Enum[2].Node[0].Root)
+                .Excluding(p => p.Schema.Enum[2].Node[1].Parent)
+                .Excluding(p => p.Schema.Enum[2].Node[1].Root)
+                );
         }
 
         [Fact]
@@ -362,7 +326,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Format = "float",
                         Default = new OpenApiAny(5)
                     }
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Schema.Default.Node.Parent));
         }
 
         [Fact]
@@ -397,7 +362,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             new OpenApiAny(9)
                         }
                     }
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Schema.Enum[0].Node.Parent)
+                .Excluding(p => p.Schema.Enum[1].Node.Parent)
+                .Excluding(p => p.Schema.Enum[2].Node.Parent));
         }
     }
 }

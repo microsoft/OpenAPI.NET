@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
@@ -50,15 +49,14 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     var any = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
                     var schema = anyFieldMap[anyFieldName].SchemaGetter(domainObject);
-                    var convertedOpenApiAny = OpenApiAnyConverter.GetSpecificOpenApiAny(any, schema);
                     
-                    if (convertedOpenApiAny == null)
+                    if (any == null)
                     {
                         anyFieldMap[anyFieldName].PropertySetter(domainObject, null);
                     }
                     else
                     {
-                        anyFieldMap[anyFieldName].PropertySetter(domainObject, new OpenApiAny(convertedOpenApiAny));
+                        anyFieldMap[anyFieldName].PropertySetter(domainObject, any);
                     }
                 }
                 catch (OpenApiException exception)
@@ -88,10 +86,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     foreach (var propertyElement in anyListFieldMap[anyListFieldName].PropertyGetter(domainObject))
                     {
-                        newProperty.Add(new OpenApiAny(
-                            OpenApiAnyConverter.GetSpecificOpenApiAny(
-                                propertyElement,
-                                anyListFieldMap[anyListFieldName].SchemaGetter(domainObject))));
+                        newProperty.Add(propertyElement);
                     }
 
                     anyListFieldMap[anyListFieldName].PropertySetter(domainObject, newProperty);
@@ -126,12 +121,8 @@ namespace Microsoft.OpenApi.Readers.V3
                         if (propertyMapElement.Value != null)
                         {
                             var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
-
-                            var newAny = OpenApiAnyConverter.GetSpecificOpenApiAny(
-                                    any,
-                                    anyMapFieldMap[anyMapFieldName].SchemaGetter(domainObject));
-
-                            anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, new OpenApiAny(newAny));
+                           
+                            anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
                         }
                     }
                 }
@@ -167,25 +158,25 @@ namespace Microsoft.OpenApi.Readers.V3
 
             return new RuntimeExpressionAnyWrapper
             {
-                Any = new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()))
+                Any = node.CreateAny()
 
             };
         }
 
         public static OpenApiAny LoadAny(ParseNode node)
         {
-            return new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()));
+            return node.CreateAny();
         }
         
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
-                return parser(new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny())), OpenApiSpecVersion.OpenApi3_0);
+                return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_0);
             }
             else
             {
-                return new OpenApiAny(OpenApiAnyConverter.GetSpecificOpenApiAny(node.CreateAny()));
+                return node.CreateAny();
             }
         }
 

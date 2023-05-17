@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -75,7 +76,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }),
                             ["x-list"] = new OpenApiAny (new JsonArray { "1", "2" })
                     }
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(i => ((OpenApiAny)i.Contact.Extensions["x-twitter"]).Node.Parent)
+                .Excluding(i => ((OpenApiAny)i.License.Extensions["x-disclaimer"]).Node.Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-something"]).Node.Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["name"].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["name"].Root)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["url"].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["url"].Root)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["email"].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["email"].Root)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[0].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[0].Root)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[1].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[1].Root));
         }
 
         [Fact]

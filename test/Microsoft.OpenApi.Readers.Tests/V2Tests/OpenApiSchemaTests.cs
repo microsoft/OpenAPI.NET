@@ -36,7 +36,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Type = "number",
                     Format = "float",
                     Default = new OpenApiAny(5)
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(schema => schema.Default.Node.Parent));
         }
 
         [Fact]
@@ -59,7 +60,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Type = "number",
                     Format = "float",
                     Example = new OpenApiAny(5)
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(schema => schema.Example.Node.Parent));
         }
 
         [Fact]
@@ -87,7 +89,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         new OpenApiAny(8), 
                         new OpenApiAny(9)
                     }                    
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(s => s.Enum[0].Node.Parent)
+                .Excluding(s => s.Enum[1].Node.Parent)
+                .Excluding(s => s.Enum[2].Node.Parent));
         }
     }
 }

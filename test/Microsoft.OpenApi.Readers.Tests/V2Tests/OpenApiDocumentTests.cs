@@ -108,6 +108,8 @@ definitions:
 paths: {}",
                 out var context);
 
+            var extension = (OpenApiAny)openApiDoc.Info.Extensions["x-extension"];
+
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
@@ -147,8 +149,9 @@ paths: {}",
                         }
                     },
                     Paths = new OpenApiPaths()
-                }, options => options.IgnoringCyclicReferences());
-
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(doc => ((OpenApiAny)doc.Info.Extensions["x-extension"]).Node.Parent));
+            
             context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() 
                 { 

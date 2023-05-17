@@ -35,15 +35,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var node = new MapNode(context, asJsonNode);
                 
                 var example = OpenApiV3Deserializer.LoadExample(node);
-
-                diagnostic.Errors.Should().BeEmpty();
-
-                example.Should().BeEquivalentTo(
-                    new OpenApiExample
+                var expected = new OpenApiExample
+                {
+                    Value = new OpenApiAny(new JsonObject
                     {
-                        Value = new OpenApiAny(new JsonObject
-                        {
-                            ["versions"] = new JsonArray
+                        ["versions"] = new JsonArray
                             {
                                 new JsonObject
                                 {
@@ -73,8 +69,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                        })
-                    }, options => options.IgnoringCyclicReferences());
+                    })
+                };
+
+                var actualRoot = example.Value.Node["versions"][0]["status"].Root;
+                var expectedRoot = expected.Value.Node["versions"][0]["status"].Root;
+                
+                diagnostic.Errors.Should().BeEmpty();
+
+                example.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences()
+                .Excluding(e => e.Value.Node["versions"][0]["status"].Root)
+                .Excluding(e => e.Value.Node["versions"][0]["id"].Root)
+                .Excluding(e => e.Value.Node["versions"][0]["links"][0]["href"].Root)
+                .Excluding(e => e.Value.Node["versions"][0]["links"][0]["rel"].Root)
+                .Excluding(e => e.Value.Node["versions"][1]["status"].Root)
+                .Excluding(e => e.Value.Node["versions"][1]["id"].Root)
+                .Excluding(e => e.Value.Node["versions"][1]["links"][0]["href"].Root)
+                .Excluding(e => e.Value.Node["versions"][1]["links"][0]["rel"].Root));
             }
         }
 

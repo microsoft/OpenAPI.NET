@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -98,7 +99,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Type = "integer",
                     Format = "int64",
                     Default = new OpenApiAny(88)
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(s => s.Default.Node.Parent));
         }
 
         [Fact]
@@ -316,7 +318,12 @@ get:
                             "name"
                         },
                         Example = new OpenApiAny(new JsonObject { ["name"] = "Puma", ["id"] = 1 })
-                    }, options=>options.IgnoringCyclicReferences());
+                    },
+                    options => options.IgnoringCyclicReferences()
+                    .Excluding(s => s.Example.Node["name"].Parent)
+                    .Excluding(s => s.Example.Node["name"].Root)
+                    .Excluding(s => s.Example.Node["id"].Parent)
+                    .Excluding(s => s.Example.Node["id"].Root));
             }
         }
 
@@ -614,7 +621,12 @@ get:
                                 }
                             }
                     }
-                }, options => options.Excluding(m => m.Name == "HostDocument").IgnoringCyclicReferences());
+                }, options => options.Excluding(m => m.Name == "HostDocument").IgnoringCyclicReferences()
+                .Excluding(c => c.Schemas["Cat"].AllOf[1].Properties["huntingSkill"].Enum[0].Node.Parent)
+                .Excluding(c => c.Schemas["Cat"].AllOf[1].Properties["huntingSkill"].Enum[1].Node.Parent)
+                .Excluding(c => c.Schemas["Cat"].AllOf[1].Properties["huntingSkill"].Enum[2].Node.Parent)
+                .Excluding(c => c.Schemas["Cat"].AllOf[1].Properties["huntingSkill"].Enum[3].Node.Parent)
+                .Excluding(c => c.Schemas["Dog"].AllOf[1].Properties["packSize"].Default.Node.Parent));
         }
 
 

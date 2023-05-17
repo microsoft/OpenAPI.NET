@@ -65,14 +65,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// </summary>
         /// <returns>The created Any object.</returns>
         public override OpenApiAny CreateAny()
-        {
-            var array = new JsonArray();
-            foreach (var node in this)
-            {
-                array.Add(node.CreateAny().Node);
-            }
-            
-            return new OpenApiAny(array);
+        {            
+            return new OpenApiAny(_nodeList);
         }
     }
 }

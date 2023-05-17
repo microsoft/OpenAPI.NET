@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -372,7 +373,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }}
                     }
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Root)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Root)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Root));
         }
     }
 }

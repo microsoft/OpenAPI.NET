@@ -34,8 +34,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// <returns>The created Any object.</returns>
         public override OpenApiAny CreateAny()
         {
-            var value = GetScalarValue();
-            return new OpenApiAny(value);
+            return new OpenApiAny(_node);
         }
     }
 }

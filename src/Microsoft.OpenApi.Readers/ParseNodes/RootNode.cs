@@ -23,7 +23,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public ParseNode Find(JsonPointer referencePointer)
         {
-            var jsonNode = referencePointer.Find(_jsonNode) is JsonNode node ? node : null;
+            if (referencePointer.Find(_jsonNode) is not JsonNode jsonNode)
+            {
+                return null;
+            }
 
             return Create(Context, jsonNode);
         }

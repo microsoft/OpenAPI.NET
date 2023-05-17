@@ -303,7 +303,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = "number",
                         Format = "float"
                     }
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Node.Parent));
         }
         
         [Fact]
@@ -343,7 +343,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = "number",
                         Format = "float"
                     }
-                }, options => options.IgnoringCyclicReferences());
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Examples["example1"].Value.Node.Parent)
+                .Excluding(p => p.Examples["example2"].Value.Node.Parent));
         }
     }
 }
