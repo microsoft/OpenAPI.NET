@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -54,8 +55,9 @@ namespace Microsoft.OpenApi.Readers
         /// Reads the stream input and parses it into an Open API document.
         /// </summary>
         /// <param name="input">Stream containing OpenAPI description to parse.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Instance result containing newly created OpenApiDocument and diagnostics object from the process</returns>
-        public async Task<ReadResult> ReadAsync(Stream input)
+        public async Task<ReadResult> ReadAsync(Stream input, CancellationToken cancellationToken = default)
         {
             MemoryStream bufferedStream;
             if (input is MemoryStream)
@@ -67,13 +69,14 @@ namespace Microsoft.OpenApi.Readers
                 // Buffer stream so that OpenApiTextReaderReader can process it synchronously
                 // YamlDocument doesn't support async reading.
                 bufferedStream = new MemoryStream();
-                await input.CopyToAsync(bufferedStream);
+                await input.CopyToAsync(bufferedStream, 81920, cancellationToken);
                 bufferedStream.Position = 0;
             }
 
-            var reader = new StreamReader(bufferedStream);
-
-            return await new OpenApiTextReaderReader(_settings).ReadAsync(reader);
+            using (var reader = new StreamReader(bufferedStream))
+            {
+                return await new OpenApiTextReaderReader(_settings).ReadAsync(reader, cancellationToken);
+            }
         }
 
         /// <summary>

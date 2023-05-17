@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiLicense() {}
+        public OpenApiLicense() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiLicense"/> object
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Models
         {
             Name = license?.Name ?? Name;
             Identifier = license?.Identifier ?? Identifier;
-            Url = license?.Url != null ? new Uri(license.Url.OriginalString) : null;
+            Url = license?.Url != null ? new Uri(license.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = license?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(license.Extensions) : null;
         }
         

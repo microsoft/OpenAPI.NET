@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -86,7 +87,7 @@ namespace Microsoft.OpenApi.Readers
             return document;
         }
 
-        public async Task<ReadResult> ReadAsync(JsonNode input)
+        public async Task<ReadResult> ReadAsync(JsonNode input, CancellationToken cancellationToken = default)
         {
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic)
@@ -103,7 +104,7 @@ namespace Microsoft.OpenApi.Readers
 
                 if (_settings.LoadExternalRefs)
                 {
-                    await LoadExternalRefs(document);
+                    await LoadExternalRefs(document, cancellationToken);
                 }
 
                 ResolveReferences(diagnostic, document);
@@ -134,7 +135,7 @@ namespace Microsoft.OpenApi.Readers
             };
         }
 
-        private async Task LoadExternalRefs(OpenApiDocument document)
+        private async Task LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken)
         {
             // Create workspace for all documents to live in.
             var openApiWorkSpace = new OpenApiWorkspace();
@@ -142,7 +143,7 @@ namespace Microsoft.OpenApi.Readers
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
-            await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document);
+            await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, cancellationToken);
         }
 
         private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
@@ -166,7 +167,6 @@ namespace Microsoft.OpenApi.Readers
                 diagnostic.Errors.Add(item);
             }
         }
-
 
         /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.

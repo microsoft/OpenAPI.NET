@@ -1,0 +1,19 @@
+﻿openapi: 3.0.0
+info:
+  title: Sample OpenApi
+  version: 1.0.0
+paths:
+  /api/editresource:
+    get:
+      responses:
+        '200':
+          description: OK
+    patch:
+      responses:
+        '200':
+          description: OK
+  /api/viewresource:
+    get:
+      responses:
+        '200':
+          description: OK

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -60,8 +61,9 @@ namespace Microsoft.OpenApi.Readers
         /// Reads the content of the TextReader.  If there are references to external documents then they will be read asynchronously.
         /// </summary>
         /// <param name="input">TextReader containing OpenAPI description to parse.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>A ReadResult instance that contains the resulting OpenApiDocument and a diagnostics instance.</returns>
-        public async Task<ReadResult> ReadAsync(TextReader input)
+        public async Task<ReadResult> ReadAsync(TextReader input, CancellationToken cancellationToken = default)
         {
             JsonNode jsonNode;
 
@@ -81,7 +83,7 @@ namespace Microsoft.OpenApi.Readers
                 };
             }
 
-            return await new OpenApiYamlDocumentReader(this._settings).ReadAsync(jsonNode);
+            return await new OpenApiYamlDocumentReader(this._settings).ReadAsync(jsonNode, cancellationToken);
         }
 
 

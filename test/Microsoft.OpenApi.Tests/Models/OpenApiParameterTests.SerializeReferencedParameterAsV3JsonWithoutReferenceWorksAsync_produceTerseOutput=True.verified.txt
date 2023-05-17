@@ -1,1 +1,1 @@
-{"name":"name1","in":"path","style":"simple"}
+{"name":"name1","in":"path"}
