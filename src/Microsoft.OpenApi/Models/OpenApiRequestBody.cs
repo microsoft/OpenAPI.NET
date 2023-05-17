@@ -192,7 +192,7 @@ namespace Microsoft.OpenApi.Models
             if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
             {
                 var bodyName = bodyParameter.Extensions[OpenApiConstants.BodyName] as OpenApiAny;
-                bodyParameter.Name = string.IsNullOrEmpty(bodyName.Node.ToString()) ? "body" : bodyName.Node.ToString();
+                bodyParameter.Name = string.IsNullOrEmpty(bodyName?.Node.ToString()) ? "body" : bodyName.Node.ToString();
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
             }
             return bodyParameter;

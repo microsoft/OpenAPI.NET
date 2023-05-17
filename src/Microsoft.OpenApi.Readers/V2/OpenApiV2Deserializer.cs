@@ -48,7 +48,6 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     mapNode.Context.StartObject(anyFieldName);
                     var anyFieldValue = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
-                    var anyFieldSchema = anyFieldMap[anyFieldName].SchemaGetter(domainObject);                    
                     
                     if(anyFieldValue == null)
                     {

@@ -86,21 +86,23 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 var anyObject = value as JsonObject;
-
+                
                 foreach (var property in anyObject)
                 {
-                    context.Enter(property.Key);
-
-                    if (schema.Properties != null && schema.Properties.ContainsKey(property.Key))
+                    if (anyObject != null)
                     {
-                        ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], schema.Properties[property.Key]);
-                    }
-                    else
-                    {
-                        ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], schema.AdditionalProperties);
-                    }
+                        context.Enter(property.Key);
+                        if (schema.Properties.TryGetValue(property.Key, out var propertyValue))
+                        {
+                            ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], propertyValue);
+                        }
+                        else
+                        {
+                            ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], schema.AdditionalProperties);
+                        }
 
-                    context.Exit();
+                        context.Exit();
+                    }                    
                 }
 
                 return;

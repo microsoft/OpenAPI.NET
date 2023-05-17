@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         JsonValue valueNode = n.Value is JsonValue value ? value 
                         : throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);                        
                        
-                        return (key, value: map(new ValueNode(Context, (JsonValue)n.Value)));
+                        return (key, value: map(new ValueNode(Context, valueNode)));
                     } finally {
                         Context.EndObject();
                     }
