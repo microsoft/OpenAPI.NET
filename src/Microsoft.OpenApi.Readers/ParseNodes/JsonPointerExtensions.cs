@@ -29,20 +29,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 {
                     var array = pointer as JsonArray;
 
-                    if (array != null)
+                    if (array != null && int.TryParse(token, out var tokenValue))
                     {
-                        pointer = array[Convert.ToInt32(token)];
+                        pointer = array[tokenValue];
                     }
-                    else
+                    else if(pointer is JsonObject map && !map.TryGetPropertyValue(token, out pointer))
                     {
-                        var map = pointer as JsonObject;
-                        if (map != null)
-                        {
-                            if (!map.TryGetPropertyValue(token, out pointer))
-                            {
-                                return null;
-                            }
-                        }
+                        return null;
                     }
                 }
 
