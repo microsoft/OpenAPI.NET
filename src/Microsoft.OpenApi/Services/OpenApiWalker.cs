@@ -447,14 +447,11 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(pathItem);
 
-            if (pathItem != null)
+            // The path may be a reference
+            if (pathItem != null && !ProcessAsReference(pathItem))
             {
-                // The path may be a reference
-                if (!ProcessAsReference(pathItem))
-                {
-                    Walk(OpenApiConstants.Parameters, () => Walk(pathItem.Parameters));
-                    Walk(pathItem.Operations);
-                }
+                Walk(OpenApiConstants.Parameters, () => Walk(pathItem.Parameters));
+                Walk(pathItem.Operations);
             }
             _visitor.Visit(pathItem as IOpenApiExtensible);
 

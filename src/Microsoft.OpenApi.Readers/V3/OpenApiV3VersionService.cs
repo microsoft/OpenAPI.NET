@@ -131,12 +131,12 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
                     else if (id.StartsWith("/paths/"))
                     {
-                        var localSegments = segments[1].Split('/');
-                        if (localSegments.Length == 3)
+                        var localSegments = segments[1].Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (localSegments.Length == 2)
                         {
                             // The reference of a path may contain JSON escape character ~1 for the forward-slash character, replace this otherwise
                             // the reference cannot be resolved.
-                            id = localSegments[2].Replace("~1", "/");
+                            id = localSegments[1].Replace("~1", "/");
                         }
                         else
                         {
