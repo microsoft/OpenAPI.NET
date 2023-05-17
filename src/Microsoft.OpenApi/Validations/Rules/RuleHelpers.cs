@@ -85,11 +85,9 @@ namespace Microsoft.OpenApi.Validations.Rules
                     return;
                 }
 
-                var anyObject = value as JsonObject;
-                
-                foreach (var property in anyObject)
+                if (value is JsonObject anyObject)
                 {
-                    if (anyObject != null)
+                    foreach (var property in anyObject)
                     {
                         context.Enter(property.Key);
                         if (schema.Properties.TryGetValue(property.Key, out var propertyValue))
@@ -102,7 +100,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                         }
 
                         context.Exit();
-                    }                    
+                    }
                 }
 
                 return;

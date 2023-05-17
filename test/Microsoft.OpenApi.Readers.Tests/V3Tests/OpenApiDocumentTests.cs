@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -1314,7 +1314,8 @@ paths: {}",
                             Type = ReferenceType.Header,
                             Id = "example-header"
                         }
-                    }, options => options.IgnoringCyclicReferences());
+                    }, options => options.IgnoringCyclicReferences()
+                    .Excluding(e => e.Example.Node.Parent));
 
                 var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
                 Assert.NotNull(examplesHeader);
@@ -1351,7 +1352,9 @@ paths: {}",
                             Type = ReferenceType.Header,
                             Id = "examples-header"
                         }
-                    }, options => options.IgnoringCyclicReferences());
+                    }, options => options.IgnoringCyclicReferences()
+                    .Excluding(e => e.Examples["uuid1"].Value.Node.Parent)
+                    .Excluding(e => e.Examples["uuid2"].Value.Node.Parent));
             }
         }
 

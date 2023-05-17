@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Helpers
 {
-    internal class JsonNodeCloneHelper
+    internal static class JsonNodeCloneHelper
     {
         internal static OpenApiAny Clone(OpenApiAny value)
         {

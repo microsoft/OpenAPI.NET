@@ -5,8 +5,6 @@ using System.Text.Json.Nodes;
 using SharpYaml.Serialization;
 using SharpYaml;
 using System.Globalization;
-//using YamlDotNet.Core;
-//using YamlDotNet.RepresentationModel;
 
 namespace Microsoft.OpenApi.Readers
 {
