@@ -13,7 +13,7 @@ using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Services;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests.Services
+namespace Microsoft.OpenApi.Hidi.Tests
 {
     public class OpenApiServiceTests
     {

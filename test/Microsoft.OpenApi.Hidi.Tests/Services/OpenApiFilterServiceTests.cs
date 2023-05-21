@@ -11,7 +11,7 @@ using Microsoft.OpenApi.Tests.UtilityFiles;
 using Moq;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests.Services
+namespace Microsoft.OpenApi.Hidi.Tests
 {
     public class OpenApiFilterServiceTests
     {
@@ -68,6 +68,43 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(3, subsetOpenApiDocument.Paths.Count);
         }
+
+        // Create predicate based RequestUrls
+        [Fact]
+        public void TestPredicateFiltersUsingRelativeRequestUrls()
+        {
+            var openApiDocument = new OpenApiDocument()
+            {
+                Info = new() { Title = "Test", Version = "1.0" },
+                Servers = new List<OpenApiServer>() { new() { Url = "https://localhost/" } },
+                Paths = new()
+                {
+                    {"/foo", new() { 
+                        Operations = new Dictionary<OperationType, OpenApiOperation>() {
+                            { OperationType.Get, new() },
+                            { OperationType.Patch, new() },
+                            { OperationType.Post, new() }
+                          } 
+                        }
+                    }
+                }
+            };
+
+            // Given a set of RequestUrls
+            var requestUrls = new Dictionary<string, List<string>>
+            {
+                    {"/foo", new List<string> {"GET","POST"}}
+            };
+            
+            // When
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: openApiDocument);
+
+            // Then
+            Assert.True(predicate("/foo",OperationType.Get,null));
+            Assert.True(predicate("/foo",OperationType.Post,null));
+            Assert.False(predicate("/foo",OperationType.Patch,null));
+        }
+    
 
         [Fact]
         public void ShouldParseNestedPostmanCollection()

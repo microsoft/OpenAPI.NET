@@ -67,21 +67,18 @@ namespace Microsoft.OpenApi.Hidi
                 OpenApiFormat openApiFormat = options.OpenApiFormat ?? (!string.IsNullOrEmpty(options.OpenApi) ? GetOpenApiFormat(options.OpenApi, logger) : OpenApiFormat.Yaml);
                 OpenApiSpecVersion openApiVersion = options.Version != null ? TryParseOpenApiSpecVersion(options.Version) : OpenApiSpecVersion.OpenApi3_0;
 
-                // If API Manifest is provided, load it, use it get the OpenAPI path
-                ApiManifestDocument apiManifest = null;
-                if (!string.IsNullOrEmpty(options.FilterOptions?.FilterByApiManifest))
-                {
-                    using(var fileStream = await GetStream(options.FilterOptions.FilterByApiManifest, logger, cancellationToken)) {
-                        apiManifest = ApiManifestDocument.Load(JsonDocument.Parse(fileStream).RootElement);
-                    }
-                    options.OpenApi = apiManifest.ApiDependencies[0].ApiDescripionUrl;
+                // If ApiManifest is provided, set the referenced OpenAPI document
+                var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken);
+                if (apiDependency != null) {
+                    options.OpenApi = apiDependency.ApiDescripionUrl;
                 }
 
                 // If Postman Collection is provided, load it
                 JsonDocument postmanCollection = null;
                 if (!String.IsNullOrEmpty(options.FilterOptions?.FilterByCollection))
                 {
-                    using (var collectionStream = await GetStream(options.FilterOptions.FilterByCollection, logger, cancellationToken)) {
+                    using (var collectionStream = await GetStream(options.FilterOptions.FilterByCollection, logger, cancellationToken))
+                    {
                         postmanCollection = JsonDocument.Parse(collectionStream);
                     }
                 }
@@ -91,7 +88,7 @@ namespace Microsoft.OpenApi.Hidi
 
                 if (options.FilterOptions != null)
                 {
-                    document = ApplyFilters(options, logger, apiManifest, postmanCollection, document, cancellationToken);
+                    document = ApplyFilters(options, logger, apiDependency, postmanCollection, document, cancellationToken);
                 }
 
                 var languageFormat = options.SettingsConfig?.GetSection("LanguageFormat")?.Value;
@@ -118,19 +115,49 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static OpenApiDocument ApplyFilters(HidiOptions options, ILogger logger, ApiManifestDocument apiManifest, JsonDocument postmanCollection, OpenApiDocument document, CancellationToken cancellationToken)
+        private static async Task<ApiDependency> FindApiDependency(string apiManifestPath, ILogger logger, CancellationToken cancellationToken)
+        {
+            ApiDependency apiDependency = null;
+            // If API Manifest is provided, load it, use it get the OpenAPI path
+            ApiManifestDocument apiManifest = null;
+            if (!string.IsNullOrEmpty(apiManifestPath))
+            {
+                // Extract fragment identifier if passed as the name of the ApiDependency
+                var apiManifestRef = apiManifestPath.Split('#');
+                string apiDependencyName = null;
+                if (apiManifestRef.Length > 1)
+                {
+                    apiDependencyName = apiManifestRef[1];
+                }
+                using (var fileStream = await GetStream(apiManifestRef[0], logger, cancellationToken))
+                {
+                    apiManifest = ApiManifestDocument.Load(JsonDocument.Parse(fileStream).RootElement);
+                }
+                if (apiDependencyName != null)
+                {
+                    apiDependency = apiManifest.ApiDependencies[apiDependencyName];
+                }
+                else
+                {
+                    apiDependency = apiManifest.ApiDependencies.First().Value;
+                }
+            }
+
+            return apiDependency;
+        }
+
+        private static OpenApiDocument ApplyFilters(HidiOptions options, ILogger logger, ApiDependency apiDependency, JsonDocument postmanCollection, OpenApiDocument document, CancellationToken cancellationToken)
         {
             Dictionary<string, List<string>> requestUrls = null;
-            if (apiManifest != null)
+            if (apiDependency != null)
             {
-                requestUrls = GetRequestUrlsFromManifest(apiManifest, document);
+                requestUrls = GetRequestUrlsFromManifest(apiDependency, document);
             }
             else if (postmanCollection != null)
             {
                 requestUrls = EnumerateJsonDocument(postmanCollection.RootElement, requestUrls);
                 logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
             }
-
 
             logger.LogTrace("Creating predicate from filter options.");
             var predicate = FilterOpenApiDocument(options.FilterOptions.FilterByOperationIds,
@@ -253,15 +280,14 @@ namespace Microsoft.OpenApi.Hidi
             return predicate;
         }
 
-        private static Dictionary<string, List<string>> GetRequestUrlsFromManifest(ApiManifestDocument apiManifestDocument, OpenApiDocument document)
+        private static Dictionary<string, List<string>> GetRequestUrlsFromManifest(ApiDependency apiDependency, OpenApiDocument document)
         {
             // Get the request URLs from the API Dependencies in the API manifest that have a baseURL that matches the server URL in the OpenAPI document
             var serversUrls = document.Servers.Select(s => s.Url);
-            var requests = apiManifestDocument.ApiDependencies
-                    .Where(a => serversUrls.Any(s => s == a.BaseUrl))
-                    .SelectMany(ad => ad.Requests.Where(r => r.Exclude == false)
-                                .Select(r=> new { BaseUrl=ad.BaseUrl, UriTemplate= r.UriTemplate, Method=r.Method } ))
-                    .GroupBy(r => r.BaseUrl.TrimEnd('/') + r.UriTemplate)   // The OpenApiFilterService expects non-relative URLs.
+            var requests = apiDependency
+                    .Requests.Where(r => r.Exclude == false)
+                                .Select(r=> new { UriTemplate= r.UriTemplate, Method=r.Method } )
+                    .GroupBy(r => r.UriTemplate)
                     .ToDictionary(g => g.Key, g => g.Select(r => r.Method).ToList());
             // This makes the assumption that the UriTemplate in the ApiManifest matches exactly the UriTemplate in the OpenAPI document
             // This does not need to be the case.  The URI template in the API manifest could map to a set of OpenAPI paths.

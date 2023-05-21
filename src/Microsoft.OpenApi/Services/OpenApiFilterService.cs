@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
@@ -79,12 +80,13 @@ namespace Microsoft.OpenApi.Services
                     foreach (var url in requestUrls)
                     {
                         var serverList = source.Servers;
+
                         var path = ExtractPath(url.Key, serverList);
 
                         var openApiOperations = GetOpenApiOperations(rootNode, path, apiVersion);
                         if (openApiOperations == null)
                         {
-                            Console.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
+                            Debug.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
                             continue;
                         }
 
@@ -345,20 +347,16 @@ namespace Microsoft.OpenApi.Services
 
         private static string ExtractPath(string url, IList<OpenApiServer> serverList)
         {
-            var queryPath = string.Empty;
-            foreach (var server in serverList)
-            {
-                var serverUrl = server.Url.TrimEnd('/');
-                if (!url.Contains(serverUrl))
-                {
-                    continue;
-                }
-
-                var urlComponents = url.Split(new[] { serverUrl }, StringSplitOptions.None);
-                queryPath = urlComponents[1];
+            // if OpenAPI has servers, then see if the url matches one of them
+            var baseUrl = serverList.Select(s => s.Url.TrimEnd('/')).Where(c => url.Contains(c)).FirstOrDefault();
+            
+            if (baseUrl == null) {
+                // if no match, then extract path from either the absolute or relative url
+                return new Uri(new Uri("http://localhost/"), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped);
+            } else {
+                // if match, then extract path from the url relative to the matched server
+                return url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
             }
-
-            return queryPath;
         }
     }
 }
