@@ -1,14 +1,12 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -92,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             Scheme = securityScheme?.Scheme ?? Scheme;
             BearerFormat = securityScheme?.BearerFormat ?? BearerFormat;
             Flows = securityScheme?.Flows != null ? new(securityScheme?.Flows) : null;
-            OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString) : null;
+            OpenIdConnectUrl = securityScheme?.OpenIdConnectUrl != null ? new Uri(securityScheme.OpenIdConnectUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
             Extensions = securityScheme?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(securityScheme.Extensions) : null;
             UnresolvedReference = securityScheme?.UnresolvedReference ?? UnresolvedReference;
             Reference = securityScheme?.Reference != null ? new(securityScheme?.Reference) : null;

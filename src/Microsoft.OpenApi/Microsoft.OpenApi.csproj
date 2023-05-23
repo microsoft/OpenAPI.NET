@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <LangVersion>Latest</LangVersion>
@@ -11,7 +11,7 @@
         <Company>Microsoft</Company>
         <Title>Microsoft.OpenApi</Title>
         <PackageId>Microsoft.OpenApi</PackageId>
-        <Version>1.4.4-preview1</Version>
+        <Version>1.6.4-preview4</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <PackageTags>OpenAPI .NET</PackageTags>
@@ -35,6 +35,9 @@
     </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="JsonSchema.Net" Version="4.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="System.Text.Json" Version="7.0.2" />
     </ItemGroup>
 
     <ItemGroup>

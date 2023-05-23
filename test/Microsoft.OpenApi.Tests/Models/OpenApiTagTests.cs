@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-tag-extension", new OpenApiNull()}
+                {"x-tag-extension", null}
             }
         };
 
@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Tests.Models
             ExternalDocs = OpenApiExternalDocsTests.AdvanceExDocs,
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-tag-extension", new OpenApiNull()}
+                {"x-tag-extension", null}
             },
             Reference = new OpenApiReference
             {
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "pet"
             }
         };
-
+        
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -60,10 +60,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             BasicTag.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -78,10 +77,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             BasicTag.SerializeAsV2WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
@@ -133,10 +131,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedTag.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -151,10 +148,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedTag.SerializeAsV2WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
@@ -219,10 +215,9 @@ x-tag-extension: ";
             // Act
             AdvancedTag.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -237,10 +232,9 @@ x-tag-extension: ";
             // Act
             AdvancedTag.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
@@ -295,10 +289,9 @@ x-tag-extension: ";
             // Act
             ReferencedTag.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -313,10 +306,9 @@ x-tag-extension: ";
             // Act
             ReferencedTag.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]

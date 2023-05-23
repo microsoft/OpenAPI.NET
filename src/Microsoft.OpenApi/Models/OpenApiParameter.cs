@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -7,9 +7,9 @@ using System.Runtime;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
         /// a string value can contain the example with escaping where necessary.
         /// </summary>
-        public IOpenApiAny Example { get; set; }
+        public OpenApiAny Example { get; set; }
 
         /// <summary>
         /// A map containing the representations for the parameter.
@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
             Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
+            Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
@@ -274,15 +274,15 @@ namespace Microsoft.OpenApi.Models
 
             // allowEmptyValue
             writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
-
+            
             // style
             if (_style.HasValue)
             {
-                writer.WriteProperty(OpenApiConstants.Style, Style.Value.GetDisplayName());
+                writer.WriteProperty(OpenApiConstants.Style, _style.Value.GetDisplayName());
             }
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, Style.HasValue && Style.Value == ParameterStyle.Form);
+            writer.WriteProperty(OpenApiConstants.Explode, _explode, _style.HasValue && _style.Value == ParameterStyle.Form);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
@@ -413,7 +413,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query)
+                if (this.In == ParameterLocation.Query && "array".Equals(Schema?.Type, StringComparison.OrdinalIgnoreCase))
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {

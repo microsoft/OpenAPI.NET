@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -10,7 +9,7 @@ using Microsoft.OpenApi.Properties;
 namespace Microsoft.OpenApi.Extensions
 {
     /// <summary>
-    /// Extension methods to verify validatity and add an extension to Extensions property.
+    /// Extension methods to verify validity and add an extension to Extensions property.
     /// </summary>
     public static class OpenApiExtensibleExtensions
     {

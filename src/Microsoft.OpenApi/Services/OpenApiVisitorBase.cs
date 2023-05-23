@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -53,6 +54,14 @@ namespace Microsoft.OpenApi.Services
         /// Visits <see cref="OpenApiDocument"/>
         /// </summary>
         public virtual void Visit(OpenApiDocument doc)
+        {
+        }
+
+        /// <summary>
+        /// Visits <see cref="JsonNode"/>
+        /// </summary>
+        /// <param name="node"></param>
+        public virtual void Visit(JsonNode node)
         {
         }
 

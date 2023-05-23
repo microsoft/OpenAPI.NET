@@ -1,11 +1,13 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -16,8 +18,6 @@ using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -1303,7 +1303,7 @@ paths: {}",
                         AllowReserved = true,
                         Style = ParameterStyle.Simple,
                         Explode = true,
-                        Example = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
+                        Example = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
                         Schema = new OpenApiSchema()
                         {
                             Type = "string",
@@ -1314,7 +1314,8 @@ paths: {}",
                             Type = ReferenceType.Header,
                             Id = "example-header"
                         }
-                    });
+                    }, options => options.IgnoringCyclicReferences()
+                    .Excluding(e => e.Example.Node.Parent));
 
                 var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
                 Assert.NotNull(examplesHeader);
@@ -1332,12 +1333,12 @@ paths: {}",
                         {
                             { "uuid1", new OpenApiExample()
                                 {
-                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                    Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
                                 }
                             },
                             { "uuid2", new OpenApiExample()
                                 {
-                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                    Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
                                 }
                             }
                         },
@@ -1351,8 +1352,48 @@ paths: {}",
                             Type = ReferenceType.Header,
                             Id = "examples-header"
                         }
-                    });
+                    }, options => options.IgnoringCyclicReferences()
+                    .Excluding(e => e.Examples["uuid1"].Value.Node.Parent)
+                    .Excluding(e => e.Examples["uuid2"].Value.Node.Parent));
             }
+        }
+
+        [Fact]
+        public void DoesNotChangeExternalReferences()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithExternalRefs.yaml"));
+
+            // Act
+            var doc = new OpenApiStreamReader(
+                new OpenApiReaderSettings { ReferenceResolution = ReferenceResolutionSetting.DoNotResolveReferences })
+                .Read(stream, out var diagnostic);
+
+            var externalRef = doc.Components.Schemas["Nested"].Properties["AnyOf"].AnyOf.First().Reference.ReferenceV3;
+            var externalRef2 = doc.Components.Schemas["Nested"].Properties["AnyOf"].AnyOf.Last().Reference.ReferenceV3;
+
+            // Assert
+            Assert.Equal("file:///C:/MySchemas.json#/definitions/ArrayObject", externalRef);
+            Assert.Equal("../foo/schemas.yaml#/components/schemas/Number", externalRef2);
+        }
+
+        [Fact]
+        public void ParseDocumentWithReferencedSecuritySchemeWorks()
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithSecuritySchemeReference.yaml"));
+
+            // Act
+            var doc = new OpenApiStreamReader(new OpenApiReaderSettings
+            {
+                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
+            }).Read(stream, out var diagnostic);
+
+            var securityScheme = doc.Components.SecuritySchemes["OAuth2"];
+
+            // Assert
+            Assert.False(securityScheme.UnresolvedReference);
+            Assert.NotNull(securityScheme.Flows);
         }
     }
 }

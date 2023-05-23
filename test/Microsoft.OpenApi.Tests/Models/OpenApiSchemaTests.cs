@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Maximum = 42,
             ExclusiveMinimum = true,
             Minimum = 10,
-            Default = new OpenApiInteger(15),
+            Default = new OpenApiAny(15),
             Type = "integer",
 
             Nullable = true,
@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Maximum = 42,
             ExclusiveMinimum = true,
             Minimum = 10,
-            Default = new OpenApiInteger(15),
+            Default = new OpenApiAny(15),
             Type = "integer",
 
             Nullable = true,
@@ -381,10 +381,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedSchema.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -399,10 +398,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedSchema.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -417,10 +415,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedSchemaWithRequiredPropertiesObject.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
@@ -462,6 +459,25 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Assert
             Assert.Equal(expectedV2Schema, v2Schema);
+        }
+
+        [Fact]
+        public void OpenApiSchemaCopyConstructorSucceeds()
+        {
+            var baseSchema = new OpenApiSchema()
+            {
+                Type = "string",
+                Format = "date"
+            };
+
+            var actualSchema = new OpenApiSchema(baseSchema)
+            {
+                Nullable = true
+            };
+
+            Assert.Equal("string", actualSchema.Type);
+            Assert.Equal("date", actualSchema.Format);
+            Assert.True(actualSchema.Nullable);
         }
     }
 }

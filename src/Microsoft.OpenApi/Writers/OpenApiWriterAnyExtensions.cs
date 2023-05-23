@@ -1,14 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Writers
 {
     /// <summary>
-    /// Extensions methods for writing the <see cref="IOpenApiAny"/>
+    /// Extensions methods for writing the <see cref="OpenApiAny"/>
     /// </summary>
     public static class OpenApiWriterAnyExtensions
     {
@@ -30,60 +33,68 @@ namespace Microsoft.OpenApi.Writers
                 foreach (var item in extensions)
                 {
                     writer.WritePropertyName(item.Key);
-                    item.Value.Write(writer, specVersion);
+
+                    if (item.Value == null)
+                    {
+                        writer.WriteNull();
+                    }
+                    else
+                    {
+                        item.Value.Write(writer, specVersion);
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// Write the <see cref="IOpenApiAny"/> value.
+        /// Write the <see cref="JsonNode"/> value.
         /// </summary>
-        /// <typeparam name="T">The Open API Any type.</typeparam>
         /// <param name="writer">The Open API writer.</param>
         /// <param name="any">The Any value</param>
-        public static void WriteAny<T>(this IOpenApiWriter writer, T any) where T : IOpenApiAny
+        public static void WriteAny(this IOpenApiWriter writer, OpenApiAny any)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (any == null)
+            writer = writer ?? throw Error.ArgumentNull(nameof(writer));
+            
+            if (any.Node == null)
             {
                 writer.WriteNull();
                 return;
             }
 
-            switch (any.AnyType)
+            var node = any.Node;
+            var element = JsonDocument.Parse(node.ToJsonString()).RootElement;
+            switch (element.ValueKind)
             {
-                case AnyType.Array: // Array
-                    writer.WriteArray(any as OpenApiArray);
+                case JsonValueKind.Array: // Array
+                    writer.WriteArray(node as JsonArray);
+                    break;                    
+                case JsonValueKind.Object: // Object
+                    writer.WriteObject(node as JsonObject);
+                    break;                    
+                case JsonValueKind.String: // Primitive
+                    writer.WritePrimitive(element);
                     break;
-
-                case AnyType.Object: // Object
-                    writer.WriteObject(any as OpenApiObject);
+                case JsonValueKind.Number: // Primitive
+                    writer.WritePrimitive(element);
                     break;
-
-                case AnyType.Primitive: // Primitive
-                    writer.WritePrimitive(any as IOpenApiPrimitive);
+                case JsonValueKind.True or JsonValueKind.False: // Primitive
+                    writer.WritePrimitive(element);
                     break;
-
-                case AnyType.Null: // null
+                case JsonValueKind.Null: // null
                     writer.WriteNull();
                     break;
-
                 default:
                     break;
             }
         }
 
-        private static void WriteArray(this IOpenApiWriter writer, OpenApiArray array)
+        private static void WriteArray(this IOpenApiWriter writer, JsonArray array)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
-
+            
             if (array == null)
             {
                 throw Error.ArgumentNull(nameof(array));
@@ -93,13 +104,13 @@ namespace Microsoft.OpenApi.Writers
 
             foreach (var item in array)
             {
-                writer.WriteAny(item);
+                writer.WriteAny(new OpenApiAny(item));
             }
 
             writer.WriteEndArray();
         }
 
-        private static void WriteObject(this IOpenApiWriter writer, OpenApiObject entity)
+        private static void WriteObject(this IOpenApiWriter writer, JsonObject entity)
         {
             if (writer == null)
             {
@@ -116,26 +127,59 @@ namespace Microsoft.OpenApi.Writers
             foreach (var item in entity)
             {
                 writer.WritePropertyName(item.Key);
-                writer.WriteAny(item.Value);
+                writer.WriteAny(new OpenApiAny(item.Value));
             }
 
             writer.WriteEndObject();
         }
 
-        private static void WritePrimitive(this IOpenApiWriter writer, IOpenApiPrimitive primitive)
+        private static void WritePrimitive(this IOpenApiWriter writer, JsonElement primitive)
         {
             if (writer == null)
             {
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-            if (primitive == null)
+            if (primitive.ValueKind == JsonValueKind.String)
             {
-                throw Error.ArgumentNull(nameof(primitive));
+                // check whether string is actual string or date time object
+                if (primitive.TryGetDateTime(out var dateTime))
+                {
+                    writer.WriteValue(dateTime);
+                }
+                else if (primitive.TryGetDateTimeOffset(out var dateTimeOffset))
+                {
+                        writer.WriteValue(dateTimeOffset);
+                }
+                else
+                {
+                    writer.WriteValue(primitive.GetString());
+                }
             }
 
-            // The Spec version is meaning for the Any type, so it's ok to use the latest one.
-            primitive.Write(writer, OpenApiSpecVersion.OpenApi3_0);
+            if (primitive.ValueKind == JsonValueKind.Number)
+            {
+                if (primitive.TryGetDecimal(out var decimalValue))
+                {
+                    writer.WriteValue(decimalValue);
+                }
+                else if (primitive.TryGetDouble(out var doubleValue))
+                {
+                    writer.WriteValue(doubleValue);
+                }
+                else if (primitive.TryGetInt64(out var longValue))
+                {
+                    writer.WriteValue(longValue);
+                }
+                else if (primitive.TryGetInt32(out var intValue))
+                {
+                    writer.WriteValue(intValue);
+                }
+            }
+            if (primitive.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            {
+                writer.WriteValue(primitive.GetBoolean());
+            }
         }
     }
 }

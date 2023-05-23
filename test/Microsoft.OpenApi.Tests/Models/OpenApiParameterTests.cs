@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -79,14 +80,14 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = "array",
                 Items = new OpenApiSchema
                 {
-                    Enum = new List<IOpenApiAny>
+                    Enum = new List<OpenApiAny>
                     {
-                        new OpenApiString("value1"),
-                        new OpenApiString("value2")
+                        new OpenApiAny("value1"),
+                        new OpenApiAny("value2")
                     }
                 }
             }
-
+            
         };
 
         public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
@@ -101,10 +102,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = "array",
                 Items = new OpenApiSchema
                 {
-                    Enum = new List<IOpenApiAny>
+                    Enum = new List<OpenApiAny>
                     {
-                        new OpenApiString("value1"),
-                        new OpenApiString("value2")
+                        new OpenApiAny("value1"),
+                        new OpenApiAny("value2")
                     }
                 }
             }
@@ -336,10 +337,9 @@ schema:
             // Act
             ReferencedParameter.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -354,10 +354,9 @@ schema:
             // Act
             ReferencedParameter.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -372,10 +371,9 @@ schema:
             // Act
             ReferencedParameter.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -390,10 +388,9 @@ schema:
             // Act
             ReferencedParameter.SerializeAsV2WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -408,10 +405,9 @@ schema:
             // Act
             AdvancedHeaderParameterWithSchemaReference.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -426,10 +422,9 @@ schema:
             // Act
             AdvancedHeaderParameterWithSchemaTypeObject.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -444,10 +439,9 @@ schema:
             // Act
             ParameterWithFormStyleAndExplodeFalse.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -462,10 +456,9 @@ schema:
             // Act
             ParameterWithFormStyleAndExplodeTrue.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

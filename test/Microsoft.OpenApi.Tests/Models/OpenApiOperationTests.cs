@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using NuGet.Frameworks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -792,6 +793,59 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             Assert.NotNull(operation.Responses);
             Assert.Equal(2, operation.Responses.Count);
+        }
+
+        [Fact]
+        public void EnsureOpenApiOperationCopyConstructorCopiesNull()
+        {
+            // Arrange
+            _basicOperation.Parameters = null;
+            _basicOperation.Tags = null;
+            _basicOperation.Responses = null;
+            _basicOperation.Callbacks = null;
+            _basicOperation.Security = null;
+            _basicOperation.Servers = null;
+            _basicOperation.Extensions = null;
+
+            // Act
+            var operation = new OpenApiOperation(_basicOperation);
+
+            // Assert
+            Assert.Null(operation.Tags);
+            Assert.Null(operation.Summary);
+            Assert.Null(operation.Description);
+            Assert.Null(operation.ExternalDocs);
+            Assert.Null(operation.OperationId);
+            Assert.Null(operation.Parameters);
+            Assert.Null(operation.RequestBody);
+            Assert.Null(operation.Responses);
+            Assert.Null(operation.Callbacks);
+            Assert.Null(operation.Security);
+            Assert.Null(operation.Servers);
+            Assert.Null(operation.Extensions);
+        }
+
+        [Fact]
+        public void EnsureOpenApiOperationCopyConstructor_SerializationResultsInSame()
+        {
+            var operations = new[]
+            {
+                _basicOperation,
+                _operationWithBody,
+                _operationWithFormData,
+                _advancedOperationWithTagsAndSecurity
+            };
+
+            foreach (var operation in operations)
+            {
+                // Act
+                var expected = operation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+                var openApiOperation = new OpenApiOperation(operation);
+                var actual = openApiOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
+
+                // Assert
+                actual.Should().Be(expected);
+            }
         }
     }
 }

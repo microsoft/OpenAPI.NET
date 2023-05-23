@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -36,8 +35,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Type = "number",
                     Format = "float",
-                    Default = new OpenApiFloat(5)
-                });
+                    Default = new OpenApiAny(5)
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(schema => schema.Default.Node.Parent));
         }
 
         [Fact]
@@ -59,8 +59,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Type = "number",
                     Format = "float",
-                    Example = new OpenApiFloat(5)
-                });
+                    Example = new OpenApiAny(5)
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(schema => schema.Example.Node.Parent));
         }
 
         [Fact]
@@ -82,13 +83,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Type = "number",
                     Format = "float",
-                    Enum =
-                    {
-                        new OpenApiFloat(7),
-                        new OpenApiFloat(8),
-                        new OpenApiFloat(9)
-                    }
-                });
+                    Enum = 
+                    { 
+                        new OpenApiAny(7), 
+                        new OpenApiAny(8), 
+                        new OpenApiAny(9)
+                    }                    
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(s => s.Enum[0].Node.Parent)
+                .Excluding(s => s.Enum[1].Node.Parent)
+                .Excluding(s => s.Enum[2].Node.Parent));
         }
     }
 }

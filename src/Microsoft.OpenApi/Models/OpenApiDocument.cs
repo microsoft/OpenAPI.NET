@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
@@ -104,7 +105,7 @@ namespace Microsoft.OpenApi.Models
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
-        }
+        }   
 
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to Open API v3.1 document.

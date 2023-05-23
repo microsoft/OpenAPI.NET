@@ -1,11 +1,14 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -31,8 +34,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
+                
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
@@ -94,8 +98,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Type = "integer",
                     Format = "int64",
-                    Default = new OpenApiLong(88)
-                });
+                    Default = new OpenApiAny(88)
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(s => s.Default.Node.Parent));
         }
 
         [Fact]
@@ -110,22 +115,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
-
+            var openApiAny = reader.ReadFragment<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.Should().BeEquivalentTo(
-                new OpenApiObject
+            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+                new JsonObject
                 {
-                    ["foo"] = new OpenApiString("bar"),
-                    ["baz"] = new OpenApiArray() {
-                        new OpenApiInteger(1),
-                        new OpenApiInteger(2)
-                    }
-                });
+                    ["foo"] = "bar",
+                    ["baz"] = new JsonArray() {1, 2}
+                }), options => options.IgnoringCyclicReferences());
         }
-
+        
         [Fact]
         public void ParseEnumFragmentShouldSucceed()
         {
@@ -136,19 +138,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
             var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
-
+            
             // Act
-            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = reader.ReadFragment<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
-            openApiAny.Should().BeEquivalentTo(
-                new OpenApiArray
+            openApiAny.Should().BeEquivalentTo(new OpenApiAny(
+                new JsonArray
                 {
-                    new OpenApiString("foo"),
-                    new OpenApiString("baz")
-                });
+                    "foo",
+                    "baz"
+                }), options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -163,8 +165,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
+                
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
@@ -252,8 +255,9 @@ get:
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
+                
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
@@ -284,8 +288,9 @@ get:
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
+                
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
@@ -312,12 +317,13 @@ get:
                         {
                             "name"
                         },
-                        Example = new OpenApiObject
-                        {
-                            ["name"] = new OpenApiString("Puma"),
-                            ["id"] = new OpenApiLong(1)
-                        }
-                    });
+                        Example = new OpenApiAny(new JsonObject { ["name"] = "Puma", ["id"] = 1 })
+                    },
+                    options => options.IgnoringCyclicReferences()
+                    .Excluding(s => s.Example.Node["name"].Parent)
+                    .Excluding(s => s.Example.Node["name"].Root)
+                    .Excluding(s => s.Example.Node["id"].Parent)
+                    .Excluding(s => s.Example.Node["id"].Root));
             }
         }
 
@@ -429,7 +435,8 @@ get:
                                 }
                             }
                     }
-                }, options => options.Excluding(m => m.Name == "HostDocument"));
+                }, options => options.Excluding(m => m.Name == "HostDocument")
+                                     .IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -534,12 +541,12 @@ get:
                                             {
                                                 Type = "string",
                                                 Description = "The measured skill for hunting",
-                                                Enum =
-                                                {
-                                                    new OpenApiString("clueless"),
-                                                    new OpenApiString("lazy"),
-                                                    new OpenApiString("adventurous"),
-                                                    new OpenApiString("aggressive")
+                                                Enum = 
+                                                { 
+                                                    new OpenApiAny("clueless"),
+                                                    new OpenApiAny("lazy"),
+                                                    new OpenApiAny("adventurous"),
+                                                    new OpenApiAny("aggressive")
                                                 }
                                             }
                                         }
@@ -600,7 +607,7 @@ get:
                                                 Type = "integer",
                                                 Format = "int32",
                                                 Description = "the size of the pack the dog is from",
-                                                Default = new OpenApiInteger(0),
+                                                Default = new OpenApiAny(0),
                                                 Minimum = 0
                                             }
                                         }
@@ -614,7 +621,12 @@ get:
                                 }
                             }
                     }
-                }, options => options.Excluding(m => m.Name == "HostDocument"));
+                }, options => options.Excluding(m => m.Name == "HostDocument").IgnoringCyclicReferences()
+                .Excluding(c => c.Schemas["Cat"].AllOf[1].Properties["huntingSkill"].Enum[0].Node.Parent)
+                .Excluding(c => c.Schemas["Cat"].AllOf[1].Properties["huntingSkill"].Enum[1].Node.Parent)
+                .Excluding(c => c.Schemas["Cat"].AllOf[1].Properties["huntingSkill"].Enum[2].Node.Parent)
+                .Excluding(c => c.Schemas["Cat"].AllOf[1].Properties["huntingSkill"].Enum[3].Node.Parent)
+                .Excluding(c => c.Schemas["Dog"].AllOf[1].Properties["packSize"].Default.Node.Parent));
         }
 
 

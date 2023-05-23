@@ -9,9 +9,7 @@ using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -110,6 +108,8 @@ definitions:
 paths: {}",
                 out var context);
 
+            var extension = (OpenApiAny)openApiDoc.Info.Extensions["x-extension"];
+
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
@@ -119,7 +119,7 @@ paths: {}",
                         Version = "0.9.1",
                         Extensions =
                         {
-                            ["x-extension"] = new OpenApiDouble(2.335)
+                            ["x-extension"] = new OpenApiAny(2.335)
                         }
                     },
                     Components = new OpenApiComponents()
@@ -149,8 +149,9 @@ paths: {}",
                         }
                     },
                     Paths = new OpenApiPaths()
-                });
-
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(doc => ((OpenApiAny)doc.Info.Extensions["x-extension"]).Node.Parent));
+            
             context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic() 
                 { 

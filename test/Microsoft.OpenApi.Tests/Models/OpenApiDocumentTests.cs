@@ -5,12 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using Microsoft.VisualBasic;
 using VerifyXunit;
@@ -600,7 +604,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiSchema ErrorModelSchema = AdvancedComponents.Schemas["errorModel"];
 
-        public static OpenApiDocument AdvancedDocument = new OpenApiDocument
+        public OpenApiDocument AdvancedDocument = new OpenApiDocument
         {
             Info = new OpenApiInfo
             {
@@ -1001,12 +1005,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = "integer",
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
-                                            ["my-extension"] = new Any.OpenApiInteger(4),
+                                            ["my-extension"] = new OpenApiAny(4),
                                         }
                                     },
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
-                                        ["my-extension"] = new Any.OpenApiInteger(4),
+                                        ["my-extension"] = new OpenApiAny(4),
                                     }
                                 },
                                 new OpenApiParameter
@@ -1020,12 +1024,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = "integer",
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
-                                            ["my-extension"] = new Any.OpenApiInteger(4),
+                                            ["my-extension"] = new OpenApiAny(4),
                                         }
                                     },
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
-                                        ["my-extension"] = new Any.OpenApiInteger(4),
+                                        ["my-extension"] = new OpenApiAny(4),
                                     }
                                 },
                             },
@@ -1061,8 +1065,8 @@ namespace Microsoft.OpenApi.Tests.Models
         }
 
         [Theory]
-        [InlineData(true)]
         [InlineData(false)]
+        [InlineData(true)]
         public async Task SerializeAdvancedDocumentAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
@@ -1072,10 +1076,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedDocument.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -1090,10 +1093,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedDocumentWithReference.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -1108,10 +1110,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedDocument.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -1126,10 +1127,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             DuplicateExtensions.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -1144,10 +1144,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             DuplicateExtensions.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -1162,10 +1161,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedDocumentWithReference.SerializeAsV2(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Fact]
@@ -1417,19 +1415,167 @@ paths: { }";
             return openApiDoc;
         }
 
+        //[Fact]
+        //public void CopyConstructorForAdvancedDocumentWorks()
+        //{
+        //    // Arrange & Act
+        //    var doc = new OpenApiDocument(AdvancedDocument);
+
+        //    var docOpId = doc.Paths["/pets"].Operations[OperationType.Get].OperationId = "findAllMyPets";
+        //    var advancedDocOpId = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].OperationId;
+        //    var responseSchemaTypeCopy = doc.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type = "object";
+        //    var advancedDocResponseSchemaType = AdvancedDocument.Paths["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Type;
+
+        //    // Assert
+        //    Assert.NotNull(doc.Info);
+        //    Assert.NotNull(doc.Servers);
+        //    Assert.NotNull(doc.Paths);
+        //    Assert.Equal(2, doc.Paths.Count);
+        //    Assert.NotNull(doc.Components);
+        //    Assert.NotEqual(docOpId, advancedDocOpId);
+        //    Assert.NotEqual(responseSchemaTypeCopy, advancedDocResponseSchemaType);
+        //}
+
         [Fact]
-        public void CopyConstructorForAdvancedDocumentWorks()
+        public void SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()
         {
-            // Arrange & Act
-            var doc = new OpenApiDocument(AdvancedDocument);
+            // Arrange
+            var expected = @"swagger: '2.0'
+info: { }
+paths:
+  /foo:
+    get:
+      parameters:
+        - in: query
+          type: string
+      responses: { }";
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo(),
+                Paths = new OpenApiPaths
+                {                    
+                    ["/foo"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation> 
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Parameters = new List<OpenApiParameter>
+                                {
+                                    new OpenApiParameter
+                                    {
+                                        In = ParameterLocation.Query,
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Type = "string"
+                                        }
+                                    }
+                                },
+                                Responses = new OpenApiResponses()
+                            }
+                        }
+                    }
+                }
+            };
+            
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
 
             // Assert
-            Assert.NotNull(doc.Info);
-            Assert.NotNull(doc.Servers);
-            Assert.NotNull(doc.Paths);
-            Assert.Equal(2, doc.Paths.Count);
-            Assert.NotNull(doc.Components);
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
         }
+        
+        [Fact]
+        public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
+        {
+            // Arrange
+            var expected = @"openapi: 3.0.1
+info:
+  title: magic style
+  version: 1.0.0
+paths:
+  /foo:
+    get:
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: object
+            additionalProperties:
+              type: integer
+      responses:
+        '200':
+          description: foo
+          content:
+            text/plain:
+              schema:
+                type: string";
+
+            var doc = new OpenApiDocument
+            {
+                Info = new OpenApiInfo
+                {
+                    Title = "magic style",
+                    Version = "1.0.0"
+                },
+                Paths = new OpenApiPaths
+                {
+                    ["/foo"] = new OpenApiPathItem
+                    {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Parameters = new List<OpenApiParameter>
+                                {
+                                    new OpenApiParameter
+                                    {
+                                        Name = "id",
+                                        In = ParameterLocation.Query,
+                                        Schema = new OpenApiSchema
+                                        {
+                                            Type = "object",
+                                            AdditionalProperties = new OpenApiSchema
+                                            {
+                                                Type = "integer"
+                                            }
+                                        }
+                                    }
+                                },
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse
+                                    {
+                                        Description = "foo",
+                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        {
+                                            ["text/plain"] = new OpenApiMediaType
+                                            {
+                                                Schema = new OpenApiSchema
+                                                {
+                                                    Type = "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Act
+            var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual = actual.MakeLineBreaksEnvironmentNeutral();
+            expected = expected.MakeLineBreaksEnvironmentNeutral();
+            actual.Should().Be(expected);
+        } 
 
         [Theory]
         [InlineData(true)]

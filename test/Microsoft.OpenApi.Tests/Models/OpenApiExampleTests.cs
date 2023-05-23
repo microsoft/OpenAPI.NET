@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -20,41 +22,40 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiExample AdvancedExample = new OpenApiExample
         {
-            Value = new OpenApiObject
+            Value = new OpenApiAny(new JsonObject
             {
-                ["versions"] = new OpenApiArray
+                ["versions"] = new JsonArray
                 {
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status1"),
-                        ["id"] = new OpenApiString("v1"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status1",
+                        ["id"] = "v1",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/1"),
-                                ["rel"] = new OpenApiString("sampleRel1"),
-                                ["bytes"] = new OpenApiByte(new byte[] { 1, 2, 3 }),
-                                ["binary"] = new OpenApiBinary(Encoding.UTF8.GetBytes("Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ"))
+                                ["href"] = "http://example.com/1",
+                                ["rel"] = "sampleRel1",
+                                ["bytes"] = Convert.ToBase64String(new byte[] { 1, 2, 3 }),
+                                ["binary"] = Convert.ToBase64String(Encoding.UTF8.GetBytes("Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ"))
                             }
                         }
                     },
-
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status2"),
-                        ["id"] = new OpenApiString("v2"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status2",
+                        ["id"] = "v2",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/2"),
-                                ["rel"] = new OpenApiString("sampleRel2")
+                                ["href"] = "http://example.com/2",
+                                ["rel"] = "sampleRel2"
                             }
                         }
                     }
                 }
-            }
+            })
         };
 
         public static OpenApiExample ReferencedExample = new OpenApiExample
@@ -64,39 +65,39 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = ReferenceType.Example,
                 Id = "example1",
             },
-            Value = new OpenApiObject
+            Value = new OpenApiAny(new JsonObject
             {
-                ["versions"] = new OpenApiArray
+                ["versions"] = new JsonArray
                 {
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status1"),
-                        ["id"] = new OpenApiString("v1"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status1",
+                        ["id"] = "v1",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/1"),
-                                ["rel"] = new OpenApiString("sampleRel1")
+                                ["href"] = "http://example.com/1",
+                                ["rel"] = "sampleRel1"
                             }
                         }
                     },
 
-                    new OpenApiObject
+                    new JsonObject
                     {
-                        ["status"] = new OpenApiString("Status2"),
-                        ["id"] = new OpenApiString("v2"),
-                        ["links"] = new OpenApiArray
+                        ["status"] = "Status2",
+                        ["id"] = "v2",
+                        ["links"] = new JsonArray
                         {
-                            new OpenApiObject
+                            new JsonObject
                             {
-                                ["href"] = new OpenApiString("http://example.com/2"),
-                                ["rel"] = new OpenApiString("sampleRel2")
+                                ["href"] = "http://example.com/2",
+                                ["rel"] = "sampleRel2"
                             }
                         }
                     }
                 }
-            }
+            })
         };
 
         private readonly ITestOutputHelper _output;
@@ -118,12 +119,11 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             AdvancedExample.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
-
+        
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -136,10 +136,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedExample.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
         [Theory]
@@ -154,10 +153,9 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act
             ReferencedExample.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Models
         /// Unlike JSON Schema, the value MUST conform to the defined type for the Schema Object defined at the same level.
         /// For example, if type is string, then default can be "foo" but cannot be 1.
         /// </summary>
-        public IOpenApiAny Default { get; set; }
+        public OpenApiAny Default { get; set; }
 
         /// <summary>
         /// Relevant only for Schema "properties" definitions. Declares the property as "read only".
@@ -200,12 +200,12 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples that cannot be naturally represented in JSON or YAML,
         /// a string value can be used to contain the example with escaping where necessary.
         /// </summary>
-        public IOpenApiAny Example { get; set; }
+        public OpenApiAny Example { get; set; }
 
         /// <summary>
         /// Follow JSON Schema definition: https://tools.ietf.org/html/draft-fge-json-schema-validation-00
         /// </summary>
-        public IList<IOpenApiAny> Enum { get; set; } = new List<IOpenApiAny>();
+        public IList<OpenApiAny> Enum { get; set; } = new List<OpenApiAny>();
 
         /// <summary>
         /// Allows sending a null value for the defined schema. Default value is false.
@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Models
             MinLength = schema?.MinLength ?? MinLength;
             Pattern = schema?.Pattern ?? Pattern;
             MultipleOf = schema?.MultipleOf ?? MultipleOf;
-            Default = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Default);
+            Default = JsonNodeCloneHelper.Clone(schema?.Default);
             ReadOnly = schema?.ReadOnly ?? ReadOnly;
             WriteOnly = schema?.WriteOnly ?? WriteOnly;
             AllOf = schema?.AllOf != null ? new List<OpenApiSchema>(schema.AllOf) : null;
@@ -282,14 +282,15 @@ namespace Microsoft.OpenApi.Models
             MaxProperties = schema?.MaxProperties ?? MaxProperties;
             MinProperties = schema?.MinProperties ?? MinProperties;
             AdditionalPropertiesAllowed = schema?.AdditionalPropertiesAllowed ?? AdditionalPropertiesAllowed;
-            AdditionalProperties = new(schema?.AdditionalProperties);
+            AdditionalProperties = schema?.AdditionalProperties != null ? new(schema?.AdditionalProperties) : null;
             Discriminator = schema?.Discriminator != null ? new(schema?.Discriminator) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(schema?.Example);
-            Enum = schema?.Enum != null ? new List<IOpenApiAny>(schema.Enum) : null;
+            Example = JsonNodeCloneHelper.Clone(schema?.Example);
+            Enum = schema?.Enum != null ? new List<OpenApiAny>(schema.Enum) : null;
             Nullable = schema?.Nullable ?? Nullable;
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
             Deprecated = schema?.Deprecated ?? Deprecated;
             Xml = schema?.Xml != null ? new(schema?.Xml) : null;
+            Extensions = schema?.Xml != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
         }
@@ -373,7 +374,6 @@ namespace Microsoft.OpenApi.Models
         private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
-
             writer.WriteStartObject();
 
             // title
@@ -426,7 +426,7 @@ namespace Microsoft.OpenApi.Models
 
             // type
             writer.WriteProperty(OpenApiConstants.Type, Type);
-
+            
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, AllOf, callback);
 
@@ -564,6 +564,11 @@ namespace Microsoft.OpenApi.Models
             }
 
             target.SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
+           
+            if (Reference != null)
+            {
+                settings.LoopDetector.PopLoop<OpenApiSchema>();
+            }
         }
 
         /// <summary>

@@ -1,9 +1,10 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -33,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
         {
-            [typeof(IOpenApiAny)] = OpenApiV3Deserializer.LoadAny,
+            [typeof(OpenApiAny)] = OpenApiV3Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV3Deserializer.LoadComponents,
             [typeof(OpenApiContact)] = OpenApiV3Deserializer.LoadContact,
@@ -114,11 +115,12 @@ namespace Microsoft.OpenApi.Readers.V3
                         catch (OpenApiException ex)
                         {
                             Diagnostic.Errors.Add(new OpenApiError(ex));
-                            return null;
                         }
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
                     string id = segments[1];
+                    var openApiReference = new OpenApiReference();
+
                     // $ref: externalSource.yaml#/Pet
                     if (id.StartsWith("/components/"))
                     {
@@ -137,15 +139,16 @@ namespace Microsoft.OpenApi.Readers.V3
                         }
                         id = localSegments[3];
                     }
-
-                    return new OpenApiReference
+                    else
                     {
-                        Summary = summary,
-                        Description = description,
-                        ExternalResource = segments[0],
-                        Type = type,
-                        Id = id
-                    };
+                        openApiReference.IsFragrament = true;
+                    }
+
+                    openApiReference.ExternalResource = segments[0];
+                    openApiReference.Type = type;
+                    openApiReference.Id = id;
+
+                    return openApiReference;
                 }
             }
 

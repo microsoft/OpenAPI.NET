@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: Example API
+  version: 1.0.0
+paths: { }
+components:
+  securitySchemes:
+    OAuth2:
+      $ref: '#/components/securitySchemes/RefOAuth2'
+    RefOAuth2:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://example.com/api/oauth/dialog
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets

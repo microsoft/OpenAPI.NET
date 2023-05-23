@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Services;
-using SharpYaml.Model;
 
 namespace Microsoft.OpenApi.Readers.Services
 {
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Services
             _readerSettings = readerSettings;
         }
 
-        internal async Task LoadAsync(OpenApiReference reference, OpenApiDocument document)
+        internal async Task LoadAsync(OpenApiReference reference, OpenApiDocument document, CancellationToken cancellationToken)
         {
             _workspace.AddDocument(reference.ExternalResource, document);
             document.Workspace = _workspace;
@@ -43,8 +43,8 @@ namespace Microsoft.OpenApi.Readers.Services
                 if (!_workspace.Contains(item.ExternalResource))
                 {
                     var input = await _loader.LoadAsync(new Uri(item.ExternalResource, UriKind.RelativeOrAbsolute));
-                    var result = await reader.ReadAsync(input); // TODO merge _diagnositics
-                    await LoadAsync(item, result.OpenApiDocument);
+                    var result = await reader.ReadAsync(input, cancellationToken); // TODO merge diagnostics
+                    await LoadAsync(item, result.OpenApiDocument, cancellationToken);
                 }
             }
         }
