@@ -1,9 +1,10 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -17,11 +18,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public AnyListFieldMapParameter(
             Func<T, IList<OpenApiAny>> propertyGetter,
             Action<T, IList<OpenApiAny>> propertySetter,
-            Func<T, OpenApiSchema> schemaGetter)
+            Func<T, OpenApiSchema> schemaGetter = null,
+            Func<T, JsonSchema> schema31Getter = null)
         {
             this.PropertyGetter = propertyGetter;
             this.PropertySetter = propertySetter;
             this.SchemaGetter = schemaGetter;
+            this.Schema31Getter = schema31Getter;
         }
 
         /// <summary>
@@ -38,5 +41,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Function to get the schema to apply to the property.
         /// </summary>
         public Func<T, OpenApiSchema> SchemaGetter { get; }
+
+        /// <summary>
+        /// Function to get the schema to apply to the property.
+        /// </summary>
+        public Func<T, JsonSchema> Schema31Getter { get; }
     }
 }

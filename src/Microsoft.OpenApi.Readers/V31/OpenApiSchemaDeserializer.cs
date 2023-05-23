@@ -261,34 +261,52 @@ namespace Microsoft.OpenApi.Readers.V31
             //{s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
+        private static readonly AnyFieldMap<JsonSchema> _schemaAnyFields = new AnyFieldMap<JsonSchema>
+        {
+            {
+                OpenApiConstants.Default,
+                new AnyFieldMapParameter<JsonSchema>(
+                    s => (Any.IOpenApiAny)s.GetDefault(),
+                    (s, v) => s.GetDefault() = v,
+                    s => s)
+            },
+            {
+                 OpenApiConstants.Example,
+                new AnyFieldMapParameter<JsonSchema>(
+                    s => (Any.IOpenApiAny)s.GetExample(),
+                    (s, v) => s.GetExample(v),
+                    s => s)
+            }
+        };
+
+        private static readonly AnyListFieldMap<JsonSchema> _schemaAnyListFields = new AnyListFieldMap<JsonSchema>
+        {
+            {
+                OpenApiConstants.Enum,
+                new AnyListFieldMapParameter<JsonSchema>(
+                    s => (IList<Any.IOpenApiAny>)s.GetEnum(),
+                    (s, v) => s.GetEnum(v),
+                    s => s)
+            }
+        };
+
         public static JsonSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
-
-            var pointer = mapNode.GetReferencePointer();
-            if (pointer != null)
-            {
-                //var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
-                //var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-
-                //return new OpenApiSchema
-                //{
-                //    UnresolvedReference = true,
-                //    Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema, summary, description)
-                //};
-            }
-
+            
             var builder = new JsonSchemaBuilder();
+            //builder.Example
 
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
             }
 
-            //OpenApiV31Deserializer.ProcessAnyFields(mapNode, builder, _schemaAnyFields);
-            //OpenApiV31Deserializer.ProcessAnyListFields(mapNode, builder, _schemaAnyListFields);
-
-            return builder.Build();
+            ProcessAnyFields(mapNode, builder, _schemaAnyFields);
+            ProcessAnyListFields(mapNode, builder, _schemaAnyListFields);
+            
+            var schema = builder.Build();
+            return schema;
         }
 
         private static SchemaValueType ConvertToSchemaValueType(string value)

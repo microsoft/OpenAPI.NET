@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <LangVersion>9.0</LangVersion>
@@ -36,8 +36,9 @@
 
     <ItemGroup>
         <PackageReference Include="JsonSchema.Net" Version="4.0.0" />
-        <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0-beta3" />
+        <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0" />
         <PackageReference Include="SharpYaml" Version="2.1.0" />
+        <PackageReference Include="Yaml2JsonNode" Version="1.1.0" />
         <PackageReference Include="System.Text.Json" Version="7.0.2" />
     </ItemGroup>
 

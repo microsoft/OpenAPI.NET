@@ -10,7 +10,7 @@ using System.Globalization;
 using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.V3
-{
+{    
     /// <summary>
     /// Class containing logic to deserialize Open API V3 document into
     /// runtime Open API object model.

@@ -69,13 +69,18 @@ namespace Microsoft.OpenApi.Readers
                     ValidateRequiredFields(doc, version);
                     break;
 
-                case string version when version.is3_0() || version.is3_1():
+                case string version when version.is3_0():
                     VersionService = new OpenApiV3VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = version.is3_1() ? OpenApiSpecVersion.OpenApi3_1 : OpenApiSpecVersion.OpenApi3_0;
                     ValidateRequiredFields(doc, version);
                     break;
-
+                case string version when version.is3_1():
+                    VersionService = new OpenApiV31VersionService(Diagnostic);
+                    doc = VersionService.LoadDocument(RootNode);
+                    this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi3_1;
+                    ValidateRequiredFields(doc, version);
+                    break;
                 default:
                     throw new OpenApiUnsupportedSpecVersionException(inputVersion);
             }

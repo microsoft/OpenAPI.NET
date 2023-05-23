@@ -1,8 +1,10 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -17,6 +19,11 @@ namespace Microsoft.OpenApi.Models
         /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
         /// </summary>
         public IDictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
+
+        /// <summary>
+        /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
+        /// </summary>
+        public IDictionary<string, JsonSchema> Schemas31 { get; set; } = new Dictionary<string, JsonSchema>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.

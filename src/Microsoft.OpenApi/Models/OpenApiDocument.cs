@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -7,20 +7,22 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Json.Schema;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
     /// Describes an OpenAPI object (OpenAPI document). See: https://swagger.io/specification
     /// </summary>
-    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible
+    public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IBaseDocument
     {
+        private readonly Dictionary<JsonPointer, JsonSchema> _lookup = new();
+        
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
         /// </summary>
@@ -85,9 +87,25 @@ namespace Microsoft.OpenApi.Models
         public string HashCode => GenerateHashValue(this);
 
         /// <summary>
+        /// Implements IBaseDocument
+        /// </summary>
+        public Uri BaseUri { get; }
+
+        /// <summary>
         /// Parameter-less constructor
         /// </summary>
         public OpenApiDocument() {}
+
+        static OpenApiDocument()
+        {
+            //SchemaKeywordRegistry.Register<Draft4ExclusiveMaximumKeyword>();
+            //SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
+            //SchemaKeywordRegistry.Register<Draft4IdKeyword>();
+            //SchemaKeywordRegistry.Register<NullableKeyword>();
+            //SchemaKeywordRegistry.Register<Draft4TypeKeyword>();
+
+            //SchemaRegistry.Global.Register(Draft4SupportData.Draft4MetaSchema);
+        }
 
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
@@ -599,6 +617,11 @@ namespace Microsoft.OpenApi.Models
             {
                 throw new OpenApiException(string.Format(Properties.SRResource.InvalidReferenceId, reference.Id));
             }
+        }
+
+        public JsonSchema FindSubschema(Json.Pointer.JsonPointer pointer, EvaluationOptions options)
+        {
+            throw new NotImplementedException();
         }
     }
 
