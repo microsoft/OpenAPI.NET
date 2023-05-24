@@ -256,15 +256,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="3.2.0">
+        <PackageReference Include="coverlet.collector" Version="6.0.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+        <PackageReference Include="coverlet.msbuild" Version="6.0.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
         <PackageReference Include="FluentAssertions" Version="6.11.0">
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
