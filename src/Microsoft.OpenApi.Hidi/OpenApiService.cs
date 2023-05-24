@@ -701,5 +701,28 @@ namespace Microsoft.OpenApi.Hidi
             // Write script tag to include JS library for rendering mermaid
             writer.WriteLine("</html");
         }
+
+        internal async static Task PluginManifest(HidiOptions options, ILogger<OpenApiService> logger, CancellationToken cancellationToken)
+        {
+                // If ApiManifest is provided, set the referenced OpenAPI document
+                var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken);
+                if (apiDependency != null) {
+                    options.OpenApi = apiDependency.ApiDescripionUrl;
+                }   
+
+                // Load OpenAPI document
+                OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
+
+                if (options.FilterOptions != null)
+                {
+                    document = ApplyFilters(options, logger, apiDependency, null, document, cancellationToken);
+                }
+
+                // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
+                
+
+                // Save OpenAI Plugin manifest and filtered OpenAI to output folder
+
+        }
     }
 }

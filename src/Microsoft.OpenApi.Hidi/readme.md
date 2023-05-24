@@ -105,3 +105,11 @@ This command accepts an OpenAPI document as an input parameter and generates a M
 **Examples:**
 
     1. hidi show -d files\People.yml -o People.md -ll trace
+
+### Plugin
+
+This command generates an OpenAI style Plugin manifest and minimal OpenAPI file based on the provided API Manifest
+
+**Examples:**
+
+    1. hidi plugin -m exampleApiManifest.yml -o mypluginfolder 
