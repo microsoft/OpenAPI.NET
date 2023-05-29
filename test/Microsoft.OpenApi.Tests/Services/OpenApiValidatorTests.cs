@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
 
-            ruleset.Add(
+            ruleset.Add(typeof(FooExtension).Name,
              new ValidationRule<FooExtension>(
                  (context, item) =>
                  {

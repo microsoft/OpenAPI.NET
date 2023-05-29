@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -67,7 +64,14 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
+            var rules = new Dictionary<string, IList<ValidationRule>>()
+            {
+                { typeof(OpenApiSchema).Name,
+                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
+                }
+            };
+
+            var errors = document.Validate(new ValidationRuleSet(rules));
 
 
             // Assert
@@ -97,8 +101,15 @@ namespace Microsoft.OpenApi.Tests.Validations
                 }
             };
 
-            // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
+            // Act            
+            var rules = new Dictionary<string, IList<ValidationRule>>()
+            {
+                { typeof(AlwaysFailRule<OpenApiSchema>).Name,
+                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
+                }
+            };
+
+            var errors = document.Validate(new ValidationRuleSet(rules));
 
             // Assert
             Assert.True(errors.Count() == 0);
@@ -147,7 +158,14 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
+            var rules = new Dictionary<string, IList<ValidationRule>>()
+            {
+                { typeof(AlwaysFailRule<OpenApiSchema>).Name,
+                    new List<ValidationRule>() { new AlwaysFailRule<OpenApiSchema>() }
+                }
+            };
+
+            var errors = document.Validate(new ValidationRuleSet(rules));
 
             // Assert
             Assert.True(errors.Count() == 0);
