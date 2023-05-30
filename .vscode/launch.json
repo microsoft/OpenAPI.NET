@@ -11,9 +11,9 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/Microsoft.OpenApi.Hidi/bin/Debug/net7.0/Microsoft.OpenApi.Hidi.dll",
-            "args": ["transform", 
+            "args": ["plugin", 
                     "-m","C:\\Users\\darrmi\\src\\github\\microsoft\\openapi.net\\test\\Microsoft.OpenApi.Hidi.Tests\\UtilityFiles\\exampleapimanifest.json", 
-                    "-o","minimoose.yaml"],
+                    "--of","./output"],
             "cwd": "${workspaceFolder}/src/Microsoft.OpenApi.Hidi",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",

@@ -15,6 +15,7 @@ namespace Microsoft.OpenApi.Hidi.Options
         public string Csdl { get; set; }
         public string CsdlFilter { get; set; }
         public FileInfo Output { get; set; }
+        public string OutputFolder { get; set; }
         public bool CleanOutput { get; set; }
         public string Version { get; set; }
         public string MetadataVersion { get; set; }
@@ -42,6 +43,7 @@ namespace Microsoft.OpenApi.Hidi.Options
             CsdlFilter = parseResult.GetValueForOption(options.CsdlFilterOption);
             Csdl = parseResult.GetValueForOption(options.CsdlOption);
             Output = parseResult.GetValueForOption(options.OutputOption);
+            OutputFolder = parseResult.GetValueForOption(options.OutputFolderOption);
             CleanOutput = parseResult.GetValueForOption(options.CleanOutputOption);
             Version = parseResult.GetValueForOption(options.VersionOption);
             MetadataVersion = parseResult.GetValueForOption(options.MetadataVersionOption);
@@ -56,7 +58,7 @@ namespace Microsoft.OpenApi.Hidi.Options
                 FilterByOperationIds = parseResult.GetValueForOption(options.FilterByOperationIdsOption),
                 FilterByTags = parseResult.GetValueForOption(options.FilterByTagsOption),
                 FilterByCollection = parseResult.GetValueForOption(options.FilterByCollectionOption),
-                FilterByApiManifest = parseResult.GetValueForOption(options.FilterByApiManifestOption)
+                FilterByApiManifest = parseResult.GetValueForOption(options.ManifestOption)
             };
         }
     }

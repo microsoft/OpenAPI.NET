@@ -29,8 +29,9 @@ using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Hidi.Formatters;
-using Microsoft.OpenApi.ApiManifest;
 using System.Linq;
+using Microsoft.OpenApi.ApiManifest.OpenAI;
+using Microsoft.OpenApi.ApiManifest;
 
 namespace Microsoft.OpenApi.Hidi
 {
@@ -710,6 +711,7 @@ namespace Microsoft.OpenApi.Hidi
                     options.OpenApi = apiDependency.ApiDescripionUrl;
                 }   
 
+                
                 // Load OpenAPI document
                 OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
 
@@ -718,11 +720,34 @@ namespace Microsoft.OpenApi.Hidi
                     document = ApplyFilters(options, logger, apiDependency, null, document, cancellationToken);
                 }
 
-                // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
+                // Ensure path in options.OutputFolder exists
+                var outputFolder = new DirectoryInfo(options.OutputFolder);
+                if (!outputFolder.Exists)
+                {
+                    outputFolder.Create();
+                }
+                var slicedOpenApi = new FileInfo(Path.Combine(options.OutputFolder,"openapi.json"));
+                // Write OpenAPI to Output folder
+                WriteOpenApi(slicedOpenApi, true, options.InlineLocal, options.InlineExternal, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
                 
-
-                // Save OpenAI Plugin manifest and filtered OpenAI to output folder
-
+                // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
+                var manifest = new OpenAIPluginManifest() {
+                    NameForHuman = document.Info.Title,
+                    DescriptionForHuman = document.Info.Description,
+                    Api = new() {
+                        Type = "openapi",
+                        Url = "./openapi.json"
+                    }
+                };
+                manifest.NameForModel = manifest.NameForHuman;
+                manifest.DescriptionForModel = manifest.DescriptionForHuman;
+                
+                // Write OpenAIPluginManifest to Output folder
+                var manifestFile = new FileInfo(Path.Combine(options.OutputFolder,"ai-plugin.json"));
+                using var file = new FileStream(manifestFile.FullName, FileMode.Create);
+                var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
+                manifest.Write(jsonWriter);
+                jsonWriter.Flush();
         }
     }
 }

@@ -11,7 +11,8 @@ namespace Microsoft.OpenApi.Hidi.Options
         public Option<string> OpenApiDescriptionOption = new("--openapi", "Input OpenAPI description file path or URL");
         public Option<string> CsdlOption = new("--csdl", "Input CSDL file path or URL");
         public Option<string> CsdlFilterOption = new("--csdl-filter", "Comma delimited list of EntitySets or Singletons to filter CSDL on. e.g. tasks,accounts");
-        public Option<FileInfo> OutputOption = new("--output", "The output directory path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
+        public Option<FileInfo> OutputOption = new("--output", "The output file path for the generated file.") { Arity = ArgumentArity.ZeroOrOne };
+        public Option<string> OutputFolderOption = new("--output-folder", "The output directory path for the generated files.") { Arity = ArgumentArity.ZeroOrOne };
         public Option<bool> CleanOutputOption = new("--clean-output", "Overwrite an existing file");
         public Option<string> VersionOption = new("--version", "OpenAPI specification version");
         public Option<string> MetadataVersionOption = new("--metadata-version", "Graph metadata version to use.");
@@ -22,7 +23,7 @@ namespace Microsoft.OpenApi.Hidi.Options
         public Option<string> FilterByOperationIdsOption = new("--filter-by-operationids", "Filters OpenApiDocument by comma delimited list of OperationId(s) provided");
         public Option<string> FilterByTagsOption = new("--filter-by-tags", "Filters OpenApiDocument by comma delimited list of Tag(s) provided. Also accepts a single regex.");
         public Option<string> FilterByCollectionOption = new("--filter-by-collection", "Filters OpenApiDocument by Postman collection provided. Provide path to collection file.");
-        public Option<string> FilterByApiManifestOption = new("--filter-by-manifest", "Filters OpenApiDocument by API Manifest provided. Provide path to API Manifest file.");
+        public Option<string> ManifestOption = new("--manifest", "Path to API manifest file to locate and filter an OpenApiDocument");
         public Option<bool> InlineLocalOption = new("--inline-local", "Inline local $ref instances");
         public Option<bool> InlineExternalOption = new("--inline-external", "Inline external $ref instances");
 
@@ -32,6 +33,7 @@ namespace Microsoft.OpenApi.Hidi.Options
             CsdlOption.AddAlias("--cs");
             CsdlFilterOption.AddAlias("--csf");
             OutputOption.AddAlias("-o");
+            OutputFolderOption.AddAlias("--of");
             CleanOutputOption.AddAlias("--co");
             VersionOption.AddAlias("-v");
             MetadataVersionOption.AddAlias("--mv");
@@ -42,7 +44,7 @@ namespace Microsoft.OpenApi.Hidi.Options
             FilterByOperationIdsOption.AddAlias("--op");
             FilterByTagsOption.AddAlias("--t");
             FilterByCollectionOption.AddAlias("-c");
-            FilterByApiManifestOption.AddAlias("-m");
+            ManifestOption.AddAlias("-m");
             InlineLocalOption.AddAlias("--il");
             InlineExternalOption.AddAlias("--ie");
         }
@@ -65,7 +67,6 @@ namespace Microsoft.OpenApi.Hidi.Options
                 FilterByOperationIdsOption,
                 FilterByTagsOption,
                 FilterByCollectionOption,
-                FilterByApiManifestOption,
                 InlineLocalOption,
                 InlineExternalOption
             };
@@ -92,5 +93,18 @@ namespace Microsoft.OpenApi.Hidi.Options
                 LogLevelOption
             };
         }
+
+        public IReadOnlyList<Option> GetPluginCommandOptions()
+        {
+            return new List<Option>
+            {
+
+                ManifestOption,
+                OutputFolderOption,
+                CleanOutputOption,
+                LogLevelOption
+            };
+        }
+
     }
 }
