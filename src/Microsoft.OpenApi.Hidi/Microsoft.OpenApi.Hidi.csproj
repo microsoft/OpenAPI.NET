@@ -45,13 +45,13 @@
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="Microsoft.OData.Edm" Version="7.16.0" />
     <PackageReference Include="Microsoft.OpenApi.OData" Version="1.4.0" />
+    <PackageReference Include="Microsoft.OpenApi.ApiManifest" Version="0.5.0-preview" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22272.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj" />
     <ProjectReference Include="..\Microsoft.OpenApi\Microsoft.OpenApi.csproj" />
-    <ProjectReference Include="..\..\..\OpenApi.ApiManifest\src\lib\apimanifest.csproj" />
   </ItemGroup>
 
   <!-- Make internals available for Unit Testing -->
