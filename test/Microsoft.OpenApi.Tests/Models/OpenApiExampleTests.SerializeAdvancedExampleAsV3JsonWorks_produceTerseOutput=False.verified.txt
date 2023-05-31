@@ -8,7 +8,7 @@
           {
             "href": "http://example.com/1",
             "rel": "sampleRel1",
-            "bytes": "AQID",
+            "bytes": "\"AQID\"",
             "binary": "Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ"
           }
         ]

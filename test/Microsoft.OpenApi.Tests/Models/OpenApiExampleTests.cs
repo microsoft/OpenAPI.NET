@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
@@ -36,8 +37,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["href"] = "http://example.com/1",
                                 ["rel"] = "sampleRel1",
-                                ["bytes"] = Convert.ToBase64String(new byte[] { 1, 2, 3 }),
-                                ["binary"] = Convert.ToBase64String(Encoding.UTF8.GetBytes("Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ"))
+                                ["bytes"] = JsonSerializer.Serialize(new byte[] { 1, 2, 3 }),
+                                ["binary"] = Encoding.UTF8.GetString(Encoding.UTF8.GetBytes("Ñ😻😑♮Í☛oƞ♑😲☇éǋžŁ♻😟¥a´Ī♃ƠąøƩ"))
                             }
                         }
                     },
@@ -96,7 +97,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             }
                         }
                     }
-                }
+                },
+                ["aDate"] = JsonSerializer.Serialize(DateTime.Parse("12/12/2022 00:00:00").ToString("yyyy-MM-dd"))
             })
         };
 
