@@ -134,14 +134,8 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     apiManifest = ApiManifestDocument.Load(JsonDocument.Parse(fileStream).RootElement);
                 }
-                if (apiDependencyName != null)
-                {
-                    apiDependency = apiManifest.ApiDependencies[apiDependencyName];
-                }
-                else
-                {
-                    apiDependency = apiManifest.ApiDependencies.First().Value;
-                }
+                
+                apiDependency = apiDependencyName != null ? apiManifest.ApiDependencies[apiDependencyName] : apiManifest.ApiDependencies.First().Value;
             }
 
             return apiDependency;
@@ -284,9 +278,8 @@ namespace Microsoft.OpenApi.Hidi
         private static Dictionary<string, List<string>> GetRequestUrlsFromManifest(ApiDependency apiDependency, OpenApiDocument document)
         {
             // Get the request URLs from the API Dependencies in the API manifest that have a baseURL that matches the server URL in the OpenAPI document
-            var serversUrls = document.Servers.Select(s => s.Url);
             var requests = apiDependency
-                    .Requests.Where(r => r.Exclude == false)
+                    .Requests.Where(r => !r.Exclude)
                                 .Select(r=> new { UriTemplate= r.UriTemplate, Method=r.Method } )
                     .GroupBy(r => r.UriTemplate)
                     .ToDictionary(g => g.Key, g => g.Select(r => r.Method).ToList());
@@ -745,7 +738,7 @@ namespace Microsoft.OpenApi.Hidi
                 // Write OpenAIPluginManifest to Output folder
                 var manifestFile = new FileInfo(Path.Combine(options.OutputFolder,"ai-plugin.json"));
                 using var file = new FileStream(manifestFile.FullName, FileMode.Create);
-                var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
+                using var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
                 manifest.Write(jsonWriter);
                 jsonWriter.Flush();
         }
