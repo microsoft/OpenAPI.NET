@@ -334,13 +334,11 @@ namespace Microsoft.OpenApi.Services
                 }
             }
 
-            foreach (var item in newComponents.RequestBodies)
+            foreach (var item in newComponents.RequestBodies
+                                        .Where(item => !target.RequestBodies.ContainsKey(item.Key))) 
             {
-                if (!target.RequestBodies.ContainsKey(item.Key))
-                {
                     moreStuff = true;
                     target.RequestBodies.Add(item);
-                }
             }
             return moreStuff;
         }
@@ -350,13 +348,9 @@ namespace Microsoft.OpenApi.Services
             // if OpenAPI has servers, then see if the url matches one of them
             var baseUrl = serverList.Select(s => s.Url.TrimEnd('/')).Where(c => url.Contains(c)).FirstOrDefault();
             
-            if (baseUrl == null) {
-                // if no match, then extract path from either the absolute or relative url
-                return new Uri(new Uri("http://localhost/"), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped);
-            } else {
-                // if match, then extract path from the url relative to the matched server
-                return url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
-            }
+            return baseUrl == null ? 
+                    new Uri(new Uri("http://localhost/"), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped) 
+                    : url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
         }
     }
 }

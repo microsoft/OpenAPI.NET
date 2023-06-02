@@ -149,12 +149,9 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             foreach (var parameter in parameters)
             {
                 var keyTypeExtension = parameter.Extensions.GetExtension("x-ms-docs-key-type");
-                if (keyTypeExtension != null)
+                if (keyTypeExtension != null && operationId.Contains(keyTypeExtension))
                 {
-                    if (operationId.Contains(keyTypeExtension))
-                    {
-                        segments.Remove(keyTypeExtension);
-                    }
+                    segments.Remove(keyTypeExtension);
                 }
             }
             return string.Join(".", segments);
@@ -162,22 +159,19 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static IList<OpenApiParameter> ResolveFunctionParameters(IList<OpenApiParameter> parameters)
         {
-            foreach (var parameter in parameters)
+            foreach (var parameter in parameters.Where(p => p.Content?.Any() ?? false))
             {
-                if (parameter.Content?.Any() ?? false)
+                // Replace content with a schema object of type array
+                // for structured or collection-valued function parameters
+                parameter.Content = null;
+                parameter.Schema = new OpenApiSchema
                 {
-                    // Replace content with a schema object of type array
-                    // for structured or collection-valued function parameters
-                    parameter.Content = null;
-                    parameter.Schema = new OpenApiSchema
+                    Type = "array",
+                    Items = new OpenApiSchema
                     {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
-                    };
-                }
+                        Type = "string"
+                    }
+                };
             }
             return parameters;
         }
