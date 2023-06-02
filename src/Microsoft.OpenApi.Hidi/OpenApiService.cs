@@ -35,7 +35,7 @@ using Microsoft.OpenApi.ApiManifest;
 
 namespace Microsoft.OpenApi.Hidi
 {
-    internal class OpenApiService
+    internal static class OpenApiService
     {
         /// <summary>
         /// Implementation of the transform command
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     apiManifest = ApiManifestDocument.Load(JsonDocument.Parse(fileStream).RootElement);
                 }
-                
+
                 apiDependency = apiDependencyName != null ? apiManifest.ApiDependencies[apiDependencyName] : apiManifest.ApiDependencies.First().Value;
             }
 
@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Hidi
             Dictionary<string, List<string>> requestUrls = null;
             if (apiDependency != null)
             {
-                requestUrls = GetRequestUrlsFromManifest(apiDependency, document);
+                requestUrls = GetRequestUrlsFromManifest(apiDependency);
             }
             else if (postmanCollection != null)
             {
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Hidi
                                                     options.FilterOptions.FilterByTags,
                                                     requestUrls,
                                                     document,
-                                                     logger, cancellationToken);
+                                                     logger);
             if (predicate != null)
             {
                 var stopwatch = new Stopwatch();
@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static Func<string, OperationType?, OpenApiOperation, bool> FilterOpenApiDocument(string filterbyoperationids, string filterbytags, Dictionary<string, List<string>> requestUrls, OpenApiDocument document, ILogger logger, CancellationToken cancellationToken)
+        private static Func<string, OperationType?, OpenApiOperation, bool> FilterOpenApiDocument(string filterbyoperationids, string filterbytags, Dictionary<string, List<string>> requestUrls, OpenApiDocument document, ILogger logger)
         {
             Func<string, OperationType?, OpenApiOperation, bool> predicate = null;
 
@@ -275,9 +275,9 @@ namespace Microsoft.OpenApi.Hidi
             return predicate;
         }
 
-        private static Dictionary<string, List<string>> GetRequestUrlsFromManifest(ApiDependency apiDependency, OpenApiDocument document)
+        private static Dictionary<string, List<string>> GetRequestUrlsFromManifest(ApiDependency apiDependency)
         {
-            // Get the request URLs from the API Dependencies in the API manifest that have a baseURL that matches the server URL in the OpenAPI document
+            // Get the request URLs from the API Dependencies in the API manifest 
             var requests = apiDependency
                     .Requests.Where(r => !r.Exclude)
                                 .Select(r=> new { UriTemplate= r.UriTemplate, Method=r.Method } )
@@ -696,7 +696,7 @@ namespace Microsoft.OpenApi.Hidi
             writer.WriteLine("</html");
         }
 
-        internal async static Task PluginManifest(HidiOptions options, ILogger<OpenApiService> logger, CancellationToken cancellationToken)
+        internal async static Task PluginManifest(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
         {
                 // If ApiManifest is provided, set the referenced OpenAPI document
                 var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken);
@@ -704,9 +704,10 @@ namespace Microsoft.OpenApi.Hidi
                     options.OpenApi = apiDependency.ApiDescripionUrl;
                 }   
 
-                
                 // Load OpenAPI document
                 OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 if (options.FilterOptions != null)
                 {

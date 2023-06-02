@@ -346,7 +346,8 @@ namespace Microsoft.OpenApi.Services
         private static string ExtractPath(string url, IList<OpenApiServer> serverList)
         {
             // if OpenAPI has servers, then see if the url matches one of them
-            var baseUrl = serverList.Select(s => s.Url.TrimEnd('/')).Where(c => url.Contains(c)).FirstOrDefault();
+            var baseUrl = serverList.Select(s => s.Url.TrimEnd('/'))
+                                    .FirstOrDefault(c => url.Contains(c));
             
             return baseUrl == null ? 
                     new Uri(new Uri("http://localhost/"), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped) 
