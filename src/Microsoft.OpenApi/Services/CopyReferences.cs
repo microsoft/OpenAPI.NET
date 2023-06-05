@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -25,12 +26,12 @@ namespace Microsoft.OpenApi.Services
         {
             switch (referenceable)
             {
-                case OpenApiSchema schema:
+                case JsonSchema schema:
                     EnsureComponentsExists();
                     EnsureSchemasExists();
-                    if (!Components.Schemas.ContainsKey(schema.Reference.Id))
+                    if (!Components.Schemas31.ContainsKey(schema.Reference.Id))
                     {
-                        Components.Schemas.Add(schema.Reference.Id, schema);
+                        Components.Schemas31.Add(schema.Reference.Id, schema);
                     }
                     break;
 
@@ -59,17 +60,17 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSchema"/>
+        /// Visits <see cref="JsonSchema"/>
         /// </summary>
         /// <param name="schema">The OpenApiSchema to be visited.</param>
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(JsonSchema schema)
         {
             // This is needed to handle schemas used in Responses in components
-            if (schema.Reference != null)
+            if (schema.GetRef() != null)
             {
                 EnsureComponentsExists();
                 EnsureSchemasExists();
-                if (!Components.Schemas.ContainsKey(schema.Reference.Id))
+                if (!Components.Schemas31.ContainsKey(schema.Reference.Id))
                 {
                     Components.Schemas.Add(schema.Reference.Id, schema);
                 }
@@ -87,9 +88,9 @@ namespace Microsoft.OpenApi.Services
 
         private void EnsureSchemasExists()
         {
-            if (_target.Components.Schemas == null)
+            if (_target.Components.Schemas31 == null)
             {
-                _target.Components.Schemas = new Dictionary<string, OpenApiSchema>();
+                _target.Components.Schemas31 = new Dictionary<string, JsonSchema>();
             }
         }
 

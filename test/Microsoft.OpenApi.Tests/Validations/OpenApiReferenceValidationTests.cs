@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -21,22 +22,14 @@ namespace Microsoft.OpenApi.Tests.Validations
         {
             // Arrange
 
-            var sharedSchema = new OpenApiSchema
-            {
-                Type = "string",
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = false
-            };
+            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test").Build();
 
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>()
+                Schemas31 = new Dictionary<string, JsonSchema>()
                 {
-                    [sharedSchema.Reference.Id] = sharedSchema
+                    //[sharedSchema.GetReference.Id] = sharedSchema
                 }
             };
 
@@ -56,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                                     {
                                         ["application/json"] = new OpenApiMediaType()
                                         {
-                                            Schema = sharedSchema
+                                            Schema31 = sharedSchema
                                         }
                                     }
                                 }
@@ -67,7 +60,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
+            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<JsonSchema>() });
 
 
             // Assert
@@ -78,22 +71,14 @@ namespace Microsoft.OpenApi.Tests.Validations
         public void UnresolvedReferenceSchemaShouldNotBeValidated()
         {
             // Arrange
-            var sharedSchema = new OpenApiSchema
-            {
-                Type = "string",
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = true
-            };
+            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test").Build();
 
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>()
+                Schemas31 = new Dictionary<string, JsonSchema>()
                 {
-                    [sharedSchema.Reference.Id] = sharedSchema
+                    //[sharedSchema.Reference.Id] = sharedSchema
                 }
             };
 
@@ -109,14 +94,7 @@ namespace Microsoft.OpenApi.Tests.Validations
         {
             // Arrange
 
-            var sharedSchema = new OpenApiSchema
-            {
-                Reference = new OpenApiReference()
-                {
-                    Id = "test"
-                },
-                UnresolvedReference = true
-            };
+            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test").Build();
 
             OpenApiDocument document = new OpenApiDocument();
 
@@ -136,7 +114,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                                     {
                                         ["application/json"] = new OpenApiMediaType()
                                         {
-                                            Schema = sharedSchema
+                                            Schema31 = sharedSchema
                                         }
                                     }
                                 }

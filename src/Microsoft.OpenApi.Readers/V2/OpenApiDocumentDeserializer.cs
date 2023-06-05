@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         o.Components = new OpenApiComponents();
                     }
 
-                    o.Components.Schemas = n.CreateMapWithReference(
+                    o.Components.Schemas31 = n.CreateMapWithReference(
                         ReferenceType.Schema,
                         LoadSchema);
                 }

@@ -19,11 +19,6 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public OpenApiSchema Schema { get; set; }
-
-        /// <summary>
-        /// The schema defining the type used for the request body.
-        /// </summary>
         public JsonSchema Schema31 { get; set; }
 
         /// <summary>
@@ -61,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
-            Schema = mediaType?.Schema != null ? new(mediaType?.Schema) : null;
+            Schema31 = JsonNodeCloneHelper.CloneJsonSchema(Schema31);
             Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
@@ -95,7 +90,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
             
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));

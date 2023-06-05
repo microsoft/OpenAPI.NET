@@ -67,11 +67,6 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the header.
         /// </summary>
-        public OpenApiSchema Schema { get; set; }
-
-        /// <summary>
-        /// The schema defining the type used for the header.
-        /// </summary>
         public JsonSchema Schema31 { get; set; }
 
         /// <summary>
@@ -113,7 +108,7 @@ namespace Microsoft.OpenApi.Models
             Style = header?.Style ?? Style;
             Explode = header?.Explode ?? Explode;
             AllowReserved = header?.AllowReserved ?? AllowReserved;
-            Schema = header?.Schema != null ? new(header?.Schema) : null;
+            Schema31 = JsonNodeCloneHelper.CloneJsonSchema(Schema31);
             Example = JsonNodeCloneHelper.Clone(header?.Example);
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
@@ -223,7 +218,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
@@ -293,7 +288,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            Schema?.WriteAsItemsProperties(writer);
+            Schema31?.WriteAsItemsProperties(writer);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));

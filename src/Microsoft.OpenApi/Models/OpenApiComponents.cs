@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -16,12 +16,7 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiComponents : IOpenApiSerializable, IOpenApiExtensible
     {
         /// <summary>
-        /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
-        /// </summary>
-        public IDictionary<string, OpenApiSchema> Schemas { get; set; } = new Dictionary<string, OpenApiSchema>();
-
-        /// <summary>
-        /// An object to hold reusable <see cref="OpenApiSchema"/> Objects.
+        /// An object to hold reusable <see cref="JsonSchema"/> Objects.
         /// </summary>
         public IDictionary<string, JsonSchema> Schemas31 { get; set; } = new Dictionary<string, JsonSchema>();
 
@@ -88,7 +83,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
+            Schemas31 = components?.Schemas31 != null ? new Dictionary<string, JsonSchema>(components.Schemas31) : null;
             Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
             Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
             Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
@@ -172,22 +167,22 @@ namespace Microsoft.OpenApi.Models
             // If the reference exists but points to other objects, the object is serialized to just that reference.
 
             // schemas
-            writer.WriteOptionalMap(
-                OpenApiConstants.Schemas,
-                Schemas,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
-                        string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
-                    {
-                        action(w, component);
-                    }
-                    else
-                    {
-                        callback(w, component);
-                    }
-                });
+            //writer.WriteOptionalMap(
+            //    OpenApiConstants.Schemas,
+            //    Schemas31,
+            //    (w, key, component) =>
+            //    {
+            //        if (component.Reference != null &&
+            //            component.Reference.Type == ReferenceType.Schema &&
+            //            string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
+            //        {
+            //            action(w, component);
+            //        }
+            //        else
+            //        {
+            //            callback(w, component);
+            //        }
+            //    });
 
             // responses
             writer.WriteOptionalMap(
@@ -343,12 +338,12 @@ namespace Microsoft.OpenApi.Models
         {
             var loops = writer.GetSettings().LoopDetector.Loops;
             writer.WriteStartObject();
-            if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+            if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
             {
 
                 writer.WriteOptionalMap(
                    OpenApiConstants.Schemas,
-                   Schemas,
+                   Schemas31,
                    static (w, key, component) => {
                        component.SerializeAsV31WithoutReference(w);
                    });

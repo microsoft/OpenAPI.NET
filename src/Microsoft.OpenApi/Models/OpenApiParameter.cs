@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -105,11 +105,6 @@ namespace Microsoft.OpenApi.Models
         public bool AllowReserved { get; set; }
 
         /// <summary>
-        /// The schema defining the type used for the parameter.
-        /// </summary>
-        public OpenApiSchema Schema { get; set; }
-
-        /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
         public JsonSchema Schema31 { get; set; }
@@ -168,7 +163,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter?.Style ?? Style;
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
-            Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
+            Schema31 = JsonNodeCloneHelper.CloneJsonSchema(Schema31);
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
@@ -288,7 +283,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, callback);
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, callback);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
@@ -367,12 +362,12 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (this is OpenApiBodyParameter)
             {
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => s.SerializeAsV2(w));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, (w, s) => s.SerializeAsV2(w));
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
             else
-            if (Schema?.UnresolvedReference == true || Schema?.Type == "object")
+            if (Schema31?.UnresolvedReference == true || Schema31?.GetType().ToString() == "object")
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }
@@ -395,13 +390,13 @@ namespace Microsoft.OpenApi.Models
                 // uniqueItems
                 // enum
                 // multipleOf
-                if (Schema != null)
+                if (Schema31 != null)
                 {
-                    Schema.WriteAsItemsProperties(writer);
+                    Schema31.WriteAsItemsProperties(writer);
 
-                    if (Schema.Extensions != null)
+                    if (Schema31.Extensions != null)
                     {
-                        foreach (var key in Schema.Extensions.Keys)
+                        foreach (var key in Schema31.Extensions.Keys)
                         {
                             // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
                             // so remove it from the cloned collection so we don't write it again.
@@ -413,7 +408,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query && "array".Equals(Schema?.Type, StringComparison.OrdinalIgnoreCase))
+                if (this.In == ParameterLocation.Query && "array".Equals(Schema31?.GetType().ToString(), StringComparison.OrdinalIgnoreCase))
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {

@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "schema", (o, n) =>
                     {
-                        o.Schema = LoadSchema(n);
+                        o.Schema31 = LoadSchema(n);
                     }
                 },
                 {
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 new AnyFieldMapParameter<OpenApiParameter>(
                     s => s.Example,
                     (s, v) => s.Example = v,
-                    s => s.Schema)
+                    s => s.Schema31)
             }
         };
 
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     m => m.Examples,
                     e => e.Value,
                     (e, v) => e.Value = v,
-                    m => m.Schema)
+                    m => m.Schema31)
             }
         };
 

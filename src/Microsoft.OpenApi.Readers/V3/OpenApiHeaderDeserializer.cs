@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "schema", (o, n) =>
                 {
-                    o.Schema = LoadSchema(n);
+                    o.Schema31 = LoadSchema(n);
                 }
             },
             {

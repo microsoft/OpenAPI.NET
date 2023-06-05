@@ -25,7 +25,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-            var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
             // Act
             var openApiInfo = OpenApiV31Deserializer.LoadInfo(node);

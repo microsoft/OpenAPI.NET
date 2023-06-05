@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -237,9 +238,16 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSchema"/>
+        /// Visits <see cref="JsonSchema"/>
         /// </summary>
-        public virtual void Visit(OpenApiSchema schema)
+        public virtual void Visit(JsonSchema schema)
+        {
+        }
+
+        /// <summary>
+        /// Visits <see cref="JsonSchema"/>
+        /// </summary>
+        public virtual void Visit(IReadOnlyCollection<JsonSchema> schema)
         {
         }
 

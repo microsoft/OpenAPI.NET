@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -69,7 +70,7 @@ namespace Microsoft.OpenApi.Services
             ResolveMap(components.Links);
             ResolveMap(components.Callbacks);
             ResolveMap(components.Examples);
-            ResolveMap(components.Schemas);
+            ResolveMap(components.Schemas31);
             ResolveMap(components.PathItems);
             ResolveMap(components.SecuritySchemes);
             ResolveMap(components.Headers);
@@ -113,7 +114,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="mediaType"></param>
         public override void Visit(OpenApiMediaType mediaType)
         {
-            ResolveObject(mediaType.Schema, r => mediaType.Schema = r);
+            ResolveObject(mediaType.Schema31, r => mediaType.Schema31 = r);
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public override void Visit(OpenApiParameter parameter)
         {
-            ResolveObject(parameter.Schema, r => parameter.Schema = r);
+            //ResolveObject(parameter.Schema, r => parameter.Schema = r);
             ResolveMap(parameter.Examples);
         }
 
@@ -191,14 +192,14 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Resolve all references used in a schema
         /// </summary>
-        public override void Visit(OpenApiSchema schema)
+        public override void Visit(JsonSchema schema)
         {
-            ResolveObject(schema.Items, r => schema.Items = r);
-            ResolveList(schema.OneOf);
-            ResolveList(schema.AllOf);
-            ResolveList(schema.AnyOf);
-            ResolveMap(schema.Properties);
-            ResolveObject(schema.AdditionalProperties, r => schema.AdditionalProperties = r);
+            //ResolveObject(schema.Items, r => schema.Items = r);
+            //ResolveList(schema.OneOf);
+            //ResolveList(schema.AllOf);
+            //ResolveList(schema.AnyOf);
+            //ResolveMap(schema.Properties);
+            //ResolveObject(schema.AdditionalProperties, r => schema.AdditionalProperties = r);
         }
 
         /// <summary>

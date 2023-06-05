@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -157,10 +158,10 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiParameter item) => Validate(item);
 
         /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiSchema"/>
+        /// Execute validation rules against an <see cref="JsonSchema"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiSchema item) => Validate(item);
+        public override void Visit(JsonSchema item) => Validate(item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiServer"/>

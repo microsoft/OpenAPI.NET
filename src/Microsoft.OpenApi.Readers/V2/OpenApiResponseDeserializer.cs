@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -57,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     new AnyFieldMapParameter<OpenApiMediaType>(
                         m => m.Example,
                         (m, v) => m.Example = v,
-                        m => m.Schema)
+                        m => m.Schema31)
                 }
             };
 
@@ -79,13 +80,13 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 foreach (var produce in produces)
                 {
-                    var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+                    var schema = context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response);
 
                     if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
                     {
                         if (schema != null)
                         {
-                            response.Content[produce].Schema = schema;
+                            response.Content[produce].Schema31 = schema;
                             ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
                         }
                     }
@@ -93,7 +94,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     {
                         var mediaType = new OpenApiMediaType
                         {
-                            Schema = schema
+                            Schema31 = schema
                         };
 
                         response.Content.Add(produce, mediaType);
@@ -132,7 +133,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 mediaTypeObject = new OpenApiMediaType
                 {
-                    Schema = node.Context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response)
+                    Schema31 = node.Context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response)
                 };
                 response.Content.Add(mediaType, mediaTypeObject);
             }
@@ -158,7 +159,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var mediaType in response.Content.Values)
             {
-                if (mediaType.Schema != null)
+                if (mediaType.Schema31 != null)
                 {
                     ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
                 }

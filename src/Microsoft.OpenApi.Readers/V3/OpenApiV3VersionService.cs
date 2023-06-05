@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -55,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.V3
             [typeof(OpenApiRequestBody)] = OpenApiV3Deserializer.LoadRequestBody,
             [typeof(OpenApiResponse)] = OpenApiV3Deserializer.LoadResponse,
             [typeof(OpenApiResponses)] = OpenApiV3Deserializer.LoadResponses,
-            [typeof(OpenApiSchema)] = OpenApiV3Deserializer.LoadSchema,
+            [typeof(JsonSchema)] = OpenApiV3Deserializer.LoadSchema,
             [typeof(OpenApiSecurityRequirement)] = OpenApiV3Deserializer.LoadSecurityRequirement,
             [typeof(OpenApiSecurityScheme)] = OpenApiV3Deserializer.LoadSecurityScheme,
             [typeof(OpenApiServer)] = OpenApiV3Deserializer.LoadServer,

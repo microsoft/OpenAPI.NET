@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
@@ -424,17 +425,8 @@ paths:
         private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
         {
             // Arrange
-            var thingSchema = new OpenApiSchema()
-            {
-                Type = "object",
-                UnresolvedReference = false,
-                Reference = new OpenApiReference
-                {
-                    Id = "thing",
-                    Type = ReferenceType.Schema
-                }
-            };
-
+            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("thing").Build();
+                
             var doc = new OpenApiDocument()
             {
                 Info = new OpenApiInfo()
@@ -453,7 +445,7 @@ paths:
                                         Description = "OK",
                                         Content = {
                                              ["application/json"] = new OpenApiMediaType() {
-                                                     Schema = thingSchema
+                                                     Schema31 = thingSchema
                                              }
                                         }
                                     }
@@ -464,11 +456,11 @@ paths:
                 },
                 Components = new OpenApiComponents
                 {
-                    Schemas = {
+                    Schemas31 = {
                         ["thing"] = thingSchema}
                 }
             };
-            thingSchema.Reference.HostDocument = doc;
+           // thingSchema.Reference.HostDocument = doc;
 
             return doc;
         }
@@ -531,24 +523,13 @@ components:
 
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
         {
-            var thingSchema = new OpenApiSchema()
-            {
-                Type = "object",
-                UnresolvedReference = false,
-                Reference = new OpenApiReference
-                {
-                    Id = "thing",
-                    Type = ReferenceType.Schema
-                }
-            };
-            thingSchema.Properties["children"] = thingSchema;
+            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("thing");
+            thingSchema.Properties(("children", thingSchema)); 
+            thingSchema.Properties(("children", thingSchema));
 
-            var relatedSchema = new OpenApiSchema()
-            {
-                Type = "integer",
-            };
+            var relatedSchema = new JsonSchemaBuilder().Type(SchemaValueType.Integer);
 
-            thingSchema.Properties["related"] = relatedSchema;
+            thingSchema.Properties(("related", relatedSchema));
 
             var doc = new OpenApiDocument()
             {
@@ -568,7 +549,7 @@ components:
                                         Description = "OK",
                                         Content = {
                                              ["application/json"] = new OpenApiMediaType() {
-                                                     Schema = thingSchema
+                                                     Schema31 = thingSchema.Build()
                                              }
                                         }
                                     }
@@ -579,11 +560,11 @@ components:
                 },
                 Components = new OpenApiComponents
                 {
-                    Schemas = {
+                    Schemas31 = {
                         ["thing"] = thingSchema}
                 }
             };
-            thingSchema.Reference.HostDocument = doc;
+            //thingSchema.Ref.HostDocument = doc;
             return doc;
         }
 

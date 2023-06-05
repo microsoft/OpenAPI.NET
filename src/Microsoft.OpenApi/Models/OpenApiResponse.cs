@@ -215,7 +215,7 @@ namespace Microsoft.OpenApi.Models
                     // schema
                     writer.WriteOptionalObject(
                         OpenApiConstants.Schema,
-                        mediatype.Value.Schema,
+                        mediatype.Value.Schema31,
                         (w, s) => s.SerializeAsV2(w));
 
                     // examples

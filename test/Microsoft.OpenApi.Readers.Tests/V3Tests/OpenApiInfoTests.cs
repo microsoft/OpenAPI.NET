@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -45,7 +45,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiInfo
                 {
                     Title = "Advanced Info",
-                    Summary = "Sample Summary",
                     Description = "Sample Description",
                     Version = "1.0.0",
                     TermsOfService = new Uri("http://example.org/termsOfService"),

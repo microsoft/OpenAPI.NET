@@ -1,10 +1,6 @@
-﻿ // Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -23,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     OpenApiConstants.Schema, (o, n) =>
                     {
-                        o.Schema = LoadSchema(n);
+                        o.Schema31 = LoadSchema(n);
                     }
                 },
                 {
@@ -59,10 +55,9 @@ namespace Microsoft.OpenApi.Readers.V3
                 new AnyFieldMapParameter<OpenApiMediaType>(
                     s => s.Example,
                     (s, v) => s.Example = v,
-                    s => s.Schema)
+                    s => s.Schema31)
             }
         };
-
 
         private static readonly AnyMapFieldMap<OpenApiMediaType, OpenApiExample> _mediaTypeAnyMapOpenApiExampleFields =
             new AnyMapFieldMap<OpenApiMediaType, OpenApiExample>
@@ -73,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     m => m.Examples,
                     e => e.Value,
                     (e, v) => e.Value = v,
-                    m => m.Schema)
+                    m => m.Schema31)
             }
         };
 
@@ -82,7 +77,6 @@ namespace Microsoft.OpenApi.Readers.V3
             var mapNode = node.CheckMapNode(OpenApiConstants.Content);
 
             var mediaType = new OpenApiMediaType();
-
             ParseMap(mapNode, mediaType, _mediaTypeFixedFields, _mediaTypePatternFields);
 
             ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);

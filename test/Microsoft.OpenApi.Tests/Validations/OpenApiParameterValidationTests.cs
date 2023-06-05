@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -73,10 +74,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 In = ParameterLocation.Path,
                 Required = true,
                 Example = new OpenApiAny(55),
-                Schema = new OpenApiSchema()
-                {
-                    Type = "string",
-                }
+                Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
             };
             
             // Act
@@ -111,14 +109,13 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema()
-                {
-                    Type = "object",
-                    AdditionalProperties = new OpenApiSchema()
-                    {
-                        Type = "integer",
-                    }
-                },
+                Schema31 = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .AdditionalProperties(
+                    new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Object)
+                    .Build())
+                .Build(),
                 Examples =
                     {
                         ["example0"] = new OpenApiExample()
@@ -188,10 +185,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema()
-                {
-                    Type = "string",
-                }
+                Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
             };
 
             // Act
@@ -226,10 +220,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema()
-                {
-                    Type = "string",
-                }
+                Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
             };
 
             // Act

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Extensions;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
+using Json.Schema;
+using Json.Schema.OpenApi;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -17,7 +19,7 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiWalker
     {
         private readonly OpenApiVisitorBase _visitor;
-        private readonly Stack<OpenApiSchema> _schemaLoop = new Stack<OpenApiSchema>();
+        private readonly Stack<JsonSchema> _schemaLoop = new Stack<JsonSchema>();
         private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="OpenApiExternalDocs"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiExternalDocs externalDocs)
+        internal void Walk(string externalDocs)
         {
             if (externalDocs == null)
             {
@@ -110,9 +112,9 @@ namespace Microsoft.OpenApi.Services
 
             Walk(OpenApiConstants.Schemas, () =>
             {
-                if (components.Schemas != null)
+                if (components.Schemas31 != null)
                 {
-                    foreach (var item in components.Schemas)
+                    foreach (var item in components.Schemas31)
                     {
                         Walk(item.Key, () => Walk(item.Value, isComponent: true));
                     }
@@ -592,7 +594,7 @@ namespace Microsoft.OpenApi.Services
             }
 
             _visitor.Visit(parameter);
-            Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema));
+            Walk(OpenApiConstants.Schema, () => Walk(parameter.Schema31));
             Walk(OpenApiConstants.Content, () => Walk(parameter.Content));
             Walk(OpenApiConstants.Examples, () => Walk(parameter.Examples));
 
@@ -741,7 +743,7 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(mediaType);
 
             Walk(OpenApiConstants.Example, () => Walk(mediaType.Examples));
-            Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
+            Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema31));
             Walk(OpenApiConstants.Encoding, () => Walk(mediaType.Encoding));
             Walk(mediaType as IOpenApiExtensible);
         }
@@ -789,14 +791,14 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="OpenApiSchema"/> and child objects
+        /// Visits <see cref="JsonSchema"/> and child objects
         /// </summary>
-        internal void Walk(OpenApiSchema schema, bool isComponent = false)
+        internal void Walk(JsonSchema schema, bool isComponent = false)
         {
-            if (schema == null || ProcessAsReference(schema, isComponent))
-            {
-                return;
-            }
+            //if (schema == null || ProcessAsReference(schema, isComponent))
+            //{
+            //    return;
+            //}
 
             if (_schemaLoop.Contains(schema))
             {
@@ -809,47 +811,61 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(schema);
 
-            if (schema.Items != null)
+            if (schema.GetItems() != null)
             {
-                Walk("items", () => Walk(schema.Items));
+                Walk("items", () => Walk(schema.GetItems()));
             }
 
-            if (schema.AllOf != null)
+            if (schema.GetAllOf() != null)
             {
-                Walk("allOf", () => Walk(schema.AllOf));
+                Walk("allOf", () => Walk(schema.GetAllOf()));
             }
 
-            if (schema.AnyOf != null)
+            if (schema.GetAnyOf() != null)
             {
-                Walk("anyOf", () => Walk(schema.AnyOf));
+                Walk("anyOf", () => Walk(schema.GetAnyOf()));
             }
 
-            if (schema.OneOf != null)
+            if (schema.GetOneOf() != null)
             {
-                Walk("oneOf", () => Walk(schema.OneOf));
+                Walk("oneOf", () => Walk(schema.GetOneOf()));
             }
 
-            if (schema.Properties != null)
+            if (schema.GetProperties() != null)
             {
                 Walk("properties", () =>
                 {
-                    foreach (var item in schema.Properties)
+                    foreach (var item in schema.GetProperties())
                     {
                         Walk(item.Key, () => Walk(item.Value));
                     }
                 });
             }
 
-            if (schema.AdditionalProperties != null)
+            if (schema.GetAdditionalProperties() != null)
             {
-                Walk("additionalProperties", () => Walk(schema.AdditionalProperties));
+                Walk("additionalProperties", () => Walk(schema.GetAdditionalProperties()));
             }
 
-            Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.ExternalDocs));
+            Walk(OpenApiConstants.ExternalDocs, () => Walk(schema.GetExternalDocs()));
 
             Walk(schema as IOpenApiExtensible);
 
             _schemaLoop.Pop();
+        }
+
+        internal void Walk(IReadOnlyCollection<JsonSchema> schemaCollection, bool isComponent = false)
+        {
+            if(schemaCollection is null)
+            {
+                return;
+            }
+
+            _visitor.Visit(schemaCollection);
+            foreach(var schema in schemaCollection)
+            {
+                Walk(schema);
+            }
         }
 
         /// <summary>
@@ -925,9 +941,9 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits a list of <see cref="OpenApiSchema"/> and child objects
+        /// Visits a list of <see cref="JsonSchema"/> and child objects
         /// </summary>
-        internal void Walk(IList<OpenApiSchema> schemas)
+        internal void Walk(IList<JsonSchema> schemas)
         {
             if (schemas == null)
             {
@@ -1023,7 +1039,7 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.Content, () => Walk(header.Content));
             Walk(OpenApiConstants.Example, () => Walk(header.Example));
             Walk(OpenApiConstants.Examples, () => Walk(header.Examples));
-            Walk(OpenApiConstants.Schema, () => Walk(header.Schema));
+            Walk(OpenApiConstants.Schema, () => Walk(header.Schema31));
             Walk(header as IOpenApiExtensible);
         }
 
@@ -1096,7 +1112,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiParameter e: Walk(e); break;
                 case OpenApiRequestBody e: Walk(e); break;
                 case OpenApiResponse e: Walk(e); break;
-                case OpenApiSchema e: Walk(e); break;
+                case JsonSchema e: Walk(e); break;
                 case OpenApiSecurityRequirement e: Walk(e); break;
                 case OpenApiSecurityScheme e: Walk(e); break;
                 case OpenApiServer e: Walk(e); break;

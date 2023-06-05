@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -95,17 +95,6 @@ namespace Microsoft.OpenApi.Models
         /// Parameter-less constructor
         /// </summary>
         public OpenApiDocument() {}
-
-        static OpenApiDocument()
-        {
-            //SchemaKeywordRegistry.Register<Draft4ExclusiveMaximumKeyword>();
-            //SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
-            //SchemaKeywordRegistry.Register<Draft4IdKeyword>();
-            //SchemaKeywordRegistry.Register<NullableKeyword>();
-            //SchemaKeywordRegistry.Register<Draft4TypeKeyword>();
-
-            //SchemaRegistry.Global.Register(Draft4SupportData.Draft4MetaSchema);
-        }
 
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
@@ -248,10 +237,10 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
                 {
-                    var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
-                        .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
+                    var openApiSchemas = schemas.Cast<JsonSchema>().Distinct().ToList()
+                        .ToDictionary(k => k.GetRef().ToString());
 
                     foreach (var schema in openApiSchemas.Values.ToList())
                     {
@@ -274,7 +263,7 @@ namespace Microsoft.OpenApi.Models
                 // definitions
                 writer.WriteOptionalMap(
                     OpenApiConstants.Definitions,
-                    Components?.Schemas,
+                    Components?.Schemas31,
                     (w, key, component) =>
                     {
                         if (component.Reference != null &&
@@ -560,9 +549,9 @@ namespace Microsoft.OpenApi.Models
                 switch (reference.Type)
                 {
                     case ReferenceType.Schema:
-                        var resolvedSchema = this.Components.Schemas[reference.Id];
-                        resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
-                        return resolvedSchema;
+                        var resolvedSchema = this.Components.Schemas31[reference.Id];
+                        //resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
+                        return (IOpenApiReferenceable)resolvedSchema;
                         
                     case ReferenceType.PathItem:
                         var resolvedPathItem = this.Components.PathItems[reference.Id];
@@ -627,9 +616,9 @@ namespace Microsoft.OpenApi.Models
 
     internal class FindSchemaReferences : OpenApiVisitorBase
     {
-        private Dictionary<string, OpenApiSchema> Schemas;
+        private Dictionary<string, JsonSchema> Schemas;
 
-        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, OpenApiSchema> schemas )
+        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, JsonSchema> schemas )
         {
             var visitor = new FindSchemaReferences();
             visitor.Schemas = schemas;
@@ -641,30 +630,30 @@ namespace Microsoft.OpenApi.Models
         {
             switch (referenceable)
             {
-                case OpenApiSchema schema:
-                    if (!Schemas.ContainsKey(schema.Reference.Id))
-                    {
-                        Schemas.Add(schema.Reference.Id, schema);
-                    }
-                    break;
+                //case JsonSchema schema:
+                //    if (!Schemas.ContainsKey(schema.Reference.Id))
+                //    {
+                //        Schemas.Add(schema.Reference.Id, schema);
+                //    }
+                //    break;
 
-                default:
-                    break;
+                //default:
+                //    break;
             }
             base.Visit(referenceable);
         }
 
-        public override void Visit(OpenApiSchema schema)
-        {
-            // This is needed to handle schemas used in Responses in components
-            if (schema.Reference != null)
-            {
-                if (!Schemas.ContainsKey(schema.Reference.Id))
-                {
-                    Schemas.Add(schema.Reference.Id, schema);
-                }
-            }
-            base.Visit(schema);
-        }
+        //public override void Visit(JsonSchema schema)
+        //{
+        //    // This is needed to handle schemas used in Responses in components
+        //    if (schema.Reference != null)
+        //    {
+        //        if (!Schemas.ContainsKey(schema.Reference.Id))
+        //        {
+        //            Schemas.Add(schema.Reference.Id, schema);
+        //        }
+        //    }
+        //    base.Visit(schema);
+        //}
     }
 }

@@ -1,7 +1,10 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
@@ -10,7 +13,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
-using Microsoft.OpenApi.Readers.V3;
 
 namespace Microsoft.OpenApi.Readers.V31
 {
@@ -32,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.V31
 
         private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
         {
-            [typeof(IOpenApiAny)] = OpenApiV31Deserializer.LoadAny,
+            [typeof(OpenApiAny)] = OpenApiV31Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV31Deserializer.LoadCallback,
             [typeof(OpenApiComponents)] = OpenApiV31Deserializer.LoadComponents,
             [typeof(OpenApiContact)] = OpenApiV31Deserializer.LoadContact,
@@ -53,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V31
             [typeof(OpenApiRequestBody)] = OpenApiV31Deserializer.LoadRequestBody,
             [typeof(OpenApiResponse)] = OpenApiV31Deserializer.LoadResponse,
             [typeof(OpenApiResponses)] = OpenApiV31Deserializer.LoadResponses,
-            [typeof(OpenApiSchema)] = OpenApiV31Deserializer.LoadSchema,
+            [typeof(JsonSchema)] = OpenApiV31Deserializer.LoadSchema,
             [typeof(OpenApiSecurityRequirement)] = OpenApiV31Deserializer.LoadSecurityRequirement,
             [typeof(OpenApiSecurityScheme)] = OpenApiV31Deserializer.LoadSecurityScheme,
             [typeof(OpenApiServer)] = OpenApiV31Deserializer.LoadServer,

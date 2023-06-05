@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -185,7 +186,7 @@ namespace Microsoft.OpenApi.Models
                 // V2 spec actually allows the body to have custom name.
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
-                Schema = Content.Values.FirstOrDefault()?.Schema ?? new OpenApiSchema(),
+                Schema31 = Content.Values.FirstOrDefault()?.Schema31 ?? new JsonSchemaBuilder().Build(),
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
@@ -203,22 +204,27 @@ namespace Microsoft.OpenApi.Models
             if (Content == null || !Content.Any())
                 yield break;
 
-            foreach (var property in Content.First().Value.Schema.Properties)
+            foreach (var property in Content.First().Value.Schema31.GetProperties())
             {
                 var paramSchema = property.Value;
-                if ("string".Equals(paramSchema.Type, StringComparison.OrdinalIgnoreCase)
-                    && ("binary".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)
-                    || "base64".Equals(paramSchema.Format, StringComparison.OrdinalIgnoreCase)))
+                if ("string".Equals(paramSchema.GetType().ToString(), StringComparison.OrdinalIgnoreCase)
+                    && ("binary".Equals(paramSchema.GetFormat().ToString(), StringComparison.OrdinalIgnoreCase)
+                    || "base64".Equals(paramSchema.GetFormat().ToString(), StringComparison.OrdinalIgnoreCase)))
                 {
-                    paramSchema.Type = "file";
-                    paramSchema.Format = null;
+                    var builder = new JsonSchemaBuilder();
+                    builder.Type(SchemaValueType.String).Equals("file");
+                    builder.Format((Format)null);
+                    paramSchema = builder.Build();
+
+                    //paramSchema.Type("file");
+                    //paramSchema.Format(null);
                 }
                 yield return new OpenApiFormDataParameter
                 {
-                    Description = property.Value.Description,
+                    Description = property.Value.GetDescription(),
                     Name = property.Key,
-                    Schema = property.Value,
-                    Required = Content.First().Value.Schema.Required.Contains(property.Key) 
+                    Schema31 = property.Value,
+                    Required = Content.First().Value.Schema31.GetRequired().Contains(property.Key) 
                 };
             }
         }

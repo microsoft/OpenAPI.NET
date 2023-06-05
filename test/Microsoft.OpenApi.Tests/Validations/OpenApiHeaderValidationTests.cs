@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -24,10 +25,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Required = true,
                 Example = new OpenApiAny(55),
-                Schema = new OpenApiSchema()
-                {
-                    Type = "string",
-                }
+                Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
             };
 
             // Act
@@ -60,14 +58,13 @@ namespace Microsoft.OpenApi.Validations.Tests
             var header = new OpenApiHeader()
             {
                 Required = true,
-                Schema = new OpenApiSchema()
-                {
-                    Type = "object",
-                    AdditionalProperties = new OpenApiSchema()
-                    {
-                        Type = "integer",
-                    }
-                },
+                Schema31 = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .AdditionalProperties(
+                    new JsonSchemaBuilder()
+                    .Type(SchemaValueType.Integer)
+                    .Build())
+                .Build(),
                 Examples =
                     {
                         ["example0"] = new OpenApiExample()

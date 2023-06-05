@@ -4,10 +4,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -165,19 +167,14 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema
-                {
-                    Properties = formParameters.ToDictionary(
+                Schema31 = new JsonSchemaBuilder().Properties(formParameters.ToDictionary(
                         k => k.Name,
                         v =>
                         {
-                            var schema = v.Schema;
-                            schema.Description = v.Description;
-                            schema.Extensions = v.Extensions;
+                            var schema = new JsonSchemaBuilder().Description(v.Description).Extensions(v.Extensions).Build();
+                            schema = v.Schema31;
                             return schema;
-                        }),
-                    Required = new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))
-                }
+                        })).Required(new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))).Build()
             };
 
             var consumes = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationConsumes) ??
@@ -210,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     k => k,
                     v => new OpenApiMediaType
                     {
-                        Schema = bodyParameter.Schema
+                        Schema31 = bodyParameter.Schema31
                     }),
                 Extensions = bodyParameter.Extensions
             };

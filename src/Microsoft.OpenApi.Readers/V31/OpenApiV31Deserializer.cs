@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -83,7 +83,9 @@ namespace Microsoft.OpenApi.Readers.V31
 
                     mapNode.Context.StartObject(anyListFieldName);
 
-                    foreach (var propertyElement in anyListFieldMap[anyListFieldName].PropertyGetter(domainObject))
+                    var propertyGetter = anyListFieldMap[anyListFieldName].PropertyGetter(domainObject);
+
+                    foreach (var propertyElement in propertyGetter)
                     {
                         newProperty.Add(propertyElement);
                     }
@@ -158,7 +160,6 @@ namespace Microsoft.OpenApi.Readers.V31
             return new RuntimeExpressionAnyWrapper
             {
                 Any = node.CreateAny()
-
             };
         }
 
@@ -171,7 +172,7 @@ namespace Microsoft.OpenApi.Readers.V31
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
             {
-                return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_0);
+                return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_1);
             }
             else
             {

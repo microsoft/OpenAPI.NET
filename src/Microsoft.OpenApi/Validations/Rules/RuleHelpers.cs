@@ -4,6 +4,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Rules
@@ -44,21 +45,21 @@ namespace Microsoft.OpenApi.Validations.Rules
             IValidationContext context,
             string ruleName,
             JsonNode value,
-            OpenApiSchema schema)
+            JsonSchema schema)
         {
             if (schema == null)
             {
                 return;
             }
             
-            var type = schema.Type;
-            var format = schema.Format;
-            var nullable = schema.Nullable;
+            var type = schema.GetType().ToString();
+            var format = schema.GetFormat().ToString();
+
             var jsonElement = JsonSerializer.Deserialize<JsonElement>(value);
 
             // Before checking the type, check first if the schema allows null.
             // If so and the data given is also null, this is allowed for any type.
-            if (nullable && jsonElement.ValueKind is JsonValueKind.Null)
+            if (jsonElement.ValueKind is JsonValueKind.Null)
             {
                 return;
             }
@@ -87,13 +88,13 @@ namespace Microsoft.OpenApi.Validations.Rules
                     foreach (var property in anyObject)
                     {
                         context.Enter(property.Key);
-                        if (schema.Properties.TryGetValue(property.Key, out var propertyValue))
+                        if (schema.GetProperties().TryGetValue(property.Key, out var propertyValue))
                         {
                             ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], propertyValue);
                         }
                         else
                         {
-                            ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], schema.AdditionalProperties);
+                            ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], schema.GetAdditionalProperties());
                         }
 
                         context.Exit();
@@ -128,7 +129,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 {
                     context.Enter(i.ToString());
 
-                    ValidateDataTypeMismatch(context, ruleName, anyArray[i], schema.Items);
+                    ValidateDataTypeMismatch(context, ruleName, anyArray[i], schema.GetItems());
 
                     context.Exit();
                 }

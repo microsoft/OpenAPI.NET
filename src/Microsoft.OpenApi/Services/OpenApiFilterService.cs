@@ -302,12 +302,12 @@ namespace Microsoft.OpenApi.Services
         private static bool AddReferences(OpenApiComponents newComponents, OpenApiComponents target)
         {
             var moreStuff = false;
-            foreach (var item in newComponents.Schemas)
+            foreach (var item in newComponents.Schemas31)
             {
-                if (!target.Schemas.ContainsKey(item.Key))
+                if (!target.Schemas31.ContainsKey(item.Key))
                 {
                     moreStuff = true;
-                    target.Schemas.Add(item);
+                    target.Schemas31.Add(item);
                 }
             }
 

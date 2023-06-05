@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -59,13 +61,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "type", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Type = n.GetScalarValue();
+                        GetOrCreateSchema(o).Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue())).Build();
                     }
                 },
                 {
                     "items", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Items = LoadSchema(n);
+                        GetOrCreateSchema(o).Items(LoadSchema(n));
                     }
                 },
                 {
@@ -77,61 +79,61 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "format", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Format = n.GetScalarValue();
+                        GetOrCreateSchema(o).Format(n.GetScalarValue());
                     }
                 },
                 {
                     "minimum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
+                        GetOrCreateSchema(o).Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "maximum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
+                        GetOrCreateSchema(o).Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "maxLength", (o, n) =>
                     {
-                        GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
+                        GetOrCreateSchema(o).MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "minLength", (o, n) =>
                     {
-                        GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
+                        GetOrCreateSchema(o).MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "readOnly", (o, n) =>
                     {
-                        GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue());
+                        GetOrCreateSchema(o).ReadOnly(bool.Parse(n.GetScalarValue()));
                     }
                 },
                 {
                     "default", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Default = n.CreateAny();
+                        GetOrCreateSchema(o).Default(n.CreateAny().Node);
                     }
                 },
                 {
                     "pattern", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Pattern = n.GetScalarValue();
+                        GetOrCreateSchema(o).Pattern(n.GetScalarValue());
                     }
                 },
                 {
                     "enum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Enum = n.CreateListOfAny();
+                        GetOrCreateSchema(o).Enum(n.CreateListOfAny().Select(x => x.Node));
                     }
                 },
                 {
                     "schema", (o, n) =>
                     {
-                        o.Schema = LoadSchema(n);
+                        o.Schema31 = LoadSchema(n);
                     }
                 },
             };
@@ -148,14 +150,14 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     OpenApiConstants.Default,
                     new AnyFieldMapParameter<OpenApiParameter>(
-                        p => p.Schema?.Default,
+                        p => new OpenApiAny(p.Schema31.GetDefault()),
                         (p, v) => {
-                            if (p.Schema != null || v != null)
+                            if (p.Schema31 != null || v != null)
                             {
-                                GetOrCreateSchema(p).Default = v;
+                                GetOrCreateSchema(p).Default(v.Node);
                             }
                         },
-                        p => p.Schema)
+                        p => p.Schema31)
                 }
             };
 
@@ -165,14 +167,14 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     OpenApiConstants.Enum,
                     new AnyListFieldMapParameter<OpenApiParameter>(
-                        p => p.Schema?.Enum,
+                        p => p.Schema31?.GetEnum().ToList(),
                         (p, v) => {
-                            if (p.Schema != null || v != null && v.Count > 0)
+                            if (p.Schema31 != null || v != null && v.Count > 0)
                             {
-                                GetOrCreateSchema(p).Enum = v;
+                                GetOrCreateSchema(p).Enum(v);
                             }
                         },
-                        p => p.Schema)
+                        p => p.Schema31)
                 },
             };
 
@@ -205,24 +207,14 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
-        private static OpenApiSchema GetOrCreateSchema(OpenApiParameter p)
+        private static JsonSchemaBuilder GetOrCreateSchema(OpenApiParameter p)
         {
-            if (p.Schema == null)
-            {
-                p.Schema = new OpenApiSchema();
-            }
-
-            return p.Schema;
+            return new JsonSchemaBuilder();
         }
 
-        private static OpenApiSchema GetOrCreateSchema(OpenApiHeader p)
+        private static JsonSchemaBuilder GetOrCreateSchema(OpenApiHeader p)
         {
-            if (p.Schema == null)
-            {
-                p.Schema = new OpenApiSchema();
-            }
-
-            return p.Schema;
+            return new JsonSchemaBuilder();
         }
 
         private static void ProcessIn(OpenApiParameter o, ParseNode n)
@@ -282,10 +274,10 @@ namespace Microsoft.OpenApi.Readers.V2
             ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
             ProcessAnyListFields(mapNode, parameter, _parameterAnyListFields);
 
-            var schema = node.Context.GetFromTempStorage<OpenApiSchema>("schema");
+            var schema = node.Context.GetFromTempStorage<JsonSchema>("schema");
             if (schema != null)
             {
-                parameter.Schema = schema;
+                parameter.Schema31 = schema;
                 node.Context.SetTempStorage("schema", null);
             }
 
