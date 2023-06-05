@@ -35,7 +35,7 @@ using Microsoft.OpenApi.ApiManifest;
 
 namespace Microsoft.OpenApi.Hidi
 {
-    internal static class OpenApiService
+    internal class OpenApiService
     {
         /// <summary>
         /// Implementation of the transform command
