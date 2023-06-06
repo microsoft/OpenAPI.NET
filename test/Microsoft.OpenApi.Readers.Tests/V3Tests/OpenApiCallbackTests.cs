@@ -21,29 +21,31 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicCallbackShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicCallback.yaml")))
-            {
-                // Arrange
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicCallback.yaml"));
+            var yamlStream = new YamlStream();            
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            // convert yamlNode to Json node
+            var asJsonNode = yamlNode.ToJsonNode();
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                // Act
-                var callback = OpenApiV3Deserializer.LoadCallback(node);
+            var node = new MapNode(context, asJsonNode);
 
-                // Assert
-                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+            // Act
+            var callback = OpenApiV3Deserializer.LoadCallback(node);
 
-                callback.Should().BeEquivalentTo(
-                    new OpenApiCallback
+            // Assert
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
+
+            callback.Should().BeEquivalentTo(
+                new OpenApiCallback
+                {
+                    PathItems =
                     {
-                        PathItems =
-                        {
                             [RuntimeExpression.Build("$request.body#/url")]
                             = new OpenApiPathItem
                             {
@@ -69,9 +71,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             }
-                        }
-                    });
-            }
+                    }
+                });
         }
 
         [Fact]

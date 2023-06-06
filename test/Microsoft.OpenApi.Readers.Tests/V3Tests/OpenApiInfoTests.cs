@@ -4,8 +4,11 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -22,62 +25,71 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseAdvancedInfoShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedInfo.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "advancedInfo.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
-                // Act
-                var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
+            // Act
+            var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
-                // Assert
-                openApiInfo.Should().BeEquivalentTo(
-                    new OpenApiInfo
+            // Assert
+            openApiInfo.Should().BeEquivalentTo(
+                new OpenApiInfo
+                {
+                    Title = "Advanced Info",
+                    Summary = "Sample Summary",
+                    Description = "Sample Description",
+                    Version = "1.0.0",
+                    TermsOfService = new Uri("http://example.org/termsOfService"),
+                    Contact = new OpenApiContact
                     {
-                        Title = "Advanced Info",
-                        Summary = "Sample Summary",
-                        Description = "Sample Description",
-                        Version = "1.0.0",
-                        TermsOfService = new Uri("http://example.org/termsOfService"),
-                        Contact = new OpenApiContact
-                        {
-                            Email = "example@example.com",
-                            Extensions =
-                            {
-                                ["x-twitter"] = new OpenApiString("@exampleTwitterHandler")
-                            },
-                            Name = "John Doe",
-                            Url = new Uri("http://www.example.com/url1")
-                        },
-                        License = new OpenApiLicense
-                        {
-                            Extensions = { ["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer") },
-                            Name = "licenseName",
-                            Url = new Uri("http://www.example.com/url2")
-                        },
+                        Email = "example@example.com",
                         Extensions =
                         {
-                            ["x-something"] = new OpenApiString("Sample Extension String Something"),
-                            ["x-contact"] = new OpenApiObject
+                                ["x-twitter"] = new OpenApiAny("@exampleTwitterHandler")
+                        },
+                        Name = "John Doe",
+                        Url = new Uri("http://www.example.com/url1")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Extensions = { ["x-disclaimer"] = new OpenApiAny("Sample Extension String Disclaimer") },
+                        Name = "licenseName",
+                        Url = new Uri("http://www.example.com/url2")
+                    },
+                    Extensions =
+                    {
+                            ["x-something"] = new OpenApiAny("Sample Extension String Something"),
+                            ["x-contact"] = new OpenApiAny(new JsonObject()
                             {
-                                ["name"] = new OpenApiString("John Doe"),
-                                ["url"] = new OpenApiString("http://www.example.com/url3"),
-                                ["email"] = new OpenApiString("example@example.com")
-                            },
-                            ["x-list"] = new OpenApiArray
-                            {
-                                new OpenApiString("1"),
-                                new OpenApiString("2")
-                            }
-                        }
-                    });
-            }
+                                ["name"] = "John Doe",
+                                ["url"] = "http://www.example.com/url3",
+                                ["email"] = "example@example.com"
+                            }),
+                            ["x-list"] = new OpenApiAny (new JsonArray { "1", "2" })
+                    }
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(i => ((OpenApiAny)i.Contact.Extensions["x-twitter"]).Node.Parent)
+                .Excluding(i => ((OpenApiAny)i.License.Extensions["x-disclaimer"]).Node.Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-something"]).Node.Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["name"].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["name"].Root)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["url"].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["url"].Root)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["email"].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-contact"]).Node["email"].Root)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[0].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[0].Root)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[1].Parent)
+                .Excluding(i => ((OpenApiAny)i.Extensions["x-list"]).Node[1].Root));
         }
 
         [Fact]
@@ -92,8 +104,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
+                
                 // Act
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
@@ -133,8 +146,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
+                
                 // Act
                 var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 

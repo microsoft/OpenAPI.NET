@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Example of the media type.
         /// </summary>
-        public IOpenApiAny Example { get; set; }
+        public OpenApiAny Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Models
             Explode = header?.Explode ?? Explode;
             AllowReserved = header?.AllowReserved ?? AllowReserved;
             Schema = header?.Schema != null ? new(header?.Schema) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header?.Example);
+            Example = JsonNodeCloneHelper.Clone(header?.Example);
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
             Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;

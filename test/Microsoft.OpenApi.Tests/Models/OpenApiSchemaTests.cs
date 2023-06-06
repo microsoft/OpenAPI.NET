@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Maximum = 42,
             ExclusiveMinimum = true,
             Minimum = 10,
-            Default = new OpenApiInteger(15),
+            Default = new OpenApiAny(15),
             Type = "integer",
 
             Nullable = true,
@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Maximum = 42,
             ExclusiveMinimum = true,
             Minimum = 10,
-            Default = new OpenApiInteger(15),
+            Default = new OpenApiAny(15),
             Type = "integer",
 
             Nullable = true,
