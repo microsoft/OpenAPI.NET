@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -22,12 +21,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set; }
+        public virtual bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Reference { get; set; }
+        public virtual OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// REQUIRED. The name of the parameter. Parameter names are case sensitive.
@@ -35,31 +34,31 @@ namespace Microsoft.OpenApi.Models
         /// If in is "header" and the name field is "Accept", "Content-Type" or "Authorization", the parameter definition SHALL be ignored.
         /// For all other cases, the name corresponds to the parameter name used by the in property.
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// REQUIRED. The location of the parameter.
         /// Possible values are "query", "header", "path" or "cookie".
         /// </summary>
-        public ParameterLocation? In { get; set; }
+        public virtual ParameterLocation? In { get; set; }
 
         /// <summary>
         /// A brief description of the parameter. This could contain examples of use.
         /// CommonMark syntax MAY be used for rich text representation.
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Determines whether this parameter is mandatory.
         /// If the parameter location is "path", this property is REQUIRED and its value MUST be true.
         /// Otherwise, the property MAY be included and its default value is false.
         /// </summary>
-        public bool Required { get; set; }
+        public virtual bool Required { get; set; }
 
         /// <summary>
         /// Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
         /// </summary>
-        public bool Deprecated { get; set; } = false;
+        public virtual bool Deprecated { get; set; } = false;
 
         /// <summary>
         /// Sets the ability to pass empty-valued parameters.
@@ -68,14 +67,14 @@ namespace Microsoft.OpenApi.Models
         /// If style is used, and if behavior is n/a (cannot be serialized),
         /// the value of allowEmptyValue SHALL be ignored.
         /// </summary>
-        public bool AllowEmptyValue { get; set; } = false;
+        public virtual bool AllowEmptyValue { get; set; } = false;
 
         /// <summary>
         /// Describes how the parameter value will be serialized depending on the type of the parameter value.
         /// Default values (based on value of in): for query - form; for path - simple; for header - simple;
         /// for cookie - form.
         /// </summary>
-        public ParameterStyle? Style
+        public virtual ParameterStyle? Style
         {
             get => _style ?? GetDefaultStyleValue();
             set => _style = value;
@@ -88,7 +87,7 @@ namespace Microsoft.OpenApi.Models
         /// When style is form, the default value is true.
         /// For all other styles, the default value is false.
         /// </summary>
-        public bool Explode
+        public virtual bool Explode
         {
             get => _explode ?? Style == ParameterStyle.Form;
             set => _explode = value;
@@ -100,12 +99,12 @@ namespace Microsoft.OpenApi.Models
         /// This property only applies to parameters with an in value of query.
         /// The default value is false.
         /// </summary>
-        public bool AllowReserved { get; set; }
+        public virtual bool AllowReserved { get; set; }
 
         /// <summary>
         /// The schema defining the type used for the parameter.
         /// </summary>
-        public OpenApiSchema Schema { get; set; }
+        public virtual OpenApiSchema Schema { get; set; }
 
         /// <summary>
         /// Examples of the media type. Each example SHOULD contain a value
@@ -114,7 +113,7 @@ namespace Microsoft.OpenApi.Models
         /// Furthermore, if referencing a schema which contains an example,
         /// the examples value SHALL override the example provided by the schema.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public virtual IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// Example of the media type. The example SHOULD match the specified schema and encoding properties
@@ -124,7 +123,7 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
         /// a string value can contain the example with escaping where necessary.
         /// </summary>
-        public IOpenApiAny Example { get; set; }
+        public virtual IOpenApiAny Example { get; set; }
 
         /// <summary>
         /// A map containing the representations for the parameter.
@@ -135,12 +134,12 @@ namespace Microsoft.OpenApi.Models
         /// When example or examples are provided in conjunction with the schema object,
         /// the example MUST follow the prescribed serialization strategy for the parameter.
         /// </summary>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public virtual IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// A parameterless constructor

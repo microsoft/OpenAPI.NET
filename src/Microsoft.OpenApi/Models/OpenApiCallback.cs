@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -18,23 +17,23 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A Path Item Object used to define a callback request and expected responses.
         /// </summary>
-        public Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
+        public virtual Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get; set; }
             = new Dictionary<RuntimeExpression, OpenApiPathItem>();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set; }
+        public virtual bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public OpenApiReference Reference { get; set; }
+        public virtual OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor

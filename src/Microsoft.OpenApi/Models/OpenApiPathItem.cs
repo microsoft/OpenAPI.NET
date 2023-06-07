@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -18,44 +17,44 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
         /// </summary>
-        public string Summary { get; set; }
+        public virtual string Summary { get; set; }
 
         /// <summary>
         /// An optional, string description, intended to apply to all operations in this path.
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Gets the definition of operations on this path.
         /// </summary>
-        public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
+        public virtual IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
             = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>
         /// An alternative server array to service all operations in this path.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public virtual IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
 
         /// <summary>
         /// A list of parameters that are applicable for all the operations described under this path.
         /// These parameters can be overridden at the operation level, but cannot be removed there.
         /// </summary>
-        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        public virtual IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set; }
+        public virtual bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Reference { get; set; }
+        public virtual OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Add one operation into this path item.
