@@ -124,29 +124,42 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
         {
-            var fileinfo = new FileInfo("sample.md");
-            // create a dummy ILogger instance for testing
-            await OpenApiService.ShowOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, fileinfo, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
-            var output = File.ReadAllText(fileinfo.FullName);
+            // create a dummy ILogger instance for testing
+            var options = new HidiOptions() {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                Output = new FileInfo("sample.md")
+            };
+            
+            await OpenApiService.ShowOpenApiDocument(options, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+
+            var output = File.ReadAllText(options.Output.FullName);
             Assert.Contains("graph LR", output);
         }
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidHtmlFileWithMermaidDiagram()
         {
-            var filePath = await OpenApiService.ShowOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            var options = new HidiOptions() {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml"
+            };
+            var filePath = await OpenApiService.ShowOpenApiDocument(options, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
             Assert.True(File.Exists(filePath));
         }
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileFromCsdlWithMermaidDiagram()
         {
-            var fileinfo = new FileInfo("sample.md");
-            // create a dummy ILogger instance for testing
-            await OpenApiService.ShowOpenApiDocument(null, "UtilityFiles\\Todo.xml", "todos", fileinfo, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            var options = new HidiOptions() {
+                Csdl = "UtilityFiles\\Todo.xml",
+                CsdlFilter = "todos",
+                Output = new FileInfo("sample.md")
+            };
 
-            var output = File.ReadAllText(fileinfo.FullName);
+            // create a dummy ILogger instance for testing
+            await OpenApiService.ShowOpenApiDocument(options, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+
+            var output = File.ReadAllText(options.Output.FullName);
             Assert.Contains("graph LR", output);
         }
 

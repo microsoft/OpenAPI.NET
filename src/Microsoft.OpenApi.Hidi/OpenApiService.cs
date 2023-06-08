@@ -85,11 +85,11 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Load OpenAPI document
-                OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
+                OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion);
 
                 if (options.FilterOptions != null)
                 {
-                    document = ApplyFilters(options, logger, apiDependency, postmanCollection, document, cancellationToken);
+                    document = ApplyFilters(options, logger, apiDependency, postmanCollection, document);
                 }
 
                 var languageFormat = options.SettingsConfig?.GetSection("LanguageFormat")?.Value;
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Hidi
                     var walker = new OpenApiWalker(powerShellFormatter);
                     walker.Walk(document);
                 }
-                WriteOpenApi(options.Output, options.TerseOutput, options.InlineLocal, options.InlineExternal, openApiFormat, openApiVersion, document, logger);
+                WriteOpenApi(options, openApiFormat, openApiVersion, document, logger);
             }
             catch (TaskCanceledException)
             {
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Hidi
             return apiDependency;
         }
 
-        private static OpenApiDocument ApplyFilters(HidiOptions options, ILogger logger, ApiDependency apiDependency, JsonDocument postmanCollection, OpenApiDocument document, CancellationToken cancellationToken)
+        private static OpenApiDocument ApplyFilters(HidiOptions options, ILogger logger, ApiDependency apiDependency, JsonDocument postmanCollection, OpenApiDocument document)
         {
             Dictionary<string, List<string>> requestUrls = null;
             if (apiDependency != null)
@@ -172,22 +172,22 @@ namespace Microsoft.OpenApi.Hidi
             return document;
         }
 
-        private static void WriteOpenApi(FileInfo output, bool terseOutput, bool inlineLocal, bool inlineExternal, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger)
+        private static void WriteOpenApi(HidiOptions options, OpenApiFormat openApiFormat, OpenApiSpecVersion openApiVersion, OpenApiDocument document, ILogger logger)
         {
             using (logger.BeginScope("Output"))
             {
-                using var outputStream = output.Create();
+                using var outputStream = options.Output.Create();
                 var textWriter = new StreamWriter(outputStream);
 
                 var settings = new OpenApiWriterSettings()
                 {
-                    InlineLocalReferences = inlineLocal,
-                    InlineExternalReferences = inlineExternal
+                    InlineLocalReferences = options.InlineLocal,
+                    InlineExternalReferences = options.InlineExternal
                 };
 
                 IOpenApiWriter writer = openApiFormat switch
                 {
-                    OpenApiFormat.Json => terseOutput ? new OpenApiJsonWriter(textWriter, settings, terseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
+                    OpenApiFormat.Json => options.TerseOutput ? new OpenApiJsonWriter(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
                     OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
                     _ => throw new ArgumentException("Unknown format"),
                 };
@@ -205,37 +205,38 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL 
-        private static async Task<OpenApiDocument> GetOpenApi(string openapi, string csdl, string csdlFilter, IConfiguration settings, bool inlineExternal, ILogger logger, CancellationToken cancellationToken, string metadataVersion = null)
+        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, CancellationToken cancellationToken, string metadataVersion = null)
         {
+            
             OpenApiDocument document;
             Stream stream;
 
-            if (!string.IsNullOrEmpty(csdl))
+            if (!string.IsNullOrEmpty(options.Csdl))
             {
                 var stopwatch = new Stopwatch();
-                using (logger.BeginScope($"Convert CSDL: {csdl}", csdl))
+                using (logger.BeginScope($"Convert CSDL: {options.Csdl}", options.Csdl))
                 {
                     stopwatch.Start();
-                    stream = await GetStream(csdl, logger, cancellationToken);
+                    stream = await GetStream(options.Csdl, logger, cancellationToken);
                     Stream filteredStream = null;
-                    if (!string.IsNullOrEmpty(csdlFilter))
+                    if (!string.IsNullOrEmpty(options.CsdlFilter))
                     {
                         XslCompiledTransform transform = GetFilterTransform();
-                        filteredStream = ApplyFilterToCsdl(stream, csdlFilter, transform);
+                        filteredStream = ApplyFilterToCsdl(stream, options.CsdlFilter, transform);
                         filteredStream.Position = 0;
                         stream.Dispose();
                         stream = null;
                     }
 
-                    document = await ConvertCsdlToOpenApi(filteredStream ?? stream, metadataVersion, settings, cancellationToken);
+                    document = await ConvertCsdlToOpenApi(filteredStream ?? stream, metadataVersion, options.SettingsConfig, cancellationToken);
                     stopwatch.Stop();
                     logger.LogTrace("{timestamp}ms: Generated OpenAPI with {paths} paths.", stopwatch.ElapsedMilliseconds, document.Paths.Count);
                 }
             }
             else
             {
-                stream = await GetStream(openapi, logger, cancellationToken);
-                var result = await ParseOpenApi(openapi, inlineExternal, logger, stream, cancellationToken);
+                stream = await GetStream(options.OpenApi, logger, cancellationToken);
+                var result = await ParseOpenApi(options.OpenApi, options.InlineExternal, logger, stream, cancellationToken);
                 document = result.OpenApiDocument;
             }
 
@@ -548,21 +549,21 @@ namespace Microsoft.OpenApi.Hidi
             return extension;
         }
 
-        internal static async Task<string> ShowOpenApiDocument(string openapi, string csdl, string csdlFilter, FileInfo output, ILogger logger, CancellationToken cancellationToken)
+        internal static async Task<string> ShowOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
         {
             try
             {
-                if (string.IsNullOrEmpty(openapi) && string.IsNullOrEmpty(csdl))
+                if (string.IsNullOrEmpty(options.OpenApi) && string.IsNullOrEmpty(options.Csdl))
                 {
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var document = await GetOpenApi(openapi, csdl, csdlFilter, null, false, logger, cancellationToken);
+                var document = await GetOpenApi(options, logger, cancellationToken);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
                     // If output is null, create a HTML file in the user's temporary directory
-                    if (output == null)
+                    if (options.Output == null)
                     {
                         var tempPath = Path.GetTempPath() + "/hidi/";
                         if (!File.Exists(tempPath))
@@ -572,11 +573,11 @@ namespace Microsoft.OpenApi.Hidi
 
                         var fileName = Path.GetRandomFileName();
 
-                        output = new FileInfo(Path.Combine(tempPath, fileName + ".html"));
+                        var output = new FileInfo(Path.Combine(tempPath, fileName + ".html"));
                         using (var file = new FileStream(output.FullName, FileMode.Create))
                         {
                             using var writer = new StreamWriter(file);
-                            WriteTreeDocumentAsHtml(openapi ?? csdl, document, writer);
+                            WriteTreeDocumentAsHtml(options.OpenApi ?? options.Csdl, document, writer);
                         }
                         logger.LogTrace("Created Html document with diagram ");
 
@@ -590,13 +591,13 @@ namespace Microsoft.OpenApi.Hidi
                     }
                     else  // Write diagram as Markdown document to output file
                     {
-                        using (var file = new FileStream(output.FullName, FileMode.Create))
+                        using (var file = new FileStream(options.Output.FullName, FileMode.Create))
                         {
                             using var writer = new StreamWriter(file);
-                            WriteTreeDocumentAsMarkdown(openapi ?? csdl, document, writer);
+                            WriteTreeDocumentAsMarkdown(options.OpenApi ?? options.Csdl, document, writer);
                         }
                         logger.LogTrace("Created markdown document with diagram ");
-                        return output.FullName;
+                        return options.Output.FullName;
                     }
                 }
             }
@@ -705,13 +706,13 @@ namespace Microsoft.OpenApi.Hidi
                 }   
 
                 // Load OpenAPI document
-                OpenApiDocument document = await GetOpenApi(options.OpenApi, options.Csdl, options.CsdlFilter, options.SettingsConfig, options.InlineExternal, logger, cancellationToken, options.MetadataVersion);
+                OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion);
 
                 cancellationToken.ThrowIfCancellationRequested();
 
                 if (options.FilterOptions != null)
                 {
-                    document = ApplyFilters(options, logger, apiDependency, null, document, cancellationToken);
+                    document = ApplyFilters(options, logger, apiDependency, null, document);
                 }
 
                 // Ensure path in options.OutputFolder exists
@@ -722,7 +723,8 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 var slicedOpenApi = new FileInfo(Path.Combine(options.OutputFolder,"openapi.json"));
                 // Write OpenAPI to Output folder
-                WriteOpenApi(slicedOpenApi, true, options.InlineLocal, options.InlineExternal, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
+                options.TerseOutput =true;
+                WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
                 
                 // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
                 var manifest = new OpenAIPluginManifest() {

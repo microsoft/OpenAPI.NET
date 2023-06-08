@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             var logger = loggerFactory.CreateLogger<OpenApiService>();
             try
             {
-                await OpenApiService.ShowOpenApiDocument(hidiOptions.OpenApi, hidiOptions.Csdl, hidiOptions.CsdlFilter, hidiOptions.Output, logger, cancellationToken);
+                await OpenApiService.ShowOpenApiDocument(hidiOptions, logger, cancellationToken);
 
                 return 0;
             }
