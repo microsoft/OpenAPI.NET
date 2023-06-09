@@ -723,6 +723,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 var slicedOpenApi = new FileInfo(Path.Combine(options.OutputFolder,"openapi.json"));
                 // Write OpenAPI to Output folder
+                options.Output = slicedOpenApi;
                 options.TerseOutput =true;
                 WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
                 

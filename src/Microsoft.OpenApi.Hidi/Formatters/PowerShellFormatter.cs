@@ -23,7 +23,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         static PowerShellFormatter()
         {
             // Add singularization exclusions.
-            // TODO: Read exclusions from a user provided file.
+            // Enhancement: Read exclusions from a user provided file.
             Vocabularies.Default.AddSingular("(drive)s$", "$1"); // drives does not properly singularize to drive.               
             Vocabularies.Default.AddSingular("(data)$", "$1"); // exclude the following from singularization.
             Vocabularies.Default.AddSingular("(delta)$", "$1");
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             Vocabularies.Default.AddSingular("(statistics)$", "$1");
         }
 
-        //TODO: FHL taks for PS
+        //FHL task for PS
         // Fixes (Order matters):
         // 1. Singularize operationId operationIdSegments.
         // 2. Add '_' to verb in an operationId.
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         public override void Visit(OpenApiOperation operation)
         {
             if (string.IsNullOrWhiteSpace(operation.OperationId))
-                throw new ArgumentException(nameof(operation), $"OperationId is required {PathString}");
+                throw new ArgumentException($"OperationId is required {PathString}", nameof(operation));
 
             var operationId = operation.OperationId;
             var operationTypeExtension = operation.Extensions.GetExtension("x-ms-docs-operation-type");
@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
                 // If a segment name is contained in the previous segment, the latter is considered a duplicate.
                 // The last segment is ignored as a rule.
-                if ((x > 0 && x < lastSegmentIndex) && singularizedSegments.Last().Equals(segment, StringComparison.OrdinalIgnoreCase))
+                if ((x > 0 && x < lastSegmentIndex) && singularizedSegments[singularizedSegments.Count - 1].Equals(segment, StringComparison.OrdinalIgnoreCase))
                     continue;
 
                 singularizedSegments.Add(segment);
