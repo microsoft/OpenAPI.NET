@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         public override void Visit(OpenApiOperation operation)
         {
             if (string.IsNullOrWhiteSpace(operation.OperationId))
-                throw new ArgumentNullException(nameof(operation.OperationId), $"OperationId is required {PathString}");
+                throw new ArgumentException(nameof(operation), $"OperationId is required {PathString}");
 
             var operationId = operation.OperationId;
             var operationTypeExtension = operation.Extensions.GetExtension("x-ms-docs-operation-type");
@@ -90,7 +90,6 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             var charPos = operationId.LastIndexOf('.', operationId.Length - 1);
             if (operationId.Contains('_') || charPos < 0)
                 return operationId;
-            // TODO: Optimize this call.
             var newOperationId = new StringBuilder(operationId);
             newOperationId[charPos] = '_';
             operationId = newOperationId.ToString();

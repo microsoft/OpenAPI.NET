@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Hidi
             if (!string.IsNullOrEmpty(options.Csdl))
             {
                 var stopwatch = new Stopwatch();
-                using (logger.BeginScope($"Convert CSDL: {options.Csdl}", options.Csdl))
+                using (logger.BeginScope("Convert CSDL: {csdl}", options.Csdl))
                 {
                     stopwatch.Start();
                     stream = await GetStream(options.Csdl, logger, cancellationToken);
@@ -356,7 +356,7 @@ namespace Microsoft.OpenApi.Hidi
         {
             ReadResult result;
             Stopwatch stopwatch = Stopwatch.StartNew();
-            using (logger.BeginScope($"Parsing OpenAPI: {openApiFile}", openApiFile))
+            using (logger.BeginScope("Parsing OpenAPI: {openApiFile}", openApiFile))
             {
                 stopwatch.Start();
 
@@ -621,7 +621,7 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     foreach (var error in context.Errors)
                     {
-                        logger.LogError($"Detected error during parsing: {error}", error.ToString());
+                        logger.LogError("Detected error during parsing: {error}", error.ToString());
                     }
                 }
             }

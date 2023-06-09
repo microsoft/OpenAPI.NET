@@ -37,10 +37,10 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             catch (Exception ex)
             {
 #if DEBUG
-                logger.LogCritical(ex, ex.Message);
+                logger.LogCritical(ex, "Command failed");
                 throw; // so debug tools go straight to the source of the exception when attached
 #else
-                logger.LogCritical( ex.Message);
+                logger.LogCritical(ex.Message);
                 return 1;
 #endif
             }
