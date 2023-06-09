@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.1
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), 
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
@@ -88,13 +88,13 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
 
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        internal virtual void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiExample</returns>
         public OpenApiExample GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
                 return doc.ResolveReferenceTo<OpenApiExample>(this.Reference);
             }
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V31 example without using reference.
         /// </summary>
-        public void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1);
         }
@@ -144,12 +144,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 example without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
         }
         
-        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
+        internal void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             writer.WriteStartObject();
 
