@@ -21,6 +21,8 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         public OpenApiDiagnostic Diagnostic { get; }
 
+        private static readonly char[] _pathSeparator = new char[] { '/' };
+
         /// <summary>
         /// Create Parsing Context
         /// </summary>
@@ -131,7 +133,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
                     else if (id.StartsWith("/paths/"))
                     {
-                        var localSegments = segments[1].Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+                        var localSegments = segments[1].Split(_pathSeparator, StringSplitOptions.RemoveEmptyEntries);
                         if (localSegments.Length == 2)
                         {
                             // The reference of a path may contain JSON escape character ~1 for the forward-slash character, replace this otherwise
