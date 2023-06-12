@@ -721,9 +721,8 @@ namespace Microsoft.OpenApi.Hidi
                 {
                     outputFolder.Create();
                 }
-                var slicedOpenApi = new FileInfo(Path.Combine(options.OutputFolder,"openapi.json"));
                 // Write OpenAPI to Output folder
-                options.Output = slicedOpenApi;
+                options.Output = new FileInfo(Path.Combine(options.OutputFolder,"openapi.json"));
                 options.TerseOutput =true;
                 WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
                 
