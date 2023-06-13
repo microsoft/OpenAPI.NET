@@ -13,6 +13,8 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="OpenApiReaderTests\Samples\OpenApiDiagnosticReportMerged\TodoMain.yaml" />
+      <None Remove="OpenApiReaderTests\Samples\OpenApiDiagnosticReportMerged\TodoReference.yaml" />
       <None Remove="V2Tests\Samples\ComponentRootReference.json" />
       <None Remove="V2Tests\Samples\OpenApiPathItem\pathItemWithBodyPathParameter.yaml" />
       <None Remove="V2Tests\Samples\OpenApiPathItem\pathItemWithFormDataPathParameter.yaml" />
@@ -20,6 +22,8 @@
       <None Remove="V3Tests\Samples\OpenApiWorkspace\TodoMain.yaml" />
     </ItemGroup>
     <ItemGroup>
+      <EmbeddedResource Include="OpenApiReaderTests\Samples\OpenApiDiagnosticReportMerged\TodoMain.yaml" />
+      <EmbeddedResource Include="OpenApiReaderTests\Samples\OpenApiDiagnosticReportMerged\TodoReference.yaml" />
       <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

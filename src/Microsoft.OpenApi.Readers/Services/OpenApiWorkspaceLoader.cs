@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Services
             _readerSettings = readerSettings;
         }
 
-        internal async Task LoadAsync(OpenApiReference reference, OpenApiDocument document, CancellationToken cancellationToken)
+        internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference, OpenApiDocument document, CancellationToken cancellationToken, OpenApiDiagnostic diagnostic = null)
         {
             _workspace.AddDocument(reference.ExternalResource, document);
             document.Workspace = _workspace;
@@ -36,6 +36,11 @@ namespace Microsoft.OpenApi.Readers.Services
 
             var reader = new OpenApiStreamReader(_readerSettings);
 
+            if (diagnostic is null)
+            {
+                diagnostic = new OpenApiDiagnostic();
+            }
+
             // Walk references
             foreach (var item in referenceCollector.References)
             {
@@ -43,10 +48,21 @@ namespace Microsoft.OpenApi.Readers.Services
                 if (!_workspace.Contains(item.ExternalResource))
                 {
                     var input = await _loader.LoadAsync(new Uri(item.ExternalResource, UriKind.RelativeOrAbsolute));
-                    var result = await reader.ReadAsync(input, cancellationToken); // TODO merge diagnostics
-                    await LoadAsync(item, result.OpenApiDocument, cancellationToken);
+                    var result = await reader.ReadAsync(input, cancellationToken);
+                    // Merge diagnostics
+                    if (result.OpenApiDiagnostic != null)
+                    {
+                        diagnostic.AppendDiagnostic(result.OpenApiDiagnostic, item.ExternalResource);
+                    }
+                    if (result.OpenApiDocument != null)
+                    {
+                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, cancellationToken, diagnostic);
+                        diagnostic = loadDiagnostic;
+                    }
                 }
             }
+
+            return diagnostic;
         }
     }
 }

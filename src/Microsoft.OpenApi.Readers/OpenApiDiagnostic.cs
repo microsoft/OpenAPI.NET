@@ -26,5 +26,48 @@ namespace Microsoft.OpenApi.Readers
         /// Open API specification version of the document parsed.
         /// </summary>
         public OpenApiSpecVersion SpecificationVersion { get; set; }
+
+        /// <summary>
+        /// Append another set of diagnostic Errors and Warnings to this one, this may be appended from another external
+        /// document's parsing and we want to indicate which file it originated from.
+        /// </summary>
+        /// <param name="diagnosticToAdd">The diagnostic instance of which the errors and warnings are to be appended to this diagnostic's</param>
+        /// <param name="fileNameToAdd">The originating file of the diagnostic to be appended, this is prefixed to each error and warning to indicate the originating file</param>
+        public void AppendDiagnostic(OpenApiDiagnostic diagnosticToAdd, string fileNameToAdd = null)
+        {
+            var fileNameIsSupplied = !string.IsNullOrEmpty(fileNameToAdd);
+            foreach (var err in diagnosticToAdd.Errors)
+            {
+                var errMsgWithFileName = fileNameIsSupplied ? $"[File: {fileNameToAdd}] {err.Message}" : err.Message;
+                Errors.Add(new OpenApiError(err.Pointer, errMsgWithFileName));
+            }
+            foreach (var warn in diagnosticToAdd.Warnings)
+            {
+                var warnMsgWithFileName = fileNameIsSupplied ? $"[File: {fileNameToAdd}] {warn.Message}" : warn.Message;
+                Warnings.Add(new OpenApiError(warn.Pointer, warnMsgWithFileName));
+            }
+        }
+    }
+}
+
+/// <summary>
+/// Extension class for IList to add the Method "AddRange" used above
+/// </summary>
+internal static class IDiagnosticExtensions
+{
+    /// <summary>
+    /// Extension method for IList so that another list can be added to the current list.
+    /// </summary>
+    /// <param name="collection"></param>
+    /// <param name="enumerable"></param>
+    /// <typeparam name="T"></typeparam>
+    internal static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> enumerable)
+    {
+        if (collection is null || enumerable is null) return;
+
+        foreach (var cur in enumerable)
+        {
+            collection.Add(cur);
+        }
     }
 }
