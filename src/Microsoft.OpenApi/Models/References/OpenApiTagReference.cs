@@ -61,6 +61,20 @@ namespace Microsoft.OpenApi.Models.References
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
+        }               
+
+        /// <inheritdoc/>
+        public override void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
+                (writer, element) => element.SerializeAsV3(writer));
+        }
+
+        /// <inheritdoc/>
+        public override void SerializeAsV31WithoutReference(IOpenApiWriter writer)
+        {
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
+                (writer, element) => element.SerializeAsV31(writer));
         }
 
         /// <inheritdoc/>
@@ -76,19 +90,5 @@ namespace Microsoft.OpenApi.Models.References
 
             writer.WriteValue(Name);
         }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV3WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
-                (writer, element) => element.SerializeAsV3(writer));
-        }
-
-        /// <inheritdoc/>
-        public override void SerializeAsV31WithoutReference(IOpenApiWriter writer)
-        {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
-                (writer, element) => element.SerializeAsV31(writer));
-        }       
     }
 }

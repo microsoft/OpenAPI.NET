@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Models.References
         public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }
 
         /// <inheritdoc/>
-        public override IDictionary<string, OpenApiHeaderReference> Headers { get => Target.Headers; set => Target.Headers = value; }
+        public override IDictionary<string, OpenApiHeader> Headers { get => Target.Headers; set => Target.Headers = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiLink> Links { get => Target.Links; set => Target.Links = value; }

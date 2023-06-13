@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Models.References
                 return;
             }
 
-            action(writer, this);
+            action(writer, Target);
         }
     }
 }

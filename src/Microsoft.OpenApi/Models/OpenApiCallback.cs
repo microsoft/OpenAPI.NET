@@ -133,9 +133,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiCallback</returns>
         public OpenApiCallback GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiCallback>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiCallback>(Reference);
             }
             else
             {
