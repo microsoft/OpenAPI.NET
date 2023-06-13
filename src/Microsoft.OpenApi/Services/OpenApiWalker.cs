@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -447,7 +447,8 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(pathItem);
 
-            if (pathItem != null)
+            // The path may be a reference
+            if (pathItem != null && !ProcessAsReference(pathItem))
             {
                 Walk(OpenApiConstants.Parameters, () => Walk(pathItem.Parameters));
                 Walk(pathItem.Operations);

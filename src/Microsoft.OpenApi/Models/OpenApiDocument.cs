@@ -504,6 +504,9 @@ namespace Microsoft.OpenApi.Models
                     case ReferenceType.Callback:
                         return this.Components.Callbacks[reference.Id];
 
+                    case ReferenceType.Path:
+                        return this.Paths[reference.Id];
+
                     default:
                         throw new OpenApiException(Properties.SRResource.InvalidReferenceType);
                 }
