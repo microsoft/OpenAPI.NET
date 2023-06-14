@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private void AddAddtionalPropertiesToSchema(OpenApiSchema schema)
         {
-            if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals(schema?.Type, StringComparison.OrdinalIgnoreCase))
+            if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals(schema.Type, StringComparison.OrdinalIgnoreCase))
             {
                 schema.AdditionalProperties = new OpenApiSchema() { Type = "object" };
 

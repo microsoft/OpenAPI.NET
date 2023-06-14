@@ -121,10 +121,7 @@ namespace Microsoft.OpenApi.Services
 
         private void EnsurRequestBodiesExists()
         {
-            if (_target.Components.RequestBodies == null)
-            {
-                _target.Components.RequestBodies = new Dictionary<string, OpenApiRequestBody>();
-            }
+            _target.Components.RequestBodies ??= new Dictionary<string, OpenApiRequestBody>();
         }
     }
 }
