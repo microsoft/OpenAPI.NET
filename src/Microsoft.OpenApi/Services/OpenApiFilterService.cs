@@ -347,7 +347,7 @@ namespace Microsoft.OpenApi.Services
                         Debug.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
                         continue;
                     }
-                    operationTypes = GetOperationTypes(openApiOperations, url.Value, path);
+                    operationTypes.AddRange(GetOperationTypes(openApiOperations, url.Value, path));
                 }
             }
 
@@ -362,16 +362,10 @@ namespace Microsoft.OpenApi.Services
 
         private static List<string> GetOperationTypes(IDictionary<OperationType, OpenApiOperation> openApiOperations, List<string> url, string path)
         {
-            var operationTypes = new List<string>();
             // Add the available ops if they are in the postman collection. See path.Value
-            foreach (var ops in openApiOperations)
-            {
-                if (url.Contains(ops.Key.ToString().ToUpper()))
-                {
-                    operationTypes.Add(ops.Key + path);
-                }
-            }
-            return operationTypes;
+            return openApiOperations.Where(ops => url.Contains(ops.Key.ToString().ToUpper()))
+                            .Select(ops => ops.Key + path)
+                            .ToList();
         }
     }
 }

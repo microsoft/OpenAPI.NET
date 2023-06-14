@@ -3,6 +3,7 @@
 
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Options;
@@ -293,6 +294,28 @@ namespace Microsoft.OpenApi.Hidi.Tests
             await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken()));
 
+        }
+
+        [Fact]
+        public async Task TransformToPowerShellCompliantOpenApi()
+        {
+            var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\examplepowershellsettings.json");
+            HidiOptions options = new HidiOptions
+            {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                CleanOutput = true,
+                Version = "3.0",
+                OpenApiFormat = OpenApiFormat.Yaml,
+                TerseOutput = false,
+                InlineLocal = false,
+                InlineExternal = false,
+                SettingsConfig = SettingsUtilities.GetConfiguration(settingsPath)
+            };
+            // create a dummy ILogger instance for testing
+            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
+
+            var output = File.ReadAllText("output.yml");
+            Assert.NotEmpty(output);
         }
 
         [Fact]
