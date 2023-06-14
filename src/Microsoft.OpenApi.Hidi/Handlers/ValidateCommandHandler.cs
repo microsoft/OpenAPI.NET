@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             HidiOptions hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
             CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
             using var loggerFactory = Logger.ConfigureLogger(hidiOptions.LogLevel);
-            var logger = loggerFactory.CreateLogger<OpenApiService>();
+            var logger = loggerFactory.CreateLogger<ValidateCommandHandler>();
             try
             {
                 await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken);

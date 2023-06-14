@@ -123,6 +123,9 @@
   <data name="ArgumentNullOrWhiteSpace" xml:space="preserve">
     <value>The argument '{0}' is null, empty or consists only of white-space.</value>
   </data>
+  <data name="DefaultBaseUri" xml:space="preserve">
+    <value>http://localhost/</value>
+  </data>
   <data name="ExtensionFieldNameMustBeginWithXDash" xml:space="preserve">
     <value>The filed name '{0}' of extension doesn't begin with x-.</value>
   </data>

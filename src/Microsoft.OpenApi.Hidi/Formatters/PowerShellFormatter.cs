@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         public override void Visit(OpenApiSchema schema)
         {
-            AddAddtionalPropertiesToSchema(schema);
+            AddAdditionalPropertiesToSchema(schema);
             ResolveAnyOfSchema(schema);
             ResolveOneOfSchema(schema);
 
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             return parameters;
         }
 
-        private void AddAddtionalPropertiesToSchema(OpenApiSchema schema)
+        private void AddAdditionalPropertiesToSchema(OpenApiSchema schema)
         {
             if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals(schema.Type, StringComparison.OrdinalIgnoreCase))
             {

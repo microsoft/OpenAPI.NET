@@ -1,10 +1,7 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-using System.IO;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Hidi;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
@@ -16,13 +13,13 @@ namespace Microsoft.OpenApi.Hidi.Tests
     public class OpenApiFilterServiceTests
     {
         private readonly OpenApiDocument _openApiDocumentMock;
-        private readonly Mock<ILogger<OpenApiService>> _mockLogger;
-        private readonly ILogger<OpenApiService> _logger;
+        private readonly Mock<ILogger<OpenApiFilterServiceTests>> _mockLogger;
+        private readonly ILogger<OpenApiFilterServiceTests> _logger;
 
         public OpenApiFilterServiceTests()
         {
             _openApiDocumentMock = OpenApiDocumentMock.CreateOpenApiDocument();
-            _mockLogger = new Mock<ILogger<OpenApiService>>();
+            _mockLogger = new Mock<ILogger<OpenApiFilterServiceTests>>();
             _logger = _mockLogger.Object;
         }
 
@@ -79,12 +76,12 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 Servers = new List<OpenApiServer>() { new() { Url = "https://localhost/" } },
                 Paths = new()
                 {
-                    {"/foo", new() { 
+                    {"/foo", new() {
                         Operations = new Dictionary<OperationType, OpenApiOperation>() {
                             { OperationType.Get, new() },
                             { OperationType.Patch, new() },
                             { OperationType.Post, new() }
-                          } 
+                          }
                         }
                     }
                 }
@@ -95,16 +92,16 @@ namespace Microsoft.OpenApi.Hidi.Tests
             {
                     {"/foo", new List<string> {"GET","POST"}}
             };
-            
+
             // When
             var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: openApiDocument);
 
             // Then
-            Assert.True(predicate("/foo",OperationType.Get,null));
-            Assert.True(predicate("/foo",OperationType.Post,null));
-            Assert.False(predicate("/foo",OperationType.Patch,null));
+            Assert.True(predicate("/foo", OperationType.Get, null));
+            Assert.True(predicate("/foo", OperationType.Post, null));
+            Assert.False(predicate("/foo", OperationType.Patch, null));
         }
-    
+
 
         [Fact]
         public void ShouldParseNestedPostmanCollection()

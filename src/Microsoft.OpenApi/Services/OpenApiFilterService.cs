@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -25,91 +26,24 @@ namespace Microsoft.OpenApi.Services
         /// <returns>A predicate.</returns>
         public static Func<string, OperationType?, OpenApiOperation, bool> CreatePredicate(
                 string operationIds = null,
-                string tags = null, 
-                Dictionary<string, List<string>> requestUrls = null, 
+                string tags = null,
+                Dictionary<string, List<string>> requestUrls = null,
                 OpenApiDocument source = null)
         {
             Func<string, OperationType?, OpenApiOperation, bool> predicate;
-
-            if (requestUrls != null && (operationIds != null || tags != null))
-            {
-                throw new InvalidOperationException("Cannot filter by Postman collection and either operationIds and tags at the same time.");
-            }
-            if (!string.IsNullOrEmpty(operationIds) && !string.IsNullOrEmpty(tags))
-            {
-                throw new InvalidOperationException("Cannot specify both operationIds and tags at the same time.");
-            }
+            ValidateFilters(requestUrls, operationIds, tags);
             if (operationIds != null)
             {
-                if (operationIds == "*")
-                {
-                    predicate = (url, operationType, operation) => true;  // All operations
-                }
-                else
-                {
-                    var operationIdsArray = operationIds.Split(',');
-                    predicate = (url, operationType, operation) => operationIdsArray.Contains(operation.OperationId);
-                }
+                predicate = GetOperationIdsPredicate(operationIds);
             }
             else if (tags != null)
             {
-                var tagsArray = tags.Split(',');
-                if (tagsArray.Length == 1)
-                {
-                    var regex = new Regex(tagsArray[0]);
-
-                    predicate = (url, operationType, operation) => operation.Tags.Any(tag => regex.IsMatch(tag.Name));
-                }
-                else
-                {
-                    predicate = (url, operationType, operation) => operation.Tags.Any(tag => tagsArray.Contains(tag.Name));
-                }
+                predicate = GetTagsPredicate(tags);
             }
             else if (requestUrls != null)
             {
-                var operationTypes = new List<string>();
-
-                if (source != null)
-                {
-                    var apiVersion = source.Info.Version;
-
-                    var sources = new Dictionary<string, OpenApiDocument> { { apiVersion, source } };
-                    var rootNode = CreateOpenApiUrlTreeNode(sources);
-
-                    // Iterate through urls dictionary and fetch operations for each url
-                    foreach (var url in requestUrls)
-                    {
-                        var serverList = source.Servers;
-
-                        var path = ExtractPath(url.Key, serverList);
-
-                        var openApiOperations = GetOpenApiOperations(rootNode, path, apiVersion);
-                        if (openApiOperations == null)
-                        {
-                            Debug.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
-                            continue;
-                        }
-
-                        // Add the available ops if they are in the postman collection. See path.Value
-                        foreach (var ops in openApiOperations)
-                        {
-                            if (url.Value.Contains(ops.Key.ToString().ToUpper()))
-                            {
-                                operationTypes.Add(ops.Key + path);
-                            }
-                        }
-                    }
-                }
-
-                if (!operationTypes.Any())
-                {
-                    throw new ArgumentException("The urls in the Postman collection supplied could not be found.");
-                }
-
-                // predicate for matching url and operationTypes
-                predicate = (path, operationType, operation) => operationTypes.Contains(operationType + path);
+                predicate = GetRequestUrlsPredicate(requestUrls, source);
             }
-
             else
             {
                 throw new InvalidOperationException("Either operationId(s),tag(s) or Postman collection need to be specified.");
@@ -335,10 +269,10 @@ namespace Microsoft.OpenApi.Services
             }
 
             foreach (var item in newComponents.RequestBodies
-                                        .Where(item => !target.RequestBodies.ContainsKey(item.Key))) 
+                                        .Where(item => !target.RequestBodies.ContainsKey(item.Key)))
             {
-                    moreStuff = true;
-                    target.RequestBodies.Add(item);
+                moreStuff = true;
+                target.RequestBodies.Add(item);
             }
             return moreStuff;
         }
@@ -348,10 +282,96 @@ namespace Microsoft.OpenApi.Services
             // if OpenAPI has servers, then see if the url matches one of them
             var baseUrl = serverList.Select(s => s.Url.TrimEnd('/'))
                                     .FirstOrDefault(c => url.Contains(c));
-            
-            return baseUrl == null ? 
-                    new Uri(new Uri("http://localhost/"), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped) 
+
+            return baseUrl == null ?
+                    new Uri(new Uri(SRResource.DefaultBaseUri), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped)
                     : url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
+        }
+
+        private static void ValidateFilters(IDictionary<string, List<string>> requestUrls, string operationIds, string tags)
+        {
+            if (requestUrls != null && (operationIds != null || tags != null))
+            {
+                throw new InvalidOperationException("Cannot filter by Postman collection and either operationIds and tags at the same time.");
+            }
+            if (!string.IsNullOrEmpty(operationIds) && !string.IsNullOrEmpty(tags))
+            {
+                throw new InvalidOperationException("Cannot specify both operationIds and tags at the same time.");
+            }
+        }
+
+        private static Func<string, OperationType?, OpenApiOperation, bool> GetOperationIdsPredicate(string operationIds)
+        {
+            if (operationIds == "*")
+            {
+                return (url, operationType, operation) => true;  // All operations
+            }
+            else
+            {
+                var operationIdsArray = operationIds.Split(',');
+                return (url, operationType, operation) => operationIdsArray.Contains(operation.OperationId);
+            }
+        }
+
+        private static Func<string, OperationType?, OpenApiOperation, bool> GetTagsPredicate(string tags)
+        {
+            var tagsArray = tags.Split(',');
+            if (tagsArray.Length == 1)
+            {
+                var regex = new Regex(tagsArray[0]);
+                return (url, operationType, operation) => operation.Tags.Any(tag => regex.IsMatch(tag.Name));
+            }
+            else
+            {
+                return (url, operationType, operation) => operation.Tags.Any(tag => tagsArray.Contains(tag.Name));
+            }
+        }
+
+        private static Func<string, OperationType?, OpenApiOperation, bool> GetRequestUrlsPredicate(Dictionary<string, List<string>> requestUrls, OpenApiDocument source)
+        {
+            var operationTypes = new List<string>();
+            if (source != null)
+            {
+                var apiVersion = source.Info.Version;
+                var sources = new Dictionary<string, OpenApiDocument> { { apiVersion, source } };
+                var rootNode = CreateOpenApiUrlTreeNode(sources);
+
+                // Iterate through urls dictionary and fetch operations for each url
+                foreach (var url in requestUrls)
+                {
+                    var serverList = source.Servers;
+                    var path = ExtractPath(url.Key, serverList);
+                    var openApiOperations = GetOpenApiOperations(rootNode, path, apiVersion);
+                    if (openApiOperations == null)
+                    {
+                        Debug.WriteLine($"The url {url.Key} could not be found in the OpenApi description");
+                        continue;
+                    }
+                    operationTypes = GetOperationTypes(openApiOperations, url.Value, path);
+                }
+            }
+
+            if (!operationTypes.Any())
+            {
+                throw new ArgumentException("The urls in the Postman collection supplied could not be found.");
+            }
+
+            // predicate for matching url and operationTypes
+            return (path, operationType, operation) => operationTypes.Contains(operationType + path);
+        }
+
+        private static List<string> GetOperationTypes(IDictionary<OperationType, OpenApiOperation> openApiOperations, List<string> url, string path)
+        {
+            var operationTypes = new List<string>();
+            // Add the available ops if they are in the postman collection. See path.Value
+            foreach (var ops in openApiOperations)
+            {
+                if (url.Contains(ops.Key.ToString().ToUpper()))
+                {
+                    operationTypes.Add(ops.Key + path);
+                }
+            }
+            return operationTypes;
         }
     }
 }

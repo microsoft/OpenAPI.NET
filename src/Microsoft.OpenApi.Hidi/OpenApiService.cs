@@ -5,37 +5,37 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Security;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Xsl;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OpenApi.ApiManifest;
+using Microsoft.OpenApi.ApiManifest.OpenAI;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Hidi.Formatters;
+using Microsoft.OpenApi.Hidi.Options;
+using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using static Microsoft.OpenApi.Hidi.OpenApiSpecVersionHelper;
-using System.Threading;
-using System.Xml.Xsl;
-using System.Xml;
-using System.Reflection;
-using Microsoft.OpenApi.Hidi.Options;
-using Microsoft.Extensions.Configuration;
-using Microsoft.OpenApi.Hidi.Utilities;
-using Microsoft.OpenApi.Hidi.Formatters;
-using System.Linq;
-using Microsoft.OpenApi.ApiManifest.OpenAI;
-using Microsoft.OpenApi.ApiManifest;
 
 namespace Microsoft.OpenApi.Hidi
 {
-    internal class OpenApiService
+    internal static class OpenApiService
     {
         /// <summary>
         /// Implementation of the transform command
@@ -70,7 +70,8 @@ namespace Microsoft.OpenApi.Hidi
 
                 // If ApiManifest is provided, set the referenced OpenAPI document
                 var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken);
-                if (apiDependency != null) {
+                if (apiDependency != null)
+                {
                     options.OpenApi = apiDependency.ApiDescripionUrl;
                 }
 
@@ -207,7 +208,7 @@ namespace Microsoft.OpenApi.Hidi
         // Get OpenAPI document either from OpenAPI or CSDL 
         private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, CancellationToken cancellationToken, string metadataVersion = null)
         {
-            
+
             OpenApiDocument document;
             Stream stream;
 
@@ -257,7 +258,7 @@ namespace Microsoft.OpenApi.Hidi
                 if (!string.IsNullOrEmpty(filterbyoperationids))
                 {
                     logger.LogTrace("Creating predicate based on the operationIds supplied.");
-                    predicate = OpenApiFilterService.CreatePredicate(operationIds: filterbyoperationids);
+                    predicate = OpenApiFilterService.CreatePredicate(tags: filterbyoperationids);
 
                 }
                 if (!string.IsNullOrEmpty(filterbytags))
@@ -280,10 +281,10 @@ namespace Microsoft.OpenApi.Hidi
         {
             // Get the request URLs from the API Dependencies in the API manifest 
             var requests = apiDependency
-                    .Requests.Where(r => !r.Exclude)
-                                .Select(r=> new { UriTemplate= r.UriTemplate, Method=r.Method } )
-                    .GroupBy(r => r.UriTemplate)
-                    .ToDictionary(g => g.Key, g => g.Select(r => r.Method).ToList());
+                    .Requests.Where(static r => !r.Exclude)
+                                .Select(static r => new { UriTemplate = r.UriTemplate, Method = r.Method })
+                    .GroupBy(static r => r.UriTemplate)
+                    .ToDictionary(static g => g.Key, static g => g.Select(static r => r.Method).ToList());
             // This makes the assumption that the UriTemplate in the ApiManifest matches exactly the UriTemplate in the OpenAPI document
             // This does not need to be the case.  The URI template in the API manifest could map to a set of OpenAPI paths.
             // Additional logic will be required to handle this scenario.  I sugggest we build this into the OpenAPI.Net library at some point.
@@ -699,51 +700,54 @@ namespace Microsoft.OpenApi.Hidi
 
         internal async static Task PluginManifest(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
         {
-                // If ApiManifest is provided, set the referenced OpenAPI document
-                var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken);
-                if (apiDependency != null) {
-                    options.OpenApi = apiDependency.ApiDescripionUrl;
-                }   
+            // If ApiManifest is provided, set the referenced OpenAPI document
+            var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken);
+            if (apiDependency != null)
+            {
+                options.OpenApi = apiDependency.ApiDescripionUrl;
+            }
 
-                // Load OpenAPI document
-                OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion);
+            // Load OpenAPI document
+            OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion);
 
-                cancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
-                if (options.FilterOptions != null)
+            if (options.FilterOptions != null)
+            {
+                document = ApplyFilters(options, logger, apiDependency, null, document);
+            }
+
+            // Ensure path in options.OutputFolder exists
+            var outputFolder = new DirectoryInfo(options.OutputFolder);
+            if (!outputFolder.Exists)
+            {
+                outputFolder.Create();
+            }
+            // Write OpenAPI to Output folder
+            options.Output = new FileInfo(Path.Combine(options.OutputFolder, "openapi.json"));
+            options.TerseOutput = true;
+            WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
+
+            // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
+            var manifest = new OpenAIPluginManifest()
+            {
+                NameForHuman = document.Info.Title,
+                DescriptionForHuman = document.Info.Description,
+                Api = new()
                 {
-                    document = ApplyFilters(options, logger, apiDependency, null, document);
+                    Type = "openapi",
+                    Url = "./openapi.json"
                 }
+            };
+            manifest.NameForModel = manifest.NameForHuman;
+            manifest.DescriptionForModel = manifest.DescriptionForHuman;
 
-                // Ensure path in options.OutputFolder exists
-                var outputFolder = new DirectoryInfo(options.OutputFolder);
-                if (!outputFolder.Exists)
-                {
-                    outputFolder.Create();
-                }
-                // Write OpenAPI to Output folder
-                options.Output = new FileInfo(Path.Combine(options.OutputFolder,"openapi.json"));
-                options.TerseOutput =true;
-                WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
-                
-                // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
-                var manifest = new OpenAIPluginManifest() {
-                    NameForHuman = document.Info.Title,
-                    DescriptionForHuman = document.Info.Description,
-                    Api = new() {
-                        Type = "openapi",
-                        Url = "./openapi.json"
-                    }
-                };
-                manifest.NameForModel = manifest.NameForHuman;
-                manifest.DescriptionForModel = manifest.DescriptionForHuman;
-                
-                // Write OpenAIPluginManifest to Output folder
-                var manifestFile = new FileInfo(Path.Combine(options.OutputFolder,"ai-plugin.json"));
-                using var file = new FileStream(manifestFile.FullName, FileMode.Create);
-                using var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
-                manifest.Write(jsonWriter);
-                jsonWriter.Flush();
+            // Write OpenAIPluginManifest to Output folder
+            var manifestFile = new FileInfo(Path.Combine(options.OutputFolder, "ai-plugin.json"));
+            using var file = new FileStream(manifestFile.FullName, FileMode.Create);
+            using var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
+            manifest.Write(jsonWriter);
+            jsonWriter.Flush();
         }
     }
 }
