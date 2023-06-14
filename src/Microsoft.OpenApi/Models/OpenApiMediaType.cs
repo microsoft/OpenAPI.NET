@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         /// Example of the media type.
         /// The example object SHOULD be in the correct format as specified by the media type.
         /// </summary>
-        public IOpenApiAny Example { get; set; }
+        public OpenApiAny Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
             Schema = mediaType?.Schema != null ? new(mediaType?.Schema) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(mediaType?.Example);
+            Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
             Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;

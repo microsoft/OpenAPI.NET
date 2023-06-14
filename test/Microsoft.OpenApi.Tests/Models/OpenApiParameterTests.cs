@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -79,14 +80,14 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = "array",
                 Items = new OpenApiSchema
                 {
-                    Enum = new List<IOpenApiAny>
+                    Enum = new List<OpenApiAny>
                     {
-                        new OpenApiString("value1"),
-                        new OpenApiString("value2")
+                        new OpenApiAny("value1"),
+                        new OpenApiAny("value2")
                     }
                 }
             }
-
+            
         };
 
         public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
@@ -101,10 +102,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 Type = "array",
                 Items = new OpenApiSchema
                 {
-                    Enum = new List<IOpenApiAny>
+                    Enum = new List<OpenApiAny>
                     {
-                        new OpenApiString("value1"),
-                        new OpenApiString("value2")
+                        new OpenApiAny("value1"),
+                        new OpenApiAny("value2")
                     }
                 }
             }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -12,7 +13,6 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
 using Microsoft.OpenApi.Readers.V3;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
 {
@@ -25,7 +25,9 @@ namespace Microsoft.OpenApi.Readers
         private readonly Dictionary<string, object> _tempStorage = new Dictionary<string, object>();
         private readonly Dictionary<object, Dictionary<string, object>> _scopedTempStorage = new Dictionary<object, Dictionary<string, object>>();
         private readonly Dictionary<string, Stack<string>> _loopStacks = new Dictionary<string, Stack<string>>();
-        internal Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = new Dictionary<string, Func<IOpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
+        internal Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>> ExtensionParsers { get; set; } = 
+            new Dictionary<string, Func<OpenApiAny, OpenApiSpecVersion, IOpenApiExtension>>();
+
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
         internal Uri BaseUrl { get; set; }
@@ -47,11 +49,11 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Initiates the parsing process.  Not thread safe and should only be called once on a parsing context
         /// </summary>
-        /// <param name="yamlDocument">Yaml document to parse.</param>
+        /// <param name="jsonNode">Set of Json nodes to parse.</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        internal OpenApiDocument Parse(YamlDocument yamlDocument)
+        internal OpenApiDocument Parse(JsonNode jsonNode)
         {
-            RootNode = new RootNode(this, yamlDocument);
+            RootNode = new RootNode(this, jsonNode);
 
             var inputVersion = GetVersion(RootNode);
 
@@ -83,12 +85,12 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Initiates the parsing process of a fragment.  Not thread safe and should only be called once on a parsing context
         /// </summary>
-        /// <param name="yamlDocument"></param>
+        /// <param name="jsonNode"></param>
         /// <param name="version">OpenAPI version of the fragment</param>
         /// <returns>An OpenApiDocument populated based on the passed yamlDocument </returns>
-        internal T ParseFragment<T>(YamlDocument yamlDocument, OpenApiSpecVersion version) where T : IOpenApiElement
+        internal T ParseFragment<T>(JsonNode jsonNode, OpenApiSpecVersion version) where T : IOpenApiElement
         {
-            var node = ParseNode.Create(this, yamlDocument.RootNode);
+            var node = ParseNode.Create(this, jsonNode);
 
             T element = default(T);
 
@@ -117,12 +119,12 @@ namespace Microsoft.OpenApi.Readers
 
             if (versionNode != null)
             {
-                return versionNode.GetScalarValue();
+                return versionNode.GetScalarValue().Replace("\"", string.Empty);
             }
 
             versionNode = rootNode.Find(new JsonPointer("/swagger"));
 
-            return versionNode?.GetScalarValue();
+            return versionNode?.GetScalarValue().Replace("\"", string.Empty);
         }
 
         /// <summary>

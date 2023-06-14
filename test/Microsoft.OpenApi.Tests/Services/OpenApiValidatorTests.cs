@@ -3,7 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -105,11 +108,11 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var ruleset = ValidationRuleSet.GetDefaultRuleSet();
 
-            ruleset.Add(typeof(FooExtension).Name,
-             new ValidationRule<FooExtension>(
+            ruleset.Add(typeof(OpenApiAny).Name, 
+             new ValidationRule<OpenApiAny>(
                  (context, item) =>
                  {
-                     if (item.Bar == "hey")
+                     if (item.Node["Bar"].ToString() == "hey")
                      {
                          context.AddError(new OpenApiValidatorError("FooExtensionRule", context.PathString, "Don't say hey"));
                      }
@@ -131,7 +134,9 @@ namespace Microsoft.OpenApi.Tests.Services
                 Baz = "baz"
             };
 
-            openApiDocument.Info.Extensions.Add("x-foo", fooExtension);
+            var extensionNode = JsonSerializer.Serialize(fooExtension);
+            var jsonNode = JsonNode.Parse(extensionNode);
+            openApiDocument.Info.Extensions.Add("x-foo", new OpenApiAny(jsonNode));
 
             var validator = new OpenApiValidator(ruleset);
             var walker = new OpenApiWalker(validator);

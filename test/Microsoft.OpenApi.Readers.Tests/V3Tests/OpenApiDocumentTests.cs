@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -18,8 +18,6 @@ using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
@@ -1305,7 +1303,7 @@ paths: {}",
                         AllowReserved = true,
                         Style = ParameterStyle.Simple,
                         Explode = true,
-                        Example = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
+                        Example = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
                         Schema = new OpenApiSchema()
                         {
                             Type = "string",
@@ -1316,7 +1314,8 @@ paths: {}",
                             Type = ReferenceType.Header,
                             Id = "example-header"
                         }
-                    });
+                    }, options => options.IgnoringCyclicReferences()
+                    .Excluding(e => e.Example.Node.Parent));
 
                 var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
                 Assert.NotNull(examplesHeader);
@@ -1334,12 +1333,12 @@ paths: {}",
                         {
                             { "uuid1", new OpenApiExample()
                                 {
-                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                    Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
                                 }
                             },
                             { "uuid2", new OpenApiExample()
                                 {
-                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                    Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
                                 }
                             }
                         },
@@ -1353,7 +1352,9 @@ paths: {}",
                             Type = ReferenceType.Header,
                             Id = "examples-header"
                         }
-                    });
+                    }, options => options.IgnoringCyclicReferences()
+                    .Excluding(e => e.Examples["uuid1"].Value.Node.Parent)
+                    .Excluding(e => e.Examples["uuid2"].Value.Node.Parent));
             }
         }
 

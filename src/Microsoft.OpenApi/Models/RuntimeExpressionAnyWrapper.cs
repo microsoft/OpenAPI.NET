@@ -1,39 +1,41 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models
 {
     /// <summary>
-    /// The wrapper either for <see cref="IOpenApiAny"/> or <see cref="RuntimeExpression"/>
+    /// The wrapper either for <see cref="JsonNode"/> or <see cref="RuntimeExpression"/>
     /// </summary>
     public class RuntimeExpressionAnyWrapper : IOpenApiElement
     {
-        private IOpenApiAny _any;
+        private OpenApiAny _any;
         private RuntimeExpression _expression;
 
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public RuntimeExpressionAnyWrapper() {}
+        public RuntimeExpressionAnyWrapper() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="RuntimeExpressionAnyWrapper"/> object
         /// </summary>
         public RuntimeExpressionAnyWrapper(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper)
         {
-            Any = OpenApiAnyCloneHelper.CloneFromCopyConstructor(runtimeExpressionAnyWrapper?.Any);
+            Any = JsonNodeCloneHelper.Clone(runtimeExpressionAnyWrapper?.Any);
             Expression = runtimeExpressionAnyWrapper?.Expression;
         }
 
         /// <summary>
-        /// Gets/Sets the <see cref="IOpenApiAny"/>
+        /// Gets/Sets the <see cref="JsonNode"/>
         /// </summary>
-        public IOpenApiAny Any
+        public OpenApiAny Any
         {
             get
             {

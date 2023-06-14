@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Properties;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -26,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (header.Example != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(HeaderMismatchedDataType), header.Example, header.Schema);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(HeaderMismatchedDataType), header.Example.Node, header.Schema);
                     }
 
                     context.Exit();
@@ -42,7 +40,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                             {
                                 context.Enter(key);
                                 context.Enter("value");
-                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(HeaderMismatchedDataType), header.Examples[key]?.Value, header.Schema);
+                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(HeaderMismatchedDataType), header.Examples[key]?.Value.Node, header.Schema);
                                 context.Exit();
                                 context.Exit();
                             }

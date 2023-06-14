@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -71,13 +72,13 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Example = new OpenApiInteger(55),
+                Example = new OpenApiAny(55),
                 Schema = new OpenApiSchema()
                 {
                     Type = "string",
                 }
             };
-
+            
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Enter("{parameter1}");
@@ -122,32 +123,29 @@ namespace Microsoft.OpenApi.Validations.Tests
                     {
                         ["example0"] = new OpenApiExample()
                         {
-                            Value = new OpenApiString("1"),
+                            Value = new OpenApiAny("1"),
                         },
                         ["example1"] = new OpenApiExample()
                         {
-                           Value = new OpenApiObject()
+                           Value = new OpenApiAny(new JsonObject()
                             {
-                                ["x"] = new OpenApiInteger(2),
-                                ["y"] = new OpenApiString("20"),
-                                ["z"] = new OpenApiString("200")
-                            }
+                                ["x"] = 2,
+                                ["y"] = "20",
+                                ["z"] = "200"
+                            })
                         },
                         ["example2"] = new OpenApiExample()
                         {
                             Value =
-                            new OpenApiArray()
-                            {
-                                new OpenApiInteger(3)
-                            }
+                            new OpenApiAny(new JsonArray(){3})
                         },
                         ["example3"] = new OpenApiExample()
                         {
-                            Value = new OpenApiObject()
+                            Value = new OpenApiAny(new JsonObject()
                             {
-                                ["x"] = new OpenApiInteger(4),
-                                ["y"] = new OpenApiInteger(40),
-                            }
+                                ["x"] = 4,
+                                ["y"] =40
+                            })
                         },
                     }
             };

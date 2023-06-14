@@ -190,7 +190,8 @@ namespace Microsoft.OpenApi.Extensions
 
                 using (var streamReader = new StreamReader(stream))
                 {
-                    return streamReader.ReadToEnd();
+                    var result = streamReader.ReadToEnd();
+                    return result;
                 }
             }
         }
