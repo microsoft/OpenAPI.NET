@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -15,15 +16,34 @@ namespace Microsoft.OpenApi.Models.References
     internal class OpenApiExampleReference : OpenApiExample
     {
         private OpenApiExample _target;
-        private readonly OpenApiDocument _hostDocument;
+        private readonly OpenApiReference _reference;
 
         private OpenApiExample Target
         {
             get
             {
-                _target ??= _hostDocument.ResolveReferenceTo<OpenApiExample>(Reference);
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiExample>(Reference);
                 return _target;
             }
+        }
+
+        public OpenApiExampleReference(OpenApiReference reference)
+        {
+            if (reference == null)
+            {
+                throw Error.ArgumentNull(nameof(reference));
+            }
+            if (reference.HostDocument == null)
+            {
+                throw Error.Argument(nameof(reference), SRResource.ReferencedElementHostDocumentIsNull);
+            }
+            if (string.IsNullOrEmpty(reference.Id))
+            {
+                throw Error.Argument(nameof(reference), SRResource.ReferencedElementIdentifierIsNullOrEmpty);
+            }
+
+            reference.Type = ReferenceType.Example;
+            _reference = reference;
         }
 
         /// <inheritdoc/>
@@ -40,20 +60,9 @@ namespace Microsoft.OpenApi.Models.References
 
         /// <inheritdoc/>
         public override IOpenApiAny Value { get => Target.Value; set => Target.Value = value; }
-
+        
         /// <inheritdoc/>
-        public override bool UnresolvedReference { get => base.UnresolvedReference; set => base.UnresolvedReference = value; }
-
-        /// <inheritdoc/>
-        public override OpenApiReference Reference
-        {
-            get => base.Reference;
-            set
-            {
-                base.Reference = value;
-                _target = null;
-            }
-        }
+        public override OpenApiReference Reference => _reference;
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)

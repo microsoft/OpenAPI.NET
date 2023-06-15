@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -15,17 +16,40 @@ namespace Microsoft.OpenApi.Models.References
     public class OpenApiCallbackReference : OpenApiCallback
     {
         private OpenApiCallback _target;
-        private readonly OpenApiDocument _hostDocument;
+        private readonly OpenApiReference _reference;
 
         private OpenApiCallback Target
         {
             get
             {
-                _target ??= _hostDocument.ResolveReferenceTo<OpenApiCallback>(Reference);
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiCallback>(Reference);
                 return _target;
             }
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reference"></param>
+        public OpenApiCallbackReference(OpenApiReference reference)
+        {
+            if (reference == null)
+            {
+                throw Error.ArgumentNull(nameof(reference));
+            }
+            if (reference.HostDocument == null)
+            {
+                throw Error.Argument(nameof(reference), SRResource.ReferencedElementHostDocumentIsNull);
+            }
+            if (string.IsNullOrEmpty(reference.Id))
+            {
+                throw Error.Argument(nameof(reference), SRResource.ReferencedElementIdentifierIsNullOrEmpty);
+            }
+
+            reference.Type = ReferenceType.Callback;
+            _reference = reference;
+        }
+
         /// <inheritdoc/>
         public override Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target.PathItems; set => Target.PathItems = value; }
 
@@ -33,18 +57,7 @@ namespace Microsoft.OpenApi.Models.References
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
 
         /// <inheritdoc/>
-        public override bool UnresolvedReference { get => base.UnresolvedReference; set => base.UnresolvedReference = value; }
-
-        /// <inheritdoc/>
-        public override OpenApiReference Reference 
-        { 
-            get => base.Reference;
-            set
-            {
-                base.Reference = value;
-                _target = null;
-            }
-        }
+        public override OpenApiReference Reference => _reference;
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
@@ -80,7 +93,7 @@ namespace Microsoft.OpenApi.Models.References
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-            
+
             if (!writer.GetSettings().ShouldInlineReference(Reference))
             {
                 callback(writer, Reference);
@@ -88,6 +101,6 @@ namespace Microsoft.OpenApi.Models.References
             }
 
             action(writer, Target);
-        }    
+        }
     }
 }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -14,20 +15,34 @@ namespace Microsoft.OpenApi.Models.References
     internal class OpenApiRequestBodyReference : OpenApiRequestBody
     {
         private OpenApiRequestBody _target;
-        private readonly OpenApiDocument _hostDocument;
+        private readonly OpenApiReference _reference;
 
         private OpenApiRequestBody Target
         {
             get
             {
-                _target ??= _hostDocument.ResolveReferenceTo<OpenApiRequestBody>(Reference);
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiRequestBody>(Reference);
                 return _target;
             }
         }
 
-        public OpenApiRequestBodyReference(OpenApiDocument hostDocument)
+        public OpenApiRequestBodyReference(OpenApiReference reference)
         {
-            _hostDocument = hostDocument;
+            if (reference == null)
+            {
+                throw Error.ArgumentNull(nameof(reference));
+            }
+            if (reference.HostDocument == null)
+            {
+                throw Error.Argument(nameof(reference), SRResource.ReferencedElementHostDocumentIsNull);
+            }
+            if (string.IsNullOrEmpty(reference.Id))
+            {
+                throw Error.Argument(nameof(reference), SRResource.ReferencedElementIdentifierIsNullOrEmpty);
+            }
+
+            reference.Type = ReferenceType.RequestBody;
+            _reference = reference;
         }
 
         /// <inheritdoc/>
@@ -43,18 +58,7 @@ namespace Microsoft.OpenApi.Models.References
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
 
         /// <inheritdoc/>
-        public override bool UnresolvedReference { get => base.UnresolvedReference; set => base.UnresolvedReference = value; }
-
-        /// <inheritdoc/>
-        public override OpenApiReference Reference
-        {
-            get => Target.Reference;
-            set
-            {
-                Target.Reference = value;
-                _target = null;
-            }
-        }
+        public override OpenApiReference Reference => _reference;
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Models.References
@@ -15,15 +16,34 @@ namespace Microsoft.OpenApi.Models.References
     internal class OpenApiParameterReference : OpenApiParameter
     {
         private OpenApiParameter _target;
-        private readonly OpenApiDocument _hostDocument;
+        private readonly OpenApiReference _reference;
 
         private OpenApiParameter Target
         {
             get
             {
-                _target ??= _hostDocument.ResolveReferenceTo<OpenApiParameter>(Reference);
+                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiParameter>(Reference);
                 return _target;
             }
+        }
+
+        public OpenApiParameterReference(OpenApiReference reference)
+        {
+            if (reference == null)
+            {
+                throw Error.ArgumentNull(nameof(reference));
+            }
+            if (reference.HostDocument == null)
+            {
+                throw Error.Argument(nameof(reference), SRResource.ReferencedElementHostDocumentIsNull);
+            }
+            if (string.IsNullOrEmpty(reference.Id))
+            {
+                throw Error.Argument(nameof(reference), SRResource.ReferencedElementIdentifierIsNullOrEmpty);
+            }
+
+            reference.Type = ReferenceType.Parameter;
+            _reference = reference;
         }
 
         /// <inheritdoc/>
@@ -60,27 +80,16 @@ namespace Microsoft.OpenApi.Models.References
         public override ParameterStyle? Style { get => Target.Style; set => Target.Style = value; }
         
         /// <inheritdoc/>
-        public override bool Explode { get => base.Explode; set => base.Explode = value; }
+        public override bool Explode { get => Target.Explode; set => Target.Explode = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
-
+        
         /// <inheritdoc/>
-        public override bool UnresolvedReference { get => base.UnresolvedReference; set => base.UnresolvedReference = value; }
-
-        /// <inheritdoc/>
-        public override OpenApiReference Reference
-        {
-            get => base.Reference;
-            set
-            {
-                base.Reference = value;
-                _target = null;
-            }
-        }
+        public override OpenApiReference Reference => _reference;
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
