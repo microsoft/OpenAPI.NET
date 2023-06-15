@@ -247,14 +247,9 @@ namespace Microsoft.OpenApi.Models
                     {
                         FindSchemaReferences.ResolveSchemas(Components, openApiSchemas);
                     }
-                    writer.WriteProperty(OpenApiConstants.Definitions, JsonSerializer.Serialize(openApiSchemas));
-                    //writer.WriteOptionalMap(
-                    //   OpenApiConstants.Definitions,
-                    //   openApiSchemas,
-                    //   (w, key, component) =>
-                    //   {
-                    //       component.SerializeAsV2WithoutReference(w);                           
-                    //   });
+
+                    writer.WritePropertyName(OpenApiConstants.Definitions);
+                    writer.WriteRaw(JsonSerializer.Serialize(openApiSchemas));
                 }
             }
             else
@@ -264,25 +259,9 @@ namespace Microsoft.OpenApi.Models
                 // definitions
                 if(Components?.Schemas31 != null)
                 {
-                    writer.WriteProperty(OpenApiConstants.Definitions, JsonSerializer.Serialize(Components?.Schemas31));
+                    writer.WritePropertyName(OpenApiConstants.Definitions);
+                    writer.WriteRaw(JsonSerializer.Serialize(Components?.Schemas31));               
                 }
-                //writer.WriteOptionalMap(
-                //    OpenApiConstants.Definitions,
-                //    Components?.Schemas31,
-                //    (w, key, component) =>
-                //    {
-                //        writer.WriteRaw(JsonSerializer.Serialize(Components?.Schemas31));
-                //        //if (component.Reference != null &&
-                //        //    component.Reference.Type == ReferenceType.Schema &&
-                //        //    component.Reference.Id == key)
-                //        //{
-                //        //    component.SerializeAsV2WithoutReference(w);
-                //        //}
-                //        //else
-                //        //{
-                //        //    component.SerializeAsV2(w);
-                //        //}
-                //    });
             }
 
             // parameters

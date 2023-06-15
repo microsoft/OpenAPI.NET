@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using Json.Schema;
+using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -26,18 +27,19 @@ namespace Microsoft.OpenApi.Helpers
                 var type = schema.GetJsonType().Value;
                 writer.WriteValue(OpenApiTypeMapper.ConvertSchemaValueTypeToString(type));
             }
-            //writer.WriteProperty(OpenApiConstants.Format, OpenApiTypeMapper.ConvertSchemaValueTypeToString((SchemaValueType)schema.GetJsonType()));
 
-
-            // format            
-            if(schema.GetFormat() != null)
+            // format
+            var format = schema.GetFormat()?.Key;
+            if (string.IsNullOrEmpty(format))
             {
-                writer.WriteProperty(OpenApiConstants.Format, schema.GetFormat().Key);
+                format = RetrieveFormatFromNestedSchema(schema.GetAllOf()) ?? RetrieveFormatFromNestedSchema(schema.GetOneOf()) 
+                    ?? RetrieveFormatFromNestedSchema(schema.GetAnyOf());
             }
+            writer.WriteProperty(OpenApiConstants.Format, format);
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, schema.GetItems(),
-                (w, s) => w.WriteRaw(JsonSerializer.Serialize(s, new JsonSerializerOptions { WriteIndented = true })));
+                (w, s) => w.WriteRaw(JsonSerializer.Serialize(s)));
 
             // collectionFormat
             // We need information from style in parameter to populate this.
@@ -93,6 +95,22 @@ namespace Microsoft.OpenApi.Helpers
 
             // extensions
             writer.WriteExtensions(extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        private static string RetrieveFormatFromNestedSchema(IReadOnlyCollection<JsonSchema> schema)
+        {
+            if (schema != null)
+            {
+                foreach (var item in schema)
+                {
+                    if (!string.IsNullOrEmpty(item.GetFormat()?.Key))
+                    {
+                        return item.GetFormat().Key;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
