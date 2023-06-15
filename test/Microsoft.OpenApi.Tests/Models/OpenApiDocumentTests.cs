@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas31 =
             {
-                ["schema1"] = new JsonSchemaBuilder().Ref("schema2"),
+                ["schema1"] = new JsonSchemaBuilder().Ref("#/definitions/schema2"),
                 ["schema2"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))

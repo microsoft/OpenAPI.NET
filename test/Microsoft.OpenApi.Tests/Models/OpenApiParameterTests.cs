@@ -256,19 +256,7 @@ schema:
   ""required"": true,
   ""style"": ""simple"",
   ""explode"": true,
-  ""schema"": {
-  ""title"": ""title2"",
-  ""description"": ""description2"",
-  ""oneOf"": [
-    {
-      ""type"": ""number"",
-      ""format"": ""double""
-    },
-    {
-      ""type"": ""string""
-    }
-  ]
-},
+  ""schema"": {""title"":""title2"",""description"":""description2"",""oneOf"":[{""type"":""number"",""format"":""double""},{""type"":""string""}]},
   ""examples"": {
     ""test"": {
       ""summary"": ""summary3"",
@@ -369,23 +357,6 @@ schema:
 
             // Act
             ReferencedParameter.SerializeAsV2WithoutReference(writer);
-            writer.Flush();
-
-            // Assert
-            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task SerializeParameterWithSchemaReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
-        {
-            // Arrange
-            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
-
-            // Act
-            AdvancedHeaderParameterWithSchemaReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

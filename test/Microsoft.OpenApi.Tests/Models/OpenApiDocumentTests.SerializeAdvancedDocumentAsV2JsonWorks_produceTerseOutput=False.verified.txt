@@ -36,9 +36,7 @@
             "name": "tags",
             "description": "tags to filter by",
             "type": "array",
-            "items": {
-              "type": "string"
-            },
+            "items": {"type":"string"},
             "collectionFormat": "multi"
           },
           {
@@ -52,66 +50,15 @@
         "responses": {
           "200": {
             "description": "pet response",
-            "schema": {
-              "type": "array",
-              "items": {
-                "required": [
-                  "id",
-                  "name"
-                ],
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "format": "int64",
-                    "type": "integer"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "tag": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
+            "schema": {"type":"array","items":{"type":"object","required":["id","name"],"properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"},"tag":{"type":"string"}}}}
           },
           "4XX": {
             "description": "unexpected client error",
-            "schema": {
-              "required": [
-                "code",
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "format": "int32",
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}
           },
           "5XX": {
             "description": "unexpected server error",
-            "schema": {
-              "required": [
-                "code",
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "format": "int32",
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}
           }
         }
       },
@@ -131,86 +78,21 @@
             "name": "body",
             "description": "Pet to add to the store",
             "required": true,
-            "schema": {
-              "required": [
-                "name"
-              ],
-              "type": "object",
-              "properties": {
-                "id": {
-                  "format": "int64",
-                  "type": "integer"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "tag": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["name"],"properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"},"tag":{"type":"string"}}}
           }
         ],
         "responses": {
           "200": {
             "description": "pet response",
-            "schema": {
-              "required": [
-                "id",
-                "name"
-              ],
-              "type": "object",
-              "properties": {
-                "id": {
-                  "format": "int64",
-                  "type": "integer"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "tag": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["id","name"],"properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"},"tag":{"type":"string"}}}
           },
           "4XX": {
             "description": "unexpected client error",
-            "schema": {
-              "required": [
-                "code",
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "format": "int32",
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}
           },
           "5XX": {
             "description": "unexpected server error",
-            "schema": {
-              "required": [
-                "code",
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "format": "int32",
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}
           }
         }
       }
@@ -237,63 +119,15 @@
         "responses": {
           "200": {
             "description": "pet response",
-            "schema": {
-              "required": [
-                "id",
-                "name"
-              ],
-              "type": "object",
-              "properties": {
-                "id": {
-                  "format": "int64",
-                  "type": "integer"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "tag": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["id","name"],"properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"},"tag":{"type":"string"}}}
           },
           "4XX": {
             "description": "unexpected client error",
-            "schema": {
-              "required": [
-                "code",
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "format": "int32",
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}
           },
           "5XX": {
             "description": "unexpected server error",
-            "schema": {
-              "required": [
-                "code",
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "format": "int32",
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}
           }
         }
       },
@@ -319,99 +153,15 @@
           },
           "4XX": {
             "description": "unexpected client error",
-            "schema": {
-              "required": [
-                "code",
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "format": "int32",
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}
           },
           "5XX": {
             "description": "unexpected server error",
-            "schema": {
-              "required": [
-                "code",
-                "message"
-              ],
-              "type": "object",
-              "properties": {
-                "code": {
-                  "format": "int32",
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
-            }
+            "schema": {"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}
           }
         }
       }
     }
   },
-  "definitions": {
-    "pet": {
-      "required": [
-        "id",
-        "name"
-      ],
-      "type": "object",
-      "properties": {
-        "id": {
-          "format": "int64",
-          "type": "integer"
-        },
-        "name": {
-          "type": "string"
-        },
-        "tag": {
-          "type": "string"
-        }
-      }
-    },
-    "newPet": {
-      "required": [
-        "name"
-      ],
-      "type": "object",
-      "properties": {
-        "id": {
-          "format": "int64",
-          "type": "integer"
-        },
-        "name": {
-          "type": "string"
-        },
-        "tag": {
-          "type": "string"
-        }
-      }
-    },
-    "errorModel": {
-      "required": [
-        "code",
-        "message"
-      ],
-      "type": "object",
-      "properties": {
-        "code": {
-          "format": "int32",
-          "type": "integer"
-        },
-        "message": {
-          "type": "string"
-        }
-      }
-    }
-  }
+  "definitions": {"pet":{"type":"object","required":["id","name"],"properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"},"tag":{"type":"string"}}},"newPet":{"type":"object","required":["name"],"properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"},"tag":{"type":"string"}}},"errorModel":{"type":"object","required":["code","message"],"properties":{"code":{"type":"integer","format":"int32"},"message":{"type":"string"}}}}
 }

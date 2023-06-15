@@ -371,7 +371,7 @@ namespace Microsoft.OpenApi.Models
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
-            else if (/*Schema31?.UnresolvedReference == true ||*/ Schema31?.GetJsonType() == SchemaValueType.Object)
+            else if (Schema31?.GetJsonType() == SchemaValueType.Object)
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }
@@ -413,7 +413,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query && "array".Equals(Schema31?.GetType().ToString(), StringComparison.OrdinalIgnoreCase))
+                if (this.In == ParameterLocation.Query && SchemaValueType.Array.Equals(Schema31?.GetJsonType()))
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {

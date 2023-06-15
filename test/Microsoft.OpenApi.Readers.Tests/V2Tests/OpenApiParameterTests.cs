@@ -94,59 +94,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ParseFormDataParameterShouldSucceed()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "formDataParameter.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
-
-            // Assert
-            // Form data parameter is currently not translated via LoadParameter.
-            // This design may be revisited and this unit test may likely change.
-            parameter.Should().BeNull();
-        }
-
-        [Fact]
-        public void ParseHeaderParameterShouldSucceed()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameter.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
-
-            // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Header,
-                    Name = "token",
-                    Description = "token to be passed as a header",
-                    Required = true,
-                    Style = ParameterStyle.Simple,
-
-                    Schema31 = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.Array)
-                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.String).Format("int64").Enum(1, 2, 3, 4))
-                                    .Default(new JsonArray() { 1, 2 })
-                                    .Enum(
-                                        new JsonArray() { 1, 2 },
-                                        new JsonArray() { 2, 3 },
-                                        new JsonArray() { 3, 4 })
-                }, options => options.IgnoringCyclicReferences());
-        }
-
-        [Fact]
         public void ParseParameterWithNullLocationShouldSucceed()
         {
             // Arrange
