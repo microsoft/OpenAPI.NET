@@ -5,18 +5,36 @@
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
             // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-            "name": ".NET Core Launch (console)",
+            "name": "Launch Hidi",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/Microsoft.OpenApi.Hidi/bin/Debug/net7.0/Microsoft.OpenApi.Hidi.dll",
-            "args": [],
+            "args": ["plugin", 
+                    "-m","C:\\Users\\darrmi\\src\\github\\microsoft\\openapi.net\\test\\Microsoft.OpenApi.Hidi.Tests\\UtilityFiles\\exampleapimanifest.json", 
+                    "--of","./output"],
             "cwd": "${workspaceFolder}/src/Microsoft.OpenApi.Hidi",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
         },
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            "name": "Launch Workbench",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/src/Microsoft.OpenApi.WorkBench/bin/Debug/net7.0-windows/Microsoft.OpenApi.Workbench.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Microsoft.OpenApi.Workbench",
+            // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },        
         {
             "name": ".NET Core Attach",
             "type": "coreclr",
