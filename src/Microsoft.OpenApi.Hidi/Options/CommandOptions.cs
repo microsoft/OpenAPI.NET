@@ -98,7 +98,6 @@ namespace Microsoft.OpenApi.Hidi.Options
         {
             return new List<Option>
             {
-
                 ManifestOption,
                 OutputFolderOption,
                 CleanOutputOption,

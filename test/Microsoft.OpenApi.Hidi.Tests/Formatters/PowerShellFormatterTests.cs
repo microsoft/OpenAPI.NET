@@ -85,9 +85,9 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
             var idsParameter = openApiDocument.Paths["/foo"].Operations[OperationType.Get].Parameters.Where(static p => p.Name == "ids").FirstOrDefault();
 
             // Assert
-            Assert.Null(idsParameter.Content);
-            Assert.NotNull(idsParameter.Schema);
-            Assert.Equal("array", idsParameter.Schema.Type);
+            Assert.Null(idsParameter?.Content);
+            Assert.NotNull(idsParameter?.Schema);
+            Assert.Equal("array", idsParameter?.Schema.Type);
         }
 
         private static OpenApiDocument GetSampleOpenApiDocument()

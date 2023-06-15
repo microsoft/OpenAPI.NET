@@ -4,8 +4,10 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
+using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.ApiManifest.OpenAI;
 using Microsoft.OpenApi.Hidi.Options;
 using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Models;
@@ -347,6 +349,25 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             var output = File.ReadAllText("sample.md");
             Assert.Contains("graph LR", output);
+        }
+
+        [Fact]
+        public void InvokePluginCommand()
+        {
+            var rootCommand = Program.CreateRootCommand();
+            var args = new string[] { "plugin", "-m", ".\\UtilityFiles\\exampleapimanifest.json", "--of", AppDomain.CurrentDomain.BaseDirectory };
+            var parseResult = rootCommand.Parse(args);
+            var handler = rootCommand.Subcommands.Where(c => c.Name == "plugin").First().Handler;
+            var context = new InvocationContext(parseResult);
+
+            handler!.Invoke(context);
+
+            using var jsDoc = JsonDocument.Parse(File.ReadAllText("ai-plugin.json"));
+            var openAiManifest = OpenAIPluginManifest.Load(jsDoc.RootElement);
+
+            Assert.Equal("Mastodon - Subset", openAiManifest?.NameForHuman);
+            Assert.Equal("openapi", openAiManifest?.Api.Type);
+            Assert.Equal("./openapi.json", openAiManifest?.Api.Url);
         }
 
 

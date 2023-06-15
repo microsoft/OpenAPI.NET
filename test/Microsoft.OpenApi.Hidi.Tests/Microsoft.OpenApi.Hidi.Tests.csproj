@@ -62,6 +62,9 @@
      <None Update="UtilityFiles\examplepowershellsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="UtilityFiles\exampleapimanifest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
