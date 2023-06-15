@@ -14,12 +14,11 @@ namespace Microsoft.OpenApi.Hidi.Extensions
         /// <returns>A <see cref="string"/> value matching the provided extensionKey. Return null when extensionKey is not found. </returns>
         public static string GetExtension(this IDictionary<string, IOpenApiExtension> extensions, string extensionKey)
         {
-            string extensionValue = null;
-            if (extensions.TryGetValue(extensionKey, out var value) && value != null)
+            if (extensions.TryGetValue(extensionKey, out var value) && value is OpenApiString castValue)
             {
-                extensionValue = (value as OpenApiString)?.Value;
+                return castValue.Value;
             }
-            return extensionValue;
+            return default;
         }
     }
 }
