@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Writers
@@ -152,6 +153,24 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
+
+        public static void WriteOptionalObject(
+        this IOpenApiWriter writer,
+        string name,
+        JsonSchema value,
+        Action<IOpenApiWriter, JsonSchema> action)
+        {
+            if (value != null)
+            {
+                var values = value as IEnumerable;
+                if (values != null && !values.GetEnumerator().MoveNext())
+                {
+                    return; // Don't render optional empty collections
+                }
+
+                writer.WriteRequiredObject(name, value, action);
+            }
+        }
         /// <summary>
         /// Write the required Open API object/element.
         /// </summary>
@@ -166,6 +185,26 @@ namespace Microsoft.OpenApi.Writers
             T value,
             Action<IOpenApiWriter, T> action)
             where T : IOpenApiElement
+        {
+            CheckArguments(writer, name, action);
+
+            writer.WritePropertyName(name);
+            if (value != null)
+            {
+                action(writer, value);
+            }
+            else
+            {
+                writer.WriteStartObject();
+                writer.WriteEndObject();
+            }
+        }
+
+        public static void WriteRequiredObject(
+        this IOpenApiWriter writer,
+        string name,
+        JsonSchema value,
+        Action<IOpenApiWriter, JsonSchema> action)
         {
             CheckArguments(writer, name, action);
 
@@ -295,6 +334,17 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
+        public static void WriteOptionalMap(
+        this IOpenApiWriter writer,
+        string name,
+        IDictionary<string, JsonSchema> elements,
+        Action<IOpenApiWriter, JsonSchema> action)
+        {
+            if (elements != null && elements.Any())
+            {
+                writer.WriteMapInternal(name, elements, action);
+            }
+        }
         /// <summary>
         /// Write the optional Open API element map.
         /// </summary>

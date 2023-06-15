@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json.Nodes;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using JsonSchema = Json.Schema.JsonSchema;
 
@@ -41,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.ExclusiveMaximum(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
@@ -53,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.ExclusiveMinimum(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
@@ -113,7 +115,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "enum", (o, n) =>
                 {
-                    o.Enum((IEnumerable<JsonNode>)n.CreateListOfAny());
+                    o.Enum(n.CreateListOfAny());
                 }
             },
             {
@@ -197,6 +199,12 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             },
             {
+                "nullable", (o, n) =>
+                {
+                    o.Nullable(bool.Parse(n.GetScalarValue()));
+                }
+            },
+            {
                 "discriminator", (o, n) =>
                 {
                     var discriminator = LoadDiscriminator(n);
@@ -267,14 +275,43 @@ namespace Microsoft.OpenApi.Readers.V3
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
+
+                switch(propertyNode.Name)
+                {
+                    case "default":
+                        builder.Default(node.CreateAny().Node);
+                        break;
+                    case "example":
+                        builder.Example(node.CreateAny().Node);
+                        break;
+                    case "enum":
+                        builder.Enum(node.CreateAny().Node);
+                        break;
+                }
             }
 
-            builder.Default(node.CreateAny().Node);
-            builder.Example(node.CreateAny().Node);
-            builder.Enum(node.CreateAny().Node);
+            //builder.Extensions(LoadExtension(node));
 
             var schema = builder.Build();
             return schema;
-        }        
+        }
+        //private static string ParseExclusiveFields(decimal value, ParseNode node)
+        //{
+        //    var builder = new JsonSchemaBuilder();
+        //    var exclusiveValue = node.GetScalarValue();
+        //    var exclusiveValueType = SchemaTypeConverter.ConvertToSchemaValueType(exclusiveValue);
+
+        //    //if (exclusiveValueType is SchemaValueType.Boolean)
+        //    //{
+        //    //    exclusiveValue = bool.Parse(exclusiveValue);
+        //    //}
+        //    //else
+        //    //{
+        //    //    exclusiveValue = decimal.Parse(exclusiveValue, NumberStyles.Float, CultureInfo.InvariantCulture);
+        //    //}
+
+        //    builder.ExclusiveMaximum(bool.Parse(exclusiveValue));
+        //    return value;
+        //}
     }
 }

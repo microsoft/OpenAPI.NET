@@ -8,6 +8,7 @@ using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -41,7 +42,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.ExclusiveMaximum(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
@@ -53,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture));
+                    o.ExclusiveMinimum(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
@@ -113,7 +114,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "enum", (o, n) =>
                 {
-                    o.Enum((IEnumerable<JsonNode>)n.CreateListOfAny());
+                    o.Enum(n.CreateListOfAny());
                 }
             },
             {
@@ -233,11 +234,22 @@ namespace Microsoft.OpenApi.Readers.V2
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
-            }
 
-            builder.Default(node.CreateAny().Node);
-            builder.Example(node.CreateAny().Node);
-            builder.Enum(node.CreateAny().Node);
+                switch (propertyNode.Name)
+                {
+                    case "default":
+                        builder.Default(node.CreateAny().Node);
+                        break;
+                    case "example":
+                        builder.Example(node.CreateAny().Node);
+                        break;
+                    case "enum":
+                        builder.Enum(node.CreateAny().Node);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             var schema = builder.Build();
             return schema;

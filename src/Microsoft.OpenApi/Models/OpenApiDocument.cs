@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
+using System.Text.Json;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -246,14 +247,14 @@ namespace Microsoft.OpenApi.Models
                     {
                         FindSchemaReferences.ResolveSchemas(Components, openApiSchemas);
                     }
-
-                    writer.WriteOptionalMap(
-                       OpenApiConstants.Definitions,
-                       openApiSchemas,
-                       (w, key, component) =>
-                       {
-                           component.SerializeAsV2WithoutReference(w);
-                       });
+                    writer.WriteProperty(OpenApiConstants.Definitions, JsonSerializer.Serialize(openApiSchemas));
+                    //writer.WriteOptionalMap(
+                    //   OpenApiConstants.Definitions,
+                    //   openApiSchemas,
+                    //   (w, key, component) =>
+                    //   {
+                    //       component.SerializeAsV2WithoutReference(w);                           
+                    //   });
                 }
             }
             else
@@ -261,23 +262,29 @@ namespace Microsoft.OpenApi.Models
                 // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
                 // If the reference exists but points to other objects, the object is serialized to just that reference.
                 // definitions
-                writer.WriteOptionalMap(
-                    OpenApiConstants.Definitions,
-                    Components?.Schemas31,
-                    (w, key, component) =>
-                    {
-                        if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.Schema &&
-                            component.Reference.Id == key)
-                        {
-                            component.SerializeAsV2WithoutReference(w);
-                        }
-                        else
-                        {
-                            component.SerializeAsV2(w);
-                        }
-                    });
+                if(Components?.Schemas31 != null)
+                {
+                    writer.WriteProperty(OpenApiConstants.Definitions, JsonSerializer.Serialize(Components?.Schemas31));
+                }
+                //writer.WriteOptionalMap(
+                //    OpenApiConstants.Definitions,
+                //    Components?.Schemas31,
+                //    (w, key, component) =>
+                //    {
+                //        writer.WriteRaw(JsonSerializer.Serialize(Components?.Schemas31));
+                //        //if (component.Reference != null &&
+                //        //    component.Reference.Type == ReferenceType.Schema &&
+                //        //    component.Reference.Id == key)
+                //        //{
+                //        //    component.SerializeAsV2WithoutReference(w);
+                //        //}
+                //        //else
+                //        //{
+                //        //    component.SerializeAsV2(w);
+                //        //}
+                //    });
             }
+
             // parameters
             var parameters = Components?.Parameters != null 
                 ? new Dictionary<string, OpenApiParameter>(Components.Parameters) 

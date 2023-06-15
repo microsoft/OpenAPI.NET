@@ -281,7 +281,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JsonSchema.Net" Version="4.1.1" />
+        <PackageReference Include="JsonSchema.Net" Version="4.1.5" />
         <PackageReference Include="JsonSchema.Net.OpenApi" Version="1.1.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
         <PackageReference Include="FluentAssertions" Version="6.7.0" />
@@ -306,8 +306,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Yaml2JsonNode" Version="1.1.0" />
-        <PackageReference Include="YamlDotNet" Version="13.0.2" />
+        <PackageReference Include="Yaml2JsonNode" Version="1.1.1" />
+        <PackageReference Include="YamlDotNet" Version="13.1.0" />
     </ItemGroup>
 
     <ItemGroup>

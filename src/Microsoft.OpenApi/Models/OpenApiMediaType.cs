@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Helpers;
@@ -88,13 +89,17 @@ namespace Microsoft.OpenApi.Models
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
             
             writer.WriteStartObject();
-            
+
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, callback);
+            if(Schema31 != null)
+            {
+                writer.WritePropertyName(OpenApiConstants.Schema);
+                writer.WriteRaw(JsonSerializer.Serialize(Schema31));
+            }
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
-
+             
             // examples
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
 

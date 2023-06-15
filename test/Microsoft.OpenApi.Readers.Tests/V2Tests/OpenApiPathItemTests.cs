@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -29,14 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet to use",
                     Required = true,
-                    Schema = new OpenApiSchema()
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema()
-                        {
-                            Type = "string"
-                        }
-                    },
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     Style = ParameterStyle.Simple
                 }
             },
@@ -55,10 +49,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "ID of pet that needs to be updated",
                             Required = true,
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
+                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                         }
                     },
                     RequestBody = new OpenApiRequestBody
@@ -67,49 +58,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             ["application/x-www-form-urlencoded"] = new OpenApiMediaType
                             {
-                                Schema = new OpenApiSchema
-                                {
-                                    Properties =
-                                    {
-                                        ["name"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated name of the pet",
-                                            Type = "string"
-                                        },
-                                        ["status"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated status of the pet",
-                                            Type = "string"
-                                        }
-                                    },
-                                    Required = new HashSet<string>
-                                    {
-                                        "name"
-                                    }
-                                }
+                                Schema31 = new JsonSchemaBuilder()
+                                .Properties(
+                                    ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
+                                    ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
+                                .Required("name")
                             },
                             ["multipart/form-data"] = new OpenApiMediaType
                             {
-                                Schema = new OpenApiSchema
-                                {
-                                    Properties =
-                                    {
-                                        ["name"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated name of the pet",
-                                            Type = "string"
-                                        },
-                                        ["status"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated status of the pet",
-                                            Type = "string"
-                                        }
-                                    },
-                                    Required = new HashSet<string>
-                                    {
-                                        "name"
-                                    }
-                                }
+                                Schema31 = new JsonSchemaBuilder()
+                                .Properties(
+                                    ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
+                                    ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
+                                .Required("name")
                             }
                         }
                     },
@@ -148,10 +109,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "ID of pet that needs to be updated",
                             Required = true,
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
+                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                         },
                         new OpenApiParameter
                         {
@@ -159,10 +117,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             In = ParameterLocation.Path,
                             Description = "Name of pet that needs to be updated",
                             Required = true,
-                            Schema = new OpenApiSchema
-                            {
-                                Type = "string"
-                            }
+                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                         }
                     },
                     RequestBody = new OpenApiRequestBody
@@ -171,59 +126,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             ["application/x-www-form-urlencoded"] = new OpenApiMediaType
                             {
-                                Schema = new OpenApiSchema
-                                {
-                                    Properties =
-                                    {
-                                        ["name"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated name of the pet",
-                                            Type = "string"
-                                        },
-                                        ["status"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated status of the pet",
-                                            Type = "string"
-                                        },
-                                        ["skill"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated skill of the pet",
-                                            Type = "string"
-                                        }
-                                    },
-                                    Required = new HashSet<string>
-                                    {
-                                        "name"
-                                    }
-                                }
+                                Schema31 = new JsonSchemaBuilder()
+                                .Properties(
+                                    ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
+                                    ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)),
+                                    ("skill", new JsonSchemaBuilder().Description("Updated skill of the pet").Type(SchemaValueType.String)))
+                                .Required("name")
                             },
                             ["multipart/form-data"] = new OpenApiMediaType
                             {
-                                Schema = new OpenApiSchema
-                                {
-                                    Properties =
-                                    {
-                                        ["name"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated name of the pet",
-                                            Type = "string"
-                                        },
-                                        ["status"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated status of the pet",
-                                            Type = "string"
-                                        },
-                                        ["skill"] = new OpenApiSchema
-                                        {
-                                            Description = "Updated skill of the pet",
-                                            Type = "string"
-                                        }
-                                    },
-                                    Required = new HashSet<string>
-                                    {
-                                        "name"
-                                    }
-                                }
+                                Schema31 = new JsonSchemaBuilder()
+                                .Properties(
+                                    ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
+                                    ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)),
+                                    ("skill", new JsonSchemaBuilder().Description("Updated skill of the pet").Type(SchemaValueType.String)))
+                                .Required("name")
                             }
                         }
                     },

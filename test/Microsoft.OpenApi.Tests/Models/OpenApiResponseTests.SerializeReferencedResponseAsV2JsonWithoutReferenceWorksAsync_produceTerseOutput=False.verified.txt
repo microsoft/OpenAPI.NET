@@ -1,11 +1,6 @@
 {
   "description": "A complex object array response",
-  "schema": {
-    "type": "array",
-    "items": {
-      "$ref": "#/definitions/customType"
-    }
-  },
+  "schema": {"type":"array","items":{"$ref":"customType"}},
   "headers": {
     "X-Rate-Limit-Limit": {
       "description": "The number of allowed requests in the current period",

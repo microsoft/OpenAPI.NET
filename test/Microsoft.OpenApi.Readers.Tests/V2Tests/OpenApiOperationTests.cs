@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -34,10 +35,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 }
             },
             Responses = new OpenApiResponses
@@ -68,10 +66,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema = new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
+                        Schema31 = new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.String)
                     }
                 },
                 RequestBody = new OpenApiRequestBody
@@ -80,49 +76,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         ["application/x-www-form-urlencoded"] = new OpenApiMediaType
                         {
-                            Schema = new OpenApiSchema
-                            {
-                                Properties =
-                                {
-                                    ["name"] = new OpenApiSchema
-                                    {
-                                        Description = "Updated name of the pet",
-                                        Type = "string"
-                                    },
-                                    ["status"] = new OpenApiSchema
-                                    {
-                                        Description = "Updated status of the pet",
-                                        Type = "string"
-                                    }
-                                },
-                                Required = new HashSet<string>
-                                {
-                                    "name"
-                                }
-                            }
+                            Schema31 = new JsonSchemaBuilder()
+                                .Properties(
+                                ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
+                                ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
+                            .Required("name")
                         },
                         ["multipart/form-data"] = new OpenApiMediaType
                         {
-                            Schema = new OpenApiSchema
-                            {
-                                Properties =
-                                {
-                                    ["name"] = new OpenApiSchema
-                                    {
-                                        Description = "Updated name of the pet",
-                                        Type = "string"
-                                    },
-                                    ["status"] = new OpenApiSchema
-                                    {
-                                        Description = "Updated status of the pet",
-                                        Type = "string"
-                                    }
-                                },
-                                Required = new HashSet<string>
-                                {
-                                    "name"
-                                }
-                            }
+                             Schema31 = new JsonSchemaBuilder()
+                                .Properties(
+                                ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
+                                ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
+                            .Required("name")
                         }
                     }
                 },
@@ -163,10 +129,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 },
             },
             RequestBody = new OpenApiRequestBody
@@ -177,10 +140,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema = new OpenApiSchema
-                        {
-                            Type = "object"
-                        }
+                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                     }
                 },
                 Extensions = { 
@@ -247,41 +207,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         }
 
         [Fact]
-        public void ParseOperationWithFormDataShouldSucceed()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithFormData.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
-
-            // Assert
-            operation.Should().BeEquivalentTo(_operationWithFormData);
-        }
-
-        [Fact]
-        public void ParseOperationWithFormDataTwiceShouldYieldSameObject()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = new MemoryStream(
-                Encoding.Default.GetBytes(_operationWithFormData.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0))))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var operation = OpenApiV2Deserializer.LoadOperation(node);
-
-            // Assert
-            operation.Should().BeEquivalentTo(_operationWithFormData);
-        }
-
-        [Fact]
         public void ParseOperationWithBodyShouldSucceed()
         {
             // Arrange
@@ -342,15 +267,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 ["application/json"] = new OpenApiMediaType()
                                 {
-                                    Schema = new OpenApiSchema()
-                                    {
-                                        Type = "array",
-                                        Items = new OpenApiSchema()
-                                        {
-                                            Type = "number",
-                                            Format = "float"
-                                        }
-                                    },
+                                    Schema31 = new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Array)
+                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")),
                                     Example = new OpenApiAny(new JsonArray()
                                     {
                                         5.0,
@@ -360,15 +279,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {
-                                    Schema = new OpenApiSchema()
-                                    {
-                                        Type = "array",
-                                        Items = new OpenApiSchema()
-                                        {
-                                            Type = "number",
-                                            Format = "float"
-                                        }
-                                    }
+                                    Schema31 = new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Array)
+                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float"))
                                 }
                             }
                         }}

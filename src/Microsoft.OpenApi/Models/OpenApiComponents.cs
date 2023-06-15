@@ -3,10 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
+using SharpYaml.Serialization;
+using Yaml2JsonNode;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -72,6 +77,11 @@ namespace Microsoft.OpenApi.Models
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+
+        /// <summary>
+        /// The indentation string to prepand to each line for each indentation level.
+        /// </summary>
+        protected const string IndentationString = "  ";
 
         /// <summary>
         /// Parameter-less constructor
@@ -167,22 +177,11 @@ namespace Microsoft.OpenApi.Models
             // If the reference exists but points to other objects, the object is serialized to just that reference.
 
             // schemas
-            //writer.WriteOptionalMap(
-            //    OpenApiConstants.Schemas,
-            //    Schemas31,
-            //    (w, key, component) =>
-            //    {
-            //        if (component.Reference != null &&
-            //            component.Reference.Type == ReferenceType.Schema &&
-            //            string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
-            //        {
-            //            action(w, component);
-            //        }
-            //        else
-            //        {
-            //            callback(w, component);
-            //        }
-            //    });
+            if (Schemas31 != null && Schemas31.Any())
+            {
+                writer.WritePropertyName(OpenApiConstants.Schemas);
+                writer.WriteRaw(JsonSerializer.Serialize(Schemas31));
+            }
 
             // responses
             writer.WriteOptionalMap(
@@ -341,12 +340,7 @@ namespace Microsoft.OpenApi.Models
             if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
             {
 
-                writer.WriteOptionalMap(
-                   OpenApiConstants.Schemas,
-                   Schemas31,
-                   static (w, key, component) => {
-                       component.SerializeAsV31WithoutReference(w);
-                   });
+                writer.WriteRaw(JsonSerializer.Serialize(schemas));
             }
             writer.WriteEndObject();
         }

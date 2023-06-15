@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -58,10 +59,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema31 = new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.String)
                 });
         }
 
@@ -86,14 +85,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "string"
-                        }
-                    },
+                    Schema31 = new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Array)
+                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     Style = ParameterStyle.Form,
                     Explode = true
                 });
@@ -141,54 +135,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "integer",
-                            Format = "int64",
-                            Enum = new List<OpenApiAny>
-                            {
-                                new OpenApiAny(1),
-                                new OpenApiAny(2),
-                                new OpenApiAny(3),
-                                new OpenApiAny(4)
-                            }
-                        },
-                        Default = new OpenApiAny(new JsonArray() {
-                            1,
-                            2
-                        }),
-                        Enum = new List<OpenApiAny>
-                        {
-                            new OpenApiAny(new JsonArray() { 1, 2 }),
-                            new OpenApiAny(new JsonArray() { 2, 3 }),
-                            new OpenApiAny(new JsonArray() { 3, 4 })
-                        }
-                    }
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(p => p.Schema.Default.Node[0].Root)
-                .Excluding(p => p.Schema.Default.Node[0].Parent)
-                .Excluding(p => p.Schema.Default.Node[1].Parent)
-                .Excluding(p => p.Schema.Default.Node[1].Root)
-                .Excluding(p => p.Schema.Items.Enum[0].Node.Parent)
-                .Excluding(p => p.Schema.Items.Enum[1].Node.Parent)
-                .Excluding(p => p.Schema.Items.Enum[2].Node.Parent)
-                .Excluding(p => p.Schema.Items.Enum[3].Node.Parent)
-                .Excluding(p => p.Schema.Enum[0].Node[0].Parent)
-                .Excluding(p => p.Schema.Enum[0].Node[0].Root)
-                .Excluding(p => p.Schema.Enum[0].Node[1].Parent)
-                .Excluding(p => p.Schema.Enum[0].Node[1].Root)
-                .Excluding(p => p.Schema.Enum[1].Node[0].Parent)
-                .Excluding(p => p.Schema.Enum[1].Node[0].Root)
-                .Excluding(p => p.Schema.Enum[1].Node[1].Parent)
-                .Excluding(p => p.Schema.Enum[1].Node[1].Root)
-                .Excluding(p => p.Schema.Enum[2].Node[0].Parent)
-                .Excluding(p => p.Schema.Enum[2].Node[0].Root)
-                .Excluding(p => p.Schema.Enum[2].Node[1].Parent)
-                .Excluding(p => p.Schema.Enum[2].Node[1].Root)
-                );
+                    Schema31 = new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.Array)
+                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.String).Format("int64").Enum(1, 2, 3, 4))
+                                    .Default(new JsonArray() { 1, 2 })
+                                    .Enum(
+                                        new JsonArray() { 1, 2 },
+                                        new JsonArray() { 2, 3 },
+                                        new JsonArray() { 3, 4 })
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -212,10 +167,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 });
         }
 
@@ -240,10 +192,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 });
         }
 
@@ -292,10 +241,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "string"
-                    }
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 });
         }
 
@@ -320,14 +266,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "number",
-                        Format = "float",
-                        Default = new OpenApiAny(5)
-                    }
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(p => p.Schema.Default.Node.Parent));
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Default(5)
+                }, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -351,21 +291,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "number",
-                        Format = "float",
-                        Enum = 
-                        { 
-                            new OpenApiAny(7),
-                            new OpenApiAny(8),
-                            new OpenApiAny(9)
-                        }
-                    }
-                }, options => options.IgnoringCyclicReferences()
-                .Excluding(p => p.Schema.Enum[0].Node.Parent)
-                .Excluding(p => p.Schema.Enum[1].Node.Parent)
-                .Excluding(p => p.Schema.Enum[2].Node.Parent));
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Enum(7, 8, 9)
+                }, options => options.IgnoringCyclicReferences());
         }
     }
 }

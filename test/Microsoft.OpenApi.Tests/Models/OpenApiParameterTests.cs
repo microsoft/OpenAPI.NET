@@ -46,7 +46,6 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Required = true,
             Deprecated = false,
-
             Style = ParameterStyle.Simple,
             Explode = true,
             Schema31 = new JsonSchemaBuilder()
@@ -151,7 +150,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object).Build(),
+            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
@@ -258,18 +257,18 @@ schema:
   ""style"": ""simple"",
   ""explode"": true,
   ""schema"": {
-    ""title"": ""title2"",
-    ""oneOf"": [
-      {
-        ""type"": ""number"",
-        ""format"": ""double""
-      },
-      {
-        ""type"": ""string""
-      }
-    ],
-    ""description"": ""description2""
-  },
+  ""title"": ""title2"",
+  ""description"": ""description2"",
+  ""oneOf"": [
+    {
+      ""type"": ""number"",
+      ""format"": ""double""
+    },
+    {
+      ""type"": ""string""
+    }
+  ]
+},
   ""examples"": {
     ""test"": {
       ""summary"": ""summary3"",

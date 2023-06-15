@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -74,10 +75,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             new OpenApiHeader
                             {
                                 Description = "The number of allowed requests in the current period",
-                                Schema = new OpenApiSchema
-                                {
-                                    Type = "integer"
-                                }
+                                Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                             }
                         }
                     });

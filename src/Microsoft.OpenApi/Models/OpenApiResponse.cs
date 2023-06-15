@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -213,10 +214,12 @@ namespace Microsoft.OpenApi.Models
                 if (mediatype.Value != null)
                 {
                     // schema
+                    //writer.WriteRaw(OpenApiConstants.Schema, JsonSerializer.Serialize(mediatype.Value.Schema31));
+
                     writer.WriteOptionalObject(
                         OpenApiConstants.Schema,
                         mediatype.Value.Schema31,
-                        (w, s) => s.SerializeAsV2(w));
+                        (w, s) => w.WriteRaw(JsonSerializer.Serialize(mediatype.Value.Schema31)));
 
                     // examples
                     if (Content.Values.Any(m => m.Example != null))

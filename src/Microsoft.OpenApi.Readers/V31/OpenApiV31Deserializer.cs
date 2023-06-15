@@ -1,8 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Expressions;
@@ -79,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.V31
             {
                 try
                 {
-                    var newProperty = new List<OpenApiAny>();
+                    var newProperty = new List<JsonNode>();
 
                     mapNode.Context.StartObject(anyListFieldName);
 

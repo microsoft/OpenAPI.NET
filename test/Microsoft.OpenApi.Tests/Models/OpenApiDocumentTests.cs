@@ -746,7 +746,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     ["application/json"] = new OpenApiMediaType
                                     {
                                         Schema31 = new JsonSchemaBuilder()
-                                                       .Ref("Pet").Build()
+                                                       .Ref("#/components/schemas/Pet").Build()
                                     }
                                 }
                             },

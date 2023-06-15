@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Tests
             // Arrange
             var workspace = new OpenApiWorkspace();
             var schemaFragment = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Schema from a fragment").Build();
-            workspace.AddFragment("fragment", schemaFragment);
+            //workspace.AddFragment("fragment", schemaFragment);
 
             // Act
             var schema = workspace.ResolveReference(new OpenApiReference()

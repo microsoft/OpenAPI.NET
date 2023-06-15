@@ -207,15 +207,11 @@ namespace Microsoft.OpenApi.Models
             foreach (var property in Content.First().Value.Schema31.GetProperties())
             {
                 var paramSchema = property.Value;
-                if ("string".Equals(paramSchema.GetType().ToString(), StringComparison.OrdinalIgnoreCase)
-                    && ("binary".Equals(paramSchema.GetFormat().ToString(), StringComparison.OrdinalIgnoreCase)
-                    || "base64".Equals(paramSchema.GetFormat().ToString(), StringComparison.OrdinalIgnoreCase)))
+                if (paramSchema.GetType().Equals(SchemaValueType.String)
+                    && ("binary".Equals(paramSchema.GetFormat().Key, StringComparison.OrdinalIgnoreCase)
+                    || "base64".Equals(paramSchema.GetFormat().Key, StringComparison.OrdinalIgnoreCase)))
                 {
-                    var builder = new JsonSchemaBuilder();
-                    builder.Type(SchemaValueType.String).Equals("file");
-                    builder.Format((Format)null);
-                    paramSchema = builder.Build();
-
+                    // JsonSchema is immutable so these can't be set
                     //paramSchema.Type("file");
                     //paramSchema.Format(null);
                 }
@@ -224,7 +220,7 @@ namespace Microsoft.OpenApi.Models
                     Description = property.Value.GetDescription(),
                     Name = property.Key,
                     Schema31 = property.Value,
-                    Required = Content.First().Value.Schema31.GetRequired().Contains(property.Key) 
+                    Required = Content.First().Value.Schema31.GetRequired()?.Contains(property.Key) ?? false
                 };
             }
         }

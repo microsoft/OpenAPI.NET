@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime;
+using System.Text.Json;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -283,7 +284,11 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, callback);
+            if(Schema31 != null)
+            {
+                writer.WritePropertyName(OpenApiConstants.Schema);
+                writer.WriteRaw(JsonSerializer.Serialize(Schema31/*, new JsonSerializerOptions { WriteIndented = true }*/));
+            }
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
@@ -362,12 +367,11 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (this is OpenApiBodyParameter)
             {
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, (w, s) => s.SerializeAsV2(w));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, (w, s) => writer.WriteRaw(JsonSerializer.Serialize(s)));
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
-            else
-            if (Schema31?.UnresolvedReference == true || Schema31?.GetType().ToString() == "object")
+            else if (/*Schema31?.UnresolvedReference == true ||*/ Schema31?.GetJsonType() == SchemaValueType.Object)
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }
@@ -392,17 +396,18 @@ namespace Microsoft.OpenApi.Models
                 // multipleOf
                 if (Schema31 != null)
                 {
-                    Schema31.WriteAsItemsProperties(writer);
+                    //writer.WriteRaw(JsonSerializer.Serialize(Schema31));
+                    SchemaSerializerHelper.WriteAsItemsProperties(Schema31, writer, Extensions);
 
-                    if (Schema31.Extensions != null)
-                    {
-                        foreach (var key in Schema31.Extensions.Keys)
-                        {
-                            // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
-                            // so remove it from the cloned collection so we don't write it again.
-                            extensionsClone.Remove(key);
-                        }
-                    }
+                    //if (Schema31.Extensions != null)
+                    //{
+                    //    foreach (var key in Schema31.Extensions.Keys)
+                    //    {
+                    //        // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
+                    //        // so remove it from the cloned collection so we don't write it again.
+                    //        extensionsClone.Remove(key);
+                    //    }
+                    //}
                 }
 
                 // allowEmptyValue
@@ -445,7 +450,6 @@ namespace Microsoft.OpenApi.Models
             
             return Style;
         }
-
     }
 
     /// <summary>

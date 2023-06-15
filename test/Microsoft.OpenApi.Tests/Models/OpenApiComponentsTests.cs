@@ -61,15 +61,11 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["schema1"] = new JsonSchemaBuilder()
                 .Properties(
-                    ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()),
-                    ("property3", new JsonSchemaBuilder().Ref("schema2").Build()))
-                .Ref("schema1")
-                .Build(),
-                
+                    ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+                    ("property3", new JsonSchemaBuilder().Ref("#/components/schemas/schema2"))),                
                 ["schema2"] = new JsonSchemaBuilder()
                 .Properties(
-                    ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()))
-                .Build()
+                    ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))
             },
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
@@ -117,8 +113,6 @@ namespace Microsoft.OpenApi.Tests.Models
             Schemas31 = new Dictionary<string, JsonSchema>
             {
                 ["schema1"] = new JsonSchemaBuilder().Type(SchemaValueType.String),
-                ["schema2"] = null,
-                ["schema3"] = null,
                 ["schema4"] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.String)
                 .AllOf(new JsonSchemaBuilder().Type(SchemaValueType.String).Build())
@@ -173,8 +167,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new JsonSchemaBuilder()
                 .Properties(
                     ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()),
-                    ("property3", new JsonSchemaBuilder().Ref("schema2").Build()))
-                .Ref("schema1")
+                    ("property3", new JsonSchemaBuilder().Ref("#/components/schemas/schema2").Build()))
+                .Ref("#/components/schemas/schema1")
                 .Build(),
                 
                 ["schema2"] = new JsonSchemaBuilder()
@@ -197,7 +191,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema31 = new JsonSchemaBuilder().Ref("schema1")
+                                        Schema31 = new JsonSchemaBuilder().Ref("#/components/schemas/schema1")
                                     }
                                 }
                             },
@@ -257,19 +251,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected = @"{
-  ""schemas"": {
-    ""schema1"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        },
-        ""property3"": {
-          ""maxLength"": 15,
-          ""type"": ""string""
-        }
-      }
-    }
-  },
+  ""schemas"": {""schema1"":{""properties"":{""property2"":{""type"":""integer""},""property3"":{""type"":""string"",""maxLength"":15}}}},
   ""securitySchemes"": {
     ""securityScheme1"": {
       ""type"": ""oauth2"",
@@ -306,25 +288,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected = @"{
-  ""schemas"": {
-    ""schema1"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        },
-        ""property3"": {
-          ""$ref"": ""#/components/schemas/schema2""
-        }
-      }
-    },
-    ""schema2"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        }
-      }
-    }
-  },
+  ""schemas"": {""schema1"":{""properties"":{""property2"":{""type"":""integer""},""property3"":{""$ref"":""#/components/schemas/schema2""}}},""schema2"":{""properties"":{""property2"":{""type"":""integer""}}}},
   ""securitySchemes"": {
     ""securityScheme1"": {
       ""type"": ""oauth2"",
@@ -436,25 +400,7 @@ securitySchemes:
         {
             // Arrange
             var expected = @"{
-  ""schemas"": {
-    ""schema1"": {
-      ""type"": ""string""
-    },
-    ""schema2"": null,
-    ""schema3"": null,
-    ""schema4"": {
-      ""type"": ""string"",
-      ""allOf"": [
-        null,
-        null,
-        {
-          ""type"": ""string""
-        },
-        null,
-        null
-      ]
-    }
-  }
+  ""schemas"": {""schema1"":{""type"":""string""},""schema4"":{""type"":""string"",""allOf"":[{""type"":""string""}]}}
 }";
 
             // Act
@@ -472,17 +418,12 @@ securitySchemes:
             // Arrange
             var expected = @"schemas:
   schema1:
-    type: string
-  schema2: 
-  schema3: 
+    type: string 
   schema4:
     type: string
     allOf:
-      - 
-      - 
       - type: string
-      - 
-      - ";
+";
 
             // Act
             var actual = BrokenComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -568,9 +509,7 @@ securitySchemes:
           ""description"": ""Information about a new pet in the system"",
           ""content"": {
             ""application/json"": {
-              ""schema"": {
-                ""$ref"": ""#/components/schemas/schema1""
-              }
+              ""schema"": {""$ref"":""#/components/schemas/schema1""}
             }
           }
         },
@@ -582,25 +521,7 @@ securitySchemes:
       }
     }
   },
-  ""schemas"": {
-    ""schema1"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        },
-        ""property3"": {
-          ""$ref"": ""#/components/schemas/schema2""
-        }
-      }
-    },
-    ""schema2"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        }
-      }
-    }
-  }
+  ""schemas"": {""schema1"":{""properties"":{""property2"":{""type"":""integer""},""property3"":{""$ref"":""#/components/schemas/schema2""}},""$ref"":""#/components/schemas/schema1""},""schema2"":{""properties"":{""property2"":{""type"":""integer""}}}}
 }";
             // Act
             var actual = ComponentsWithPathItem.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);

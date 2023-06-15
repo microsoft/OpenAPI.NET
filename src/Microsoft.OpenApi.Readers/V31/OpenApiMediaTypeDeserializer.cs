@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V31
                 new AnyFieldMapParameter<OpenApiMediaType>(
                     s => s.Example,
                     (s, v) => s.Example = v,
-                    s => s.Schema)
+                    s => s.Schema31)
             }
         };
 
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Readers.V31
                     m => m.Examples,
                     e => e.Value,
                     (e, v) => e.Value = v,
-                    m => m.Schema)
+                    m => m.Schema31)
             }
         };
 

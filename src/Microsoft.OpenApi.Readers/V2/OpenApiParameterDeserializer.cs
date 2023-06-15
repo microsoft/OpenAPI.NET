@@ -19,6 +19,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
+        private static readonly JsonSchemaBuilder builder = new JsonSchemaBuilder();
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
             {
@@ -61,13 +62,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "type", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue())).Build();
+                        o.Schema31 = builder.Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue()));
                     }
                 },
                 {
                     "items", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Items(LoadSchema(n));
+                        o.Schema31 = builder.Items(LoadSchema(n));
                     }
                 },
                 {
@@ -79,55 +80,55 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "format", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Format(n.GetScalarValue());
+                        o.Schema31 = builder.Format(n.GetScalarValue());
                     }
                 },
                 {
                     "minimum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema31 = builder.Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "maximum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema31 = builder.Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "maxLength", (o, n) =>
                     {
-                        GetOrCreateSchema(o).MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema31 = builder.MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "minLength", (o, n) =>
                     {
-                        GetOrCreateSchema(o).MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema31 = builder.MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "readOnly", (o, n) =>
                     {
-                        GetOrCreateSchema(o).ReadOnly(bool.Parse(n.GetScalarValue()));
+                        o.Schema31 = builder.ReadOnly(bool.Parse(n.GetScalarValue()));
                     }
                 },
                 {
                     "default", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Default(n.CreateAny().Node);
+                        o.Schema31 = builder.Default(n.CreateAny().Node);
                     }
                 },
                 {
                     "pattern", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Pattern(n.GetScalarValue());
+                        o.Schema31 = builder.Pattern(n.GetScalarValue());
                     }
                 },
                 {
                     "enum", (o, n) =>
                     {
-                        GetOrCreateSchema(o).Enum(n.CreateListOfAny().Select(x => x.Node));
+                        o.Schema31 = builder.Enum(n.CreateListOfAny());
                     }
                 },
                 {
@@ -150,11 +151,11 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     OpenApiConstants.Default,
                     new AnyFieldMapParameter<OpenApiParameter>(
-                        p => new OpenApiAny(p.Schema31.GetDefault()),
+                        p => new OpenApiAny(p.Schema31?.GetDefault()),
                         (p, v) => {
                             if (p.Schema31 != null || v != null)
                             {
-                                GetOrCreateSchema(p).Default(v.Node);
+                                p.Schema31 = builder.Default(v.Node);
                             }
                         },
                         p => p.Schema31)
@@ -171,7 +172,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         (p, v) => {
                             if (p.Schema31 != null || v != null && v.Count > 0)
                             {
-                                GetOrCreateSchema(p).Enum(v);
+                                p.Schema31 = builder.Enum(v);
                             }
                         },
                         p => p.Schema31)
@@ -207,13 +208,16 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
-        private static JsonSchemaBuilder GetOrCreateSchema(OpenApiParameter p)
+        private static JsonSchema GetOrCreateSchema(OpenApiParameter p)
         {
-            return new JsonSchemaBuilder();
+            p.Schema31 ??= JsonSchema.Empty;
+            return p.Schema31;
         }
 
         private static JsonSchemaBuilder GetOrCreateSchema(OpenApiHeader p)
         {
+            p.Schema31 ??= JsonSchema.Empty;
+           
             return new JsonSchemaBuilder();
         }
 
@@ -270,9 +274,8 @@ namespace Microsoft.OpenApi.Readers.V2
             var parameter = new OpenApiParameter();
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
-
-            ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
-            ProcessAnyListFields(mapNode, parameter, _parameterAnyListFields);
+            //ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
+            //ProcessAnyListFields(mapNode, parameter, _parameterAnyListFields);
 
             var schema = node.Context.GetFromTempStorage<JsonSchema>("schema");
             if (schema != null)

@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("customType").Build()).Build(),
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("#/components/schemas/customType").Build()).Build(),
                     Example = new OpenApiAny("Blabla"),
                     Extensions = new Dictionary<string, IOpenApiExtension>
                     {
@@ -124,25 +124,16 @@ namespace Microsoft.OpenApi.Tests.Models
   ""headers"": {
     ""X-Rate-Limit-Limit"": {
       ""description"": ""The number of allowed requests in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
+      ""schema"": {""type"":""integer""}
     },
     ""X-Rate-Limit-Reset"": {
       ""description"": ""The number of seconds left in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
+      ""schema"": {""type"":""integer""}
     }
   },
   ""content"": {
     ""text/plain"": {
-      ""schema"": {
-        ""type"": ""array"",
-        ""items"": {
-          ""$ref"": ""#/components/schemas/customType""
-        }
-      },
+      ""schema"": {""type"":""array"",""items"":{""$ref"":""#/components/schemas/customType""}},
       ""example"": ""Blabla"",
       ""myextension"": ""myextensionvalue""
     }
@@ -197,12 +188,7 @@ content:
             // Arrange
             var expected = @"{
   ""description"": ""A complex object array response"",
-  ""schema"": {
-    ""type"": ""array"",
-    ""items"": {
-      ""$ref"": ""#/definitions/customType""
-    }
-  },
+  ""schema"": {""type"":""array"",""items"":{""$ref"":""#/definitions/customType""}},
   ""examples"": {
     ""text/plain"": ""Blabla""
   },

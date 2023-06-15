@@ -296,11 +296,7 @@ namespace Microsoft.OpenApi.Tests.Models
     ""description"": ""description2"",
     ""content"": {
       ""application/json"": {
-        ""schema"": {
-          ""maximum"": 10,
-          ""minimum"": 5,
-          ""type"": ""number""
-        }
+        ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
       }
     },
     ""required"": true
@@ -313,11 +309,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""description"": null,
       ""content"": {
         ""application/json"": {
-          ""schema"": {
-            ""maximum"": 10,
-            ""minimum"": 5,
-            ""type"": ""number""
-          }
+          ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
         }
       }
     }
@@ -369,11 +361,7 @@ namespace Microsoft.OpenApi.Tests.Models
     ""description"": ""description2"",
     ""content"": {
       ""application/json"": {
-        ""schema"": {
-          ""maximum"": 10,
-          ""minimum"": 5,
-          ""type"": ""number""
-        }
+        ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
       }
     },
     ""required"": true
@@ -386,11 +374,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""description"": null,
       ""content"": {
         ""application/json"": {
-          ""schema"": {
-            ""maximum"": 10,
-            ""minimum"": 5,
-            ""type"": ""number""
-          }
+          ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
         }
       }
     }
@@ -452,46 +436,16 @@ namespace Microsoft.OpenApi.Tests.Models
       ""in"": ""path"",
       ""description"": ""ID of pet that needs to be updated"",
       ""required"": true,
-      ""schema"": {
-        ""type"": ""string""
-      }
+      ""schema"": {""type"":""string""}
     }
   ],
   ""requestBody"": {
     ""content"": {
       ""application/x-www-form-urlencoded"": {
-        ""schema"": {
-          ""required"": [
-            ""name""
-          ],
-          ""properties"": {
-            ""name"": {
-              ""type"": ""string"",
-              ""description"": ""Updated name of the pet""
-            },
-            ""status"": {
-              ""type"": ""string"",
-              ""description"": ""Updated status of the pet""
-            }
-          }
-        }
+        ""schema"": {""properties"":{""name"":{""type"":""string"",""description"":""Updated name of the pet""},""status"":{""type"":""string"",""description"":""Updated status of the pet""}},""required"":[""name""]}
       },
       ""multipart/form-data"": {
-        ""schema"": {
-          ""required"": [
-            ""name""
-          ],
-          ""properties"": {
-            ""name"": {
-              ""type"": ""string"",
-              ""description"": ""Updated name of the pet""
-            },
-            ""status"": {
-              ""type"": ""string"",
-              ""description"": ""Updated status of the pet""
-            }
-          }
-        }
+        ""schema"": {""properties"":{""name"":{""type"":""string"",""description"":""Updated name of the pet""},""status"":{""type"":""string"",""description"":""Updated status of the pet""}},""required"":[""name""]}
       }
     }
   },
@@ -599,11 +553,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""name"": ""body"",
       ""description"": ""description2"",
       ""required"": true,
-      ""schema"": {
-        ""maximum"": 10,
-        ""minimum"": 5,
-        ""type"": ""number""
-      }
+      ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
     }
   ],
   ""responses"": {
@@ -612,11 +562,7 @@ namespace Microsoft.OpenApi.Tests.Models
     },
     ""400"": {
       ""description"": null,
-      ""schema"": {
-        ""maximum"": 10,
-        ""minimum"": 5,
-        ""type"": ""number""
-      }
+      ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
     }
   },
   ""schemes"": [
@@ -669,11 +615,7 @@ namespace Microsoft.OpenApi.Tests.Models
       ""name"": ""body"",
       ""description"": ""description2"",
       ""required"": true,
-      ""schema"": {
-        ""maximum"": 10,
-        ""minimum"": 5,
-        ""type"": ""number""
-      }
+      ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
     }
   ],
   ""responses"": {
@@ -682,11 +624,7 @@ namespace Microsoft.OpenApi.Tests.Models
     },
     ""400"": {
       ""description"": null,
-      ""schema"": {
-        ""maximum"": 10,
-        ""minimum"": 5,
-        ""type"": ""number""
-      }
+      ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
     }
   },
   ""schemes"": [
