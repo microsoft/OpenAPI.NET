@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static string ResolvePutOperationId(string operationId)
         {
-            return operationId.Contains(DefaultPutPrefix) ?
+            return operationId.Contains(DefaultPutPrefix, StringComparison.OrdinalIgnoreCase) ?
                 operationId.Replace(DefaultPutPrefix, PowerShellPutPrefix) : operationId;
         }
 
@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             foreach (var parameter in parameters)
             {
                 var keyTypeExtension = parameter.Extensions.GetExtension("x-ms-docs-key-type");
-                if (keyTypeExtension != null && operationId.Contains(keyTypeExtension))
+                if (keyTypeExtension != null && operationId.Contains(keyTypeExtension, StringComparison.OrdinalIgnoreCase))
                 {
                     segments.Remove(keyTypeExtension);
                 }
