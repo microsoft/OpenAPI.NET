@@ -288,6 +288,7 @@ namespace Microsoft.OpenApi.Models
             ExternalDocs = schema?.ExternalDocs != null ? new(schema?.ExternalDocs) : null;
             Deprecated = schema?.Deprecated ?? Deprecated;
             Xml = schema?.Xml != null ? new(schema?.Xml) : null;
+            Extensions = schema?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(schema.Extensions) : null;
             UnresolvedReference = schema?.UnresolvedReference ?? UnresolvedReference;
             Reference = schema?.Reference != null ? new(schema?.Reference) : null;
         }
