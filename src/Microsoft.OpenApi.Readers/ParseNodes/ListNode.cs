@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         private readonly JsonArray _nodeList;
 
         public ListNode(ParsingContext context, JsonArray jsonArray) : base(
-            context)
+            context, jsonArray)
         {
             _nodeList = jsonArray;
         }
@@ -33,9 +33,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 .ToList();
         }
 
-        public override List<OpenApiAny> CreateListOfAny()
+        public override List<JsonNode> CreateListOfAny()
         {
-            return _nodeList.Select(n => Create(Context, n).CreateAny())
+            return _nodeList.Select(n => Create(Context, n).CreateAny().Node)
                 .Where(i => i != null)
                 .ToList();
         }

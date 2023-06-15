@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     internal class PropertyNode : ParseNode
     {
         public PropertyNode(ParsingContext context, string name, JsonNode node) : base(
-            context)
+            context, node)
         {
             Name = name;
             Value = Create(context, node);

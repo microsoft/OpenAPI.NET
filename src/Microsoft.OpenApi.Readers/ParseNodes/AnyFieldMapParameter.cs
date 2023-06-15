@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -17,12 +17,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public AnyFieldMapParameter(
             Func<T, OpenApiAny> propertyGetter,
             Action<T, OpenApiAny> propertySetter,
-            Func<T, OpenApiSchema> schemaGetter = null,
             Func<T, JsonSchema> schema31Getter = null)
         {
             this.PropertyGetter = propertyGetter;
             this.PropertySetter = propertySetter;
-            this.SchemaGetter = schemaGetter;
             this.Schema31Getter = schema31Getter;
         }
 
@@ -35,11 +33,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Function to set the value of the property.
         /// </summary>
         public Action<T, OpenApiAny> PropertySetter { get; }
-
-        /// <summary>
-        /// Function to get the schema to apply to the property.
-        /// </summary>
-        public Func<T, OpenApiSchema> SchemaGetter { get; }
         
         /// <summary>
         /// Function to get the schema to apply to the property.

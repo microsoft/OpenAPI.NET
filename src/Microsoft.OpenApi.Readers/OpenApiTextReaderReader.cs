@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections;
@@ -54,9 +54,7 @@ namespace Microsoft.OpenApi.Readers
                 diagnostic = new OpenApiDiagnostic();
                 diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
                 return new OpenApiDocument();
-            }
-            
-            //var asJsonNode = yamlDocument.ToJsonNode();
+            }            
 
             return new OpenApiYamlDocumentReader(this._settings).Read(jsonNode, out diagnostic);
         }

@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
         }
         public MapNode(ParsingContext context, JsonNode node) : base(
-            context)
+            context, node)
         {
             if (node is not JsonObject mapNode)
             {
