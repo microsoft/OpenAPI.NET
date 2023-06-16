@@ -1,28 +1,25 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
-using System.IO;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Hidi;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Tests.UtilityFiles;
 using Moq;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests.Services
+namespace Microsoft.OpenApi.Hidi.Tests
 {
     public class OpenApiFilterServiceTests
     {
         private readonly OpenApiDocument _openApiDocumentMock;
-        private readonly Mock<ILogger<OpenApiService>> _mockLogger;
-        private readonly ILogger<OpenApiService> _logger;
+        private readonly Mock<ILogger<OpenApiFilterServiceTests>> _mockLogger;
+        private readonly ILogger<OpenApiFilterServiceTests> _logger;
 
         public OpenApiFilterServiceTests()
         {
             _openApiDocumentMock = OpenApiDocumentMock.CreateOpenApiDocument();
-            _mockLogger = new Mock<ILogger<OpenApiService>>();
+            _mockLogger = new Mock<ILogger<OpenApiFilterServiceTests>>();
             _logger = _mockLogger.Object;
         }
 
@@ -68,6 +65,43 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(3, subsetOpenApiDocument.Paths.Count);
         }
+
+        // Create predicate based RequestUrls
+        [Fact]
+        public void TestPredicateFiltersUsingRelativeRequestUrls()
+        {
+            var openApiDocument = new OpenApiDocument()
+            {
+                Info = new() { Title = "Test", Version = "1.0" },
+                Servers = new List<OpenApiServer>() { new() { Url = "https://localhost/" } },
+                Paths = new()
+                {
+                    {"/foo", new() {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>() {
+                            { OperationType.Get, new() },
+                            { OperationType.Patch, new() },
+                            { OperationType.Post, new() }
+                          }
+                        }
+                    }
+                }
+            };
+
+            // Given a set of RequestUrls
+            var requestUrls = new Dictionary<string, List<string>>
+            {
+                    {"/foo", new List<string> {"GET","POST"}}
+            };
+
+            // When
+            var predicate = OpenApiFilterService.CreatePredicate(requestUrls: requestUrls, source: openApiDocument);
+
+            // Then
+            Assert.True(predicate("/foo", OperationType.Get, null));
+            Assert.True(predicate("/foo", OperationType.Post, null));
+            Assert.False(predicate("/foo", OperationType.Patch, null));
+        }
+
 
         [Fact]
         public void ShouldParseNestedPostmanCollection()

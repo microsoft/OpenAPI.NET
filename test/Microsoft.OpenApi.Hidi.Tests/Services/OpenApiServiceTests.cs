@@ -3,22 +3,29 @@
 
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.Text;
-using Castle.Core.Logging;
+using System.CommandLine.Parsing;
+using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Hidi;
-using Microsoft.OpenApi.Hidi.Handlers;
+using Microsoft.OpenApi.ApiManifest.OpenAI;
+using Microsoft.OpenApi.Hidi.Options;
+using Microsoft.OpenApi.Hidi.Utilities;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.OData;
 using Microsoft.OpenApi.Services;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Xunit;
 
-namespace Microsoft.OpenApi.Tests.Services
+namespace Microsoft.OpenApi.Hidi.Tests
 {
     public class OpenApiServiceTests
     {
+        private readonly ILogger<OpenApiServiceTests> _logger;
+
+        public OpenApiServiceTests()
+        {
+            _logger = new Logger<OpenApiServiceTests>(new LoggerFactory());
+        }
+
         [Fact]
         public async Task ReturnConvertedCSDLFile()
         {
@@ -26,7 +33,6 @@ namespace Microsoft.OpenApi.Tests.Services
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
             var fileInput = new FileInfo(filePath);
             var csdlStream = fileInput.OpenRead();
-
             // Act
             var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
             var expectedPathCount = 5;
@@ -36,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(openApiDoc.Paths);
             Assert.Equal(expectedPathCount, openApiDoc.Paths.Count);
         }
-        
+
         [Theory]
         [InlineData("Todos.Todo.UpdateTodo", null, 1)]
         [InlineData("Todos.Todo.ListTodo", null, 1)]
@@ -47,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
             var fileInput = new FileInfo(filePath);
             var csdlStream = fileInput.OpenRead();
-            
+
             // Act
             var openApiDoc = await OpenApiService.ConvertCsdlToOpenApi(csdlStream);
             var predicate = OpenApiFilterService.CreatePredicate(operationIds, tags);
@@ -58,14 +64,14 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotEmpty(subsetOpenApiDocument.Paths);
             Assert.Equal(expectedPathCount, subsetOpenApiDocument.Paths.Count);
         }
-        
+
         [Theory]
         [InlineData("UtilityFiles/appsettingstest.json")]
         [InlineData(null)]
         public void ReturnOpenApiConvertSettingsWhenSettingsFileIsProvided(string filePath)
         {
             // Arrange
-            var config = OpenApiService.GetConfiguration(filePath);
+            var config = SettingsUtilities.GetConfiguration(filePath);
 
             // Act and Assert
             var settings = config.GetSection("OpenApiConvertSettings").Get<OpenApiConvertSettings>();
@@ -122,34 +128,50 @@ namespace Microsoft.OpenApi.Tests.Services
             var output = reader.ReadToEnd();
             Assert.Contains("graph LR", output);
         }
-        
+
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
         {
-            var fileinfo = new FileInfo("sample.md");
-            // create a dummy ILogger instance for testing
-            await OpenApiService.ShowOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, fileinfo, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
 
-            var output = File.ReadAllText(fileinfo.FullName);
+            // create a dummy ILogger instance for testing
+            var options = new HidiOptions()
+            {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                Output = new FileInfo("sample.md")
+            };
+
+            await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
+
+            var output = File.ReadAllText(options.Output.FullName);
             Assert.Contains("graph LR", output);
         }
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidHtmlFileWithMermaidDiagram()
         {
-            var filePath = await OpenApiService.ShowOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            var options = new HidiOptions()
+            {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml"
+            };
+            var filePath = await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
             Assert.True(File.Exists(filePath));
         }
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileFromCsdlWithMermaidDiagram()
         {
-            var fileinfo = new FileInfo("sample.md");
-            // create a dummy ILogger instance for testing
-            await OpenApiService.ShowOpenApiDocument(null, "UtilityFiles\\Todo.xml", "todos", fileinfo, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            var options = new HidiOptions()
+            {
+                Csdl = "UtilityFiles\\Todo.xml",
+                CsdlFilter = "todos",
+                Output = new FileInfo("sample.md")
+            };
 
-            var output = File.ReadAllText(fileinfo.FullName);
+            // create a dummy ILogger instance for testing
+            await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
+
+            var output = File.ReadAllText(options.Output.FullName);
             Assert.Contains("graph LR", output);
         }
 
@@ -157,7 +179,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public async Task ThrowIfOpenApiUrlIsNotProvidedWhenValidating()
         {
             await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+                await OpenApiService.ValidateOpenApiDocument("", _logger, new CancellationToken()));
         }
 
 
@@ -165,21 +187,21 @@ namespace Microsoft.OpenApi.Tests.Services
         public async Task ThrowIfURLIsNotResolvableWhenValidating()
         {
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("https://example.org/itdoesnmatter", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+                await OpenApiService.ValidateOpenApiDocument("https://example.org/itdoesnmatter", _logger, new CancellationToken()));
         }
 
         [Fact]
         public async Task ThrowIfFileDoesNotExistWhenValidating()
         {
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("aFileThatBetterNotExist.fake", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+                await OpenApiService.ValidateOpenApiDocument("aFileThatBetterNotExist.fake", _logger, new CancellationToken()));
         }
 
         [Fact]
         public async Task ValidateCommandProcessesOpenApi()
         {
             // create a dummy ILogger instance for testing
-            await OpenApiService.ValidateOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.ValidateOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", _logger, new CancellationToken());
 
             Assert.True(true);
         }
@@ -188,20 +210,36 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public async Task TransformCommandConvertsOpenApi()
         {
-            var fileinfo = new FileInfo("sample.json");
+            HidiOptions options = new HidiOptions
+            {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                Output = new FileInfo("sample.json"),
+                CleanOutput = true,
+                TerseOutput = false,
+                InlineLocal = false,
+                InlineExternal = false,
+            };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml",null, null,  fileinfo, true, null, null, null,false,null,false,false,null,null,null,new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
 
             var output = File.ReadAllText("sample.json");
             Assert.NotEmpty(output);
         }
 
-        
+
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputname()
         {
+            HidiOptions options = new HidiOptions
+            {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                CleanOutput = true,
+                TerseOutput = false,
+                InlineLocal = false,
+                InlineExternal = false,
+            };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, null, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
 
             var output = File.ReadAllText("output.yml");
             Assert.NotEmpty(output);
@@ -210,8 +248,16 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public async Task TransformCommandConvertsCsdlWithDefaultOutputname()
         {
+            HidiOptions options = new HidiOptions
+            {
+                Csdl = "UtilityFiles\\Todo.xml",
+                CleanOutput = true,
+                TerseOutput = false,
+                InlineLocal = false,
+                InlineExternal = false,
+            };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument(null, "UtilityFiles\\Todo.xml", null, null, true, null, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
 
             var output = File.ReadAllText("output.yml");
             Assert.NotEmpty(output);
@@ -220,8 +266,18 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputnameAndSwitchFormat()
         {
+            HidiOptions options = new HidiOptions
+            {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                CleanOutput = true,
+                Version = "3.0",
+                OpenApiFormat = OpenApiFormat.Yaml,
+                TerseOutput = false,
+                InlineLocal = false,
+                InlineExternal = false,
+            };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", null, null, null, true, "3.0", null, OpenApiFormat.Yaml, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
 
             var output = File.ReadAllText("output.yml");
             Assert.NotEmpty(output);
@@ -230,21 +286,50 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public async Task ThrowTransformCommandIfOpenApiAndCsdlAreEmpty()
         {
+            HidiOptions options = new HidiOptions
+            {
+                CleanOutput = true,
+                TerseOutput = false,
+                InlineLocal = false,
+                InlineExternal = false,
+            };
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await OpenApiService.TransformOpenApiDocument(null, null, null, null, true, null, null, null, false, null, false, false, null, null, null, new Logger<OpenApiService>(new LoggerFactory()), new CancellationToken()));
+                await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken()));
 
+        }
+
+        [Fact]
+        public async Task TransformToPowerShellCompliantOpenApi()
+        {
+            var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\examplepowershellsettings.json");
+            HidiOptions options = new HidiOptions
+            {
+                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                CleanOutput = true,
+                Version = "3.0",
+                OpenApiFormat = OpenApiFormat.Yaml,
+                TerseOutput = false,
+                InlineLocal = false,
+                InlineExternal = false,
+                SettingsConfig = SettingsUtilities.GetConfiguration(settingsPath)
+            };
+            // create a dummy ILogger instance for testing
+            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
+
+            var output = File.ReadAllText("output.yml");
+            Assert.NotEmpty(output);
         }
 
         [Fact]
         public void InvokeTransformCommand()
         {
             var rootCommand = Program.CreateRootCommand();
-            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json","--co" };
+            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json", "--co" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
             var context = new InvocationContext(parseResult);
 
-            handler.Invoke(context);
+            handler!.Invoke(context);
 
             var output = File.ReadAllText("sample.json");
             Assert.NotEmpty(output);
@@ -260,10 +345,29 @@ namespace Microsoft.OpenApi.Tests.Services
             var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
             var context = new InvocationContext(parseResult);
 
-            handler.Invoke(context);
+            handler!.Invoke(context);
 
             var output = File.ReadAllText("sample.md");
             Assert.Contains("graph LR", output);
+        }
+
+        [Fact]
+        public void InvokePluginCommand()
+        {
+            var rootCommand = Program.CreateRootCommand();
+            var args = new string[] { "plugin", "-m", ".\\UtilityFiles\\exampleapimanifest.json", "--of", AppDomain.CurrentDomain.BaseDirectory };
+            var parseResult = rootCommand.Parse(args);
+            var handler = rootCommand.Subcommands.Where(c => c.Name == "plugin").First().Handler;
+            var context = new InvocationContext(parseResult);
+
+            handler!.Invoke(context);
+
+            using var jsDoc = JsonDocument.Parse(File.ReadAllText("ai-plugin.json"));
+            var openAiManifest = OpenAIPluginManifest.Load(jsDoc.RootElement);
+
+            Assert.Equal("Mastodon - Subset", openAiManifest?.NameForHuman);
+            Assert.Equal("openapi", openAiManifest?.Api.Type);
+            Assert.Equal("./openapi.json", openAiManifest?.Api.Url);
         }
 
 
