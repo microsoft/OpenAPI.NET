@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
@@ -478,6 +479,30 @@ namespace Microsoft.OpenApi.Tests.Models
             Assert.Equal("string", actualSchema.Type);
             Assert.Equal("date", actualSchema.Format);
             Assert.True(actualSchema.Nullable);
+        }
+
+        [Fact]
+        public void CloningSchemaExtensionsWorks()
+        {
+            // Arrange
+            var schema = new OpenApiSchema
+            {
+                Extensions =
+                {
+                    { "x-myextension", new OpenApiInteger(42) }
+                }
+            };
+
+            // Act && Assert
+            var schemaCopy = new OpenApiSchema(schema);
+            Assert.Equal(1, schemaCopy.Extensions.Count);
+
+            // Act && Assert
+            schemaCopy.Extensions = new Dictionary<string, IOpenApiExtension>
+            {
+                { "x-myextension" , new OpenApiInteger(40) }
+            };
+            Assert.NotEqual(schema.Extensions, schemaCopy.Extensions);
         }
     }
 }

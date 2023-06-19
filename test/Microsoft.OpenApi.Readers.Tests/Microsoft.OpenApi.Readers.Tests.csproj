@@ -13,6 +13,8 @@
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="OpenApiReaderTests\Samples\OpenApiDiagnosticReportMerged\TodoMain.yaml" />
+      <None Remove="OpenApiReaderTests\Samples\OpenApiDiagnosticReportMerged\TodoReference.yaml" />
       <None Remove="V2Tests\Samples\ComponentRootReference.json" />
       <None Remove="V2Tests\Samples\OpenApiPathItem\pathItemWithBodyPathParameter.yaml" />
       <None Remove="V2Tests\Samples\OpenApiPathItem\pathItemWithFormDataPathParameter.yaml" />
@@ -20,6 +22,8 @@
       <None Remove="V3Tests\Samples\OpenApiWorkspace\TodoMain.yaml" />
     </ItemGroup>
     <ItemGroup>
+      <EmbeddedResource Include="OpenApiReaderTests\Samples\OpenApiDiagnosticReportMerged\TodoMain.yaml" />
+      <EmbeddedResource Include="OpenApiReaderTests\Samples\OpenApiDiagnosticReportMerged\TodoReference.yaml" />
       <EmbeddedResource Include="OpenApiReaderTests\Samples\unsupported.v1.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -256,15 +260,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="3.2.0">
+        <PackageReference Include="coverlet.collector" Version="6.0.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+        <PackageReference Include="coverlet.msbuild" Version="6.0.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
         <PackageReference Include="FluentAssertions" Version="6.11.0">
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3">

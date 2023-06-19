@@ -21,6 +21,8 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         public OpenApiDiagnostic Diagnostic { get; }
 
+        private static readonly char[] _pathSeparator = new char[] { '/' };
+
         /// <summary>
         /// Create Parsing Context
         /// </summary>
@@ -128,6 +130,20 @@ namespace Microsoft.OpenApi.Readers.V3
                             }
                         }
                         id = localSegments[3];
+                    }
+                    else if (id.StartsWith("/paths/"))
+                    {
+                        var localSegments = segments[1].Split(_pathSeparator, StringSplitOptions.RemoveEmptyEntries);
+                        if (localSegments.Length == 2)
+                        {
+                            // The reference of a path may contain JSON escape character ~1 for the forward-slash character, replace this otherwise
+                            // the reference cannot be resolved.
+                            id = localSegments[1].Replace("~1", "/");
+                        }
+                        else
+                        {
+                            throw new OpenApiException("Referenced Path mismatch");
+                        }
                     }
                     else
                     {

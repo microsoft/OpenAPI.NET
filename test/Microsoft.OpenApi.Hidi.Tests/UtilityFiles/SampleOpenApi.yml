@@ -5,15 +5,18 @@ info:
 paths:
   /api/editresource:
     get:
+      operationId: api.ListEditresource
       responses:
         '200':
           description: OK
     patch:
+      operationId: api.UpdateEditresource
       responses:
         '200':
           description: OK
   /api/viewresource:
     get:
+      operationId: api.ListViewresource
       responses:
         '200':
           description: OK

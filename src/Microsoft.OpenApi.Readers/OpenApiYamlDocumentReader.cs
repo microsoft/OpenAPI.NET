@@ -102,7 +102,13 @@ namespace Microsoft.OpenApi.Readers
 
                 if (_settings.LoadExternalRefs)
                 {
-                    await LoadExternalRefs(document, cancellationToken);
+                    var diagnosticExternalRefs = await LoadExternalRefs(document, cancellationToken);
+                    // Merge diagnostics of external reference
+                    if (diagnosticExternalRefs != null)
+                    {
+                        diagnostic.Errors.AddRange(diagnosticExternalRefs.Errors);
+                        diagnostic.Warnings.AddRange(diagnosticExternalRefs.Warnings);
+                    }
                 }
 
                 ResolveReferences(diagnostic, document);
@@ -133,7 +139,7 @@ namespace Microsoft.OpenApi.Readers
             };
         }
 
-        private async Task LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken)
+        private async Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken)
         {
             // Create workspace for all documents to live in.
             var openApiWorkSpace = new OpenApiWorkspace();
@@ -141,7 +147,7 @@ namespace Microsoft.OpenApi.Readers
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
-            await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, cancellationToken);
+            return await workspaceLoader.LoadAsync(new OpenApiReference() { ExternalResource = "/" }, document, cancellationToken);
         }
 
         private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)

@@ -1,0 +1,22 @@
+{
+    "OpenApiConvertSettings": {
+      "AddSingleQuotesForStringParameters": true,
+      "AddEnumDescriptionExtension": true,
+      "EnableKeyAsSegment": true,
+      "EnableOperationId": true,
+      "PrefixEntityTypeNameBeforeKey": true,
+      "TagDepth": 2,
+      "EnablePagination": true,
+      "EnableDiscriminatorValue": false,
+      "EnableDerivedTypesReferencesForRequestBody": false,
+      "EnableDerivedTypesReferencesForResponses": false,
+      "ShowRootPath": false,
+      "ExpandDerivedTypesNavigationProperties": false,
+      "ShowLinks": false,
+      "DeclarePathParametersOnPathItem": false,
+      "EnableODataAnnotationReferencesForResponses": false,
+      "EnableODataTypeCast": true,
+      "UseSuccessStatusCodeRange": true
+    },
+    "LanguageFormat": "PowerShell"
+  }

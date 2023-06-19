@@ -1024,6 +1024,8 @@ namespace Microsoft.OpenApi.Models
         Callback = 8,
         [Microsoft.OpenApi.Attributes.Display("tags")]
         Tag = 9,
+        [Microsoft.OpenApi.Attributes.Display("paths")]
+        Path = 10,
     }
     public class RuntimeExpressionAnyWrapper : Microsoft.OpenApi.Interfaces.IOpenApiElement
     {
