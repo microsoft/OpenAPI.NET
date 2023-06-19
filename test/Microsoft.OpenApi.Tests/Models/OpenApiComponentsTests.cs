@@ -156,7 +156,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Schemas31 =
             {
                 ["schema1"] = new JsonSchemaBuilder()
-                    .Ref("schema2").Build()
+                    .Ref("schema1").Build()
             }
         };
 
@@ -416,13 +416,12 @@ securitySchemes:
         public void SerializeBrokenComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    type: string 
-  schema4:
-    type: string
-    allOf:
-      - type: string
+            var expected = @"schemas: schema1:
+  type: string
+schema4:
+  type: string
+  allOf:
+  - type: string
 ";
 
             // Act
@@ -438,14 +437,14 @@ securitySchemes:
         public void SerializeTopLevelReferencingComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    $ref: '#/components/schemas/schema2'
-  schema2:
-    type: object
-    properties:
-      property1:
-        type: string";
+            var expected = @"schemas: schema1:
+  $ref: schema2
+schema2:
+  type: object
+  properties:
+    property1:
+      type: string
+";
 
             // Act
             var actual = TopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -476,17 +475,18 @@ securitySchemes:
         public void SerializeTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    type: object
-    properties:
-      property1:
-        type: string
-  schema2:
-    type: object
-    properties:
-      property1:
-        type: string";
+            var expected = @"schemas: schema1:
+  type: object
+  properties:
+    property1:
+      type: string
+      $ref: schema1
+schema2:
+  type: object
+  properties:
+    property1:
+      type: string
+";
 
             // Act
             var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
