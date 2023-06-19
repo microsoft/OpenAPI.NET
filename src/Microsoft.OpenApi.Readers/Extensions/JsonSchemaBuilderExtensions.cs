@@ -136,8 +136,10 @@ namespace Microsoft.OpenApi.Readers.Extensions
         }
     }
 
+    [SchemaKeyword(Name)]
     internal class AdditionalPropertiesAllowedKeyword : IJsonSchemaKeyword
     {
+        public const string Name = "additionalPropertiesAllowed";
         internal bool AdditionalPropertiesAllowed { get; }
 
         internal AdditionalPropertiesAllowedKeyword(bool additionalPropertiesAllowed)
