@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true if the rule is successfully removed; otherwise, false.</returns>
         public bool Remove(ValidationRule rule)
         {
-            return _rules.Values.Remove(rule);
+            return _rules.Values.Remove((IList<ValidationRule>)rule);
         }
 
         /// <summary>
