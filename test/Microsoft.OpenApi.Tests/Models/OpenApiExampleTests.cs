@@ -97,7 +97,8 @@ namespace Microsoft.OpenApi.Tests.Models
                             }
                         }
                     }
-                }
+                },
+                ["aDate"] = JsonSerializer.Serialize(DateTime.Parse("12/12/2022 00:00:00").ToString("yyyy-MM-dd"))
             })
         };
 
