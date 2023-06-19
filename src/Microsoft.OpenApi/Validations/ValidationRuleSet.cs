@@ -182,16 +182,12 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true, if the update was successful; otherwise false.</returns>
         public bool Update(string key, ValidationRule newRule, ValidationRule oldRule)
         {
-            if (!_rules.ContainsKey(key))
+            if (_rules.TryGetValue(key, out var currentRules))
             {
-                return false;
+                currentRules.Add(newRule);
+                return currentRules.Remove(oldRule);
             }
-            else
-            {
-                _rules[key].Remove(oldRule);
-                _rules[key].Add(newRule);
-                return true;
-            }
+            return false;
         }
 
         /// <summary>
