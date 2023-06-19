@@ -7,11 +7,16 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.More;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using SharpYaml.Serialization;
+//using SharpYaml.Serialization;
 using Yaml2JsonNode;
+using YamlDotNet.RepresentationModel;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+
 
 namespace Microsoft.OpenApi.Models
 {
@@ -179,8 +184,23 @@ namespace Microsoft.OpenApi.Models
             // schemas
             if (Schemas31 != null && Schemas31.Any())
             {
-                writer.WritePropertyName(OpenApiConstants.Schemas);
-                writer.WriteRaw(JsonSerializer.Serialize(Schemas31));
+                if (writer is OpenApiYamlWriter)
+                {
+                    var document = Schemas31.ToJsonDocument();
+                    var yamlNode = ConvertJsonToYaml(document.RootElement);
+                    var serializer = new SerializerBuilder()
+                                        .Build();
+
+                    var yamlSchema = serializer.Serialize(yamlNode);
+
+                    writer.WritePropertyName(OpenApiConstants.Schemas);
+                    writer.WriteRaw(yamlSchema);
+                }
+                else
+                {
+                    writer.WritePropertyName(OpenApiConstants.Schemas);
+                    writer.WriteRaw(JsonSerializer.Serialize(Schemas31));
+                }
             }
 
             // responses
@@ -351,6 +371,46 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Components object does not exist in V2.
+        }
+
+        private static YamlNode ConvertJsonToYaml(JsonElement element)
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Object:
+                    var yamlObject = new YamlMappingNode();
+                    foreach (var property in element.EnumerateObject())
+                    {
+                        yamlObject.Add(property.Name, ConvertJsonToYaml(property.Value));
+                    }
+                    return yamlObject;
+
+                case JsonValueKind.Array:
+                    var yamlArray = new YamlSequenceNode();
+                    foreach (var item in element.EnumerateArray())
+                    {
+                        yamlArray.Add(ConvertJsonToYaml(item));
+                    }
+                    return yamlArray;
+
+                case JsonValueKind.String:
+                    return new YamlScalarNode(element.GetString());
+
+                case JsonValueKind.Number:
+                    return new YamlScalarNode(element.GetRawText());
+
+                case JsonValueKind.True:
+                    return new YamlScalarNode("true");
+
+                case JsonValueKind.False:
+                    return new YamlScalarNode("false");
+
+                case JsonValueKind.Null:
+                    return new YamlScalarNode("null");
+
+                default:
+                    throw new NotSupportedException($"Unsupported JSON value kind: {element.ValueKind}");
+            }
         }
     }
 }
