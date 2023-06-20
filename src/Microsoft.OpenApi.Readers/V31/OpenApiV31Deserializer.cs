@@ -145,12 +145,6 @@ namespace Microsoft.OpenApi.Readers.V31
             }
         }
 
-        private static RuntimeExpression LoadRuntimeExpression(ParseNode node)
-        {
-            var value = node.GetScalarValue();
-            return RuntimeExpression.Build(value);
-        }
-
         private static RuntimeExpressionAnyWrapper LoadRuntimeExpressionAnyWrapper(ParseNode node)
         {
             var value = node.GetScalarValue();

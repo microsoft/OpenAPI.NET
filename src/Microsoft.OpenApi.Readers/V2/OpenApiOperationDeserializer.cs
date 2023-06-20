@@ -169,8 +169,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         k => k.Name,
                         v =>
                         {
-                            var schema = new JsonSchemaBuilder().Description(v.Description).Extensions(v.Extensions).Build();
-                            schema = v.Schema31;
+                            var schema = v.Schema31;
                             return schema;
                         })).Required(new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))).Build()
             };

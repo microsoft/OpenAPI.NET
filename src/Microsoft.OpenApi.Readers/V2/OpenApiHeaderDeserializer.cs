@@ -136,38 +136,6 @@ namespace Microsoft.OpenApi.Readers.V2
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        private static readonly AnyFieldMap<OpenApiHeader> _headerAnyFields =
-            new AnyFieldMap<OpenApiHeader>
-            {
-                {
-                    OpenApiConstants.Default,
-                    new AnyFieldMapParameter<OpenApiHeader>(
-                        p => new OpenApiAny(p.Schema31?.GetDefault()),
-                        (p, v) =>
-                        {
-                            if(p.Schema31 == null) return;
-                           v = new OpenApiAny(p.Schema31.GetDefault());
-                        },
-                        p => p.Schema31)
-                }
-            };
-
-        private static readonly AnyListFieldMap<OpenApiHeader> _headerAnyListFields =
-            new AnyListFieldMap<OpenApiHeader>
-            {
-                {
-                    OpenApiConstants.Enum,
-                    new AnyListFieldMapParameter<OpenApiHeader>(
-                        p => p.Schema31?.GetEnum().ToList(),
-                        (p, v) =>
-                        {
-                            if(p.Schema31 == null) return;
-                            v = p.Schema31.GetEnum().ToList();
-                        },
-                        p => p.Schema31)
-                },
-            };
-
         public static OpenApiHeader LoadHeader(ParseNode node)
         {
             var mapNode = node.CheckMapNode("header");
@@ -183,9 +151,6 @@ namespace Microsoft.OpenApi.Readers.V2
                 header.Schema31 = schema;
                 node.Context.SetTempStorage("schema", null);
             }
-
-            //ProcessAnyFields(mapNode, header, _headerAnyFields);
-            //ProcessAnyListFields(mapNode, header, _headerAnyListFields);
 
             return header;
         }

@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V31
             Diagnostic = diagnostic;
         }
 
-        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        private readonly IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
         {
             [typeof(OpenApiAny)] = OpenApiV31Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV31Deserializer.LoadCallback,
@@ -186,27 +186,24 @@ namespace Microsoft.OpenApi.Readers.V31
 
             var segments = localReference.Split('/');
 
-            if (segments.Length == 4) // /components/{type}/pet
+            if (segments.Length == 4 && segments[1] == "components") // /components/{type}/pet
             {
-                if (segments[1] == "components")
+                var referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
+                var refId = segments[3];
+                if (segments[2] == "pathItems")
                 {
-                    var referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
-                    var refId = segments[3];
-                    if (segments[2] == "pathItems")
-                    {
-                        refId = "/" + segments[3];
-                    };
+                    refId = "/" + segments[3];
+                };
 
-                    var parsedReference = new OpenApiReference
-                    {
-                        Summary = summary,
-                        Description = description,
-                        Type = referenceType,
-                        Id = refId
-                    };
+                var parsedReference = new OpenApiReference
+                {
+                    Summary = summary,
+                    Description = description,
+                    Type = referenceType,
+                    Id = refId
+                };
 
-                    return parsedReference;
-                }
+                return parsedReference;
             }
 
             throw new OpenApiException(string.Format(SRResource.ReferenceHasInvalidFormat, localReference));

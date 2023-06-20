@@ -395,7 +395,6 @@ namespace Microsoft.OpenApi.Models
                 // multipleOf
                 if (Schema31 != null)
                 {
-                    //writer.WriteRaw(JsonSerializer.Serialize(Schema31));
                     SchemaSerializerHelper.WriteAsItemsProperties(Schema31, writer, Extensions);
 
                     //if (Schema31.Extensions != null)

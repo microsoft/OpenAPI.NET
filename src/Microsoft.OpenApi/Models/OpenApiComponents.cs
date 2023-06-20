@@ -9,7 +9,6 @@ using Json.More;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-//using SharpYaml.Serialization;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 

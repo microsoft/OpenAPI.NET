@@ -228,14 +228,14 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
 
-            var builder = new JsonSchemaBuilder();
+            var schemaBuilder = new JsonSchemaBuilder();
 
             foreach (var propertyNode in mapNode)
             {
-                propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
+                propertyNode.ParseField(schemaBuilder, _schemaFixedFields, _schemaPatternFields);
             }
 
-            var schema = builder.Build();
+            var schema = schemaBuilder.Build();
             return schema;
         }
     }

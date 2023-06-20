@@ -628,18 +628,5 @@ namespace Microsoft.OpenApi.Models
             }
             base.Visit(referenceable);
         }
-
-        //public override void Visit(JsonSchema schema)
-        //{
-        //    // This is needed to handle schemas used in Responses in components
-        //    if (schema.Reference != null)
-        //    {
-        //        if (!Schemas.ContainsKey(schema.Reference.Id))
-        //        {
-        //            Schemas.Add(schema.Reference.Id, schema);
-        //        }
-        //    }
-        //    base.Visit(schema);
-        //}
     }
 }

@@ -212,8 +212,6 @@ namespace Microsoft.OpenApi.Models
                 if (mediatype.Value != null)
                 {
                     // schema
-                    //writer.WriteRaw(OpenApiConstants.Schema, JsonSerializer.Serialize(mediatype.Value.Schema31));
-
                     writer.WriteOptionalObject(
                         OpenApiConstants.Schema,
                         mediatype.Value.Schema31,
