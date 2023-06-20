@@ -234,21 +234,6 @@ namespace Microsoft.OpenApi.Readers.V2
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
-
-                switch (propertyNode.Name)
-                {
-                    case "default":
-                        builder.Default(node.CreateAny().Node);
-                        break;
-                    case "example":
-                        builder.Example(node.CreateAny().Node);
-                        break;
-                    case "enum":
-                        builder.Enum(node.CreateAny().Node);
-                        break;
-                    default:
-                        break;
-                }
             }
 
             var schema = builder.Build();

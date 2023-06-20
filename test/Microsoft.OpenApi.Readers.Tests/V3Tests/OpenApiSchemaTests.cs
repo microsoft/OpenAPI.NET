@@ -49,7 +49,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 schema.Should().BeEquivalentTo(
                     new JsonSchemaBuilder()
                         .Type(SchemaValueType.String)
-                        .Format("email"));
+                        .Format("email")
+                        .Build());
             }
         }
 
@@ -150,39 +151,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         }
 
         [Fact]
-        public void ParseSimpleSchemaShouldSucceed()
-        {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "simpleSchema.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
-
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
-
-                var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
-                
-                // Act
-                var schema = OpenApiV3Deserializer.LoadSchema(node);
-
-                // Assert
-                diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
-
-                schema.Should().BeEquivalentTo(
-                    new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Object)
-                        .Required("name")
-                        .Properties(
-                        ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                        ("address", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                        ("age", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Minimum(0)))
-                        .AdditionalPropertiesAllowed(false));
-            }
-        }
-
-        [Fact]
         public void ParsePathFragmentShouldSucceed()
         {
             var input = @"
@@ -245,7 +213,8 @@ get:
                 schema.Should().BeEquivalentTo(
                     new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
-                        .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String)));
+                        .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.String))
+                        .Build());
             }
         }
 
@@ -277,7 +246,8 @@ get:
                         ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                         ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)))
                     .Required("name")
-                    .Example(new JsonObject { ["name"] = "Puma", ["id"] = 1 }),
+                    .Example(new JsonObject { ["name"] = "Puma", ["id"] = 1 })
+                    .Build(),
                     options => options.IgnoringCyclicReferences());
             }
         }

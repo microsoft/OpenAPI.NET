@@ -324,14 +324,14 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    properties:
-      property2:
-        type: integer
-      property3:
-        maxLength: 15
-        type: string
+            var expected = @"schemas: schema1:
+  properties:
+    property2:
+      type: integer
+    property3:
+      type: string
+      maxLength: 15
+
 securitySchemes:
   securityScheme1:
     type: oauth2

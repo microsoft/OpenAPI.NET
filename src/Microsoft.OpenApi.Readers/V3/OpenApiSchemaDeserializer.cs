@@ -172,7 +172,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     if (n is ValueNode)
                     {
-                        o.AdditionalProperties(bool.Parse(n.GetScalarValue()));
+                        o.AdditionalPropertiesAllowed(bool.Parse(n.GetScalarValue()));
                     }
                     else
                     {
@@ -241,7 +241,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             },
             {
-                "examples", (o, n) =>
+                "example", (o, n) =>
                 {
                     if(n is ListNode)
                     {
@@ -249,7 +249,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
                     else
                     {
-                        o.Examples(n.CreateAny().Node);
+                        o.Example(n.CreateAny().Node);
                     }
                 }
             },
@@ -275,43 +275,12 @@ namespace Microsoft.OpenApi.Readers.V3
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
-
-                switch(propertyNode.Name)
-                {
-                    case "default":
-                        builder.Default(node.CreateAny().Node);
-                        break;
-                    case "example":
-                        builder.Example(node.CreateAny().Node);
-                        break;
-                    case "enum":
-                        builder.Enum(node.CreateAny().Node);
-                        break;
-                }
             }
 
             //builder.Extensions(LoadExtension(node));
 
             var schema = builder.Build();
             return schema;
-        }
-        //private static string ParseExclusiveFields(decimal value, ParseNode node)
-        //{
-        //    var builder = new JsonSchemaBuilder();
-        //    var exclusiveValue = node.GetScalarValue();
-        //    var exclusiveValueType = SchemaTypeConverter.ConvertToSchemaValueType(exclusiveValue);
-
-        //    //if (exclusiveValueType is SchemaValueType.Boolean)
-        //    //{
-        //    //    exclusiveValue = bool.Parse(exclusiveValue);
-        //    //}
-        //    //else
-        //    //{
-        //    //    exclusiveValue = decimal.Parse(exclusiveValue, NumberStyles.Float, CultureInfo.InvariantCulture);
-        //    //}
-
-        //    builder.ExclusiveMaximum(bool.Parse(exclusiveValue));
-        //    return value;
-        //}
+        }       
     }
 }
