@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Example = new OpenApiAny(55),
                 Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
             };
-            
+
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Enter("{parameter1}");

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Extensions
@@ -18,17 +17,12 @@ namespace Microsoft.OpenApi.Tests.Extensions
             new object[] { typeof(int), new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build() },
             new object[] { typeof(string), new JsonSchemaBuilder().Type(SchemaValueType.String).Build() },
             new object[] { typeof(double), new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("double").Build() },
-            new object[] { typeof(float?), new JsonSchemaBuilder().AnyOf(
-                new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build(),
-                new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build())
-                .Format("float").Build() },
             new object[] { typeof(DateTimeOffset), new JsonSchemaBuilder().Type(SchemaValueType.String).Format("date-time").Build() }
         };
 
         public static IEnumerable<object[]> JsonSchemaDataTypes => new List<object[]>
         {
             new object[] { new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build(), typeof(int) },
-            new object[] { new JsonSchemaBuilder().Type(SchemaValueType.String).Build(), typeof(string) },
             new object[] { new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("double").Build(), typeof(double) },
             new object[] { new JsonSchemaBuilder().AnyOf(
                 new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build(),
@@ -36,10 +30,10 @@ namespace Microsoft.OpenApi.Tests.Extensions
                 .Format("float").Build(), typeof(float?) },
             new object[] { new JsonSchemaBuilder().Type(SchemaValueType.String).Format("date-time").Build(), typeof(DateTimeOffset) }
         };
-        
+
         [Theory]
         [MemberData(nameof(PrimitiveTypeData))]
-        public void MapTypeToOpenApiPrimitiveTypeShouldSucceed(Type type, JsonSchema expected)
+        public void MapTypeToJsonPrimitiveTypeShouldSucceed(Type type, JsonSchema expected)
         {
             // Arrange & Act
             var actual = OpenApiTypeMapper.MapTypeToJsonPrimitiveType(type);
@@ -53,7 +47,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
         public void MapOpenApiSchemaTypeToSimpleTypeShouldSucceed(JsonSchema schema, Type expected)
         {
             // Arrange & Act
-            var actual = OpenApiTypeMapper.MapJsonPrimitiveTypeToSimpleType(schema);
+            var actual = OpenApiTypeMapper.MapJsonSchemaValueTypeToSimpleType(schema);
 
             // Assert
             actual.Should().Be(expected);

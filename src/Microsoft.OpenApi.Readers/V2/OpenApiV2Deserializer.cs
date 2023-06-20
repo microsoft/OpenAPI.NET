@@ -48,8 +48,8 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     mapNode.Context.StartObject(anyFieldName);
                     var anyFieldValue = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
-                    
-                    if(anyFieldValue == null)
+
+                    if (anyFieldValue == null)
                     {
                         anyFieldMap[anyFieldName].PropertySetter(domainObject, null);
                     }
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             }
         }
-        
+
         public static OpenApiAny LoadAny(ParseNode node)
         {
             return node.CreateAny();

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
@@ -130,7 +129,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         if (type == null)
                         {
                             type = referencedType;
-                        } 
+                        }
                         else
                         {
                             if (type != referencedType)
@@ -208,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         Type = referenceType,
                         Id = refId
                     };
-                    
+
                     return parsedReference;
                 }
             }

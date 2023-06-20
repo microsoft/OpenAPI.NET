@@ -30,25 +30,27 @@ namespace Microsoft.OpenApi.Tests
         {
             var workspace = new OpenApiWorkspace();
 
-            workspace.AddDocument("root", new OpenApiDocument() {
+            workspace.AddDocument("root", new OpenApiDocument()
+            {
                 Paths = new OpenApiPaths()
                 {
                     ["/"] = new OpenApiPathItem()
                     {
-                        Operations  = new Dictionary<OperationType, OpenApiOperation>()
+                        Operations = new Dictionary<OperationType, OpenApiOperation>()
                         {
-                            [OperationType.Get] = new OpenApiOperation() {
+                            [OperationType.Get] = new OpenApiOperation()
+                            {
                                 Responses = new OpenApiResponses()
                                 {
                                     ["200"] = new OpenApiResponse()
                                     {
-                                       Content = new Dictionary<string,OpenApiMediaType>()
-                                       {
-                                           ["application/json"] = new OpenApiMediaType()
-                                           {
-                                               Schema31 = new JsonSchemaBuilder().Ref("test").Build()
-                                           }
-                                       }
+                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        {
+                                            ["application/json"] = new OpenApiMediaType()
+                                            {
+                                                Schema31 = new JsonSchemaBuilder().Ref("test").Build()
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -56,7 +58,8 @@ namespace Microsoft.OpenApi.Tests
                     }
                 }
             });
-            workspace.AddDocument("common", new OpenApiDocument() {
+            workspace.AddDocument("common", new OpenApiDocument()
+            {
                 Components = new OpenApiComponents()
                 {
                     Schemas31 = {
@@ -77,7 +80,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Id = "test",
                 Type = ReferenceType.Schema,
-                ExternalResource ="common"
+                ExternalResource = "common"
             }) as JsonSchema;
 
             Assert.NotNull(schema);
@@ -99,15 +102,15 @@ namespace Microsoft.OpenApi.Tests
                       re.Description = "Success";
                       re.CreateContent("application/json", co =>
                           co.Schema31 = new JsonSchemaBuilder().Ref("test").Build()
-                          //{
-                          //    Reference = new OpenApiReference()  // Reference
-                          //    {
-                          //        Id = "test",
-                          //        Type = ReferenceType.Schema,
-                          //        ExternalResource = "common"
-                          //    },
-                          //    UnresolvedReference = true
-                          //}
+                      //{
+                      //    Reference = new OpenApiReference()  // Reference
+                      //    {
+                      //        Id = "test",
+                      //        Type = ReferenceType.Schema,
+                      //        ExternalResource = "common"
+                      //    },
+                      //    UnresolvedReference = true
+                      //}
                       );
                   })
                 );
@@ -206,40 +209,41 @@ namespace Microsoft.OpenApi.Tests
         }
     }
 
-    public static class OpenApiFactoryExtensions {
-
-    public static OpenApiDocument CreatePathItem(this OpenApiDocument document, string path, Action<OpenApiPathItem> config)
+    public static class OpenApiFactoryExtensions
     {
-        var pathItem = new OpenApiPathItem();
-        config(pathItem);
-        document.Paths = new OpenApiPaths();
-        document.Paths.Add(path, pathItem);
-        return document;
-    }
 
-    public static OpenApiPathItem CreateOperation(this OpenApiPathItem parent, OperationType opType, Action<OpenApiOperation> config)
-    {
-        var child = new OpenApiOperation();
-        config(child);
-        parent.Operations.Add(opType, child);
-        return parent;
-    }
+        public static OpenApiDocument CreatePathItem(this OpenApiDocument document, string path, Action<OpenApiPathItem> config)
+        {
+            var pathItem = new OpenApiPathItem();
+            config(pathItem);
+            document.Paths = new OpenApiPaths();
+            document.Paths.Add(path, pathItem);
+            return document;
+        }
 
-    public static OpenApiOperation CreateResponse(this OpenApiOperation parent, string status, Action<OpenApiResponse> config)
-    {
-        var child = new OpenApiResponse();
-        config(child);
-        parent.Responses.Add(status, child);
-        return parent;
-    }
+        public static OpenApiPathItem CreateOperation(this OpenApiPathItem parent, OperationType opType, Action<OpenApiOperation> config)
+        {
+            var child = new OpenApiOperation();
+            config(child);
+            parent.Operations.Add(opType, child);
+            return parent;
+        }
 
-    public static OpenApiResponse CreateContent(this OpenApiResponse parent, string mediaType, Action<OpenApiMediaType> config)
-    {
-        var child = new OpenApiMediaType();
-        config(child);
-        parent.Content.Add(mediaType, child);
-        return parent;
-    }
+        public static OpenApiOperation CreateResponse(this OpenApiOperation parent, string status, Action<OpenApiResponse> config)
+        {
+            var child = new OpenApiResponse();
+            config(child);
+            parent.Responses.Add(status, child);
+            return parent;
+        }
 
-}
+        public static OpenApiResponse CreateContent(this OpenApiResponse parent, string mediaType, Action<OpenApiMediaType> config)
+        {
+            var child = new OpenApiMediaType();
+            config(child);
+            parent.Content.Add(mediaType, child);
+            return parent;
+        }
+
+    }
 }

@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             var result = streamReader.ReadToEnd();
             return new OpenApiStringReader().ReadFragment<T>(result, OpenApiSpecVersion.OpenApi3_1, out OpenApiDiagnostic diagnostic4);
         }
-        
+
         [Fact]
         public void ParseDocumentWithWebhooksShouldSucceed()
         {
@@ -66,13 +66,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                             ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))
                         )
                         .Ref("#/components/schemas/newPet");
-            
+
             var components = new OpenApiComponents
             {
                 Schemas31 =
                 {
                     ["pet"] = petSchema,
-                    ["newPet"] = newPetSchema                    
+                    ["newPet"] = newPetSchema
                 }
             };
 
@@ -105,7 +105,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             .Type(SchemaValueType.Array)
                                             .Items(new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.String)
-                                            )                                            
+                                            )
                                         },
                                         new OpenApiParameter
                                         {

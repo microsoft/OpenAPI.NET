@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using Json.Schema;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {

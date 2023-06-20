@@ -3,7 +3,6 @@
 
 using System;
 using System.Text.Json.Nodes;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -33,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     {
                         pointer = array[tokenValue];
                     }
-                    else if(pointer is JsonObject map && !map.TryGetPropertyValue(token, out pointer))
+                    else if (pointer is JsonObject map && !map.TryGetPropertyValue(token, out pointer))
                     {
                         return null;
                     }

@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         .OneOf(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("double").Build(),
                             new JsonSchemaBuilder().Type(SchemaValueType.String).Build())
                         .Build(),
-            
+
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     })
                 .Build())
             .Build()
-            
+
         };
 
         public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
@@ -106,9 +106,9 @@ namespace Microsoft.OpenApi.Tests.Models
             .Build()
 
         };
-        
+
         public static OpenApiParameter QueryParameterWithMissingStyle = new OpenApiParameter
-        {            
+        {
             Name = "id",
             In = ParameterLocation.Query,
             Schema31 = new JsonSchemaBuilder()
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 new JsonSchemaBuilder()
                 .Type(SchemaValueType.Integer).Build())
             .Build()
-        };    
+        };
 
         public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter
         {
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act & Assert
             parameter.Explode.Should().Be(expectedExplode);
-        }        
+        }
 
         [Theory]
         [InlineData(ParameterLocation.Path, ParameterStyle.Simple)]
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Act & Assert
             parameter.SerializeAsV3(writer);
             writer.Flush();
-            
+
             parameter.Style.Should().Be(expectedStyle);
         }
 

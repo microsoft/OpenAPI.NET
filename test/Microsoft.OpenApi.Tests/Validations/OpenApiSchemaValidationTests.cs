@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Json.Schema;
-using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
@@ -101,7 +100,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                     }).Node)
                 .Type(SchemaValueType.Object)
                 .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build())
-                .Build();            
+                .Build();
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
@@ -137,7 +136,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var schema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(
-                    ("property1", 
+                    ("property1",
                     new JsonSchemaBuilder()
                         .Type(SchemaValueType.Array)
                         .Items(new JsonSchemaBuilder()
@@ -246,7 +245,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             var components = new OpenApiComponents
             {
-                Schemas31 = 
+                Schemas31 =
                 {
                     {
                         "Person",
@@ -261,8 +260,8 @@ namespace Microsoft.OpenApi.Validations.Tests
                             .Properties(("array", new JsonSchemaBuilder().Type(SchemaValueType.Array).Ref("Person").Build()))
                             .Build())
                         .Ref("Person")
-                        .Build()                        
-                    }                    
+                        .Build()
+                    }
                 }
             };
 

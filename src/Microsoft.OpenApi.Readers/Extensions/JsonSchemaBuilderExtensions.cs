@@ -3,10 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
 using Json.Schema;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.Extensions

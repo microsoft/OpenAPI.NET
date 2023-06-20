@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.V3
                     mapNode.Context.StartObject(anyFieldName);
 
                     var any = anyFieldMap[anyFieldName].PropertyGetter(domainObject);
-                    
+
                     if (any == null)
                     {
                         anyFieldMap[anyFieldName].PropertySetter(domainObject, null);
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.V3
             foreach (var anyMapFieldName in anyMapFieldMap.Keys.ToList())
             {
                 try
-                {                   
+                {
                     mapNode.Context.StartObject(anyMapFieldName);
 
                     foreach (var propertyMapElement in anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject))
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         if (propertyMapElement.Value != null)
                         {
                             var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
-                           
+
                             anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
                         }
                     }
@@ -167,7 +167,7 @@ namespace Microsoft.OpenApi.Readers.V3
         {
             return node.CreateAny();
         }
-        
+
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
             if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))

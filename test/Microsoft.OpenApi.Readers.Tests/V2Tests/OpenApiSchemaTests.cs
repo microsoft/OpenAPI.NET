@@ -4,13 +4,10 @@
 using System.IO;
 using FluentAssertions;
 using Json.Schema;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Readers.V2;
 using Xunit;
-using Json.Schema.OpenApi;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {

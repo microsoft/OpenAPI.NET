@@ -3,9 +3,7 @@
 
 using System;
 using Json.Schema;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
@@ -33,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// Function to set the value of the property.
         /// </summary>
         public Action<T, OpenApiAny> PropertySetter { get; }
-        
+
         /// <summary>
         /// Function to get the schema to apply to the property.
         /// </summary>

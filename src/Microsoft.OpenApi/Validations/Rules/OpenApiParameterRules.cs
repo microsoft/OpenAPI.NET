@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiParameter>(
                 (context, parameter) =>
                 {
-                    if (parameter.In == ParameterLocation.Path && 
+                    if (parameter.In == ParameterLocation.Path &&
                            !(context.PathString.Contains("{" + parameter.Name + "}") || context.PathString.Contains("#/components")))
                     {
                         context.Enter("in");

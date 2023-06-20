@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime;
 using System.Text.Json;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
@@ -109,7 +108,7 @@ namespace Microsoft.OpenApi.Models
         /// The schema defining the type used for the request body.
         /// </summary>
         public JsonSchema Schema31 { get; set; }
-        
+
         /// <summary>
         /// Examples of the media type. Each example SHOULD contain a value
         /// in the correct format as specified in the parameter encoding.
@@ -148,7 +147,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A parameterless constructor
         /// </summary>
-        public OpenApiParameter() {}
+        public OpenApiParameter() { }
 
         /// <summary>
         /// Initializes a clone instance of <see cref="OpenApiParameter"/> object
@@ -172,26 +171,26 @@ namespace Microsoft.OpenApi.Models
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
             Deprecated = parameter?.Deprecated ?? Deprecated;
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.1
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), 
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
-        }        
+        }
 
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback, 
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
@@ -204,7 +203,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     callback(writer, Reference);
                     return;
-                } 
+                }
                 else
                 {
                     target = GetEffective(Reference.HostDocument);
@@ -229,26 +228,26 @@ namespace Microsoft.OpenApi.Models
                 return this;
             }
         }
-        
+
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
         public void SerializeAsV31WithoutReference(IOpenApiWriter writer)
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, 
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
                 (writer, element) => element.SerializeAsV31(writer));
         }
-        
+
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
-            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
+            SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
                 (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
@@ -270,7 +269,7 @@ namespace Microsoft.OpenApi.Models
 
             // allowEmptyValue
             writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
-            
+
             // style
             if (_style.HasValue)
             {
@@ -284,7 +283,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            if(Schema31 != null)
+            if (Schema31 != null)
             {
                 writer.WritePropertyName(OpenApiConstants.Schema);
                 writer.WriteRaw(JsonSerializer.Serialize(Schema31/*, new JsonSerializerOptions { WriteIndented = true }*/));
@@ -319,7 +318,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV2(writer);
                     return;
-                } 
+                }
                 else
                 {
                     target = this.GetEffective(Reference.HostDocument);
@@ -447,7 +446,7 @@ namespace Microsoft.OpenApi.Models
                 ParameterLocation.Cookie => (ParameterStyle?)ParameterStyle.Form,
                 _ => (ParameterStyle?)ParameterStyle.Simple,
             };
-            
+
             return Style;
         }
     }

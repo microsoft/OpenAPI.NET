@@ -3,7 +3,6 @@
 
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
@@ -60,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 var asJsonNode = yamlNode.ToJsonNode();
                 var node = new MapNode(context, asJsonNode);
-                
+
                 // Act
                 var encoding = OpenApiV3Deserializer.LoadEncoding(node);
 

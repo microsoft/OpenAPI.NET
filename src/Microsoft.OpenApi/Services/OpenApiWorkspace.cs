@@ -4,9 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -25,11 +22,13 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// A list of OpenApiDocuments contained in the workspace
         /// </summary>
-        public IEnumerable<OpenApiDocument> Documents {
-            get {
+        public IEnumerable<OpenApiDocument> Documents
+        {
+            get
+            {
                 return _documents.Values;
             }
-        }  
+        }
 
         /// <summary>
         /// A list of document fragments that are contained in the workspace
@@ -60,13 +59,13 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public OpenApiWorkspace()
         {
-            BaseUrl = new Uri("file://" + Environment.CurrentDirectory + "\\" );
+            BaseUrl = new Uri("file://" + Environment.CurrentDirectory + "\\");
         }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiWorkspace"/> object
         /// </summary>
-        public OpenApiWorkspace(OpenApiWorkspace workspace){}
+        public OpenApiWorkspace(OpenApiWorkspace workspace) { }
 
         /// <summary>
         /// Verify if workspace contains a document based on its URL. 
@@ -84,7 +83,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="location"></param>
         /// <param name="document"></param>
-        public void AddDocument(string location, OpenApiDocument  document)
+        public void AddDocument(string location, OpenApiDocument document)
         {
             document.Workspace = this;
             _documents.Add(ToLocationUrl(location), document);

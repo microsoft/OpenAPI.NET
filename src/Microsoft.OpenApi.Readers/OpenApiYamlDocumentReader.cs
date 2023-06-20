@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +15,6 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.Services;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers
 {

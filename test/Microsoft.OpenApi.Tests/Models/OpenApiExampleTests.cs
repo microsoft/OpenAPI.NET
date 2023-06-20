@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
-        
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]

@@ -3,11 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -71,7 +69,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public OpenApiPathItem() {}
+        public OpenApiPathItem() { }
 
         /// <summary>
         /// Initializes a clone of an <see cref="OpenApiPathItem"/> object
@@ -93,7 +91,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), 
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
         }
 
@@ -102,10 +100,10 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
         /// </summary>
@@ -121,7 +119,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     callback(writer, Reference);
                     return;
-                } 
+                }
                 else
                 {
                     target = GetEffective(Reference.HostDocument);
@@ -162,7 +160,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV2(writer);
                     return;
-                } 
+                }
                 else
                 {
                     target = this.GetEffective(Reference.HostDocument);
@@ -209,7 +207,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
 
         }
-        
+
         /// <summary>
         /// Serialize inline PathItem in OpenAPI V31
         /// </summary>
@@ -226,7 +224,7 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
-            
+
         }
 
         private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,

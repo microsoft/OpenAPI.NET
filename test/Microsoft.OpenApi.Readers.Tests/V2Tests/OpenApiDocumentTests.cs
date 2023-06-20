@@ -2,17 +2,12 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Threading;
 using FluentAssertions;
 using Json.Schema;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using System.Linq;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -234,14 +229,16 @@ paths:
                 .Type(SchemaValueType.Array)
                 .Items(new JsonSchemaBuilder()
                     .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")))
-                    .Ref("Item"));
+                    .Ref("Item"))
+                .Build();
 
             var errorSchema = new JsonSchemaBuilder()
                     .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                    .Ref("Error");
-            
+                    .Ref("Error")
+                    .Build();
+
             var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
             foreach (var response in responses)
             {
@@ -249,12 +246,12 @@ paths:
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
-                Assert.Equal(json.Schema31.Keywords.OfType<TypeKeyword>().FirstOrDefault().Type, targetSchema.Build().GetJsonType());
-                //json.Schema31.Keywords.OfType<TypeKeyword>().FirstOrDefault().Type.Should().BeEquivalentTo(targetSchema.Build().GetJsonType());
+                //Assert.Equal(json.Schema31.Keywords.OfType<TypeKeyword>().FirstOrDefault().Type, targetSchema.Build().GetJsonType());
+                json.Schema31.Should().BeEquivalentTo(targetSchema);
 
                 var xml = response.Value.Content["application/xml"];
                 Assert.NotNull(xml);
-                //xml.Schema31.Should().BeEquivalentTo(targetSchema);
+                xml.Schema31.Should().BeEquivalentTo(targetSchema);
             }
         }
 

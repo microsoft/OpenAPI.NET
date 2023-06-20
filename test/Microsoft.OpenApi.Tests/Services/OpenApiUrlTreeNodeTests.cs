@@ -19,7 +19,8 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             Paths = new OpenApiPaths()
             {
-                ["/"] = new OpenApiPathItem() {
+                ["/"] = new OpenApiPathItem()
+                {
                     Operations = new Dictionary<OperationType, OpenApiOperation>()
                     {
                         [OperationType.Get] = new OpenApiOperation(),

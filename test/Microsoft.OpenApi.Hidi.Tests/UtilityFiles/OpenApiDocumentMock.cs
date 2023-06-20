@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System.Text.Json.Nodes;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -186,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                 Required = true,
                                 Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
                             }
-                        }                                    
+                        }
                     },
                     ["/users"] = new OpenApiPathItem()
                     {
@@ -221,14 +219,14 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                             Schema31 = new JsonSchemaBuilder()
                                                             .Title("Collection of user")
                                                             .Type(SchemaValueType.Object)
-                                                            .Properties(("value", 
+                                                            .Properties(("value",
                                                                 new JsonSchemaBuilder()
                                                                     .Type(SchemaValueType.Array)
                                                                     .Items(new JsonSchemaBuilder()
                                                                         .Ref("microsoft.graph.user")
                                                                         .Build())
                                                                 .Build()))
-                                                            .Build()                                                            
+                                                            .Build()
                                                         }
                                                     }
                                                 }
@@ -407,7 +405,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                                 new JsonSchemaBuilder()
                                                                     .Type(SchemaValueType.String)
                                                                     .Build())
-                                                            .Build()                                                            
+                                                            .Build()
                                                         }
                                                     }
                                                 }
@@ -482,7 +480,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                             Schema31 = new JsonSchemaBuilder()
                                                             .Title("Collection of hostSecurityProfile")
                                                             .Type(SchemaValueType.Object)
-                                                            .Properties(("value1", 
+                                                            .Properties(("value1",
                                                                 new JsonSchemaBuilder()
                                                                     .Type(SchemaValueType.Array)
                                                                     .Items(new JsonSchemaBuilder().Ref("microsoft.graph.networkInterface").Build())

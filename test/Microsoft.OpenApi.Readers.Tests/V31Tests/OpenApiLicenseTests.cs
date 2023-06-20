@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
-using SharpYaml.Serialization;
 using System.IO;
-using Xunit;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V31;
+using SharpYaml.Serialization;
+using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -31,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var asJsonNode = yamlNode.ToJsonNode();
             var node = new MapNode(context, asJsonNode);
-            
+
             // Act
             var license = OpenApiV31Deserializer.LoadLicense(node);
 

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -39,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V31
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
-        
+
         internal static OpenApiLicense LoadLicense(ParseNode node)
         {
             var mapNode = node.CheckMapNode("License");

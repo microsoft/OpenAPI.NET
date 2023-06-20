@@ -5,10 +5,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
-using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
@@ -102,11 +100,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-                var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
-                
-                // Act
-                var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+
+            // Act
+            var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(
@@ -141,11 +139,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
 
-                var asJsonNode = yamlNode.ToJsonNode();
-                var node = new MapNode(context, asJsonNode);
-                
-                // Act
-                var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
+
+            // Act
+            var openApiInfo = OpenApiV3Deserializer.LoadInfo(node);
 
             // Assert
             openApiInfo.Should().BeEquivalentTo(

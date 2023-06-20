@@ -3,19 +3,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using Json.More;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 //using SharpYaml.Serialization;
-using Yaml2JsonNode;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 
 namespace Microsoft.OpenApi.Models
@@ -128,7 +124,7 @@ namespace Microsoft.OpenApi.Models
             }
 
             writer.WriteStartObject();
-            
+
             // pathItems - only present in v3.1
             writer.WriteOptionalMap(
             OpenApiConstants.PathItems,
@@ -148,7 +144,7 @@ namespace Microsoft.OpenApi.Models
             });
 
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer),
-               (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));          
+               (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));
         }
 
         /// <summary>
@@ -171,11 +167,11 @@ namespace Microsoft.OpenApi.Models
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer),
                 (writer, referenceElement) => referenceElement.SerializeAsV3WithoutReference(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/>.
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback, Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
@@ -264,9 +260,9 @@ namespace Microsoft.OpenApi.Models
                 (w, key, component) =>
                 {
                     if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.RequestBody && 
+                        component.Reference.Type == ReferenceType.RequestBody &&
                         string.Equals(component.Reference.Id, key, StringComparison.OrdinalIgnoreCase))
-                        
+
                     {
                         action(w, component);
                     }
@@ -347,7 +343,7 @@ namespace Microsoft.OpenApi.Models
                         callback(w, component);
                     }
                 });
-            
+
             // extensions
             writer.WriteExtensions(Extensions, version);
             writer.WriteEndObject();
@@ -364,7 +360,7 @@ namespace Microsoft.OpenApi.Models
             }
             writer.WriteEndObject();
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v2.0.
         /// </summary>

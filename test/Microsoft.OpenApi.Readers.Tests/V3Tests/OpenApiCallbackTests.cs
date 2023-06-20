@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicCallback.yaml"));
-            var yamlStream = new YamlStream();            
+            var yamlStream = new YamlStream();
             yamlStream.Load(new StreamReader(stream));
             var yamlNode = yamlStream.Documents.First().RootNode;
 

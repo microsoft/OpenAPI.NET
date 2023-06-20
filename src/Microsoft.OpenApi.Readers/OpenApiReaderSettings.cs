@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Validations;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json.Nodes;
 
 namespace Microsoft.OpenApi.Readers
 {

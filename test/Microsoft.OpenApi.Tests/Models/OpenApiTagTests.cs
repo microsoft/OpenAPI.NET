@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Interfaces;
@@ -47,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "pet"
             }
         };
-        
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]

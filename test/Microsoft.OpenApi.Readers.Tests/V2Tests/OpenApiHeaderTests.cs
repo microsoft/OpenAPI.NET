@@ -2,10 +2,8 @@
 // Licensed under the MIT license. 
 
 using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Json.Schema;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -39,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 .Type(SchemaValueType.Number)
                                 .Format("float")
                                 .Default(5)
-                }, 
+                },
                 options => options
                 .IgnoringCyclicReferences());
         }
@@ -56,7 +54,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Act
             var header = OpenApiV2Deserializer.LoadHeader(node);
-            
+
             // Assert
             header.Should().BeEquivalentTo(
                 new OpenApiHeader

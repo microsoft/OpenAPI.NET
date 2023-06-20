@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()),
                     ("property3", new JsonSchemaBuilder().Type(SchemaValueType.String).MaxLength(15).Build()))
                 .Build()
-                
+
             },
             SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
             {
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new JsonSchemaBuilder()
                 .Properties(
                     ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-                    ("property3", new JsonSchemaBuilder().Ref("#/components/schemas/schema2"))),                
+                    ("property3", new JsonSchemaBuilder().Ref("#/components/schemas/schema2"))),
                 ["schema2"] = new JsonSchemaBuilder()
                 .Properties(
                     ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))
@@ -170,7 +170,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     ("property3", new JsonSchemaBuilder().Ref("#/components/schemas/schema2").Build()))
                 .Ref("#/components/schemas/schema1")
                 .Build(),
-                
+
                 ["schema2"] = new JsonSchemaBuilder()
                 .Properties(
                     ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))
@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             }
         };
-        
+
         private readonly ITestOutputHelper _output;
 
         public OpenApiComponentsTests(ITestOutputHelper output)
@@ -536,7 +536,7 @@ schema2:
         public void SerializeComponentsWithPathItemsAsYamlWorks()
         {
             // Arrange
-        var expected = @"pathItems:
+            var expected = @"pathItems:
   /pets:
     post:
       requestBody:

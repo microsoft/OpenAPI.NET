@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.OpenApi.Expressions;
+﻿using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -39,6 +36,6 @@ namespace Microsoft.OpenApi.Readers.V31
             ParseMap(mapNode, domainObject, _callbackFixedFields, _callbackPatternFields);
 
             return domainObject;
-        }        
+        }
     }
 }

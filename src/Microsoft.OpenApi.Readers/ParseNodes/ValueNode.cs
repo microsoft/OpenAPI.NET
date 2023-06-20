@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Globalization;
 using System;
+using System.Globalization;
 using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Readers.Exceptions;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {

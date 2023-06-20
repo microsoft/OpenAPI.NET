@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
 using Xunit;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -143,7 +142,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                     }
                 },
-                Extensions = { 
+                Extensions = {
                     [OpenApiConstants.BodyName] = new OpenApiAny("petObject")
                 }
             },

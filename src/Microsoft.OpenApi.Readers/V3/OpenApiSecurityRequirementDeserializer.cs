@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -18,12 +17,12 @@ namespace Microsoft.OpenApi.Readers.V3
             var mapNode = node.CheckMapNode("security");
             string description = null;
             string summary = null;
-            
+
             var securityRequirement = new OpenApiSecurityRequirement();
 
             foreach (var property in mapNode)
             {
-                if(property.Name.Equals("description") || property.Name.Equals("summary"))
+                if (property.Name.Equals("description") || property.Name.Equals("summary"))
                 {
                     description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
                     summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);

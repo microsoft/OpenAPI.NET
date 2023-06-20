@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V31
     {
         public static JsonSchema LoadSchema(ParseNode node)
         {
-            return node.JsonNode.Deserialize<JsonSchema>();            
+            return node.JsonNode.Deserialize<JsonSchema>();
         }
     }
 

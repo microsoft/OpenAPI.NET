@@ -1,11 +1,7 @@
-﻿using FluentAssertions;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.OpenApi.Models;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -311,7 +307,7 @@ paths: {}
                     Errors =
                     {
                         new OpenApiError("#/", "Invalid host"),
-                        new OpenApiError("", "Paths is a REQUIRED field at #/")                        
+                        new OpenApiError("", "Paths is a REQUIRED field at #/")
                     },
                     SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
                 });

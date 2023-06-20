@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -233,7 +232,7 @@ summary: This is a sample server for a pet store.";
   ""version"": ""1.1.1"",
   ""summary"": ""This is a sample server for a pet store.""
 }";
-            
+
             // Act
             var actual = InfoWithSummary.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
 

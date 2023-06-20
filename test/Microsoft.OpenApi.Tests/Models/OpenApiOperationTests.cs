@@ -7,7 +7,6 @@ using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
-using NuGet.Frameworks;
 using Xunit;
 using Xunit.Abstractions;
 

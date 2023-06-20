@@ -3,13 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Extensions;
-using System.Text.Json.Nodes;
-using Microsoft.OpenApi.Any;
 using Json.Schema;
 using Json.Schema.OpenApi;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Services
 {
@@ -120,7 +119,7 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
             });
-            
+
             Walk(OpenApiConstants.SecuritySchemes, () =>
             {
                 if (components.SecuritySchemes != null)
@@ -131,7 +130,7 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
             });
-            
+
             Walk(OpenApiConstants.Callbacks, () =>
             {
                 if (components.Callbacks != null)
@@ -856,13 +855,13 @@ namespace Microsoft.OpenApi.Services
 
         internal void Walk(IReadOnlyCollection<JsonSchema> schemaCollection, bool isComponent = false)
         {
-            if(schemaCollection is null)
+            if (schemaCollection is null)
             {
                 return;
             }
 
             _visitor.Visit(schemaCollection);
-            foreach(var schema in schemaCollection)
+            foreach (var schema in schemaCollection)
             {
                 Walk(schema);
             }

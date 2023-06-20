@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text.Json.Nodes;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Json.Schema;
@@ -15,13 +13,11 @@ using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
 using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -53,7 +49,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 .Type(SchemaValueType.Object)
                                 .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
             }
-        
+
         };
 
         public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
@@ -101,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64").Build()),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()),
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
-                            .Ref("pet").Build(),                
+                            .Ref("pet").Build(),
                 ["newPet"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("name")
@@ -116,7 +112,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 .Properties(
                                     ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()),
                                     ("message", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
-                                .Ref("errorModel").Build()              
+                                .Ref("errorModel").Build()
             }
         };
 
@@ -175,7 +171,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = false,
                                     Schema31 = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.Array)
-                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.String).Build()).Build()                                 
+                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.String).Build()).Build()
                                 },
                                 new OpenApiParameter
                                 {
@@ -500,7 +496,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Schema31 = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Integer)
                                                 .Format("int32")
-                                                .Build()                                    
+                                                .Build()
                                 }
                             },
                             Responses = new OpenApiResponses
@@ -754,7 +750,7 @@ namespace Microsoft.OpenApi.Tests.Models
                             {
                                 ["200"] = new OpenApiResponse
                                 {
-                                    Description = "Return a 200 status to indicate that the data was received successfully"                                    
+                                    Description = "Return a 200 status to indicate that the data was received successfully"
                                 }
                             }
                         }
@@ -854,7 +850,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                             Schema31 = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
                                                         .Items(PetSchema)
-                                                        .Build()                                           
+                                                        .Build()
                                         },
                                     }
                                 }
@@ -1253,10 +1249,10 @@ paths:
             {
                 Info = new OpenApiInfo(),
                 Paths = new OpenApiPaths
-                {                    
+                {
                     ["/foo"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation> 
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
@@ -1274,7 +1270,7 @@ paths:
                     }
                 }
             };
-            
+
             // Act
             var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
 
@@ -1283,7 +1279,7 @@ paths:
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
-        
+
         [Fact]
         public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
         {
@@ -1365,7 +1361,7 @@ paths:
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
-        } 
+        }
 
         [Theory]
         [InlineData(true)]
@@ -1382,7 +1378,7 @@ paths:
             var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            await Verifier.Verify(actual).UseParameters(produceTerseOutput);            
+            await Verifier.Verify(actual).UseParameters(produceTerseOutput);
         }
 
         [Fact]
@@ -1420,7 +1416,7 @@ webhooks:
       responses:
         '200':
           description: Return a 200 status to indicate that the data was received successfully";
-            
+
             // Act
             var actual = DocumentWithWebhooks.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
 

@@ -374,7 +374,7 @@ paths:
 components: { }";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true } );
+            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV3(writer);
@@ -426,7 +426,7 @@ paths:
         {
             // Arrange
             var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("thing").Build();
-                
+
             var doc = new OpenApiDocument()
             {
                 Info = new OpenApiInfo()
@@ -460,7 +460,7 @@ paths:
                         ["thing"] = thingSchema}
                 }
             };
-           // thingSchema.Reference.HostDocument = doc;
+            // thingSchema.Reference.HostDocument = doc;
 
             return doc;
         }
@@ -524,7 +524,7 @@ components:
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
         {
             var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("thing");
-            thingSchema.Properties(("children", thingSchema)); 
+            thingSchema.Properties(("children", thingSchema));
             thingSchema.Properties(("children", thingSchema));
 
             var relatedSchema = new JsonSchemaBuilder().Type(SchemaValueType.Integer);

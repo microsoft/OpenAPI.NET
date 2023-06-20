@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.V31
                 var valueNode = mapNode.Where(x => x.Name.Equals(scalarValue))
                 .Select(static x => x.Value).OfType<ValueNode>().FirstOrDefault();
 
-                return valueNode.GetScalarValue();
+                return valueNode?.GetScalarValue();
             }
 
             return null;

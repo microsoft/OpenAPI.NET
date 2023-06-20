@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Text.Json.Nodes;
 using Json.Schema;
 using Json.Schema.OpenApi;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -181,7 +180,7 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "discriminator", (o, n) =>
-                {                    
+                {
                     var discriminator = new OpenApiDiscriminator
                     {
                         PropertyName = n.GetScalarValue()
@@ -224,7 +223,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             //{s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
-             
+
         public static JsonSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);

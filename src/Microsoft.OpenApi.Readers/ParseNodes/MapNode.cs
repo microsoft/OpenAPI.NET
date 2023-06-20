@@ -56,8 +56,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             var nodes = jsonMap.Select(
-                n => {
-                    
+                n =>
+                {
+
                     var key = n.Key;
                     T value;
                     try
@@ -66,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         value = n.Value is JsonObject jsonObject
                           ? map(new MapNode(Context, jsonObject))
                           : default;
-                    } 
+                    }
                     finally
                     {
                         Context.EndObject();
@@ -83,9 +84,9 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override Dictionary<string, T> CreateMapWithReference<T>(
             ReferenceType referenceType,
-            Func<MapNode, T> map) 
+            Func<MapNode, T> map)
         {
-            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);            
+            var jsonMap = _node ?? throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
 
             var nodes = jsonMap.Select(
                 n =>
@@ -111,7 +112,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                                 Id = entry.key
                             };
                         }
-                     }
+                    }
                     finally
                     {
                         Context.EndObject();
@@ -132,15 +133,17 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     try
                     {
                         Context.StartObject(key);
-                        JsonValue valueNode = n.Value is JsonValue value ? value 
-                        : throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);                        
-                       
+                        JsonValue valueNode = n.Value is JsonValue value ? value
+                        : throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);
+
                         return (key, value: map(new ValueNode(Context, valueNode)));
-                    } finally {
+                    }
+                    finally
+                    {
                         Context.EndObject();
                     }
                 });
-            
+
             return nodes.ToDictionary(k => k.key, v => v.value);
         }
 
@@ -185,7 +188,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             var scalarNode = _node[key.GetScalarValue()] is JsonValue jsonValue
                 ? jsonValue
                 : throw new OpenApiReaderException($"Expected scalar while parsing {key.GetScalarValue()}", Context);
-            
+
             return Convert.ToString(scalarNode?.GetValue<object>(), CultureInfo.InvariantCulture);
         }
 
@@ -194,7 +197,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// </summary>
         /// <returns>The created Json object.</returns>
         public override OpenApiAny CreateAny()
-        {            
+        {
             return new OpenApiAny(_node);
         }
     }

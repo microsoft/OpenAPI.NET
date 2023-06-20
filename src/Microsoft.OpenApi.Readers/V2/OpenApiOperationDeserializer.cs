@@ -3,11 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -215,7 +213,7 @@ namespace Microsoft.OpenApi.Readers.V2
             requestBody.Extensions[OpenApiConstants.BodyName] = new OpenApiAny(bodyParameter.Name);
             return requestBody;
         }
-        
+
         private static OpenApiTag LoadTagByReference(
             ParsingContext context,
             string tagName)

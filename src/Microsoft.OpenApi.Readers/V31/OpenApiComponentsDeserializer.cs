@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.OpenApi.Extensions;
+﻿using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -40,5 +39,5 @@ namespace Microsoft.OpenApi.Readers.V31
 
             return components;
         }
-    }    
+    }
 }

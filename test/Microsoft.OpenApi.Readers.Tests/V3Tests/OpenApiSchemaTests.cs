@@ -5,15 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
-using System.Xml.Linq;
 using FluentAssertions;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Extensions;
+using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
 using Xunit;
@@ -39,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
                 var asJsonNode = yamlNode.ToJsonNode();
                 var node = new MapNode(context, asJsonNode);
-                
+
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
@@ -113,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
             // Act
             var openApiAny = reader.ReadFragment<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
-            
+
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
 
@@ -121,10 +119,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new JsonObject
                 {
                     ["foo"] = "bar",
-                    ["baz"] = new JsonArray() {1, 2}
+                    ["baz"] = new JsonArray() { 1, 2 }
                 }), options => options.IgnoringCyclicReferences());
         }
-        
+
         [Fact]
         public void ParseEnumFragmentShouldSucceed()
         {
@@ -135,7 +133,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 ]";
             var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
-            
+
             // Act
             var openApiAny = reader.ReadFragment<OpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
 
@@ -203,7 +201,7 @@ get:
 
                 var asJsonNode = yamlNode.ToJsonNode();
                 var node = new MapNode(context, asJsonNode);
-                
+
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
@@ -232,7 +230,7 @@ get:
 
                 var asJsonNode = yamlNode.ToJsonNode();
                 var node = new MapNode(context, asJsonNode);
-                
+
                 // Act
                 var schema = OpenApiV3Deserializer.LoadSchema(node);
 
@@ -417,7 +415,7 @@ get:
 
             diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
-                { 
+                {
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
                     Errors = new List<OpenApiError>()
                         {

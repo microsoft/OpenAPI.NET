@@ -85,13 +85,15 @@ namespace Microsoft.OpenApi.Readers.V31
                     mapNode.Context.StartObject(anyListFieldName);
 
                     var propertyGetter = anyListFieldMap[anyListFieldName].PropertyGetter(domainObject);
-
-                    foreach (var propertyElement in propertyGetter)
+                    if (propertyGetter != null)
                     {
-                        newProperty.Add(propertyElement);
-                    }
+                        foreach (var propertyElement in propertyGetter)
+                        {
+                            newProperty.Add(propertyElement);
+                        }
 
-                    anyListFieldMap[anyListFieldName].PropertySetter(domainObject, newProperty);
+                        anyListFieldMap[anyListFieldName].PropertySetter(domainObject, newProperty);
+                    }
                 }
                 catch (OpenApiException exception)
                 {
@@ -115,16 +117,19 @@ namespace Microsoft.OpenApi.Readers.V31
                 try
                 {
                     mapNode.Context.StartObject(anyMapFieldName);
-
-                    foreach (var propertyMapElement in anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject))
+                    var propertyMapGetter = anyMapFieldMap[anyMapFieldName].PropertyMapGetter(domainObject);
+                    if (propertyMapGetter != null)
                     {
-                        mapNode.Context.StartObject(propertyMapElement.Key);
-
-                        if (propertyMapElement.Value != null)
+                        foreach (var propertyMapElement in propertyMapGetter)
                         {
-                            var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
+                            mapNode.Context.StartObject(propertyMapElement.Key);
 
-                            anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
+                            if (propertyMapElement.Value != null)
+                            {
+                                var any = anyMapFieldMap[anyMapFieldName].PropertyGetter(propertyMapElement.Value);
+
+                                anyMapFieldMap[anyMapFieldName].PropertySetter(propertyMapElement.Value, any);
+                            }
                         }
                     }
                 }

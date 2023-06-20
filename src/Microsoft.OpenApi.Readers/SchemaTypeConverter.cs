@@ -22,6 +22,6 @@ namespace Microsoft.OpenApi.Readers
                 "double" => SchemaValueType.Number,
                 _ => throw new NotSupportedException(),
             };
-        }        
+        }
     }
 }

@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var diagnostic = new OpenApiDiagnostic();
             var context = new ParsingContext(diagnostic);
-            
+
             var asJsonNode = yamlNode.ToJsonNode();
             var node = new MapNode(context, asJsonNode);
 
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             // Assert
             schema.Should().BeEquivalentTo(expectedSchema);
         }
-        
+
         [Fact]
         public void ParseStandardSchemaExampleSucceeds()
         {
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                 .Build();
 
             // Act
-            var title = myschema.Get<TitleKeyword>().Value;    
+            var title = myschema.Get<TitleKeyword>().Value;
             var description = myschema.Get<DescriptionKeyword>().Value;
             var nameProperty = myschema.Get<PropertiesKeyword>().Properties["name"];
 

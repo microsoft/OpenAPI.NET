@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiEncoding() {}
+        public OpenApiEncoding() { }
 
         /// <summary>
         /// Initializes a copy of an <see cref="OpenApiEncoding"/> object
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = encoding?.AllowReserved ?? AllowReserved;
             Extensions = encoding?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(encoding.Extensions) : null;
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiEncoding"/> to Open Api v3.1
         /// </summary>
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiEncoding"/> to Open Api v3.0
         /// </summary>
@@ -88,11 +88,11 @@ namespace Microsoft.OpenApi.Models
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiExternalDocs"/> to Open Api v3.0.
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));

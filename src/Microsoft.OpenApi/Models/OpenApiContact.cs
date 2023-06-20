@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -59,7 +58,7 @@ namespace Microsoft.OpenApi.Models
         {
             WriteInternal(writer, OpenApiSpecVersion.OpenApi3_1);
         }
-        
+
         /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
         /// </summary>

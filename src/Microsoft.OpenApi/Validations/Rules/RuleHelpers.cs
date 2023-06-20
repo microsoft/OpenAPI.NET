@@ -5,7 +5,6 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Schema;
-using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -51,7 +50,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             {
                 return;
             }
-            
+
             var type = schema.GetType().ToString();
             var format = schema.GetFormat().ToString();
 

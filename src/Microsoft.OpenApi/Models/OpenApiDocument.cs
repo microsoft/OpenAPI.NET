@@ -7,13 +7,12 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using Json.Schema;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
-using System.Text.Json;
 
 namespace Microsoft.OpenApi.Models
 {
@@ -23,7 +22,7 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IBaseDocument
     {
         private readonly Dictionary<JsonPointer, JsonSchema> _lookup = new();
-        
+
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
         /// </summary>
@@ -95,7 +94,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Parameter-less constructor
         /// </summary>
-        public OpenApiDocument() {}
+        public OpenApiDocument() { }
 
         /// <summary>
         /// Initializes a copy of an an <see cref="OpenApiDocument"/> object
@@ -113,7 +112,7 @@ namespace Microsoft.OpenApi.Models
             Tags = document?.Tags != null ? new List<OpenApiTag>(document.Tags) : null;
             ExternalDocs = document?.ExternalDocs != null ? new(document?.ExternalDocs) : null;
             Extensions = document?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(document.Extensions) : null;
-        }   
+        }
 
         /// <summary>
         /// Serialize <see cref="OpenApiDocument"/> to Open API v3.1 document.
@@ -124,16 +123,16 @@ namespace Microsoft.OpenApi.Models
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
-            
+
             // openApi;
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.1.0");
-            
+
             // jsonSchemaDialect
             writer.WriteProperty(OpenApiConstants.JsonSchemaDialect, JsonSchemaDialect);
 
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_1, (w, element) => element.SerializeAsV31(w),
                 (w, element) => element.SerializeAsV31WithoutReference(w));
-            
+
             // webhooks
             writer.WriteOptionalMap(
             OpenApiConstants.Webhooks,
@@ -164,10 +163,10 @@ namespace Microsoft.OpenApi.Models
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
 
             writer.WriteStartObject();
-            
+
             // openapi
             writer.WriteProperty(OpenApiConstants.OpenApi, "3.0.1");
-            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w), 
+            SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w),
                 (w, element) => element.SerializeAsV3WithoutReference(w));
             writer.WriteEndObject();
         }
@@ -179,10 +178,10 @@ namespace Microsoft.OpenApi.Models
         /// <param name="version"></param>
         /// <param name="callback"></param>
         /// <param name="action"></param>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
-            Action<IOpenApiWriter, IOpenApiSerializable> callback, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
+            Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
-        {            
+        {
             // info
             writer.WriteRequiredObject(OpenApiConstants.Info, Info, callback);
 
@@ -257,16 +256,16 @@ namespace Microsoft.OpenApi.Models
                 // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
                 // If the reference exists but points to other objects, the object is serialized to just that reference.
                 // definitions
-                if(Components?.Schemas31 != null)
+                if (Components?.Schemas31 != null)
                 {
                     writer.WritePropertyName(OpenApiConstants.Definitions);
-                    writer.WriteRaw(JsonSerializer.Serialize(Components?.Schemas31));               
+                    writer.WriteRaw(JsonSerializer.Serialize(Components?.Schemas31));
                 }
             }
 
             // parameters
-            var parameters = Components?.Parameters != null 
-                ? new Dictionary<string, OpenApiParameter>(Components.Parameters) 
+            var parameters = Components?.Parameters != null
+                ? new Dictionary<string, OpenApiParameter>(Components.Parameters)
                 : new Dictionary<string, OpenApiParameter>();
 
             if (Components?.RequestBodies != null)
@@ -368,13 +367,14 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(
                     OpenApiConstants.Host,
                     firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
-                
+
                 // basePath
                 if (firstServerUrl.AbsolutePath != "/")
                 {
                     writer.WriteProperty(OpenApiConstants.BasePath, firstServerUrl.AbsolutePath);
                 }
-            } else
+            }
+            else
             {
                 var relativeUrl = firstServerUrl.OriginalString;
                 if (relativeUrl.StartsWith("//"))
@@ -503,7 +503,7 @@ namespace Microsoft.OpenApi.Models
                     throw new ArgumentException(Properties.SRResource.WorkspaceRequredForExternalReferenceResolution);
                 }
                 return this.Workspace.ResolveReference(reference);
-            } 
+            }
 
             if (!reference.Type.HasValue)
             {
@@ -538,13 +538,13 @@ namespace Microsoft.OpenApi.Models
                         var resolvedSchema = this.Components.Schemas31[reference.Id];
                         //resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
                         return (IOpenApiReferenceable)resolvedSchema;
-                        
+
                     case ReferenceType.PathItem:
                         var resolvedPathItem = this.Components.PathItems[reference.Id];
                         resolvedPathItem.Description = reference.Description != null ? reference.Description : resolvedPathItem.Description;
                         resolvedPathItem.Summary = reference.Summary != null ? reference.Summary : resolvedPathItem.Summary;
                         return resolvedPathItem;
-                        
+
                     case ReferenceType.Response:
                         var resolvedResponse = this.Components.Responses[reference.Id];
                         resolvedResponse.Description = reference.Description != null ? reference.Description : resolvedResponse.Description;
@@ -565,17 +565,17 @@ namespace Microsoft.OpenApi.Models
                         var resolvedRequestBody = this.Components.RequestBodies[reference.Id];
                         resolvedRequestBody.Description = reference.Description != null ? reference.Description : resolvedRequestBody.Description;
                         return resolvedRequestBody;
-                        
+
                     case ReferenceType.Header:
                         var resolvedHeader = this.Components.Headers[reference.Id];
                         resolvedHeader.Description = reference.Description != null ? reference.Description : resolvedHeader.Description;
                         return resolvedHeader;
-                        
+
                     case ReferenceType.SecurityScheme:
                         var resolvedSecurityScheme = this.Components.SecuritySchemes[reference.Id];
                         resolvedSecurityScheme.Description = reference.Description != null ? reference.Description : resolvedSecurityScheme.Description;
                         return resolvedSecurityScheme;
-                        
+
                     case ReferenceType.Link:
                         var resolvedLink = this.Components.Links[reference.Id];
                         resolvedLink.Description = reference.Description != null ? reference.Description : resolvedLink.Description;
@@ -604,7 +604,7 @@ namespace Microsoft.OpenApi.Models
     {
         private Dictionary<string, JsonSchema> Schemas;
 
-        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, JsonSchema> schemas )
+        public static void ResolveSchemas(OpenApiComponents components, Dictionary<string, JsonSchema> schemas)
         {
             var visitor = new FindSchemaReferences();
             visitor.Schemas = schemas;

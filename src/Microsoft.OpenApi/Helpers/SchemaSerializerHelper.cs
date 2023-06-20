@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using Json.Schema;
-using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -32,7 +29,7 @@ namespace Microsoft.OpenApi.Helpers
             var format = schema.GetFormat()?.Key;
             if (string.IsNullOrEmpty(format))
             {
-                format = RetrieveFormatFromNestedSchema(schema.GetAllOf()) ?? RetrieveFormatFromNestedSchema(schema.GetOneOf()) 
+                format = RetrieveFormatFromNestedSchema(schema.GetAllOf()) ?? RetrieveFormatFromNestedSchema(schema.GetOneOf())
                     ?? RetrieveFormatFromNestedSchema(schema.GetAnyOf());
             }
             writer.WriteProperty(OpenApiConstants.Format, format);

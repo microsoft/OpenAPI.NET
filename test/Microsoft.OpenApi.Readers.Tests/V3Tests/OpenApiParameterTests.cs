@@ -270,7 +270,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         .Format("float")
                 }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Node.Parent));
         }
-        
+
         [Fact]
         public void ParseParameterWithExamplesShouldSucceed()
         {

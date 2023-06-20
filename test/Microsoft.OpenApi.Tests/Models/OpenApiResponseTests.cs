@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Json.Schema;
@@ -75,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer)    
+                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {

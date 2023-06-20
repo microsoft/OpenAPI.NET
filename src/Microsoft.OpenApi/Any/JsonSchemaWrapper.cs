@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Nodes;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -38,7 +35,7 @@ namespace Microsoft.OpenApi.Any
         {
             throw new NotImplementedException();
         }
-        
+
         /// <inheritdoc/>
         public void SerializeAsV2WithoutReference(IOpenApiWriter writer)
         {

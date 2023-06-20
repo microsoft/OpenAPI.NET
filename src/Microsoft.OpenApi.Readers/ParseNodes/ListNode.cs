@@ -35,11 +35,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override List<JsonNode> CreateListOfAny()
         {
-            return _nodeList.Select(n => Create(Context, n).CreateAny().Node)
+
+            var list = _nodeList.Select(n => Create(Context, n).CreateAny().Node)
                 .Where(i => i != null)
                 .ToList();
+
+            return list;
         }
-        
+
         public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
             if (_nodeList == null)
@@ -65,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// </summary>
         /// <returns>The created Any object.</returns>
         public override OpenApiAny CreateAny()
-        {            
+        {
             return new OpenApiAny(_nodeList);
         }
     }

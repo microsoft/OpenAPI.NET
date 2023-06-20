@@ -78,20 +78,20 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, OpenApiSpecVersion.OpenApi3_0, (w, element) => element.SerializeAsV3(w));
-        }        
-        
+        }
+
         /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.
         /// </summary>
-        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        private void SerializeInternal(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-            
+
             writer.WriteStartObject();
 
             // schema
-            if(Schema31 != null)
+            if (Schema31 != null)
             {
                 writer.WritePropertyName(OpenApiConstants.Schema);
                 writer.WriteRaw(JsonSerializer.Serialize(Schema31));
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Models
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));
-             
+
             // examples
             writer.WriteOptionalMap(OpenApiConstants.Examples, Examples, callback);
 
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Models
 
             // extensions
             writer.WriteExtensions(Extensions, version);
-            
+
             writer.WriteEndObject();
         }
 

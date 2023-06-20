@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         public static Stream GetStream(string fileName)
         {
             string path = GetPath(fileName);
-             Stream stream = typeof(Resources).Assembly.GetManifestResourceStream(path);
+            Stream stream = typeof(Resources).Assembly.GetManifestResourceStream(path);
 
             if (stream == null)
             {

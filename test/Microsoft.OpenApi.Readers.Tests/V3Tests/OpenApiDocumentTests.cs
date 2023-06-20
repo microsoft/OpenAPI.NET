@@ -3,12 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using FluentAssertions;
 using Json.Schema;
 using Microsoft.OpenApi.Any;
@@ -104,7 +101,7 @@ paths: {}",
 
             context.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()
-                { 
+                {
                     SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
                     Errors = new List<OpenApiError>()
                         {
@@ -122,7 +119,7 @@ paths: {}",
 
                 diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic()
-                    { 
+                    {
                         SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
                         Errors = new List<OpenApiError>()
                         {
@@ -204,7 +201,7 @@ paths: {}",
 
                 diagnostic.Should().BeEquivalentTo(
                     new OpenApiDiagnostic()
-                    { 
+                    {
                         SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
                         Errors = new List<OpenApiError>()
                         {
@@ -336,7 +333,7 @@ paths: {}",
                                             In = ParameterLocation.Query,
                                             Description = "maximum number of results to return",
                                             Required = false,
-                                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32") 
+                                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")
                                         }
                                     },
                                     Responses = new OpenApiResponses
@@ -1036,7 +1033,7 @@ paths: {}",
                 Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
             }
         }
-        
+
         [Fact]
         public void HeaderParameterShouldAllowExample()
         {

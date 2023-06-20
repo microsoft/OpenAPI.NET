@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using System;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests

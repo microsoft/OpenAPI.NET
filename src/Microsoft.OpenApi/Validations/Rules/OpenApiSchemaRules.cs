@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
+using System.Linq;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Properties;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {

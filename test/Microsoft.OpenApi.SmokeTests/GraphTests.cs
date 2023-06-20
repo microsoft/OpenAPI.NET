@@ -1,13 +1,9 @@
-﻿using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers;
-using Microsoft.OpenApi.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Services;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,7 +21,8 @@ namespace Microsoft.OpenApi.SmokeTests
             _output = output;
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             _httpClient = new HttpClient(new HttpClientHandler()
-            {                AutomaticDecompression = DecompressionMethods.GZip
+            {
+                AutomaticDecompression = DecompressionMethods.GZip
             });
             _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
             _httpClient.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("OpenApi.Net.Tests", "1.0"));
@@ -57,7 +54,7 @@ namespace Microsoft.OpenApi.SmokeTests
         //[Fact(Skip="Run manually")]
         public void LoadOpen()
         {
-            var operations = new[] { "foo","bar" };
+            var operations = new[] { "foo", "bar" };
             var workspace = new OpenApiWorkspace();
             workspace.AddDocument(graphOpenApiUrl, _graphOpenApi);
             var subset = new OpenApiDocument();

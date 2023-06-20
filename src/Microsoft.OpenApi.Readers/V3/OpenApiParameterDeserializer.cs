@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -149,7 +148,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 var description = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Description);
                 var summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
-                
+
                 return mapNode.GetReferencedObject<OpenApiParameter>(ReferenceType.Parameter, pointer, summary, description);
             }
 

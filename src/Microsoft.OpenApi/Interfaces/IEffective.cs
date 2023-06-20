@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Interfaces
     /// In the next major version, this will be the approach accessing all referenced elements. 
     /// This will enable us to support merging properties that are peers of the $ref  </remarks>
     /// <typeparam name="T">Type of OpenApi Element that is being referenced.</typeparam>
-    public interface IEffective<T>  where T : class,IOpenApiElement
+    public interface IEffective<T> where T : class, IOpenApiElement
     {
         /// <summary>
         /// Returns a calculated and cloned version of the element.
