@@ -208,12 +208,6 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
-        private static JsonSchema GetOrCreateSchema(OpenApiParameter p)
-        {
-            p.Schema31 ??= JsonSchema.Empty;
-            return p.Schema31;
-        }
-
         private static JsonSchemaBuilder GetOrCreateSchema(OpenApiHeader p)
         {
             p.Schema31 ??= JsonSchema.Empty;
@@ -274,8 +268,6 @@ namespace Microsoft.OpenApi.Readers.V2
             var parameter = new OpenApiParameter();
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
-            //ProcessAnyFields(mapNode, parameter, _parameterAnyFields);
-            //ProcessAnyListFields(mapNode, parameter, _parameterAnyListFields);
 
             var schema = node.Context.GetFromTempStorage<JsonSchema>("schema");
             if (schema != null)

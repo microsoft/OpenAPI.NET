@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using Yaml2JsonNode;
+using YamlDotNet.Serialization;
 
 namespace Microsoft.OpenApi.Helpers
 {
@@ -92,6 +95,29 @@ namespace Microsoft.OpenApi.Helpers
 
             // extensions
             writer.WriteExtensions(extensions, OpenApiSpecVersion.OpenApi2_0);
+        }
+
+        public static void WriteOutJsonSchemaInYaml(this IOpenApiWriter writer, JsonSchema schema, string name)
+        {
+            if (writer is OpenApiYamlWriter)
+            {
+                var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(schema));
+                var yamlNode = jsonNode.ToYamlNode();
+                var serializer = new SerializerBuilder()
+                                    .Build();
+
+                var yamlSchema = serializer.Serialize(yamlNode);
+
+                writer.WritePropertyName(name);
+                writer.WriteRaw("\n");
+                writer.WriteRaw(yamlSchema);
+            }
+            else
+            {
+                writer.WritePropertyName(name);
+                writer.WriteRaw(JsonSerializer.Serialize(schema));
+            }
+
         }
 
         private static string RetrieveFormatFromNestedSchema(IReadOnlyCollection<JsonSchema> schema)

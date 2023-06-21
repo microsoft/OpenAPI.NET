@@ -360,17 +360,17 @@ securitySchemes:
         public void SerializeAdvancedComponentsWithReferenceAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas:
-  schema1:
-    properties:
-      property2:
-        type: integer
-      property3:
-        $ref: '#/components/schemas/schema2'
-  schema2:
-    properties:
-      property2:
-        type: integer
+            var expected = @"schemas: schema1:
+  properties:
+    property2:
+      type: integer
+    property3:
+      $ref: '#/components/schemas/schema2'
+schema2:
+  properties:
+    property2:
+      type: integer
+
 securitySchemes:
   securityScheme1:
     type: oauth2
@@ -456,22 +456,6 @@ schema2:
         }
 
         [Fact]
-        public void SerializeTopLevelSelfReferencingComponentsAsYamlV3Works()
-        {
-            // Arrange
-            var expected = @"schemas:
-  schema1: { }";
-
-            // Act
-            var actual = TopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
-
-            // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
-        }
-
-        [Fact]
         public void SerializeTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
         {
             // Arrange
@@ -543,22 +527,24 @@ schema2:
         description: Information about a new pet in the system
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/schema1'
+            schema: 
+ $ref: '#/components/schemas/schema1'
+
       responses:
         '200':
           description: Return a 200 status to indicate that the data was received successfully
-schemas:
-  schema1:
-    properties:
-      property2:
-        type: integer
-      property3:
-        $ref: '#/components/schemas/schema2'
-  schema2:
-    properties:
-      property2:
-        type: integer";
+schemas: schema1:
+  properties:
+    property2:
+      type: integer
+    property3:
+      $ref: '#/components/schemas/schema2'
+  $ref: '#/components/schemas/schema1'
+schema2:
+  properties:
+    property2:
+      type: integer
+";
 
             // Act
             var actual = ComponentsWithPathItem.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);

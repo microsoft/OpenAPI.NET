@@ -219,8 +219,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31,
-                (w, s) => w.WriteRaw(JsonSerializer.Serialize(s)));
+            writer.WriteOutJsonSchemaInYaml(Schema31, OpenApiConstants.Schema);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));

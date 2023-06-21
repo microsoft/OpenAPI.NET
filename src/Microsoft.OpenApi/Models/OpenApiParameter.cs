@@ -285,8 +285,7 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (Schema31 != null)
             {
-                writer.WritePropertyName(OpenApiConstants.Schema);
-                writer.WriteRaw(JsonSerializer.Serialize(Schema31/*, new JsonSerializerOptions { WriteIndented = true }*/));
+                writer.WriteOutJsonSchemaInYaml(Schema31, OpenApiConstants.Schema);
             }
 
             // example

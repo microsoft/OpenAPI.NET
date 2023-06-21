@@ -10,6 +10,7 @@ namespace Microsoft.OpenApi.Readers.Extensions
 {
     internal static class JsonSchemaBuilderExtensions
     {
+
         public static JsonSchemaBuilder Extensions(this JsonSchemaBuilder builder, IDictionary<string, IOpenApiExtension> extensions)
         {
             builder.Add(new ExtensionsKeyword(extensions));
@@ -84,6 +85,7 @@ namespace Microsoft.OpenApi.Readers.Extensions
         }
     }
 
+    [SchemaKeyword(Name)]
     internal class NullableKeyword : IJsonSchemaKeyword
     {
         public const string Name = "nullable";
