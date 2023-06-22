@@ -50,6 +50,21 @@ namespace Microsoft.OpenApi.Models.References
             _reference = reference;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="referenceId"></param>
+        /// <param name="hostDocument"></param>
+        public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument)
+        {
+            _reference = new OpenApiReference()
+            {                
+                Id = referenceId,
+                HostDocument = hostDocument,
+                Type = ReferenceType.Callback         
+            };            
+        }
+
         /// <inheritdoc/>
         public override Dictionary<RuntimeExpression, OpenApiPathItem> PathItems { get => Target.PathItems; set => Target.PathItems = value; }
 

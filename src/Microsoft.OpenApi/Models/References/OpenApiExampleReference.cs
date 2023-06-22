@@ -17,6 +17,7 @@ namespace Microsoft.OpenApi.Models.References
     {
         private OpenApiExample _target;
         private readonly OpenApiReference _reference;
+        private string _description;
 
         private OpenApiExample Target
         {
@@ -44,6 +45,21 @@ namespace Microsoft.OpenApi.Models.References
 
             reference.Type = ReferenceType.Example;
             _reference = reference;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="referenceId"></param>
+        /// <param name="hostDocument"></param>
+        public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument)
+        {
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                HostDocument = hostDocument,
+                Type = ReferenceType.Example
+            };
         }
 
         /// <inheritdoc/>

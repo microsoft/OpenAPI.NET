@@ -43,6 +43,22 @@ namespace Microsoft.OpenApi.Models.References
             _reference = reference;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="referenceId"></param>
+        /// <param name="hostDocument"></param>
+        public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument)
+        {
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                HostDocument = hostDocument,
+                Type = ReferenceType.Header
+            };
+        }
+
         /// <inheritdoc/>
         public override string Description { get => Target.Description; set => Target.Description = value; }
 

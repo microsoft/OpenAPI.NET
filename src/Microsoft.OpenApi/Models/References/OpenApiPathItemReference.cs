@@ -45,6 +45,16 @@ namespace Microsoft.OpenApi.Models.References
             _reference = reference;
         }
 
+        public OpenApiPathItemReference(string referenceId, OpenApiDocument hostDocument)
+        {
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                HostDocument = hostDocument,
+                Type = ReferenceType.PathItem
+            };
+        }
+
         /// <inheritdoc/>
         public override string Summary { get => Target.Summary; set => Target.Summary = value; }
 

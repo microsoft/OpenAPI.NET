@@ -45,6 +45,17 @@ namespace Microsoft.OpenApi.Models.References
             _reference = reference;
         }
 
+
+        public OpenApiSecuritySchemeReference(string referenceId, OpenApiDocument hostDocument)
+        {
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                HostDocument = hostDocument,
+                Type = ReferenceType.SecurityScheme
+            };
+        }
+
         /// <inheritdoc/>
         public override string Description { get => Target.Description; set => Target.Description = value; }
 

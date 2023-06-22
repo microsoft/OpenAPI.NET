@@ -46,6 +46,16 @@ namespace Microsoft.OpenApi.Models.References
             _reference = reference;
         }
 
+        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument)
+        {
+            _reference = new OpenApiReference()
+            {
+                Id = referenceId,
+                HostDocument = hostDocument,
+                Type = ReferenceType.Parameter
+            };
+        }
+
         /// <inheritdoc/>
         public override string Name { get => Target.Name; set => Target.Name = value; }
 
