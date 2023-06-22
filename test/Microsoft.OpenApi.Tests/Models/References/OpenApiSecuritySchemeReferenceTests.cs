@@ -33,7 +33,7 @@ components:
       in: header
 ";
 
-        OpenApiSecuritySchemeReference _openApiSecuritySchemeReference;
+        readonly OpenApiSecuritySchemeReference _openApiSecuritySchemeReference;
 
         public OpenApiSecuritySchemeReferenceTests()
         {
