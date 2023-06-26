@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations
     /// </summary>
     public sealed class ValidationRuleSet
     {
-        private readonly IDictionary<string, IList<ValidationRule>> _rules = new Dictionary<string, IList<ValidationRule>>();
+        private readonly IDictionary<string, IList<ValidationRule>> _rulesDictionary = new Dictionary<string, IList<ValidationRule>>();
 
         private static ValidationRuleSet _defaultRuleSet;
 
@@ -25,17 +25,17 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the keys in this rule set.
         /// </summary>
-        public ICollection<string> Keys => _rules.Keys;
+        public ICollection<string> Keys => _rulesDictionary.Keys;
 
         /// <summary>
         /// Gets the rules in this rule set.
         /// </summary>
-        public IList<ValidationRule> Rules => _rules.Values.SelectMany(v => v).ToList();
+        public IList<ValidationRule> Rules => _rulesDictionary.Values.SelectMany(v => v).ToList();
 
         /// <summary>
         /// Gets the number of elements contained in this rule set.
         /// </summary>
-        public int Count => _rules.Count;
+        public int Count => _rulesDictionary.Count;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationRuleSet"/> class.
@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>Either the rules related to the given key, or an empty list.</returns>
         public IList<ValidationRule> FindRules(string key)
         {
-            _rules.TryGetValue(key, out var results);
+            _rulesDictionary.TryGetValue(key, out var results);
             return results ?? _emptyRules;
         }
 
@@ -160,17 +160,17 @@ namespace Microsoft.OpenApi.Validations
         /// <exception cref="OpenApiException">Exception thrown when rule already exists.</exception>
         public void Add(string key, ValidationRule rule)
         {
-            if (!_rules.ContainsKey(key))
+            if (!_rulesDictionary.ContainsKey(key))
             {
-                _rules[key] = new List<ValidationRule>();
+                _rulesDictionary[key] = new List<ValidationRule>();
             }
 
-            if (_rules[key].Contains(rule))
+            if (_rulesDictionary[key].Contains(rule))
             {
                 throw new OpenApiException(SRResource.Validation_RuleAddTwice);
             }
 
-            _rules[key].Add(rule);
+            _rulesDictionary[key].Add(rule);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true, if the update was successful; otherwise false.</returns>
         public bool Update(string key, ValidationRule newRule, ValidationRule oldRule)
         {
-            if (_rules.TryGetValue(key, out var currentRules))
+            if (_rulesDictionary.TryGetValue(key, out var currentRules))
             {
                 currentRules.Add(newRule);
                 return currentRules.Remove(oldRule);
@@ -197,7 +197,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true if the collection of rules with the provided key is removed; otherwise, false.</returns>
         public bool Remove(string key)
         {
-            return _rules.Remove(key);
+            return _rulesDictionary.Remove(key);
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true if the rule is successfully removed; otherwise, false.</returns>
         public bool Remove(string key, ValidationRule rule)
         {
-            if (_rules.TryGetValue(key, out IList<ValidationRule> validationRules))
+            if (_rulesDictionary.TryGetValue(key, out IList<ValidationRule> validationRules))
             {
                 return validationRules.Remove(rule);
             }
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         public void Clear()
         {
-            _rules.Clear();
+            _rulesDictionary.Clear();
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true if the rule set contains an element with the key; otherwise, false.</returns>
         public bool ContainsKey(string key)
         {
-            return _rules.ContainsKey(key);
+            return _rulesDictionary.ContainsKey(key);
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns></returns>
         public bool Contains(string key, ValidationRule rule)
         {
-            return _rules.TryGetValue(key, out IList<ValidationRule> validationRules) && validationRules.Contains(rule);
+            return _rulesDictionary.TryGetValue(key, out IList<ValidationRule> validationRules) && validationRules.Contains(rule);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>true if the specified key has rules.</returns>
         public bool TryGetValue(string key, out IList<ValidationRule> rules)
         {
-            return _rules.TryGetValue(key, out rules);
+            return _rulesDictionary.TryGetValue(key, out rules);
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>The enumerator.</returns>
         public IEnumerator<ValidationRule> GetEnumerator()
         {
-            foreach (var ruleList in _rules.Values)
+            foreach (var ruleList in _rulesDictionary.Values)
             {
                 foreach (var rule in ruleList)
                 {
