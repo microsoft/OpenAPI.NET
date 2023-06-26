@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -217,13 +217,21 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        /// Removes a rule from the list of rules.
+        /// Removes the first rule  that matches the provided rule from the list of rules.
         /// </summary>
         /// <param name="rule">The rule to be removed.</param>
         /// <returns>true if the rule is successfully removed; otherwise, false.</returns>
         public bool Remove(ValidationRule rule)
         {
-            return _rules.Values.Remove((IList<ValidationRule>)rule);
+            foreach(var item in _rulesDictionary.Values)
+            {
+                if (item.Remove(rule))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
