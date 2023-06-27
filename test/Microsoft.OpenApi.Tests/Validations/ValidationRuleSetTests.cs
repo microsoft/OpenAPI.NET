@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
@@ -22,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
         private readonly IDictionary<string, IList<ValidationRule>> _rulesDictionary; 
 
-        public ValidationRuleSetTests(ITestOutputHelper output)
+        public ValidationRuleSetTests()
         {
             _rulesDictionary = new Dictionary<string, IList<ValidationRule>>()
             {
