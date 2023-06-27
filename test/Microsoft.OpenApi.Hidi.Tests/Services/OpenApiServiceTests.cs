@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public async Task ReturnConvertedCSDLFile()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "Todo.xml");
             var fileInput = new FileInfo(filePath);
             var csdlStream = fileInput.OpenRead();
             // Act
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public async Task ReturnFilteredOpenApiDocBasedOnOperationIdsAndInputCsdlDocument(string operationIds, string tags, int expectedPathCount)
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\Todo.xml");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "Todo.xml");
             var fileInput = new FileInfo(filePath);
             var csdlStream = fileInput.OpenRead();
 
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             // create a dummy ILogger instance for testing
             var options = new HidiOptions()
             {
-                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 Output = new FileInfo("sample.md")
             };
 
@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var options = new HidiOptions()
             {
-                OpenApi = "UtilityFiles\\SampleOpenApi.yml"
+                OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml")
             };
             var filePath = await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
             Assert.True(File.Exists(filePath));
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var options = new HidiOptions()
             {
-                Csdl = "UtilityFiles\\Todo.xml",
+                Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
                 CsdlFilter = "todos",
                 Output = new FileInfo("sample.md")
             };
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public async Task ValidateCommandProcessesOpenApi()
         {
             // create a dummy ILogger instance for testing
-            await OpenApiService.ValidateOpenApiDocument("UtilityFiles\\SampleOpenApi.yml", _logger, new CancellationToken());
+            await OpenApiService.ValidateOpenApiDocument(Path.Combine("UtilityFiles", "SampleOpenApi.yml"), _logger, new CancellationToken());
 
             Assert.True(true);
         }
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             HidiOptions options = new HidiOptions
             {
-                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 Output = new FileInfo("sample.json"),
                 CleanOutput = true,
                 TerseOutput = false,
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             HidiOptions options = new HidiOptions
             {
-                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
                 TerseOutput = false,
                 InlineLocal = false,
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             HidiOptions options = new HidiOptions
             {
-                Csdl = "UtilityFiles\\Todo.xml",
+                Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
                 CleanOutput = true,
                 TerseOutput = false,
                 InlineLocal = false,
@@ -268,7 +268,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             HidiOptions options = new HidiOptions
             {
-                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
                 Version = "3.0",
                 OpenApiFormat = OpenApiFormat.Yaml,
@@ -301,10 +301,10 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformToPowerShellCompliantOpenApi()
         {
-            var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\examplepowershellsettings.json");
+            var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "examplepowershellsettings.json");
             HidiOptions options = new HidiOptions
             {
-                OpenApi = "UtilityFiles\\SampleOpenApi.yml",
+                OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
                 Version = "3.0",
                 OpenApiFormat = OpenApiFormat.Yaml,
@@ -324,7 +324,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void InvokeTransformCommand()
         {
             var rootCommand = Program.CreateRootCommand();
-            var args = new string[] { "transform", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.json", "--co" };
+            var openapi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
+            var args = new string[] { "transform", "-d", openapi, "-o", "sample.json", "--co" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
             var context = new InvocationContext(parseResult);
@@ -340,7 +341,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void InvokeShowCommand()
         {
             var rootCommand = Program.CreateRootCommand();
-            var args = new string[] { "show", "-d", ".\\UtilityFiles\\SampleOpenApi.yml", "-o", "sample.md" };
+            var openapi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
+            var args = new string[] { "show", "-d", openapi, "-o", "sample.md" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
             var context = new InvocationContext(parseResult);
@@ -355,7 +357,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void InvokePluginCommand()
         {
             var rootCommand = Program.CreateRootCommand();
-            var args = new string[] { "plugin", "-m", ".\\UtilityFiles\\exampleapimanifest.json", "--of", AppDomain.CurrentDomain.BaseDirectory };
+            var manifest = Path.Combine(".", "UtilityFiles", "exampleapimanifest.json");
+            var args = new string[] { "plugin", "-m", manifest, "--of", AppDomain.CurrentDomain.BaseDirectory };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "plugin").First().Handler;
             var context = new InvocationContext(parseResult);
