@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public virtual OpenApiReference Reference { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         /// <param name="callback"></param>
         /// <param name="action"></param>
-        internal virtual void SerializeInternal(IOpenApiWriter writer, 
+        private void SerializeInternal(IOpenApiWriter writer, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {

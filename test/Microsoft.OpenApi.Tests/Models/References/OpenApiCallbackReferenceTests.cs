@@ -1,7 +1,10 @@
-﻿using System.Globalization;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers;
@@ -85,23 +88,47 @@ components:
             _callbackReference = new("callbackEvent", openApiDoc);
         }
 
+        [Fact]
+        public void ReferenceResolutionWorks()
+        {
+            // Assert
+            Assert.NotEmpty(_callbackReference.PathItems);
+            Assert.Equal("{$request.body#/callbackUrl}", _callbackReference.PathItems.First().Key.Expression);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeReferencedCallbackAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeCallbackReferenceAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
-            
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });            
 
             // Act
             _callbackReference.SerializeAsV3(writer);
             writer.Flush();
 
-            // Assert
-            Assert.NotEmpty(_callbackReference.PathItems);
+            // Assert            
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeCallbackReferenceAsV31JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _callbackReference.SerializeAsV31(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+        
     }
 }

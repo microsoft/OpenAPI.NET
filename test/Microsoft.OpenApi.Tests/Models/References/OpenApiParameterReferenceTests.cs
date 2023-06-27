@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -14,6 +13,8 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models.References
 {
+    [Collection("DefaultSettings")]
+    [UsesVerify]
     public class OpenApiParameterReferenceTests
     {
         private const string OpenApi = @"
@@ -59,8 +60,58 @@ components:
             // Assert
             Assert.Equal("limit", _parameterReference.Name);
             Assert.Equal("Results to return", _parameterReference.Description);
-            _parameterReference.Description = "Number of limit results";
-            
+            _parameterReference.Description = "Number of limit results";            
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeParameterReferenceAsV3JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _parameterReference.SerializeAsV3(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeParameterReferenceAsV31JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _parameterReference.SerializeAsV31(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeParameterReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _parameterReference.SerializeAsV2(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

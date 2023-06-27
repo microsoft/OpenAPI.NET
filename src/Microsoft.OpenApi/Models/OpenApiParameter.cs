@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference object.
         /// </summary>
-        public virtual OpenApiReference Reference { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// REQUIRED. The name of the parameter. Parameter names are case sensitive.
@@ -187,7 +187,7 @@ namespace Microsoft.OpenApi.Models
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }        
 
-        internal virtual void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback, 
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback, 
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
@@ -216,9 +216,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiParameter</returns>
         public OpenApiParameter GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiParameter>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiParameter>(Reference);
             }
             else
             {

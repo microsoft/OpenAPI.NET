@@ -368,24 +368,24 @@ namespace Microsoft.OpenApi.Properties {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to The HostDocument in the referenced element is null..
+        ///   Looks up a localized string similar to The HostDocument is null..
         /// </summary>
-        internal static string ReferencedElementHostDocumentIsNull
+        internal static string HostDocumentIsNull
         {
             get
             {
-                return ResourceManager.GetString("ReferencedElementHostDocumentIsNull", resourceCulture);
+                return ResourceManager.GetString("HostDocumentIsNull", resourceCulture);
             }
         }
 
         /// <summary>
         ///   Looks up a localized string similar to The identifier in the referenced element is null or empty ..
         /// </summary>
-        internal static string ReferencedElementIdentifierIsNullOrEmpty
+        internal static string ReferenceIdIsNullOrEmpty
         {
             get
             {
-                return ResourceManager.GetString("ReferencedElementIdentifierIsNullOrEmpty", resourceCulture);
+                return ResourceManager.GetString("ReferenceIdIsNullOrEmpty", resourceCulture);
             }
         }
     }

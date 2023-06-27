@@ -58,10 +58,6 @@
       <DependentUpon>OpenApiCallbackReferenceTests.cs</DependentUpon>
     </None>
       
-    <None Update="Models\References\OpenApiCallbackReferenceTests.SerializeReferencedCallbackAsV3JsonWorks_produceTerseOutput=False.received.txt">
-      <DependentUpon>OpenApiCallbackReferenceTests.cs</DependentUpon>
-    </None>
-      
     <None Update="PublicApi\PublicApi.approved.txt" CopyToOutputDirectory="Always" />
   </ItemGroup>
 

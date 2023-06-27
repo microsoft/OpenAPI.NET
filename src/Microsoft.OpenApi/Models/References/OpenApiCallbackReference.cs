@@ -22,41 +22,27 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiCallback>(Reference);
+                _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiCallback>(_reference);
                 return _target;
             }
-        }
+        }               
 
         /// <summary>
-        /// 
+        /// Constructor initializing the reference object.
         /// </summary>
-        /// <param name="reference"></param>
-        public OpenApiCallbackReference(OpenApiReference reference)
-        {
-            if (reference == null)
-            {
-                throw Error.ArgumentNull(nameof(reference));
-            }
-            if (reference.HostDocument == null)
-            {
-                throw Error.Argument(nameof(reference), SRResource.ReferencedElementHostDocumentIsNull);
-            }
-            if (string.IsNullOrEmpty(reference.Id))
-            {
-                throw Error.Argument(nameof(reference), SRResource.ReferencedElementIdentifierIsNullOrEmpty);
-            }
-
-            reference.Type = ReferenceType.Callback;
-            _reference = reference;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="referenceId"></param>
-        /// <param name="hostDocument"></param>
+        /// <param name="referenceId">The reference Id.</param>
+        /// <param name="hostDocument">The host OpenAPI document.</param>
         public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument)
         {
+            if (string.IsNullOrEmpty(referenceId))
+            {
+                throw Error.Argument(nameof(referenceId), SRResource.ReferenceIdIsNullOrEmpty);
+            }
+            if (hostDocument == null)
+            {
+                throw Error.Argument(nameof(hostDocument), SRResource.HostDocumentIsNull);
+            }
+
             _reference = new OpenApiReference()
             {                
                 Id = referenceId,
@@ -72,20 +58,15 @@ namespace Microsoft.OpenApi.Models.References
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
 
         /// <inheritdoc/>
-        public override OpenApiReference Reference => _reference;
-
-        /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
-                (writer, referenceElement) => referenceElement.SerializeAsV3WithoutReference(writer));
+            SerializeInternal(writer,(writer, referenceElement) => referenceElement.SerializeAsV3WithoutReference(writer));
         }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
-                (writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));
+            SerializeInternal(writer,(writer, referenceElement) => referenceElement.SerializeAsV31WithoutReference(writer));
         }
 
         /// <inheritdoc/>
@@ -103,18 +84,10 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        internal override void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        private void SerializeInternal(IOpenApiWriter writer,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                callback(writer, Reference);
-                return;
-            }
-
             action(writer, Target);
         }
     }

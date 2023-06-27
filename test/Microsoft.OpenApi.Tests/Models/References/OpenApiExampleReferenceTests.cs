@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license. 
+
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers;
+using VerifyXunit;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models.References
 {
+    [Collection("DefaultSettings")]
+    [UsesVerify]
     public class OpenApiExampleReferenceTests
     {
         private const string OpenApi = @"

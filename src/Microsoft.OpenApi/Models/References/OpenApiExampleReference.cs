@@ -28,32 +28,22 @@ namespace Microsoft.OpenApi.Models.References
             }
         }
 
-        public OpenApiExampleReference(OpenApiReference reference)
-        {
-            if (reference == null)
-            {
-                throw Error.ArgumentNull(nameof(reference));
-            }
-            if (reference.HostDocument == null)
-            {
-                throw Error.Argument(nameof(reference), SRResource.ReferencedElementHostDocumentIsNull);
-            }
-            if (string.IsNullOrEmpty(reference.Id))
-            {
-                throw Error.Argument(nameof(reference), SRResource.ReferencedElementIdentifierIsNullOrEmpty);
-            }
-
-            reference.Type = ReferenceType.Example;
-            _reference = reference;
-        }
-
         /// <summary>
-        /// 
+        /// Constructor initializing the reference object.
         /// </summary>
-        /// <param name="referenceId"></param>
-        /// <param name="hostDocument"></param>
+        /// <param name="referenceId">The reference Id.</param>
+        /// <param name="hostDocument">The host OpenAPI document.</param>
         public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument)
         {
+            if (string.IsNullOrEmpty(referenceId))
+            {
+                throw Error.Argument(nameof(referenceId), SRResource.ReferenceIdIsNullOrEmpty);
+            }
+            if (hostDocument == null)
+            {
+                throw Error.Argument(nameof(hostDocument), SRResource.HostDocumentIsNull);
+            }
+
             _reference = new OpenApiReference()
             {
                 Id = referenceId,

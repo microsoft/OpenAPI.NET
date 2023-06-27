@@ -32,11 +32,11 @@ namespace Microsoft.OpenApi.Models.References
             }
             if (reference.HostDocument == null)
             {
-                throw Error.Argument(nameof(reference), SRResource.ReferencedElementHostDocumentIsNull);
+                throw Error.Argument(nameof(reference), SRResource.HostDocumentIsNull);
             }
             if (string.IsNullOrEmpty(reference.Id))
             {
-                throw Error.Argument(nameof(reference), SRResource.ReferencedElementIdentifierIsNullOrEmpty);
+                throw Error.Argument(nameof(reference), SRResource.ReferenceIdIsNullOrEmpty);
             }
 
             reference.Type = ReferenceType.Header;
@@ -45,12 +45,21 @@ namespace Microsoft.OpenApi.Models.References
 
 
         /// <summary>
-        /// 
+        /// Constructor initializing the reference object.
         /// </summary>
-        /// <param name="referenceId"></param>
-        /// <param name="hostDocument"></param>
+        /// <param name="referenceId">The reference Id.</param>
+        /// <param name="hostDocument">The host OpenAPI document.</param>
         public OpenApiHeaderReference(string referenceId, OpenApiDocument hostDocument)
-        {
+        {            
+            if (string.IsNullOrEmpty(referenceId))
+            {
+                throw Error.Argument(nameof(referenceId), SRResource.ReferenceIdIsNullOrEmpty);
+            }
+            if (hostDocument == null)
+            {
+                throw Error.Argument(nameof(hostDocument), SRResource.HostDocumentIsNull);
+            }
+
             _reference = new OpenApiReference()
             {
                 Id = referenceId,
