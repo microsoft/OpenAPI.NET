@@ -49,12 +49,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public virtual bool UnresolvedReference { get; set; }
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference object.
         /// </summary>
-        public virtual OpenApiReference Reference { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Add one operation into this path item.
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
         /// </summary>
-        internal virtual void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
@@ -135,9 +135,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiPathItem</returns>
         public OpenApiPathItem GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiPathItem>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiPathItem>(Reference);
             }
             else
             {
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models
                 } 
                 else
                 {
-                    target = this.GetEffective(Reference.HostDocument);
+                    target = GetEffective(Reference.HostDocument);
                 }
             }
 

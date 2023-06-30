@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public virtual OpenApiReference Reference { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Parameterless constructor
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Models
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
                 
-        internal virtual void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
@@ -129,9 +129,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiLink</returns>
         public OpenApiLink GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiLink>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiLink>(Reference);
             }
             else
             {

@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Reference pointer.
         /// </summary>
-        public virtual OpenApiReference Reference { get; set; }
+        public OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// A brief description of the header.
@@ -131,7 +131,7 @@ namespace Microsoft.OpenApi.Models
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }        
 
-        internal virtual void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
