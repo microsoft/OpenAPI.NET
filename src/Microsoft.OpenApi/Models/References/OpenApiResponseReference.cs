@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiResponse>(Reference);
+                _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiResponse>(_reference);
                 return _target;
             }
         }
@@ -66,20 +66,15 @@ namespace Microsoft.OpenApi.Models.References
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
         
         /// <inheritdoc/>
-        public override OpenApiReference Reference => _reference;
-
-        /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
-                (writer, element) => element.SerializeAsV3WithoutReference(writer));
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
-                (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
         }
 
         /// <inheritdoc/>
@@ -97,18 +92,10 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        internal override void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        private void SerializeInternal(IOpenApiWriter writer,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                callback(writer, Reference);
-                return;
-            }
-
             action(writer, this);
         }
     }

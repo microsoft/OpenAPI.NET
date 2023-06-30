@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiSecurityScheme>(Reference);
+                _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiSecurityScheme>(_reference);
                 return _target;
             }
         }
@@ -78,18 +78,15 @@ namespace Microsoft.OpenApi.Models.References
         public override SecuritySchemeType Type { get => Target.Type; set => Target.Type = value; }
         
         /// <inheritdoc/>
-        public override OpenApiReference Reference => _reference;
-
-        /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), SerializeAsV3WithoutReference);
+            SerializeInternal(writer, SerializeAsV3WithoutReference);
         }
         
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), SerializeAsV31WithoutReference);
+            SerializeInternal(writer, SerializeAsV31WithoutReference);
         }
 
         /// <inheritdoc/>
@@ -107,17 +104,10 @@ namespace Microsoft.OpenApi.Models.References
         }        
 
         /// <inheritdoc/>
-        internal override void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        private void SerializeInternal(IOpenApiWriter writer,
             Action<IOpenApiWriter> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-
-            if (Reference != null)
-            {
-                callback(writer, Reference);
-                return;
-            }
-
             action(writer);
         }
     }

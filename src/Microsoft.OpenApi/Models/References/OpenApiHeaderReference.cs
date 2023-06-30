@@ -19,30 +19,10 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiHeader>(Reference);
+                _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiHeader>(_reference);
                 return _target;
             }
         }
-
-        public OpenApiHeaderReference(OpenApiReference reference)
-        {
-            if (reference == null)
-            {
-                throw Error.ArgumentNull(nameof(reference));
-            }
-            if (reference.HostDocument == null)
-            {
-                throw Error.Argument(nameof(reference), SRResource.HostDocumentIsNull);
-            }
-            if (string.IsNullOrEmpty(reference.Id))
-            {
-                throw Error.Argument(nameof(reference), SRResource.ReferenceIdIsNullOrEmpty);
-            }
-
-            reference.Type = ReferenceType.Header;
-            _reference = reference;
-        }
-
 
         /// <summary>
         /// Constructor initializing the reference object.
@@ -105,20 +85,15 @@ namespace Microsoft.OpenApi.Models.References
         public override IDictionary<string, IOpenApiExtension> Extensions { get => base.Extensions; set => base.Extensions = value; }
         
         /// <inheritdoc/>
-        public override OpenApiReference Reference => _reference;
-
-        /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
-                (writer, element) => element.SerializeAsV31WithoutReference(writer));
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV31WithoutReference(writer));
         }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
-                (writer, element) => element.SerializeAsV3WithoutReference(writer));
+            SerializeInternal(writer, (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
 
         /// <inheritdoc/>
@@ -136,18 +111,10 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        internal override void SerializeInternal(IOpenApiWriter writer,
-            Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        private void SerializeInternal(IOpenApiWriter writer,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-
-            if (!writer.GetSettings().ShouldInlineReference(Reference))
-            {
-                callback(writer, Reference);
-                return;
-            }
-
             action(writer, Target);
         }
     }

@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Models.References
         {
             get
             {
-                _target ??= Reference.HostDocument.ResolveReferenceTo<OpenApiTag>(Reference);
+                _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiTag>(_reference);
                 return _target;
             }
         }
@@ -63,9 +63,6 @@ namespace Microsoft.OpenApi.Models.References
         public override string Name { get => Target.Name; set => Target.Name = value; }
         
         /// <inheritdoc/>
-        public override OpenApiReference Reference => _reference;
-
-        /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
@@ -92,17 +89,10 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        internal override void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-
-            if (Reference != null)
-            {
-                callback(writer, Reference);
-                return;
-            }
-
-            writer.WriteValue(Name);
+            callback(writer, Reference);
         }
     }
 }
