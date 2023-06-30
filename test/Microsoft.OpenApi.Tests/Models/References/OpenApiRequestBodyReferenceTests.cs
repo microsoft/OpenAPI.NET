@@ -55,7 +55,7 @@ components:
         {
             var reader = new OpenApiStringReader();
             OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            _openApiRequestBodyReference = new("", openApiDoc)
+            _openApiRequestBodyReference = new("UserRequest", openApiDoc)
             {
                 Description = "User request body"
             };
