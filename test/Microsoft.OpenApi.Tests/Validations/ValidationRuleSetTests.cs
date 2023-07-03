@@ -62,13 +62,12 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             var ruleSet = new ValidationRuleSet(_rulesDictionary);
+            var responseValidationRule = new ValidationRule<OpenApiResponse>((context, item) => { });
 
-            // Act
-            ruleSet.Remove(_contactValidationRule);
-            var rules = ruleSet.Rules;
-
-            // Assert
-            Assert.False(rules.Contains(_contactValidationRule));
+            // Act and Assert
+            Assert.True(ruleSet.Remove(_contactValidationRule));
+            Assert.False(ruleSet.Rules.Contains(_contactValidationRule));
+            Assert.False(ruleSet.Remove(_contactValidationRule)); // rule already removed
         }
 
         [Fact]
