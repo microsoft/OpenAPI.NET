@@ -1,0 +1,4 @@
+﻿{
+  "description": "Location of the created post",
+  "type": "string"
+}

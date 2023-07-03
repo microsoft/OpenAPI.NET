@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Models.References
         private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-            callback(writer, Reference);
+            callback(writer, Target);
         }
     }
 }

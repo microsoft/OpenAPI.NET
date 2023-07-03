@@ -1,9 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Globalization;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
 
@@ -72,6 +76,40 @@ tags:
             // Assert
             Assert.Equal("user", _openApiTagReference.Name);
             Assert.Equal("Users operations", _openApiTagReference.Description);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeSecuritySchemeReferenceAsV3JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _openApiTagReference.SerializeAsV3(writer);
+            writer.Flush();
+
+            // Assert            
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeSecuritySchemeReferenceAsV31JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _openApiTagReference.SerializeAsV31(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }

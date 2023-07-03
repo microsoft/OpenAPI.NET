@@ -1,0 +1,6 @@
+﻿{
+  "description": "Location of the created post",
+  "schema": {
+    "type": "string"
+  }
+}

@@ -1,10 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Writers;
+using Mono.Cecil;
 using VerifyXunit;
 using Xunit;
 
@@ -62,6 +67,57 @@ components:
             Assert.Equal(3, _openApiPathItemReference.Operations.Count);
             Assert.Equal("User path item description", _openApiPathItemReference.Description);
             Assert.Equal(new OperationType[] { OperationType.Get, OperationType.Post, OperationType.Delete }, _openApiPathItemReference.Operations.Select(o => o.Key));            
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeCallbackReferenceAsV3JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _openApiPathItemReference.SerializeAsV3(writer);
+            writer.Flush();
+
+            // Assert            
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeCallbackReferenceAsV31JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _openApiPathItemReference.SerializeAsV31(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeParameterReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            _openApiPathItemReference.SerializeAsV2(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
     }
 }
