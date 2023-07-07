@@ -17,6 +17,7 @@ namespace Microsoft.OpenApi.Models.References
     {
         private OpenApiParameter _target;
         private readonly OpenApiReference _reference;
+        private string _description;
 
         private OpenApiParameter Target
         {
@@ -32,7 +33,12 @@ namespace Microsoft.OpenApi.Models.References
         /// </summary>
         /// <param name="referenceId">The reference Id.</param>
         /// <param name="hostDocument">The host OpenAPI document.</param>
-        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument)
+        /// <param name="externalResource">Optional: External resource in the reference.
+        /// It may be:
+        /// 1. a absolute/relative file path, for example:  ../commons/pet.json
+        /// 2. a Url, for example: http://localhost/pet.json
+        /// </param>
+        public OpenApiParameterReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
         {
             if (string.IsNullOrEmpty(referenceId))
             {
@@ -47,7 +53,8 @@ namespace Microsoft.OpenApi.Models.References
             {
                 Id = referenceId,
                 HostDocument = hostDocument,
-                Type = ReferenceType.Parameter
+                Type = ReferenceType.Parameter,
+                ExternalResource = externalResource
             };
         }
 
@@ -55,7 +62,7 @@ namespace Microsoft.OpenApi.Models.References
         public override string Name { get => Target.Name; set => Target.Name = value; }
 
         /// <inheritdoc/>
-        public override string Description { get => Target.Description; set => Target.Description = value; }
+        public override string Description { get => _description ?? Target.Description; set => _description = value; }
 
         /// <inheritdoc/>
         public override bool Required { get => Target.Required; set => Target.Required = value; }

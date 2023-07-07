@@ -25,14 +25,19 @@ namespace Microsoft.OpenApi.Models.References
                 _target ??= _reference.HostDocument.ResolveReferenceTo<OpenApiCallback>(_reference);
                 return _target;
             }
-        }               
+        }
 
         /// <summary>
         /// Constructor initializing the reference object.
         /// </summary>
         /// <param name="referenceId">The reference Id.</param>
         /// <param name="hostDocument">The host OpenAPI document.</param>
-        public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument)
+        /// <param name="externalResource">Optional: External resource in the reference.
+        /// It may be:
+        /// 1. a absolute/relative file path, for example:  ../commons/pet.json
+        /// 2. a Url, for example: http://localhost/pet.json
+        /// </param>
+        public OpenApiCallbackReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
         {
             if (string.IsNullOrEmpty(referenceId))
             {
@@ -47,8 +52,9 @@ namespace Microsoft.OpenApi.Models.References
             {                
                 Id = referenceId,
                 HostDocument = hostDocument,
-                Type = ReferenceType.Callback         
-            };            
+                Type = ReferenceType.Callback,
+                ExternalResource = externalResource
+            };
         }
 
         /// <inheritdoc/>

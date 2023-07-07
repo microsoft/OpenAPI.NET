@@ -17,6 +17,8 @@ namespace Microsoft.OpenApi.Models.References
     {
         private OpenApiExample _target;
         private readonly OpenApiReference _reference;
+        private string _summary;
+        private string _description;
 
         private OpenApiExample Target
         {
@@ -32,7 +34,12 @@ namespace Microsoft.OpenApi.Models.References
         /// </summary>
         /// <param name="referenceId">The reference Id.</param>
         /// <param name="hostDocument">The host OpenAPI document.</param>
-        public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument)
+        /// <param name="externalResource">Optional: External resource in the reference.
+        /// It may be:
+        /// 1. a absolute/relative file path, for example:  ../commons/pet.json
+        /// 2. a Url, for example: http://localhost/pet.json
+        /// </param>
+        public OpenApiExampleReference(string referenceId, OpenApiDocument hostDocument, string externalResource = null)
         {
             if (string.IsNullOrEmpty(referenceId))
             {
@@ -47,15 +54,16 @@ namespace Microsoft.OpenApi.Models.References
             {
                 Id = referenceId,
                 HostDocument = hostDocument,
-                Type = ReferenceType.Example
+                Type = ReferenceType.Example,
+                ExternalResource = externalResource
             };
         }
 
         /// <inheritdoc/>
-        public override string Description { get => Target.Description; set => Target.Description = value; }
+        public override string Description { get => _description ?? Target.Description; set => _description = value; }
 
         /// <inheritdoc/>
-        public override string Summary { get => Target.Summary; set => Target.Summary = value; }
+        public override string Summary { get => _summary ?? Target.Summary; set => _summary = value; }
 
         /// <inheritdoc/>
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
@@ -65,7 +73,6 @@ namespace Microsoft.OpenApi.Models.References
 
         /// <inheritdoc/>
         public override IOpenApiAny Value { get => Target.Value; set => Target.Value = value; }
-        
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
