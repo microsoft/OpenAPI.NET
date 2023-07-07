@@ -1,5 +1,6 @@
 ﻿{
-  "summary": "Example of an admin user",
+  "summary": "Example of a user",
+  "description": "This is is an example of a user",
   "value": [
     {
       "id": "1",

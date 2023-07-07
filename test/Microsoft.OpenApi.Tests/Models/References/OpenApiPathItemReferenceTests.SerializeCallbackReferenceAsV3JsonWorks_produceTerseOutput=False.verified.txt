@@ -1,4 +1,5 @@
 ﻿{
+  "summary": "User path item summary",
   "description": "User path item description",
   "get": {
     "summary": "Get users",

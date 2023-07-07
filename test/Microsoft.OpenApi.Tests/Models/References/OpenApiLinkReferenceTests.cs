@@ -56,43 +56,89 @@ components:
       operationId: getUser
       parameters:
         userId: '$response.body#/id'
-      description: >
-        The `id` value returned in the response can be used as
-        the `userId` parameter in `GET /users/{userId}`.
+      description: The id value returned in the response can be used as the userId parameter in GET /users/{userId}";
+
+        private const string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  version: 0.0.0
+  title: Links example
+paths:
+  /users:
+    post:
+      summary: Creates a user and returns the user ID
+      operationId: createUser
+      requestBody:
+        required: true
+        description: A JSON object that contains the user name and age.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    description: ID of the created user.
+          links:
+            GetUserByUserId:
+              $ref: '#/components/links/GetUserByUserId'   # <---- referencing the link here
 ";
 
-        OpenApiLinkReference _openApiLinkReference;
+        private readonly OpenApiLinkReference _localLinkReference;
+        private readonly OpenApiLinkReference _externalLinkReference;
+        private readonly OpenApiDocument _openApiDoc;
+        private readonly OpenApiDocument _openApiDoc_2;
 
         public OpenApiLinkReferenceTests()
         {
             var reader = new OpenApiStringReader();
-            OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            _openApiLinkReference = new("GetUserByUserId", openApiDoc)
+            _openApiDoc = reader.Read(OpenApi, out _);
+            _openApiDoc_2 = reader.Read(OpenApi_2, out _);
+            _openApiDoc_2.Workspace = new();
+            _openApiDoc_2.Workspace.AddDocument("http://localhost/linkreferencesample", _openApiDoc);
+
+            _localLinkReference = new("GetUserByUserId", _openApiDoc)
             {
                 Description = "Use the id returned as the userId in `GET /users/{userId}`"
+            };
+
+            _externalLinkReference = new("GetUserByUserId", _openApiDoc_2, "http://localhost/linkreferencesample")
+            {
+                Description = "Externally referenced: Use the id returned as the userId in `GET /users/{userId}`"
             };
         }
 
         [Fact]
-        public void ReferenceResolutionWorks()
+        public void LinkReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal("Use the id returned as the userId in `GET /users/{userId}`", _openApiLinkReference.Description);
-            Assert.Equal("getUser", _openApiLinkReference.OperationId);
-            Assert.Equal("userId", _openApiLinkReference.Parameters.First().Key);
+            Assert.Equal("Use the id returned as the userId in `GET /users/{userId}`", _localLinkReference.Description);
+            Assert.Equal("getUser", _localLinkReference.OperationId);
+            Assert.Equal("userId", _localLinkReference.Parameters.First().Key);
+            Assert.Equal("Externally referenced: Use the id returned as the userId in `GET /users/{userId}`", _externalLinkReference.Description);
+            Assert.Equal("The id value returned in the response can be used as the userId parameter in GET /users/{userId}",
+                _openApiDoc.Components.Links.First().Value.Description); // The main description value shouldn't change
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeCallbackReferenceAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeLinkReferenceAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiLinkReference.SerializeAsV3(writer);
+            _localLinkReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert            
@@ -102,14 +148,14 @@ components:
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeCallbackReferenceAsV31JsonWorks(bool produceTerseOutput)
+        public async Task SerializeLinkReferenceAsV31JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiLinkReference.SerializeAsV31(writer);
+            _localLinkReference.SerializeAsV31(writer);
             writer.Flush();
 
             // Assert

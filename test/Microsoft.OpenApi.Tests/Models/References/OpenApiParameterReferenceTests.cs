@@ -3,6 +3,7 @@
 
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
@@ -42,25 +43,55 @@ components:
         minimum: 1
         maximum: 100
 ";
-        readonly OpenApiParameterReference _parameterReference;
+
+        private const string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      summary: Get users
+      parameters:
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        200:
+          description: Successful operation
+";
+        private readonly OpenApiParameterReference _localParameterReference;
+        private readonly OpenApiParameterReference _externalParameterReference;
+        private readonly OpenApiDocument _openApiDoc;
+        private readonly OpenApiDocument _openApiDoc_2;
 
         public OpenApiParameterReferenceTests()
         {
             var reader = new OpenApiStringReader();
-            OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            _parameterReference = new("limitParam", openApiDoc)
+            _openApiDoc = reader.Read(OpenApi, out _);
+            _openApiDoc_2 = reader.Read(OpenApi_2, out _);
+            _openApiDoc_2.Workspace = new();
+            _openApiDoc_2.Workspace.AddDocument("http://localhost/parameterreference", _openApiDoc);
+
+            _localParameterReference = new("limitParam", _openApiDoc)
             {
                 Description = "Results to return"
+            };
+
+            _externalParameterReference = new OpenApiParameterReference("limitParam", _openApiDoc_2, "http://localhost/parameterreference")
+            {
+                Description = "Externally referenced: Results to return"
             };
         }
 
         [Fact]
-        public void ReferenceResolutionWorks()
+        public void ParameterReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal("limit", _parameterReference.Name);
-            Assert.Equal("Results to return", _parameterReference.Description);
-            _parameterReference.Description = "Number of limit results";            
+            Assert.Equal("limit", _localParameterReference.Name);
+            Assert.Equal("Results to return", _localParameterReference.Description);
+            Assert.Equal("Externally referenced: Results to return", _externalParameterReference.Description);
+            Assert.Equal("Number of results to return",
+                _openApiDoc.Components.Parameters.First().Value.Description); // The main description value shouldn't change
         }
 
         [Theory]
@@ -73,7 +104,7 @@ components:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _parameterReference.SerializeAsV3(writer);
+            _localParameterReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert
@@ -90,7 +121,7 @@ components:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _parameterReference.SerializeAsV31(writer);
+            _localParameterReference.SerializeAsV31(writer);
             writer.Flush();
 
             // Assert
@@ -107,7 +138,7 @@ components:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _parameterReference.SerializeAsV2(writer);
+            _localParameterReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

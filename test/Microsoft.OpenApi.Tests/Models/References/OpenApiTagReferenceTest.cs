@@ -71,7 +71,7 @@ tags:
         }
 
         [Fact]
-        public void ReferenceResolutionWorks()
+        public void TagReferenceResolutionWorks()
         {
             // Assert
             Assert.Equal("user", _openApiTagReference.Name);
@@ -81,7 +81,7 @@ tags:
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeSecuritySchemeReferenceAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeTagReferenceAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
@@ -98,7 +98,7 @@ tags:
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeSecuritySchemeReferenceAsV31JsonWorks(bool produceTerseOutput)
+        public async Task SerializeTagReferenceAsV31JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);

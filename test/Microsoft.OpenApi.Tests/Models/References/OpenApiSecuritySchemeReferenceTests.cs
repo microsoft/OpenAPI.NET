@@ -48,13 +48,12 @@ components:
         }
 
         [Fact]
-        public void ReferenceResolutionWorks()
+        public void SecuritySchemeResolutionWorks()
         {
             // Assert
             Assert.Equal("X-API-Key", _openApiSecuritySchemeReference.Name);
             Assert.Equal(SecuritySchemeType.ApiKey, _openApiSecuritySchemeReference.Type);
         }
-
 
         [Theory]
         [InlineData(true)]

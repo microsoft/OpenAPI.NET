@@ -1,1 +1,1 @@
-﻿{"description":"Location of the created post","schema":{"type":"string"}}
+﻿{"description":"The URL of the newly created post","schema":{"type":"string"}}

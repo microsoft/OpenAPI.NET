@@ -41,24 +41,52 @@ components:
             $ref: '#/components/schemas/Pong'
 ";
 
-        OpenApiResponseReference _openApiResponseReference;
+        private const string OpenApi_2 = @"
+openapi: 3.0.3
+info:
+  title: Sample API
+  version: 1.0.0
+
+paths:
+  /ping:
+    get:
+      responses:
+        '200':
+          $ref: '#/components/responses/OkResponse'
+";
+
+        private readonly OpenApiResponseReference _localResponseReference;
+        private readonly OpenApiResponseReference _externalResponseReference;
+        private readonly OpenApiDocument _openApiDoc;
+        private readonly OpenApiDocument _openApiDoc_2;
 
         public OpenApiResponseReferenceTest()
         {
             var reader = new OpenApiStringReader();
-            OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            _openApiResponseReference = new("OkResponse", openApiDoc)
+            _openApiDoc = reader.Read(OpenApi, out _);
+            _openApiDoc_2 = reader.Read(OpenApi_2, out _);
+            _openApiDoc_2.Workspace = new();
+            _openApiDoc_2.Workspace.AddDocument("http://localhost/responsereference", _openApiDoc);
+
+            _localResponseReference = new("OkResponse", _openApiDoc)
             {
                 Description = "OK response"
+            };
+
+            _externalResponseReference = new("OkResponse", _openApiDoc_2, "http://localhost/responsereference")
+            {
+                Description = "External reference: OK response"
             };
         }
 
         [Fact]
-        public void ReferenceResolutionWorks()
+        public void ResponseReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal("OK response", _openApiResponseReference.Description);
-            Assert.Equal("text/plain", _openApiResponseReference.Content.First().Key);
+            Assert.Equal("OK response", _localResponseReference.Description);
+            Assert.Equal("text/plain", _localResponseReference.Content.First().Key);
+            Assert.Equal("External reference: OK response", _externalResponseReference.Description);
+            Assert.Equal("OK", _openApiDoc.Components.Responses.First().Value.Description);
         }
 
         [Theory]
@@ -71,7 +99,7 @@ components:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiResponseReference.SerializeAsV3(writer);
+            _localResponseReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert            
@@ -88,7 +116,7 @@ components:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiResponseReference.SerializeAsV31(writer);
+            _localResponseReference.SerializeAsV31(writer);
             writer.Flush();
 
             // Assert

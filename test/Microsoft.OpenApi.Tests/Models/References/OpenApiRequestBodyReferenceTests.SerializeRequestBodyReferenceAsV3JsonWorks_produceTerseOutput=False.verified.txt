@@ -1,5 +1,5 @@
 ﻿{
-  "description": "User request body",
+  "description": "User creation request body",
   "content": {
     "application/json": {
       "schema": {

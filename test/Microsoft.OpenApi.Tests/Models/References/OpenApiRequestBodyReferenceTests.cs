@@ -53,24 +53,55 @@ components:
           type: string
 ";
 
-        OpenApiRequestBodyReference _openApiRequestBodyReference;
+        private const string OpenApi_2 = @"
+openapi: 3.0.3
+info:
+  title: Sample API
+  version: 1.0.0
+
+paths:
+  /users:
+    post:
+      summary: Create a user
+      requestBody:
+        $ref: '#/components/requestBodies/UserRequest'  # <---- referencing the requestBody here
+      responses:
+        '201':
+          description: User created
+";
+
+        private readonly OpenApiRequestBodyReference _localRequestBodyReference;
+        private readonly OpenApiRequestBodyReference _externalRequestBodyReference;
+        private readonly OpenApiDocument _openApiDoc;
+        private readonly OpenApiDocument _openApiDoc_2;
 
         public OpenApiRequestBodyReferenceTests()
         {
             var reader = new OpenApiStringReader();
-            OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            _openApiRequestBodyReference = new("UserRequest", openApiDoc)
+            _openApiDoc = reader.Read(OpenApi, out _);
+            _openApiDoc_2 = reader.Read(OpenApi_2, out _);
+            _openApiDoc_2.Workspace = new();
+            _openApiDoc_2.Workspace.AddDocument("http://localhost/requestbodyreference", _openApiDoc);
+
+            _localRequestBodyReference = new("UserRequest", _openApiDoc)
             {
                 Description = "User request body"
+            };
+
+            _externalRequestBodyReference = new("UserRequest", _openApiDoc_2, "http://localhost/requestbodyreference")
+            {
+                Description = "External Reference: User request body"
             };
         }
 
         [Fact]
-        public void ReferenceResolutionWorks()
+        public void RequestBodyReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal("User request body", _openApiRequestBodyReference.Description);
-            Assert.Equal("application/json", _openApiRequestBodyReference.Content.First().Key);
+            Assert.Equal("User request body", _localRequestBodyReference.Description);
+            Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
+            Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);
+            Assert.Equal("User creation request body", _openApiDoc.Components.RequestBodies.First().Value.Description);
         }
 
         [Theory]
@@ -83,7 +114,7 @@ components:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiRequestBodyReference.SerializeAsV3(writer);
+            _localRequestBodyReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert            
@@ -100,7 +131,7 @@ components:
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiRequestBodyReference.SerializeAsV31(writer);
+            _localRequestBodyReference.SerializeAsV31(writer);
             writer.Flush();
 
             // Assert

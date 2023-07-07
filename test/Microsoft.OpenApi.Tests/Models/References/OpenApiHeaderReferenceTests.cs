@@ -3,12 +3,12 @@
 
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
-using Mono.Cecil;
 using VerifyXunit;
 using Xunit;
 
@@ -41,36 +41,68 @@ components:
         type: string
 ";
 
-        readonly OpenApiHeaderReference _openApiHeaderReference;
+        private const string OpenApi_2 = @"
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+paths:
+  /users:
+    post:
+      summary: Create a post
+      responses:
+        '201':
+          description: Post created successfully
+          headers:
+            Location:
+              $ref: '#/components/headers/LocationHeader'
+";
+
+        private readonly OpenApiHeaderReference _localHeaderReference;
+        private readonly OpenApiHeaderReference _externalHeaderReference;
+        private readonly OpenApiDocument _openApiDoc;
+        private readonly OpenApiDocument _openApiDoc_2;
 
         public OpenApiHeaderReferenceTests()
         {
             var reader = new OpenApiStringReader();
-            OpenApiDocument openApiDoc = reader.Read(OpenApi, out _);
-            _openApiHeaderReference = new OpenApiHeaderReference("LocationHeader", openApiDoc)
+            _openApiDoc = reader.Read(OpenApi, out _);
+            _openApiDoc_2 = reader.Read(OpenApi_2, out _);
+            _openApiDoc_2.Workspace = new();
+            _openApiDoc_2.Workspace.AddDocument("http://localhost/headerreference", _openApiDoc);
+
+            _localHeaderReference = new OpenApiHeaderReference("LocationHeader", _openApiDoc)
             {
-                Description = "Location of the created post"
+                Description = "Location of the locally created post"
+            };
+
+            _externalHeaderReference = new OpenApiHeaderReference("LocationHeader", _openApiDoc_2, "http://localhost/headerreference")
+            {
+                Description = "Location of the external created post"
             };
         }
 
         [Fact]
-        public void ReferenceResolutionWorks()
+        public void HeaderReferenceResolutionWorks()
         {
             // Assert
-            Assert.Equal("Location of the created post", _openApiHeaderReference.Description);
+            Assert.Equal("Location of the locally created post", _localHeaderReference.Description);
+            Assert.Equal("Location of the external created post", _externalHeaderReference.Description);
+            Assert.Equal("The URL of the newly created post",
+                _openApiDoc.Components.Headers.First().Value.Description); // The main description value shouldn't change
         }
 
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeCallbackReferenceAsV3JsonWorks(bool produceTerseOutput)
+        public async Task SerializeHeaderReferenceAsV3JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiHeaderReference.SerializeAsV3(writer);
+            _localHeaderReference.SerializeAsV3(writer);
             writer.Flush();
 
             // Assert            
@@ -80,14 +112,14 @@ components:
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeCallbackReferenceAsV31JsonWorks(bool produceTerseOutput)
+        public async Task SerializeHeaderReferenceAsV31JsonWorks(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiHeaderReference.SerializeAsV31(writer);
+            _localHeaderReference.SerializeAsV31(writer);
             writer.Flush();
 
             // Assert
@@ -97,14 +129,14 @@ components:
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task SerializeParameterReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
+        public async Task SerializeHeaderReferenceAsV2JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            _openApiHeaderReference.SerializeAsV2(writer);
+            _localHeaderReference.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

@@ -1,1 +1,1 @@
-﻿{"summary":"Example of an admin user","value":[{"id":"1","name":"John Doe"}]}
+﻿{"summary":"Example of a user","description":"This is is an example of a user","value":[{"id":"1","name":"John Doe"}]}
