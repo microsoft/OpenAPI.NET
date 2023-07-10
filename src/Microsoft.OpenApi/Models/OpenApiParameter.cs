@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -123,7 +124,7 @@ namespace Microsoft.OpenApi.Models
         /// To represent examples of media types that cannot naturally be represented in JSON or YAML,
         /// a string value can contain the example with escaping where necessary.
         /// </summary>
-        public virtual IOpenApiAny Example { get; set; }
+        public virtual OpenApiAny Example { get; set; }
 
         /// <summary>
         /// A map containing the representations for the parameter.
@@ -162,7 +163,7 @@ namespace Microsoft.OpenApi.Models
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
             Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
-            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
+            Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
             Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
             AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;

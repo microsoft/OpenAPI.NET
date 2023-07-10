@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -179,7 +179,6 @@ namespace Microsoft.OpenApi.Services
             ResolveObject(parameter.Schema, r => parameter.Schema = r);
             ResolveMap(parameter.Examples);
         }
-
 
         /// <summary>
         /// Resolve all references to links

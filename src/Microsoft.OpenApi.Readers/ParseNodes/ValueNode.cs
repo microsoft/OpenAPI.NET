@@ -1,21 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using Microsoft.OpenApi.Any;
+using System.Globalization;
+using System;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Readers.Exceptions;
-using SharpYaml;
-using SharpYaml.Serialization;
+using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal class ValueNode : ParseNode
     {
-        private readonly YamlScalarNode _node;
+        private readonly JsonValue _node;
 
-        public ValueNode(ParsingContext context, YamlNode node) : base(
+        public ValueNode(ParsingContext context, JsonNode node) : base(
             context)
         {
-            if (!(node is YamlScalarNode scalarNode))
+            if (node is not JsonValue scalarNode)
             {
                 throw new OpenApiReaderException("Expected a value.", node);
             }
@@ -24,17 +25,16 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override string GetScalarValue()
         {
-            return _node.Value;
+            return Convert.ToString(_node.GetValue<object>(), CultureInfo.InvariantCulture);
         }
 
         /// <summary>
-        /// Create a <see cref="IOpenApiPrimitive"/>
+        /// Create a <see cref="JsonNode"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override IOpenApiAny CreateAny()
+        public override OpenApiAny CreateAny()
         {
-            var value = GetScalarValue();
-            return new OpenApiString(value, this._node.Style == ScalarStyle.SingleQuoted || this._node.Style == ScalarStyle.DoubleQuoted || this._node.Style == ScalarStyle.Literal || this._node.Style == ScalarStyle.Folded);
+            return new OpenApiAny(_node);
         }
     }
 }

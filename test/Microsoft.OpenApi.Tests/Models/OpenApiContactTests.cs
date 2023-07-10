@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -24,10 +25,10 @@ namespace Microsoft.OpenApi.Tests.Models
             Email = "support@example.com",
             Extensions = new Dictionary<string, IOpenApiExtension>
             {
-                {"x-internal-id", new OpenApiInteger(42)}
+                {"x-internal-id", new OpenApiAny(42)}
             }
         };
-
+        
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json, "{ }")]
         [InlineData(OpenApiSpecVersion.OpenApi2_0, OpenApiFormat.Json, "{ }")]

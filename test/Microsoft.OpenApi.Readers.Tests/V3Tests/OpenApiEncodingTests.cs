@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -29,7 +30,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
 
                 // Act
                 var encoding = OpenApiV3Deserializer.LoadEncoding(node);
@@ -55,8 +57,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
+                
                 // Act
                 var encoding = OpenApiV3Deserializer.LoadEncoding(node);
 

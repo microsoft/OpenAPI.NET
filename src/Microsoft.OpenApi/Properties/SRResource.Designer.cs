@@ -77,7 +77,18 @@ namespace Microsoft.OpenApi.Properties {
                 return ResourceManager.GetString("ArgumentNullOrWhiteSpace", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to The argument &apos;{0}&apos; is null..
+        /// </summary>
+        internal static string ArgumentNull
+        {
+            get
+            {
+                return ResourceManager.GetString("ArgumentNull", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to The filed name &apos;{0}&apos; of extension doesn&apos;t begin with x-..
         /// </summary>

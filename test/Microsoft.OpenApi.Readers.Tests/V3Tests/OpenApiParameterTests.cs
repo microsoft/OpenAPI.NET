@@ -297,15 +297,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Example = new OpenApiFloat(5),
+                    Example = new OpenApiAny((float)5.0),
                     Schema = new OpenApiSchema
                     {
                         Type = "number",
                         Format = "float"
                     }
-                });
+                }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Node.Parent));
         }
-
+        
         [Fact]
         public void ParseParameterWithExamplesShouldSucceed()
         {
@@ -331,11 +331,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["example1"] = new OpenApiExample()
                         {
-                            Value = new OpenApiFloat(5),
+                            Value = new OpenApiAny(5.0)
                         },
                         ["example2"] = new OpenApiExample()
                         {
-                            Value = new OpenApiFloat((float)7.5),
+                            Value = new OpenApiAny((float)7.5)
                         }
                     },
                     Schema = new OpenApiSchema
@@ -343,7 +343,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = "number",
                         Format = "float"
                     }
-                });
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Examples["example1"].Value.Node.Parent)
+                .Excluding(p => p.Examples["example2"].Value.Node.Parent));
         }
     }
 }

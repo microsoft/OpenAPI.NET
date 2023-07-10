@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -190,7 +191,8 @@ namespace Microsoft.OpenApi.Models
             };
             if (bodyParameter.Extensions.ContainsKey(OpenApiConstants.BodyName))
             {
-                bodyParameter.Name = (Extensions[OpenApiConstants.BodyName] as OpenApiString)?.Value ?? "body";
+                var bodyName = bodyParameter.Extensions[OpenApiConstants.BodyName] as OpenApiAny;
+                bodyParameter.Name = string.IsNullOrEmpty(bodyName?.Node.ToString()) ? "body" : bodyName?.Node.ToString();
                 bodyParameter.Extensions.Remove(OpenApiConstants.BodyName);
             }
             return bodyParameter;

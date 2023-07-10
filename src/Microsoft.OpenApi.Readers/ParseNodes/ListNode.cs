@@ -5,48 +5,46 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Readers.Exceptions;
-using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
 {
     internal class ListNode : ParseNode, IEnumerable<ParseNode>
     {
-        private readonly YamlSequenceNode _nodeList;
+        private readonly JsonArray _nodeList;
 
-        public ListNode(ParsingContext context, YamlSequenceNode sequenceNode) : base(
+        public ListNode(ParsingContext context, JsonArray jsonArray) : base(
             context)
         {
-            _nodeList = sequenceNode;
+            _nodeList = jsonArray;
         }
 
         public override List<T> CreateList<T>(Func<MapNode, T> map)
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException(
-                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList.Select(n => map(new MapNode(Context, n as YamlMappingNode)))
+            return _nodeList?.Select(n => map(new MapNode(Context, n as JsonObject)))
                 .Where(i => i != null)
                 .ToList();
         }
 
-        public override List<IOpenApiAny> CreateListOfAny()
+        public override List<OpenApiAny> CreateListOfAny()
         {
-            return _nodeList.Select(n => ParseNode.Create(Context, n).CreateAny())
+            return _nodeList.Select(n => Create(Context, n).CreateAny())
                 .Where(i => i != null)
                 .ToList();
         }
-
+        
         public override List<T> CreateSimpleList<T>(Func<ValueNode, T> map)
         {
             if (_nodeList == null)
             {
-                throw new OpenApiReaderException(
-                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}", _nodeList);
             }
 
             return _nodeList.Select(n => map(new ValueNode(Context, n))).ToList();
@@ -63,18 +61,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         }
 
         /// <summary>
-        /// Create a <see cref="OpenApiArray"/>
+        /// Create a <see cref="JsonArray"/>
         /// </summary>
         /// <returns>The created Any object.</returns>
-        public override IOpenApiAny CreateAny()
-        {
-            var array = new OpenApiArray();
-            foreach (var node in this)
-            {
-                array.Add(node.CreateAny());
-            }
-
-            return array;
+        public override OpenApiAny CreateAny()
+        {            
+            return new OpenApiAny(_nodeList);
         }
     }
 }

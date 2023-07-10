@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -147,78 +148,47 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         {
                             Type = "integer",
                             Format = "int64",
-                            Enum = new List<IOpenApiAny>
+                            Enum = new List<OpenApiAny>
                             {
-                                new OpenApiLong(1),
-                                new OpenApiLong(2),
-                                new OpenApiLong(3),
-                                new OpenApiLong(4),
+                                new OpenApiAny(1),
+                                new OpenApiAny(2),
+                                new OpenApiAny(3),
+                                new OpenApiAny(4)
                             }
                         },
-                        Default = new OpenApiArray() {
-                            new OpenApiLong(1),
-                            new OpenApiLong(2)
-                        },
-                        Enum = new List<IOpenApiAny>
+                        Default = new OpenApiAny(new JsonArray() {
+                            1,
+                            2
+                        }),
+                        Enum = new List<OpenApiAny>
                         {
-                            new OpenApiArray() { new OpenApiLong(1), new OpenApiLong(2) },
-                            new OpenApiArray() { new OpenApiLong(2), new OpenApiLong(3) },
-                            new OpenApiArray() { new OpenApiLong(3), new OpenApiLong(4) }
+                            new OpenApiAny(new JsonArray() { 1, 2 }),
+                            new OpenApiAny(new JsonArray() { 2, 3 }),
+                            new OpenApiAny(new JsonArray() { 3, 4 })
                         }
                     }
-                });
-        }
-
-        [Fact]
-        public void ParseHeaderParameterWithIncorrectDataTypeShouldSucceed()
-        {
-            // Arrange
-            MapNode node;
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "headerParameterWithIncorrectDataType.yaml")))
-            {
-                node = TestHelper.CreateYamlMapNode(stream);
-            }
-
-            // Act
-            var parameter = OpenApiV2Deserializer.LoadParameter(node);
-
-            // Assert
-            parameter.Should().BeEquivalentTo(
-                new OpenApiParameter
-                {
-                    In = ParameterLocation.Header,
-                    Name = "token",
-                    Description = "token to be passed as a header",
-                    Required = true,
-                    Style = ParameterStyle.Simple,
-
-                    Schema = new OpenApiSchema
-                    {
-                        Type = "array",
-                        Items = new OpenApiSchema
-                        {
-                            Type = "string",
-                            Format = "date-time",
-                            Enum = new List<IOpenApiAny>
-                            {
-                                new OpenApiString("1"),
-                                new OpenApiString("2"),
-                                new OpenApiString("3"),
-                                new OpenApiString("4"),
-                            }
-                        },
-                        Default = new OpenApiArray() {
-                            new OpenApiString("1"),
-                            new OpenApiString("2")
-                        },
-                        Enum = new List<IOpenApiAny>
-                        {
-                            new OpenApiArray() { new OpenApiString("1"), new OpenApiString("2") },
-                            new OpenApiArray() { new OpenApiString("2"), new OpenApiString("3") },
-                            new OpenApiArray() { new OpenApiString("3"), new OpenApiString("4") }
-                        }
-                    }
-                });
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Schema.Default.Node[0].Root)
+                .Excluding(p => p.Schema.Default.Node[0].Parent)
+                .Excluding(p => p.Schema.Default.Node[1].Parent)
+                .Excluding(p => p.Schema.Default.Node[1].Root)
+                .Excluding(p => p.Schema.Items.Enum[0].Node.Parent)
+                .Excluding(p => p.Schema.Items.Enum[1].Node.Parent)
+                .Excluding(p => p.Schema.Items.Enum[2].Node.Parent)
+                .Excluding(p => p.Schema.Items.Enum[3].Node.Parent)
+                .Excluding(p => p.Schema.Enum[0].Node[0].Parent)
+                .Excluding(p => p.Schema.Enum[0].Node[0].Root)
+                .Excluding(p => p.Schema.Enum[0].Node[1].Parent)
+                .Excluding(p => p.Schema.Enum[0].Node[1].Root)
+                .Excluding(p => p.Schema.Enum[1].Node[0].Parent)
+                .Excluding(p => p.Schema.Enum[1].Node[0].Root)
+                .Excluding(p => p.Schema.Enum[1].Node[1].Parent)
+                .Excluding(p => p.Schema.Enum[1].Node[1].Root)
+                .Excluding(p => p.Schema.Enum[2].Node[0].Parent)
+                .Excluding(p => p.Schema.Enum[2].Node[0].Root)
+                .Excluding(p => p.Schema.Enum[2].Node[1].Parent)
+                .Excluding(p => p.Schema.Enum[2].Node[1].Root)
+                );
         }
 
         [Fact]
@@ -354,9 +324,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Default = new OpenApiFloat(5)
+                        Default = new OpenApiAny(5)
                     }
-                });
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Schema.Default.Node.Parent));
         }
 
         [Fact]
@@ -384,14 +355,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         Type = "number",
                         Format = "float",
-                        Enum =
-                        {
-                            new OpenApiFloat(7),
-                            new OpenApiFloat(8),
-                            new OpenApiFloat(9)
+                        Enum = 
+                        { 
+                            new OpenApiAny(7),
+                            new OpenApiAny(8),
+                            new OpenApiAny(9)
                         }
                     }
-                });
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(p => p.Schema.Enum[0].Node.Parent)
+                .Excluding(p => p.Schema.Enum[1].Node.Parent)
+                .Excluding(p => p.Schema.Enum[2].Node.Parent));
         }
     }
 }

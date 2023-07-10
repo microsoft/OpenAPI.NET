@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Linq;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -30,49 +31,61 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var diagnostic = new OpenApiDiagnostic();
                 var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
-
+                var asJsonNode = yamlNode.ToJsonNode();
+                var node = new MapNode(context, asJsonNode);
+                
                 var example = OpenApiV3Deserializer.LoadExample(node);
-
-                diagnostic.Errors.Should().BeEmpty();
-
-                example.Should().BeEquivalentTo(
-                    new OpenApiExample
+                var expected = new OpenApiExample
+                {
+                    Value = new OpenApiAny(new JsonObject
                     {
-                        Value = new OpenApiObject
-                        {
-                            ["versions"] = new OpenApiArray
+                        ["versions"] = new JsonArray
                             {
-                                new OpenApiObject
+                                new JsonObject
                                 {
-                                    ["status"] = new OpenApiString("Status1"),
-                                    ["id"] = new OpenApiString("v1"),
-                                    ["links"] = new OpenApiArray
+                                    ["status"] = "Status1",
+                                    ["id"] = "v1",
+                                    ["links"] = new JsonArray
                                     {
-                                        new OpenApiObject
+                                        new JsonObject
                                         {
-                                            ["href"] = new OpenApiString("http://example.com/1"),
-                                            ["rel"] = new OpenApiString("sampleRel1")
+                                            ["href"] = "http://example.com/1",
+                                            ["rel"] = "sampleRel1"
                                         }
                                     }
                                 },
 
-                                new OpenApiObject
+                                new JsonObject
                                 {
-                                    ["status"] = new OpenApiString("Status2"),
-                                    ["id"] = new OpenApiString("v2"),
-                                    ["links"] = new OpenApiArray
+                                    ["status"] = "Status2",
+                                    ["id"] = "v2",
+                                    ["links"] = new JsonArray
                                     {
-                                        new OpenApiObject
+                                        new JsonObject
                                         {
-                                            ["href"] = new OpenApiString("http://example.com/2"),
-                                            ["rel"] = new OpenApiString("sampleRel2")
+                                            ["href"] = "http://example.com/2",
+                                            ["rel"] = "sampleRel2"
                                         }
                                     }
                                 }
                             }
-                        }
-                    });
+                    })
+                };
+
+                var actualRoot = example.Value.Node["versions"][0]["status"].Root;
+                var expectedRoot = expected.Value.Node["versions"][0]["status"].Root;
+                
+                diagnostic.Errors.Should().BeEmpty();
+
+                example.Should().BeEquivalentTo(expected, options => options.IgnoringCyclicReferences()
+                .Excluding(e => e.Value.Node["versions"][0]["status"].Root)
+                .Excluding(e => e.Value.Node["versions"][0]["id"].Root)
+                .Excluding(e => e.Value.Node["versions"][0]["links"][0]["href"].Root)
+                .Excluding(e => e.Value.Node["versions"][0]["links"][0]["rel"].Root)
+                .Excluding(e => e.Value.Node["versions"][1]["status"].Root)
+                .Excluding(e => e.Value.Node["versions"][1]["id"].Root)
+                .Excluding(e => e.Value.Node["versions"][1]["links"][0]["href"].Root)
+                .Excluding(e => e.Value.Node["versions"][1]["links"][0]["rel"].Root));
             }
         }
 

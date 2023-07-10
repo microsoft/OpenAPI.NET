@@ -20,32 +20,32 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseBasicDiscriminatorShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDiscriminator.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDiscriminator.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var asJsonNode = yamlNode.ToJsonNode();
+            var node = new MapNode(context, asJsonNode);
 
-                // Act
-                var discriminator = OpenApiV3Deserializer.LoadDiscriminator(node);
+            // Act
+            var discriminator = OpenApiV3Deserializer.LoadDiscriminator(node);
 
-                // Assert
-                discriminator.Should().BeEquivalentTo(
-                    new OpenApiDiscriminator
+            // Assert
+            discriminator.Should().BeEquivalentTo(
+                new OpenApiDiscriminator
+                {
+                    PropertyName = "pet_type",
+                    Mapping =
                     {
-                        PropertyName = "pet_type",
-                        Mapping =
-                        {
                             ["puppy"] = "#/components/schemas/Dog",
                             ["kitten"] = "Cat"
-                        }
-                    });
-            }
+                    }
+                });
         }
     }
 }

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -38,10 +39,10 @@ namespace Microsoft.OpenApi.Tests.Models
                             Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
                         }
                     },
-                    Example = new OpenApiString("Blabla"),
+                    Example = new OpenApiAny("Blabla"),
                     Extensions = new Dictionary<string, IOpenApiExtension>
                     {
-                        ["myextension"] = new OpenApiString("myextensionvalue"),
+                        ["myextension"] = new OpenApiAny("myextensionvalue"),
                     },
                 }
             },

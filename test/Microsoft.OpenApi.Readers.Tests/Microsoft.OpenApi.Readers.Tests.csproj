@@ -260,8 +260,12 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiSecurityScheme\openIdConnectSecurityScheme.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiWorkspace\TodoComponents.yaml" />
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiWorkspace\TodoMain.yaml" />
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiWorkspace\TodoComponents.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="V3Tests\Samples\OpenApiWorkspace\TodoMain.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
       <EmbeddedResource Include="V3Tests\Samples\OpenApiXml\basicXml.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
@@ -289,6 +293,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Yaml2JsonNode" Version="1.1.0" />
+        <PackageReference Include="YamlDotNet" Version="13.0.2" />
     </ItemGroup>
 
     <ItemGroup>

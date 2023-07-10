@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (schema.Default != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Default, schema);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Default.Node, schema);
                     }
 
                     context.Exit();
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (schema.Example != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Example, schema);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Example.Node, schema);
                     }
 
                     context.Exit();
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                         for (int i = 0; i < schema.Enum.Count; i++)
                         {
                             context.Enter(i.ToString());
-                            RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Enum[i], schema);
+                            RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Enum[i].Node, schema);
                             context.Exit();
                         }
                     }

@@ -1,13 +1,15 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -1003,12 +1005,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = "integer",
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
-                                            ["my-extension"] = new Any.OpenApiInteger(4),
+                                            ["my-extension"] = new OpenApiAny(4),
                                         }
                                     },
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
-                                        ["my-extension"] = new Any.OpenApiInteger(4),
+                                        ["my-extension"] = new OpenApiAny(4),
                                     }
                                 },
                                 new OpenApiParameter
@@ -1022,12 +1024,12 @@ namespace Microsoft.OpenApi.Tests.Models
                                         Type = "integer",
                                         Extensions = new Dictionary<string, IOpenApiExtension>
                                         {
-                                            ["my-extension"] = new Any.OpenApiInteger(4),
+                                            ["my-extension"] = new OpenApiAny(4),
                                         }
                                     },
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
-                                        ["my-extension"] = new Any.OpenApiInteger(4),
+                                        ["my-extension"] = new OpenApiAny(4),
                                     }
                                 },
                             },

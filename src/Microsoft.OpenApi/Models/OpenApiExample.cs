@@ -1,9 +1,10 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Helpers;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -67,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         {
             Summary = example?.Summary ?? Summary;
             Description = example?.Description ?? Description;
-            Value = OpenApiAnyCloneHelper.CloneFromCopyConstructor(example?.Value);
+            Value = JsonNodeCloneHelper.Clone(example?.Value);
             ExternalValue = example?.ExternalValue ?? ExternalValue;
             Extensions = example?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(example.Extensions) : null;
             Reference = example?.Reference != null ? new(example?.Reference) : null;

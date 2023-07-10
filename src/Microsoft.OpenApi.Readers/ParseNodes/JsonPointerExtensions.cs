@@ -2,6 +2,7 @@
 // Licensed under the MIT license. 
 
 using System;
+using System.Text.Json.Nodes;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -12,36 +13,29 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
     public static class JsonPointerExtensions
     {
         /// <summary>
-        /// Finds the YAML node that corresponds to this JSON pointer based on the base YAML node.
+        /// Finds the JSON node that corresponds to this JSON pointer based on the base Json node.
         /// </summary>
-        public static YamlNode Find(this JsonPointer currentPointer, YamlNode baseYamlNode)
+        public static JsonNode Find(this JsonPointer currentPointer, JsonNode baseJsonNode)
         {
             if (currentPointer.Tokens.Length == 0)
             {
-                return baseYamlNode;
+                return baseJsonNode;
             }
 
             try
             {
-                var pointer = baseYamlNode;
+                var pointer = baseJsonNode;
                 foreach (var token in currentPointer.Tokens)
                 {
-                    var sequence = pointer as YamlSequenceNode;
+                    var array = pointer as JsonArray;
 
-                    if (sequence != null)
+                    if (array != null && int.TryParse(token, out var tokenValue))
                     {
-                        pointer = sequence.Children[Convert.ToInt32(token)];
+                        pointer = array[tokenValue];
                     }
-                    else
+                    else if(pointer is JsonObject map && !map.TryGetPropertyValue(token, out pointer))
                     {
-                        var map = pointer as YamlMappingNode;
-                        if (map != null)
-                        {
-                            if (!map.Children.TryGetValue(new YamlScalarNode(token), out pointer))
-                            {
-                                return null;
-                            }
-                        }
+                        return null;
                     }
                 }
 

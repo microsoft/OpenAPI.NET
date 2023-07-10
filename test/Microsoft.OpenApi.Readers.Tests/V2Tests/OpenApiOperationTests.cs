@@ -4,14 +4,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
@@ -183,7 +184,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 },
                 Extensions = { 
-                    [OpenApiConstants.BodyName] = new OpenApiString("petObject") 
+                    [OpenApiConstants.BodyName] = new OpenApiAny("petObject")
                 }
             },
             Responses = new OpenApiResponses
@@ -294,7 +295,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -312,7 +313,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var operation = OpenApiV2Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(_operationWithBody);
+            operation.Should().BeEquivalentTo(_operationWithBody, options => options.IgnoringCyclicReferences());
         }
 
         [Fact]
@@ -350,12 +351,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             Format = "float"
                                         }
                                     },
-                                    Example = new OpenApiArray()
+                                    Example = new OpenApiAny(new JsonArray()
                                     {
-                                        new OpenApiFloat(5),
-                                        new OpenApiFloat(6),
-                                        new OpenApiFloat(7),
-                                    }
+                                        5.0,
+                                        6.0,
+                                        7.0
+                                    })
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {
@@ -372,8 +373,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }}
                     }
-                }
-            );
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[0].Root)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[1].Root)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Parent)
+                .Excluding(o => o.Responses["200"].Content["application/json"].Example.Node[2].Root));
         }
     }
 }
