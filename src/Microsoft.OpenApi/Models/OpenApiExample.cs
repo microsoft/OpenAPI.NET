@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models
         /// exclusive. To represent examples of media types that cannot naturally represented
         /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
         /// </summary>
-        public virtual IOpenApiAny Value { get; set; }
+        public virtual OpenApiAny Value { get; set; }
 
         /// <summary>
         /// A URL that points to the literal example.

@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Models.References
         public override IDictionary<string, OpenApiExample> Examples { get => Target.Examples; set => Target.Examples = value; }
 
         /// <inheritdoc/>
-        public override IOpenApiAny Example { get => Target.Example; set => Target.Example = value; }
+        public override OpenApiAny Example { get => Target.Example; set => Target.Example = value; }
 
         /// <inheritdoc/>
         public override ParameterLocation? In { get => Target.In; set => Target.In = value; }

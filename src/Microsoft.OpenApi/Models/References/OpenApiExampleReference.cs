@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Models.References
         public override string ExternalValue { get => Target.ExternalValue; set => Target.ExternalValue = value; }
 
         /// <inheritdoc/>
-        public override IOpenApiAny Value { get => Target.Value; set => Target.Value = value; }
+        public override OpenApiAny Value { get => Target.Value; set => Target.Value = value; }
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)

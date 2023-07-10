@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Example of the media type.
         /// </summary>
-        public virtual IOpenApiAny Example { get; set; }
+        public virtual OpenApiAny Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.

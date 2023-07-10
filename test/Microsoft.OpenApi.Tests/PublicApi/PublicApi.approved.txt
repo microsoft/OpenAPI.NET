@@ -474,7 +474,7 @@ namespace Microsoft.OpenApi.Models
         public virtual Microsoft.OpenApi.Models.OpenApiReference Reference { get; set; }
         public virtual string Summary { get; set; }
         public virtual bool UnresolvedReference { get; set; }
-        public virtual Microsoft.OpenApi.Any.IOpenApiAny Value { get; set; }
+        public virtual Microsoft.OpenApi.Any.OpenApiAny Value { get; set; }
         public Microsoft.OpenApi.Models.OpenApiExample GetEffective(Microsoft.OpenApi.Models.OpenApiDocument doc) { }
         public void SerializeAsV2(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
         public void SerializeAsV2WithoutReference(Microsoft.OpenApi.Writers.IOpenApiWriter writer) { }
@@ -514,7 +514,7 @@ namespace Microsoft.OpenApi.Models
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType> Content { get; set; }
         public virtual bool Deprecated { get; set; }
         public virtual string Description { get; set; }
-        public virtual Microsoft.OpenApi.Any.IOpenApiAny Example { get; set; }
+        public virtual Microsoft.OpenApi.Any.OpenApiAny Example { get; set; }
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiExample> Examples { get; set; }
         public virtual bool Explode { get; set; }
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
@@ -650,7 +650,7 @@ namespace Microsoft.OpenApi.Models
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiMediaType> Content { get; set; }
         public virtual bool Deprecated { get; set; }
         public virtual string Description { get; set; }
-        public virtual Microsoft.OpenApi.Any.IOpenApiAny Example { get; set; }
+        public virtual Microsoft.OpenApi.Any.OpenApiAny Example { get; set; }
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Models.OpenApiExample> Examples { get; set; }
         public virtual bool Explode { get; set; }
         public virtual System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> Extensions { get; set; }
