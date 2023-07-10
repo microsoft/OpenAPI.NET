@@ -16,6 +16,7 @@ namespace Microsoft.OpenApi.Models.References
     {
         private OpenApiTag _target;
         private readonly OpenApiReference _reference;
+        private string _description;
 
         private OpenApiTag Target
         {
@@ -51,7 +52,7 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override string Description { get => Target.Description; set => Target.Description = value; }
+        public override string Description { get => _description ?? Target.Description; set => _description = value; }
 
         /// <inheritdoc/>
         public override OpenApiExternalDocs ExternalDocs { get => Target.ExternalDocs; set => Target.ExternalDocs = value; }
