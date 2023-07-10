@@ -66,13 +66,13 @@ namespace Microsoft.OpenApi.Models.References
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer));
+            SerializeInternal(writer);
         }
 
         /// <inheritdoc/>
         public override void SerializeAsV31(IOpenApiWriter writer)
         {
-            SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer));
+            SerializeInternal(writer);
         }               
 
         /// <inheritdoc/>
@@ -90,10 +90,10 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        private void SerializeInternal(IOpenApiWriter writer)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
-            callback(writer, Target);
+            writer.WriteValue(Name);
         }
     }
 }
