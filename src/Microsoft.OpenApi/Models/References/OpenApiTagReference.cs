@@ -52,16 +52,16 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override string Description { get => _description ?? Target.Description; set => _description = value; }
+        public override string Description { get => _description ?? Target?.Description; set => _description = value; }
 
         /// <inheritdoc/>
-        public override OpenApiExternalDocs ExternalDocs { get => Target.ExternalDocs; set => Target.ExternalDocs = value; }
+        public override OpenApiExternalDocs ExternalDocs { get => Target?.ExternalDocs; set => Target.ExternalDocs = value; }
 
         /// <inheritdoc/>
-        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
+        public override IDictionary<string, IOpenApiExtension> Extensions { get => Target?.Extensions; set => Target.Extensions = value; }
 
         /// <inheritdoc/>
-        public override string Name { get => Target.Name; set => Target.Name = value; }
+        public override string Name { get => Target?.Name; set => Target.Name = value; }
         
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
