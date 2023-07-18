@@ -67,7 +67,11 @@ namespace Microsoft.OpenApi.Models.References
         public override OpenApiServer Server { get => Target.Server; set => Target.Server = value; }
 
         /// <inheritdoc/>
-        public override string Description { get => _description ?? Target.Description; set => _description = value; }
+        public override string Description
+        {
+            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            set => _description = value;
+        }
 
         /// <inheritdoc/>
         public override Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get => Target.Parameters; set => Target.Parameters = value; }

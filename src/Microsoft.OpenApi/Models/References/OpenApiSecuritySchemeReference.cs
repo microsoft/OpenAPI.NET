@@ -16,6 +16,7 @@ namespace Microsoft.OpenApi.Models.References
     {
         private OpenApiSecurityScheme _target;
         private readonly OpenApiReference _reference;
+        private string _description;
 
         private OpenApiSecurityScheme Target
         {
@@ -51,7 +52,11 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override string Description { get => Target.Description; set => Target.Description = value; }
+        public override string Description
+        {
+            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            set => _description = value;
+        }
 
         /// <inheritdoc/>
         public override string Name { get => Target.Name; set => Target.Name = value; }

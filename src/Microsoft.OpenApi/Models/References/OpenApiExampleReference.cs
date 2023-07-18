@@ -60,14 +60,18 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override string Description 
+        public override string Description
         {
             get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
             set => _description = value; 
         }
 
         /// <inheritdoc/>
-        public override string Summary { get => _summary ?? Target.Summary; set => _summary = value; }
+        public override string Summary
+        { 
+            get => string.IsNullOrEmpty(_summary) ? Target.Summary : _summary;
+            set => _summary = value;
+        }
 
         /// <inheritdoc/>
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }

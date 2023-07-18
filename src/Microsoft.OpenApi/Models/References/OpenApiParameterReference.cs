@@ -64,7 +64,11 @@ namespace Microsoft.OpenApi.Models.References
         public override string Name { get => Target.Name; set => Target.Name = value; }
 
         /// <inheritdoc/>
-        public override string Description { get => _description ?? Target.Description; set => _description = value; }
+        public override string Description
+        {
+            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            set => _description = value;
+        }
 
         /// <inheritdoc/>
         public override bool Required { get => Target.Required; set => Target.Required = value; }

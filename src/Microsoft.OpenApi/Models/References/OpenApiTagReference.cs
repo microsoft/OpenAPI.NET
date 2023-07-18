@@ -52,7 +52,11 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override string Description { get => _description ?? Target?.Description; set => _description = value; }
+        public override string Description
+        {
+            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            set => _description = value;
+        }
 
         /// <inheritdoc/>
         public override OpenApiExternalDocs ExternalDocs { get => Target?.ExternalDocs; set => Target.ExternalDocs = value; }

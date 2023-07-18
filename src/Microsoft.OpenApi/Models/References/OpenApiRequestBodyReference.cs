@@ -58,7 +58,11 @@ namespace Microsoft.OpenApi.Models.References
         }
 
         /// <inheritdoc/>
-        public override string Description { get => _description ?? Target.Description; set => _description = value; }
+        public override string Description
+        {
+            get => string.IsNullOrEmpty(_description) ? Target.Description : _description;
+            set => _description = value;
+        }
 
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }
@@ -68,7 +72,6 @@ namespace Microsoft.OpenApi.Models.References
 
         /// <inheritdoc/>
         public override IDictionary<string, IOpenApiExtension> Extensions { get => Target.Extensions; set => Target.Extensions = value; }
-
 
         /// <inheritdoc/>
         public override void SerializeAsV3(IOpenApiWriter writer)
