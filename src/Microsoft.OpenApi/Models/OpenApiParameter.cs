@@ -430,7 +430,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
-        private ParameterStyle? GetDefaultStyleValue()
+        internal virtual ParameterStyle? GetDefaultStyleValue()
         {
             Style = In switch
             {

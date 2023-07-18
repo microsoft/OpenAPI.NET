@@ -18,6 +18,8 @@ namespace Microsoft.OpenApi.Models.References
         private OpenApiParameter _target;
         private readonly OpenApiReference _reference;
         private string _description;
+        private bool? _explode;
+        private ParameterStyle? _style;
 
         private OpenApiParameter Target
         {
@@ -89,10 +91,18 @@ namespace Microsoft.OpenApi.Models.References
         public override ParameterLocation? In { get => Target.In; set => Target.In = value; }
 
         /// <inheritdoc/>
-        public override ParameterStyle? Style { get => Target.Style; set => Target.Style = value; }
+        public override ParameterStyle? Style 
+        {
+            get => _style ?? GetDefaultStyleValue();
+            set => _style = value;
+        }
         
         /// <inheritdoc/>
-        public override bool Explode { get => Target.Explode; set => Target.Explode = value; }
+        public override bool Explode 
+        {
+            get => _explode ?? Style == ParameterStyle.Form;
+            set => _explode = value;
+        }
 
         /// <inheritdoc/>
         public override IDictionary<string, OpenApiMediaType> Content { get => Target.Content; set => Target.Content = value; }
