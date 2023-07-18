@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             {
                 Required = true,
                 Example = new OpenApiAny(55),
-                Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
             };
 
             // Act
@@ -58,7 +58,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var header = new OpenApiHeader()
             {
                 Required = true,
-                Schema31 = new JsonSchemaBuilder()
+                Schema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .AdditionalProperties(
                     new JsonSchemaBuilder()

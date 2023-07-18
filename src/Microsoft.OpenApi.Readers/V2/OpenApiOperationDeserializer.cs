@@ -165,11 +165,11 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema31 = new JsonSchemaBuilder().Properties(formParameters.ToDictionary(
+                Schema = new JsonSchemaBuilder().Properties(formParameters.ToDictionary(
                         k => k.Name,
                         v =>
                         {
-                            var schema = v.Schema31;
+                            var schema = v.Schema;
                             return schema;
                         })).Required(new HashSet<string>(formParameters.Where(p => p.Required).Select(p => p.Name))).Build()
             };
@@ -204,7 +204,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     k => k,
                     v => new OpenApiMediaType
                     {
-                        Schema31 = bodyParameter.Schema31
+                        Schema = bodyParameter.Schema
                     }),
                 Extensions = bodyParameter.Extensions
             };

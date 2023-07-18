@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public JsonSchema Schema31 { get; set; }
+        public JsonSchema Schema { get; set; }
 
         /// <summary>
         /// Examples of the media type. Each example SHOULD contain a value
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter?.Style ?? Style;
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
-            Schema31 = JsonNodeCloneHelper.CloneJsonSchema(Schema31);
+            Schema = JsonNodeCloneHelper.CloneJsonSchema(Schema);
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
@@ -283,9 +283,9 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            if (Schema31 != null)
+            if (Schema != null)
             {
-                writer.WriteOutJsonSchemaInYaml(Schema31, OpenApiConstants.Schema);
+                writer.WriteOutJsonSchemaInYaml(Schema, OpenApiConstants.Schema);
             }
 
             // example
@@ -365,11 +365,11 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (this is OpenApiBodyParameter)
             {
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema31, (w, s) => writer.WriteRaw(JsonSerializer.Serialize(s)));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteRaw(JsonSerializer.Serialize(s)));
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.
-            else if (Schema31?.GetJsonType() == SchemaValueType.Object)
+            else if (Schema?.GetJsonType() == SchemaValueType.Object)
             {
                 writer.WriteProperty(OpenApiConstants.Type, "string");
             }
@@ -392,13 +392,13 @@ namespace Microsoft.OpenApi.Models
                 // uniqueItems
                 // enum
                 // multipleOf
-                if (Schema31 != null)
+                if (Schema != null)
                 {
-                    SchemaSerializerHelper.WriteAsItemsProperties(Schema31, writer, Extensions);
+                    SchemaSerializerHelper.WriteAsItemsProperties(Schema, writer, Extensions);
 
-                    //if (Schema31.Extensions != null)
+                    //if (Schema.Extensions != null)
                     //{
-                    //    foreach (var key in Schema31.Extensions.Keys)
+                    //    foreach (var key in Schema.Extensions.Keys)
                     //    {
                     //        // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
                     //        // so remove it from the cloned collection so we don't write it again.
@@ -410,7 +410,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query && SchemaValueType.Array.Equals(Schema31?.GetJsonType()))
+                if (this.In == ParameterLocation.Query && SchemaValueType.Array.Equals(Schema?.GetJsonType()))
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {

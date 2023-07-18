@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiComponents AdvancedComponents = new OpenApiComponents
         {
-            Schemas31 = new Dictionary<string, JsonSchema>
+            Schemas = new Dictionary<string, JsonSchema>
             {
                 ["schema1"] = new JsonSchemaBuilder()
                 .Properties(
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents AdvancedComponentsWithReference = new OpenApiComponents
         {
-            Schemas31 = new Dictionary<string, JsonSchema>
+            Schemas = new Dictionary<string, JsonSchema>
             {
                 ["schema1"] = new JsonSchemaBuilder()
                 .Properties(
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents BrokenComponents = new OpenApiComponents
         {
-            Schemas31 = new Dictionary<string, JsonSchema>
+            Schemas = new Dictionary<string, JsonSchema>
             {
                 ["schema1"] = new JsonSchemaBuilder().Type(SchemaValueType.String),
                 ["schema4"] = new JsonSchemaBuilder()
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
-            Schemas31 =
+            Schemas =
             {
                 ["schema1"] = new JsonSchemaBuilder()
                     .Ref("schema2").Build(),
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
         {
-            Schemas31 =
+            Schemas =
             {
                 ["schema1"] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
         {
-            Schemas31 =
+            Schemas =
             {
                 ["schema1"] = new JsonSchemaBuilder()
                     .Ref("schema1").Build()
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         public static OpenApiComponents ComponentsWithPathItem = new OpenApiComponents
         {
-            Schemas31 = new Dictionary<string, JsonSchema>
+            Schemas = new Dictionary<string, JsonSchema>
             {
                 ["schema1"] = new JsonSchemaBuilder()
                 .Properties(
@@ -191,7 +191,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema31 = new JsonSchemaBuilder().Ref("#/components/schemas/schema1")
+                                        Schema = new JsonSchemaBuilder().Ref("#/components/schemas/schema1")
                                     }
                                 }
                             },

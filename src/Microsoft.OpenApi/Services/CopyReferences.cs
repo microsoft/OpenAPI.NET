@@ -29,9 +29,9 @@ namespace Microsoft.OpenApi.Services
                 case JsonSchema schema:
                     EnsureComponentsExists();
                     EnsureSchemasExists();
-                    if (!Components.Schemas31.ContainsKey(schema.GetRef().OriginalString))
+                    if (!Components.Schemas.ContainsKey(schema.GetRef().OriginalString))
                     {
-                        Components.Schemas31.Add(schema.GetRef().OriginalString, schema);
+                        Components.Schemas.Add(schema.GetRef().OriginalString, schema);
                     }
                     break;
 
@@ -70,9 +70,9 @@ namespace Microsoft.OpenApi.Services
             {
                 EnsureComponentsExists();
                 EnsureSchemasExists();
-                if (!Components.Schemas31.ContainsKey(schema.GetRef().OriginalString))
+                if (!Components.Schemas.ContainsKey(schema.GetRef().OriginalString))
                 {
-                    Components.Schemas31.Add(schema.GetRef().OriginalString, schema);
+                    Components.Schemas.Add(schema.GetRef().OriginalString, schema);
                 }
             }
             base.Visit(schema);
@@ -88,9 +88,9 @@ namespace Microsoft.OpenApi.Services
 
         private void EnsureSchemasExists()
         {
-            if (_target.Components.Schemas31 == null)
+            if (_target.Components.Schemas == null)
             {
-                _target.Components.Schemas31 = new Dictionary<string, JsonSchema>();
+                _target.Components.Schemas = new Dictionary<string, JsonSchema>();
             }
         }
 

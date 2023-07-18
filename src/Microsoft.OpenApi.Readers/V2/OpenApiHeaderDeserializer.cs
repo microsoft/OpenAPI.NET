@@ -30,19 +30,19 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "type", (o, n) =>
                 {
-                   o.Schema31 = builder.Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue()));
+                   o.Schema = builder.Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue()));
                 }
             },
             {
                 "format", (o, n) =>
                 {
-                    o.Schema31 = builder.Format(n.GetScalarValue());
+                    o.Schema = builder.Format(n.GetScalarValue());
                 }
             },
             {
                 "items", (o, n) =>
                 {
-                    o.Schema31 = builder.Items(LoadSchema(n));
+                    o.Schema = builder.Items(LoadSchema(n));
                 }
             },
             {
@@ -54,49 +54,49 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "default", (o, n) =>
                 {
-                    o.Schema31 = builder.Default(n.CreateAny().Node).Build();
+                    o.Schema = builder.Default(n.CreateAny().Node).Build();
                 }
             },
             {
                 "maximum", (o, n) =>
                 {
-                    o.Schema31 = builder.Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = builder.Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.Schema31 = builder.ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = builder.ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minimum", (o, n) =>
                 {
-                    o.Schema31 = builder.Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = builder.Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.Schema31 = builder.ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = builder.ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "maxLength", (o, n) =>
                 {
-                    o.Schema31 = builder.MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = builder.MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minLength", (o, n) =>
                 {
-                    o.Schema31 = builder.MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = builder.MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "pattern", (o, n) =>
                 {
-                    o.Schema31 = builder.Pattern(n.GetScalarValue());
+                    o.Schema = builder.Pattern(n.GetScalarValue());
                 }
             },
             {
@@ -108,25 +108,25 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "minItems", (o, n) =>
                 {
-                    o.Schema31 = builder.MinItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = builder.MinItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "uniqueItems", (o, n) =>
                 {
-                    o.Schema31 = builder.UniqueItems(bool.Parse(n.GetScalarValue()));
+                    o.Schema = builder.UniqueItems(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.Schema31 = builder.MultipleOf(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = builder.MultipleOf(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "enum", (o, n) =>
                 {
-                    o.Schema31 = builder.Enum(n.CreateListOfAny());
+                    o.Schema = builder.Enum(n.CreateListOfAny());
                 }
             }
         };
@@ -148,7 +148,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var schema = node.Context.GetFromTempStorage<JsonSchema>("schema");
             if (schema != null)
             {
-                header.Schema31 = schema;
+                header.Schema = schema;
                 node.Context.SetTempStorage("schema", null);
             }
 

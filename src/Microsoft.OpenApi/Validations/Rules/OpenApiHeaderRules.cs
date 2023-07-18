@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (header.Example != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(HeaderMismatchedDataType), header.Example.Node, header.Schema31);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(HeaderMismatchedDataType), header.Example.Node, header.Schema);
                     }
 
                     context.Exit();
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                             {
                                 context.Enter(key);
                                 context.Enter("value");
-                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(HeaderMismatchedDataType), header.Examples[key]?.Value.Node, header.Schema31);
+                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(HeaderMismatchedDataType), header.Examples[key]?.Value.Node, header.Schema);
                                 context.Exit();
                                 context.Exit();
                             }

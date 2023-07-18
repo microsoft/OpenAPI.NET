@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
                     }
                 }
             },
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new OpenApiMediaType
                         {
-                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
                         }
                     }
                 }
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
                     }
                 }
             },
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new OpenApiMediaType
                         {
-                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
                         }
                     }
                 }
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
                     }
                 },
                 RequestBody = new OpenApiRequestBody()
@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/x-www-form-urlencoded"] = new OpenApiMediaType()
                         {
-                            Schema31 = new JsonSchemaBuilder()
+                            Schema = new JsonSchemaBuilder()
                             .Properties(
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated name of the pet")),
                                 ("status", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated status of the pet")))
@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         ["multipart/form-data"] = new OpenApiMediaType()
                         {
-                            Schema31 = new JsonSchemaBuilder()
+                            Schema = new JsonSchemaBuilder()
                             .Properties(
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated name of the pet")),
                                 ("status", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated status of the pet")))

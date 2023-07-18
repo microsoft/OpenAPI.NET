@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Extensions
             switch (propertyName)
             {
                 case OpenApiConstants.Schema:
-                    return (IOpenApiReferenceable)headerElement.Schema31;
+                    return (IOpenApiReferenceable)headerElement.Schema;
                 case OpenApiConstants.Examples when mapKey != null:
                     return headerElement.Examples[mapKey];
                 default:
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Extensions
             switch (propertyName)
             {
                 case OpenApiConstants.Schema:
-                    return (IOpenApiReferenceable)parameterElement.Schema31;
+                    return (IOpenApiReferenceable)parameterElement.Schema;
                 case OpenApiConstants.Examples when mapKey != null:
                     return parameterElement.Examples[mapKey];
                 default:

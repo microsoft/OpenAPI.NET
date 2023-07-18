@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                                                 }
                                             }
                                         },
@@ -164,7 +164,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                                                 }
                                             }
                                         },
@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                                                 }
                                             }
                                         },
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                                                 }
                                             }
                                         },

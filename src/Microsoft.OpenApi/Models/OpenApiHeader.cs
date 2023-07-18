@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the header.
         /// </summary>
-        public JsonSchema Schema31 { get; set; }
+        public JsonSchema Schema { get; set; }
 
         /// <summary>
         /// Example of the media type.
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Models
             Style = header?.Style ?? Style;
             Explode = header?.Explode ?? Explode;
             AllowReserved = header?.AllowReserved ?? AllowReserved;
-            Schema31 = JsonNodeCloneHelper.CloneJsonSchema(Schema31);
+            Schema = JsonNodeCloneHelper.CloneJsonSchema(Schema);
             Example = JsonNodeCloneHelper.Clone(header?.Example);
             Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
             Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            writer.WriteOutJsonSchemaInYaml(Schema31, OpenApiConstants.Schema);
+            writer.WriteOutJsonSchemaInYaml(Schema, OpenApiConstants.Schema);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));
@@ -289,7 +289,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
 
             // schema
-            SchemaSerializerHelper.WriteAsItemsProperties(Schema31, writer, Extensions);
+            SchemaSerializerHelper.WriteAsItemsProperties(Schema, writer, Extensions);
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, s) => w.WriteAny(s));

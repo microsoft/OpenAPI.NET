@@ -70,6 +70,7 @@ namespace Microsoft.OpenApi.Writers
         /// Indicates if external references should be rendered as an inline object
         /// </summary>
         public bool InlineExternalReferences { get; set; } = false;
+        public int Indentation { get; internal set; }
 
         internal bool ShouldInlineReference(OpenApiReference reference)
         {

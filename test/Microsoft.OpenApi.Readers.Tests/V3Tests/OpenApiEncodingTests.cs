@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             new OpenApiHeader
                             {
                                 Description = "The number of allowed requests in the current period",
-                                Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                                Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                             }
                         }
                     });

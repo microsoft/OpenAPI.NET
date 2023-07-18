@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
-                                                Schema31 = new JsonSchemaBuilder().Ref("test").Build()
+                                                Schema = new JsonSchemaBuilder().Ref("test").Build()
                                             }
                                         }
                                     }
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new OpenApiComponents()
                 {
-                    Schemas31 = {
+                    Schemas = {
                         ["test"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("The referenced one").Build()
                     }
                 }
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Tests
                   {
                       re.Description = "Success";
                       re.CreateContent("application/json", co =>
-                          co.Schema31 = new JsonSchemaBuilder().Ref("test").Build()
+                          co.Schema = new JsonSchemaBuilder().Ref("test").Build()
                       //{
                       //    Reference = new OpenApiReference()  // Reference
                       //    {
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Tests
             var errors = doc.ResolveReferences();
             Assert.Empty(errors);
 
-            var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema31;
+            var schema = doc.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             //var effectiveSchema = schema.GetEffective(doc);
             //Assert.False(effectiveSchema.UnresolvedReference);
         }
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Tests
             {
                 Components = new OpenApiComponents()
                 {
-                    Schemas31 = {
+                    Schemas = {
                         ["test"] = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("The referenced one").Build()
                     }
                 }

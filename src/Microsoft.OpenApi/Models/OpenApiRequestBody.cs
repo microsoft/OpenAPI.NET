@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Models
                 // V2 spec actually allows the body to have custom name.
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
-                Schema31 = Content.Values.FirstOrDefault()?.Schema31 ?? new JsonSchemaBuilder().Build(),
+                Schema = Content.Values.FirstOrDefault()?.Schema ?? new JsonSchemaBuilder().Build(),
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Models
             if (Content == null || !Content.Any())
                 yield break;
 
-            foreach (var property in Content.First().Value.Schema31.GetProperties())
+            foreach (var property in Content.First().Value.Schema.GetProperties())
             {
                 var paramSchema = property.Value;
                 if (paramSchema.GetType().Equals(SchemaValueType.String)
@@ -218,8 +218,8 @@ namespace Microsoft.OpenApi.Models
                 {
                     Description = property.Value.GetDescription(),
                     Name = property.Key,
-                    Schema31 = property.Value,
-                    Required = Content.First().Value.Schema31.GetRequired()?.Contains(property.Key) ?? false
+                    Schema = property.Value,
+                    Required = Content.First().Value.Schema.GetRequired()?.Contains(property.Key) ?? false
                 };
             }
         }

@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     new AnyFieldMapParameter<OpenApiMediaType>(
                         m => m.Example,
                         (m, v) => m.Example = v,
-                        m => m.Schema31)
+                        m => m.Schema)
                 }
             };
 
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     {
                         if (schema != null)
                         {
-                            response.Content[produce].Schema31 = schema;
+                            response.Content[produce].Schema = schema;
                             ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
                         }
                     }
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     {
                         var mediaType = new OpenApiMediaType
                         {
-                            Schema31 = schema
+                            Schema = schema
                         };
 
                         response.Content.Add(produce, mediaType);
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 mediaTypeObject = new OpenApiMediaType
                 {
-                    Schema31 = node.Context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response)
+                    Schema = node.Context.GetFromTempStorage<JsonSchema>(TempStorageKeys.ResponseSchema, response)
                 };
                 response.Content.Add(mediaType, mediaTypeObject);
             }
@@ -158,7 +158,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var mediaType in response.Content.Values)
             {
-                if (mediaType.Schema31 != null)
+                if (mediaType.Schema != null)
                 {
                     ProcessAnyFields(mapNode, mediaType, _mediaTypeAnyFields);
                 }

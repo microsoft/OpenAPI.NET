@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Number)
                                 .Format("float")
                                 .Default(5)
@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Number)
                                 .Format("float")
                                 .Enum(7, 8, 9)

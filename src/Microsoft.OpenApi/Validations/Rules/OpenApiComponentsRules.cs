@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiComponents>(
                 (context, components) =>
                 {
-                    ValidateKeys(context, components.Schemas31?.Keys, "schemas");
+                    ValidateKeys(context, components.Schemas?.Keys, "schemas");
 
                     ValidateKeys(context, components.Responses?.Keys, "responses");
 

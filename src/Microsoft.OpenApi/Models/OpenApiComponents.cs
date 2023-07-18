@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="JsonSchema"/> Objects.
         /// </summary>
-        public IDictionary<string, JsonSchema> Schemas31 { get; set; } = new Dictionary<string, JsonSchema>();
+        public IDictionary<string, JsonSchema> Schemas { get; set; } = new Dictionary<string, JsonSchema>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiComponents(OpenApiComponents components)
         {
-            Schemas31 = components?.Schemas31 != null ? new Dictionary<string, JsonSchema>(components.Schemas31) : null;
+            Schemas = components?.Schemas != null ? new Dictionary<string, JsonSchema>(components.Schemas) : null;
             Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
             Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
             Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
@@ -179,11 +179,11 @@ namespace Microsoft.OpenApi.Models
             // If the reference exists but points to other objects, the object is serialized to just that reference.
 
             // schemas
-            if (Schemas31 != null && Schemas31.Any())
+            if (Schemas != null && Schemas.Any())
             {
                 if (writer is OpenApiYamlWriter)
                 {
-                    var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(Schemas31));
+                    var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(Schemas));
                     var yamlNode = jsonNode.ToYamlNode();
                     var serializer = new SerializerBuilder()
                                         .Build();
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Models
                 else
                 {
                     writer.WritePropertyName(OpenApiConstants.Schemas);
-                    writer.WriteRaw(JsonSerializer.Serialize(Schemas31));
+                    writer.WriteRaw(JsonSerializer.Serialize(Schemas));
                 }
             }
 

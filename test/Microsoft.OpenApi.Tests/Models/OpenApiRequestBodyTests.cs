@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new OpenApiMediaType
                 {
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
                 }
             }
         };
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["application/json"] = new OpenApiMediaType
                 {
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
                 }
             }
         };

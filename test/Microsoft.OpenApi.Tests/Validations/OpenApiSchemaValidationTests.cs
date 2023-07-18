@@ -210,7 +210,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             IEnumerable<OpenApiError> errors;
             var components = new OpenApiComponents
             {
-                Schemas31 = {
+                Schemas = {
                     {
                         "schema1",
                         new JsonSchemaBuilder()
@@ -245,7 +245,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             var components = new OpenApiComponents
             {
-                Schemas31 =
+                Schemas =
                 {
                     {
                         "Person",

@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the request body.
         /// </summary>
-        public JsonSchema Schema31 { get; set; }
+        public JsonSchema Schema { get; set; }
 
         /// <summary>
         /// Example of the media type.
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
-            Schema31 = JsonNodeCloneHelper.CloneJsonSchema(Schema31);
+            Schema = JsonNodeCloneHelper.CloneJsonSchema(Schema);
             Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
@@ -91,9 +91,9 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // schema
-            if (Schema31 != null)
+            if (Schema != null)
             {
-                writer.WriteOutJsonSchemaInYaml(Schema31, OpenApiConstants.Schema);
+                writer.WriteOutJsonSchemaInYaml(Schema, OpenApiConstants.Schema);
             }
 
             // example

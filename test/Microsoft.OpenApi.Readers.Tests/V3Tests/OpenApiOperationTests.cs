@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Name = "username",
                         Description = "The user name for login",
                         Required = true,
-                        Schema31 = new JsonSchemaBuilder()
+                        Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.String)
                     },
                     new OpenApiParameter
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Description = "The password for login in clear text",
                         In = ParameterLocation.Query,
                         Required = true,
-                        Schema31 = new JsonSchemaBuilder()
+                        Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.String)
                     }
                 }

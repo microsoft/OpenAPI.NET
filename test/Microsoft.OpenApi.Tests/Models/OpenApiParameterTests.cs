@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Deprecated = false,
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema31 = new JsonSchemaBuilder()
+            Schema = new JsonSchemaBuilder()
                         .Title("title2")
                         .Description("description2")
                         .OneOf(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("double").Build(),
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Style = ParameterStyle.Form,
             Explode = false,
-            Schema31 = new JsonSchemaBuilder()
+            Schema = new JsonSchemaBuilder()
             .Type(SchemaValueType.Array)
             .Items(
                 new JsonSchemaBuilder()
@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Style = ParameterStyle.Form,
             Explode = true,
-            Schema31 = new JsonSchemaBuilder()
+            Schema = new JsonSchemaBuilder()
             .Type(SchemaValueType.Array)
             .Items(
                 new JsonSchemaBuilder()
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Name = "id",
             In = ParameterLocation.Query,
-            Schema31 = new JsonSchemaBuilder()
+            Schema = new JsonSchemaBuilder()
             .Type(SchemaValueType.Object)
             .AdditionalProperties(
                 new JsonSchemaBuilder()
@@ -129,7 +129,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema31 = new JsonSchemaBuilder().Ref("schemaObject1").Build(),
+            Schema = new JsonSchemaBuilder().Ref("schemaObject1").Build(),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             Style = ParameterStyle.Simple,
             Explode = true,
-            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object),
+            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object),
             Examples = new Dictionary<string, OpenApiExample>
             {
                 ["test"] = new OpenApiExample

@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
-                Schemas31 = new Dictionary<string, JsonSchema>()
+                Schemas = new Dictionary<string, JsonSchema>()
                 {
                     ["test"] = sharedSchema
                 }
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                                     {
                                         ["application/json"] = new OpenApiMediaType()
                                         {
-                                            Schema31 = sharedSchema
+                                            Schema = sharedSchema
                                         }
                                     }
                                 }
@@ -73,7 +73,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
             {
-                Schemas31 = new Dictionary<string, JsonSchema>()
+                Schemas = new Dictionary<string, JsonSchema>()
                 {
                     ["test"] = sharedSchema
                 }
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                                     {
                                         ["application/json"] = new OpenApiMediaType()
                                         {
-                                            Schema31 = sharedSchema
+                                            Schema = sharedSchema
                                         }
                                     }
                                 }

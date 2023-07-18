@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 }
             },
             Responses = new OpenApiResponses
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema31 = new JsonSchemaBuilder()
+                        Schema = new JsonSchemaBuilder()
                                         .Type(SchemaValueType.String)
                     }
                 },
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     {
                         ["application/x-www-form-urlencoded"] = new OpenApiMediaType
                         {
-                            Schema31 = new JsonSchemaBuilder()
+                            Schema = new JsonSchemaBuilder()
                                 .Properties(
                                 ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
                                 ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         },
                         ["multipart/form-data"] = new OpenApiMediaType
                         {
-                             Schema31 = new JsonSchemaBuilder()
+                             Schema = new JsonSchemaBuilder()
                                 .Properties(
                                 ("name", new JsonSchemaBuilder().Description("Updated name of the pet").Type(SchemaValueType.String)),
                                 ("status", new JsonSchemaBuilder().Description("Updated status of the pet").Type(SchemaValueType.String)))
@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 },
             },
             RequestBody = new OpenApiRequestBody
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                     }
                 },
                 Extensions = {
@@ -266,7 +266,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             {
                                 ["application/json"] = new OpenApiMediaType()
                                 {
-                                    Schema31 = new JsonSchemaBuilder()
+                                    Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.Array)
                                     .Items(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float")),
                                     Example = new OpenApiAny(new JsonArray()
@@ -278,7 +278,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 },
                                 ["application/xml"] = new OpenApiMediaType()
                                 {
-                                    Schema31 = new JsonSchemaBuilder()
+                                    Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.Array)
                                     .Items(new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float"))
                                 }

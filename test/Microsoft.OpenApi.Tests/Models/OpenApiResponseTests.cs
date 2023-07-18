@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("#/components/schemas/customType").Build()).Build(),
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("#/components/schemas/customType").Build()).Build(),
                     Example = new OpenApiAny("Blabla"),
                     Extensions = new Dictionary<string, IOpenApiExtension>
                     {
@@ -44,12 +44,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
             }
         };
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 ["text/plain"] = new OpenApiMediaType
                 {
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("customType").Build()).Build()
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Ref("customType").Build()).Build()
                 }
             },
             Headers =
@@ -74,12 +74,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["X-Rate-Limit-Limit"] = new OpenApiHeader
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
                 ["X-Rate-Limit-Reset"] = new OpenApiHeader
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer)
                 },
             }
         };

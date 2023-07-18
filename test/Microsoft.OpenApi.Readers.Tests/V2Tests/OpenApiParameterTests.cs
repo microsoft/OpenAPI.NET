@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.String)
                 });
         }
@@ -82,7 +82,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.Array)
                                     .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     Style = ParameterStyle.Form,
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 });
         }
 
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 });
         }
 
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 });
         }
 
@@ -210,7 +210,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Default(5)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Default(5)
                 }, options => options.IgnoringCyclicReferences());
         }
 
@@ -235,7 +235,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Enum(7, 8, 9)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Format("float").Enum(7, 8, 9)
                 }, options => options.IgnoringCyclicReferences());
         }
     }

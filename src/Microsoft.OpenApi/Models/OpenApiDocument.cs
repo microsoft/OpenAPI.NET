@@ -256,10 +256,10 @@ namespace Microsoft.OpenApi.Models
                 // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
                 // If the reference exists but points to other objects, the object is serialized to just that reference.
                 // definitions
-                if (Components?.Schemas31 != null)
+                if (Components?.Schemas != null)
                 {
                     writer.WritePropertyName(OpenApiConstants.Definitions);
-                    writer.WriteRaw(JsonSerializer.Serialize(Components?.Schemas31));
+                    writer.WriteRaw(JsonSerializer.Serialize(Components?.Schemas));
                 }
             }
 
@@ -535,7 +535,7 @@ namespace Microsoft.OpenApi.Models
                 switch (reference.Type)
                 {
                     case ReferenceType.Schema:
-                        var resolvedSchema = this.Components.Schemas31[reference.Id];
+                        var resolvedSchema = this.Components.Schemas[reference.Id];
                         //resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
                         return (IOpenApiReferenceable)resolvedSchema;
 

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text.Json.Nodes;
 using Json.Schema;
 using Json.Schema.OpenApi;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -221,7 +222,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static readonly PatternFieldMap<JsonSchemaBuilder> _schemaPatternFields = new PatternFieldMap<JsonSchemaBuilder>
         {
-            //{s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("x-"), (o, p, n) => o.Extensions(LoadExtensions(p, LoadExtension(p, n)))}
         };
 
         public static JsonSchema LoadSchema(ParseNode node)
@@ -237,6 +238,15 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var schema = schemaBuilder.Build();
             return schema;
+        }
+
+        private static Dictionary<string, IOpenApiExtension> LoadExtensions(string value, IOpenApiExtension extension)
+        {
+            var extensions = new Dictionary<string, IOpenApiExtension>
+            {
+                { value, extension }
+            };
+            return extensions;
         }
     }
 }
