@@ -295,12 +295,9 @@ namespace Microsoft.OpenApi.Models
             var parsedUrl = server.Url;
 
             var variables = server.Variables;
-            foreach (var variable in variables)
+            foreach (var variable in variables.Where(static x => !string.IsNullOrEmpty(x.Value.Default)))
             {
-                if (!string.IsNullOrEmpty(variable.Value.Default))
-                {
-                    parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", variable.Value.Default);
-                }
+                parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", variable.Value.Default);
             }
             return parsedUrl;
         }
