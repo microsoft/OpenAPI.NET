@@ -153,7 +153,6 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-
         public static void WriteOptionalObject(
         this IOpenApiWriter writer,
         string name,
@@ -200,12 +199,19 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
+        /// <summary>
+        /// Write the required schema object
+        /// </summary>
+        /// <param name="writer">The Open API writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="value">The property value.</param>
+        /// <param name="action">The proprety value writer action.</param>
         public static void WriteRequiredObject(
         this IOpenApiWriter writer,
         string name,
         JsonSchema value,
         Action<IOpenApiWriter, JsonSchema> action)
-        {
+         {
             CheckArguments(writer, name, action);
 
             writer.WritePropertyName(name);
@@ -258,24 +264,6 @@ namespace Microsoft.OpenApi.Writers
             {
                 writer.WriteCollectionInternal(name, elements, action);
             }
-        }
-
-        /// <summary>
-        /// Write the required Open API object/element collection.
-        /// </summary>
-        /// <typeparam name="T">The Open API element type. <see cref="IOpenApiElement"/></typeparam>
-        /// <param name="writer">The Open API writer.</param>
-        /// <param name="name">The property name.</param>
-        /// <param name="elements">The collection values.</param>
-        /// <param name="action">The collection element writer action.</param>
-        public static void WriteRequiredCollection<T>(
-            this IOpenApiWriter writer,
-            string name,
-            IEnumerable<T> elements,
-            Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement
-        {
-            writer.WriteCollectionInternal(name, elements, action);
         }
 
         /// <summary>
@@ -334,6 +322,13 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
+        /// <summary>
+        /// Write optional JsonSchema map
+        /// </summary>
+        /// <param name="writer">The Open API writer.</param>
+        /// <param name="name">The property name.</param>
+        /// <param name="elements">The map values.</param>
+        /// <param name="action">The map element writer action with writer and value as input.</param>
         public static void WriteOptionalMap(
         this IOpenApiWriter writer,
         string name,
@@ -410,6 +405,36 @@ namespace Microsoft.OpenApi.Writers
             }
 
             writer.WriteEndArray();
+        }
+
+        private static void WriteMapInternal(
+            this IOpenApiWriter writer,
+            string name,
+            IDictionary<string, JsonSchema> elements,
+            Action<IOpenApiWriter, JsonSchema> action)
+        {
+            CheckArguments(writer, name, action);
+
+            writer.WritePropertyName(name);
+            writer.WriteStartObject();
+
+            if (elements != null)
+            {
+                foreach (var item in elements)
+                {
+                    writer.WritePropertyName(item.Key);
+                    if (item.Value != null)
+                    {
+                        action(writer, item.Value);
+                    }
+                    else
+                    {
+                        writer.WriteNull();
+                    }
+                }
+            }
+
+            writer.WriteEndObject();
         }
 
         private static void WriteMapInternal<T>(

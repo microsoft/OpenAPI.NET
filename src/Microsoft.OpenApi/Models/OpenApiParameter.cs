@@ -285,7 +285,8 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (Schema != null)
             {
-                writer.WriteOutJsonSchemaInYaml(Schema, OpenApiConstants.Schema);
+                writer.WritePropertyName(OpenApiConstants.Schema);
+                writer.WriteJsonSchema(Schema);
             }
 
             // example
@@ -365,7 +366,7 @@ namespace Microsoft.OpenApi.Models
             // schema
             if (this is OpenApiBodyParameter)
             {
-                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteRaw(JsonSerializer.Serialize(s)));
+                writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteJsonSchema(s));
             }
             // In V2 parameter's type can't be a reference to a custom object schema or can't be of type object
             // So in that case map the type as string.

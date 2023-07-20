@@ -3,16 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using Json.More;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
-using Yaml2JsonNode;
-using YamlDotNet.RepresentationModel;
-using YamlDotNet.Serialization;
 
 
 namespace Microsoft.OpenApi.Models
@@ -179,26 +173,10 @@ namespace Microsoft.OpenApi.Models
             // If the reference exists but points to other objects, the object is serialized to just that reference.
 
             // schemas
-            if (Schemas != null && Schemas.Any())
-            {
-                if (writer is OpenApiYamlWriter)
-                {
-                    var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(Schemas));
-                    var yamlNode = jsonNode.ToYamlNode();
-                    var serializer = new SerializerBuilder()
-                                        .Build();
-
-                    var yamlSchema = serializer.Serialize(yamlNode);
-
-                    writer.WritePropertyName(OpenApiConstants.Schemas);
-                    writer.WriteRaw(yamlSchema);
-                }
-                else
-                {
-                    writer.WritePropertyName(OpenApiConstants.Schemas);
-                    writer.WriteRaw(JsonSerializer.Serialize(Schemas));
-                }
-            }
+            writer.WriteOptionalMap(
+                OpenApiConstants.Schemas,
+                Schemas,
+                (w, s) => w.WriteJsonSchema(s));
 
             // responses
             writer.WriteOptionalMap(
@@ -356,8 +334,10 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
             if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
             {
-
-                writer.WriteRaw(JsonSerializer.Serialize(schemas));
+                writer.WriteOptionalMap(
+                   OpenApiConstants.Schemas,
+                   Schemas,
+                   static (w, s) => { w.WriteJsonSchema(s); });
             }
             writer.WriteEndObject();
         }

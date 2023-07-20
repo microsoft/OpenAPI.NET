@@ -91,10 +91,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteStartObject();
 
             // schema
-            if (Schema != null)
-            {
-                writer.WriteOutJsonSchemaInYaml(Schema, OpenApiConstants.Schema);
-            }
+            writer.WriteOptionalObject(OpenApiConstants.Schema, Schema, (w, s) => writer.WriteJsonSchema(s));
 
             // example
             writer.WriteOptionalObject(OpenApiConstants.Example, Example, (w, e) => w.WriteAny(e));

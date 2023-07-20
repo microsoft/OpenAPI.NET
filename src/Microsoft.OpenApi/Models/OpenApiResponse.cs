@@ -217,7 +217,7 @@ namespace Microsoft.OpenApi.Models
                 if (mediatype.Value != null)
                 {
                     // schema
-                    writer.WriteOutJsonSchemaInYaml(mediatype.Value.Schema, OpenApiConstants.Schema);
+                    writer.WriteOptionalObject(OpenApiConstants.Schema, mediatype.Value.Schema, (w, s) => writer.WriteJsonSchema(s));
 
                     // examples
                     if (Content.Values.Any(m => m.Example != null))

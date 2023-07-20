@@ -1081,7 +1081,6 @@ definitions:
                 }
             };
 
-
             var reference = document.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.GetRef();           
             
             // Act
