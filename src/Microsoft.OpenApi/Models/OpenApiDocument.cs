@@ -290,6 +290,18 @@ namespace Microsoft.OpenApi.Models
             writer.WriteEndObject();
         }
 
+        private static string ParseServerUrl(OpenApiServer server)
+        {
+            var parsedUrl = server.Url;
+
+            var variables = server.Variables;
+            foreach (var variable in variables.Where(static x => !string.IsNullOrEmpty(x.Value.Default)))
+            {
+                parsedUrl = parsedUrl.Replace($"{{{variable.Key}}}", variable.Value.Default);
+            }
+            return parsedUrl;
+        }
+
         private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
         {
             if (servers == null || !servers.Any())
@@ -299,11 +311,11 @@ namespace Microsoft.OpenApi.Models
 
             // Arbitrarily choose the first server given that V2 only allows 
             // one host, port, and base path.
-            var firstServer = servers.First();
+            var serverUrl = ParseServerUrl(servers.First());
 
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
             // The Url property cannotcontain path templating to be valid for V2 serialization.
-            var firstServerUrl = new Uri(firstServer.Url, UriKind.RelativeOrAbsolute);
+            var firstServerUrl = new Uri(serverUrl, UriKind.RelativeOrAbsolute);
 
             // host
             if (firstServerUrl.IsAbsoluteUri)
@@ -337,7 +349,7 @@ namespace Microsoft.OpenApi.Models
             var schemes = servers.Select(
                     s =>
                     {
-                        Uri.TryCreate(s.Url, UriKind.RelativeOrAbsolute, out var url);
+                        Uri.TryCreate(ParseServerUrl(s), UriKind.RelativeOrAbsolute, out var url);
                         return url;
                     })
                 .Where(
