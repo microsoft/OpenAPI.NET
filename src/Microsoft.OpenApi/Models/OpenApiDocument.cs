@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Writers;
-using static Microsoft.OpenApi.Extensions.OpenApiSerializableExtensions;
 
 namespace Microsoft.OpenApi.Models
 {

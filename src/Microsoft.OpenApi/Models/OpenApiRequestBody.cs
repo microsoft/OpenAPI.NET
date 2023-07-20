@@ -30,23 +30,23 @@ namespace Microsoft.OpenApi.Models
         /// A brief description of the request body. This could contain examples of use.
         /// CommonMark syntax MAY be used for rich text representation.
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Determines if the request body is required in the request. Defaults to false.
         /// </summary>
-        public bool Required { get; set; }
+        public virtual bool Required { get; set; }
 
         /// <summary>
         /// REQUIRED. The content of the request body. The key is a media type or media type range and the value describes it.
         /// For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
         /// </summary>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public virtual IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.1
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
@@ -113,9 +113,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiRequestBody</returns>
         public OpenApiRequestBody GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiRequestBody>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiRequestBody>(Reference);
             }
             else
             {
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V31 document without using reference.
         /// </summary>
-        public void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
                     (writer, element) => element.SerializeAsV31(writer));
@@ -135,13 +135,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
                 (writer, element) => element.SerializeAsV3(writer));
         }
         
-        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
+        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();

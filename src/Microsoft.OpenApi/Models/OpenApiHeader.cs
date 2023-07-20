@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set; }
+        public virtual bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference pointer.
@@ -30,63 +30,63 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// A brief description of the header.
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Determines whether this header is mandatory.
         /// </summary>
-        public bool Required { get; set; }
+        public virtual bool Required { get; set; }
 
         /// <summary>
         /// Specifies that a header is deprecated and SHOULD be transitioned out of usage.
         /// </summary>
-        public bool Deprecated { get; set; }
+        public virtual bool Deprecated { get; set; }
 
         /// <summary>
         /// Sets the ability to pass empty-valued headers.
         /// </summary>
-        public bool AllowEmptyValue { get; set; }
+        public virtual bool AllowEmptyValue { get; set; }
 
         /// <summary>
         /// Describes how the header value will be serialized depending on the type of the header value.
         /// </summary>
-        public ParameterStyle? Style { get; set; }
+        public virtual ParameterStyle? Style { get; set; }
 
         /// <summary>
         /// When this is true, header values of type array or object generate separate parameters
         /// for each value of the array or key-value pair of the map.
         /// </summary>
-        public bool Explode { get; set; }
+        public virtual bool Explode { get; set; }
 
         /// <summary>
         /// Determines whether the header value SHOULD allow reserved characters, as defined by RFC3986.
         /// </summary>
-        public bool AllowReserved { get; set; }
+        public virtual bool AllowReserved { get; set; }
 
         /// <summary>
         /// The schema defining the type used for the header.
         /// </summary>
-        public OpenApiSchema Schema { get; set; }
+        public virtual OpenApiSchema Schema { get; set; }
 
         /// <summary>
         /// Example of the media type.
         /// </summary>
-        public OpenApiAny Example { get; set; }
+        public virtual OpenApiAny Example { get; set; }
 
         /// <summary>
         /// Examples of the media type.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public virtual IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// A map containing the representations for the header.
         /// </summary>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public virtual IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.1
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer), 
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer), 
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
@@ -162,9 +162,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiHeader</returns>
         public OpenApiHeader GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiHeader>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiHeader>(Reference);
             }
             else
             {
@@ -175,7 +175,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V31 document without using reference.
         /// </summary>
-        public void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, 
                 (writer, element) => element.SerializeAsV31(writer));
@@ -184,13 +184,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, 
                 (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, 
+        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version, 
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();

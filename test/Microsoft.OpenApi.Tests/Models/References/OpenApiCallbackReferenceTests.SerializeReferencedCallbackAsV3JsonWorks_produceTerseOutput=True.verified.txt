@@ -1,0 +1,1 @@
+﻿{"{$request.body#/callbackUrl}":{"post":{"requestBody":{"content":{"application/json":{"schema":{"required":["message"],"type":"object","properties":{"message":{"type":"string","example":"Some event happened"}}}}},"required":true},"responses":{"200":{"description":"ok"}}}}}

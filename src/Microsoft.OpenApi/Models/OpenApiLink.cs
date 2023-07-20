@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -18,44 +17,44 @@ namespace Microsoft.OpenApi.Models
         /// A relative or absolute reference to an OAS operation.
         /// This field is mutually exclusive of the operationId field, and MUST point to an Operation Object.
         /// </summary>
-        public string OperationRef { get; set; }
+        public virtual string OperationRef { get; set; }
 
         /// <summary>
         /// The name of an existing, resolvable OAS operation, as defined with a unique operationId.
         /// This field is mutually exclusive of the operationRef field.
         /// </summary>
-        public string OperationId { get; set; }
+        public virtual string OperationId { get; set; }
 
         /// <summary>
         /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
         /// </summary>
-        public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
+        public virtual Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
             new Dictionary<string, RuntimeExpressionAnyWrapper>();
 
         /// <summary>
         /// A literal value or {expression} to use as a request body when calling the target operation.
         /// </summary>
-        public RuntimeExpressionAnyWrapper RequestBody { get; set; }
+        public virtual RuntimeExpressionAnyWrapper RequestBody { get; set; }
 
         /// <summary>
         /// A description of the link.
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// A server object to be used by the target operation.
         /// </summary>
-        public OpenApiServer Server { get; set; }
+        public virtual OpenApiServer Server { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
-        public bool UnresolvedReference { get; set; }
+        public virtual bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Reference pointer.
@@ -86,7 +85,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLink"/> to Open Api v3.1
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
@@ -95,12 +94,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiLink"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
-
+                
         private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
@@ -130,9 +129,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiLink</returns>
         public OpenApiLink GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiLink>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiLink>(Reference);
             }
             else
             {
@@ -143,7 +142,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V31 document without using reference.
         /// </summary>
-        public void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -151,12 +150,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
+        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, (writer, element) => element.SerializeAsV3(writer));
         }
 
-        private void SerializeInternalWithoutReference(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
+        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
 

@@ -377,5 +377,27 @@ namespace Microsoft.OpenApi.Properties {
                 return ResourceManager.GetString("WorkspaceRequredForExternalReferenceResolution", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The HostDocument is null..
+        /// </summary>
+        internal static string HostDocumentIsNull
+        {
+            get
+            {
+                return ResourceManager.GetString("HostDocumentIsNull", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The identifier in the referenced element is null or empty ..
+        /// </summary>
+        internal static string ReferenceIdIsNullOrEmpty
+        {
+            get
+            {
+                return ResourceManager.GetString("ReferenceIdIsNullOrEmpty", resourceCulture);
+            }
+        }
     }
 }
