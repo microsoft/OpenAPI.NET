@@ -1,7 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
+using Json.Schema;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -42,7 +46,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Indicates whether or not the produced document will be written in a compact or pretty fashion.
         /// </summary>
-        private bool _produceTerseOutput = false;
+        private readonly bool _produceTerseOutput = false;
 
         /// <summary>
         /// Base Indentation Level.
@@ -249,6 +253,22 @@ namespace Microsoft.OpenApi.Writers
             }
 
             base.WriteIndentation();
+        }
+
+        /// <summary>
+        /// Writes out a JsonSchema object
+        /// </summary>
+        /// <param name="schema"></param>
+        public override void WriteJsonSchema(JsonSchema schema)
+        {
+            if (_produceTerseOutput)
+            {
+                WriteRaw(JsonSerializer.Serialize(schema));
+            }
+            else
+            {
+                WriteRaw(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
+            }
         }
 
         /// <summary>

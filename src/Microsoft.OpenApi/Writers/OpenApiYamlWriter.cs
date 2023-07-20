@@ -2,6 +2,13 @@
 // Licensed under the MIT license. 
 
 using System.IO;
+using System.Text.Json.Nodes;
+using System.Text.Json;
+using Json.Schema;
+using Microsoft.OpenApi.Models;
+using YamlDotNet.Serialization;
+using System.Collections.Generic;
+using Yaml2JsonNode;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -220,6 +227,21 @@ namespace Microsoft.OpenApi.Writers
 
                 DecreaseIndentation();
             }
+        }
+
+        /// <summary>
+        /// Writes out a JsonSchema object
+        /// </summary>
+        /// <param name="schema"></param>
+        public override void WriteJsonSchema(JsonSchema schema)
+        {
+            var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(schema));
+            var yamlNode = jsonNode.ToYamlNode();
+            var serializer = new SerializerBuilder()
+                                .Build();
+
+            var yamlSchema = serializer.Serialize(yamlNode);
+            WriteRaw(yamlSchema);
         }
 
         private void WriteChompingIndicator(string value)

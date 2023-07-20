@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Properties;
 
@@ -297,6 +298,16 @@ namespace Microsoft.OpenApi.Writers
             {
                 Writer.Write(IndentationString);
             }
+        }
+
+        /// <summary>
+        /// Writes out the JsonSchema object
+        /// </summary>
+        /// <param name="schema"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public virtual void WriteJsonSchema(JsonSchema schema)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
