@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -18,20 +18,20 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Short description for the example.
         /// </summary>
-        public string Summary { get; set; }
+        public virtual string Summary { get; set; }
 
         /// <summary>
         /// Long description for the example.
         /// CommonMark syntax MAY be used for rich text representation.
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Embedded literal example. The value field and externalValue field are mutually
         /// exclusive. To represent examples of media types that cannot naturally represented
         /// in JSON or YAML, use a string value to contain the example, escaping where necessary.
         /// </summary>
-        public OpenApiAny Value { get; set; }
+        public virtual OpenApiAny Value { get; set; }
 
         /// <summary>
         /// A URL that points to the literal example.
@@ -39,22 +39,22 @@ namespace Microsoft.OpenApi.Models
         /// included in JSON or YAML documents.
         /// The value field and externalValue field are mutually exclusive.
         /// </summary>
-        public string ExternalValue { get; set; }
+        public virtual string ExternalValue { get; set; }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Reference object.
         /// </summary>
-        public OpenApiReference Reference { get; set; }
+        public virtual OpenApiReference Reference { get; set; }
 
         /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
         /// </summary>
-        public bool UnresolvedReference { get; set; } = false;
+        public virtual bool UnresolvedReference { get; set; } = false;
 
         /// <summary>
         /// Parameter-less constructor
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.1
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
@@ -89,13 +89,13 @@ namespace Microsoft.OpenApi.Models
         /// Serialize <see cref="OpenApiExample"/> to Open Api v3.0
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
         }
 
-        private void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
+        internal virtual void SerializeInternal(IOpenApiWriter writer, Action<IOpenApiWriter, IOpenApiSerializable> callback,
             Action<IOpenApiWriter, IOpenApiReferenceable> action)
         {
             writer = writer ?? throw Error.ArgumentNull(nameof(writer));
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiExample</returns>
         public OpenApiExample GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
                 return doc.ResolveReferenceTo<OpenApiExample>(this.Reference);
             }
@@ -137,7 +137,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V31 example without using reference.
         /// </summary>
-        public void SerializeAsV31WithoutReference(IOpenApiWriter writer)
+        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1);
         }
@@ -145,12 +145,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 example without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0);
         }
-
-        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
+        
+        internal void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version)
         {
             writer.WriteStartObject();
 

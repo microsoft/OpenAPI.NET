@@ -17,34 +17,34 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
         /// </summary>
-        public string Summary { get; set; }
+        public virtual string Summary { get; set; }
 
         /// <summary>
         /// An optional, string description, intended to apply to all operations in this path.
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Gets the definition of operations on this path.
         /// </summary>
-        public IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
+        public virtual IDictionary<OperationType, OpenApiOperation> Operations { get; set; }
             = new Dictionary<OperationType, OpenApiOperation>();
 
         /// <summary>
         /// An alternative server array to service all operations in this path.
         /// </summary>
-        public IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
+        public virtual IList<OpenApiServer> Servers { get; set; } = new List<OpenApiServer>();
 
         /// <summary>
         /// A list of parameters that are applicable for all the operations described under this path.
         /// These parameters can be overridden at the operation level, but cannot be removed there.
         /// </summary>
-        public IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
+        public virtual IList<OpenApiParameter> Parameters { get; set; } = new List<OpenApiParameter>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.1
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiPathItem"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
@@ -135,9 +135,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiPathItem</returns>
         public OpenApiPathItem GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiPathItem>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiPathItem>(Reference);
             }
             else
             {
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models
                 }
                 else
                 {
-                    target = this.GetEffective(Reference.HostDocument);
+                    target = GetEffective(Reference.HostDocument);
                 }
             }
 
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Models
         /// Serialize inline PathItem in OpenAPI V31
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV31WithoutReference(IOpenApiWriter writer)
+        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer)
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1, (writer, element) => element.SerializeAsV31(writer));
         }
@@ -221,13 +221,13 @@ namespace Microsoft.OpenApi.Models
         /// Serialize inline PathItem in OpenAPI V3
         /// </summary>
         /// <param name="writer"></param>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0, (writer, element) => element.SerializeAsV3(writer));
 
         }
 
-        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
+        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
 

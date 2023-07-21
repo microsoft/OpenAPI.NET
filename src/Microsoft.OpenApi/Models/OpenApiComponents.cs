@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -24,55 +24,55 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiResponse"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
+        public virtual IDictionary<string, OpenApiResponse> Responses { get; set; } = new Dictionary<string, OpenApiResponse>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiParameter"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiParameter> Parameters { get; set; } =
+        public virtual IDictionary<string, OpenApiParameter> Parameters { get; set; } =
             new Dictionary<string, OpenApiParameter>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiExample"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
+        public virtual IDictionary<string, OpenApiExample> Examples { get; set; } = new Dictionary<string, OpenApiExample>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiRequestBody"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; } =
+        public virtual IDictionary<string, OpenApiRequestBody> RequestBodies { get; set; } =
             new Dictionary<string, OpenApiRequestBody>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiHeader"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
+        public virtual IDictionary<string, OpenApiHeader> Headers { get; set; } = new Dictionary<string, OpenApiHeader>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiSecurityScheme"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } =
+        public virtual IDictionary<string, OpenApiSecurityScheme> SecuritySchemes { get; set; } =
             new Dictionary<string, OpenApiSecurityScheme>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiLink"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
+        public virtual IDictionary<string, OpenApiLink> Links { get; set; } = new Dictionary<string, OpenApiLink>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiCallback"/> Objects.
         /// </summary>
-        public IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
+        public virtual IDictionary<string, OpenApiCallback> Callbacks { get; set; } = new Dictionary<string, OpenApiCallback>();
 
         /// <summary>
         /// An object to hold reusable <see cref="OpenApiPathItem"/> Object.
         /// </summary>
-        public IDictionary<string, OpenApiPathItem> PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
+        public virtual IDictionary<string, OpenApiPathItem> PathItems { get; set; } = new Dictionary<string, OpenApiPathItem>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// The indentation string to prepand to each line for each indentation level.

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -59,6 +59,8 @@ namespace Microsoft.OpenApi.Tests.Validations
             // Act
             var errors = document.Validate(new ValidationRuleSet() /*{ new AlwaysFailRule<JsonSchema>() }*/);
 
+            var errors = document.Validate(new ValidationRuleSet(rules));
+
 
             // Assert
             Assert.True(errors.Count() == 1);
@@ -81,6 +83,8 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             // Act
             var errors = document.Validate(new ValidationRuleSet() /*{ new AlwaysFailRule<JsonSchema>() }*/);
+
+            var errors = document.Validate(new ValidationRuleSet(rules));
 
             // Assert
             Assert.True(errors.Count() == 0);
@@ -123,6 +127,8 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             // Act
             var errors = document.Validate(new ValidationRuleSet() /*{ new AlwaysFailRule<JsonSchema>() }*/);
+
+            var errors = document.Validate(new ValidationRuleSet(rules));
 
             // Assert
             Assert.True(errors.Count() == 0);
