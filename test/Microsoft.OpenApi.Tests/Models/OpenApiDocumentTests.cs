@@ -981,6 +981,305 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
+        public OpenApiDocument AdvancedDocumentWithServerVariable = new OpenApiDocument
+        {
+            Info = new OpenApiInfo
+            {
+                Version = "1.0.0",
+                Title = "Swagger Petstore (Simple)",
+                Description =
+                    "A sample API that uses a petstore as an example to demonstrate features in the swagger-2.0 specification",
+                TermsOfService = new Uri("http://helloreverb.com/terms/"),
+                Contact = new OpenApiContact
+                {
+                    Name = "Swagger API team",
+                    Email = "foo@example.com",
+                    Url = new Uri("http://swagger.io")
+                },
+                License = new OpenApiLicense
+                {
+                    Name = "MIT",
+                    Url = new Uri("http://opensource.org/licenses/MIT")
+                }
+            },
+            Servers = new List<OpenApiServer>
+            {
+                new OpenApiServer
+                {
+                    Url = "https://{endpoint}/openai",
+                    Variables = new Dictionary<string, OpenApiServerVariable>
+                    {
+                        ["endpoint"] = new OpenApiServerVariable
+                        {
+                            Default = "your-resource-name.openai.azure.com"
+                        }
+                    }
+                }
+            },
+            Paths = new OpenApiPaths
+            {
+                ["/pets"] = new OpenApiPathItem
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Get] = new OpenApiOperation
+                        {
+                            Description = "Returns all pets from the system that the user has access to",
+                            OperationId = "findPets",
+                            Parameters = new List<OpenApiParameter>
+                            {
+                                new OpenApiParameter
+                                {
+                                    Name = "tags",
+                                    In = ParameterLocation.Query,
+                                    Description = "tags to filter by",
+                                    Required = false,
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "array",
+                                        Items = new OpenApiSchema
+                                        {
+                                            Type = "string"
+                                        }
+                                    }
+                                },
+                                new OpenApiParameter
+                                {
+                                    Name = "limit",
+                                    In = ParameterLocation.Query,
+                                    Description = "maximum number of results to return",
+                                    Required = false,
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "integer",
+                                        Format = "int32"
+                                    }
+                                }
+                            },
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "pet response",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["application/json"] = new OpenApiMediaType
+                                        {
+                                            Schema = new OpenApiSchema
+                                            {
+                                                Type = "array",
+                                                Items = PetSchema
+                                            }
+                                        },
+                                        ["application/xml"] = new OpenApiMediaType
+                                        {
+                                            Schema = new OpenApiSchema
+                                            {
+                                                Type = "array",
+                                                Items = PetSchema
+                                            }
+                                        }
+                                    }
+                                },
+                                ["4XX"] = new OpenApiResponse
+                                {
+                                    Description = "unexpected client error",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["text/html"] = new OpenApiMediaType
+                                        {
+                                            Schema = ErrorModelSchema
+                                        }
+                                    }
+                                },
+                                ["5XX"] = new OpenApiResponse
+                                {
+                                    Description = "unexpected server error",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["text/html"] = new OpenApiMediaType
+                                        {
+                                            Schema = ErrorModelSchema
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        [OperationType.Post] = new OpenApiOperation
+                        {
+                            Description = "Creates a new pet in the store.  Duplicates are allowed",
+                            OperationId = "addPet",
+                            RequestBody = new OpenApiRequestBody
+                            {
+                                Description = "Pet to add to the store",
+                                Required = true,
+                                Content = new Dictionary<string, OpenApiMediaType>
+                                {
+                                    ["application/json"] = new OpenApiMediaType
+                                    {
+                                        Schema = NewPetSchema
+                                    }
+                                }
+                            },
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "pet response",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["application/json"] = new OpenApiMediaType
+                                        {
+                                            Schema = PetSchema
+                                        },
+                                    }
+                                },
+                                ["4XX"] = new OpenApiResponse
+                                {
+                                    Description = "unexpected client error",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["text/html"] = new OpenApiMediaType
+                                        {
+                                            Schema = ErrorModelSchema
+                                        }
+                                    }
+                                },
+                                ["5XX"] = new OpenApiResponse
+                                {
+                                    Description = "unexpected server error",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["text/html"] = new OpenApiMediaType
+                                        {
+                                            Schema = ErrorModelSchema
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                ["/pets/{id}"] = new OpenApiPathItem
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
+                    {
+                        [OperationType.Get] = new OpenApiOperation
+                        {
+                            Description =
+                                "Returns a user based on a single ID, if the user does not have access to the pet",
+                            OperationId = "findPetById",
+                            Parameters = new List<OpenApiParameter>
+                            {
+                                new OpenApiParameter
+                                {
+                                    Name = "id",
+                                    In = ParameterLocation.Path,
+                                    Description = "ID of pet to fetch",
+                                    Required = true,
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "integer",
+                                        Format = "int64"
+                                    }
+                                }
+                            },
+                            Responses = new OpenApiResponses
+                            {
+                                ["200"] = new OpenApiResponse
+                                {
+                                    Description = "pet response",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["application/json"] = new OpenApiMediaType
+                                        {
+                                            Schema = PetSchema
+                                        },
+                                        ["application/xml"] = new OpenApiMediaType
+                                        {
+                                            Schema = PetSchema
+                                        }
+                                    }
+                                },
+                                ["4XX"] = new OpenApiResponse
+                                {
+                                    Description = "unexpected client error",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["text/html"] = new OpenApiMediaType
+                                        {
+                                            Schema = ErrorModelSchema
+                                        }
+                                    }
+                                },
+                                ["5XX"] = new OpenApiResponse
+                                {
+                                    Description = "unexpected server error",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["text/html"] = new OpenApiMediaType
+                                        {
+                                            Schema = ErrorModelSchema
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        [OperationType.Delete] = new OpenApiOperation
+                        {
+                            Description = "deletes a single pet based on the ID supplied",
+                            OperationId = "deletePet",
+                            Parameters = new List<OpenApiParameter>
+                            {
+                                new OpenApiParameter
+                                {
+                                    Name = "id",
+                                    In = ParameterLocation.Path,
+                                    Description = "ID of pet to delete",
+                                    Required = true,
+                                    Schema = new OpenApiSchema
+                                    {
+                                        Type = "integer",
+                                        Format = "int64"
+                                    }
+                                }
+                            },
+                            Responses = new OpenApiResponses
+                            {
+                                ["204"] = new OpenApiResponse
+                                {
+                                    Description = "pet deleted"
+                                },
+                                ["4XX"] = new OpenApiResponse
+                                {
+                                    Description = "unexpected client error",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["text/html"] = new OpenApiMediaType
+                                        {
+                                            Schema = ErrorModelSchema
+                                        }
+                                    }
+                                },
+                                ["5XX"] = new OpenApiResponse
+                                {
+                                    Description = "unexpected server error",
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["text/html"] = new OpenApiMediaType
+                                        {
+                                            Schema = ErrorModelSchema
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            Components = AdvancedComponents
+        };
+
         private readonly ITestOutputHelper _output;
 
         public OpenApiDocumentTests(ITestOutputHelper output)
@@ -1016,6 +1315,23 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act
             AdvancedDocumentWithReference.SerializeAsV3(writer);
+            writer.Flush();
+
+            // Assert
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeAdvancedDocumentWithServerVariableAsV2JsonWorks(bool produceTerseOutput)
+        {
+            // Arrange
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+
+            // Act
+            AdvancedDocumentWithServerVariable.SerializeAsV2(writer);
             writer.Flush();
 
             // Assert

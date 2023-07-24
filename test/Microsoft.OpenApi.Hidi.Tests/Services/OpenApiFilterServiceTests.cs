@@ -51,7 +51,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void ReturnFilteredOpenApiDocumentBasedOnPostmanCollection()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver2.json");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver2.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void ShouldParseNestedPostmanCollection()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver3.json");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver3.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void ThrowsExceptionWhenUrlsInCollectionAreMissingFromSourceDocument()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver1.json");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver1.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void ContinueProcessingWhenUrlsInCollectionAreMissingFromSourceDocument()
         {
             // Arrange
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles\\postmanCollection_ver4.json");
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "postmanCollection_ver4.json");
             var fileInput = new FileInfo(filePath);
             var stream = fileInput.OpenRead();
 
