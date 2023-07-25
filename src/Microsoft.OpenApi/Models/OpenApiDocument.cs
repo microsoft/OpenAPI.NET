@@ -247,8 +247,10 @@ namespace Microsoft.OpenApi.Models
                         FindSchemaReferences.ResolveSchemas(Components, openApiSchemas);
                     }
 
-                    writer.WritePropertyName(OpenApiConstants.Definitions);
-                    writer.WriteRaw(JsonSerializer.Serialize(openApiSchemas));
+                    writer.WriteOptionalMap(
+                       OpenApiConstants.Definitions,
+                       openApiSchemas,
+                       (w, s) => w.WriteJsonSchema(s));
                 }
             }
             else
@@ -258,92 +260,94 @@ namespace Microsoft.OpenApi.Models
                 // definitions
                 if (Components?.Schemas != null)
                 {
-                    writer.WritePropertyName(OpenApiConstants.Definitions);
-                    writer.WriteRaw(JsonSerializer.Serialize(Components?.Schemas));
+                    writer.WriteOptionalMap(
+                        OpenApiConstants.Definitions,
+                        Components?.Schemas,
+                        (w, s) => w.WriteJsonSchema(s));
                 }
-            }
 
-            // parameters
-            var parameters = Components?.Parameters != null
-                ? new Dictionary<string, OpenApiParameter>(Components.Parameters)
-                : new Dictionary<string, OpenApiParameter>();
+                // parameters
+                var parameters = Components?.Parameters != null
+                    ? new Dictionary<string, OpenApiParameter>(Components.Parameters)
+                    : new Dictionary<string, OpenApiParameter>();
 
-            if (Components?.RequestBodies != null)
-            {
-                foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
+                if (Components?.RequestBodies != null)
                 {
-                    parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
+                    foreach (var requestBody in Components.RequestBodies.Where(b => !parameters.ContainsKey(b.Key)))
+                    {
+                        parameters.Add(requestBody.Key, requestBody.Value.ConvertToBodyParameter());
+                    }
                 }
+                writer.WriteOptionalMap(
+                    OpenApiConstants.Parameters,
+                    parameters,
+                    (w, key, component) =>
+                    {
+                        if (component.Reference != null &&
+                            component.Reference.Type == ReferenceType.Parameter &&
+                            component.Reference.Id == key)
+                        {
+                            component.SerializeAsV2WithoutReference(w);
+                        }
+                        else
+                        {
+                            component.SerializeAsV2(w);
+                        }
+                    });
+
+                // responses
+                writer.WriteOptionalMap(
+                    OpenApiConstants.Responses,
+                    Components?.Responses,
+                    (w, key, component) =>
+                    {
+                        if (component.Reference != null &&
+                            component.Reference.Type == ReferenceType.Response &&
+                            component.Reference.Id == key)
+                        {
+                            component.SerializeAsV2WithoutReference(w);
+                        }
+                        else
+                        {
+                            component.SerializeAsV2(w);
+                        }
+                    });
+
+                // securityDefinitions
+                writer.WriteOptionalMap(
+                    OpenApiConstants.SecurityDefinitions,
+                    Components?.SecuritySchemes,
+                    (w, key, component) =>
+                    {
+                        if (component.Reference != null &&
+                            component.Reference.Type == ReferenceType.SecurityScheme &&
+                            component.Reference.Id == key)
+                        {
+                            component.SerializeAsV2WithoutReference(w);
+                        }
+                        else
+                        {
+                            component.SerializeAsV2(w);
+                        }
+                    });
+
+                // security
+                writer.WriteOptionalCollection(
+                    OpenApiConstants.Security,
+                    SecurityRequirements,
+                    (w, s) => s.SerializeAsV2(w));
+
+                // tags
+                writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2WithoutReference(w));
+
+                // externalDocs
+                writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
+
+                // extensions
+                writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
+
+                writer.WriteEndObject();
             }
-            writer.WriteOptionalMap(
-                OpenApiConstants.Parameters,
-                parameters,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Parameter &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV2WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV2(w);
-                    }
-                });
-
-            // responses
-            writer.WriteOptionalMap(
-                OpenApiConstants.Responses,
-                Components?.Responses,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Response &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV2WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV2(w);
-                    }
-                });
-
-            // securityDefinitions
-            writer.WriteOptionalMap(
-                OpenApiConstants.SecurityDefinitions,
-                Components?.SecuritySchemes,
-                (w, key, component) =>
-                {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.SecurityScheme &&
-                        component.Reference.Id == key)
-                    {
-                        component.SerializeAsV2WithoutReference(w);
-                    }
-                    else
-                    {
-                        component.SerializeAsV2(w);
-                    }
-                });
-
-            // security
-            writer.WriteOptionalCollection(
-                OpenApiConstants.Security,
-                SecurityRequirements,
-                (w, s) => s.SerializeAsV2(w));
-
-            // tags
-            writer.WriteOptionalCollection(OpenApiConstants.Tags, Tags, (w, t) => t.SerializeAsV2WithoutReference(w));
-
-            // externalDocs
-            writer.WriteOptionalObject(OpenApiConstants.ExternalDocs, ExternalDocs, (w, e) => e.SerializeAsV2(w));
-
-            // extensions
-            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
-
-            writer.WriteEndObject();
         }
 
         private static void WriteHostInfoV2(IOpenApiWriter writer, IList<OpenApiServer> servers)
