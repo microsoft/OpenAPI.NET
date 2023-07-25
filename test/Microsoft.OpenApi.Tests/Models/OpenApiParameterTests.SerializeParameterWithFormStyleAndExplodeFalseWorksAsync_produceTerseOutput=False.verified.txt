@@ -4,5 +4,13 @@
   "description": "description1",
   "style": "form",
   "explode": false,
-  "schema": {"type":"array","items":{"enum":["value1","value2"]}}
+  "schema": {
+    "type": "array",
+    "items": {
+      "enum": [
+        "value1",
+        "value2"
+      ]
+    }
+  }
 }

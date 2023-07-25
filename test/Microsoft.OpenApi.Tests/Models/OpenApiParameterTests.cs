@@ -256,7 +256,19 @@ additionalProperties:
   ""required"": true,
   ""style"": ""simple"",
   ""explode"": true,
-  ""schema"": {""title"":""title2"",""description"":""description2"",""oneOf"":[{""type"":""number"",""format"":""double""},{""type"":""string""}]},
+  ""schema"": {
+    ""title"": ""title2"",
+    ""description"": ""description2"",
+    ""oneOf"": [
+      {
+        ""type"": ""number"",
+        ""format"": ""double""
+      },
+      {
+        ""type"": ""string""
+      }
+    ]
+  },
   ""examples"": {
     ""test"": {
       ""summary"": ""summary3"",

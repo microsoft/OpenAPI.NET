@@ -1391,19 +1391,19 @@ info:
   version: 1.0.0
 paths: { }
 components:
-  schemas: Pet:
-  required:
-  - id
-  - name
-  properties:
-    id:
-      type: integer
-      format: int64
-    name:
-      type: string
-    tag:
-      type: string
-
+  schemas:
+    Pet:
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        tag:
+          type: string
 webhooks:
   newPet:
     post:
@@ -1411,9 +1411,8 @@ webhooks:
         description: Information about a new pet in the system
         content:
           application/json:
-            schema: 
- $ref: '#/components/schemas/Pet'
-
+            schema:
+              $ref: '#/components/schemas/Pet'
       responses:
         '200':
           description: Return a 200 status to indicate that the data was received successfully";
