@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using Json.Schema;
 using Microsoft.OpenApi.Models;
@@ -267,7 +269,24 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
-                WriteRaw(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
+                var jsonString = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
+
+                // Slit json string into lines
+                string[] lines = jsonString.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+                for (int i = 0;  i < lines.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        Writer.Write(lines[i]);
+                    }
+                    else
+                    {
+                        Writer.WriteLine();
+                        WriteIndentation();
+                        Writer.Write(lines[i]);
+                    }
+                }
             }
         }
 

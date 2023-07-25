@@ -9,6 +9,8 @@ using Microsoft.OpenApi.Models;
 using YamlDotNet.Serialization;
 using System.Collections.Generic;
 using Yaml2JsonNode;
+using System.Collections;
+using System;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -241,7 +243,18 @@ namespace Microsoft.OpenApi.Writers
                                 .Build();
 
             var yamlSchema = serializer.Serialize(yamlNode);
-            WriteRaw(yamlSchema);
+
+            //remove trailing newlines
+            yamlSchema = yamlSchema.Trim();
+            var yamlArray = yamlSchema.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            foreach(var str in yamlArray)
+            {
+                Writer.WriteLine();
+                WriteIndentation();
+                Writer.Write("  ");
+
+                Writer.Write(str);
+            }
         }
 
         private void WriteChompingIndicator(string value)
