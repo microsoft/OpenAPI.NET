@@ -4,7 +4,9 @@
       "requestBody": {
         "content": {
           "application/json": {
-            "schema": {"type":"object"}
+            "schema": {
+              "type": "object"
+            }
           }
         }
       },

@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             var mediaType = new OpenApiMediaType()
             {
                 Example = new OpenApiAny(55),
-                Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
+                Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build(),
             };
 
             // Act
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             var mediaType = new OpenApiMediaType()
             {
-                Schema31 = new JsonSchemaBuilder()
+                Schema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .AdditionalProperties(new JsonSchemaBuilder()
                     .Type(SchemaValueType.Integer).Build())

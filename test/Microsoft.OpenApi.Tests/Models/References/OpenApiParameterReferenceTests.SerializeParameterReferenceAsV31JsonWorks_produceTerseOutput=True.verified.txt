@@ -1,0 +1,1 @@
+﻿{"name":"limit","in":"query","description":"Number of results to return","schema":{"type":"integer","minimum":1,"maximum":100}}

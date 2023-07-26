@@ -383,7 +383,8 @@ components: { }";
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
+            //Assert.Equal(expected, actual);
         }
 
 
@@ -445,7 +446,7 @@ paths:
                                         Description = "OK",
                                         Content = {
                                              ["application/json"] = new OpenApiMediaType() {
-                                                     Schema31 = thingSchema
+                                                     Schema = thingSchema
                                              }
                                         }
                                     }
@@ -456,7 +457,7 @@ paths:
                 },
                 Components = new OpenApiComponents
                 {
-                    Schemas31 = {
+                    Schemas = {
                         ["thing"] = thingSchema}
                 }
             };
@@ -518,7 +519,8 @@ components:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
+            //Assert.Equal(expected, actual);
         }
 
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
@@ -549,7 +551,7 @@ components:
                                         Description = "OK",
                                         Content = {
                                              ["application/json"] = new OpenApiMediaType() {
-                                                     Schema31 = thingSchema.Build()
+                                                     Schema = thingSchema.Build()
                                              }
                                         }
                                     }
@@ -560,7 +562,7 @@ components:
                 },
                 Components = new OpenApiComponents
                 {
-                    Schemas31 = {
+                    Schemas = {
                         ["thing"] = thingSchema}
                 }
             };
@@ -619,7 +621,8 @@ definitions:
             // Assert
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
-            Assert.Equal(expected, actual);
+            actual.Should().BeEquivalentTo(expected);
+            //Assert.Equal(expected, actual);
         }
 
     }

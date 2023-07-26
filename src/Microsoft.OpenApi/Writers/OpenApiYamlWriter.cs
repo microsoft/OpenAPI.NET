@@ -2,6 +2,15 @@
 // Licensed under the MIT license. 
 
 using System.IO;
+using System.Text.Json.Nodes;
+using System.Text.Json;
+using Json.Schema;
+using Microsoft.OpenApi.Models;
+using YamlDotNet.Serialization;
+using System.Collections.Generic;
+using Yaml2JsonNode;
+using System.Collections;
+using System;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -219,6 +228,32 @@ namespace Microsoft.OpenApi.Writers
                 }
 
                 DecreaseIndentation();
+            }
+        }
+
+        /// <summary>
+        /// Writes out a JsonSchema object
+        /// </summary>
+        /// <param name="schema"></param>
+        public override void WriteJsonSchema(JsonSchema schema)
+        {
+            var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(schema));
+            var yamlNode = jsonNode.ToYamlNode();
+            var serializer = new SerializerBuilder()
+                                .Build();
+
+            var yamlSchema = serializer.Serialize(yamlNode);
+
+            //remove trailing newlines
+            yamlSchema = yamlSchema.Trim();
+            var yamlArray = yamlSchema.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            foreach(var str in yamlArray)
+            {
+                Writer.WriteLine();
+                WriteIndentation();
+                Writer.Write("  ");
+
+                Writer.Write(str);
             }
         }
 

@@ -221,7 +221,7 @@ paths: {}",
 
                 var components = new OpenApiComponents
                 {
-                    Schemas31 = new Dictionary<string, JsonSchema>
+                    Schemas = new Dictionary<string, JsonSchema>
                     {
                         ["pet"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
@@ -250,7 +250,7 @@ paths: {}",
                 };
 
                 // Create a clone of the schema to avoid modifying things in components.
-                var petSchema = components.Schemas31["pet"];
+                var petSchema = components.Schemas["pet"];
 
                 //petSchema.Reference = new OpenApiReference
                 //{
@@ -259,7 +259,7 @@ paths: {}",
                 //    HostDocument = actual
                 //};
 
-                var newPetSchema = components.Schemas31["newPet"];
+                var newPetSchema = components.Schemas["newPet"];
 
                 //newPetSchema.Reference = new OpenApiReference
                 //{
@@ -268,7 +268,7 @@ paths: {}",
                 //    HostDocument = actual
                 //};
 
-                var errorModelSchema = components.Schemas31["errorModel"];
+                var errorModelSchema = components.Schemas["errorModel"];
 
                 //errorModelSchema.Reference = new OpenApiReference
                 //{
@@ -323,7 +323,7 @@ paths: {}",
                                             In = ParameterLocation.Query,
                                             Description = "tags to filter by",
                                             Required = false,
-                                            Schema31 = new JsonSchemaBuilder()
+                                            Schema = new JsonSchemaBuilder()
                                             .Type(SchemaValueType.Array)
                                             .Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
                                         },
@@ -333,7 +333,7 @@ paths: {}",
                                             In = ParameterLocation.Query,
                                             Description = "maximum number of results to return",
                                             Required = false,
-                                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")
+                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")
                                         }
                                     },
                                     Responses = new OpenApiResponses
@@ -345,11 +345,11 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(petSchema)
+                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(petSchema)
                                                 },
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(petSchema)
+                                                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(petSchema)
                                                 }
                                             }
                                         },
@@ -360,7 +360,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         },
@@ -371,7 +371,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         }
@@ -389,7 +389,7 @@ paths: {}",
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema31 = newPetSchema
+                                                Schema = newPetSchema
                                             }
                                         }
                                     },
@@ -402,7 +402,7 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = petSchema
+                                                    Schema = petSchema
                                                 },
                                             }
                                         },
@@ -413,7 +413,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         },
@@ -424,7 +424,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         }
@@ -449,7 +449,7 @@ paths: {}",
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to fetch",
                                             Required = true,
-                                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")
+                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")
                                         }
                                     },
                                     Responses = new OpenApiResponses
@@ -461,11 +461,11 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = petSchema
+                                                    Schema = petSchema
                                                 },
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = petSchema
+                                                    Schema = petSchema
                                                 }
                                             }
                                         },
@@ -476,7 +476,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         },
@@ -487,7 +487,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         }
@@ -505,7 +505,7 @@ paths: {}",
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to delete",
                                             Required = true,
-                                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")
+                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")
                                         }
                                     },
                                     Responses = new OpenApiResponses
@@ -521,7 +521,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         },
@@ -532,7 +532,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         }
@@ -561,7 +561,7 @@ paths: {}",
 
                 var components = new OpenApiComponents
                 {
-                    Schemas31 = new Dictionary<string, JsonSchema>
+                    Schemas = new Dictionary<string, JsonSchema>
                     {
                         ["pet"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
@@ -617,14 +617,14 @@ paths: {}",
                 };
 
                 // Create a clone of the schema to avoid modifying things in components.
-                var petSchema = components.Schemas31["pet"];
+                var petSchema = components.Schemas["pet"];
                 //petSchema.Reference = new OpenApiReference
                 //{
                 //    Id = "pet",
                 //    Type = ReferenceType.Schema
                 //};
 
-                var newPetSchema = components.Schemas31["newPet"];
+                var newPetSchema = components.Schemas["newPet"];
 
                 //newPetSchema.Reference = new OpenApiReference
                 //{
@@ -632,7 +632,7 @@ paths: {}",
                 //    Type = ReferenceType.Schema
                 //};
 
-                var errorModelSchema = components.Schemas31["errorModel"];
+                var errorModelSchema = components.Schemas["errorModel"];
 
                 //errorModelSchema.Reference = new OpenApiReference
                 //{
@@ -724,7 +724,7 @@ paths: {}",
                                             In = ParameterLocation.Query,
                                             Description = "tags to filter by",
                                             Required = false,
-                                            Schema31 = new JsonSchemaBuilder()
+                                            Schema = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Array)
                                                 .Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
                                         },
@@ -734,7 +734,7 @@ paths: {}",
                                             In = ParameterLocation.Query,
                                             Description = "maximum number of results to return",
                                             Required = false,
-                                            Schema31 = new JsonSchemaBuilder()
+                                            Schema = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Integer)
                                                 .Format("int32")
                                         }
@@ -748,13 +748,13 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = new JsonSchemaBuilder()
+                                                    Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
                                                         .Items(petSchema)
                                                 },
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = new JsonSchemaBuilder()
+                                                    Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
                                                         .Items(petSchema)
                                                 }
@@ -767,7 +767,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         },
@@ -778,7 +778,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         }
@@ -801,7 +801,7 @@ paths: {}",
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema31 = newPetSchema
+                                                Schema = newPetSchema
                                             }
                                         }
                                     },
@@ -814,7 +814,7 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = petSchema
+                                                    Schema = petSchema
                                                 },
                                             }
                                         },
@@ -825,7 +825,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         },
@@ -836,7 +836,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         }
@@ -873,7 +873,7 @@ paths: {}",
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to fetch",
                                             Required = true,
-                                            Schema31 = new JsonSchemaBuilder()
+                                            Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Integer)
                                                         .Format("int64")
                                         }
@@ -887,11 +887,11 @@ paths: {}",
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = petSchema
+                                                    Schema = petSchema
                                                 },
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = petSchema
+                                                    Schema = petSchema
                                                 }
                                             }
                                         },
@@ -902,7 +902,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         },
@@ -913,7 +913,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         }
@@ -931,7 +931,7 @@ paths: {}",
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to delete",
                                             Required = true,
-                                            Schema31 = new JsonSchemaBuilder()
+                                            Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
                                                         .Format("int64")
                                         }
@@ -949,7 +949,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         },
@@ -960,7 +960,7 @@ paths: {}",
                                             {
                                                 ["text/html"] = new OpenApiMediaType
                                                 {
-                                                    Schema31 = errorModelSchema
+                                                    Schema = errorModelSchema
                                                 }
                                             }
                                         }
@@ -1054,7 +1054,7 @@ paths: {}",
                         Style = ParameterStyle.Simple,
                         Explode = true,
                         Example = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
-                        Schema31 = new JsonSchemaBuilder()
+                        Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.Array)
                                     .Format(Formats.Uuid)
                                     .Ref("#components/header/example-header")
@@ -1086,7 +1086,7 @@ paths: {}",
                                 }
                             }
                         },
-                        Schema31 = new JsonSchemaBuilder()
+                        Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.String)
                                     .Format(Formats.Uuid),
                         Reference = new OpenApiReference()
@@ -1111,8 +1111,8 @@ paths: {}",
                 new OpenApiReaderSettings { ReferenceResolution = ReferenceResolutionSetting.DoNotResolveReferences })
                 .Read(stream, out var diagnostic);
 
-            var externalRef = doc.Components.Schemas31["Nested"].GetProperties();//.GetAnyOf().First().Reference.ReferenceV3;
-            var externalRef2 = doc.Components.Schemas31["Nested"].GetProperties();//.GetAnyOf().Last().Reference.ReferenceV3;
+            var externalRef = doc.Components.Schemas["Nested"].GetProperties();//.GetAnyOf().First().Reference.ReferenceV3;
+            var externalRef2 = doc.Components.Schemas["Nested"].GetProperties();//.GetAnyOf().Last().Reference.ReferenceV3;
 
             // Assert
             //Assert.Equal("file:///C:/MySchemas.json#/definitions/ArrayObject", externalRef);

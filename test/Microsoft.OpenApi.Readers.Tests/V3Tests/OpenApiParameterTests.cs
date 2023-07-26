@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.String)
                 });
         }
 
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     Style = ParameterStyle.Form,
                     Explode = true
                 });
@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     In = ParameterLocation.Query,
                     Name = "freeForm",
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                     .Type(SchemaValueType.Object)
                     .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
                     Style = ParameterStyle.Form
@@ -118,7 +118,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     {
                         ["application/json"] = new OpenApiMediaType
                         {
-                            Schema31 = new JsonSchemaBuilder()
+                            Schema = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("lat", "long")
                                 .Properties(
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Array)
                         .Items(new JsonSchemaBuilder()
                             .Type(SchemaValueType.Integer)
@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.String)
                 });
         }
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.String)
                 });
         }
@@ -238,7 +238,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.String)
                 });
         }
@@ -265,7 +265,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Example = new OpenApiAny((float)5.0),
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Number)
                         .Format("float")
                 }, options => options.IgnoringCyclicReferences().Excluding(p => p.Example.Node.Parent));
@@ -303,7 +303,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             Value = new OpenApiAny((float)7.5)
                         }
                     },
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Number)
                         .Format("float")
                 }, options => options.IgnoringCyclicReferences()

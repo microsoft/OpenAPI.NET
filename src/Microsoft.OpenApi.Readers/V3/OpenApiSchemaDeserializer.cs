@@ -274,7 +274,7 @@ namespace Microsoft.OpenApi.Readers.V3
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
-            }
+            }        
 
             //builder.Extensions(LoadExtension(node));
 

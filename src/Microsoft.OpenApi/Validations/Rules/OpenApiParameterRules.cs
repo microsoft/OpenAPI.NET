@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (parameter.Example != null)
                     {
-                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(ParameterMismatchedDataType), parameter.Example.Node, parameter.Schema31);
+                        RuleHelpers.ValidateDataTypeMismatch(context, nameof(ParameterMismatchedDataType), parameter.Example.Node, parameter.Schema);
                     }
 
                     context.Exit();
@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                             {
                                 context.Enter(key);
                                 context.Enter("value");
-                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(ParameterMismatchedDataType), parameter.Examples[key]?.Value.Node, parameter.Schema31);
+                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(ParameterMismatchedDataType), parameter.Examples[key]?.Value.Node, parameter.Schema);
                                 context.Exit();
                                 context.Exit();
                             }

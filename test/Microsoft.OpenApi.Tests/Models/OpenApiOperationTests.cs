@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
                     }
                 }
             },
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new OpenApiMediaType
                         {
-                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
                         }
                     }
                 }
@@ -130,7 +130,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 {
                     ["application/json"] = new OpenApiMediaType
                     {
-                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
                     }
                 }
             },
@@ -150,7 +150,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/json"] = new OpenApiMediaType
                         {
-                            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
+                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Number).Minimum(5).Maximum(10).Build()
                         }
                     }
                 }
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
                     }
                 },
                 RequestBody = new OpenApiRequestBody()
@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     {
                         ["application/x-www-form-urlencoded"] = new OpenApiMediaType()
                         {
-                            Schema31 = new JsonSchemaBuilder()
+                            Schema = new JsonSchemaBuilder()
                             .Properties(
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated name of the pet")),
                                 ("status", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated status of the pet")))
@@ -223,7 +223,7 @@ namespace Microsoft.OpenApi.Tests.Models
                         },
                         ["multipart/form-data"] = new OpenApiMediaType()
                         {
-                            Schema31 = new JsonSchemaBuilder()
+                            Schema = new JsonSchemaBuilder()
                             .Properties(
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated name of the pet")),
                                 ("status", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Updated status of the pet")))
@@ -295,7 +295,11 @@ namespace Microsoft.OpenApi.Tests.Models
     ""description"": ""description2"",
     ""content"": {
       ""application/json"": {
-        ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
+        ""schema"": {
+          ""type"": ""number"",
+          ""minimum"": 5,
+          ""maximum"": 10
+        }
       }
     },
     ""required"": true
@@ -308,7 +312,11 @@ namespace Microsoft.OpenApi.Tests.Models
       ""description"": null,
       ""content"": {
         ""application/json"": {
-          ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
+          ""schema"": {
+            ""type"": ""number"",
+            ""minimum"": 5,
+            ""maximum"": 10
+          }
         }
       }
     }
@@ -360,7 +368,11 @@ namespace Microsoft.OpenApi.Tests.Models
     ""description"": ""description2"",
     ""content"": {
       ""application/json"": {
-        ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
+        ""schema"": {
+          ""type"": ""number"",
+          ""minimum"": 5,
+          ""maximum"": 10
+        }
       }
     },
     ""required"": true
@@ -373,7 +385,11 @@ namespace Microsoft.OpenApi.Tests.Models
       ""description"": null,
       ""content"": {
         ""application/json"": {
-          ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
+          ""schema"": {
+            ""type"": ""number"",
+            ""minimum"": 5,
+            ""maximum"": 10
+          }
         }
       }
     }
@@ -435,16 +451,46 @@ namespace Microsoft.OpenApi.Tests.Models
       ""in"": ""path"",
       ""description"": ""ID of pet that needs to be updated"",
       ""required"": true,
-      ""schema"": {""type"":""string""}
+      ""schema"": {
+        ""type"": ""string""
+      }
     }
   ],
   ""requestBody"": {
     ""content"": {
       ""application/x-www-form-urlencoded"": {
-        ""schema"": {""properties"":{""name"":{""type"":""string"",""description"":""Updated name of the pet""},""status"":{""type"":""string"",""description"":""Updated status of the pet""}},""required"":[""name""]}
+        ""schema"": {
+          ""properties"": {
+            ""name"": {
+              ""type"": ""string"",
+              ""description"": ""Updated name of the pet""
+            },
+            ""status"": {
+              ""type"": ""string"",
+              ""description"": ""Updated status of the pet""
+            }
+          },
+          ""required"": [
+            ""name""
+          ]
+        }
       },
       ""multipart/form-data"": {
-        ""schema"": {""properties"":{""name"":{""type"":""string"",""description"":""Updated name of the pet""},""status"":{""type"":""string"",""description"":""Updated status of the pet""}},""required"":[""name""]}
+        ""schema"": {
+          ""properties"": {
+            ""name"": {
+              ""type"": ""string"",
+              ""description"": ""Updated name of the pet""
+            },
+            ""status"": {
+              ""type"": ""string"",
+              ""description"": ""Updated status of the pet""
+            }
+          },
+          ""required"": [
+            ""name""
+          ]
+        }
       }
     }
   },
@@ -552,7 +598,11 @@ namespace Microsoft.OpenApi.Tests.Models
       ""name"": ""body"",
       ""description"": ""description2"",
       ""required"": true,
-      ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
+      ""schema"": {
+        ""type"": ""number"",
+        ""minimum"": 5,
+        ""maximum"": 10
+      }
     }
   ],
   ""responses"": {
@@ -561,7 +611,11 @@ namespace Microsoft.OpenApi.Tests.Models
     },
     ""400"": {
       ""description"": null,
-      ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
+      ""schema"": {
+        ""type"": ""number"",
+        ""minimum"": 5,
+        ""maximum"": 10
+      }
     }
   },
   ""schemes"": [
@@ -614,7 +668,11 @@ namespace Microsoft.OpenApi.Tests.Models
       ""name"": ""body"",
       ""description"": ""description2"",
       ""required"": true,
-      ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
+      ""schema"": {
+        ""type"": ""number"",
+        ""minimum"": 5,
+        ""maximum"": 10
+      }
     }
   ],
   ""responses"": {
@@ -623,7 +681,11 @@ namespace Microsoft.OpenApi.Tests.Models
     },
     ""400"": {
       ""description"": null,
-      ""schema"": {""type"":""number"",""minimum"":5,""maximum"":10}
+      ""schema"": {
+        ""type"": ""number"",
+        ""minimum"": 5,
+        ""maximum"": 10
+      }
     }
   },
   ""schemes"": [

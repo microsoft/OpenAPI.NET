@@ -1,0 +1,28 @@
+﻿{
+  "summary": "User path item summary",
+  "description": "User path item description",
+  "get": {
+    "summary": "Get users",
+    "responses": {
+      "200": {
+        "description": "Successful operation"
+      }
+    }
+  },
+  "post": {
+    "summary": "Create a user",
+    "responses": {
+      "201": {
+        "description": "User created successfully"
+      }
+    }
+  },
+  "delete": {
+    "summary": "Delete a user",
+    "responses": {
+      "204": {
+        "description": "User deleted successfully"
+      }
+    }
+  }
+}

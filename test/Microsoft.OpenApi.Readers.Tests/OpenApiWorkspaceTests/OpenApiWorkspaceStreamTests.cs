@@ -67,7 +67,7 @@ paths: {}";
             //                                .Operations[OperationType.Get]
             //                                .Responses["200"]
             //                                .Content["application/json"]
-            //                                    .Schema31.GetEffective(result.OpenApiDocument);
+            //                                    .Schema.GetEffective(result.OpenApiDocument);
             //Assert.Equal("object", referencedSchema.Type);
             //Assert.Equal("string", referencedSchema.Properties["subject"].Type);
             //Assert.False(referencedSchema.UnresolvedReference);
@@ -78,7 +78,7 @@ paths: {}";
             //                                .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
             //                                .Where(p => p.Name == "filter").FirstOrDefault();
 
-            //Assert.Equal("string", referencedParameter.Schema31.GetType());
+            //Assert.Equal("string", referencedParameter.Schema.GetType());
 
         }
     }

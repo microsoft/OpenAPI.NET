@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Services
             ResolveMap(components.Links);
             ResolveMap(components.Callbacks);
             ResolveMap(components.Examples);
-            //ResolveMap(components.Schemas31);
+            //ResolveMap(components.Schemas);
             ResolveMap(components.PathItems);
             ResolveMap(components.SecuritySchemes);
             ResolveMap(components.Headers);
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="mediaType"></param>
         public override void Visit(OpenApiMediaType mediaType)
         {
-            //ResolveObject(mediaType.Schema31, r => mediaType.Schema31 = r);
+            //ResolveObject(mediaType.Schema, r => mediaType.Schema = r);
         }
 
         /// <summary>

@@ -1,0 +1,10 @@
+﻿{
+  "description": "User creation request body",
+  "content": {
+    "application/json": {
+      "schema": {
+        "$ref": "#/components/schemas/UserSchema"
+      }
+    }
+  }
+}

@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
+                                        Schema = new JsonSchemaBuilder().Type(SchemaValueType.String).Build()
                                     }
                                 }
                             }
@@ -124,7 +124,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 Paths = new OpenApiPaths(),
                 Components = new OpenApiComponents()
                 {
-                    Schemas31 = new Dictionary<string, JsonSchema>
+                    Schemas = new Dictionary<string, JsonSchema>
                     {
                         ["loopy"] = loopySchema
                     }
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             var derivedSchema = new JsonSchemaBuilder().AnyOf(baseSchema).Ref("derived").Build();
             var testHeader = new OpenApiHeader()
             {
-                Schema31 = derivedSchema,
+                Schema = derivedSchema,
                 Reference = new OpenApiReference()
                 {
                     Id = "test-header",
@@ -184,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                                         {
                                             ["application/json"] = new OpenApiMediaType()
                                             {
-                                                Schema31 = derivedSchema
+                                                Schema = derivedSchema
                                             }
                                         },
                                         Headers = new Dictionary<string, OpenApiHeader>()
@@ -199,7 +199,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 },
                 Components = new OpenApiComponents()
                 {
-                    Schemas31 = new Dictionary<string, JsonSchema>()
+                    Schemas = new Dictionary<string, JsonSchema>()
                     {
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,

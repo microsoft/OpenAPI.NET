@@ -317,7 +317,7 @@ namespace Microsoft.OpenApi.Validations
                 type = typeof(IOpenApiReferenceable);
             }
 
-            var rules = _ruleSet.FindRules(type);
+            var rules = _ruleSet.FindRules(type.Name);
             foreach (var rule in rules)
             {
                 rule.Evaluate(this as IValidationContext, item);

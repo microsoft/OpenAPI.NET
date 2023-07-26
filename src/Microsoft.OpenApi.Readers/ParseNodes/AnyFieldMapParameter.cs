@@ -15,11 +15,11 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public AnyFieldMapParameter(
             Func<T, OpenApiAny> propertyGetter,
             Action<T, OpenApiAny> propertySetter,
-            Func<T, JsonSchema> schema31Getter = null)
+            Func<T, JsonSchema> SchemaGetter = null)
         {
             this.PropertyGetter = propertyGetter;
             this.PropertySetter = propertySetter;
-            this.Schema31Getter = schema31Getter;
+            this.SchemaGetter = SchemaGetter;
         }
 
         /// <summary>
@@ -35,6 +35,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// <summary>
         /// Function to get the schema to apply to the property.
         /// </summary>
-        public Func<T, JsonSchema> Schema31Getter { get; }
+        public Func<T, JsonSchema> SchemaGetter { get; }
     }
 }

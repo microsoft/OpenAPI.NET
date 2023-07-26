@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -30,23 +30,23 @@ namespace Microsoft.OpenApi.Models
         /// A brief description of the request body. This could contain examples of use.
         /// CommonMark syntax MAY be used for rich text representation.
         /// </summary>
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
 
         /// <summary>
         /// Determines if the request body is required in the request. Defaults to false.
         /// </summary>
-        public bool Required { get; set; }
+        public virtual bool Required { get; set; }
 
         /// <summary>
         /// REQUIRED. The content of the request body. The key is a media type or media type range and the value describes it.
         /// For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
         /// </summary>
-        public IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
+        public virtual IDictionary<string, OpenApiMediaType> Content { get; set; } = new Dictionary<string, OpenApiMediaType>();
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
         /// </summary>
-        public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
+        public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
         /// Parameter-less constructor
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.1
         /// </summary>
-        public void SerializeAsV31(IOpenApiWriter writer)
+        public virtual void SerializeAsV31(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV31(writer),
                 (writer, element) => element.SerializeAsV31WithoutReference(writer));
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize <see cref="OpenApiRequestBody"/> to Open Api v3.0
         /// </summary>
-        public void SerializeAsV3(IOpenApiWriter writer)
+        public virtual void SerializeAsV3(IOpenApiWriter writer)
         {
             SerializeInternal(writer, (writer, element) => element.SerializeAsV3(writer),
                 (writer, element) => element.SerializeAsV3WithoutReference(writer));
@@ -113,9 +113,9 @@ namespace Microsoft.OpenApi.Models
         /// <returns>OpenApiRequestBody</returns>
         public OpenApiRequestBody GetEffective(OpenApiDocument doc)
         {
-            if (this.Reference != null)
+            if (Reference != null)
             {
-                return doc.ResolveReferenceTo<OpenApiRequestBody>(this.Reference);
+                return doc.ResolveReferenceTo<OpenApiRequestBody>(Reference);
             }
             else
             {
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V31 document without using reference.
         /// </summary>
-        public void SerializeAsV31WithoutReference(IOpenApiWriter writer)
+        public virtual void SerializeAsV31WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_1,
                     (writer, element) => element.SerializeAsV31(writer));
@@ -135,13 +135,13 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>
-        public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
+        public virtual void SerializeAsV3WithoutReference(IOpenApiWriter writer) 
         {
             SerializeInternalWithoutReference(writer, OpenApiSpecVersion.OpenApi3_0,
                 (writer, element) => element.SerializeAsV3(writer));
         }
-
-        private void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
+        
+        internal virtual void SerializeInternalWithoutReference(IOpenApiWriter writer, OpenApiSpecVersion version,
             Action<IOpenApiWriter, IOpenApiSerializable> callback)
         {
             writer.WriteStartObject();
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Models
                 // V2 spec actually allows the body to have custom name.
                 // To allow round-tripping we use an extension to hold the name
                 Name = "body",
-                Schema31 = Content.Values.FirstOrDefault()?.Schema31 ?? new JsonSchemaBuilder().Build(),
+                Schema = Content.Values.FirstOrDefault()?.Schema ?? new JsonSchemaBuilder().Build(),
                 Required = Required,
                 Extensions = Extensions.ToDictionary(static k => k.Key, static v => v.Value)  // Clone extensions so we can remove the x-bodyName extensions from the output V2 model.
             };
@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Models
             if (Content == null || !Content.Any())
                 yield break;
 
-            foreach (var property in Content.First().Value.Schema31.GetProperties())
+            foreach (var property in Content.First().Value.Schema.GetProperties())
             {
                 var paramSchema = property.Value;
                 if (paramSchema.GetType().Equals(SchemaValueType.String)
@@ -218,8 +218,8 @@ namespace Microsoft.OpenApi.Models
                 {
                     Description = property.Value.GetDescription(),
                     Name = property.Key,
-                    Schema31 = property.Value,
-                    Required = Content.First().Value.Schema31.GetRequired()?.Contains(property.Key) ?? false
+                    Schema = property.Value,
+                    Required = Content.First().Value.Schema.GetRequired()?.Contains(property.Key) ?? false
                 };
             }
         }

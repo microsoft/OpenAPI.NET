@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     In = ParameterLocation.Query,
                     Description = "number of items to skip",
                     Required = true,
-                    Schema31 = new JsonSchemaBuilder()
+                    Schema = new JsonSchemaBuilder()
                     .Type(SchemaValueType.Integer)
                     .Format("int32")
                     .Ref("skipParam")
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     {
                         ["application/json"] = new OpenApiMediaType
                         {
-                            Schema31 = new JsonSchemaBuilder()
+                            Schema = new JsonSchemaBuilder()
                             .Description("Sample description")
                             .Required("name")
                             .Properties(

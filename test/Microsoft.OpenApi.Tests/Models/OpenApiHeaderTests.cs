@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiHeader AdvancedHeader = new OpenApiHeader
         {
             Description = "sampleHeader",
-            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
+            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
         };
 
         public static OpenApiHeader ReferencedHeader = new OpenApiHeader
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "example1",
             },
             Description = "sampleHeader",
-            Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
+            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
         };
 
         private readonly ITestOutputHelper _output;

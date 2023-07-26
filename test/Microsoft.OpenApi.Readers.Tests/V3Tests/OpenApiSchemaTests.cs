@@ -273,7 +273,7 @@ get:
             components.Should().BeEquivalentTo(
                 new OpenApiComponents
                 {
-                    Schemas31 =
+                    Schemas =
                     {
                             ["ErrorModel"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
@@ -325,7 +325,7 @@ get:
             components.Should().BeEquivalentTo(
                 new OpenApiComponents
                 {
-                    Schemas31 =
+                    Schemas =
                     {
                             ["Pet"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
@@ -444,8 +444,8 @@ get:
 
             //schemaExtension.AllOf[0].Properties["child"] = schemaExtension;
 
-            components.Schemas31["microsoft.graph.schemaExtension"]
-                .Should().BeEquivalentTo(components.Schemas31["microsoft.graph.schemaExtension"].GetAllOf().ElementAt(0).GetProperties()["child"]);
+            components.Schemas["microsoft.graph.schemaExtension"]
+                .Should().BeEquivalentTo(components.Schemas["microsoft.graph.schemaExtension"].GetAllOf().ElementAt(0).GetProperties()["child"]);
         }
     }
 }

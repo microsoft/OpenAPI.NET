@@ -17,12 +17,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             Func<T, IDictionary<string, U>> propertyMapGetter,
             Func<U, OpenApiAny> propertyGetter,
             Action<U, OpenApiAny> propertySetter,
-            Func<T, JsonSchema> schema31Getter)
+            Func<T, JsonSchema> SchemaGetter)
         {
             this.PropertyMapGetter = propertyMapGetter;
             this.PropertyGetter = propertyGetter;
             this.PropertySetter = propertySetter;
-            this.Schema31Getter = schema31Getter;
+            this.SchemaGetter = SchemaGetter;
         }
 
         /// <summary>
@@ -43,6 +43,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         /// <summary>
         /// Function to get the schema to apply to the property.
         /// </summary>
-        public Func<T, JsonSchema> Schema31Getter { get; }
+        public Func<T, JsonSchema> SchemaGetter { get; }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Readers.Extensions
 {
-    internal static class JsonSchemaBuilderExtensions
+    public static class JsonSchemaBuilderExtensions
     {
 
         public static JsonSchemaBuilder Extensions(this JsonSchemaBuilder builder, IDictionary<string, IOpenApiExtension> extensions)

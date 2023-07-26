@@ -1,0 +1,1 @@
+﻿{"description":"Location of the locally created post","type":"string"}

@@ -100,12 +100,12 @@ paths:
 
                 var okMediaType = new OpenApiMediaType
                 {
-                    Schema31 = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(okSchema)
+                    Schema = new JsonSchemaBuilder().Type(SchemaValueType.Array).Items(okSchema)
                 };
 
                 var errorMediaType = new OpenApiMediaType
                 {
-                    Schema31 = errorSchema
+                    Schema = errorSchema
                 };
 
                 doc.Should().BeEquivalentTo(new OpenApiDocument
@@ -203,7 +203,7 @@ paths:
                     },
                     Components = new OpenApiComponents
                     {
-                        Schemas31 =
+                        Schemas =
                         {
                             ["Item"] = okSchema,
                             ["Error"] = errorSchema
@@ -246,12 +246,12 @@ paths:
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
-                //Assert.Equal(json.Schema31.Keywords.OfType<TypeKeyword>().FirstOrDefault().Type, targetSchema.Build().GetJsonType());
-                json.Schema31.Should().BeEquivalentTo(targetSchema);
+                //Assert.Equal(json.Schema.Keywords.OfType<TypeKeyword>().FirstOrDefault().Type, targetSchema.Build().GetJsonType());
+                json.Schema.Should().BeEquivalentTo(targetSchema);
 
                 var xml = response.Value.Content["application/xml"];
                 Assert.NotNull(xml);
-                xml.Schema31.Should().BeEquivalentTo(targetSchema);
+                xml.Schema.Should().BeEquivalentTo(targetSchema);
             }
         }
 
@@ -263,7 +263,7 @@ paths:
             {
                 OpenApiStreamReader reader = new OpenApiStreamReader();
                 OpenApiDocument doc = reader.Read(stream, out OpenApiDiagnostic diags);
-                JsonSchema schema1 = doc.Components.Schemas31["AllPets"];
+                JsonSchema schema1 = doc.Components.Schemas["AllPets"];
                 //Assert.False(schema1.UnresolvedReference);
                 //JsonSchema schema2 = doc.ResolveReferenceTo<JsonSchema>(schema1.GetRef());
                 //if (schema1.GetRef() == schema2.GetRef())
