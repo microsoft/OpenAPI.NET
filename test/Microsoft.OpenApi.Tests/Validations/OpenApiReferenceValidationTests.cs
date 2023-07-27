@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 using Xunit;
