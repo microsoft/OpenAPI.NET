@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -57,8 +57,13 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() /*{ new AlwaysFailRule<JsonSchema>() }*/);
-
+            var rules = new Dictionary<string, IList<ValidationRule>>()
+            {
+                { typeof(JsonSchema).Name,
+                    new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
+                }
+            };
+            
             var errors = document.Validate(new ValidationRuleSet(rules));
 
 
@@ -82,7 +87,12 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() /*{ new AlwaysFailRule<JsonSchema>() }*/);
+            var rules = new Dictionary<string, IList<ValidationRule>>()
+            {
+                { typeof(JsonSchema).Name,
+                    new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
+                }
+            };
 
             var errors = document.Validate(new ValidationRuleSet(rules));
 
@@ -126,7 +136,12 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() /*{ new AlwaysFailRule<JsonSchema>() }*/);
+            var rules = new Dictionary<string, IList<ValidationRule>>()
+            {
+                { typeof(JsonSchema).Name,
+                    new List<ValidationRule>() { new AlwaysFailRule<JsonSchema>() }
+                }
+            };
 
             var errors = document.Validate(new ValidationRuleSet(rules));
 
@@ -135,7 +150,7 @@ namespace Microsoft.OpenApi.Tests.Validations
         }
     }
 
-    public class AlwaysFailRule<T> : ValidationRule<T> where T : IOpenApiElement
+    public class AlwaysFailRule<T> : ValidationRule<T>
     {
         public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
         {
