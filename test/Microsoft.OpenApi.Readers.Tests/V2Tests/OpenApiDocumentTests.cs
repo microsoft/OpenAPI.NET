@@ -17,9 +17,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     {
         private const string SampleFolderPath = "V2Tests/Samples/";
 
-
-
-
         [Fact]
         public void ShouldThrowWhenReferenceTypeIsInvalid()
         {

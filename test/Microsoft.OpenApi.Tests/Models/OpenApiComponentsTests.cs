@@ -251,7 +251,19 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected = @"{
-  ""schemas"": {""schema1"":{""properties"":{""property2"":{""type"":""integer""},""property3"":{""type"":""string"",""maxLength"":15}}}},
+  ""schemas"": {
+    ""schema1"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        },
+        ""property3"": {
+          ""type"": ""string"",
+          ""maxLength"": 15
+        }
+      }
+    }
+  },
   ""securitySchemes"": {
     ""securityScheme1"": {
       ""type"": ""oauth2"",
@@ -288,7 +300,25 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected = @"{
-  ""schemas"": {""schema1"":{""properties"":{""property2"":{""type"":""integer""},""property3"":{""$ref"":""#/components/schemas/schema2""}}},""schema2"":{""properties"":{""property2"":{""type"":""integer""}}}},
+  ""schemas"": {
+    ""schema1"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        },
+        ""property3"": {
+          ""$ref"": ""#/components/schemas/schema2""
+        }
+      }
+    },
+    ""schema2"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        }
+      }
+    }
+  },
   ""securitySchemes"": {
     ""securityScheme1"": {
       ""type"": ""oauth2"",
@@ -324,14 +354,14 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas: schema1:
-  properties:
-    property2:
-      type: integer
-    property3:
-      type: string
-      maxLength: 15
-
+            var expected = @"schemas:
+  schema1:
+    properties:
+      property2:
+        type: integer
+      property3:
+        type: string
+        maxLength: 15
 securitySchemes:
   securityScheme1:
     type: oauth2
@@ -360,17 +390,17 @@ securitySchemes:
         public void SerializeAdvancedComponentsWithReferenceAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas: schema1:
-  properties:
-    property2:
-      type: integer
-    property3:
-      $ref: '#/components/schemas/schema2'
-schema2:
-  properties:
-    property2:
-      type: integer
-
+            var expected = @"schemas:
+  schema1:
+    properties:
+      property2:
+        type: integer
+      property3:
+        $ref: '#/components/schemas/schema2'
+  schema2:
+    properties:
+      property2:
+        type: integer
 securitySchemes:
   securityScheme1:
     type: oauth2
@@ -400,7 +430,19 @@ securitySchemes:
         {
             // Arrange
             var expected = @"{
-  ""schemas"": {""schema1"":{""type"":""string""},""schema4"":{""type"":""string"",""allOf"":[{""type"":""string""}]}}
+  ""schemas"": {
+    ""schema1"": {
+      ""type"": ""string""
+    },
+    ""schema4"": {
+      ""type"": ""string"",
+      ""allOf"": [
+        {
+          ""type"": ""string""
+        }
+      ]
+    }
+  }
 }";
 
             // Act
@@ -416,13 +458,13 @@ securitySchemes:
         public void SerializeBrokenComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas: schema1:
-  type: string
-schema4:
-  type: string
-  allOf:
-  - type: string
-";
+            var expected = @"schemas:
+  schema1:
+    type: string
+  schema4:
+    type: string
+    allOf:
+    - type: string";
 
             // Act
             var actual = BrokenComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -437,14 +479,14 @@ schema4:
         public void SerializeTopLevelReferencingComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas: schema1:
-  $ref: schema2
-schema2:
-  type: object
-  properties:
-    property1:
-      type: string
-";
+            var expected = @"schemas:
+  schema1:
+    $ref: schema2
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
 
             // Act
             var actual = TopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -459,18 +501,18 @@ schema2:
         public void SerializeTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"schemas: schema1:
-  type: object
-  properties:
-    property1:
-      type: string
-      $ref: schema1
-schema2:
-  type: object
-  properties:
-    property1:
-      type: string
-";
+            var expected = @"schemas:
+  schema1:
+    type: object
+    properties:
+      property1:
+        type: string
+        $ref: schema1
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
 
             // Act
             var actual = TopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -493,7 +535,9 @@ schema2:
           ""description"": ""Information about a new pet in the system"",
           ""content"": {
             ""application/json"": {
-              ""schema"": {""$ref"":""#/components/schemas/schema1""}
+              ""schema"": {
+                ""$ref"": ""#/components/schemas/schema1""
+              }
             }
           }
         },
@@ -505,7 +549,25 @@ schema2:
       }
     }
   },
-  ""schemas"": {""schema1"":{""properties"":{""property2"":{""type"":""integer""},""property3"":{""$ref"":""#/components/schemas/schema2""}},""$ref"":""#/components/schemas/schema1""},""schema2"":{""properties"":{""property2"":{""type"":""integer""}}}}
+  ""schemas"": {
+    ""schema1"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        },
+        ""property3"": {
+          ""$ref"": ""#/components/schemas/schema2""
+        }
+      }
+    },
+    ""schema2"": {
+      ""properties"": {
+        ""property2"": {
+          ""type"": ""integer""
+        }
+      }
+    }
+  }
 }";
             // Act
             var actual = ComponentsWithPathItem.SerializeAsJson(OpenApiSpecVersion.OpenApi3_1);
@@ -527,24 +589,22 @@ schema2:
         description: Information about a new pet in the system
         content:
           application/json:
-            schema: 
- $ref: '#/components/schemas/schema1'
-
+            schema:
+              $ref: '#/components/schemas/schema1'
       responses:
         '200':
           description: Return a 200 status to indicate that the data was received successfully
-schemas: schema1:
-  properties:
-    property2:
-      type: integer
-    property3:
-      $ref: '#/components/schemas/schema2'
-  $ref: '#/components/schemas/schema1'
-schema2:
-  properties:
-    property2:
-      type: integer
-";
+schemas:
+  schema1:
+    properties:
+      property2:
+        type: integer
+      property3:
+        $ref: '#/components/schemas/schema2'
+  schema2:
+    properties:
+      property2:
+        type: integer";
 
             // Act
             var actual = ComponentsWithPathItem.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_1);
