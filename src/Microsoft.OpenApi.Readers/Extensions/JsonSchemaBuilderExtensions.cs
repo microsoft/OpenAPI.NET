@@ -5,12 +5,12 @@ using System;
 using System.Collections.Generic;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Readers.Extensions
 {
     public static class JsonSchemaBuilderExtensions
     {
-
         public static JsonSchemaBuilder Extensions(this JsonSchemaBuilder builder, IDictionary<string, IOpenApiExtension> extensions)
         {
             builder.Add(new ExtensionsKeyword(extensions));
@@ -37,6 +37,18 @@ namespace Microsoft.OpenApi.Readers.Extensions
         public static JsonSchemaBuilder ExclusiveMinimum(this JsonSchemaBuilder builder, bool value)
         {
             builder.Add(new Draft4ExclusiveMinimumKeyword(value));
+            return builder;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="discriminator"></param>
+        /// <returns></returns>
+        public static JsonSchemaBuilder Discriminator(this JsonSchemaBuilder builder, OpenApiDiscriminator discriminator)
+        {
+            builder.Add(new DiscriminatorKeyword(discriminator));
             return builder;
         }
     }
@@ -152,4 +164,26 @@ namespace Microsoft.OpenApi.Readers.Extensions
             throw new NotImplementedException();
         }
     }
+
+    [SchemaKeyword(Name)]
+    internal class DiscriminatorKeyword : OpenApiDiscriminator, IJsonSchemaKeyword
+    {
+        public const string Name = "discriminator";
+
+        /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public DiscriminatorKeyword() : base() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiDiscriminator"/> instance
+        /// </summary>
+        internal DiscriminatorKeyword(OpenApiDiscriminator discriminator) : base(discriminator) { }
+
+        public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

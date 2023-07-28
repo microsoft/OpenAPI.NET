@@ -10,6 +10,7 @@ using Json.Schema;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
@@ -215,7 +216,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         "schema1",
                         new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
-                        //.Discriminator(new OpenApiDiscriminator { PropertyName = "property1" })
+                        .Discriminator(new OpenApiDiscriminator { PropertyName = "property1" })
                         .Ref("schema1")
                         .Build()
                     }
