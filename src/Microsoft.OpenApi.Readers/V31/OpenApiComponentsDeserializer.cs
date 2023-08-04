@@ -1,4 +1,5 @@
-﻿using Microsoft.OpenApi.Extensions;
+﻿using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -12,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V31
     {
         private static FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
     {
-        {"schemas", (o, n) => o.Schemas = n.CreateMap(LoadSchema)},
+        {"schemas", (o, n) => o.SchemaWrappers = n.CreateMap(new JsonSchemaWrapper(LoadSchema))},
         {"responses", (o, n) => o.Responses = n.CreateMapWithReference(ReferenceType.Response, LoadResponse)},
         {"parameters", (o, n) => o.Parameters = n.CreateMapWithReference(ReferenceType.Parameter, LoadParameter)},
         {"examples", (o, n) => o.Examples = n.CreateMapWithReference(ReferenceType.Example, LoadExample)},

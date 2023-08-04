@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text.Json.Nodes;
 using Json.Schema;
 using Json.Schema.OpenApi;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -280,6 +281,11 @@ namespace Microsoft.OpenApi.Readers.V3
 
             var schema = builder.Build();
             return schema;
+        }
+
+        public static JsonSchemaWrapper LoadSchemaWrapper(ParseNode node)
+        {
+            return new JsonSchemaWrapper(LoadSchema(node));
         }
     }
 }
