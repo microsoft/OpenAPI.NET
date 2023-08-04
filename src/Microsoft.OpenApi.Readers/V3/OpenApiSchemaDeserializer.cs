@@ -283,7 +283,7 @@ namespace Microsoft.OpenApi.Readers.V3
             return schema;
         }
 
-        public static JsonSchemaWrapper LoadSchemaWrapper(ParseNode node)
+        public static JsonSchemaWrapper LoadJsonSchemaWrapper(ParseNode node)
         {
             return new JsonSchemaWrapper(LoadSchema(node));
         }
