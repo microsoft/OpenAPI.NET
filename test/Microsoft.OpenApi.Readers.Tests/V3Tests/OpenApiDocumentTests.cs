@@ -1150,9 +1150,7 @@ paths: {}",
             }).Read(stream, out var diagnostic);
 
             var actualSchema = doc.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
-            var reference = actualSchema.BaseUri.AbsoluteUri;//.GetRef().OriginalString;
-            var registeredSchema = SchemaRegistry.Global.Get(new Uri("http://everything.json/#/components/schemas/User"));
-            var result = registeredSchema.FindSubschema(Json.Pointer.JsonPointer.Parse(reference), new EvaluationOptions());
+
             var expectedSchema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(
@@ -1162,7 +1160,7 @@ paths: {}",
                 .Build();
 
             // Assert
-            Assert.Equal(expectedSchema, actualSchema);
+            actualSchema.Should().BeEquivalentTo(expectedSchema);
         }
 
     }

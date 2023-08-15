@@ -538,11 +538,6 @@ namespace Microsoft.OpenApi.Models
             {
                 switch (reference.Type)
                 {
-                    case ReferenceType.Schema:
-                        var resolvedSchema = this.Components.Schemas[reference.Id];
-                        //resolvedSchema.Description = reference.Description != null ? reference.Description : resolvedSchema.Description;
-                        return (IOpenApiReferenceable)resolvedSchema;
-
                     case ReferenceType.PathItem:
                         var resolvedPathItem = this.Components.PathItems[reference.Id];
                         resolvedPathItem.Description = reference.Description != null ? reference.Description : resolvedPathItem.Description;
