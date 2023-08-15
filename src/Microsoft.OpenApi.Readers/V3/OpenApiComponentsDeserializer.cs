@@ -1,6 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -39,6 +44,13 @@ namespace Microsoft.OpenApi.Readers.V3
             var components = new OpenApiComponents();
 
             ParseMap(mapNode, components, _componentsFixedFields, _componentsPatternFields);
+            var refUri = "http://everything.json/#/components/schemas/";
+            foreach(var schema in components.Schemas)
+            {
+                var referenceableJson = new JsonNodeBaseDocument(JsonNode.Parse(JsonSerializer.Serialize(schema.Value)), new Uri(refUri + schema.Key));
+                SchemaRegistry.Global.Register(referenceableJson);
+                //SchemaRegistry.Global.Register(schema.Value, new Uri(refUri + schema.Key));
+            }
 
             return components;
         }
