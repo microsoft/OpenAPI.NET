@@ -45,11 +45,9 @@ namespace Microsoft.OpenApi.Readers.V3
 
             ParseMap(mapNode, components, _componentsFixedFields, _componentsPatternFields);
             var refUri = "http://everything.json/#/components/schemas/";
-            foreach(var schema in components.Schemas)
+            foreach (var schema in components.Schemas)
             {
-                var referenceableJson = new JsonNodeBaseDocument(JsonNode.Parse(JsonSerializer.Serialize(schema.Value)), new Uri(refUri + schema.Key));
-                SchemaRegistry.Global.Register(referenceableJson);
-                //SchemaRegistry.Global.Register(schema.Value, new Uri(refUri + schema.Key));
+                SchemaRegistry.Global.Register(new Uri(refUri + schema.Key), schema.Value);
             }
 
             return components;
