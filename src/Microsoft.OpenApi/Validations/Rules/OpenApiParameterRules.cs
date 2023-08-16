@@ -86,7 +86,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                             {
                                 context.Enter(key);
                                 context.Enter("value");
-                                RuleHelpers.ValidateDataTypeMismatch(context, nameof(ParameterMismatchedDataType), parameter.Examples[key]?.Value.Node, parameter.Schema);
+                                RuleHelpers.ValidateDataTypeMismatch(context, 
+                                    nameof(ParameterMismatchedDataType), parameter.Examples[key]?.Value.Node, parameter.Schema);
                                 context.Exit();
                                 context.Exit();
                             }

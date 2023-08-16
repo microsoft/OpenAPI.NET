@@ -187,7 +187,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder()
-                        .Type(SchemaValueType.String)
+                                .Type(SchemaValueType.String)
                 });
         }
 
@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder()
-                        .Type(SchemaValueType.String)
+                                .Type(SchemaValueType.String)
                 });
         }
 
@@ -239,7 +239,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder()
-                        .Type(SchemaValueType.String)
+                                .Type(SchemaValueType.String)
                 });
         }
 
@@ -304,8 +304,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         }
                     },
                     Schema = new JsonSchemaBuilder()
-                        .Type(SchemaValueType.Number)
-                        .Format("float")
+                                .Type(SchemaValueType.Number)
+                                .Format("float")
                 }, options => options.IgnoringCyclicReferences()
                 .Excluding(p => p.Examples["example1"].Value.Node.Parent)
                 .Excluding(p => p.Examples["example2"].Value.Node.Parent));
