@@ -228,8 +228,14 @@ namespace Microsoft.OpenApi.Readers.V2
         public static JsonSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
-
             var schemaBuilder = new JsonSchemaBuilder();
+
+            // check for a $ref and if present, add it to the builder as a Ref keyword
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                builder.Ref(pointer);
+            }
 
             foreach (var propertyNode in mapNode)
             {
