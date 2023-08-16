@@ -217,16 +217,16 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         new OpenApiMediaType
                                                         {
                                                             Schema = new JsonSchemaBuilder()
-                                                            .Title("Collection of user")
-                                                            .Type(SchemaValueType.Object)
-                                                            .Properties(("value",
-                                                                new JsonSchemaBuilder()
-                                                                    .Type(SchemaValueType.Array)
-                                                                    .Items(new JsonSchemaBuilder()
-                                                                        .Ref("microsoft.graph.user")
-                                                                        .Build())
-                                                                .Build()))
-                                                            .Build()
+                                                                        .Title("Collection of user")
+                                                                        .Type(SchemaValueType.Object)
+                                                                        .Properties(("value",
+                                                                            new JsonSchemaBuilder()
+                                                                                .Type(SchemaValueType.Array)
+                                                                                .Items(new JsonSchemaBuilder()
+                                                                                    .Ref("microsoft.graph.user")
+                                                                                    .Build())
+                                                                            .Build()))
+                                                                        .Build()
                                                         }
                                                     }
                                                 }
@@ -401,11 +401,11 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         new OpenApiMediaType
                                                         {
                                                             Schema = new JsonSchemaBuilder()
-                                                            .AnyOf(
-                                                                new JsonSchemaBuilder()
-                                                                    .Type(SchemaValueType.String)
-                                                                    .Build())
-                                                            .Build()
+                                                                        .AnyOf(
+                                                                            new JsonSchemaBuilder()
+                                                                                .Type(SchemaValueType.String)
+                                                                                .Build())
+                                                                        .Build()
                                                         }
                                                     }
                                                 }
@@ -478,14 +478,13 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                                         new OpenApiMediaType
                                                         {
                                                             Schema = new JsonSchemaBuilder()
-                                                            .Title("Collection of hostSecurityProfile")
-                                                            .Type(SchemaValueType.Object)
-                                                            .Properties(("value1",
-                                                                new JsonSchemaBuilder()
-                                                                    .Type(SchemaValueType.Array)
-                                                                    .Items(new JsonSchemaBuilder().Ref("microsoft.graph.networkInterface").Build())
-                                                                    .Build()))
-                                                            .Build()
+                                                                        .Title("Collection of hostSecurityProfile")
+                                                                        .Type(SchemaValueType.Object)
+                                                                        .Properties(("value1",
+                                                                            new JsonSchemaBuilder()
+                                                                                .Type(SchemaValueType.Array)
+                                                                                .Items(new JsonSchemaBuilder().Ref("microsoft.graph.networkInterface"))))
+                                                                        .Build()
                                                         }
                                                     }
                                                 }
@@ -645,9 +644,10 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                             "microsoft.graph.networkInterface", new JsonSchemaBuilder()
                             .Title("networkInterface")
                             .Type(SchemaValueType.Object)
-                            .Properties(("description", new JsonSchemaBuilder()
-                                            .Type(SchemaValueType.String)
-                                            .Description("Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).").Build()))
+                            .Properties(
+                                ("description", new JsonSchemaBuilder()
+                                    .Type(SchemaValueType.String)
+                                    .Description("Description of the NIC (e.g. Ethernet adapter, Wireless LAN adapter Local Area Connection <#>, etc.).")))
                             .Build()
                         }
                     }

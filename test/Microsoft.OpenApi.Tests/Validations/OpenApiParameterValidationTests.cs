@@ -110,12 +110,12 @@ namespace Microsoft.OpenApi.Validations.Tests
                 In = ParameterLocation.Path,
                 Required = true,
                 Schema = new JsonSchemaBuilder()
-                .Type(SchemaValueType.Object)
-                .AdditionalProperties(
-                    new JsonSchemaBuilder()
-                    .Type(SchemaValueType.Object)
-                    .Build())
-                .Build(),
+                            .Type(SchemaValueType.Object)
+                            .AdditionalProperties(
+                                new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Build())
+                            .Build(),
                 Examples =
                     {
                         ["example0"] = new OpenApiExample()

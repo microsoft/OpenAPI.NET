@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers
             }
 
             // Validate the document
-            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Count() > 0)
+            if (_settings.RuleSet != null && _settings.RuleSet.Rules.Any())
             {
                 var openApiErrors = document.Validate(_settings.RuleSet);
                 foreach (var item in openApiErrors.OfType<OpenApiValidatorError>())

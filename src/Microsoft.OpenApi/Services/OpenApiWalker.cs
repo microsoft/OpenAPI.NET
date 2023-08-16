@@ -794,11 +794,11 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(JsonSchema schema, bool isComponent = false)
         {
-            //if (schema == null || ProcessAsReference(schema, isComponent))
-            //{
-            //    return;
-            //}
-             
+            if (schema == null || schema.GetRef() != null )
+            {
+                return;
+            }
+
             if (_schemaLoop.Contains(schema))
             {
                 return;  // Loop detected, this schema has already been walked.

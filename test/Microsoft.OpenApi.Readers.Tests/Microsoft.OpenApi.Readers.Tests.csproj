@@ -143,7 +143,10 @@
       <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\minimalDocument.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\docWithSecuritySchemeReference.yaml">
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\docWithJsonSchema.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="V3Tests\Samples\OpenApiDocument\docWithSecuritySchemeReference.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V31Tests\Samples\OpenApiDocument\documentWithWebhooks.yaml">

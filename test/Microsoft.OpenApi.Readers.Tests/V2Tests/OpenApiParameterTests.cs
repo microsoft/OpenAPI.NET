@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.IO;
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Description = "username to fetch",
                     Required = true,
                     Schema = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.String)
+                                .Type(SchemaValueType.String)
                 });
         }
 
@@ -83,8 +83,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Description = "ID of the object to fetch",
                     Required = false,
                     Schema = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.Array)
-                                    .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                                .Type(SchemaValueType.Array)
+                                .Items(new JsonSchemaBuilder().Type(SchemaValueType.String)),
                     Style = ParameterStyle.Form,
                     Explode = true
                 });

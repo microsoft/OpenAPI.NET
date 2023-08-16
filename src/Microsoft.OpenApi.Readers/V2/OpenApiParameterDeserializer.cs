@@ -210,8 +210,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static JsonSchemaBuilder GetOrCreateSchema(OpenApiHeader p)
         {
-            p.Schema ??= JsonSchema.Empty;
-
             return new JsonSchemaBuilder();
         }
 

@@ -215,10 +215,10 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var expected = @"name: id
 in: query
-schema: type: object
-additionalProperties:
-  type: integer
-";
+schema:
+  type: object
+  additionalProperties:
+    type: integer";
 
             // Act
             var actual = QueryParameterWithMissingStyle.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
