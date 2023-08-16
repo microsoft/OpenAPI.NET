@@ -5,12 +5,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Json.Schema;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Models.References;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Tests.Models.References
 {
@@ -98,6 +101,15 @@ paths:
         public void RequestBodyReferenceResolutionWorks()
         {
             // Assert
+            var expectedSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .Properties(
+                    ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    ("email", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .Build();
+            var actualSchema = _localRequestBodyReference.Content["application/json"].Schema;
+
+            actualSchema.Should().BeEquivalentTo(expectedSchema);
             Assert.Equal("User request body", _localRequestBodyReference.Description);
             Assert.Equal("application/json", _localRequestBodyReference.Content.First().Key);
             Assert.Equal("External Reference: User request body", _externalRequestBodyReference.Description);

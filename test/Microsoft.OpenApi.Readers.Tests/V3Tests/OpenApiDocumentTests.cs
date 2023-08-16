@@ -224,28 +224,28 @@ paths: {}",
                     Schemas = new Dictionary<string, JsonSchema>
                     {
                         ["pet"] = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Object)
-                                .Required("id", "name")
-                                .Properties(
-                                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
-                                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("#/components/schemas/pet"),
+                                    .Type(SchemaValueType.Object)
+                                    .Required("id", "name")
+                                    .Properties(
+                                        ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
+                                        ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                                        ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                                    .Ref("#/components/schemas/pet"),
                         ["newPet"] = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Object)
-                                .Required("id", "name")
-                                .Properties(
-                                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
-                                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("#/components/schemas/newPet"),
+                                        .Type(SchemaValueType.Object)
+                                        .Required("id", "name")
+                                        .Properties(
+                                            ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
+                                            ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                                            ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                                        .Ref("#/components/schemas/newPet"),
                         ["errorModel"] = new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Object)
-                                .Required("code", "message")
-                                .Properties(
-                                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
-                                    ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("#/components/schemas/errorModel")
+                                        .Type(SchemaValueType.Object)
+                                        .Required("code", "message")
+                                        .Properties(
+                                            ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
+                                            ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                                        .Ref("#/components/schemas/errorModel")
                     }
                 };
 
@@ -333,7 +333,7 @@ paths: {}",
                                             In = ParameterLocation.Query,
                                             Description = "maximum number of results to return",
                                             Required = false,
-                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")
+                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32").Build()
                                         }
                                     },
                                     Responses = new OpenApiResponses
@@ -389,8 +389,7 @@ paths: {}",
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = newPetSchema
-                                            }
+                                                Schema = newPetSchema                        }
                                         }
                                     },
                                     Responses = new OpenApiResponses
@@ -505,7 +504,7 @@ paths: {}",
                                             In = ParameterLocation.Path,
                                             Description = "ID of pet to delete",
                                             Required = true,
-                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")
+                                            Schema = new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64").Build()
                                         }
                                     },
                                     Responses = new OpenApiResponses
@@ -725,8 +724,8 @@ paths: {}",
                                             Description = "tags to filter by",
                                             Required = false,
                                             Schema = new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.Array)
-                                                .Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+                                                        .Type(SchemaValueType.Array)
+                                                        .Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
                                         },
                                         new OpenApiParameter
                                         {
@@ -735,8 +734,8 @@ paths: {}",
                                             Description = "maximum number of results to return",
                                             Required = false,
                                             Schema = new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.Integer)
-                                                .Format("int32")
+                                                        .Type(SchemaValueType.Integer)
+                                                        .Format("int32")
                                         }
                                     },
                                     Responses = new OpenApiResponses
@@ -756,7 +755,7 @@ paths: {}",
                                                 {
                                                     Schema = new JsonSchemaBuilder()
                                                         .Type(SchemaValueType.Array)
-                                                        .Items(petSchema)
+                                                        .Items(petSchema) 
                                                 }
                                             }
                                         },
@@ -1137,5 +1136,32 @@ paths: {}",
             Assert.False(securityScheme.UnresolvedReference);
             Assert.NotNull(securityScheme.Flows);
         }
+
+        [Fact]
+        public async void ParseDocumentWithJsonSchemaReferencesWorks() 
+        {
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));
+
+            // Act
+            var doc = new OpenApiStreamReader(new OpenApiReaderSettings
+            {
+                ReferenceResolution = ReferenceResolutionSetting.ResolveLocalReferences
+            }).Read(stream, out var diagnostic);
+
+            var actualSchema = doc.Paths["/users/{userId}"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
+
+            var expectedSchema = new JsonSchemaBuilder()
+                .Type(SchemaValueType.Object)
+                .Properties(
+                    ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+                    ("username", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                    ("email", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .Build();
+
+            // Assert
+            actualSchema.Should().BeEquivalentTo(expectedSchema);
+        }
+
     }
 }

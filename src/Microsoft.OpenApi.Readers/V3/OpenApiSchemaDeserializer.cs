@@ -1,6 +1,7 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json.Nodes;
@@ -269,8 +270,14 @@ namespace Microsoft.OpenApi.Readers.V3
         public static JsonSchema LoadSchema(ParseNode node)
         {
             var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
-
             var builder = new JsonSchemaBuilder();
+
+            // check for a $ref and if present, add it to the builder as a Ref keyword
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                builder.Ref(pointer);
+            }
 
             foreach (var propertyNode in mapNode)
             {
