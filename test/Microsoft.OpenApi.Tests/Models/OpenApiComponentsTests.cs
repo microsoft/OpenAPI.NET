@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Json.Schema;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
@@ -168,7 +169,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 .Properties(
                     ("property2", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build()),
                     ("property3", new JsonSchemaBuilder().Ref("#/components/schemas/schema2").Build()))
-                .Ref("#/components/schemas/schema1")
                 .Build(),
 
                 ["schema2"] = new JsonSchemaBuilder()

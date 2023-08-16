@@ -36,7 +36,9 @@
             "name": "tags",
             "description": "tags to filter by",
             "type": "array",
-            "items": {"type":"string"},
+            "items": {
+              "type": "string"
+            },
             "collectionFormat": "multi"
           },
           {
