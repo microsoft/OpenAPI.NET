@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -9,7 +9,7 @@ using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Extensions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using JsonSchema = Json.Schema.JsonSchema;
 
@@ -209,8 +209,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 "discriminator", (o, n) =>
                 {
                     var discriminator = LoadDiscriminator(n);
-                    o.Discriminator(discriminator.PropertyName, (IReadOnlyDictionary<string, string>)discriminator.Mapping,
-                        (IReadOnlyDictionary<string, JsonNode>)discriminator.Extensions);
+                    o.Discriminator(discriminator);
                 }
             },
             {

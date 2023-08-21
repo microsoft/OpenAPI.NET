@@ -23,9 +23,9 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Assert
 
-            bool result = !errors.Any();
+            bool result = errors.Any();
 
-            Assert.False(result);
+            Assert.True(result);
             Assert.NotNull(errors);
             OpenApiError error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"), error.Message);

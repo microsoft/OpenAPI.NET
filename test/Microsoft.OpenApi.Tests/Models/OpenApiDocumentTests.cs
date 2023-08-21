@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -18,7 +18,7 @@ using Microsoft.VisualBasic;
 using VerifyXunit;
 using Xunit;
 using Xunit.Abstractions;
-using Microsoft.OpenApi.Readers.Extensions;
+using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {

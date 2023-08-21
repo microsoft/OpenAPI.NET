@@ -93,6 +93,19 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiExternalDocs"/> and child objects
+        /// </summary>
+        internal void Walk(OpenApiExternalDocs externalDocs)
+        {
+            if (externalDocs == null)
+            {
+                return;
+            }
+
+            _visitor.Visit(externalDocs);
+        }
+
+        /// <summary>
         /// Visits <see cref="OpenApiComponents"/> and child objects
         /// </summary>
         internal void Walk(OpenApiComponents components)
@@ -794,7 +807,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(JsonSchema schema, bool isComponent = false)
         {
-            if (schema == null || schema.GetRef() != null )
+            if (schema == null || ProcessAsReference(schema))
             {
                 return;
             }
@@ -1078,6 +1091,11 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(referenceable);
         }
 
+        //internal void Walk(JsonNodeBaseDocument node)
+        //{
+        //    _visitor.Visit(node);
+        //}
+
         /// <summary>
         /// Dispatcher method that enables using a single method to walk the model
         /// starting from any <see cref="IOpenApiElement"/>
@@ -1145,6 +1163,19 @@ namespace Microsoft.OpenApi.Services
             {
                 Walk(referenceable);
             }
+            return isReference;
+        }
+
+        /// <summary>
+        /// Identify if an element is just a reference to a component, or an actual component
+        /// </summary>
+        private bool ProcessAsReference(JsonSchema jsonSchema, bool isComponent = false)
+        {
+            var isReference = jsonSchema.GetRef() != null && !isComponent;
+            //if (isReference)
+            //{
+            //    Walk(jsonSchema);
+            //}
             return isReference;
         }
     }
