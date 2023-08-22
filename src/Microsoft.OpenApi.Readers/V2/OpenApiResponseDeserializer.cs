@@ -92,12 +92,12 @@ namespace Microsoft.OpenApi.Readers.V2
                 foreach (var produce in produces)
                 {
 
-                    if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
+                    if (response.Content.TryGetValue(produce, out var produceValue)) 
                     {
                         if (schema != null)
                         {
-                            response.Content[produce].Schema = schema;
-                            ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
+                            produceValue.Schema = schema;
+                            ProcessAnyFields(mapNode, produceValue, _mediaTypeAnyFields);
                         }
                     }
                     else
