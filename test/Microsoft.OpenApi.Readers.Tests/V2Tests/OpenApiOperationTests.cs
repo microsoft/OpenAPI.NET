@@ -400,7 +400,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             Description = "OK",
                             Content =
                             {
-                                [""] = new OpenApiMediaType()
+                                ["application/octet-stream"] = new OpenApiMediaType()
                                 {
                                     Schema = new OpenApiSchema()
                                     {
