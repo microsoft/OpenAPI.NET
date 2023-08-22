@@ -617,27 +617,10 @@ paths: {}",
 
                 // Create a clone of the schema to avoid modifying things in components.
                 var petSchema = components.Schemas["pet"];
-                //petSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "pet",
-                //    Type = ReferenceType.Schema
-                //};
 
                 var newPetSchema = components.Schemas["newPet"];
 
-                //newPetSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "newPet",
-                //    Type = ReferenceType.Schema
-                //};
-
                 var errorModelSchema = components.Schemas["errorModel"];
-
-                //errorModelSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "errorModel",
-                //    Type = ReferenceType.Schema
-                //};
 
                 var tag1 = new OpenApiTag
                 {
@@ -1056,7 +1039,12 @@ paths: {}",
                         Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.Array)
                                     .Format(Formats.Uuid)
-                                    .Ref("#components/header/example-header")
+                                    .Ref("#components/header/example-header"),
+                        Reference = new OpenApiReference()
+                        {
+                            Type = ReferenceType.Header,
+                            Id = "example-header"
+                        }
                     }, options => options.IgnoringCyclicReferences()
                     .Excluding(e => e.Example.Node.Parent));
 

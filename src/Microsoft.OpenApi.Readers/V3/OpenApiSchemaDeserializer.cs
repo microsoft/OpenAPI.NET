@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -263,7 +264,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
         private static readonly PatternFieldMap<JsonSchemaBuilder> _schemaPatternFields = new PatternFieldMap<JsonSchemaBuilder>
         {
-            //{s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
+            {s => s.StartsWith("x-"), (o, p, n) => o.Extensions(LoadExtensions(p, LoadExtension(p, n)))}
         };
 
         public static JsonSchema LoadSchema(ParseNode node)
@@ -281,12 +282,19 @@ namespace Microsoft.OpenApi.Readers.V3
             foreach (var propertyNode in mapNode)
             {
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
-            }        
+            }
 
-            //builder.Extensions(LoadExtension(node));
-
-            var schema = builder.Build();
+            var schema = builder.Build();            
             return schema;
+        }
+
+        private static Dictionary<string, IOpenApiExtension> LoadExtensions(string value, IOpenApiExtension extension)
+        {
+            var extensions = new Dictionary<string, IOpenApiExtension>
+            {
+                { value, extension }
+            };
+            return extensions;
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Json.Schema;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Interface;
 using Xunit;
 
@@ -62,23 +65,23 @@ paths: {}";
             Assert.NotNull(result.OpenApiDocument.Workspace);
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));
 
-            //var referencedSchema = result.OpenApiDocument
-            //                                .Paths["/todos"]
-            //                                .Operations[OperationType.Get]
-            //                                .Responses["200"]
-            //                                .Content["application/json"]
-            //                                    .Schema.GetEffective(result.OpenApiDocument);
-            //Assert.Equal("object", referencedSchema.Type);
-            //Assert.Equal("string", referencedSchema.Properties["subject"].Type);
-            //Assert.False(referencedSchema.UnresolvedReference);
+            var referencedSchema = result.OpenApiDocument
+                                    .Paths["/todos"]
+                                    .Operations[OperationType.Get]
+                                    .Responses["200"]
+                                    .Content["application/json"]
+                                    .Schema;
+            var x = referencedSchema.GetProperties().TryGetValue("subject", out var schema);
+            Assert.Equal(SchemaValueType.Object, referencedSchema.GetJsonType());
+            Assert.Equal(SchemaValueType.String, schema.GetJsonType());
 
-            //var referencedParameter = result.OpenApiDocument
-            //                                .Paths["/todos"]
-            //                                .Operations[OperationType.Get]
-            //                                .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
-            //                                .Where(p => p.Name == "filter").FirstOrDefault();
+            var referencedParameter = result.OpenApiDocument
+                                        .Paths["/todos"]
+                                        .Operations[OperationType.Get]
+                                        .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
+                                        .FirstOrDefault(p => p.Name == "filter");
 
-            //Assert.Equal("string", referencedParameter.Schema.GetType());
+            Assert.Equal(SchemaValueType.String, referencedParameter.Schema.GetJsonType());
 
         }
     }

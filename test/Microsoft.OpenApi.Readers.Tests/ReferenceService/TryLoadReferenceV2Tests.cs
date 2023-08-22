@@ -16,47 +16,14 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         private const string SampleFolderPath = "ReferenceService/Samples/";
 
         [Fact]
-        public void LoadSchemaReference()
-        {
-            // Arrange
-            OpenApiDocument document;
-            var diagnostic = new OpenApiDiagnostic();
-
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
-            {
-                document = new OpenApiStreamReader().Read(stream, out diagnostic);
-            }
-
-            var reference = new OpenApiReference
-            {
-                Type = ReferenceType.Schema,
-                Id = "SampleObject"
-            };
-
-            // Act
-            //var referencedObject = document.ResolveReferenceTo<JsonSchema>(reference);
-
-            //// Assert
-            //referencedObject.Should().BeEquivalentTo(
-            //    new JsonSchemaBuilder()
-            //    .Required("id", "name")
-            //    .Properties(
-            //        ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
-            //        ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-            //        ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-            //    .Ref("SampleObject"));
-        }
-
-        [Fact]
         public void LoadParameterReference()
         {
             // Arrange
             OpenApiDocument document;
-            var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                document = new OpenApiStreamReader().Read(stream, out diagnostic);
+                document = new OpenApiStreamReader().Read(stream, out var diagnostic);
             }
 
             var reference = new OpenApiReference
@@ -79,7 +46,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     Schema = new JsonSchemaBuilder()
                     .Type(SchemaValueType.Integer)
                     .Format("int32")
-                    .Ref("skipParam")
                 }
             );
         }
@@ -89,11 +55,10 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         {
             // Arrange
             OpenApiDocument document;
-            var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                document = new OpenApiStreamReader().Read(stream, out diagnostic);
+                document = new OpenApiStreamReader().Read(stream, out var diagnostic);
             }
 
             var reference = new OpenApiReference
@@ -126,11 +91,10 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         {
             // Arrange
             OpenApiDocument document;
-            var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                document = new OpenApiStreamReader().Read(stream, out diagnostic);
+                document = new OpenApiStreamReader().Read(stream, out var diagnostic);
             }
 
             var reference = new OpenApiReference
@@ -165,11 +129,10 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
         {
             // Arrange
             OpenApiDocument document;
-            var diagnostic = new OpenApiDiagnostic();
 
             using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "multipleReferences.v2.yaml")))
             {
-                document = new OpenApiStreamReader().Read(stream, out diagnostic);
+                document = new OpenApiStreamReader().Read(stream, out var diagnostic);
             }
 
             var reference = new OpenApiReference
