@@ -807,7 +807,8 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(JsonSchema schema, bool isComponent = false)
         {
-            if (schema == null || ProcessAsReference(schema))
+            if (schema == null
+                || (schema.GetRef() != null && !isComponent))
             {
                 return;
             }
@@ -1163,19 +1164,6 @@ namespace Microsoft.OpenApi.Services
             {
                 Walk(referenceable);
             }
-            return isReference;
-        }
-
-        /// <summary>
-        /// Identify if an element is just a reference to a component, or an actual component
-        /// </summary>
-        private bool ProcessAsReference(JsonSchema jsonSchema, bool isComponent = false)
-        {
-            var isReference = jsonSchema.GetRef() != null && !isComponent;
-            //if (isReference)
-            //{
-            //    Walk(jsonSchema);
-            //}
             return isReference;
         }
     }
