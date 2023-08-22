@@ -86,7 +86,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         Schema = schema
                     };
 
-                    response.Content.Add(string.Empty, mediaType);
+                    response.Content.Add("application/octet-stream", mediaType);
                 }
 
                 foreach (var produce in produces)
