@@ -93,6 +93,19 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
+        /// Visits <see cref="OpenApiExternalDocs"/> and child objects
+        /// </summary>
+        internal void Walk(OpenApiExternalDocs externalDocs)
+        {
+            if (externalDocs == null)
+            {
+                return;
+            }
+
+            _visitor.Visit(externalDocs);
+        }
+
+        /// <summary>
         /// Visits <see cref="OpenApiComponents"/> and child objects
         /// </summary>
         internal void Walk(OpenApiComponents components)
@@ -794,7 +807,8 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal void Walk(JsonSchema schema, bool isComponent = false)
         {
-            if (schema == null || schema.GetRef() != null )
+            if (schema == null
+                || (schema.GetRef() != null && !isComponent))
             {
                 return;
             }
@@ -1077,6 +1091,11 @@ namespace Microsoft.OpenApi.Services
         {
             _visitor.Visit(referenceable);
         }
+
+        //internal void Walk(JsonNodeBaseDocument node)
+        //{
+        //    _visitor.Visit(node);
+        //}
 
         /// <summary>
         /// Dispatcher method that enables using a single method to walk the model

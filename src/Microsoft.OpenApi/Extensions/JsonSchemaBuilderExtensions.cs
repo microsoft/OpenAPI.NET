@@ -7,7 +7,7 @@ using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
-namespace Microsoft.OpenApi.Readers.Extensions
+namespace Microsoft.OpenApi.Extensions
 {
     public static class JsonSchemaBuilderExtensions
     {
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Readers.Extensions
     }
 
     [SchemaKeyword(Name)]
-    internal class DiscriminatorKeyword : OpenApiDiscriminator, IJsonSchemaKeyword
+    public class DiscriminatorKeyword : OpenApiDiscriminator, IJsonSchemaKeyword
     {
         public const string Name = "discriminator";
 

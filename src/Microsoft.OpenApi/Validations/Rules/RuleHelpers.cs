@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Schema;
+using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Validations.Rules
 {
@@ -51,9 +52,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            var type = schema.GetType().ToString();
-            var format = schema.GetFormat().Key;
-
+            var type = schema.GetJsonType().Value.GetDisplayName();
+            var format = schema.GetFormat()?.Key;
             var jsonElement = JsonSerializer.Deserialize<JsonElement>(value);
 
             // Before checking the type, check first if the schema allows null.
@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "object")
+            if ("object".Equals(type, StringComparison.OrdinalIgnoreCase))
             {
                 // It is not against the spec to have a string representing an object value.
                 // To represent examples of media types that cannot naturally be represented in JSON or YAML,
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     foreach (var property in anyObject)
                     {
                         context.Enter(property.Key);
-                        if (schema.GetProperties().TryGetValue(property.Key, out var propertyValue))
+                        if ((schema.GetProperties()?.TryGetValue(property.Key, out var propertyValue)) ?? false)
                         {
                             ValidateDataTypeMismatch(context, ruleName, anyObject[property.Key], propertyValue);
                         }
@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "array")
+            if ("array".Equals(type, StringComparison.OrdinalIgnoreCase))
             {
                 // It is not against the spec to have a string representing an array value.
                 // To represent examples of media types that cannot naturally be represented in JSON or YAML,
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 // If value is not a string and also not an array, there is a data mismatch.
-                if (!(value is JsonArray))
+                if (value is not JsonArray)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -136,7 +136,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && format == "int32")
+            if ("integer".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                "int32".Equals(format, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -148,7 +149,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && format == "int64")
+            if ("integer".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                "int64".Equals(format, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -160,7 +162,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && jsonElement.ValueKind is not JsonValueKind.Number)
+            if ("integer".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                jsonElement.ValueKind is not JsonValueKind.Number)
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -172,7 +175,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "number" && format == "float")
+            if ("number".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                "float".Equals(format, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -184,7 +188,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "number" && format == "double")
+            if ("number".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                "double".Equals(format, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -196,7 +201,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "number")
+            if ("number".Equals(type, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.Number)
                 {
@@ -208,7 +213,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string" && format == "byte")
+            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                "byte".Equals(format, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -220,7 +226,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string" && format == "date")
+            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                "date".Equals(format, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -232,7 +239,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string" && format == "date-time")
+            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                "date-time".Equals(format, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -244,7 +252,8 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string" && format == "password")
+            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase) &&
+                "password".Equals(format, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -256,7 +265,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "string")
+            if ("string".Equals(type, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.String)
                 {
@@ -268,7 +277,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "boolean")
+            if ("boolean".Equals(type, StringComparison.OrdinalIgnoreCase))
             {
                 if (jsonElement.ValueKind is not JsonValueKind.True and not JsonValueKind.False)
                 {

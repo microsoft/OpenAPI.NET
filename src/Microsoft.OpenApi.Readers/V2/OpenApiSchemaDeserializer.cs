@@ -8,7 +8,7 @@ using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Extensions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2

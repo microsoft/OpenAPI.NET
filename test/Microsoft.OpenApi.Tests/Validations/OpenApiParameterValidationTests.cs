@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                             .Type(SchemaValueType.Object)
                             .AdditionalProperties(
                                 new JsonSchemaBuilder()
-                                .Type(SchemaValueType.Object)
+                                .Type(SchemaValueType.Integer)
                                 .Build())
                             .Build(),
                 Examples =
@@ -133,15 +133,14 @@ namespace Microsoft.OpenApi.Validations.Tests
                         },
                         ["example2"] = new OpenApiExample()
                         {
-                            Value =
-                            new OpenApiAny(new JsonArray(){3})
+                            Value = new OpenApiAny(new JsonArray(){3})
                         },
                         ["example3"] = new OpenApiExample()
                         {
                             Value = new OpenApiAny(new JsonObject()
                             {
                                 ["x"] = 4,
-                                ["y"] =40
+                                ["y"] = 40
                             })
                         },
                     }

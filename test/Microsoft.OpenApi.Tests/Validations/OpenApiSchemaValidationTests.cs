@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using FluentAssertions;
 using Json.Schema;
+using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations.Rules;
 using Xunit;
+using Microsoft.OpenApi.Extensions;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
@@ -51,12 +53,12 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new JsonSchemaBuilder().Default(new OpenApiAny("1234").Node).Type(SchemaValueType.String).Build();
-            // Add example to schema
-            // var example = new ExampleKeyword(new OpenApiAny(55).Node);
-            //Example = new OpenApiAny(55),
-
-
+            var schema = new JsonSchemaBuilder()
+                .Default(new OpenApiAny("1234").Node)
+                .Type(SchemaValueType.String)
+                .Example(new OpenApiAny(55).Node)
+                .Build();
+            
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             var walker = new OpenApiWalker(validator);
@@ -186,10 +188,10 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(schema);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            bool result = warnings.Any();
 
             // Assert
-            result.Should().BeFalse();
+            result.Should().BeTrue();
             warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
                 RuleHelpers.DataTypeMismatchedErrorMessage,
@@ -215,7 +217,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                         "schema1",
                         new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
-                        //.Discriminator(new OpenApiDiscriminator { PropertyName = "property1" })
+                        .Discriminator(new OpenApiDiscriminator() { PropertyName = "property1" })
                         .Ref("schema1")
                         .Build()
                     }
@@ -233,7 +235,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             errors.Should().BeEquivalentTo(new List<OpenApiValidatorError>
             {
-                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
+                    new OpenApiValidatorError(nameof(JsonSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
                         string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                     "schema1", "property1"))
             });
@@ -251,13 +253,12 @@ namespace Microsoft.OpenApi.Validations.Tests
                         "Person",
                         new JsonSchemaBuilder()
                         .Type(SchemaValueType.Array)
-                        //Discriminator = new OpenApiDiscriminator
-                        //    {
-                        //        PropertyName = "type"
-                        //    }
-                        //.Discriminator()
+                        .Discriminator(new OpenApiDiscriminator
+                         {
+                            PropertyName = "type"
+                         })
                         .OneOf(new JsonSchemaBuilder()
-                            .Properties(("array", new JsonSchemaBuilder().Type(SchemaValueType.Array).Ref("Person").Build()))
+                            .Properties(("type", new JsonSchemaBuilder().Type(SchemaValueType.Array).Ref("Person").Build()))
                             .Build())
                         .Ref("Person")
                         .Build()
