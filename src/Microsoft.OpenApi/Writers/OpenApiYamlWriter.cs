@@ -255,6 +255,12 @@ namespace Microsoft.OpenApi.Writers
 
                 Writer.Write(str);
             }
+
+            if (schema.GetRef() != null && Settings.LoopDetector.PushLoop<JsonSchema>(schema))
+            {
+                Settings.LoopDetector.SaveLoop(schema);
+            }
+
         }
 
         private void WriteChompingIndicator(string value)

@@ -527,10 +527,11 @@ components:
 
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
         {
-            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("thing");
-            thingSchema.Properties(("children", thingSchema));
-            var relatedSchema = new JsonSchemaBuilder().Type(SchemaValueType.Integer);
-            thingSchema.Properties(("related", relatedSchema));
+            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                .Properties(
+                ("children", new JsonSchemaBuilder().Ref("#/definitions/thing")),
+                ("related", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))
+                .Build();
 
             var doc = new OpenApiDocument()
             {
@@ -550,7 +551,7 @@ components:
                                         Description = "OK",
                                         Content = {
                                              ["application/json"] = new OpenApiMediaType() {
-                                                     Schema = thingSchema.Build()
+                                                     Schema = thingSchema
                                              }
                                         }
                                     }

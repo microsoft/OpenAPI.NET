@@ -615,6 +615,7 @@ namespace Microsoft.OpenApi.Models
         {
             switch (referenceable)
             {
+                // TODO
                 //case JsonSchema schema:
                 //    if (!Schemas.ContainsKey(schema.Reference.Id))
                 //    {
