@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -416,6 +416,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 }
             );
+        }
+
+        [Fact]
+        public void ParseOperationWithBodyAndEmptyConsumesSetsRequestBodySchemaIfExists()
+        {
+            // Arrange
+            MapNode node;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithBodyAndEmptyConsumes.yaml"));
+            node = TestHelper.CreateYamlMapNode(stream);
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+
+            // Assert
+            operation.Should().BeEquivalentTo(_operationWithBody);
         }
     }
 }

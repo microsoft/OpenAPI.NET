@@ -51,6 +51,9 @@
         <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithBody.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
+        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithBodyAndEmptyConsumes.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
         <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithFormData.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
