@@ -194,7 +194,6 @@ namespace Microsoft.OpenApi.Writers
             string name,
             IEnumerable<T> elements,
             Action<IOpenApiWriter, T> action)
-            where T : IOpenApiElement, IBaseDocument
         {
             if (elements != null && elements.Any())
             {

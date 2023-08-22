@@ -288,10 +288,5 @@ namespace Microsoft.OpenApi.Readers.V3
             var schema = builder.Build();
             return schema;
         }
-
-        public static JsonSchemaWrapper LoadJsonSchemaWrapper(ParseNode node)
-        {
-            return new JsonSchemaWrapper(LoadSchema(node));
-        }
     }
 }
