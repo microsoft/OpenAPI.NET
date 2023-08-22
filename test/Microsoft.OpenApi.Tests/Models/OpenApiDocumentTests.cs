@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
-                                .Ref("schema1"),
+                                .Ref("#/definitions/schema1"),
                 ["schema2"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new JsonSchemaBuilder().Ref("schema1")
+                ["schema1"] = new JsonSchemaBuilder().Ref("#/definitions/schemas/schema1")
             }
         };
 
