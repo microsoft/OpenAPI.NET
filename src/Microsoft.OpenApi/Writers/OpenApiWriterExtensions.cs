@@ -139,7 +139,6 @@ namespace Microsoft.OpenApi.Writers
             string name,
             T value,
             Action<IOpenApiWriter, T> action)
-            //where T : IOpenApiElement
         {
             if (value != null)
             {
