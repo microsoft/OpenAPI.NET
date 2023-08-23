@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,14 +53,13 @@ paths: {}";
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
-                BaseUrl = new Uri("fie://c:\\")
+                BaseUrl = new Uri("file://c:\\")
             });
 
             ReadResult result;
-            using (var stream = Resources.GetStream("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml"))
-            {
-                result = await reader.ReadAsync(stream);
-            }
+            using var stream = Resources.GetStream("V3Tests/Samples/OpenApiWorkspace/TodoMain.yaml");
+            result = await reader.ReadAsync(stream);
+            
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoComponents.yaml"));

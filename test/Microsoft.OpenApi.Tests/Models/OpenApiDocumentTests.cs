@@ -807,12 +807,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Description = "The first operand",
                                     Required = true,
                                     Schema = new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.Integer),                                  
-                                        //.Extensions(new Dictionary<string, IOpenApiExtension>
-                                        //{
-                                        //    ["my-extension"] = new OpenApiAny(4),
-                                        //})
-                                        //.Build(),
+                                        .Type(SchemaValueType.Integer),
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         ["my-extension"] = new OpenApiAny(4),
@@ -826,11 +821,6 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Integer),
-                                    //.Extensions(new Dictionary<string, IOpenApiExtension>
-                                    //    {
-                                    //        ["my-extension"] = new OpenApiAny(4),
-                                    //    })
-                                    //.Build(),
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         ["my-extension"] = new OpenApiAny(4),

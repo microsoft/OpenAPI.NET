@@ -45,7 +45,12 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     Required = true,
                     Schema = new JsonSchemaBuilder()
                     .Type(SchemaValueType.Integer)
-                    .Format("int32")
+                    .Format("int32"),
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Parameter,
+                        Id = "skipParam"
+                    }
                 }
             );
         }

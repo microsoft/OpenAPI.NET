@@ -1,16 +1,12 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
-using Yaml2JsonNode;
-using YamlDotNet.Serialization;
 
 namespace Microsoft.OpenApi.Helpers
 {
@@ -42,7 +38,7 @@ namespace Microsoft.OpenApi.Helpers
 
             // items
             writer.WriteOptionalObject(OpenApiConstants.Items, schema.GetItems(),
-                (w, s) => w.WriteRaw(JsonSerializer.Serialize(s)));
+                (w, s) => w.WriteJsonSchema(s));
 
             // collectionFormat
             // We need information from style in parameter to populate this.

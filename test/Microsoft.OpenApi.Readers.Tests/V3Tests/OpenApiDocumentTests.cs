@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -569,7 +569,7 @@ paths: {}",
                                 ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("pet"),
+                            .Ref("#/components/schemas/pet"),
                         ["newPet"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("name")
@@ -577,14 +577,14 @@ paths: {}",
                                 ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("newPet"),
+                            .Ref("#/components/schemas/newPet"),
                         ["errorModel"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("code", "message")
                             .Properties(
                                 ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                                 ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("errorModel"),
+                            .Ref("#/components/schemas/errorModel"),
                     },
                     SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
                     {
