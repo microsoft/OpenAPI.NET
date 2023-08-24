@@ -324,13 +324,17 @@ namespace Microsoft.OpenApi.Writers
                     {
                         continue;
                     }
-
                     if (i == 0)
                     {
                         Writer.Write(lines[i]);
                     }
                     else
                     {
+                        if (i < lines.Length-1 && lines[i+1].Contains("$ref"))
+                        {
+                            lines[i] = lines[i].TrimEnd(',');
+                        }
+                        
                         Writer.WriteLine();
                         WriteIndentation();
                         Writer.Write(lines[i]);
