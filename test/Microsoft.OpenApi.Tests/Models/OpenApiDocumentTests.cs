@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
-                                .Ref("schema1"),
+                                .Ref("#/definitions/schema1"),
                 ["schema2"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Build()))
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Schemas =
             {
-                ["schema1"] = new JsonSchemaBuilder().Ref("schema1")
+                ["schema1"] = new JsonSchemaBuilder().Ref("#/definitions/schemas/schema1")
             }
         };
 
@@ -807,12 +807,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Description = "The first operand",
                                     Required = true,
                                     Schema = new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.Integer),                                  
-                                        //.Extensions(new Dictionary<string, IOpenApiExtension>
-                                        //{
-                                        //    ["my-extension"] = new OpenApiAny(4),
-                                        //})
-                                        //.Build(),
+                                        .Type(SchemaValueType.Integer),
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         ["my-extension"] = new OpenApiAny(4),
@@ -826,11 +821,6 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Required = true,
                                     Schema = new JsonSchemaBuilder()
                                                 .Type(SchemaValueType.Integer),
-                                    //.Extensions(new Dictionary<string, IOpenApiExtension>
-                                    //    {
-                                    //        ["my-extension"] = new OpenApiAny(4),
-                                    //    })
-                                    //.Build(),
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         ["my-extension"] = new OpenApiAny(4),

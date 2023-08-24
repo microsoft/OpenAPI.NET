@@ -237,6 +237,18 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="schema"></param>
         public override void WriteJsonSchema(JsonSchema schema)
         {
+            var reference = schema.GetRef();
+            if (reference != null)
+            {
+                if (Settings.InlineLocalReferences)
+                {
+                    FindJsonSchemaRefs.ResolveJsonSchema(schema);
+                }
+                else
+                {
+                    schema = new JsonSchemaBuilder().Ref(reference);
+                }
+            }
             var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(schema));
             var yamlNode = jsonNode.ToYamlNode();
             var serializer = new SerializerBuilder()

@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                     ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("pet"),
+                                .Ref("#/components/schemas/pet"),
                     ["newPet"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("name")
@@ -209,28 +209,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                     ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("newPet")
+                                .Ref("#components/schemas/newPet")
                 }
             };
 
             // Create a clone of the schema to avoid modifying things in components.
             var petSchema = components.Schemas["pet"];
-
-            //petSchema.Reference = new OpenApiReference
-            //{
-            //    Id = "pet",
-            //    Type = ReferenceType.Schema,
-            //    HostDocument = actual
-            //};
-
             var newPetSchema = components.Schemas["newPet"];
 
-            //newPetSchema.Reference = new OpenApiReference
-            //{
-            //    Id = "newPet",
-            //    Type = ReferenceType.Schema,
-            //    HostDocument = actual
-            //};
             components.PathItems = new Dictionary<string, OpenApiPathItem>
             {
                 ["/pets"] = new OpenApiPathItem

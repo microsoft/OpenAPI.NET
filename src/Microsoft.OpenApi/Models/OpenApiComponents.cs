@@ -1,8 +1,9 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text.Json;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
@@ -176,7 +177,21 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(
                 OpenApiConstants.Schemas,
                 Schemas,
-                (w, s) => w.WriteJsonSchema(s));
+                (w, s) => 
+                {
+                    var reference = s.GetRef();
+                    //var segments = reference.Segments;
+                    //var id = segments[segments.Length - 1];
+                    if (s.GetRef() != null /*&& id == key*/)
+                    {
+                        w.WriteJsonSchemaWithoutReference(s);
+                    }
+                    else
+                    {
+                        w.WriteJsonSchema(s);
+                    }                    
+                }
+                );
 
             // responses
             writer.WriteOptionalMap(

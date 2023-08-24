@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -569,7 +569,7 @@ paths: {}",
                                 ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("pet"),
+                            .Ref("#/components/schemas/pet"),
                         ["newPet"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("name")
@@ -577,14 +577,14 @@ paths: {}",
                                 ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("newPet"),
+                            .Ref("#/components/schemas/newPet"),
                         ["errorModel"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("code", "message")
                             .Properties(
                                 ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                                 ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("errorModel"),
+                            .Ref("#/components/schemas/errorModel"),
                     },
                     SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
                     {
@@ -617,27 +617,10 @@ paths: {}",
 
                 // Create a clone of the schema to avoid modifying things in components.
                 var petSchema = components.Schemas["pet"];
-                //petSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "pet",
-                //    Type = ReferenceType.Schema
-                //};
 
                 var newPetSchema = components.Schemas["newPet"];
 
-                //newPetSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "newPet",
-                //    Type = ReferenceType.Schema
-                //};
-
                 var errorModelSchema = components.Schemas["errorModel"];
-
-                //errorModelSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "errorModel",
-                //    Type = ReferenceType.Schema
-                //};
 
                 var tag1 = new OpenApiTag
                 {
@@ -1056,7 +1039,12 @@ paths: {}",
                         Schema = new JsonSchemaBuilder()
                                     .Type(SchemaValueType.Array)
                                     .Format(Formats.Uuid)
-                                    .Ref("#components/header/example-header")
+                                    .Ref("#components/header/example-header"),
+                        Reference = new OpenApiReference()
+                        {
+                            Type = ReferenceType.Header,
+                            Id = "example-header"
+                        }
                     }, options => options.IgnoringCyclicReferences()
                     .Excluding(e => e.Example.Node.Parent));
 

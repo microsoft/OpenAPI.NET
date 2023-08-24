@@ -101,16 +101,7 @@ namespace Microsoft.OpenApi.Tests
                   {
                       re.Description = "Success";
                       re.CreateContent("application/json", co =>
-                          co.Schema = new JsonSchemaBuilder().Ref("test").Build()
-                      //{
-                      //    Reference = new OpenApiReference()  // Reference
-                      //    {
-                      //        Id = "test",
-                      //        Type = ReferenceType.Schema,
-                      //        ExternalResource = "common"
-                      //    },
-                      //    UnresolvedReference = true
-                      //}
+                          co.Schema = new JsonSchemaBuilder().Ref("test").Build()                      
                       );
                   })
                 );

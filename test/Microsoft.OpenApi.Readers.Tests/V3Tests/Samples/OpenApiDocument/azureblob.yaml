@@ -1,0 +1,469 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Azure Blob Storage",
+    "description": "Microsoft Azure Storage provides a massively scalable, durable, and highly available storage for data on the cloud, and serves as the data storage solution for modern applications. Connect to Blob Storage to perform various operations such as create, update, get and delete on blobs in your Azure Storage account.",
+    "x-ms-api-annotation": {
+      "status": "Production"
+    },
+    "contact": {
+      "name": "Microsoft",
+      "url": "https://azure.microsoft.com/support/"
+    }
+  },
+  "host": "localhost:23340",
+  "basePath": "/apim/azureblob",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{connectionId}/datasets/default/GetFileContentByPath": {
+      "get": {
+        "tags": [
+          "AzureBlobSingletonFileTransferFileData"
+        ],
+        "summary": "Get blob content using path",
+        "description": "This operation retrieves blob contents using path.",
+        "operationId": "GetFileContentByPath",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "description": "Specify unique path to the blob.",
+            "required": true,
+            "x-ms-summary": "Blob path",
+            "x-ms-dynamic-values": {
+              "capability": "file-picker",
+              "parameters": {
+                "dataset": "AccountNameFromSettings",
+                "isFolder": false,
+                "fileFilter": []
+              },
+              "value-path": "Path"
+            },
+            "x-ms-dynamic-tree": {
+              "settings": {
+                "canSelectParentNodes": false,
+                "canSelectLeafNodes": true
+              },
+              "open": {
+                "operationId": "ListAllRootFolders_V4",
+                "itemValuePath": "Path",
+                "itemTitlePath": "DisplayName",
+                "itemIsParent": "(IsFolder eq true)",
+                "itemFullTitlePath": "Path",
+                "itemsPath": "value",
+                "parameters": {
+                  "dataset": {
+                    "value": "AccountNameFromSettings"
+                  }
+                }
+              },
+              "browse": {
+                "operationId": "ListFolder_V4",
+                "itemValuePath": "Path",
+                "itemTitlePath": "DisplayName",
+                "itemIsParent": "(IsFolder eq true)",
+                "itemFullTitlePath": "Path",
+                "itemsPath": "value",
+                "parameters": {
+                  "dataset": {
+                    "value": "AccountNameFromSettings"
+                  },
+                  "id": {
+                    "selectedItemValuePath": "Id"
+                  }
+                }
+              }
+            },
+            "type": "string"
+          },
+          {
+            "name": "inferContentType",
+            "in": "query",
+            "description": "Infer content-type based on extension.",
+            "required": false,
+            "x-ms-summary": "Infer content type",
+            "x-ms-visibility": "advanced",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "queryParametersSingleEncoded",
+            "in": "query",
+            "required": false,
+            "x-ms-visibility": "internal",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "binary",
+              "description": "The content of the file.",
+              "type": "string",
+              "x-ms-summary": "File Content"
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": true,
+        "x-ms-api-annotation": {
+          "status": "Production",
+          "family": "GetFileContentByPath",
+          "revision": 1
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Object": {
+      "type": "object",
+      "properties": {}
+    },
+    "BlobMetadata": {
+      "description": "Blob metadata",
+      "type": "object",
+      "properties": {
+        "Id": {
+          "description": "The unique id of the file or folder.",
+          "type": "string"
+        },
+        "Name": {
+          "description": "The name of the file or folder.",
+          "type": "string"
+        },
+        "DisplayName": {
+          "description": "The display name of the file or folder.",
+          "type": "string"
+        },
+        "Path": {
+          "description": "The path of the file or folder.",
+          "type": "string"
+        },
+        "LastModified": {
+          "format": "date-time",
+          "description": "The date and time the file or folder was last modified.",
+          "type": "string"
+        },
+        "Size": {
+          "format": "int64",
+          "description": "The size of the file or folder.",
+          "type": "integer"
+        },
+        "MediaType": {
+          "description": "The media type of the file or folder.",
+          "type": "string"
+        },
+        "IsFolder": {
+          "description": "A boolean value (true, false) to indicate whether or not the blob is a folder.",
+          "type": "boolean"
+        },
+        "ETag": {
+          "description": "The etag of the file or folder.",
+          "type": "string"
+        },
+        "FileLocator": {
+          "description": "The filelocator of the file or folder.",
+          "type": "string"
+        },
+        "LastModifiedBy": {
+          "format": "string",
+          "description": "The author of the last modification.",
+          "type": "string"
+        }
+      }
+    },
+    "BlobMetadataResponse": {
+      "description": "Represents blob datasets metadata response",
+      "type": "object",
+      "properties": {
+        "Id": {
+          "description": "The unique id of the file or folder.",
+          "type": "string"
+        },
+        "Name": {
+          "description": "The name of the file or folder.",
+          "type": "string"
+        },
+        "DisplayName": {
+          "description": "The display name of the file or folder.",
+          "type": "string"
+        },
+        "Path": {
+          "description": "The path of the file or folder.",
+          "type": "string"
+        },
+        "LastModified": {
+          "format": "date-time",
+          "description": "The date and time the file or folder was last modified.",
+          "type": "string"
+        },
+        "Size": {
+          "format": "int64",
+          "description": "The size of the file or folder.",
+          "type": "integer"
+        },
+        "MediaType": {
+          "description": "The media type of the file or folder.",
+          "type": "string"
+        },
+        "IsFolder": {
+          "description": "A boolean value (true, false) to indicate whether or not the blob is a folder.",
+          "type": "boolean"
+        },
+        "ETag": {
+          "description": "The etag of the file or folder.",
+          "type": "string"
+        },
+        "FileLocator": {
+          "description": "The filelocator of the file or folder.",
+          "type": "string"
+        }
+      }
+    },
+    "BlobMetadataPage": {
+      "description": "Represents a page of blob metadata.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "Blob metadata collection.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BlobMetadata"
+          },
+          "readOnly": true
+        },
+        "nextLink": {
+          "description": "An Url which can be used to retrieve the next page.",
+          "type": "string",
+          "x-ms-visibility": "advanced"
+        },
+        "nextPageMarker": {
+          "description": "A marker which can be used to retrieve the next page.",
+          "type": "string",
+          "x-ms-summary": "Next page marker",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    },
+    "SharedAccessSignatureBlobPolicy": {
+      "description": "The set of parameters to generate a SAS link.",
+      "type": "object",
+      "properties": {
+        "GroupPolicyIdentifier": {
+          "description": "The string identifying a stored access policy. The Group policy parameters (e.g. Start time and End time) have precedence over input parameters mentioned in actions.",
+          "type": "string",
+          "x-ms-summary": "Group Policy Identifier",
+          "x-ms-visibility": "important",
+          "x-ms-dynamic-values": {
+            "operationId": "GetAccessPolicies",
+            "parameters": {
+              "path": {
+                "parameter": "path"
+              }
+            },
+            "value-path": "GroupPolicyIdentifier"
+          }
+        },
+        "Permissions": {
+          "description": "The permissions specified on the SAS (Values separated by comma).",
+          "default": "Read",
+          "enum": [
+            "Read",
+            "Write",
+            "Add",
+            "Create",
+            "Delete",
+            "List",
+            "Read,Write",
+            "Read,Write,List",
+            "Read,Write,List,Delete"
+          ],
+          "type": "string",
+          "x-ms-summary": "Permissions",
+          "x-ms-visibility": "advanced"
+        },
+        "StartTime": {
+          "format": "date-time",
+          "description": "The date and time at which the SAS becomes valid (example: '2017-11-01T15:30:00+00:00'). Default = now().",
+          "type": "string",
+          "x-ms-summary": "Start Time",
+          "x-ms-visibility": "advanced"
+        },
+        "ExpiryTime": {
+          "format": "date-time",
+          "description": "The date and time after which the SAS is no longer valid (example: '2017-12-01T15:30:00+00:00'). Default = now() + 24h.",
+          "type": "string",
+          "x-ms-summary": "Expiry Time",
+          "x-ms-visibility": "advanced"
+        },
+        "AccessProtocol": {
+          "description": "The allowed protocols (https only, or http and https). Null if you don't want to restrict protocol.",
+          "enum": [
+            "HttpsOnly",
+            "HttpsOrHttp"
+          ],
+          "type": "string",
+          "x-ms-summary": "Shared Access Protocol",
+          "x-ms-visibility": "advanced"
+        },
+        "IpAddressOrRange": {
+          "description": "The allowed IP address or IP address range. Null if you don't want to restrict based on IP address.",
+          "type": "string",
+          "x-ms-summary": "IP address or IP address range",
+          "x-ms-visibility": "advanced"
+        }
+      }
+    },
+    "SharedAccessSignature": {
+      "description": "Shared access signature",
+      "type": "object",
+      "properties": {
+        "WebUrl": {
+          "format": "uri",
+          "description": "A URL to an object with access token.",
+          "type": "string",
+          "x-ms-summary": "Web Url"
+        }
+      }
+    },
+    "StorageAccountList": {
+      "description": "List of storage account names",
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "List of storage account names",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StorageAccount"
+          }
+        }
+      }
+    },
+    "StorageAccount": {
+      "description": "Storage account",
+      "type": "object",
+      "properties": {
+        "Name": {
+          "description": "The name of the storage account.",
+          "type": "string",
+          "x-ms-summary": "Storage Account name"
+        },
+        "DisplayName": {
+          "description": "The display name of the storage account.",
+          "type": "string",
+          "x-ms-summary": "Storage Account display name"
+        }
+      }
+    },
+    "DataSetsMetadata": {
+      "description": "Dataset metadata",
+      "type": "object",
+      "properties": {
+        "tabular": {
+          "$ref": "#/definitions/TabularDataSetsMetadata"
+        },
+        "blob": {
+          "$ref": "#/definitions/BlobDataSetsMetadata"
+        }
+      }
+    },
+    "TabularDataSetsMetadata": {
+      "description": "Tabular dataset metadata",
+      "type": "object",
+      "properties": {
+        "source": {
+          "description": "Dataset source",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Dataset display name",
+          "type": "string"
+        },
+        "urlEncoding": {
+          "description": "Dataset url encoding",
+          "type": "string"
+        },
+        "tableDisplayName": {
+          "description": "Table display name",
+          "type": "string"
+        },
+        "tablePluralName": {
+          "description": "Table plural display name",
+          "type": "string"
+        }
+      }
+    },
+    "BlobDataSetsMetadata": {
+      "description": "Blob dataset metadata",
+      "type": "object",
+      "properties": {
+        "source": {
+          "description": "Blob dataset source",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Blob dataset display name",
+          "type": "string"
+        },
+        "urlEncoding": {
+          "description": "Blob dataset url encoding",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "x-ms-capabilities": {
+    "file-picker": {
+      "open": {
+        "operationId": "ListAllRootFolders_V4",
+        "parameters": {
+          "dataset": {
+            "parameter": "dataset"
+          }
+        }
+      },
+      "browse": {
+        "operationId": "ListFolder_V4",
+        "parameters": {
+          "dataset": {
+            "parameter": "dataset"
+          },
+          "id": {
+            "value-property": "Id"
+          }
+        }
+      },
+      "value-collection": "value",
+      "value-title": "DisplayName",
+      "value-folder-property": "IsFolder",
+      "value-media-property": "MediaType"
+    },
+    "testConnection": {
+      "operationId": "TestConnection",
+      "parameters": {}
+    }
+  },
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://azure.microsoft.com/services/storage/blobs/"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://privacy.microsoft.com/"
+    },
+    {
+      "propertyName": "Categories",
+      "propertyValue": "Productivity"
+    }
+  ]
+}
