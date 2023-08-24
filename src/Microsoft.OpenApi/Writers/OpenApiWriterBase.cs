@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using Json.Schema;
 using Microsoft.OpenApi.Exceptions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
+using Microsoft.OpenApi.Services;
+using YamlDotNet.Serialization.ObjectGraphVisitors;
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -310,6 +313,11 @@ namespace Microsoft.OpenApi.Writers
             throw new NotImplementedException();
         }
 
+        public virtual void WriteJsonSchemaWithoutReference(JsonSchema schema)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Get current scope.
         /// </summary>
@@ -419,6 +427,16 @@ namespace Microsoft.OpenApi.Writers
                 throw new OpenApiWriterException(
                     string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
             }
+        }
+    }
+
+    internal class FindJsonSchemaRefs : OpenApiVisitorBase
+    {
+        public static void ResolveJsonSchema(JsonSchema schema)
+        {
+            var visitor = new FindJsonSchemaRefs();
+            var walker = new OpenApiWalker(visitor);
+            walker.Walk(schema);
         }
     }
 }

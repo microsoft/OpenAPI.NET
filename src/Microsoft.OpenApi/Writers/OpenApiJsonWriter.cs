@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Json.Schema;
@@ -269,6 +270,19 @@ namespace Microsoft.OpenApi.Writers
             }
             else
             {
+                var reference = schema.GetRef();
+                if (reference != null)
+                {
+                    if (Settings.InlineLocalReferences || Settings.InlineExternalReferences)
+                    {
+                        FindJsonSchemaRefs.ResolveJsonSchema(schema);
+                    }
+                    else
+                    {                        
+                        schema = new JsonSchemaBuilder().Ref(reference);
+                    }
+                }
+
                 var jsonString = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
 
                 // Slit json string into lines
@@ -276,6 +290,41 @@ namespace Microsoft.OpenApi.Writers
 
                 for (int i = 0;  i < lines.Length; i++)
                 {
+                    if (i == 0)
+                    {
+                        Writer.Write(lines[i]); // TODO: Explain why
+                    }
+                    else
+                    {
+                        Writer.WriteLine();
+                        WriteIndentation();
+                        Writer.Write(lines[i]);
+                    }
+                }
+            }
+        }
+
+        public override void WriteJsonSchemaWithoutReference(JsonSchema schema)
+        {
+            if (_produceTerseOutput)
+            {
+                WriteRaw(JsonSerializer.Serialize(schema));
+            }
+            else
+            {
+                var jsonString = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
+
+                // Split json string into lines
+                string[] lines = jsonString.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    // check for $ref then skip it
+                    if (lines[i].Contains("$ref"))
+                    {
+                        continue;
+                    }
+
                     if (i == 0)
                     {
                         Writer.Write(lines[i]);
