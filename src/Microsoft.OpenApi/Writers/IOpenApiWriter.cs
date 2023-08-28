@@ -80,8 +80,9 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the JsonSchema object
         /// </summary>
-        /// <param name="schema"></param>
-        void WriteJsonSchemaWithoutReference(JsonSchema schema);
+        /// <param name="writer">The IOpenApiWriter object</param>
+        /// <param name="schema">The JsonSchema object</param>
+        void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema);
 
         /// <summary>
         /// Flush the writer.

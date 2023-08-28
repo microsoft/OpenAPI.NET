@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Models
                                 var id = segments[segments.Length - 1];
                                 if (id == key)
                                 {
-                                    w.WriteJsonSchemaWithoutReference(s);
+                                    w.WriteJsonSchemaWithoutReference(w,s);
                                 }
                             }
                             else
