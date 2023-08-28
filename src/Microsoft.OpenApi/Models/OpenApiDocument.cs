@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
                        openApiSchemas,
-                       (w, s) => w.WriteJsonSchema(s));
+                       (w, key, s) => w.WriteJsonSchema(s));
                 }
             }
             else
@@ -263,7 +263,23 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                         OpenApiConstants.Definitions,
                         Components?.Schemas,
-                        (w, s) => w.WriteJsonSchema(s));
+                        (w, key, s) =>
+                        {
+                            var reference = s.GetRef();
+                            if(reference != null)
+                            {
+                                var segments = reference.OriginalString.Split('/');
+                                var id = segments[segments.Length - 1];
+                                if (id == key)
+                                {
+                                    w.WriteJsonSchemaWithoutReference(s);
+                                }
+                            }
+                            else
+                            {
+                                w.WriteJsonSchema(s);
+                            }
+                        });
                 }
 
                 // parameters

@@ -177,19 +177,22 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(
                 OpenApiConstants.Schemas,
                 Schemas,
-                (w, s) => 
+                (w, key, s) => 
                 {
                     var reference = s.GetRef();
-                    //var segments = reference.Segments;
-                    //var id = segments[segments.Length - 1];
-                    if (s.GetRef() != null /*&& id == key*/)
+                    if (reference != null)
                     {
-                        w.WriteJsonSchemaWithoutReference(s);
+                        var segments = reference.OriginalString.Split('/');
+                        var id = segments[segments.Length - 1];
+                        if (id == key)
+                        {
+                            w.WriteJsonSchemaWithoutReference(s);
+                        }
                     }
                     else
                     {
                         w.WriteJsonSchema(s);
-                    }                    
+                    }
                 }
                 );
 
@@ -352,7 +355,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteOptionalMap(
                    OpenApiConstants.Schemas,
                    Schemas,
-                   static (w, s) => { w.WriteJsonSchema(s); });
+                   static (w, key, s) => { w.WriteJsonSchema(s); });
             }
             writer.WriteEndObject();
         }
