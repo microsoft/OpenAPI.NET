@@ -231,49 +231,6 @@ namespace Microsoft.OpenApi.Writers
             }
         }
 
-        /// <summary>
-        /// Writes out a JsonSchema object
-        /// </summary>
-        /// <param name="schema"></param>
-        public override void WriteJsonSchema(JsonSchema schema)
-        {
-            var reference = schema.GetRef();
-            if (reference != null)
-            {
-                if (Settings.InlineLocalReferences)
-                {
-                    FindJsonSchemaRefs.ResolveJsonSchema(schema);
-                }
-                else
-                {
-                    schema = new JsonSchemaBuilder().Ref(reference);
-                }
-            }
-            var jsonNode = JsonNode.Parse(JsonSerializer.Serialize(schema));
-            var yamlNode = jsonNode.ToYamlNode();
-            var serializer = new SerializerBuilder()
-                                .Build();
-
-            var yamlSchema = serializer.Serialize(yamlNode);
-
-            //remove trailing newlines
-            yamlSchema = yamlSchema.Trim();
-            var yamlArray = yamlSchema.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-            foreach(var str in yamlArray)
-            {
-                Writer.WriteLine();
-                WriteIndentation();
-                Writer.Write("  ");
-
-                Writer.Write(str);
-            }
-
-            if (schema.GetRef() != null && Settings.LoopDetector.PushLoop<JsonSchema>(schema))
-            {
-                Settings.LoopDetector.SaveLoop(schema);
-            }
-
-        }
 
         private void WriteChompingIndicator(string value)
         {

@@ -261,33 +261,6 @@ namespace Microsoft.OpenApi.Writers
             base.WriteIndentation();
         }
 
-        /// <summary>
-        /// Writes out a JsonSchema object
-        /// </summary>
-        /// <param name="schema"></param>
-        public override void WriteJsonSchema(JsonSchema schema)
-        {
-            if (schema != null)
-            {
-                var reference = schema.GetRef();
-                if (reference != null)
-                {
-                    if (Settings.InlineExternalReferences)
-                    {
-                        FindJsonSchemaRefs.ResolveJsonSchema(schema);
-                    }
-                    else
-                    {
-                        this.WriteStartObject();
-                        this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
-                        WriteEndObject();
-                        return;
-                    }
-                }
-
-                WriteJsonSchemaWithoutReference(this, schema);
-            }
-        }
 
         /// <summary>
         /// Writes a line terminator to the text string or stream.

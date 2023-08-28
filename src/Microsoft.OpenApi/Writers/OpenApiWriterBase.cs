@@ -306,16 +306,6 @@ namespace Microsoft.OpenApi.Writers
                 Writer.Write(IndentationString);
             }
         }
-
-        /// <summary>
-        /// Writes out the JsonSchema object
-        /// </summary>
-        /// <param name="schema"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public virtual void WriteJsonSchema(JsonSchema schema)
-        {
-            throw new NotImplementedException();
-        }
         
         /// <summary>
         /// Get current scope.
@@ -425,6 +415,34 @@ namespace Microsoft.OpenApi.Writers
             {
                 throw new OpenApiWriterException(
                     string.Format(SRResource.ObjectScopeNeededForPropertyNameWriting, name));
+            }
+        }
+
+        /// <summary>
+        /// Writes out a JsonSchema object
+        /// </summary>
+        /// <param name="schema"></param>
+        public void WriteJsonSchema(JsonSchema schema)
+        {
+            if (schema != null)
+            {
+                var reference = schema.GetRef();
+                if (reference != null)
+                {
+                    if (Settings.InlineExternalReferences)
+                    {
+                        FindJsonSchemaRefs.ResolveJsonSchema(schema);
+                    }
+                    else
+                    {
+                        this.WriteStartObject();
+                        this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
+                        WriteEndObject();
+                        return;
+                    }
+                }
+
+                WriteJsonSchemaWithoutReference(this, schema);
             }
         }
 
