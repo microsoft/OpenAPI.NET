@@ -429,26 +429,37 @@ namespace Microsoft.OpenApi.Writers
                 var reference = schema.GetRef();
                 if (reference != null)
                 {
-                    if (Settings.InlineExternalReferences)
+                    if (!Settings.ShouldInlineReference())
                     {
-                        FindJsonSchemaRefs.ResolveJsonSchema(schema);
+                        WriteJsonSchemaReference(this, reference);
+                        return;                        
                     }
                     else
                     {
-                        this.WriteStartObject();
-                        this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
-                        WriteEndObject();
-                        return;
+                        if (Settings.InlineExternalReferences)
+                        {
+                            FindJsonSchemaRefs.ResolveJsonSchema(schema);
+                        }
                     }
                 }
 
+                if (!Settings.LoopDetector.PushLoop(schema))
+                {
+                    Settings.LoopDetector.SaveLoop(schema);
+                    WriteJsonSchemaReference(this, reference);
+                    return;
+                }
+
                 WriteJsonSchemaWithoutReference(this, schema);
+
+                if (reference != null)
+                {
+                    Settings.LoopDetector.PopLoop<JsonSchema>();
+                }                    
             }
         }
 
-        /// <summary>
-        /// Serialize to OpenAPI V3 document without using reference.
-        /// </summary>
+        /// <inheritdoc />
         public void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema)
         {
             writer.WriteStartObject();
@@ -580,6 +591,15 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteExtensions(schema.GetExtensions(), OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
+        }
+
+        /// <inheritdoc />
+        public void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference)
+        {
+            this.WriteStartObject();
+            this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
+            WriteEndObject();
+            return;
         }
     }
 
