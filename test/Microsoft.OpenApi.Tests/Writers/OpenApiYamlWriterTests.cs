@@ -428,7 +428,13 @@ paths:
         private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
         {
             // Arrange
-            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("thing").Build();
+            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("#/components/schemas/thing");
+
+            thingSchema.Properties(("children", thingSchema));
+
+            var relatedSchema = new JsonSchemaBuilder().Type(SchemaValueType.Integer);
+
+            thingSchema.Properties(("related", relatedSchema));
 
             var doc = new OpenApiDocument()
             {
@@ -463,7 +469,6 @@ paths:
                         ["thing"] = thingSchema}
                 }
             };
-            // thingSchema.Reference.HostDocument = doc;
 
             return doc;
         }
