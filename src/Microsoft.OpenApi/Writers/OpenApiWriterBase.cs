@@ -531,14 +531,7 @@ namespace Microsoft.OpenApi.Writers
 
             // properties
             writer.WriteOptionalMap(OpenApiConstants.Properties, (IDictionary<string, JsonSchema>)schema.GetProperties(),
-                (w, key, s) =>
-                {
-                    foreach (var property in schema.GetProperties())
-                    {
-                        writer.WritePropertyName(property.Key);
-                        w.WriteJsonSchema(property.Value);
-                    }
-                });
+                (w, key, s) => w.WriteJsonSchema(s));
 
             // additionalProperties
             if (schema.GetAdditionalPropertiesAllowed() ?? false)
@@ -598,7 +591,6 @@ namespace Microsoft.OpenApi.Writers
             this.WriteStartObject();
             this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
             WriteEndObject();
-            return;
         }
     }
 
