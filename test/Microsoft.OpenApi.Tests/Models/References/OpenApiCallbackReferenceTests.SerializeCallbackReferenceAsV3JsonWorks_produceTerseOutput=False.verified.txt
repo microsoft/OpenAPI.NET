@@ -5,16 +5,16 @@
         "content": {
           "application/json": {
             "schema": {
+              "required": [
+                "message"
+              ],
               "type": "object",
               "properties": {
                 "message": {
                   "type": "string",
                   "example": "Some event happened"
                 }
-              },
-              "required": [
-                "message"
-              ]
+              }
             }
           }
         },

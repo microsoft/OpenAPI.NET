@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -443,13 +443,12 @@ namespace Microsoft.OpenApi.Writers
                     {
                         FindJsonSchemaRefs.ResolveJsonSchema(schema);
                     }
-                }
-
-                if (!Settings.LoopDetector.PushLoop(schema))
-                {
-                    Settings.LoopDetector.SaveLoop(schema);
-                    WriteJsonSchemaReference(this, reference);
-                    return;
+                    if (!Settings.LoopDetector.PushLoop(schema))
+                    {
+                        Settings.LoopDetector.SaveLoop(schema);
+                        WriteJsonSchemaReference(this, reference);
+                        return;
+                    }
                 }
             }
 
@@ -594,7 +593,6 @@ namespace Microsoft.OpenApi.Writers
             this.WriteStartObject();
             this.WriteProperty(OpenApiConstants.DollarRef, reference.OriginalString);
             WriteEndObject();
-            return;
         }
     }
 
