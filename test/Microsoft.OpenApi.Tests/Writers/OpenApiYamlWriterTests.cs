@@ -532,8 +532,6 @@ components:
                 ("related", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))
                 .Build();
 
-            thingSchema.BaseUri = new Uri($"https://json-everything.net/{thingSchema.GetRef()}");
-
             var doc = new OpenApiDocument()
             {
                 Info = new OpenApiInfo()
