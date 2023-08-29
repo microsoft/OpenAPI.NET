@@ -426,7 +426,7 @@ paths:
         private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
         {
             // Arrange
-            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("thing").Build();
+            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("#/components/schemas/thing").Build();
 
             var doc = new OpenApiDocument()
             {
@@ -526,10 +526,13 @@ components:
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
         {
             var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                .Ref("#/definitions/thing")
                 .Properties(
-                ("children", new JsonSchemaBuilder().Ref("thing")),
+                ("children", new JsonSchemaBuilder().Ref("#/definitions/thing")),
                 ("related", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))
                 .Build();
+
+            thingSchema.BaseUri = new Uri($"https://json-everything.net/{thingSchema.GetRef()}");
 
             var doc = new OpenApiDocument()
             {
