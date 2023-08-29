@@ -371,7 +371,6 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: thing
 components: { }";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -409,8 +408,7 @@ paths:
         '200':
           description: OK
           schema:
-            type: object
-            $ref: thing";
+            type: object";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
@@ -529,7 +527,7 @@ components:
         {
             var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
                 .Properties(
-                ("children", new JsonSchemaBuilder().Ref("#/definitions/thing")),
+                ("children", new JsonSchemaBuilder().Ref("thing")),
                 ("related", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))
                 .Build();
 
