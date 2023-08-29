@@ -512,7 +512,7 @@ namespace Microsoft.OpenApi.Writers
             writer.WriteOptionalCollection(OpenApiConstants.Enum, schema.GetEnum(), (nodeWriter, s) => nodeWriter.WriteAny(new OpenApiAny(s)));
 
             // type
-            writer.WriteProperty(OpenApiConstants.Type, schema.GetJsonType().ToString().ToLowerInvariant());
+            writer.WriteProperty(OpenApiConstants.Type, schema.GetJsonType()?.ToString().ToLowerInvariant());
 
             // allOf
             writer.WriteOptionalCollection(OpenApiConstants.AllOf, schema.GetAllOf(), (w, s) => w.WriteJsonSchema(s));
