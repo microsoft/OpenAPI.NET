@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
+using System;
 using System.Collections.Generic;
 using Json.Schema;
 
@@ -80,12 +81,20 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Write the JsonSchema object
         /// </summary>
-        /// <param name="schema"></param>
-        void WriteJsonSchemaWithoutReference(JsonSchema schema);
+        /// <param name="writer">The IOpenApiWriter object</param>
+        /// <param name="schema">The JsonSchema object</param>
+        void WriteJsonSchemaWithoutReference(IOpenApiWriter writer, JsonSchema schema);
 
         /// <summary>
         /// Flush the writer.
         /// </summary>
         void Flush();
+
+        /// <summary>
+        /// Writes a reference to a JsonSchema object.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="reference"></param>
+        void WriteJsonSchemaReference(IOpenApiWriter writer, Uri reference);
     }
 }

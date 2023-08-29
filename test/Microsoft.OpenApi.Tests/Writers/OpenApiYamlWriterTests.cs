@@ -371,6 +371,7 @@ paths:
             application/json:
               schema:
                 type: object
+                $ref: thing
 components: { }";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -384,7 +385,7 @@ components: { }";
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().BeEquivalentTo(expected);
-            //Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
 
@@ -408,7 +409,8 @@ paths:
         '200':
           description: OK
           schema:
-            type: object";
+            type: object
+            $ref: thing";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
@@ -520,18 +522,16 @@ components:
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().BeEquivalentTo(expected);
-            //Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
         {
-            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("thing");
-            thingSchema.Properties(("children", thingSchema));
-            thingSchema.Properties(("children", thingSchema));
-
-            var relatedSchema = new JsonSchemaBuilder().Type(SchemaValueType.Integer);
-
-            thingSchema.Properties(("related", relatedSchema));
+            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                .Properties(
+                ("children", new JsonSchemaBuilder().Ref("#/definitions/thing")),
+                ("related", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))
+                .Build();
 
             var doc = new OpenApiDocument()
             {
@@ -551,7 +551,7 @@ components:
                                         Description = "OK",
                                         Content = {
                                              ["application/json"] = new OpenApiMediaType() {
-                                                     Schema = thingSchema.Build()
+                                                     Schema = thingSchema
                                              }
                                         }
                                     }
@@ -566,7 +566,7 @@ components:
                         ["thing"] = thingSchema}
                 }
             };
-            //thingSchema.Ref.HostDocument = doc;
+            
             return doc;
         }
 
@@ -622,7 +622,7 @@ definitions:
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().BeEquivalentTo(expected);
-            //Assert.Equal(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
     }

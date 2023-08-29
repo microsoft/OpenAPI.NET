@@ -16,6 +16,7 @@ namespace Microsoft.OpenApi.Extensions
             builder.Add(new ExtensionsKeyword(extensions));
             return builder;
         }
+        
         public static JsonSchemaBuilder AdditionalPropertiesAllowed(this JsonSchemaBuilder builder, bool additionalPropertiesAllowed)
         {
             builder.Add(new AdditionalPropertiesAllowedKeyword(additionalPropertiesAllowed));
@@ -54,7 +55,7 @@ namespace Microsoft.OpenApi.Extensions
     }
 
     [SchemaKeyword(Name)]
-    internal class Draft4ExclusiveMinimumKeyword : IJsonSchemaKeyword
+    public class Draft4ExclusiveMinimumKeyword : IJsonSchemaKeyword
     {
         public const string Name = "exclusiveMinimum";
 
@@ -76,7 +77,7 @@ namespace Microsoft.OpenApi.Extensions
     }
 
     [SchemaKeyword(Name)]
-    internal class Draft4ExclusiveMaximumKeyword : IJsonSchemaKeyword
+    public class Draft4ExclusiveMaximumKeyword : IJsonSchemaKeyword
     {
         public const string Name = "exclusiveMaximum";
 
@@ -98,7 +99,7 @@ namespace Microsoft.OpenApi.Extensions
     }
 
     [SchemaKeyword(Name)]
-    internal class NullableKeyword : IJsonSchemaKeyword
+    public class NullableKeyword : IJsonSchemaKeyword
     {
         public const string Name = "nullable";
 
@@ -129,7 +130,7 @@ namespace Microsoft.OpenApi.Extensions
     }
 
     [SchemaKeyword(Name)]
-    internal class ExtensionsKeyword : IJsonSchemaKeyword
+    public class ExtensionsKeyword : IJsonSchemaKeyword
     {
         public const string Name = "extensions";
 
@@ -148,9 +149,10 @@ namespace Microsoft.OpenApi.Extensions
     }
 
     [SchemaKeyword(Name)]
-    internal class AdditionalPropertiesAllowedKeyword : IJsonSchemaKeyword
+    public class AdditionalPropertiesAllowedKeyword : IJsonSchemaKeyword
     {
         public const string Name = "additionalPropertiesAllowed";
+        
         internal bool AdditionalPropertiesAllowed { get; }
 
         internal AdditionalPropertiesAllowedKeyword(bool additionalPropertiesAllowed)

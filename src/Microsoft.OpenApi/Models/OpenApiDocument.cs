@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Models
                                 var id = segments[segments.Length - 1];
                                 if (id == key)
                                 {
-                                    w.WriteJsonSchemaWithoutReference(s);
+                                    w.WriteJsonSchemaWithoutReference(w,s);
                                 }
                             }
                             else
@@ -631,6 +631,7 @@ namespace Microsoft.OpenApi.Models
         {
             switch (referenceable)
             {
+                // TODO
                 //case JsonSchema schema:
                 //    if (!Schemas.ContainsKey(schema.Reference.Id))
                 //    {
