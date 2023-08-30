@@ -396,10 +396,10 @@ namespace Microsoft.OpenApi.Models
                 if (Schema != null)
                 {
                     SchemaSerializerHelper.WriteAsItemsProperties(Schema, writer, Extensions);
-
-                    if (Schema.GetExtensions() != null)
+                    var extensions = Schema.GetExtensions();
+                    if (extensions != null)
                     {
-                        foreach (var key in Schema.GetExtensions().Keys)
+                        foreach (var key in extensions.Keys)
                         {
                             // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
                             // so remove it from the cloned collection so we don't write it again.
