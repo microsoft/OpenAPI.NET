@@ -397,15 +397,15 @@ namespace Microsoft.OpenApi.Models
                 {
                     SchemaSerializerHelper.WriteAsItemsProperties(Schema, writer, Extensions);
 
-                    //if (Schema.Extensions != null)
-                    //{
-                    //    foreach (var key in Schema.Extensions.Keys)
-                    //    {
-                    //        // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
-                    //        // so remove it from the cloned collection so we don't write it again.
-                    //        extensionsClone.Remove(key);
-                    //    }
-                    //}
+                    if (Schema.GetExtensions() != null)
+                    {
+                        foreach (var key in Schema.GetExtensions().Keys)
+                        {
+                            // The extension will already have been serialized as part of the call to WriteAsItemsProperties above,
+                            // so remove it from the cloned collection so we don't write it again.
+                            extensionsClone.Remove(key);
+                        }
+                    }
                 }
 
                 // allowEmptyValue
@@ -427,7 +427,6 @@ namespace Microsoft.OpenApi.Models
                     }
                 }
             }
-
 
             // extensions
             writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
