@@ -256,7 +256,7 @@ namespace Microsoft.OpenApi.Services
 
         private T ResolveReference<T>(OpenApiReference reference) where T : class, IOpenApiReferenceable, new()
         {
-            if (string.IsNullOrEmpty(reference.ExternalResource))
+            if (string.IsNullOrEmpty(reference?.ExternalResource))
             {
                 try
                 {

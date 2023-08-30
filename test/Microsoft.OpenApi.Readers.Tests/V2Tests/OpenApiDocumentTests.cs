@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -163,26 +163,6 @@ paths: {}",
                 var reader = new OpenApiStreamReader();
                 var doc = reader.Read(stream, out var diagnostic);
 
-                var successSchema = new OpenApiSchema()
-                {
-                    Type = "array",
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "Item",
-                        HostDocument = doc
-                    },
-                    Items = new OpenApiSchema()
-                    {
-                        Reference = new OpenApiReference()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "Item",
-                            HostDocument = doc
-                        }
-                    }
-                };
-
                 var okSchema = new OpenApiSchema()
                 {
                     Reference = new OpenApiReference
@@ -192,14 +172,14 @@ paths: {}",
                         HostDocument = doc
                     },
                     Properties = new Dictionary<string, OpenApiSchema>()
-                                                    {
-                                                        { "id", new OpenApiSchema()
-                                                            {
-                                                                Type = "string",
-                                                                Description = "Item identifier."
-                                                            }
-                                                        }
-                                                    }
+                    {
+                        { "id", new OpenApiSchema()
+                            {
+                                Type = "string",
+                                Description = "Item identifier."
+                            }
+                        }
+                    }
                 };
 
                 var errorSchema = new OpenApiSchema()
@@ -211,24 +191,24 @@ paths: {}",
                         HostDocument = doc
                     },
                     Properties = new Dictionary<string, OpenApiSchema>()
-                                                    {
-                                                        { "code", new OpenApiSchema()
-                                                            {
-                                                                Type = "integer",
-                                                                Format = "int32"
-                                                            }
-                                                        },
-                                                        { "message", new OpenApiSchema()
-                                                            {
-                                                                Type = "string"
-                                                            }
-                                                        },
-                                                        { "fields", new OpenApiSchema()
-                                                            {
-                                                                Type = "string"
-                                                            }
-                                                        }
-                                                    }
+                    {
+                        { "code", new OpenApiSchema()
+                            {
+                                Type = "integer",
+                                Format = "int32"
+                            }
+                        },
+                        { "message", new OpenApiSchema()
+                            {
+                                Type = "string"
+                            }
+                        },
+                        { "fields", new OpenApiSchema()
+                            {
+                                Type = "string"
+                            }
+                        }
+                    }
                 };
 
                 var okMediaType = new OpenApiMediaType
