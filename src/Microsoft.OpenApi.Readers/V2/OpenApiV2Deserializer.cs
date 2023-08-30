@@ -29,10 +29,11 @@ namespace Microsoft.OpenApi.Readers.V2
                 return;
             }
 
-            foreach (var propertyNode in mapNode)
+            var allFields = fixedFieldMap.Keys.Union(mapNode.Select(x => x.Name));
+            foreach (var propertyNode in allFields)
             {
-                propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap);
-                requiredFields?.Remove(propertyNode.Name);
+                mapNode[propertyNode]?.ParseField(domainObject, fixedFieldMap, patternFieldMap);
+                requiredFields?.Remove(propertyNode);
             }
         }
 
