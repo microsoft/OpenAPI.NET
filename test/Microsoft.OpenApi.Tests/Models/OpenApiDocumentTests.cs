@@ -807,7 +807,11 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Description = "The first operand",
                                     Required = true,
                                     Schema = new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.Integer),
+                                        .Type(SchemaValueType.Integer)
+                                        .Extensions(new Dictionary<string, IOpenApiExtension>
+                                        {
+                                            ["my-extension"] = new OpenApiAny(4)
+                                        }),
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         ["my-extension"] = new OpenApiAny(4),
@@ -820,7 +824,11 @@ namespace Microsoft.OpenApi.Tests.Models
                                     Description = "The second operand",
                                     Required = true,
                                     Schema = new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.Integer),
+                                                .Type(SchemaValueType.Integer)
+                                                .Extensions(new Dictionary<string, IOpenApiExtension>
+                                                {
+                                                    ["my-extension"] = new OpenApiAny(4)
+                                                }),
                                     Extensions = new Dictionary<string, IOpenApiExtension>
                                     {
                                         ["my-extension"] = new OpenApiAny(4),
@@ -1320,6 +1328,7 @@ paths:
                                         Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Object)
                                                     .AdditionalProperties(new JsonSchemaBuilder().Type(SchemaValueType.Integer).Build())
+                                                    .AdditionalPropertiesAllowed(true)
                                                     .Build()
                                     }
                                 },
@@ -1384,8 +1393,8 @@ components:
   schemas:
     Pet:
       required:
-      - id
-      - name
+        - id
+        - name
       properties:
         id:
           type: integer
