@@ -67,7 +67,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "produces", (o, n) => {
                         var produces = n.CreateSimpleList(s => s.GetScalarValue());
-                        if (produces != null) {
+                        if (produces.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
                         }
                     }
