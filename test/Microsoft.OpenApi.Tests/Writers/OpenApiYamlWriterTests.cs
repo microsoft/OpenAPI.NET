@@ -371,7 +371,6 @@ paths:
             application/json:
               schema:
                 type: object
-                $ref: thing
 components: { }";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -409,8 +408,7 @@ paths:
         '200':
           description: OK
           schema:
-            type: object
-            $ref: thing";
+            type: object";
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
@@ -428,13 +426,8 @@ paths:
         private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
         {
             // Arrange
-            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("#/components/schemas/thing");
 
-            thingSchema.Properties(("children", thingSchema));
-
-            var relatedSchema = new JsonSchemaBuilder().Type(SchemaValueType.Integer);
-
-            thingSchema.Properties(("related", relatedSchema));
+            var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Ref("#/components/schemas/thing").Build();
 
             var doc = new OpenApiDocument()
             {
@@ -533,6 +526,7 @@ components:
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
         {
             var thingSchema = new JsonSchemaBuilder().Type(SchemaValueType.Object)
+                .Ref("#/definitions/thing")
                 .Properties(
                 ("children", new JsonSchemaBuilder().Ref("#/definitions/thing")),
                 ("related", new JsonSchemaBuilder().Type(SchemaValueType.Integer)))

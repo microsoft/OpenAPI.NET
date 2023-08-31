@@ -424,22 +424,24 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="schema"></param>
         public void WriteJsonSchema(JsonSchema schema)
         {
-            if (schema != null)
+            if (schema == null)
             {
-                var reference = schema.GetRef();
-                if (reference != null)
+                return;
+            }
+            
+            var reference = schema.GetRef();
+            if (reference != null)
+            {
+                if (!Settings.ShouldInlineReference())
                 {
-                    if (!Settings.ShouldInlineReference())
+                    WriteJsonSchemaReference(this, reference);
+                    return;
+                }
+                else
+                {
+                    if (Settings.InlineExternalReferences)
                     {
-                        WriteJsonSchemaReference(this, reference);
-                        return;                        
-                    }
-                    else
-                    {
-                        if (Settings.InlineExternalReferences)
-                        {
-                            FindJsonSchemaRefs.ResolveJsonSchema(schema);
-                        }
+                        FindJsonSchemaRefs.ResolveJsonSchema(schema);
                     }
                     if (!Settings.LoopDetector.PushLoop(schema))
                     {
@@ -448,13 +450,13 @@ namespace Microsoft.OpenApi.Writers
                         return;
                     }
                 }
+            }
 
-                WriteJsonSchemaWithoutReference(this, schema);
+            WriteJsonSchemaWithoutReference(this, schema);
 
-                if (reference != null)
-                {
-                    Settings.LoopDetector.PopLoop<JsonSchema>();
-                }                    
+            if (reference != null)
+            {
+                Settings.LoopDetector.PopLoop<JsonSchema>();
             }
         }
 
