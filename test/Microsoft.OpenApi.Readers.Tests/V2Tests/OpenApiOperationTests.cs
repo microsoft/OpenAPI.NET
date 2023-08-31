@@ -182,8 +182,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                     }
                 },
-                Extensions = { 
-                    [OpenApiConstants.BodyName] = new OpenApiString("petObject") 
+                Extensions = {
+                    [OpenApiConstants.BodyName] = new OpenApiString("petObject")
                 }
             },
             Responses = new OpenApiResponses
@@ -374,6 +374,63 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 }
             );
+        }
+
+        [Fact]
+        public void ParseOperationWithEmptyProducesArraySetsResponseSchemaIfExists()
+        {
+            // Arrange
+            MapNode node;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithEmptyProducesArrayInResponse.json"));
+            node = TestHelper.CreateYamlMapNode(stream);
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+
+            // Assert
+            operation.Should().BeEquivalentTo(
+                new OpenApiOperation()
+                {
+                    Responses = new OpenApiResponses()
+                    {
+                        { "200", new OpenApiResponse()
+                        {
+                            Description = "OK",
+                            Content =
+                            {
+                                ["application/octet-stream"] = new OpenApiMediaType()
+                                {
+                                    Schema = new OpenApiSchema()
+                                    {
+                                        Format = "binary",
+                                        Description = "The content of the file.",
+                                        Type = "string",
+                                        Extensions =
+                                        {
+                                            ["x-ms-summary"] = new OpenApiString("File Content")
+                                        }
+                                    }
+                                }
+                            }
+                        }}
+                    }
+                }
+            );
+        }
+
+        [Fact]
+        public void ParseOperationWithBodyAndEmptyConsumesSetsRequestBodySchemaIfExists()
+        {
+            // Arrange
+            MapNode node;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "operationWithBodyAndEmptyConsumes.yaml"));
+            node = TestHelper.CreateYamlMapNode(stream);
+
+            // Act
+            var operation = OpenApiV2Deserializer.LoadOperation(node);
+
+            // Assert
+            operation.Should().BeEquivalentTo(_operationWithBody);
         }
     }
 }

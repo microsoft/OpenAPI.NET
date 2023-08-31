@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net7.0</TargetFrameworks>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -51,10 +51,14 @@
         <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithBody.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
+        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithBodyAndEmptyConsumes.yaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
         <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithFormData.yaml">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithResponseExamples.yaml" />
+        <EmbeddedResource Include="V2Tests\Samples\OpenApiOperation\operationWithEmptyProducesArrayInResponse.json" />
       <EmbeddedResource Include="V2Tests\Samples\OpenApiParameter\bodyParameter.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>

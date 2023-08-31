@@ -163,26 +163,6 @@ paths: {}",
                 var reader = new OpenApiStreamReader();
                 var doc = reader.Read(stream, out var diagnostic);
 
-                var successSchema = new OpenApiSchema()
-                {
-                    Type = "array",
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.Schema,
-                        Id = "Item",
-                        HostDocument = doc
-                    },
-                    Items = new OpenApiSchema()
-                    {
-                        Reference = new OpenApiReference()
-                        {
-                            Type = ReferenceType.Schema,
-                            Id = "Item",
-                            HostDocument = doc
-                        }
-                    }
-                };
-
                 var okSchema = new OpenApiSchema()
                 {
                     Reference = new OpenApiReference
@@ -192,14 +172,14 @@ paths: {}",
                         HostDocument = doc
                     },
                     Properties = new Dictionary<string, OpenApiSchema>()
-                                                    {
-                                                        { "id", new OpenApiSchema()
-                                                            {
-                                                                Type = "string",
-                                                                Description = "Item identifier."
-                                                            }
-                                                        }
-                                                    }
+                    {
+                        { "id", new OpenApiSchema()
+                            {
+                                Type = "string",
+                                Description = "Item identifier."
+                            }
+                        }
+                    }
                 };
 
                 var errorSchema = new OpenApiSchema()
@@ -211,24 +191,24 @@ paths: {}",
                         HostDocument = doc
                     },
                     Properties = new Dictionary<string, OpenApiSchema>()
-                                                    {
-                                                        { "code", new OpenApiSchema()
-                                                            {
-                                                                Type = "integer",
-                                                                Format = "int32"
-                                                            }
-                                                        },
-                                                        { "message", new OpenApiSchema()
-                                                            {
-                                                                Type = "string"
-                                                            }
-                                                        },
-                                                        { "fields", new OpenApiSchema()
-                                                            {
-                                                                Type = "string"
-                                                            }
-                                                        }
-                                                    }
+                    {
+                        { "code", new OpenApiSchema()
+                            {
+                                Type = "integer",
+                                Format = "int32"
+                            }
+                        },
+                        { "message", new OpenApiSchema()
+                            {
+                                Type = "string"
+                            }
+                        },
+                        { "fields", new OpenApiSchema()
+                            {
+                                Type = "string"
+                            }
+                        }
+                    }
                 };
 
                 var okMediaType = new OpenApiMediaType
@@ -439,7 +419,7 @@ paths: {}",
                 if (schema2.UnresolvedReference && schema1.Reference.Id == schema2.Reference.Id)
                 {
                     // detected a cycle - this code gets triggered
-                    Assert.True(false, "A cycle should not be detected");
+                    Assert.Fail("A cycle should not be detected");
                 }
             }
         }
