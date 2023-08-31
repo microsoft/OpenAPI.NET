@@ -317,6 +317,13 @@ namespace Microsoft.OpenApi.Validations
                 type = typeof(IOpenApiReferenceable);
             }
 
+            if (potentialReference == null &&
+                item is JsonSchema schema &&
+                schema.GetRef() != null)
+            {
+                type = typeof(IBaseDocument);
+            }
+
             var rules = _ruleSet.FindRules(type.Name);
             foreach (var rule in rules)
             {
