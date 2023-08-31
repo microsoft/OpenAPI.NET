@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -419,7 +419,7 @@ paths: {}",
                 if (schema2.UnresolvedReference && schema1.Reference.Id == schema2.Reference.Id)
                 {
                     // detected a cycle - this code gets triggered
-                    Assert.True(false, "A cycle should not be detected");
+                    Assert.Fail("A cycle should not be detected");
                 }
             }
         }
