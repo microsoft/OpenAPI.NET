@@ -73,35 +73,35 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces)
-                ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces);
-            if (produces != null)
+                ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces)
+                ?? new List<string> { "application/octet-stream" };
+
+            var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
+
+            foreach (var produce in produces)
             {
-                foreach (var produce in produces)
+
+                if (response.Content.TryGetValue(produce, out var produceValue)) 
                 {
-                    var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
-
-                    if (response.Content.ContainsKey(produce) && response.Content[produce] != null)
+                    if (schema != null)
                     {
-                        if (schema != null)
-                        {
-                            response.Content[produce].Schema = schema;
-                            ProcessAnyFields(mapNode, response.Content[produce], _mediaTypeAnyFields);
-                        }
-                    }
-                    else
-                    {
-                        var mediaType = new OpenApiMediaType
-                        {
-                            Schema = schema
-                        };
-
-                        response.Content.Add(produce, mediaType);
+                        produceValue.Schema = schema;
+                        ProcessAnyFields(mapNode, produceValue, _mediaTypeAnyFields);
                     }
                 }
+                else
+                {
+                    var mediaType = new OpenApiMediaType
+                    {
+                        Schema = schema
+                    };
 
-                context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
-                context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
+                    response.Content.Add(produce, mediaType);
+                }
             }
+
+            context.SetTempStorage(TempStorageKeys.ResponseSchema, null, response);
+            context.SetTempStorage(TempStorageKeys.ResponseProducesSet, true, response);
         }
 
         private static void LoadExamples(OpenApiResponse response, ParseNode node)
