@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Schemas =
             {
                 ["schema1"] = new JsonSchemaBuilder()
-                    .Ref("schema2").Build(),
+                    .Ref("#/components/schemas/schema2").Build(),
                 ["schema2"] = new JsonSchemaBuilder()
                     .Type(SchemaValueType.Object)
                     .Properties(("property1", new JsonSchemaBuilder().Type(SchemaValueType.String)))
@@ -141,7 +141,8 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["schema1"] = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Object)
                 .Properties(
-                    ("property1", new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("schema1")))
+                    ("property1", new JsonSchemaBuilder().Type(SchemaValueType.String)))
+                .Ref("#/components/schemas/schema1")
                 .Build(),
 
                 ["schema2"] = new JsonSchemaBuilder()
@@ -258,8 +259,8 @@ namespace Microsoft.OpenApi.Tests.Models
           ""type"": ""integer""
         },
         ""property3"": {
-          ""type"": ""string"",
-          ""maxLength"": 15
+          ""maxLength"": 15,
+          ""type"": ""string""
         }
       }
     }
@@ -360,8 +361,8 @@ namespace Microsoft.OpenApi.Tests.Models
       property2:
         type: integer
       property3:
-        type: string
         maxLength: 15
+        type: string
 securitySchemes:
   securityScheme1:
     type: oauth2
