@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Tests.Validations
         public void UnresolvedReferenceSchemaShouldNotBeValidated()
         {
             // Arrange
-            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test");
+            var sharedSchema = new JsonSchemaBuilder().Type(SchemaValueType.String).Ref("test").Build();
 
             OpenApiDocument document = new OpenApiDocument();
             document.Components = new OpenApiComponents()
