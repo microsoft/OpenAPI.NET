@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 return;
             }
 
-            var allFields = fixedFieldMap.Keys.Union(mapNode.Select(x => x.Name));
+            var allFields = fixedFieldMap.Keys.Union(mapNode.Select(static x => x.Name));
             foreach (var propertyNode in allFields)
             {
                 mapNode[propertyNode]?.ParseField(domainObject, fixedFieldMap, patternFieldMap);
@@ -78,16 +78,18 @@ namespace Microsoft.OpenApi.Readers.V2
                     var newProperty = new List<IOpenApiAny>();
 
                     mapNode.Context.StartObject(anyListFieldName);
-
-                    var list = anyListFieldMap[anyListFieldName]?.PropertyGetter(domainObject);
-                    if (list != null)
+                    if (anyListFieldMap.TryGetValue(anyListFieldName, out var fieldName))
                     {
-                        foreach (var propertyElement in list)
+                        var list = fieldName.PropertyGetter(domainObject);
+                        if (list != null)
                         {
-                            newProperty.Add(
-                                OpenApiAnyConverter.GetSpecificOpenApiAny(
-                                    propertyElement,
-                                    anyListFieldMap[anyListFieldName].SchemaGetter(domainObject)));
+                            foreach (var propertyElement in list)
+                            {
+                                newProperty.Add(
+                                    OpenApiAnyConverter.GetSpecificOpenApiAny(
+                                        propertyElement,
+                                        anyListFieldMap[anyListFieldName].SchemaGetter(domainObject)));
+                            }
                         }
                     }
 
