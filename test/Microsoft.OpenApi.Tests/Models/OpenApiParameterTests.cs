@@ -116,6 +116,7 @@ namespace Microsoft.OpenApi.Tests.Models
             .AdditionalProperties(
                 new JsonSchemaBuilder()
                 .Type(SchemaValueType.Integer).Build())
+            .AdditionalPropertiesAllowed(true)
             .Build()
         };
 
@@ -258,7 +259,6 @@ schema:
   ""explode"": true,
   ""schema"": {
     ""title"": ""title2"",
-    ""description"": ""description2"",
     ""oneOf"": [
       {
         ""type"": ""number"",
@@ -267,7 +267,8 @@ schema:
       {
         ""type"": ""string""
       }
-    ]
+    ],
+    ""description"": ""description2""
   },
   ""examples"": {
     ""test"": {
