@@ -464,7 +464,7 @@ securitySchemes:
   schema4:
     type: string
     allOf:
-    - type: string";
+      - type: string";
 
             // Act
             var actual = BrokenComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -481,7 +481,7 @@ securitySchemes:
             // Arrange
             var expected = @"schemas:
   schema1:
-    $ref: schema2
+    $ref: '#/components/schemas/schema2'
   schema2:
     type: object
     properties:
@@ -507,7 +507,6 @@ securitySchemes:
     properties:
       property1:
         type: string
-        $ref: schema1
   schema2:
     type: object
     properties:
