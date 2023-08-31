@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     mapNode.Context.StartObject(anyListFieldName);
 
-                    var list = anyListFieldMap[anyListFieldName].PropertyGetter(domainObject);
+                    var list = anyListFieldMap[anyListFieldName]?.PropertyGetter(domainObject);
                     if (list != null)
                     {
                         foreach (var propertyElement in list)
