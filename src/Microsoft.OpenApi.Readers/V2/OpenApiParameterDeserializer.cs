@@ -19,10 +19,9 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly JsonSchemaBuilder builder = new JsonSchemaBuilder();
-        private static JsonSchemaBuilder s_HeaderJsonSchemaBuilder;
-        private static JsonSchemaBuilder s_ParameterJsonSchemaBuilder;
-        private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
+        private static readonly JsonSchemaBuilder builder = new();        
+        private static JsonSchemaBuilder _parameterJsonSchemaBuilder;
+        private static FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
             {
                 {
@@ -209,17 +208,12 @@ namespace Microsoft.OpenApi.Readers.V2
                     return;
             }
         }
+        
         private static JsonSchemaBuilder GetOrCreateSchemaBuilder(OpenApiParameter p)
         {
-            s_ParameterJsonSchemaBuilder ??= new JsonSchemaBuilder();
-            return s_ParameterJsonSchemaBuilder;
+            _parameterJsonSchemaBuilder ??= new JsonSchemaBuilder();
+            return _parameterJsonSchemaBuilder;
         }
-
-        private static JsonSchemaBuilder GetOrCreateSchemaBuilder(OpenApiHeader p)
-        {
-            s_HeaderJsonSchemaBuilder ??= new JsonSchemaBuilder();
-            return s_HeaderJsonSchemaBuilder;
-        }        
 
         private static void ProcessIn(OpenApiParameter o, ParseNode n)
         {
@@ -272,6 +266,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             var parameter = new OpenApiParameter();
+            _parameterJsonSchemaBuilder = null;
 
             ParseMap(mapNode, parameter, _parameterFixedFields, _parameterPatternFields);
 

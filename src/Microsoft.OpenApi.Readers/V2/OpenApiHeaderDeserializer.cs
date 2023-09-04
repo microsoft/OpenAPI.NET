@@ -3,9 +3,7 @@
 
 using System;
 using System.Globalization;
-using System.Linq;
 using Json.Schema;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -19,6 +17,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
+        private static JsonSchemaBuilder _headerJsonSchemaBuilder;
         private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new FixedFieldMap<OpenApiHeader>
         {
             {
@@ -136,10 +135,18 @@ namespace Microsoft.OpenApi.Readers.V2
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
+        private static JsonSchemaBuilder GetOrCreateSchemaBuilder(OpenApiHeader p)
+        {
+            _headerJsonSchemaBuilder ??= new JsonSchemaBuilder();
+            return _headerJsonSchemaBuilder;
+        }
+
         public static OpenApiHeader LoadHeader(ParseNode node)
         {
             var mapNode = node.CheckMapNode("header");
             var header = new OpenApiHeader();
+            _headerJsonSchemaBuilder = null;
+            
             foreach (var property in mapNode)
             {
                 property.ParseField(header, _headerFixedFields, _headerPatternFields);
