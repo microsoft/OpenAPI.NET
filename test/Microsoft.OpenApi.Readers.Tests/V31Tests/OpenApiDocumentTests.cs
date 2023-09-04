@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
-            //diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
+            diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
             actual.Should().BeEquivalentTo(expected);
         }
 
