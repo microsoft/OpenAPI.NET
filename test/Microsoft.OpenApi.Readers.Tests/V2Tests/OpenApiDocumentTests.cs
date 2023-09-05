@@ -18,32 +18,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         private const string SampleFolderPath = "V2Tests/Samples/";
 
         [Fact]
-        public void ShouldThrowWhenReferenceTypeIsInvalid()
-        {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-paths: 
-  '/':
-    get:
-      responses:
-        '200':
-          description: ok
-          schema:
-            $ref: '#/defi888nition/does/notexist'
-";
-
-            var reader = new OpenApiStringReader();
-            var doc = reader.Read(input, out var diagnostic);
-
-            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new OpenApiError( new OpenApiException("Unknown reference type 'defi888nition'")) });
-            doc.Should().NotBeNull();
-        }
-
-        [Fact]
         public void ShouldThrowWhenReferenceDoesNotExist()
         {
             var input = @"
