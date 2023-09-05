@@ -60,19 +60,6 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits the referenceable element in the host document
-        /// </summary>
-        /// <param name="referenceable">The referenceable element in the doc.</param>
-        //public override void Visit(IBaseDocument node)
-        //{
-        //    var schema = (JsonSchema)node;
-        //    if (schema.GetRef() != null)
-        //    {
-        //        referenceable.Reference.HostDocument = _currentDocument;
-        //    }
-        //}
-
-        /// <summary>
         /// Resolves references in components
         /// </summary>
         /// <param name="components"></param>

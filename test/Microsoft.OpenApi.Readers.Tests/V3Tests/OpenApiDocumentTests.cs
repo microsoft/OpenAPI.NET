@@ -249,33 +249,11 @@ paths: {}",
                     }
                 };
 
-                // Create a clone of the schema to avoid modifying things in components.
                 var petSchema = components.Schemas["pet"];
-
-                //petSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "pet",
-                //    Type = ReferenceType.Schema,
-                //    HostDocument = actual
-                //};
 
                 var newPetSchema = components.Schemas["newPet"];
 
-                //newPetSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "newPet",
-                //    Type = ReferenceType.Schema,
-                //    HostDocument = actual
-                //};
-
                 var errorModelSchema = components.Schemas["errorModel"];
-
-                //errorModelSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "errorModel",
-                //    Type = ReferenceType.Schema,
-                //    HostDocument = actual
-                //};
 
                 var expected = new OpenApiDocument
                 {
@@ -615,7 +593,6 @@ paths: {}",
                     }
                 };
 
-                // Create a clone of the schema to avoid modifying things in components.
                 var petSchema = components.Schemas["pet"];
 
                 var newPetSchema = components.Schemas["newPet"];
