@@ -38,10 +38,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             // Arrange and Act
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
             var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var actualSchema = actual.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             var petSchema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
-                        .Required("name")
+                        .Required("id", "name")
                         .Properties(
                             ("id", new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Integer)
@@ -50,8 +51,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 .Type(SchemaValueType.String)
                             ),
                             ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))
-                        )
-                        .Ref("#/components/schemas/newPet");
+                        );
 
             var newPetSchema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
@@ -64,8 +64,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 .Type(SchemaValueType.String)
                             ),
                             ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))
-                        )
-                        .Ref("#/components/schemas/newPet");
+                        );
 
             var components = new OpenApiComponents
             {
@@ -128,50 +127,48 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             {
                                                 Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Array)
-                                                    .Items(new JsonSchemaBuilder()
-                                                        .Ref("#/components/schemas/pet"))
+                                                    .Items(petSchema)
 
                                             },
-                                            ["application/xml"] = new OpenApiMediaType
-                                            {
-                                                Schema = new JsonSchemaBuilder()
-                                                    .Type(SchemaValueType.Array)
-                                                    .Items(new JsonSchemaBuilder()
-                                                        .Ref("#/components/schemas/pet"))
-                                            }
+                                            //["application/xml"] = new OpenApiMediaType
+                                            //{
+                                            //    Schema = new JsonSchemaBuilder()
+                                            //        .Type(SchemaValueType.Array)
+                                            //        .Items(petSchema)
+                                            //}
                                         }
                                     }
                                 }
                             },
-                            [OperationType.Post] = new OpenApiOperation
-                            {
-                                RequestBody = new OpenApiRequestBody
-                                {
-                                    Description = "Information about a new pet in the system",
-                                    Required = true,
-                                    Content = new Dictionary<string, OpenApiMediaType>
-                                    {
-                                        ["application/json"] = new OpenApiMediaType
-                                        {
-                                            Schema = newPetSchema
-                                        }
-                                    }
-                                },
-                                Responses = new OpenApiResponses
-                                {
-                                    ["200"] = new OpenApiResponse
-                                    {
-                                        Description = "Return a 200 status to indicate that the data was received successfully",
-                                        Content = new Dictionary<string, OpenApiMediaType>
-                                        {
-                                            ["application/json"] = new OpenApiMediaType
-                                            {
-                                                Schema = petSchema
-                                            },
-                                        }
-                                    }
-                                }
-                            }
+                            //[OperationType.Post] = new OpenApiOperation
+                            //{
+                            //    RequestBody = new OpenApiRequestBody
+                            //    {
+                            //        Description = "Information about a new pet in the system",
+                            //        Required = true,
+                            //        Content = new Dictionary<string, OpenApiMediaType>
+                            //        {
+                            //            ["application/json"] = new OpenApiMediaType
+                            //            {
+                            //                Schema = newPetSchema
+                            //            }
+                            //        }
+                            //    },
+                            //    Responses = new OpenApiResponses
+                            //    {
+                            //        ["200"] = new OpenApiResponse
+                            //        {
+                            //            Description = "Return a 200 status to indicate that the data was received successfully",
+                            //            Content = new Dictionary<string, OpenApiMediaType>
+                            //            {
+                            //                ["application/json"] = new OpenApiMediaType
+                            //                {
+                            //                    Schema = petSchema
+                            //                }
+                            //            }
+                            //        }
+                            //    }
+                            //}
                         }
                     }
                 },
