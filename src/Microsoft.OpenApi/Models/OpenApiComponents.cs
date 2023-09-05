@@ -3,8 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text.Json;
+using System.Linq;
 using Json.Schema;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
@@ -177,24 +176,19 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalMap(
                 OpenApiConstants.Schemas,
                 Schemas,
-                (w, key, s) => 
+                (w, key, s) =>
                 {
                     var reference = s.GetRef();
-                    if (reference != null)
+                    if (reference != null &&
+                        reference.OriginalString.Split('/').Last().Equals(key))
                     {
-                        var segments = reference.OriginalString.Split('/');
-                        var id = segments[segments.Length - 1];
-                        if (id == key)
-                        {
-                            w.WriteJsonSchemaWithoutReference(w,s);
-                        }
+                        w.WriteJsonSchemaWithoutReference(w, s);
                     }
                     else
                     {
                         w.WriteJsonSchema(s);
                     }
-                }
-                );
+                });
 
             // responses
             writer.WriteOptionalMap(
