@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                builder.Ref(pointer);
+                return schemaBuilder.Ref(pointer);
             }
 
             foreach (var propertyNode in mapNode)
