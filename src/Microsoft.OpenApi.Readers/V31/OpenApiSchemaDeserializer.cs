@@ -17,16 +17,8 @@ namespace Microsoft.OpenApi.Readers.V31
     {
         public static JsonSchema LoadSchema(ParseNode node)
         {
-            var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
-
-            var builder = new JsonSchemaBuilder();
-            var pointer = mapNode.GetReferencePointer();
-            if (pointer != null)
-            {
-                return builder.Ref(pointer);
-            }
-
-            return node.JsonNode.Deserialize<JsonSchema>();
+            var schema = node.JsonNode.Deserialize<JsonSchema>();
+            return schema;
         }
     }
 
