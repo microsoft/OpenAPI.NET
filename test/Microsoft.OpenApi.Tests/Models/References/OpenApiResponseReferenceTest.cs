@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Globalization;
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Models.References
     public class OpenApiResponseReferenceTest
     {
         private const string OpenApi = @"
-openapi: 3.0.3
+openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
@@ -44,7 +44,7 @@ components:
 ";
 
         private const string OpenApi_2 = @"
-openapi: 3.0.3
+openapi: 3.0.0
 info:
   title: Sample API
   version: 1.0.0
@@ -87,6 +87,7 @@ paths:
             // Assert
             Assert.Equal("OK response", _localResponseReference.Description);
             Assert.Equal("text/plain", _localResponseReference.Content.First().Key);
+            Assert.NotNull(_localResponseReference.Content.First().Value.Schema.GetRef());
             Assert.Equal("External reference: OK response", _externalResponseReference.Description);
             Assert.Equal("OK", _openApiDoc.Components.Responses.First().Value.Description);
         }
