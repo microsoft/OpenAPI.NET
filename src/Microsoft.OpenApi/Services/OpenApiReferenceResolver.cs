@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Services
         /// <param name="mediaType"></param>
         public override void Visit(OpenApiMediaType mediaType)
         {
-            ResolveJsonSchema(mediaType.Schema, r => mediaType.Schema = r);
+            ResolveJsonSchema(mediaType.Schema, r => mediaType.Schema = r ?? mediaType.Schema);
         }
 
         /// <summary>
@@ -213,7 +213,13 @@ namespace Microsoft.OpenApi.Services
 
         private JsonSchema ResolveJsonSchemaReference(JsonSchema schema)
         {
-            return (JsonSchema)SchemaRegistry.Global.Get(schema.GetRef());
+            var reference = schema.GetRef();
+            if (reference == null)
+            {
+                return schema;
+            }
+            var refUri = $"http://everything.json{reference.OriginalString.TrimStart('#')}";
+            return (JsonSchema)SchemaRegistry.Global.Get(new Uri(refUri));
         }
 
         /// <summary>

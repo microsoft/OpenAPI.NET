@@ -1,6 +1,10 @@
 ﻿{
   "description": "OK response",
   "content": {
-    "text/plain": { }
+    "text/plain": {
+      "schema": {
+        "$ref": "#/components/schemas/Pong"
+      }
+    }
   }
 }

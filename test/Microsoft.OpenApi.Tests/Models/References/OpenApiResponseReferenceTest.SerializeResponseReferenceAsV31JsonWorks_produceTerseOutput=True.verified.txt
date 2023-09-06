@@ -1,1 +1,1 @@
-﻿{"description":"OK response","content":{"text/plain":{}}}
+﻿{"description":"OK response","content":{"text/plain":{"schema":{"$ref":"#/components/schemas/Pong"}}}}

@@ -41,10 +41,10 @@ namespace Microsoft.OpenApi.Readers.V31
 
             ParseMap(mapNode, components, _componentsFixedFields, _componentsPatternFields);
 
-            var refUri = "http://everything.json/#/components/schemas/";
             foreach (var schema in components.Schemas)
             {
-                SchemaRegistry.Global.Register(new Uri(refUri + schema.Key), schema.Value);
+                var refUri = new Uri($"http://everything.json/components/schemas/{schema.Key}");
+                SchemaRegistry.Global.Register(refUri, schema.Value);
             }
 
             return components;
