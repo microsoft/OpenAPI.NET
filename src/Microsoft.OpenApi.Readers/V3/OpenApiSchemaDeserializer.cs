@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -276,7 +276,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var pointer = mapNode.GetReferencePointer();
             if (pointer != null)
             {
-                builder.Ref(pointer);
+                return builder.Ref(pointer);
             }
 
             foreach (var propertyNode in mapNode)
