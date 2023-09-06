@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -119,13 +119,7 @@ namespace Microsoft.OpenApi.Extensions
 
         public void Evaluate(EvaluationContext context)
         {
-            context.EnterKeyword(Name);
-            var schemaValueType = context.LocalInstance.GetSchemaValueType();
-            if (schemaValueType == SchemaValueType.Null && !Value)
-            {
-                context.LocalResult.Fail(Name, "nulls are not allowed"); // TODO: localize error message
-            }
-            context.ExitKeyword(Name, context.LocalResult.IsValid);
+            throw new NotImplementedException();
         }
     }
 

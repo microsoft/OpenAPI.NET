@@ -130,45 +130,45 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                                     .Items(petSchema)
 
                                             },
-                                            //["application/xml"] = new OpenApiMediaType
-                                            //{
-                                            //    Schema = new JsonSchemaBuilder()
-                                            //        .Type(SchemaValueType.Array)
-                                            //        .Items(petSchema)
-                                            //}
+                                            ["application/xml"] = new OpenApiMediaType
+                                            {
+                                                Schema = new JsonSchemaBuilder()
+                                                    .Type(SchemaValueType.Array)
+                                                    .Items(petSchema)
+                                            }
                                         }
                                     }
                                 }
                             },
-                            //[OperationType.Post] = new OpenApiOperation
-                            //{
-                            //    RequestBody = new OpenApiRequestBody
-                            //    {
-                            //        Description = "Information about a new pet in the system",
-                            //        Required = true,
-                            //        Content = new Dictionary<string, OpenApiMediaType>
-                            //        {
-                            //            ["application/json"] = new OpenApiMediaType
-                            //            {
-                            //                Schema = newPetSchema
-                            //            }
-                            //        }
-                            //    },
-                            //    Responses = new OpenApiResponses
-                            //    {
-                            //        ["200"] = new OpenApiResponse
-                            //        {
-                            //            Description = "Return a 200 status to indicate that the data was received successfully",
-                            //            Content = new Dictionary<string, OpenApiMediaType>
-                            //            {
-                            //                ["application/json"] = new OpenApiMediaType
-                            //                {
-                            //                    Schema = petSchema
-                            //                }
-                            //            }
-                            //        }
-                            //    }
-                            //}
+                            [OperationType.Post] = new OpenApiOperation
+                            {
+                                RequestBody = new OpenApiRequestBody
+                                {
+                                    Description = "Information about a new pet in the system",
+                                    Required = true,
+                                    Content = new Dictionary<string, OpenApiMediaType>
+                                    {
+                                        ["application/json"] = new OpenApiMediaType
+                                        {
+                                            Schema = newPetSchema
+                                        }
+                                    }
+                                },
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse
+                                    {
+                                        Description = "Return a 200 status to indicate that the data was received successfully",
+                                        Content = new Dictionary<string, OpenApiMediaType>
+                                        {
+                                            ["application/json"] = new OpenApiMediaType
+                                            {
+                                                Schema = petSchema
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 },

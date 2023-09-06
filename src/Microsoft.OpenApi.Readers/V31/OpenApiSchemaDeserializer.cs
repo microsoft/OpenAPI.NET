@@ -2,8 +2,6 @@
 // Licensed under the MIT license. 
 
 using System.Text.Json;
-using Json.Schema;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using JsonSchema = Json.Schema.JsonSchema;
 
