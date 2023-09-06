@@ -341,6 +341,71 @@ namespace Microsoft.OpenApi
         OpenApi3_0 = 1,
     }
 }
+namespace Microsoft.OpenApi.MicrosoftExtensions
+{
+    public class EnumDescription : Microsoft.OpenApi.Interfaces.IOpenApiElement
+    {
+        public EnumDescription() { }
+        public EnumDescription(Microsoft.OpenApi.Any.OpenApiObject source) { }
+        public string Description { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
+    public class OpenApiDeprecationExtension : Microsoft.OpenApi.Interfaces.IOpenApiExtension
+    {
+        public OpenApiDeprecationExtension() { }
+        public System.DateTimeOffset? Date { get; set; }
+        public string Description { get; set; }
+        public System.DateTimeOffset? RemovalDate { get; set; }
+        public string Version { get; set; }
+        public static string Name { get; }
+        public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+        public static Microsoft.OpenApi.MicrosoftExtensions.OpenApiDeprecationExtension Parse(Microsoft.OpenApi.Any.IOpenApiAny source) { }
+    }
+    public class OpenApiEnumFlagsExtension : Microsoft.OpenApi.Interfaces.IOpenApiExtension
+    {
+        public OpenApiEnumFlagsExtension() { }
+        public bool IsFlags { get; set; }
+        public static string Name { get; }
+        public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+        public static Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumFlagsExtension Parse(Microsoft.OpenApi.Any.IOpenApiAny source) { }
+    }
+    public class OpenApiEnumValuesDescriptionExtension : Microsoft.OpenApi.Interfaces.IOpenApiExtension
+    {
+        public OpenApiEnumValuesDescriptionExtension() { }
+        public string EnumName { get; set; }
+        public System.Collections.Generic.List<Microsoft.OpenApi.MicrosoftExtensions.EnumDescription> ValuesDescriptions { get; set; }
+        public static string Name { get; }
+        public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+        public static Microsoft.OpenApi.MicrosoftExtensions.OpenApiEnumValuesDescriptionExtension Parse(Microsoft.OpenApi.Any.IOpenApiAny source) { }
+    }
+    public class OpenApiPagingExtension : Microsoft.OpenApi.Interfaces.IOpenApiExtension
+    {
+        public OpenApiPagingExtension() { }
+        public string ItemName { get; set; }
+        public string NextLinkName { get; set; }
+        public string OperationName { get; set; }
+        public static string Name { get; }
+        public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+        public static Microsoft.OpenApi.MicrosoftExtensions.OpenApiPagingExtension Parse(Microsoft.OpenApi.Any.IOpenApiAny source) { }
+    }
+    public class OpenApiPrimaryErrorMessageExtension : Microsoft.OpenApi.Interfaces.IOpenApiExtension
+    {
+        public OpenApiPrimaryErrorMessageExtension() { }
+        public bool IsPrimaryErrorMessage { get; set; }
+        public static string Name { get; }
+        public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+        public static Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension Parse(Microsoft.OpenApi.Any.IOpenApiAny source) { }
+    }
+    public class OpenApiReservedParameterExtension : Microsoft.OpenApi.Interfaces.IOpenApiExtension
+    {
+        public OpenApiReservedParameterExtension() { }
+        public bool? IsReserved { get; set; }
+        public static string Name { get; }
+        public void Write(Microsoft.OpenApi.Writers.IOpenApiWriter writer, Microsoft.OpenApi.OpenApiSpecVersion specVersion) { }
+        public static Microsoft.OpenApi.MicrosoftExtensions.OpenApiReservedParameterExtension Parse(Microsoft.OpenApi.Any.IOpenApiAny source) { }
+    }
+}
 namespace Microsoft.OpenApi.Models
 {
     public class OpenApiCallback : Microsoft.OpenApi.Interfaces.IEffective<Microsoft.OpenApi.Models.OpenApiCallback>, Microsoft.OpenApi.Interfaces.IOpenApiElement, Microsoft.OpenApi.Interfaces.IOpenApiExtensible, Microsoft.OpenApi.Interfaces.IOpenApiReferenceable, Microsoft.OpenApi.Interfaces.IOpenApiSerializable
