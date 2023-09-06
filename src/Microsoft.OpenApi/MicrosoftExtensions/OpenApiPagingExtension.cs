@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.MicrosoftExtensions;
 /// Extension element for OpenAPI to add pageable information.
 /// Based of the AutoRest specification https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
 /// </summary>
-internal class OpenApiPagingExtension : IOpenApiExtension
+public class OpenApiPagingExtension : IOpenApiExtension
 {
     /// <summary>
     /// Name of the extension as used in the description.
