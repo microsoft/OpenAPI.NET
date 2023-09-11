@@ -193,14 +193,22 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Resolve all references used in a schema
         /// </summary>
-        public override void Visit(JsonSchema schema)
+        public override JsonSchema VisitJsonSchema(JsonSchema schema)
         {
-            ResolveJsonSchema(schema.GetItems(), r => new JsonSchemaBuilder().Items(r));
+            var builder = new JsonSchemaBuilder();
+            foreach(var keyword in schema.Keywords)
+            {
+                builder.Add(keyword);
+            }
+
+            ResolveJsonSchema(schema.GetItems(), r => schema = builder.Items(r));
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetOneOf());
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAllOf());
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAnyOf());
             ResolveJsonSchemaMap((IDictionary<string, JsonSchema>)schema.GetProperties());
-            ResolveJsonSchema(schema.GetAdditionalProperties(), r => new JsonSchemaBuilder().AdditionalProperties(r));
+            ResolveJsonSchema(schema.GetAdditionalProperties(), r => schema = builder.AdditionalProperties(r));
+
+            return builder.Build();
         }
 
         private void ResolveJsonSchemas(IDictionary<string, JsonSchema> schemas)
