@@ -622,23 +622,5 @@ namespace Microsoft.OpenApi.Models
             var walker = new OpenApiWalker(visitor);
             walker.Walk(components);
         }
-
-        public override void Visit(IOpenApiReferenceable referenceable)
-        {
-            switch (referenceable)
-            {
-                // TODO
-                //case JsonSchema schema:
-                //    if (!Schemas.ContainsKey(schema.Reference.Id))
-                //    {
-                //        Schemas.Add(schema.Reference.Id, schema);
-                //    }
-                //    break;
-
-                //default:
-                //    break;
-            }
-            base.Visit(referenceable);
-        }
     }
 }

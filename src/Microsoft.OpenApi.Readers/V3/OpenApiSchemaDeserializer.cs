@@ -284,7 +284,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 propertyNode.ParseField(builder, _schemaFixedFields, _schemaPatternFields);
             }
 
-            var schema = builder.Build();            
+            var schema = builder.Build();
             return schema;
         }
 

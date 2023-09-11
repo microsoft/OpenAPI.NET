@@ -277,16 +277,13 @@ get:
                     {
                             ["ErrorModel"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
+                                .Required("message", "code")
                                 .Properties(
-                                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600)),
-                                    ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Required("message")
-                                .Ref("ErrorModel"),
+                                    ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                                    ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600))),
                             ["ExtendedErrorModel"] = new JsonSchemaBuilder()
-                                .Ref("ExtendedErrorModel")
                                 .AllOf(
                                     new JsonSchemaBuilder()
-                                        .Ref("ErrorModel")
                                         .Type(SchemaValueType.Object)
                                         .Properties(
                                             ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Minimum(100).Maximum(600)),

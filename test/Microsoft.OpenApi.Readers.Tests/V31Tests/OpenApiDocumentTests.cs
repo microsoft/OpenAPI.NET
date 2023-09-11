@@ -38,7 +38,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             // Arrange and Act
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithWebhooks.yaml"));
             var actual = new OpenApiStreamReader().Read(stream, out var diagnostic);
-            var actualSchema = actual.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
 
             var petSchema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
@@ -197,8 +196,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 .Properties(
                                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                    ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("#/components/schemas/pet"),
+                                    ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                     ["newPet"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("name")
@@ -206,7 +204,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                     ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("#components/schemas/newPet")
                 }
             };
 

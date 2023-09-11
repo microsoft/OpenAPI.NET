@@ -546,23 +546,20 @@ paths: {}",
                             .Properties(
                                 ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("#/components/schemas/pet"),
+                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["newPet"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("name")
                             .Properties(
                                 ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("#/components/schemas/newPet"),
+                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["errorModel"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("code", "message")
                             .Properties(
                                 ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                                 ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("#/components/schemas/errorModel"),
                     },
                     SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
                     {
@@ -891,7 +888,7 @@ paths: {}",
                                             Description = "ID of pet to delete",
                                             Required = true,
                                             Schema = new JsonSchemaBuilder()
-                                                        .Type(SchemaValueType.Array)
+                                                        .Type(SchemaValueType.Integer)
                                                         .Format("int64")
                                         }
                                     },
