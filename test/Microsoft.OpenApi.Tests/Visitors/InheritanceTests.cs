@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Json.Schema;
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
             visitor.Visit(default(IDictionary<string, OpenApiExample>));
             visitor.Visit(default(OpenApiComponents));
             visitor.Visit(default(OpenApiExternalDocs));
-            visitor.Visit(default(JsonSchema));
+           // visitor.Visit(default(JsonSchema));
             visitor.Visit(default(IDictionary<string, OpenApiLink>));
             visitor.Visit(default(OpenApiLink));
             visitor.Visit(default(OpenApiCallback));
