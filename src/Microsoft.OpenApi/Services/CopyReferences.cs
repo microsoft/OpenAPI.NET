@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Services
         /// Visits <see cref="JsonSchema"/>
         /// </summary>
         /// <param name="schema">The OpenApiSchema to be visited.</param>
-        public override void Visit(JsonSchema schema)
+        public override void Visit(ref JsonSchema schema)
         {
             // This is needed to handle schemas used in Responses in components
             if (schema.GetRef() != null)
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Services
                     Components.Schemas.Add(schema.GetRef().OriginalString, schema);
                 }
             }
-            base.Visit(schema);
+            base.Visit(ref schema);
         }
 
         private void EnsureComponentsExists()

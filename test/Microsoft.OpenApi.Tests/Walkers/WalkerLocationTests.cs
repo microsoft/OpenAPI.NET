@@ -286,7 +286,7 @@ namespace Microsoft.OpenApi.Tests.Walkers
             Locations.Add(this.PathString);
         }
 
-        public override void Visit(JsonSchema schema)
+        public override void Visit(ref JsonSchema schema)
         {
             Locations.Add(this.PathString);
         }
