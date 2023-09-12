@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Validations
         /// Execute validation rules against an <see cref="JsonSchema"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
-        public override void Visit(JsonSchema item) => Validate(item);
+        public override void Visit(ref JsonSchema item) => Validate(item);
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiServer"/>

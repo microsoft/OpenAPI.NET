@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Hidi
 
         public int SchemaCount { get; set; } = 0;
 
-        public override void Visit(JsonSchema schema)
+        public override void Visit(ref JsonSchema schema)
         {
             SchemaCount++;
         }

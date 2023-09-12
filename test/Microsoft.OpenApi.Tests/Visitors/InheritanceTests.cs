@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Json.Schema;
@@ -232,10 +232,10 @@ namespace Microsoft.OpenApi.Tests.Visitors
                 base.Visit(externalDocs);
             }
 
-            public override void Visit(JsonSchema schema)
+            public override void Visit(ref JsonSchema schema)
             {
                 EncodeCall();
-                base.Visit(schema);
+                base.Visit(ref schema);
             }
 
             public override void Visit(IDictionary<string, OpenApiLink> links)

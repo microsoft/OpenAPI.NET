@@ -240,7 +240,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="JsonSchema"/>
         /// </summary>
-        public virtual void Visit(JsonSchema schema)
+        public virtual void Visit(ref JsonSchema schema)
         {
         }
         

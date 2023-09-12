@@ -822,7 +822,7 @@ namespace Microsoft.OpenApi.Services
                 _schemaLoop.Push(schema);
             }
 
-            _visitor.Visit(schema);
+            _visitor.Visit(ref schema);
 
             if (schema.GetItems() != null)
             {
