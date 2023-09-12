@@ -60,19 +60,6 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits the referenceable element in the host document
-        /// </summary>
-        /// <param name="referenceable">The referenceable element in the doc.</param>
-        //public override void Visit(IBaseDocument node)
-        //{
-        //    var schema = (JsonSchema)node;
-        //    if (schema.GetRef() != null)
-        //    {
-        //        referenceable.Reference.HostDocument = _currentDocument;
-        //    }
-        //}
-
-        /// <summary>
         /// Resolves references in components
         /// </summary>
         /// <param name="components"></param>
@@ -202,18 +189,27 @@ namespace Microsoft.OpenApi.Services
         {
             ResolveMap(links);
         }
-
+        
         /// <summary>
-        /// Resolve all references used in a schema
+        /// Resolve all references used in a schem
         /// </summary>
+        /// <param name="schema"></param>
         public override void Visit(JsonSchema schema)
         {
-            ResolveJsonSchema(schema.GetItems(), r => new JsonSchemaBuilder().Items(r));
+            var builder = new JsonSchemaBuilder();
+            foreach (var keyword in schema.Keywords)
+            {
+                builder.Add(keyword);
+            }
+            
+            ResolveJsonSchema(schema.GetItems(), r => schema = builder.Items(r));
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetOneOf());
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAllOf());
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAnyOf());
             ResolveJsonSchemaMap((IDictionary<string, JsonSchema>)schema.GetProperties());
-            ResolveJsonSchema(schema.GetAdditionalProperties(), r => new JsonSchemaBuilder().AdditionalProperties(r));
+            ResolveJsonSchema(schema.GetAdditionalProperties(), r => schema = builder.AdditionalProperties(r));
+
+            schema = builder.Build();
         }
 
         private void ResolveJsonSchemas(IDictionary<string, JsonSchema> schemas)

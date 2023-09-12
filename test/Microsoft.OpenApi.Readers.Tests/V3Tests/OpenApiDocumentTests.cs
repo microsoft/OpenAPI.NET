@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -249,33 +249,11 @@ paths: {}",
                     }
                 };
 
-                // Create a clone of the schema to avoid modifying things in components.
                 var petSchema = components.Schemas["pet"];
-
-                //petSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "pet",
-                //    Type = ReferenceType.Schema,
-                //    HostDocument = actual
-                //};
 
                 var newPetSchema = components.Schemas["newPet"];
 
-                //newPetSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "newPet",
-                //    Type = ReferenceType.Schema,
-                //    HostDocument = actual
-                //};
-
                 var errorModelSchema = components.Schemas["errorModel"];
-
-                //errorModelSchema.Reference = new OpenApiReference
-                //{
-                //    Id = "errorModel",
-                //    Type = ReferenceType.Schema,
-                //    HostDocument = actual
-                //};
 
                 var expected = new OpenApiDocument
                 {
@@ -568,23 +546,20 @@ paths: {}",
                             .Properties(
                                 ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("#/components/schemas/pet"),
+                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["newPet"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("name")
                             .Properties(
                                 ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("#/components/schemas/newPet"),
+                                ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["errorModel"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("code", "message")
                             .Properties(
                                 ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                                 ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("#/components/schemas/errorModel"),
                     },
                     SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>
                     {
@@ -615,7 +590,6 @@ paths: {}",
                     }
                 };
 
-                // Create a clone of the schema to avoid modifying things in components.
                 var petSchema = components.Schemas["pet"];
 
                 var newPetSchema = components.Schemas["newPet"];
@@ -914,7 +888,7 @@ paths: {}",
                                             Description = "ID of pet to delete",
                                             Required = true,
                                             Schema = new JsonSchemaBuilder()
-                                                        .Type(SchemaValueType.Array)
+                                                        .Type(SchemaValueType.Integer)
                                                         .Format("int64")
                                         }
                                     },
@@ -1019,49 +993,47 @@ paths: {}",
         [Fact]
         public void HeaderParameterShouldAllowExample()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml")))
-            {
-                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-                var exampleHeader = openApiDoc.Components?.Headers?["example-header"];
-                Assert.NotNull(exampleHeader);
-                exampleHeader.Should().BeEquivalentTo(
-                    new OpenApiHeader()
+            var exampleHeader = openApiDoc.Components?.Headers?["example-header"];
+            Assert.NotNull(exampleHeader);
+            exampleHeader.Should().BeEquivalentTo(
+                new OpenApiHeader()
+                {
+                    Description = "Test header with example",
+                    Required = true,
+                    Deprecated = true,
+                    AllowEmptyValue = true,
+                    AllowReserved = true,
+                    Style = ParameterStyle.Simple,
+                    Explode = true,
+                    Example = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
+                    Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.String)
+                                .Format(Formats.Uuid),
+                    Reference = new OpenApiReference()
                     {
-                        Description = "Test header with example",
-                        Required = true,
-                        Deprecated = true,
-                        AllowEmptyValue = true,
-                        AllowReserved = true,
-                        Style = ParameterStyle.Simple,
-                        Explode = true,
-                        Example = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
-                        Schema = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.Array)
-                                    .Format(Formats.Uuid)
-                                    .Ref("#components/header/example-header"),
-                        Reference = new OpenApiReference()
-                        {
-                            Type = ReferenceType.Header,
-                            Id = "example-header"
-                        }
-                    }, options => options.IgnoringCyclicReferences()
-                    .Excluding(e => e.Example.Node.Parent));
+                        Type = ReferenceType.Header,
+                        Id = "example-header"
+                    }
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(e => e.Example.Node.Parent));
 
-                var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
-                Assert.NotNull(examplesHeader);
-                examplesHeader.Should().BeEquivalentTo(
-                    new OpenApiHeader()
+            var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
+            Assert.NotNull(examplesHeader);
+            examplesHeader.Should().BeEquivalentTo(
+                new OpenApiHeader()
+                {
+                    Description = "Test header with example",
+                    Required = true,
+                    Deprecated = true,
+                    AllowEmptyValue = true,
+                    AllowReserved = true,
+                    Style = ParameterStyle.Simple,
+                    Explode = true,
+                    Examples = new Dictionary<string, OpenApiExample>()
                     {
-                        Description = "Test header with example",
-                        Required = true,
-                        Deprecated = true,
-                        AllowEmptyValue = true,
-                        AllowReserved = true,
-                        Style = ParameterStyle.Simple,
-                        Explode = true,
-                        Examples = new Dictionary<string, OpenApiExample>()
-                        {
                             { "uuid1", new OpenApiExample()
                                 {
                                     Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
@@ -1072,19 +1044,18 @@ paths: {}",
                                     Value = new OpenApiAny("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
                                 }
                             }
-                        },
-                        Schema = new JsonSchemaBuilder()
-                                    .Type(SchemaValueType.String)
-                                    .Format(Formats.Uuid),
-                        Reference = new OpenApiReference()
-                        {
-                            Type = ReferenceType.Header,
-                            Id = "examples-header"
-                        }
-                    }, options => options.IgnoringCyclicReferences()
-                    .Excluding(e => e.Examples["uuid1"].Value.Node.Parent)
-                    .Excluding(e => e.Examples["uuid2"].Value.Node.Parent));
-            }
+                    },
+                    Schema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.String)
+                                .Format(Formats.Uuid),
+                    Reference = new OpenApiReference()
+                    {
+                        Type = ReferenceType.Header,
+                        Id = "examples-header"
+                    }
+                }, options => options.IgnoringCyclicReferences()
+                .Excluding(e => e.Examples["uuid1"].Value.Node.Parent)
+                .Excluding(e => e.Examples["uuid2"].Value.Node.Parent));
         }
 
         [Fact]

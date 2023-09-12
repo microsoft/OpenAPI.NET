@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             var petSchema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
-                        .Required("name")
+                        .Required("id", "name")
                         .Properties(
                             ("id", new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Integer)
@@ -50,8 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 .Type(SchemaValueType.String)
                             ),
                             ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))
-                        )
-                        .Ref("#/components/schemas/newPet");
+                        );
 
             var newPetSchema = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
@@ -64,8 +63,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 .Type(SchemaValueType.String)
                             ),
                             ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))
-                        )
-                        .Ref("#/components/schemas/newPet");
+                        );
 
             var components = new OpenApiComponents
             {
@@ -128,16 +126,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             {
                                                 Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Array)
-                                                    .Items(new JsonSchemaBuilder()
-                                                        .Ref("#/components/schemas/pet"))
+                                                    .Items(petSchema)
 
                                             },
                                             ["application/xml"] = new OpenApiMediaType
                                             {
                                                 Schema = new JsonSchemaBuilder()
                                                     .Type(SchemaValueType.Array)
-                                                    .Items(new JsonSchemaBuilder()
-                                                        .Ref("#/components/schemas/pet"))
+                                                    .Items(petSchema)
                                             }
                                         }
                                     }
@@ -167,7 +163,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                             ["application/json"] = new OpenApiMediaType
                                             {
                                                 Schema = petSchema
-                                            },
+                                            }
                                         }
                                     }
                                 }
@@ -200,8 +196,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                 .Properties(
                                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                    ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("#/components/schemas/pet"),
+                                    ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                     ["newPet"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("name")
@@ -209,7 +204,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
                                     ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                     ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                     ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                .Ref("#components/schemas/newPet")
                 }
             };
 

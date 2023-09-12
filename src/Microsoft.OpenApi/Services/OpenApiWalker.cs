@@ -506,7 +506,7 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(pathItem as IOpenApiExtensible);
 
             _pathItemLoop.Pop();
-        }
+         }
 
         /// <summary>
         /// Visits dictionary of <see cref="OpenApiOperation"/>
@@ -755,7 +755,7 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(mediaType);
 
             Walk(OpenApiConstants.Example, () => Walk(mediaType.Examples));
-            Walk(OpenApiConstants.Schema, () => Walk(mediaType.Schema));
+            Walk(OpenApiConstants.Schema, () => mediaType.Schema = Walk(mediaType.Schema));
             Walk(OpenApiConstants.Encoding, () => Walk(mediaType.Encoding));
             Walk(mediaType as IOpenApiExtensible);
         }
@@ -805,17 +805,17 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Visits <see cref="JsonSchema"/> and child objects
         /// </summary>
-        internal void Walk(JsonSchema schema, bool isComponent = false)
+        internal JsonSchema Walk(JsonSchema schema, bool isComponent = false)
         {
             if (schema == null
                 || (schema.GetRef() != null && !isComponent))
             {
-                return;
+                return schema;
             }
 
             if (_schemaLoop.Contains(schema))
             {
-                return;  // Loop detected, this schema has already been walked.
+                return schema;  // Loop detected, this schema has already been walked.
             }
             else
             {
@@ -865,6 +865,7 @@ namespace Microsoft.OpenApi.Services
             Walk(schema as IOpenApiExtensible);
 
             _schemaLoop.Pop();
+            return schema;
         }
 
         internal void Walk(IReadOnlyCollection<JsonSchema> schemaCollection, bool isComponent = false)
