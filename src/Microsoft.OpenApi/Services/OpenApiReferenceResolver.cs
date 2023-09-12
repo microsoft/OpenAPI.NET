@@ -189,18 +189,19 @@ namespace Microsoft.OpenApi.Services
         {
             ResolveMap(links);
         }
-
+        
         /// <summary>
-        /// Resolve all references used in a schema
+        /// Resolve all references used in a schem
         /// </summary>
-        public override JsonSchema VisitJsonSchema(JsonSchema schema)
+        /// <param name="schema"></param>
+        public override void Visit(JsonSchema schema)
         {
             var builder = new JsonSchemaBuilder();
-            foreach(var keyword in schema.Keywords)
+            foreach (var keyword in schema.Keywords)
             {
                 builder.Add(keyword);
             }
-
+            
             ResolveJsonSchema(schema.GetItems(), r => schema = builder.Items(r));
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetOneOf());
             ResolveJsonSchemaList((IList<JsonSchema>)schema.GetAllOf());
@@ -208,7 +209,7 @@ namespace Microsoft.OpenApi.Services
             ResolveJsonSchemaMap((IDictionary<string, JsonSchema>)schema.GetProperties());
             ResolveJsonSchema(schema.GetAdditionalProperties(), r => schema = builder.AdditionalProperties(r));
 
-            return builder.Build();
+            schema = builder.Build();
         }
 
         private void ResolveJsonSchemas(IDictionary<string, JsonSchema> schemas)
