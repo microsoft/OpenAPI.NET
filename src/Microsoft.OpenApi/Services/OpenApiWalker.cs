@@ -807,10 +807,8 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         internal JsonSchema Walk(JsonSchema schema, bool isComponent = false)
         {
-            var reference = schema.GetRef();
-
             if (schema == null
-                || (reference != null && isComponent))
+                || (schema.GetRef() != null && !isComponent))
             {
                 return schema;
             }
@@ -824,7 +822,7 @@ namespace Microsoft.OpenApi.Services
                 _schemaLoop.Push(schema);
             }
 
-            schema = _visitor.VisitJsonSchema(schema);
+            _visitor.Visit(schema);
 
             if (schema.GetItems() != null)
             {
