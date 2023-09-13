@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -55,16 +55,13 @@ paths:
 
                 var successSchema = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Array)
-                            .Ref("Item")
                             .Items(new JsonSchemaBuilder()
-                                .Ref("Item"));
+                                .Ref("#/definitions/Item"));
 
                 var okSchema = new JsonSchemaBuilder()
-                        .Ref("Item")
                         .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")));
 
                 var errorSchema = new JsonSchemaBuilder()
-                        .Ref("Error")
                         .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)));
@@ -199,15 +196,13 @@ paths:
             var successSchema = new JsonSchemaBuilder()
                 .Type(SchemaValueType.Array)
                 .Items(new JsonSchemaBuilder()
-                    .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier.")))
-                    .Ref("Item"))
+                    .Properties(("id", new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Item identifier."))))
                 .Build();
 
             var errorSchema = new JsonSchemaBuilder()
                     .Properties(("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                         ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                         ("fields", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                    .Ref("Error")
                     .Build();
 
             var responses = document.Paths["/items"].Operations[OperationType.Get].Responses;
@@ -217,7 +212,6 @@ paths:
 
                 var json = response.Value.Content["application/json"];
                 Assert.NotNull(json);
-                //Assert.Equal(json.Schema.Keywords.OfType<TypeKeyword>().FirstOrDefault().Type, targetSchema.Build().GetJsonType());
                 json.Schema.Should().BeEquivalentTo(targetSchema);
 
                 var xml = response.Value.Content["application/xml"];
