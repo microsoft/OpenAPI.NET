@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
@@ -224,18 +224,19 @@ paths:
         [Fact]
         public void ShouldAllowComponentsThatJustContainAReference()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "ComponentRootReference.json")))
+            // Arrange
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "ComponentRootReference.json"));
+            OpenApiStreamReader reader = new OpenApiStreamReader();
+
+            // Act
+            OpenApiDocument doc = reader.Read(stream, out OpenApiDiagnostic diags);
+            JsonSchema schema = doc.Components.Schemas["AllPets"];
+
+            // Assert
+            if (schema.GetRef() != null)
             {
-                OpenApiStreamReader reader = new OpenApiStreamReader();
-                OpenApiDocument doc = reader.Read(stream, out OpenApiDiagnostic diags);
-                JsonSchema schema1 = doc.Components.Schemas["AllPets"];
-                //Assert.False(schema1.UnresolvedReference);
-                //JsonSchema schema2 = doc.ResolveReferenceTo<JsonSchema>(schema1.GetRef());
-                //if (schema1.GetRef() == schema2.GetRef())
-                //{
-                //    // detected a cycle - this code gets triggered
-                //    Assert.True(false, "A cycle should not be detected");
-                //}
+                // detected a cycle - this code gets triggered
+                Assert.True(false, "A cycle should not be detected");
             }
         }
     }
