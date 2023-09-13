@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -262,6 +263,8 @@ namespace Microsoft.OpenApi.Readers.V2
             MakeServers(openApidoc.Servers, openApiNode.Context, rootNode);
 
             FixRequestBodyReferences(openApidoc);
+
+            RegisterComponentsSchemasInGlobalRegistry(openApidoc.Components.Schemas);
             return openApidoc;
         }
 
@@ -307,6 +310,15 @@ namespace Microsoft.OpenApi.Readers.V2
             //Check if the host (excluding port number) is a valid dns/ip address.
             var hostPart = host.Split(':').First();
             return Uri.CheckHostName(hostPart) != UriHostNameType.Unknown;
+        }
+
+        private static void RegisterComponentsSchemasInGlobalRegistry(IDictionary<string, JsonSchema> schemas)
+        {
+            foreach (var schema in schemas)
+            {
+                var refUri = new Uri($"http://everything.json/definitions/{schema.Key}");
+                SchemaRegistry.Global.Register(refUri, schema.Value);
+            }
         }
     }
 
