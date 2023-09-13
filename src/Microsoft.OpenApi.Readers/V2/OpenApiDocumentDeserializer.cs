@@ -263,8 +263,8 @@ namespace Microsoft.OpenApi.Readers.V2
             MakeServers(openApidoc.Servers, openApiNode.Context, rootNode);
 
             FixRequestBodyReferences(openApidoc);
+            RegisterComponentsSchemasInGlobalRegistry(openApidoc.Components?.Schemas);
 
-            RegisterComponentsSchemasInGlobalRegistry(openApidoc.Components.Schemas);
             return openApidoc;
         }
 
@@ -314,6 +314,11 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static void RegisterComponentsSchemasInGlobalRegistry(IDictionary<string, JsonSchema> schemas)
         {
+            if (schemas == null)
+            {
+                return;
+            }
+
             foreach (var schema in schemas)
             {
                 var refUri = new Uri($"http://everything.json/definitions/{schema.Key}");
