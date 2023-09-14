@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Hidi
             }
             else if (postmanCollection != null)
             {
-                requestUrls = EnumerateJsonDocument(postmanCollection.RootElement, requestUrls);
+                requestUrls = EnumerateJsonDocument(postmanCollection.RootElement, new());
                 logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
             }
 
