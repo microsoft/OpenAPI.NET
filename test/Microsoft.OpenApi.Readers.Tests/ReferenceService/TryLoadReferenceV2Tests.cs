@@ -164,7 +164,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                             .Properties(
                                 ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
                                 ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                            .Ref("#/components/schemas/SampleObject2")
                         }
                     },
                     Reference = new OpenApiReference
