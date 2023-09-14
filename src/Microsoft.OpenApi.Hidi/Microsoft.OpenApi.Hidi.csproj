@@ -3,8 +3,10 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackAsTool>true</PackAsTool>
+    <Nullable>enable</Nullable>
     <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -26,6 +28,9 @@
     <SignAssembly>true</SignAssembly>
     <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <NoWarn>NU5048</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -61,5 +66,9 @@
     </AssemblyAttribute>
   </ItemGroup>
     <!-- End Unit test Internals -->
+
+  <ItemGroup>
+    <None Include="../../readme.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
 </Project>

@@ -228,7 +228,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
 
         [Fact]
-        public async Task TransformCommandConvertsOpenApiWithDefaultOutputname()
+        public async Task TransformCommandConvertsOpenApiWithDefaultOutputName()
         {
             HidiOptions options = new HidiOptions
             {
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public async Task TransformCommandConvertsCsdlWithDefaultOutputname()
+        public async Task TransformCommandConvertsCsdlWithDefaultOutputName()
         {
             HidiOptions options = new HidiOptions
             {
@@ -264,7 +264,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public async Task TransformCommandConvertsOpenApiWithDefaultOutputnameAndSwitchFormat()
+        public async Task TransformCommandConvertsOpenApiWithDefaultOutputNameAndSwitchFormat()
         {
             HidiOptions options = new HidiOptions
             {
@@ -367,10 +367,12 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             using var jsDoc = JsonDocument.Parse(File.ReadAllText("ai-plugin.json"));
             var openAiManifest = OpenAIPluginManifest.Load(jsDoc.RootElement);
-
-            Assert.Equal("Mastodon - Subset", openAiManifest?.NameForHuman);
-            Assert.Equal("openapi", openAiManifest?.Api.Type);
-            Assert.Equal("./openapi.json", openAiManifest?.Api.Url);
+            
+            Assert.NotNull(openAiManifest);
+            Assert.Equal("Mastodon - Subset", openAiManifest.NameForHuman);
+            Assert.NotNull(openAiManifest.Api);
+            Assert.Equal("openapi", openAiManifest.Api.Type);
+            Assert.Equal("./openapi.json", openAiManifest.Api.Url);
         }
 
 

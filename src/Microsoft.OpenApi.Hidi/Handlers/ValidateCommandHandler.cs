@@ -5,6 +5,7 @@ using System;
 using System.CommandLine.Invocation;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Hidi.Options;
 
@@ -26,11 +27,12 @@ namespace Microsoft.OpenApi.Hidi.Handlers
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             HidiOptions hidiOptions = new HidiOptions(context.ParseResult, CommandOptions);
-            CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetService(typeof(CancellationToken));
+            CancellationToken cancellationToken = (CancellationToken)context.BindingContext.GetRequiredService(typeof(CancellationToken));
             using var loggerFactory = Logger.ConfigureLogger(hidiOptions.LogLevel);
             var logger = loggerFactory.CreateLogger<ValidateCommandHandler>();
             try
             {
+                if (hidiOptions.OpenApi is null) throw new InvalidOperationException("OpenApi file is required");
                 await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken);
                 return 0;
             }

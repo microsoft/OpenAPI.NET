@@ -495,7 +495,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
             // Act && Assert
             var schemaCopy = new OpenApiSchema(schema);
-            Assert.Equal(1, schemaCopy.Extensions.Count);
+            Assert.Single(schemaCopy.Extensions);
 
             // Act && Assert
             schemaCopy.Extensions = new Dictionary<string, IOpenApiExtension>

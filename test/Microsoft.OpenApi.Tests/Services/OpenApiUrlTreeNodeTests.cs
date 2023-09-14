@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.NotNull(rootNode);
             Assert.NotNull(rootNode.PathItems);
             Assert.False(rootNode.HasOperations(label));
-            Assert.Equal(0, rootNode.Children.Count);
+            Assert.Empty(rootNode.Children);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             Assert.NotNull(rootNode);
             Assert.NotNull(rootNode.PathItems);
-            Assert.Equal(1, rootNode.Children.Count);
+            Assert.Single(rootNode.Children);
             Assert.Equal("houses", rootNode.Children["houses"].Segment);
             Assert.NotNull(rootNode.Children["houses"].PathItems);
             Assert.False(rootNode.Children["houses"].HasOperations("cabin"));
@@ -339,7 +339,7 @@ namespace Microsoft.OpenApi.Tests.Services
             var rootNode = OpenApiUrlTreeNode.Create(doc, label);
 
             Assert.NotNull(rootNode);
-            Assert.Equal(1, rootNode.Children.Count);
+            Assert.Single(rootNode.Children);
             Assert.NotNull(rootNode.Children["houses"].Children["apartments"].Children["{apartment-id}"].PathItems);
             Assert.True(rootNode.Children["houses"].Children["apartments"].Children["{apartment-id}"].IsParameter);
             Assert.Equal("{apartment-id}", rootNode.Children["houses"].Children["apartments"].Children["{apartment-id}"].Segment);

@@ -16,6 +16,9 @@ namespace Microsoft.OpenApi.Models
     public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
     {
         private bool? _explode;
+        /// <summary>
+        /// The style of the parameter.
+        /// </summary>
         public ParameterStyle? _style;
 
         /// <summary>

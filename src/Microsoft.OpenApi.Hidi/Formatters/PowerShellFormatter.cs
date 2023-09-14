@@ -191,9 +191,8 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static void ResolveOneOfSchema(OpenApiSchema schema)
         {
-            if (schema.OneOf?.Any() ?? false)
+            if (schema.OneOf?.FirstOrDefault() is {} newSchema)
             {
-                var newSchema = schema.OneOf.FirstOrDefault();
                 schema.OneOf = null;
                 FlattenSchema(schema, newSchema);
             }
@@ -201,9 +200,8 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static void ResolveAnyOfSchema(OpenApiSchema schema)
         {
-            if (schema.AnyOf?.Any() ?? false)
+            if (schema.AnyOf?.FirstOrDefault() is {} newSchema)
             {
-                var newSchema = schema.AnyOf.FirstOrDefault();
                 schema.AnyOf = null;
                 FlattenSchema(schema, newSchema);
             }

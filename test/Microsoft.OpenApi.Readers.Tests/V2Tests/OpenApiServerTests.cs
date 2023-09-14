@@ -1,11 +1,7 @@
 ﻿using FluentAssertions;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -49,7 +45,7 @@ paths: {}
 
             var doc = reader.Read(input, out var diagnostic);
 
-            Assert.Equal(0, doc.Servers.Count);
+            Assert.Empty(doc.Servers);
         }
 
         [Fact]
@@ -67,10 +63,10 @@ paths: {}
             {
             });
 
-            var doc = reader.Read(input, out var diagnostic);
+            var doc = reader.Read(input, out var _);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("//www.foo.com", server.Url);
         }
 
@@ -95,7 +91,7 @@ paths: {}
             var doc = reader.Read(input, out var diagnostic);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("http://www.foo.com", server.Url);
         }
 
@@ -117,7 +113,7 @@ paths: {}
             var doc = reader.Read(input, out var diagnostic);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("/baz", server.Url);
         }
 
@@ -141,7 +137,7 @@ paths: {}
             var doc = reader.Read(input, out var diagnostic);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("http://bing.com/foo", server.Url);
         }
 
@@ -165,7 +161,7 @@ paths: {}
             var doc = reader.Read(input, out var diagnostic);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("http://bing.com", server.Url);
         }
 
@@ -188,7 +184,7 @@ paths: {}
             var doc = reader.Read(input, out var diagnostic);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("https://bing.com/api", server.Url);
         }
 
@@ -211,7 +207,7 @@ paths: {}
             var doc = reader.Read(input, out var diagnostic);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("https://www.example.com", server.Url);
         }
 
@@ -231,10 +227,10 @@ paths: {}
                 BaseUrl = new Uri("https://dev.bing.com/api/description.yaml")
             });
 
-            var doc = reader.Read(input, out var diagnostic);
+            var doc = reader.Read(input, out var _);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("https://prod.bing.com", server.Url);
         }
 
@@ -283,7 +279,7 @@ paths: {}
             var doc = reader.Read(input, out var diagnostic);
 
             var server = doc.Servers.First();
-            Assert.Equal(1, doc.Servers.Count);
+            Assert.Single(doc.Servers);
             Assert.Equal("https://localhost:23232", server.Url);
         }
 
