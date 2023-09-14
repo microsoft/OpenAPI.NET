@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         private static string ResolveVerbSegmentInOpertationId(string operationId)
         {
             var charPos = operationId.LastIndexOf('.', operationId.Length - 1);
-            if (operationId.Contains('_') || charPos < 0)
+            if (operationId.Contains('_', StringComparison.OrdinalIgnoreCase) || charPos < 0)
                 return operationId;
             var newOperationId = new StringBuilder(operationId);
             newOperationId[charPos] = '_';
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         private static string ResolvePutOperationId(string operationId)
         {
             return operationId.Contains(DefaultPutPrefix, StringComparison.OrdinalIgnoreCase) ?
-                operationId.Replace(DefaultPutPrefix, PowerShellPutPrefix) : operationId;
+                operationId.Replace(DefaultPutPrefix, PowerShellPutPrefix, StringComparison.Ordinal) : operationId;
         }
 
         private static string ResolveByRefOperationId(string operationId)

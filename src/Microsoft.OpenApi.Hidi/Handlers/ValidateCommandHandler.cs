@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             try
             {
                 if (hidiOptions.OpenApi is null) throw new InvalidOperationException("OpenApi file is required");
-                await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken);
+                await OpenApiService.ValidateOpenApiDocument(hidiOptions.OpenApi, logger, cancellationToken).ConfigureAwait(false);
                 return 0;
             }
             catch (Exception ex)

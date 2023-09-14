@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Hidi.Handlers
             var logger = loggerFactory.CreateLogger<TransformCommandHandler>();
             try
             {
-                await OpenApiService.TransformOpenApiDocument(hidiOptions, logger, cancellationToken);
+                await OpenApiService.TransformOpenApiDocument(hidiOptions, logger, cancellationToken).ConfigureAwait(false);
 
                 return 0;
             }

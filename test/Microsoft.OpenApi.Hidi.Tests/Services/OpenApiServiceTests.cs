@@ -17,13 +17,14 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Hidi.Tests
 {
-    public class OpenApiServiceTests
+    public sealed class OpenApiServiceTests : IDisposable
     {
         private readonly ILogger<OpenApiServiceTests> _logger;
+        private readonly LoggerFactory _loggerFactory = new();
 
         public OpenApiServiceTests()
         {
-            _logger = new Logger<OpenApiServiceTests>(new LoggerFactory());
+            _logger = new Logger<OpenApiServiceTests>(_loggerFactory);
         }
 
         [Fact]
@@ -105,7 +106,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             stream.Position = 0;
             using var reader = new StreamReader(stream);
             var output = reader.ReadToEnd();
-            Assert.Contains("graph LR", output);
+            Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -126,7 +127,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             stream.Position = 0;
             using var reader = new StreamReader(stream);
             var output = reader.ReadToEnd();
-            Assert.Contains("graph LR", output);
+            Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
 
@@ -144,7 +145,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
 
             var output = File.ReadAllText(options.Output.FullName);
-            Assert.Contains("graph LR", output);
+            Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -172,7 +173,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
 
             var output = File.ReadAllText(options.Output.FullName);
-            Assert.Contains("graph LR", output);
+            Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -341,8 +342,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public void InvokeShowCommand()
         {
             var rootCommand = Program.CreateRootCommand();
-            var openapi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
-            var args = new string[] { "show", "-d", openapi, "-o", "sample.md" };
+            var openApi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
+            var args = new string[] { "show", "-d", openApi, "-o", "sample.md" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
             var context = new InvocationContext(parseResult);
@@ -350,7 +351,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             handler!.Invoke(context);
 
             var output = File.ReadAllText("sample.md");
-            Assert.Contains("graph LR", output);
+            Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
         [Fact]
@@ -382,6 +383,11 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var rootCommand = Program.CreateRootCommand();
             Assert.NotNull(rootCommand);
+        }
+
+        public void Dispose()
+        {
+            _loggerFactory.Dispose();
         }
     }
 }
