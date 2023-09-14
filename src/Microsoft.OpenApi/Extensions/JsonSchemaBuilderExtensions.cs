@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -16,7 +16,13 @@ namespace Microsoft.OpenApi.Extensions
             builder.Add(new ExtensionsKeyword(extensions));
             return builder;
         }
-        
+
+        public static JsonSchemaBuilder Summary(this JsonSchemaBuilder builder, string summary)
+        {
+            builder.Add(new SummaryKeyword(summary));
+            return builder;
+        }
+
         public static JsonSchemaBuilder AdditionalPropertiesAllowed(this JsonSchemaBuilder builder, bool additionalPropertiesAllowed)
         {
             builder.Add(new AdditionalPropertiesAllowedKeyword(additionalPropertiesAllowed));
@@ -133,6 +139,25 @@ namespace Microsoft.OpenApi.Extensions
         internal ExtensionsKeyword(IDictionary<string, IOpenApiExtension> extensions)
         {
             Extensions = extensions;
+        }
+
+        // Implementation of IJsonSchemaKeyword interface
+        public void Evaluate(EvaluationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [SchemaKeyword(Name)]
+    public class SummaryKeyword : IJsonSchemaKeyword
+    {
+        public const string Name = "summary";
+
+        internal string Summary { get; }
+
+        internal SummaryKeyword(string summary)
+        {
+            Summary = summary;
         }
 
         // Implementation of IJsonSchemaKeyword interface
