@@ -337,7 +337,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 
             // Assert
             Assert.True(header.Description == "A referenced X-Test header"); /*response header #ref's description overrides the header's description*/
-            //Assert.True(schema.UnresolvedReference == false && schema.Type == "object"); /*schema reference is resolved*/
+            Assert.Null(schema.GetRef());
+            Assert.Equal(SchemaValueType.Object, schema.GetJsonType());
             Assert.Equal("A pet in a petstore", schema.GetDescription()); /*The reference object's description overrides that of the referenced component*/
         }
     }
