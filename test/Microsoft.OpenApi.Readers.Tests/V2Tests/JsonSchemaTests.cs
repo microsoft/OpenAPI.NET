@@ -12,7 +12,7 @@ using Xunit;
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
     [Collection("DefaultSettings")]
-    public class OpenApiSchemaTests
+    public class JsonSchemaTests
     {
         private const string SampleFolderPath = "V2Tests/Samples/OpenApiSchema/";
 

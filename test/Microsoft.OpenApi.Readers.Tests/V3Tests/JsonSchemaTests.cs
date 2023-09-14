@@ -10,7 +10,7 @@ using Json.Schema;
 using Json.Schema.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Extensions;
+using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V3;
 using SharpYaml.Serialization;
@@ -19,7 +19,7 @@ using Xunit;
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 {
     [Collection("DefaultSettings")]
-    public class OpenApiSchemaTests
+    public class JsonSchemaTests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiSchema/";
 
@@ -333,15 +333,13 @@ get:
                                     ),
                                     ("petType", new JsonSchemaBuilder()
                                         .Type(SchemaValueType.String)
-                                    )
-                                )
-                                .Required("name", "petType")
-                                .Ref("#/components/schemas/Pet"),
+                                    )                                   
+                                )                               
+                                .Required("name", "petType"),
                             ["Cat"] = new JsonSchemaBuilder()
                                 .Description("A representation of a cat")
                                 .AllOf(
                                     new JsonSchemaBuilder()
-                                        .Ref("#/components/schemas/Pet")
                                         .Type(SchemaValueType.Object)
                                         .Discriminator(new OpenApiDiscriminator { PropertyName =  "petType"})
                                         .Properties(
@@ -363,13 +361,11 @@ get:
                                                 .Enum("clueless", "lazy", "adventurous", "aggressive")
                                             )
                                         )
-                                )
-                                .Ref("#/components/schemas/Cat"),
+                                ),
                             ["Dog"] = new JsonSchemaBuilder()
                                 .Description("A representation of a dog")
                                 .AllOf(
                                     new JsonSchemaBuilder()
-                                        .Ref("#/components/schemas/Pet")
                                         .Type(SchemaValueType.Object)
                                         .Discriminator(new OpenApiDiscriminator { PropertyName =  "petType"})
                                         .Properties(
@@ -394,7 +390,6 @@ get:
                                             )
                                         )
                                 )
-                                .Ref("#/components/schemas/Dog")
                     }
                 }, options => options.Excluding(m => m.Name == "HostDocument").IgnoringCyclicReferences());
         }
