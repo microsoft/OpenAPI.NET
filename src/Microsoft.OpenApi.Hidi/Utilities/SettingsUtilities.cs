@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Hidi.Utilities
             return config;
         }
 
-        internal static OpenApiConvertSettings GetOpenApiConvertSettings(IConfiguration config, string? metadataVersion = null)
+        internal static OpenApiConvertSettings GetOpenApiConvertSettings(IConfiguration config, string? metadataVersion)
         {
             if (config == null) { throw new System.ArgumentNullException(nameof(config)); }
             var settings = new OpenApiConvertSettings();
