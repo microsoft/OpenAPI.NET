@@ -279,7 +279,7 @@
         </PackageReference>
         <PackageReference Include="SharpYaml" Version="2.1.0">
         </PackageReference>
-        <PackageReference Include="xunit" Version="2.5.0">
+        <PackageReference Include="xunit" Version="2.5.1">
         </PackageReference>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
           <PrivateAssets>all</PrivateAssets>
