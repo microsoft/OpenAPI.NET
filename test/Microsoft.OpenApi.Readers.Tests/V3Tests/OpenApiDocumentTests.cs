@@ -229,23 +229,20 @@ paths: {}",
                                     .Properties(
                                         ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                         ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                        ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                    .Ref("#/components/schemas/pet"),
+                                        ("id", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["newPet"] = new JsonSchemaBuilder()
                                         .Type(SchemaValueType.Object)
                                         .Required("id", "name")
                                         .Properties(
                                             ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
                                             ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                            ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                        .Ref("#/components/schemas/newPet"),
+                                            ("id", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["errorModel"] = new JsonSchemaBuilder()
                                         .Type(SchemaValueType.Object)
                                         .Required("code", "message")
                                         .Properties(
                                             ("code", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int32")),
                                             ("message", new JsonSchemaBuilder().Type(SchemaValueType.String)))
-                                        .Ref("#/components/schemas/errorModel")
                     }
                 };
 

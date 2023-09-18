@@ -237,26 +237,33 @@ namespace Microsoft.OpenApi.Services
             var refUri = $"http://everything.json{reference.OriginalString.TrimStart('#')}";
             var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(refUri));
 
-            var resolvedSchemaBuilder = new JsonSchemaBuilder();
-
-            foreach (var keyword in resolvedSchema.Keywords)
+            if (resolvedSchema != null)
             {
-                resolvedSchemaBuilder.Add(keyword);
+                var resolvedSchemaBuilder = new JsonSchemaBuilder();
 
-                // Replace the resolved schema's description with that of the schema reference
-                if (!string.IsNullOrEmpty(description))
+                foreach (var keyword in resolvedSchema?.Keywords)
                 {
-                    resolvedSchemaBuilder.Description(description);
+                    resolvedSchemaBuilder.Add(keyword);
+
+                    // Replace the resolved schema's description with that of the schema reference
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        resolvedSchemaBuilder.Description(description);
+                    }
+
+                    // Replace the resolved schema's summary with that of the schema reference
+                    if (!string.IsNullOrEmpty(summary))
+                    {
+                        resolvedSchemaBuilder.Summary(summary);
+                    }
                 }
 
-                // Replace the resolved schema's summary with that of the schema reference
-                if (!string.IsNullOrEmpty(summary))
-                {
-                    resolvedSchemaBuilder.Summary(summary);
-                }
+                return resolvedSchemaBuilder.Build();
             }
-
-            return resolvedSchemaBuilder.Build();
+            else 
+            {
+                return null;
+            }
         }
 
         /// <summary>
