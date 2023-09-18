@@ -2,6 +2,9 @@
 // Licensed under the MIT license. 
 
 using System.Text.Json;
+using Json.Schema;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using JsonSchema = Json.Schema.JsonSchema;
 
@@ -15,8 +18,33 @@ namespace Microsoft.OpenApi.Readers.V31
     {
         public static JsonSchema LoadSchema(ParseNode node)
         {
-            var schema = node.JsonNode.Deserialize<JsonSchema>();
-            return schema;
+            var mapNode = node.CheckMapNode(OpenApiConstants.Schema);
+            var builder = new JsonSchemaBuilder();
+
+            // check for a $ref and if present, add it to the builder as a Ref keyword
+            var pointer = mapNode.GetReferencePointer();
+            if (pointer != null)
+            {
+                builder = builder.Ref(pointer);
+
+                // Check for summary and description and append to builder
+                var summary = mapNode.GetSummaryValue();
+                var description = mapNode.GetDescriptionValue(); 
+                if (!string.IsNullOrEmpty(summary))
+                {
+                    builder.Summary(summary);
+                }
+                if (!string.IsNullOrEmpty(description))
+                {
+                    builder.Description(description);
+                }
+
+                return builder.Build();
+            }
+            else
+            {
+                return node.JsonNode.Deserialize<JsonSchema>();
+            }
         }
     }
 

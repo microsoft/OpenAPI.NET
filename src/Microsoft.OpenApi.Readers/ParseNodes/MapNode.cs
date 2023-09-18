@@ -183,6 +183,26 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             return refNode.GetScalarValue();
         }
 
+        public string GetSummaryValue()
+        {
+            if (!_node.TryGetPropertyValue("summary", out JsonNode summaryNode))
+            {
+                return null;
+            }
+
+            return summaryNode.GetScalarValue();
+        }
+
+        public string GetDescriptionValue()
+        {
+            if (!_node.TryGetPropertyValue("description", out JsonNode descriptionNode))
+            {
+                return null;
+            }
+
+            return descriptionNode.GetScalarValue();
+        }
+
         public string GetScalarValue(ValueNode key)
         {
             var scalarNode = _node[key.GetScalarValue()] is JsonValue jsonValue
