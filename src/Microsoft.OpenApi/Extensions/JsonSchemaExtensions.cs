@@ -18,6 +18,14 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
+        /// Gets the `summary` keyword if it exists.
+        /// </summary>
+        public static string? GetSummary(this JsonSchema schema)
+        {
+            return schema.TryGetKeyword<SummaryKeyword>(SummaryKeyword.Name, out var k) ? k.Summary! : null;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="schema"></param>
