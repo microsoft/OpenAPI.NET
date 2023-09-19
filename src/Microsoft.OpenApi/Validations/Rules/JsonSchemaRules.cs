@@ -85,6 +85,28 @@ namespace Microsoft.OpenApi.Validations.Rules
                     context.Exit();
                 });
 
+        // Create a validation rule to validate whether the $ref is pointing to a valid schema object
+        //public static ValidationRule<JsonSchema> ValidateSchemaReference =>
+        //    new ValidationRule<JsonSchema>(
+        //        (context, jsonSchema) =>
+        //        {
+        //            // $ref
+        //            context.Enter("$ref");
+
+        //            if (jsonSchema.GetRef() != null)
+        //            {
+        //                var reference = jsonSchema.GetRef();
+
+        //                if (!context.RootSchemas.TryGetValue(reference, out var referenceSchema))
+        //                {
+        //                    context.CreateError(nameof(ValidateSchemaReference),
+        //                        string.Format(SRResource.Validation_SchemaReferenceNotFound, reference));
+        //                }
+        //            }
+
+        //            context.Exit();
+        //        });
+
         /// <summary>
         /// Validates the property name in the discriminator against the ones present in the children schema
         /// </summary>
