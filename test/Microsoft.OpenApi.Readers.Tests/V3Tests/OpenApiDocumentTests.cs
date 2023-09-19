@@ -228,15 +228,15 @@ paths: {}",
                                     .Required("id", "name")
                                     .Properties(
                                         ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
-                                        ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                        ("id", new JsonSchemaBuilder().Type(SchemaValueType.String))),
+                                        ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                                        ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["newPet"] = new JsonSchemaBuilder()
                                         .Type(SchemaValueType.Object)
-                                        .Required("id", "name")
+                                        .Required("name")
                                         .Properties(
                                             ("id", new JsonSchemaBuilder().Type(SchemaValueType.Integer).Format("int64")),
-                                            ("id", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-                                            ("id", new JsonSchemaBuilder().Type(SchemaValueType.String))),
+                                            ("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+                                            ("tag", new JsonSchemaBuilder().Type(SchemaValueType.String))),
                         ["errorModel"] = new JsonSchemaBuilder()
                                         .Type(SchemaValueType.Object)
                                         .Required("code", "message")
