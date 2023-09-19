@@ -12,13 +12,13 @@ namespace Microsoft.OpenApi.Hidi.Extensions
         /// <param name="extensions">A dictionary of <see cref="IOpenApiExtension"/>.</param>
         /// <param name="extensionKey">The key corresponding to the <see cref="IOpenApiExtension"/>.</param>
         /// <returns>A <see cref="string"/> value matching the provided extensionKey. Return null when extensionKey is not found. </returns>
-        public static string GetExtension(this IDictionary<string, IOpenApiExtension> extensions, string extensionKey)
+        internal static string GetExtension(this IDictionary<string, IOpenApiExtension> extensions, string extensionKey)
         {
             if (extensions.TryGetValue(extensionKey, out var value) && value is OpenApiString castValue)
             {
                 return castValue.Value;
             }
-            return default;
+            return string.Empty;
         }
     }
 }

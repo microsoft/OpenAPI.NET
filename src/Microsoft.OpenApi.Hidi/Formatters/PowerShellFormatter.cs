@@ -88,7 +88,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         private static string ResolveVerbSegmentInOpertationId(string operationId)
         {
             var charPos = operationId.LastIndexOf('.', operationId.Length - 1);
-            if (operationId.Contains('_') || charPos < 0)
+            if (operationId.Contains('_', StringComparison.OrdinalIgnoreCase) || charPos < 0)
                 return operationId;
             var newOperationId = new StringBuilder(operationId);
             newOperationId[charPos] = '_';
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         private static string ResolvePutOperationId(string operationId)
         {
             return operationId.Contains(DefaultPutPrefix, StringComparison.OrdinalIgnoreCase) ?
-                operationId.Replace(DefaultPutPrefix, PowerShellPutPrefix) : operationId;
+                operationId.Replace(DefaultPutPrefix, PowerShellPutPrefix, StringComparison.Ordinal) : operationId;
         }
 
         private static string ResolveByRefOperationId(string operationId)
@@ -191,9 +191,8 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static void ResolveOneOfSchema(OpenApiSchema schema)
         {
-            if (schema.OneOf?.Any() ?? false)
+            if (schema.OneOf?.FirstOrDefault() is {} newSchema)
             {
-                var newSchema = schema.OneOf.FirstOrDefault();
                 schema.OneOf = null;
                 FlattenSchema(schema, newSchema);
             }
@@ -201,9 +200,8 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
         private static void ResolveAnyOfSchema(OpenApiSchema schema)
         {
-            if (schema.AnyOf?.Any() ?? false)
+            if (schema.AnyOf?.FirstOrDefault() is {} newSchema)
             {
-                var newSchema = schema.AnyOf.FirstOrDefault();
                 schema.AnyOf = null;
                 FlattenSchema(schema, newSchema);
             }

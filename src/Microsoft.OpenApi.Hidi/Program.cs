@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Hidi
             var rootCommand = CreateRootCommand();
 
             // Parse the incoming args and invoke the handler
-            return await rootCommand.InvokeAsync(args);
+            return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
         }
 
         internal static RootCommand CreateRootCommand()

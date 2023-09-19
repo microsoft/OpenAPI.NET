@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             foreach (var pathItem in subsetOpenApiDocument.Paths)
             {
                 Assert.True(pathItem.Value.Parameters.Any());
-                Assert.Equal(1, pathItem.Value.Parameters.Count);
+                Assert.Single(pathItem.Value.Parameters);
             }
         }
     }

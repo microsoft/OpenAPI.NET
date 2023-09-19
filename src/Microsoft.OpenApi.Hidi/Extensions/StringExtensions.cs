@@ -12,13 +12,16 @@ namespace Microsoft.OpenApi.Hidi.Extensions
         /// <summary>
         /// Checks if the specified searchValue is equal to the target string based on the specified <see cref="StringComparison"/>.
         /// </summary>
-        /// <param name="target">The target string to commpare to.</param>
+        /// <param name="target">The target string to compare to.</param>
         /// <param name="searchValue">The search string to seek.</param>
         /// <param name="comparison">The <see cref="StringComparison"/> to use. This defaults to <see cref="StringComparison.OrdinalIgnoreCase"/>.</param>
         /// <returns>true if the searchValue parameter occurs within this string; otherwise, false.</returns>
-        public static bool IsEquals(this string target, string searchValue, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
+        public static bool IsEquals(this string? target, string? searchValue, StringComparison comparison = StringComparison.OrdinalIgnoreCase)
         {
-            if (string.IsNullOrWhiteSpace(target) || string.IsNullOrWhiteSpace(searchValue))
+            if (string.IsNullOrWhiteSpace(target) && string.IsNullOrWhiteSpace(searchValue))
+            {
+                return true;
+            } else if (string.IsNullOrWhiteSpace(target))
             {
                 return false;
             }
