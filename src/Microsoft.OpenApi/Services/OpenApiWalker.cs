@@ -1093,11 +1093,6 @@ namespace Microsoft.OpenApi.Services
             _visitor.Visit(referenceable);
         }
 
-        //internal void Walk(JsonNodeBaseDocument node)
-        //{
-        //    _visitor.Visit(node);
-        //}
-
         /// <summary>
         /// Dispatcher method that enables using a single method to walk the model
         /// starting from any <see cref="IOpenApiElement"/>
