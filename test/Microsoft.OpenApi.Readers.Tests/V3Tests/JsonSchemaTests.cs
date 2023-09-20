@@ -310,7 +310,7 @@ get:
             {
                 Schemas =
                 {
-                    ["Pet"] = new JsonSchemaBuilder()
+                    ["Pet1"] = new JsonSchemaBuilder()
                         .Type(SchemaValueType.Object)
                         .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
                         .Properties(
@@ -378,7 +378,7 @@ get:
                         )
                 }
             };
-            
+
             // We serialize so that we can get rid of the schema BaseUri properties which show up as diffs
             var actual = openApiDoc.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
             var expected = expectedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);

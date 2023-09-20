@@ -1,4 +1,4 @@
-﻿# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
+# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
 # Add required properties in the Open API document object to avoid errors
 openapi: 3.0.0
 info:
@@ -7,7 +7,9 @@ info:
 paths: { }
 components:
   schemas:
-    Pet:
+    ## Naming this schema Pet1 to disambiguate it from another schema `pet` contained in other test files.
+    ## SchemaRegistry.Global.Register() is global and can only register 1 schema with the same name.
+    Pet1:
       type: object
       discriminator:
         propertyName: petType
@@ -22,7 +24,7 @@ components:
     Cat:  ## "Cat" will be used as the discriminator value
       description: A representation of a cat
       allOf:
-      - $ref: '#/components/schemas/Pet'
+      - $ref: '#/components/schemas/Pet1'
       - type: object
         properties:
           huntingSkill:
@@ -38,7 +40,7 @@ components:
     Dog:  ## "Dog" will be used as the discriminator value
       description: A representation of a dog
       allOf:
-      - $ref: '#/components/schemas/Pet'
+      - $ref: '#/components/schemas/Pet1'
       - type: object
         properties:
           packSize:
