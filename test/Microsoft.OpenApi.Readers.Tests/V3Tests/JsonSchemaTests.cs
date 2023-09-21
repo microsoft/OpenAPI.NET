@@ -306,92 +306,85 @@ get:
             // Act
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            // Assert
-            var components = openApiDoc.Components;
-
-            diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic()
+            var expectedComponents = new OpenApiComponents
+            {
+                Schemas =
                 {
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0,
-                    Errors = new List<OpenApiError>()
-                    {
-                            new OpenApiError("", "Paths is a REQUIRED field at #/")
-                    }
-                });
-
-            components.Should().BeEquivalentTo(
-                new OpenApiComponents
-                {
-                    Schemas =
-                    {
-                            ["Pet"] = new JsonSchemaBuilder()
+                    ["Pet1"] = new JsonSchemaBuilder()
+                        .Type(SchemaValueType.Object)
+                        .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
+                        .Properties(
+                            ("name", new JsonSchemaBuilder()
+                                .Type(SchemaValueType.String)
+                            ),
+                            ("petType", new JsonSchemaBuilder()
+                                .Type(SchemaValueType.String)
+                            )
+                        )
+                        .Required("name", "petType"),
+                    ["Cat"] = new JsonSchemaBuilder()
+                        .Description("A representation of a cat")
+                        .AllOf(
+                            new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
-                                .Discriminator(new OpenApiDiscriminator { PropertyName =  "petType"})
+                                .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
                                 .Properties(
                                     ("name", new JsonSchemaBuilder()
                                         .Type(SchemaValueType.String)
                                     ),
                                     ("petType", new JsonSchemaBuilder()
                                         .Type(SchemaValueType.String)
-                                    )                                   
-                                )                               
-                                .Required("name", "petType"),
-                            ["Cat"] = new JsonSchemaBuilder()
-                                .Description("A representation of a cat")
-                                .AllOf(
-                                    new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.Object)
-                                        .Discriminator(new OpenApiDiscriminator { PropertyName =  "petType"})
-                                        .Properties(
-                                            ("name", new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.String)
-                                            ),
-                                            ("petType", new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.String)
-                                            )
-                                        )
-                                        .Required("name", "petType"),
-                                    new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.Object)
-                                        .Required("huntingSkill")
-                                        .Properties(
-                                            ("huntingSkill", new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.String)
-                                                .Description("The measured skill for hunting")
-                                                .Enum("clueless", "lazy", "adventurous", "aggressive")
-                                            )
-                                        )
-                                ),
-                            ["Dog"] = new JsonSchemaBuilder()
-                                .Description("A representation of a dog")
-                                .AllOf(
-                                    new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.Object)
-                                        .Discriminator(new OpenApiDiscriminator { PropertyName =  "petType"})
-                                        .Properties(
-                                            ("name", new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.String)
-                                            ),
-                                            ("petType", new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.String)
-                                            )
-                                        )
-                                        .Required("name", "petType"),
-                                    new JsonSchemaBuilder()
-                                        .Type(SchemaValueType.Object)
-                                        .Required("packSize")
-                                        .Properties(
-                                            ("packSize", new JsonSchemaBuilder()
-                                                .Type(SchemaValueType.Integer)
-                                                .Format("int32")
-                                                .Description("the size of the pack the dog is from")
-                                                .Default(0)
-                                                .Minimum(0)
-                                            )
-                                        )
+                                    )
                                 )
-                    }
-                }, options => options.Excluding(m => m.Name == "HostDocument").IgnoringCyclicReferences());
+                                .Required("name", "petType"),
+                            new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Required("huntingSkill")
+                                .Properties(
+                                    ("huntingSkill", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.String)
+                                        .Description("The measured skill for hunting")
+                                        .Enum("clueless", "lazy", "adventurous", "aggressive")
+                                    )
+                                )
+                        ),
+                    ["Dog"] = new JsonSchemaBuilder()
+                        .Description("A representation of a dog")
+                        .AllOf(
+                            new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Discriminator(new OpenApiDiscriminator { PropertyName = "petType" })
+                                .Properties(
+                                    ("name", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.String)
+                                    ),
+                                    ("petType", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.String)
+                                    )
+                                )
+                                .Required("name", "petType"),
+                            new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Required("packSize")
+                                .Properties(
+                                    ("packSize", new JsonSchemaBuilder()
+                                        .Type(SchemaValueType.Integer)
+                                        .Format("int32")
+                                        .Description("the size of the pack the dog is from")
+                                        .Default(0)
+                                        .Minimum(0)
+                                    )
+                                )
+                        )
+                }
+            };
+
+            // We serialize so that we can get rid of the schema BaseUri properties which show up as diffs
+            var actual = openApiDoc.Components.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+            var expected = expectedComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
+
+            // Assert
+            actual.Should().Be(expected);
         }
 
 
@@ -400,10 +393,10 @@ get:
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "selfReferencingSchema.yaml"));
             // Act
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);            
 
-            // Assert
-            var components = openApiDoc.Components;
+           // Assert
+           var components = openApiDoc.Components;
 
             diagnostic.Should().BeEquivalentTo(
                 new OpenApiDiagnostic()

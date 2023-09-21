@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             if (schema.GetRef() != null)
             {
                 // detected a cycle - this code gets triggered
-                Assert.True(false, "A cycle should not be detected");
+                Assert.Fail("A cycle should not be detected");
             }
         }
     }
