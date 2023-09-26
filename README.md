@@ -73,7 +73,7 @@ var document = new OpenApiDocument
 };
 ```
 
-Reading and writing a OpenAPI description
+Reading and writing an OpenAPI description
 
 ```C#
 var httpClient = new HttpClient
