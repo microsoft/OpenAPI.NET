@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net7.0</TargetFrameworks>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -36,7 +36,10 @@
       <EmbeddedResource Include="V2Tests\Samples\basic.v3.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\ComponentRootReference.json">
+        <EmbeddedResource Include="V2Tests\Samples\docWithEmptyProduces.yaml">
+           <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>        
+        <EmbeddedResource Include="V2Tests\Samples\ComponentRootReference.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\minimal.v2.yaml">
@@ -279,9 +282,9 @@
         </PackageReference>
         <PackageReference Include="SharpYaml" Version="2.1.0">
         </PackageReference>
-        <PackageReference Include="xunit" Version="2.5.0">
+        <PackageReference Include="xunit" Version="2.5.1">
         </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

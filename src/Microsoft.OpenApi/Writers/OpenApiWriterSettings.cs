@@ -31,6 +31,7 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public class OpenApiWriterSettings
     {
+        [Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
         private ReferenceInlineSetting referenceInline = ReferenceInlineSetting.DoNotInlineReferences;
 
         internal LoopDetector LoopDetector { get; } = new LoopDetector();

@@ -63,6 +63,11 @@ namespace Microsoft.OpenApi.Readers
         public Uri BaseUrl { get; set; }
 
         /// <summary>
+        /// Allows clients to define a custom DefaultContentType if produces array is empty
+        /// </summary>
+        public List<string> DefaultContentType { get; set; }
+
+        /// <summary>
         /// Function used to provide an alternative loader for accessing external references.
         /// </summary>
         /// <remarks>

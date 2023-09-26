@@ -8,9 +8,10 @@ namespace Microsoft.OpenApi.Hidi.Utilities
 {
     internal static class SettingsUtilities
     {
-        internal static IConfiguration GetConfiguration(string settingsFile = null)
+        internal static IConfiguration GetConfiguration(string? settingsFile = null)
         {
-            settingsFile ??= "appsettings.json";
+            if (string.IsNullOrEmpty(settingsFile))
+                settingsFile = "appsettings.json";
 
             IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile(settingsFile, true)
@@ -19,7 +20,7 @@ namespace Microsoft.OpenApi.Hidi.Utilities
             return config;
         }
 
-        internal static OpenApiConvertSettings GetOpenApiConvertSettings(IConfiguration config, string metadataVersion = null)
+        internal static OpenApiConvertSettings GetOpenApiConvertSettings(IConfiguration config, string? metadataVersion)
         {
             if (config == null) { throw new System.ArgumentNullException(nameof(config)); }
             var settings = new OpenApiConvertSettings();

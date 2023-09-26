@@ -216,7 +216,7 @@ stages:
         displayName: publish Hidi as executable
         inputs:
           command: 'publish'
-          arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion) -p:PublishTrimmed=true
+          arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true /p:PackAsTool=false --self-contained --output $(Build.ArtifactStagingDirectory)/Microsoft.OpenApi.Hidi-v$(hidiversion)
           projects: 'src/Microsoft.OpenApi.Hidi/Microsoft.OpenApi.Hidi.csproj'
           publishWebProjects: False
           zipAfterPublish: false 

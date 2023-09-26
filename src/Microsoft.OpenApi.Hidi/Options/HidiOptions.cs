@@ -11,21 +11,22 @@ namespace Microsoft.OpenApi.Hidi.Options
 {
     internal class HidiOptions
     {
-        public string OpenApi { get; set; }
-        public string Csdl { get; set; }
-        public string CsdlFilter { get; set; }
-        public FileInfo Output { get; set; }
-        public string OutputFolder { get; set; }
+        private const string defaultOutputFolderValue = "./";
+        public string? OpenApi { get; set; }
+        public string? Csdl { get; set; }
+        public string? CsdlFilter { get; set; }
+        public FileInfo? Output { get; set; }
+        public string OutputFolder { get; set; } = defaultOutputFolderValue;
         public bool CleanOutput { get; set; }
-        public string Version { get; set; }
-        public string MetadataVersion { get; set; }
+        public string? Version { get; set; }
+        public string? MetadataVersion { get; set; }
         public OpenApiFormat? OpenApiFormat { get; set; }
         public bool TerseOutput { get; set; }
-        public IConfiguration SettingsConfig { get; set; }
+        public IConfiguration? SettingsConfig { get; set; }
         public LogLevel LogLevel { get; set; }
         public bool InlineLocal { get; set; }
         public bool InlineExternal { get; set; }
-        public FilterOptions FilterOptions { get; set; }
+        public FilterOptions FilterOptions { get; set; } = new();
 
         public HidiOptions(ParseResult parseResult, CommandOptions options)
         {
@@ -43,13 +44,13 @@ namespace Microsoft.OpenApi.Hidi.Options
             CsdlFilter = parseResult.GetValueForOption(options.CsdlFilterOption);
             Csdl = parseResult.GetValueForOption(options.CsdlOption);
             Output = parseResult.GetValueForOption(options.OutputOption);
-            OutputFolder = parseResult.GetValueForOption(options.OutputFolderOption);
+            OutputFolder = parseResult.GetValueForOption(options.OutputFolderOption) is string outputFolderOptionValue && !string.IsNullOrEmpty(outputFolderOptionValue) ? outputFolderOptionValue : defaultOutputFolderValue;
             CleanOutput = parseResult.GetValueForOption(options.CleanOutputOption);
             Version = parseResult.GetValueForOption(options.VersionOption);
             MetadataVersion = parseResult.GetValueForOption(options.MetadataVersionOption);
             OpenApiFormat = parseResult.GetValueForOption(options.FormatOption);
             TerseOutput = parseResult.GetValueForOption(options.TerseOutputOption);
-            SettingsConfig = SettingsUtilities.GetConfiguration(parseResult.GetValueForOption(options.SettingsFileOption));
+            SettingsConfig = parseResult.GetValueForOption(options.SettingsFileOption) is string configOptionValue && !string.IsNullOrEmpty(configOptionValue) ? SettingsUtilities.GetConfiguration(configOptionValue) : null;
             LogLevel = parseResult.GetValueForOption(options.LogLevelOption);
             InlineLocal = parseResult.GetValueForOption(options.InlineLocalOption);
             InlineExternal = parseResult.GetValueForOption(options.InlineExternalOption);

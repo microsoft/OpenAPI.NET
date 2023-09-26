@@ -3,8 +3,10 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackAsTool>true</PackAsTool>
+    <Nullable>enable</Nullable>
     <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -15,7 +17,7 @@
     <PackageId>Microsoft.OpenApi.Hidi</PackageId>
     <ToolCommandName>hidi</ToolCommandName>
     <PackageOutputPath>./../../artifacts</PackageOutputPath>
-    <Version>1.2.9</Version>
+    <Version>1.3.0</Version>
     <Description>OpenAPI.NET CLI tool for slicing OpenAPI documents</Description>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
     <PackageTags>OpenAPI .NET</PackageTags>
@@ -26,6 +28,10 @@
     <SignAssembly>true</SignAssembly>
     <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <NoWarn>$(NoWarn);NU5048;NU5104;CA1848;</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <AnalysisMode>All</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>
@@ -61,5 +67,9 @@
     </AssemblyAttribute>
   </ItemGroup>
     <!-- End Unit test Internals -->
+
+  <ItemGroup>
+    <None Include="./readme.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 
 </Project>
