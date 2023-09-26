@@ -36,7 +36,10 @@
       <EmbeddedResource Include="V2Tests\Samples\basic.v3.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Include="V2Tests\Samples\ComponentRootReference.json">
+        <EmbeddedResource Include="V2Tests\Samples\docWithEmptyProduces.yaml">
+           <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>        
+        <EmbeddedResource Include="V2Tests\Samples\ComponentRootReference.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
       <EmbeddedResource Include="V2Tests\Samples\minimal.v2.yaml">
