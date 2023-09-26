@@ -29,6 +29,7 @@ namespace Microsoft.OpenApi.Readers
         internal RootNode RootNode { get; set; }
         internal List<OpenApiTag> Tags { get; private set; } = new List<OpenApiTag>();
         internal Uri BaseUrl { get; set; }
+        internal List<string> DefaultContentType { get; set; }
 
         /// <summary>
         /// Diagnostic object that returns metadata about the parsing process.

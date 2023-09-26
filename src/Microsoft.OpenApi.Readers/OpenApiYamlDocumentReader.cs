@@ -47,7 +47,8 @@ namespace Microsoft.OpenApi.Readers
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers,
-                BaseUrl = _settings.BaseUrl
+                BaseUrl = _settings.BaseUrl,
+                DefaultContentType = _settings.DefaultContentType
             };
 
             OpenApiDocument document = null;
