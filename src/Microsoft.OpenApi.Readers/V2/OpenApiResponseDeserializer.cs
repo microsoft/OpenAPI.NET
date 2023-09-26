@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             var produces = context.GetFromTempStorage<List<string>>(TempStorageKeys.OperationProduces)
                 ?? context.GetFromTempStorage<List<string>>(TempStorageKeys.GlobalProduces)
-                ?? new List<string> { "application/octet-stream" };
+                ?? context.DefaultContentType ?? new List<string> { "application/octet-stream" };
 
             var schema = context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response);
 
