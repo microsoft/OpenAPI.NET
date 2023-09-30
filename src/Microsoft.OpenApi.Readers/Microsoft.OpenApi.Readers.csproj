@@ -5,7 +5,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
         <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Version>1.6.9</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
