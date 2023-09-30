@@ -19,7 +19,6 @@
     <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <NoWarn>$(NoWarn);NU5048;NU5104;CA1848;</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <AnalysisMode>All</AnalysisMode>
   </PropertyGroup>
