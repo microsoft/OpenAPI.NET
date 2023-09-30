@@ -5,7 +5,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>1.6.9</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
-        <PackageTags>OpenAPI .NET</PackageTags>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
