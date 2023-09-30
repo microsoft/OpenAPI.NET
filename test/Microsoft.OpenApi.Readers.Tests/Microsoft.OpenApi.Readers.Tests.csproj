@@ -4,11 +4,6 @@
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <Authors></Authors>
         <Company>Microsoft</Company>
-        <Product>Microsoft.OpenApi.Readers.Tests</Product>
-        <PackageId>Microsoft.OpenApi.Readers.Tests</PackageId>
-        <Description>Tests for Microsoft.OpenApi.Readers</Description>
-        <AssemblyName>Microsoft.OpenApi.Readers.Tests</AssemblyName>
-        <RootNamespace>Microsoft.OpenApi.Readers.Tests</RootNamespace>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>

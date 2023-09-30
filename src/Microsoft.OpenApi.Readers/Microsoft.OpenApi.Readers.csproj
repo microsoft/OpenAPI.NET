@@ -9,16 +9,12 @@
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Authors>Microsoft</Authors>
         <Company>Microsoft</Company>
-        <Title>Microsoft.OpenApi.Readers</Title>
-        <PackageId>Microsoft.OpenApi.Readers</PackageId>
         <Version>1.6.9</Version>
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <PackageTags>OpenAPI .NET</PackageTags>
         <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
         <PackageReleaseNotes>https://github.com/microsoft/OpenAPI.NET/releases</PackageReleaseNotes>
-        <AssemblyName>Microsoft.OpenApi.Readers</AssemblyName>
-        <RootNamespace>Microsoft.OpenApi.Readers</RootNamespace>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
