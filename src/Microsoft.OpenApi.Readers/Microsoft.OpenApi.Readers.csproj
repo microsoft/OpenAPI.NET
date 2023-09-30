@@ -9,7 +9,6 @@
         <Description>OpenAPI.NET Readers for JSON and YAML documents</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
         <PackageTags>OpenAPI .NET</PackageTags>
-        <PackageReleaseNotes>https://github.com/microsoft/OpenAPI.NET/releases</PackageReleaseNotes>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
