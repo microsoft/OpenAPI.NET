@@ -7,8 +7,6 @@
         <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Authors>Microsoft</Authors>
-        <Company>Microsoft</Company>
         <Version>1.6.9</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
         <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>

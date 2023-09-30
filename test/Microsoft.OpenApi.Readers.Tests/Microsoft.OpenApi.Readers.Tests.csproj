@@ -2,8 +2,6 @@
     <PropertyGroup>
         <TargetFrameworks>net7.0</TargetFrameworks>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <Authors></Authors>
-        <Company>Microsoft</Company>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\..\src\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>

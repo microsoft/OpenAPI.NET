@@ -1,6 +1,8 @@
 <Project>
   <PropertyGroup>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <Authors>Microsoft</Authors>
+    <Company>Microsoft</Company>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference
