@@ -21,11 +21,6 @@
         <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
-    <!-- https://github.com/clairernovotny/DeterministicBuilds#deterministic-builds -->
-    <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="SharpYaml" Version="2.1.0" />
     </ItemGroup>

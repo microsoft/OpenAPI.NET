@@ -21,11 +21,6 @@
         <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
-    <!-- https://github.com/clairernovotny/DeterministicBuilds#deterministic-builds -->
-    <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    </PropertyGroup>
-
     <ItemGroup>
         <Compile Update="Properties\SRResource.Designer.cs">
             <DesignTime>True</DesignTime>
