@@ -81,7 +81,7 @@ namespace Microsoft.OpenApi.Hidi
                 if (!string.IsNullOrEmpty(options.FilterOptions?.FilterByCollection))
                 {
                     using var collectionStream = await GetStream(options.FilterOptions.FilterByCollection, logger, cancellationToken).ConfigureAwait(false);
-                    postmanCollection = JsonDocument.Parse(collectionStream);
+                    postmanCollection = await JsonDocument.ParseAsync(collectionStream, cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
 
                 // Load OpenAPI document
@@ -132,7 +132,8 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 using (var fileStream = await GetStream(apiManifestRef[0], logger, cancellationToken).ConfigureAwait(false))
                 {
-                    apiManifest = ApiManifestDocument.Load(JsonDocument.Parse(fileStream).RootElement);
+                    var document = await JsonDocument.ParseAsync(fileStream, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    apiManifest = ApiManifestDocument.Load(document.RootElement);
                 }
 
                 apiDependency = !string.IsNullOrEmpty(apiDependencyName) && apiManifest.ApiDependencies.TryGetValue(apiDependencyName, out var dependency) ? dependency : apiManifest.ApiDependencies.First().Value;
@@ -453,13 +454,13 @@ namespace Microsoft.OpenApi.Hidi
                         // Fetch list of methods and urls from collection, store them in a dictionary
                         var path = request.GetProperty("url").GetProperty("raw").ToString();
                         var method = request.GetProperty("method").ToString();
-                        if (!paths.ContainsKey(path))
+                        if (paths.TryGetValue(path, out var value))
                         {
-                            paths.Add(path, new List<string> { method });
+                            value.Add(method);
                         }
                         else
                         {
-                            paths[path].Add(method);
+                            paths.Add(path, new List<string> {method});
                         }
                     }
                     else
@@ -755,7 +756,7 @@ namespace Microsoft.OpenApi.Hidi
             using var file = new FileStream(manifestFile.FullName, FileMode.Create);
             using var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
             manifest.Write(jsonWriter);
-            jsonWriter.Flush();
+            await jsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }
