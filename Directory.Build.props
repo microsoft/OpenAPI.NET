@@ -5,6 +5,7 @@
     <Company>Microsoft</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference
