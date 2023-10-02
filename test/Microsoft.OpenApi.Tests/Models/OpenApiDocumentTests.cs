@@ -24,13 +24,13 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiDocumentTests
     {
-        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
+        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents
         {
             Schemas =
             {
                 ["schema1"] = new OpenApiSchema
                 {
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema2"
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
+        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents
         {
             Schemas =
             {
@@ -59,12 +59,12 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
                     },
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema1"
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
@@ -84,13 +84,13 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
+        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents
         {
             Schemas =
             {
                 ["schema1"] = new OpenApiSchema
                 {
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema1"
@@ -99,27 +99,27 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelReferencingComponents = new OpenApiDocument()
+        public static OpenApiDocument SimpleDocumentWithTopLevelReferencingComponents = new OpenApiDocument
         {
-            Info = new OpenApiInfo()
+            Info = new OpenApiInfo
             {
                 Version = "1.0.0"
             },
             Components = TopLevelReferencingComponents
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiDocument()
+        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiDocument
         {
-            Info = new OpenApiInfo()
+            Info = new OpenApiInfo
             {
                 Version = "1.0.0"
             },
             Components = TopLevelSelfReferencingComponentsWithOtherProperties
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponents = new OpenApiDocument()
+        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponents = new OpenApiDocument
         {
-            Info = new OpenApiInfo()
+            Info = new OpenApiInfo
             {
                 Version = "1.0.0"
             },
@@ -1485,7 +1485,7 @@ definitions:
         public void SerializeDocumentWithReferenceButNoComponents()
         {
             // Arrange
-            var document = new OpenApiDocument()
+            var document = new OpenApiDocument
             {
                 Info = new OpenApiInfo
                 {
@@ -1504,7 +1504,7 @@ definitions:
                                 {
                                     ["200"] = new OpenApiResponse
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -1546,11 +1546,12 @@ info:
   version: 1.0.0
 basePath: /server1
 paths: { }";
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
-                    new OpenApiServer()
+                Info = new OpenApiInfo { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
                     {
                         Url = "/server1"
                     }
@@ -1577,11 +1578,12 @@ info:
 host: //example.org
 basePath: /server1
 paths: { }";
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
-                    new OpenApiServer()
+                Info = new OpenApiInfo { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
                     {
                         Url = "//example.org/server1"
                     }
@@ -1607,11 +1609,12 @@ info:
   version: 1.0.0
 host: //example.org
 paths: { }";
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
-                    new OpenApiServer()
+                Info = new OpenApiInfo { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
                     {
                         Url = "//example.org/"
                     }

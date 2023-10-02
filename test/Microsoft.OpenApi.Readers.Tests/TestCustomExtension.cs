@@ -24,11 +24,12 @@ info:
         baz: hi!
 paths: {}
 ";
-            var settings = new OpenApiReaderSettings()
+            var settings = new OpenApiReaderSettings
             {
                 ExtensionParsers = { { "x-foo", (a,v) => {
                         var fooNode = (OpenApiObject)a;
-                        return new FooExtension() {
+                        return new FooExtension
+                        {
                               Bar = (fooNode["bar"] as OpenApiString)?.Value,
                               Baz = (fooNode["baz"] as OpenApiString)?.Value
                         };

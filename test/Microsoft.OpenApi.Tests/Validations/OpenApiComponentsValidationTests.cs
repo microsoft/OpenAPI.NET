@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             const string key = "%@abc";
 
-            OpenApiComponents components = new OpenApiComponents()
+            OpenApiComponents components = new OpenApiComponents
             {
                 Responses = new Dictionary<string, OpenApiResponse>
                 {

@@ -18,7 +18,7 @@ info:
   version: 1.0.0
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
             });
 
@@ -39,7 +39,7 @@ schemes:
   - http
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
             });
 
@@ -59,7 +59,7 @@ info:
 host: www.foo.com
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
             });
 
@@ -83,7 +83,7 @@ schemes:
   - http
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://www.foo.com/spec.yaml")
             });
@@ -106,7 +106,7 @@ info:
 basePath: /baz
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
             });
 
@@ -129,7 +129,7 @@ schemes:
   - http
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com/foo")
             });
@@ -153,7 +153,7 @@ schemes:
   - http
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });
@@ -176,7 +176,7 @@ info:
 basePath: /api
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });
@@ -199,7 +199,7 @@ info:
 host: www.example.com
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });
@@ -222,7 +222,7 @@ info:
 host: prod.bing.com
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://dev.bing.com/api/description.yaml")
             });
@@ -247,7 +247,7 @@ schemes:
   - https
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://dev.bing.com/api")
             });
@@ -271,7 +271,7 @@ info:
 host: localhost:23232
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });
@@ -294,7 +294,7 @@ info:
 host: http://test.microsoft.com
 paths: {}
 ";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });

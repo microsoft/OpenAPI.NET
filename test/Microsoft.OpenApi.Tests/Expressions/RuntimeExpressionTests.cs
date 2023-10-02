@@ -188,7 +188,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
 
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
+            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))
@@ -232,7 +232,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             response.Expression.Should().Be(expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
+            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))

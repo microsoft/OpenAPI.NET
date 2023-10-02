@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var callback = subscribeOperation.Callbacks["simpleHook"];
 
                 diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                    new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 callback.Should().BeEquivalentTo(
                     new OpenApiCallback
@@ -98,7 +98,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         {
                             [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                                 Operations = {
-                                    [OperationType.Post] = new OpenApiOperation()
+                                    [OperationType.Post] = new OpenApiOperation
                                     {
                                         RequestBody = new OpenApiRequestBody
                                         {
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = new OpenApiSchema()
+                                                    Schema = new OpenApiSchema
                                                     {
                                                         Type = "object"
                                                     }
@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 var subscribeOperation = path.Operations[OperationType.Post];
 
                 diagnostic.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                    new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
                 var callback1 = subscribeOperation.Callbacks["simpleHook"];
 
@@ -157,7 +157,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         {
                             [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
                                 Operations = {
-                                    [OperationType.Post] = new OpenApiOperation()
+                                    [OperationType.Post] = new OpenApiOperation
                                     {
                                         RequestBody = new OpenApiRequestBody
                                         {
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = new OpenApiSchema()
+                                                    Schema = new OpenApiSchema
                                                     {
                                                         Type = "object"
                                                     }
@@ -198,7 +198,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         {
                             [RuntimeExpression.Build("/simplePath")]= new OpenApiPathItem {
                                 Operations = {
-                                    [OperationType.Post] = new OpenApiOperation()
+                                    [OperationType.Post] = new OpenApiOperation
                                     {
                                         RequestBody = new OpenApiRequestBody
                                         {
@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/json"] = new OpenApiMediaType
                                                 {
-                                                    Schema = new OpenApiSchema()
+                                                    Schema = new OpenApiSchema
                                                     {
                                                         Type = "string"
                                                     }
@@ -234,7 +234,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         {
                             [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new OpenApiPathItem {
                                 Operations = {
-                                    [OperationType.Post] = new OpenApiOperation()
+                                    [OperationType.Post] = new OpenApiOperation
                                     {
                                         RequestBody = new OpenApiRequestBody
                                         {
@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                             {
                                                 ["application/xml"] = new OpenApiMediaType
                                                 {
-                                                    Schema = new OpenApiSchema()
+                                                    Schema = new OpenApiSchema
                                                     {
                                                         Type = "object"
                                                     }

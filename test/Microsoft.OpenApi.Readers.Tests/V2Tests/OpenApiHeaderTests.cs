@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema = new OpenApiSchema()
+                    Schema = new OpenApiSchema
                     {
                         Type = "number",
                         Format = "float",
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema = new OpenApiSchema()
+                    Schema = new OpenApiSchema
                     {
                         Type = "number",
                         Format = "float",
