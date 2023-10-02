@@ -170,11 +170,21 @@ namespace Microsoft.OpenApi.Tests
         {
             // Arrange
             var workspace = new OpenApiWorkspace();
-            var responseFragment = new OpenApiResponse {Headers = new Dictionary<string, OpenApiHeader> {{"header1", new OpenApiHeader()}}};
+            var responseFragment = new OpenApiResponse
+            {
+                Headers = new Dictionary<string, OpenApiHeader>
+                {
+                    { "header1", new OpenApiHeader() }
+                }
+            };
             workspace.AddFragment("fragment", responseFragment);
 
             // Act
-            var resolvedElement = workspace.ResolveReference(new OpenApiReference {Id = "headers/header1", ExternalResource = "fragment"});
+            var resolvedElement = workspace.ResolveReference(new OpenApiReference
+            {
+                Id = "headers/header1",
+                ExternalResource = "fragment"
+            });
 
             // Assert
             Assert.Same(responseFragment.Headers["header1"], resolvedElement);
@@ -183,7 +193,19 @@ namespace Microsoft.OpenApi.Tests
         // Test artifacts
         private static OpenApiDocument CreateCommonDocument()
         {
-            return new OpenApiDocument {Components = new OpenApiComponents {Schemas = {["test"] = new OpenApiSchema {Type = "string", Description = "The referenced one"}}}};
+            return new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = {
+                        ["test"] = new OpenApiSchema
+                        {
+                            Type = "string",
+                            Description = "The referenced one"
+                        }
+                    }
+                }
+            };
         }
     }
 
