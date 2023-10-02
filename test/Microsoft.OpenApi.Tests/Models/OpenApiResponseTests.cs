@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -108,13 +107,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 },
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiResponseTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Json)]

@@ -1280,13 +1280,6 @@ namespace Microsoft.OpenApi.Tests.Models
             Components = AdvancedComponents
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiDocumentTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Theory]
         [InlineData(false)]
         [InlineData(true)]

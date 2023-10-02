@@ -12,20 +12,12 @@ using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
     [Collection("DefaultSettings")]
     public class OpenApiValidatorTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiValidatorTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void ResponseMustHaveADescription()
         {

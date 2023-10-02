@@ -7,7 +7,6 @@ using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -37,13 +36,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["scopeName4"] = "description4"
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiOAuthFlowTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Fact]
         public void SerializeBasicOAuthFlowAsV3JsonWorks()
