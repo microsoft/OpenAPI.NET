@@ -142,8 +142,7 @@ namespace Microsoft.OpenApi.Writers
         {
             if (value != null)
             {
-                var values = value as IEnumerable;
-                if (values != null && !values.GetEnumerator().MoveNext())
+                if (value is IEnumerable values && !values.GetEnumerator().MoveNext())
                 {
                     return; // Don't render optional empty collections
                 }

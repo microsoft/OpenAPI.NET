@@ -19,6 +19,6 @@ namespace Microsoft.OpenApi.Any
         /// <summary>
         /// Primitive type this object represents.
         /// </summary>
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Integer;
+        public override PrimitiveType PrimitiveType => PrimitiveType.Integer;
     }
 }

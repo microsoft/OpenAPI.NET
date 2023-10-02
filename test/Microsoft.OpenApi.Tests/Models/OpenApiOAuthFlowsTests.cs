@@ -96,15 +96,17 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""implicit"": {
-    ""authorizationUrl"": ""http://example.com/authorization"",
-    ""scopes"": {
-      ""scopeName1"": ""description1"",
-      ""scopeName2"": ""description2""
-    }
-  }
-}";
+                """
+                {
+                  "implicit": {
+                    "authorizationUrl": "http://example.com/authorization",
+                    "scopes": {
+                      "scopeName1": "description1",
+                      "scopeName2": "description2"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = OAuthFlowsWithSingleFlow.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -120,23 +122,25 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""implicit"": {
-    ""authorizationUrl"": ""http://example.com/authorization"",
-    ""scopes"": {
-      ""scopeName1"": ""description1"",
-      ""scopeName2"": ""description2""
-    }
-  },
-  ""password"": {
-    ""tokenUrl"": ""http://example.com/token"",
-    ""refreshUrl"": ""http://example.com/refresh"",
-    ""scopes"": {
-      ""scopeName3"": ""description3"",
-      ""scopeName4"": ""description4""
-    }
-  }
-}";
+                """
+                {
+                  "implicit": {
+                    "authorizationUrl": "http://example.com/authorization",
+                    "scopes": {
+                      "scopeName1": "description1",
+                      "scopeName2": "description2"
+                    }
+                  },
+                  "password": {
+                    "tokenUrl": "http://example.com/token",
+                    "refreshUrl": "http://example.com/refresh",
+                    "scopes": {
+                      "scopeName3": "description3",
+                      "scopeName4": "description4"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = OAuthFlowsWithMultipleFlows.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);

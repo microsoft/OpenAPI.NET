@@ -70,14 +70,15 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public void TestPredicateFiltersUsingRelativeRequestUrls()
         {
-            var openApiDocument = new OpenApiDocument()
+            var openApiDocument = new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer>() { new() { Url = "https://localhost/" } },
+                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new()
                 {
                     {"/foo", new() {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>() {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
                             { OperationType.Get, new() },
                             { OperationType.Patch, new() },
                             { OperationType.Post, new() }

@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new MockLoader(),
@@ -27,11 +27,13 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 
             // Todo: this should be ReadAsync
             var stream = new MemoryStream();
-            var doc = @"openapi: 3.0.0
-info:
-  title: foo
-  version: 1.0.0
-paths: {}";
+            var doc = """
+                      openapi: 3.0.0
+                      info:
+                        title: foo
+                        version: 1.0.0
+                      paths: {}
+                      """;
             var wr = new StreamWriter(stream);
             wr.Write(doc);
             wr.Flush();
@@ -48,7 +50,7 @@ paths: {}";
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),

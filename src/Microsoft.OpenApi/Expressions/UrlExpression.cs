@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the expression string.
         /// </summary>
-        public override string Expression { get; } = Url;
+        public override string Expression => Url;
 
         /// <summary>
         /// Private constructor.

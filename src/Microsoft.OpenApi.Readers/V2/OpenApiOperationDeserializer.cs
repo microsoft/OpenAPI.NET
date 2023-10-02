@@ -221,10 +221,10 @@ namespace Microsoft.OpenApi.Readers.V2
             ParsingContext context,
             string tagName)
         {
-            var tagObject = new OpenApiTag()
+            var tagObject = new OpenApiTag
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference() { Id = tagName, Type = ReferenceType.Tag }
+                Reference = new OpenApiReference { Id = tagName, Type = ReferenceType.Tag }
             };
 
             return tagObject;

@@ -3,21 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -32,38 +28,46 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 
         public T Clone<T>(T element) where T : IOpenApiSerializable
         {
-            using var stream = new MemoryStream();
-            IOpenApiWriter writer;
-            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-            writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
+            using (var stream = new MemoryStream())
             {
-                InlineLocalReferences = true
-            });
-            element.SerializeAsV3(writer);
-            writer.Flush();
-            stream.Position = 0;
+                IOpenApiWriter writer;
+                var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
+                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings
+                {
+                    InlineLocalReferences = true
+                });
+                element.SerializeAsV3(writer);
+                writer.Flush();
+                stream.Position = 0;
 
-            using var streamReader = new StreamReader(stream);
-            var result = streamReader.ReadToEnd();
-            return new OpenApiStringReader().ReadFragment<T>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
+                using (var streamReader = new StreamReader(stream))
+                {
+                    var result = streamReader.ReadToEnd();
+                    return new OpenApiStringReader().ReadFragment<T>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
+                }
+            }
         }
 
         public OpenApiSecurityScheme CloneSecurityScheme(OpenApiSecurityScheme element)
         {
-            using var stream = new MemoryStream();
-            IOpenApiWriter writer;
-            var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-            writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings()
+            using (var stream = new MemoryStream())
             {
-                InlineLocalReferences = true
-            });
-            element.SerializeAsV3WithoutReference(writer);
-            writer.Flush();
-            stream.Position = 0;
+                IOpenApiWriter writer;
+                var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
+                writer = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings
+                {
+                    InlineLocalReferences = true
+                });
+                element.SerializeAsV3WithoutReference(writer);
+                writer.Flush();
+                stream.Position = 0;
 
-            using var streamReader = new StreamReader(stream);
-            var result = streamReader.ReadToEnd();
-            return new OpenApiStringReader().ReadFragment<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
+                using (var streamReader = new StreamReader(stream))
+                {
+                    var result = streamReader.ReadToEnd();
+                    return new OpenApiStringReader().ReadFragment<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
+                }
+            }
         }
 
 
@@ -76,12 +80,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
             var openApiDoc = new OpenApiStringReader().Read(
-                @"
-openapi : 3.0.0
-info:
-    title: Simple Document
-    version: 0.9.1
-paths: {}",
+                """
+
+                openapi : 3.0.0
+                info:
+                    title: Simple Document
+                    version: 0.9.1
+                paths: {}
+                """,
                 out var context);
 
             openApiDoc.Should().BeEquivalentTo(
@@ -96,7 +102,7 @@ paths: {}",
                 });
 
             context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Theory]
@@ -111,23 +117,24 @@ paths: {}",
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
             var openApiDoc = new OpenApiStringReader().Read(
-                @"
-openapi : 3.0.0
-info:
-    title: Simple Document
-    version: 0.9.1
-components:
-  schemas:
-    sampleSchema:
-      type: object
-      properties:
-        sampleProperty:
-          type: double
-          minimum: 100.54
-          maximum: 60000000.35
-          exclusiveMaximum: true
-          exclusiveMinimum: false
-paths: {}",
+                """
+                openapi : 3.0.0
+                info:
+                    title: Simple Document
+                    version: 0.9.1
+                components:
+                  schemas:
+                    sampleSchema:
+                      type: object
+                      properties:
+                        sampleProperty:
+                          type: double
+                          minimum: 100.54
+                          maximum: 60000000.35
+                          exclusiveMaximum: true
+                          exclusiveMinimum: false
+                paths: {}
+                """,
                 out var context);
 
             openApiDoc.Should().BeEquivalentTo(
@@ -138,16 +145,16 @@ paths: {}",
                         Title = "Simple Document",
                         Version = "0.9.1"
                     },
-                    Components = new OpenApiComponents()
+                    Components = new OpenApiComponents
                     {
                         Schemas =
                         {
-                            ["sampleSchema"] = new OpenApiSchema()
+                            ["sampleSchema"] = new OpenApiSchema
                             {
                                 Type = "object",
                                 Properties =
                                 {
-                                    ["sampleProperty"] = new OpenApiSchema()
+                                    ["sampleProperty"] = new OpenApiSchema
                                     {
                                         Type = "double",
                                         Minimum = (decimal)100.54,
@@ -156,7 +163,7 @@ paths: {}",
                                         ExclusiveMinimum = false
                                     }
                                 },
-                                Reference = new OpenApiReference()
+                                Reference = new OpenApiReference
                                 {
                                     Id = "sampleSchema",
                                     Type = ReferenceType.Schema
@@ -168,89 +175,95 @@ paths: {}",
                 });
 
             context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
         public void ParseBasicDocumentWithMultipleServersShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicDocumentWithMultipleServers.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
 
-            openApiDoc.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new OpenApiInfo
+                openApiDoc.Should().BeEquivalentTo(
+                    new OpenApiDocument
                     {
-                        Title = "The API",
-                        Version = "0.9.1",
-                    },
-                    Servers =
-                    {
-                        new OpenApiServer
+                        Info = new OpenApiInfo
                         {
-                            Url = new Uri("http://www.example.org/api").ToString(),
-                            Description = "The http endpoint"
+                            Title = "The API",
+                            Version = "0.9.1",
                         },
-                        new OpenApiServer
+                        Servers =
                         {
-                            Url = new Uri("https://www.example.org/api").ToString(),
-                            Description = "The https endpoint"
-                        }
-                    },
-                    Paths = new OpenApiPaths()
-                });
+                            new OpenApiServer
+                            {
+                                Url = new Uri("http://www.example.org/api").ToString(),
+                                Description = "The http endpoint"
+                            },
+                            new OpenApiServer
+                            {
+                                Url = new Uri("https://www.example.org/api").ToString(),
+                                Description = "The https endpoint"
+                            }
+                        },
+                        Paths = new OpenApiPaths()
+                    });
+            }
         }
 
         [Fact]
         public void ParseBrokenMinimalDocumentShouldYieldExpectedDiagnostic()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "brokenMinimalDocument.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            openApiDoc.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new OpenApiInfo
+                openApiDoc.Should().BeEquivalentTo(
+                    new OpenApiDocument
                     {
-                        Version = "0.9"
-                    },
-                    Paths = new OpenApiPaths()
-                });
+                        Info = new OpenApiInfo
+                        {
+                            Version = "0.9"
+                        },
+                        Paths = new OpenApiPaths()
+                    });
 
-            diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic
-                {
-                    Errors =
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic
                     {
-                        new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
-                    },
-                    SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
-                });
+                        Errors =
+                        {
+                            new OpenApiValidatorError(nameof(OpenApiInfoRules.InfoRequiredFields),"#/info/title", "The field 'title' in 'info' object is REQUIRED.")
+                        },
+                        SpecificationVersion = OpenApiSpecVersion.OpenApi3_0
+                    });
+            }
         }
 
         [Fact]
         public void ParseMinimalDocumentShouldSucceed()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "minimalDocument.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            openApiDoc.Should().BeEquivalentTo(
-                new OpenApiDocument
-                {
-                    Info = new OpenApiInfo
+                openApiDoc.Should().BeEquivalentTo(
+                    new OpenApiDocument
                     {
-                        Title = "Simple Document",
-                        Version = "0.9.1"
-                    },
-                    Paths = new OpenApiPaths()
-                });
+                        Info = new OpenApiInfo
+                        {
+                            Title = "Simple Document",
+                            Version = "0.9.1"
+                        },
+                        Paths = new OpenApiPaths()
+                    });
 
-            diagnostic.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                diagnostic.Should().BeEquivalentTo(
+                    new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+            }
         }
 
         [Fact]
@@ -680,7 +693,7 @@ paths: {}",
             }
 
             context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -1187,7 +1200,7 @@ paths: {}",
                         {
                             Name = "tagName1",
                             Description = "tagDescription1",
-                            Reference = new OpenApiReference()
+                            Reference = new OpenApiReference
                             {
                                 Id = "tagName1",
                                 Type = ReferenceType.Tag
@@ -1213,7 +1226,7 @@ paths: {}",
             }
 
             context.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                    new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
@@ -1229,87 +1242,91 @@ paths: {}",
             }
 
             context.Should().BeEquivalentTo(
-                    new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
+                    new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi3_0 });
         }
 
         [Fact]
         public void GlobalSecurityRequirementShouldReferenceSecurityScheme()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedApi.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "securedApi.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            var securityRequirement = openApiDoc.SecurityRequirements.First();
+                var securityRequirement = openApiDoc.SecurityRequirements.First();
 
-            Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
+                Assert.Same(securityRequirement.Keys.First(), openApiDoc.Components.SecuritySchemes.First().Value);
+            }
         }
 
         [Fact]
         public void HeaderParameterShouldAllowExample()
         {
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml"));
-            var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
+            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiWithFullHeaderComponent.yaml")))
+            {
+                var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
-            var exampleHeader = openApiDoc.Components?.Headers?["example-header"];
-            Assert.NotNull(exampleHeader);
-            exampleHeader.Should().BeEquivalentTo(
-                new OpenApiHeader()
-                {
-                    Description = "Test header with example",
-                    Required = true,
-                    Deprecated = true,
-                    AllowEmptyValue = true,
-                    AllowReserved = true,
-                    Style = ParameterStyle.Simple,
-                    Explode = true,
-                    Example = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
-                    Schema = new OpenApiSchema()
+                var exampleHeader = openApiDoc.Components?.Headers?["example-header"];
+                Assert.NotNull(exampleHeader);
+                exampleHeader.Should().BeEquivalentTo(
+                    new OpenApiHeader
                     {
-                        Type = "string",
-                        Format = "uuid"
-                    },
-                    Reference = new OpenApiReference()
-                    {
-                        Type = ReferenceType.Header,
-                        Id = "example-header"
-                    }
-                });
+                        Description = "Test header with example",
+                        Required = true,
+                        Deprecated = true,
+                        AllowEmptyValue = true,
+                        AllowReserved = true,
+                        Style = ParameterStyle.Simple,
+                        Explode = true,
+                        Example = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721"),
+                        Schema = new OpenApiSchema
+                        {
+                            Type = "string",
+                            Format = "uuid"
+                        },
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.Header,
+                            Id = "example-header"
+                        }
+                    });
 
-            var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
-            Assert.NotNull(examplesHeader);
-            examplesHeader.Should().BeEquivalentTo(
-                new OpenApiHeader()
-                {
-                    Description = "Test header with example",
-                    Required = true,
-                    Deprecated = true,
-                    AllowEmptyValue = true,
-                    AllowReserved = true,
-                    Style = ParameterStyle.Simple,
-                    Explode = true,
-                    Examples = new Dictionary<string, OpenApiExample>()
+                var examplesHeader = openApiDoc.Components?.Headers?["examples-header"];
+                Assert.NotNull(examplesHeader);
+                examplesHeader.Should().BeEquivalentTo(
+                    new OpenApiHeader
                     {
-                        { "uuid1", new OpenApiExample()
-                            {
-                                Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                        Description = "Test header with example",
+                        Required = true,
+                        Deprecated = true,
+                        AllowEmptyValue = true,
+                        AllowReserved = true,
+                        Style = ParameterStyle.Simple,
+                        Explode = true,
+                        Examples = new Dictionary<string, OpenApiExample>
+                        {
+                            { "uuid1", new OpenApiExample
+                                {
+                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                }
+                            },
+                            { "uuid2", new OpenApiExample
+                                {
+                                    Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
+                                }
                             }
                         },
-                        { "uuid2", new OpenApiExample()
-                            {
-                                Value = new OpenApiString("99391c7e-ad88-49ec-a2ad-99ddcb1f7721")
-                            }
+                        Schema = new OpenApiSchema
+                        {
+                            Type = "string",
+                            Format = "uuid"
+                        },
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.Header,
+                            Id = "examples-header"
                         }
-                    },
-                    Schema = new OpenApiSchema()
-                    {
-                        Type = "string",
-                        Format = "uuid"
-                    },
-                    Reference = new OpenApiReference()
-                    {
-                        Type = ReferenceType.Header,
-                        Id = "examples-header"
-                    }
-                });
+                    });
+            }
         }
 
         [Fact]

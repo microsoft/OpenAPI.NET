@@ -38,7 +38,7 @@ public class OpenApiEnumValuesDescriptionExtension : IOpenApiExtension
     public void Write(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
     {
         if (writer is null) throw new ArgumentNullException(nameof(writer));
-        if ((specVersion == OpenApiSpecVersion.OpenApi2_0 || specVersion == OpenApiSpecVersion.OpenApi3_0) &&
+        if (specVersion is OpenApiSpecVersion.OpenApi2_0 or OpenApiSpecVersion.OpenApi3_0 &&
             !string.IsNullOrEmpty(EnumName) &&
             ValuesDescriptions.Any())
         { // when we upgrade to 3.1, we don't need to write this extension as JSON schema will support writing enum values

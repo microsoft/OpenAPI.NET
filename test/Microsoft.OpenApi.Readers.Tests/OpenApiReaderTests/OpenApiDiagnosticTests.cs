@@ -7,7 +7,6 @@ using System;
 using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests;
 using Xunit;
 using Microsoft.OpenApi.Readers.Interface;
 using System.IO;
@@ -41,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         public async Task DiagnosticReportMergedForExternalReference()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),

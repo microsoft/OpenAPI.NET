@@ -176,8 +176,7 @@ namespace Microsoft.OpenApi.Validations
             foreach (var property in rules)
             {
                 var propertyValue = property.GetValue(null); // static property
-                ValidationRule rule = propertyValue as ValidationRule;
-                if (rule != null)
+                if (propertyValue is ValidationRule rule)
                 {
                     ruleSet.Add(rule);
                 }

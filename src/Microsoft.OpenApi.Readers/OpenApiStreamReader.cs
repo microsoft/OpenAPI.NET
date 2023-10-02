@@ -60,9 +60,9 @@ namespace Microsoft.OpenApi.Readers
         public async Task<ReadResult> ReadAsync(Stream input, CancellationToken cancellationToken = default)
         {
             MemoryStream bufferedStream;
-            if (input is MemoryStream)
+            if (input is MemoryStream stream)
             {
-                bufferedStream = (MemoryStream)input;
+                bufferedStream = stream;
             }
             else
             {

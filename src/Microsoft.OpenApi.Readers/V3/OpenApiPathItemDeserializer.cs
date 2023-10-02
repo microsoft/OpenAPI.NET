@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.V3
             
             {
                 "$ref", (o,n) => {
-                    o.Reference = new OpenApiReference() { ExternalResource = n.GetScalarValue() };
+                    o.Reference = new OpenApiReference { ExternalResource = n.GetScalarValue() };
                     o.UnresolvedReference =true;
                 }  
             },
