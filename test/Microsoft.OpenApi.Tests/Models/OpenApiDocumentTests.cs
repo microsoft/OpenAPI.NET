@@ -1410,18 +1410,21 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeSimpleDocumentWithTopLevelReferencingComponentsAsYamlV2Works()
         {
             // Arrange
-            var expected = @"swagger: '2.0'
-info:
-  version: 1.0.0
-paths: { }
-definitions:
-  schema1:
-    $ref: '#/definitions/schema2'
-  schema2:
-    type: object
-    properties:
-      property1:
-        type: string";
+            var expected =
+                """
+                swagger: '2.0'
+                info:
+                  version: 1.0.0
+                paths: { }
+                definitions:
+                  schema1:
+                    $ref: '#/definitions/schema2'
+                  schema2:
+                    type: object
+                    properties:
+                      property1:
+                        type: string
+                """;
 
             // Act
             var actual = SimpleDocumentWithTopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -1436,12 +1439,15 @@ definitions:
         public void SerializeSimpleDocumentWithTopLevelSelfReferencingComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"swagger: '2.0'
-info:
-  version: 1.0.0
-paths: { }
-definitions:
-  schema1: { }";
+            var expected =
+                """
+                swagger: '2.0'
+                info:
+                  version: 1.0.0
+                paths: { }
+                definitions:
+                  schema1: { }
+                """;
 
             // Act
             var actual = SimpleDocumentWithTopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -1456,21 +1462,24 @@ definitions:
         public void SerializeSimpleDocumentWithTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = @"swagger: '2.0'
-info:
-  version: 1.0.0
-paths: { }
-definitions:
-  schema1:
-    type: object
-    properties:
-      property1:
-        type: string
-  schema2:
-    type: object
-    properties:
-      property1:
-        type: string";
+            var expected =
+                """
+                swagger: '2.0'
+                info:
+                  version: 1.0.0
+                paths: { }
+                definitions:
+                  schema1:
+                    type: object
+                    properties:
+                      property1:
+                        type: string
+                  schema2:
+                    type: object
+                    properties:
+                      property1:
+                        type: string
+                """;
 
             // Act
             var actual = SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -1541,11 +1550,13 @@ definitions:
         {
             // Arrange
             var expected =
-                @"swagger: '2.0'
-info:
-  version: 1.0.0
-basePath: /server1
-paths: { }";
+                """
+                swagger: '2.0'
+                info:
+                  version: 1.0.0
+                basePath: /server1
+                paths: { }
+                """;
             var doc = new OpenApiDocument
             {
                 Info = new OpenApiInfo { Version = "1.0.0" },
@@ -1572,12 +1583,14 @@ paths: { }";
         {
             // Arrange
             var expected =
-                @"swagger: '2.0'
-info:
-  version: 1.0.0
-host: //example.org
-basePath: /server1
-paths: { }";
+                """
+                swagger: '2.0'
+                info:
+                  version: 1.0.0
+                host: //example.org
+                basePath: /server1
+                paths: { }
+                """;
             var doc = new OpenApiDocument
             {
                 Info = new OpenApiInfo { Version = "1.0.0" },
@@ -1604,11 +1617,13 @@ paths: { }";
         {
             // Arrange
             var expected =
-                @"swagger: '2.0'
-info:
-  version: 1.0.0
-host: //example.org
-paths: { }";
+                """
+                swagger: '2.0'
+                info:
+                  version: 1.0.0
+                host: //example.org
+                paths: { }
+                """;
             var doc = new OpenApiDocument
             {
                 Info = new OpenApiInfo { Version = "1.0.0" },
@@ -1683,15 +1698,18 @@ paths: { }";
         public void SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()
         {
             // Arrange
-            var expected = @"swagger: '2.0'
-info: { }
-paths:
-  /foo:
-    get:
-      parameters:
-        - in: query
-          type: string
-      responses: { }";
+            var expected =
+                """
+                swagger: '2.0'
+                info: { }
+                paths:
+                  /foo:
+                    get:
+                      parameters:
+                        - in: query
+                          type: string
+                      responses: { }
+                """;
 
             var doc = new OpenApiDocument
             {
@@ -1735,27 +1753,30 @@ paths:
         public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
         {
             // Arrange
-            var expected = @"openapi: 3.0.1
-info:
-  title: magic style
-  version: 1.0.0
-paths:
-  /foo:
-    get:
-      parameters:
-        - name: id
-          in: query
-          schema:
-            type: object
-            additionalProperties:
-              type: integer
-      responses:
-        '200':
-          description: foo
-          content:
-            text/plain:
-              schema:
-                type: string";
+            var expected =
+                """
+                openapi: 3.0.1
+                info:
+                  title: magic style
+                  version: 1.0.0
+                paths:
+                  /foo:
+                    get:
+                      parameters:
+                        - name: id
+                          in: query
+                          schema:
+                            type: object
+                            additionalProperties:
+                              type: integer
+                      responses:
+                        '200':
+                          description: foo
+                          content:
+                            text/plain:
+                              schema:
+                                type: string
+                """;
 
             var doc = new OpenApiDocument
             {
