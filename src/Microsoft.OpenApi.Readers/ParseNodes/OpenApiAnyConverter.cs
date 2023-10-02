@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return newObject;
             }
 
-            if (!(openApiAny is OpenApiString))
+            if (openApiAny is not OpenApiString)
             {
                 return openApiAny;
             }

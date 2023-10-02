@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Validations
                 return;
             }
 
-            if (!(item is T))
+            if (item is not T)
             {
                 throw Error.Argument(string.Format(SRResource.InputItemShouldBeType, typeof(T).FullName));
             }

@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public MapNode(ParsingContext context, YamlNode node) : base(
             context)
         {
-            if (!(node is YamlMappingNode mapNode))
+            if (node is not YamlMappingNode mapNode)
             {
                 throw new OpenApiReaderException("Expected map.", Context);
             }
