@@ -196,9 +196,13 @@ namespace Microsoft.OpenApi.Services
         /// <param name="schema"></param>
         public override void Visit(ref JsonSchema schema)
         {
-            if (schema.GetRef() != null)
+            var reference = schema.GetRef();
+            var description = schema.GetDescription();
+            var summary = schema.GetSummary();
+
+            if (reference != null)
             {
-                schema = ResolveJsonSchemaReference(schema);
+                schema = ResolveJsonSchemaReference(reference, description, summary);
             }
             
             var builder = new JsonSchemaBuilder();
@@ -230,17 +234,8 @@ namespace Microsoft.OpenApi.Services
             return resolvedSchemas;
         }
 
-        private JsonSchema ResolveJsonSchemaReference(JsonSchema schema)
+        public JsonSchema ResolveJsonSchemaReference(Uri reference, string description = null, string summary = null)
         {
-            var reference = schema.GetRef();
-            var description = schema.GetDescription();
-            var summary = schema.GetSummary();
-
-            if (reference == null)
-            {
-                return schema;
-            }
-
             var refUri = $"http://everything.json{reference.OriginalString.Split('#').LastOrDefault()}";
             var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(refUri));
 
@@ -310,10 +305,11 @@ namespace Microsoft.OpenApi.Services
         private void ResolveJsonSchema(JsonSchema schema, Action<JsonSchema> assign)
         {
             if (schema == null) return;
+            var reference = schema.GetRef();
 
-            if (schema.GetRef() != null)
+            if (reference != null)
             {
-                assign(ResolveJsonSchemaReference(schema));
+                assign(ResolveJsonSchemaReference(reference));
             }
         }
 
@@ -338,9 +334,10 @@ namespace Microsoft.OpenApi.Services
             for (int i = 0; i < list.Count; i++)
             {
                 var entity = list[i];
-                if (entity.GetRef() != null)
+                var reference = entity.GetRef();
+                if (reference != null)
                 {
-                    list[i] = ResolveJsonSchemaReference(entity);
+                    list[i] = ResolveJsonSchemaReference(reference);
                 }
             }
 
@@ -368,9 +365,11 @@ namespace Microsoft.OpenApi.Services
             foreach (var key in map.Keys.ToList())
             {
                 var entity = map[key];
-                if (entity.GetRef() != null)
+                var reference = entity.GetRef();
+
+                if (reference != null)
                 {
-                    map[key] = ResolveJsonSchemaReference(entity);
+                    map[key] = ResolveJsonSchemaReference(reference);
                 }
             }
 

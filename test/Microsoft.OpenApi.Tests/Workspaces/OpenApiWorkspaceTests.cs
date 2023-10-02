@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -75,14 +75,13 @@ namespace Microsoft.OpenApi.Tests
         public void OpenApiWorkspacesCanResolveExternalReferences()
         {
             var workspace = new OpenApiWorkspace();
-            workspace.AddDocument("common", CreateCommonDocument());
-            var schema = workspace.ResolveReference(new OpenApiReference()
-            {
-                Id = "test",
-                Type = ReferenceType.Schema,
-                ExternalResource = "common"
-            }) as JsonSchema;
+            var doc = CreateCommonDocument();
+            var location = "common";
 
+            workspace.AddDocument(location, doc);
+
+            var schema = workspace.ResolveJsonSchemaReference(new Uri("http://everything.json/common#/components/schemas/test"));
+            
             Assert.NotNull(schema);
             Assert.Equal("The referenced one", schema.GetDescription());
         }

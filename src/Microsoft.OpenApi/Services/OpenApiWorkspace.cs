@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -127,6 +129,28 @@ namespace Microsoft.OpenApi.Services
             {
                 var jsonPointer = new JsonPointer($"/{reference.Id ?? string.Empty}");
                 return fragment.ResolveReference(jsonPointer);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the target of a JSON schema reference from within the workspace
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <returns></returns>
+        public JsonSchema ResolveJsonSchemaReference(Uri reference)
+        {
+            var doc = _documents.Values.First();
+            if (doc != null)
+            {
+                foreach (var jsonSchema in doc.Components.Schemas)
+                {
+                    var refUri = new Uri($"http://everything.json/components/schemas/{jsonSchema.Key}");
+                    SchemaRegistry.Global.Register(refUri, jsonSchema.Value);
+                }
+
+                var resolver = new OpenApiReferenceResolver(doc);
+                return resolver.ResolveJsonSchemaReference(reference);
             }
             return null;
         }
