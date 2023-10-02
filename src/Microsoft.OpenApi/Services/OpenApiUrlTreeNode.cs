@@ -296,7 +296,6 @@ namespace Microsoft.OpenApi.Services
 
         private static (string, string) GetShapeDelimiters(string methods)
         {
-            
             if (MermaidNodeStyles.TryGetValue(methods, out var style))
             {
                 //switch on shape
