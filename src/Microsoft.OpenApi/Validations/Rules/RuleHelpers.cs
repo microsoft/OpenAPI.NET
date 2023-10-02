@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 // If value is not a string and also not an object, there is a data mismatch.
-                if (!(value is OpenApiObject anyObject))
+                if (value is not OpenApiObject anyObject)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 // If value is not a string and also not an array, there is a data mismatch.
-                if (!(value is OpenApiArray anyArray))
+                if (value is not OpenApiArray anyArray)
                 {
                     context.CreateWarning(
                         ruleName,
