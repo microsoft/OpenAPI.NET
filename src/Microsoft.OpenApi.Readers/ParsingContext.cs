@@ -244,6 +244,5 @@ namespace Microsoft.OpenApi.Readers
                 _loopStacks[loopid].Pop();
             }
         }
-
     }
 }

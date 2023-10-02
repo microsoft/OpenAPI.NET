@@ -241,7 +241,7 @@ namespace Microsoft.OpenApi.Models
 
             // allowEmptyValue
             writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
-            
+
             // style
             if (_style.HasValue)
             {
@@ -400,7 +400,6 @@ namespace Microsoft.OpenApi.Models
                 }
             }
 
-
             // extensions
             writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
@@ -420,7 +419,6 @@ namespace Microsoft.OpenApi.Models
 
             return Style;
         }
-
     }
 
     /// <summary>

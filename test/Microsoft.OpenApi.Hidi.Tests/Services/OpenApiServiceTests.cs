@@ -87,7 +87,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             }
         }
 
-
         [Fact]
         public void ShowCommandGeneratesMermaidDiagramAsMarkdown()
         {
@@ -129,7 +128,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var output = reader.ReadToEnd();
             Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
-
 
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
@@ -183,7 +181,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 await OpenApiService.ValidateOpenApiDocument("", _logger, new CancellationToken()));
         }
 
-
         [Fact]
         public async Task ThrowIfURLIsNotResolvableWhenValidating()
         {
@@ -207,7 +204,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             Assert.True(true);
         }
 
-
         [Fact]
         public async Task TransformCommandConvertsOpenApi()
         {
@@ -226,7 +222,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var output = await File.ReadAllTextAsync("sample.json");
             Assert.NotEmpty(output);
         }
-
 
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputName()
@@ -337,7 +332,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             Assert.NotEmpty(output);
         }
 
-
         [Fact]
         public void InvokeShowCommand()
         {
@@ -368,14 +362,13 @@ namespace Microsoft.OpenApi.Hidi.Tests
 
             using var jsDoc = JsonDocument.Parse(File.ReadAllText("ai-plugin.json"));
             var openAiManifest = OpenAIPluginManifest.Load(jsDoc.RootElement);
-            
+
             Assert.NotNull(openAiManifest);
             Assert.Equal("Mastodon - Subset", openAiManifest.NameForHuman);
             Assert.NotNull(openAiManifest.Api);
             Assert.Equal("openapi", openAiManifest.Api.Type);
             Assert.Equal("./openapi.json", openAiManifest.Api.Url);
         }
-
 
         // Relatively useless test to keep the code coverage metrics happy
         [Fact]

@@ -35,6 +35,5 @@ namespace Microsoft.OpenApi.Validations
         /// Pointer to source of validation error in document
         /// </summary>
         string PathString { get; }
-
     }
 }

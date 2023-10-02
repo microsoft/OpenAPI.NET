@@ -85,7 +85,6 @@ aDate: 2017-01-02
                 });
         }
 
-
         [Fact]
         public void ParseNestedObjectAsAnyShouldSucceed()
         {
@@ -264,7 +263,6 @@ aDate: 2017-01-02
                     ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))
                 });
         }
-
 
         [Fact]
         public void ParseNestedObjectAsAnyWithPartialSchemaShouldSucceed()

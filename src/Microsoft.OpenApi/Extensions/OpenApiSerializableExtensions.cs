@@ -132,7 +132,6 @@ namespace Microsoft.OpenApi.Extensions
             writer.Flush();
         }
 
-
         /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in JSON format.
         /// </summary>

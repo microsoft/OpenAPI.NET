@@ -32,6 +32,5 @@ namespace Microsoft.OpenApi.Validations
             OpenApiValidatorWarning warning = new OpenApiValidatorWarning(ruleName, context.PathString, message);
             context.AddWarning(warning);
         }
-
     }
 }

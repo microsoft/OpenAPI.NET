@@ -16,14 +16,9 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
-
-
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V2Tests/Samples/";
-
-
-
 
         [Fact]
         public void ShouldThrowWhenReferenceTypeIsInvalid()
@@ -404,7 +399,6 @@ paths: {}",
                 xml.Schema.Should().BeEquivalentTo(targetSchema);
             }
         }
-
 
         [Fact]
         public void ShouldAllowComponentsThatJustContainAReference()

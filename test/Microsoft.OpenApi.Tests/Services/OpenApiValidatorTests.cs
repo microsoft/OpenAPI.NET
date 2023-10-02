@@ -99,7 +99,6 @@ namespace Microsoft.OpenApi.Tests.Services
         });
         }
 
-
         [Fact]
         public void ValidateCustomExtension()
         {
@@ -143,7 +142,6 @@ namespace Microsoft.OpenApi.Tests.Services
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
                    });
         }
-
     }
 
     internal class FooExtension : IOpenApiExtension, IOpenApiElement

@@ -608,7 +608,6 @@ get:
             }
         }
 
-
         [Fact]
         public void ParseSelfReferencingSchemaShouldNotStackOverflow()
         {

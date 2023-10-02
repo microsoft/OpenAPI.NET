@@ -311,6 +311,5 @@ paths: {}
                     SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
                 });
         }
-
     }
 }

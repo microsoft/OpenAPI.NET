@@ -28,8 +28,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Throws<ArgumentException>("expression", test);
         }
 
-
-
         [Theory]
         [InlineData("$unknown")]
         [InlineData("$abc")]
@@ -150,7 +148,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.NotSame(runtimeExpression1, runtimeExpression2);
             Assert.Equal(runtimeExpression1, runtimeExpression2);
         }
-
 
         [Fact]
         public void CompositeRuntimeExpressionContainsExpression()

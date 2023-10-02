@@ -50,8 +50,6 @@ namespace Microsoft.OpenApi.SmokeTests
                 _output.WriteLine(String.Join("\n", diagnostic.Errors));
                 //               Assert.True(false);  // Uncomment to identify descriptions with errors.
             }
-
-
         }
 
         //[Fact(Skip="Run manually")]

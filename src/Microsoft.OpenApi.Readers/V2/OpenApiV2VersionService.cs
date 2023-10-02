@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
 
-
 namespace Microsoft.OpenApi.Readers.V2
 {
     /// <summary>
@@ -197,7 +196,6 @@ namespace Microsoft.OpenApi.Readers.V2
                         }
                         id = localSegments[2];
                     }
-
 
                     // $ref: externalSource.yaml#/Pet
                     return new OpenApiReference

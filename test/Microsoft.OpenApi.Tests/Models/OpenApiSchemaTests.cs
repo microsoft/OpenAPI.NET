@@ -378,7 +378,6 @@ namespace Microsoft.OpenApi.Tests.Models
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
-
             // Act
             ReferencedSchema.SerializeAsV3WithoutReference(writer);
             writer.Flush();

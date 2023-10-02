@@ -119,7 +119,6 @@ namespace Microsoft.OpenApi.Models
             }
         }
 
-
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.
         /// </summary>

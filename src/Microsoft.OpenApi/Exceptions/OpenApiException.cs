@@ -47,6 +47,5 @@ namespace Microsoft.OpenApi.Exceptions
         /// Currently only line= is provided because using char= causes tests to break due to CR/LF and LF differences
         /// </summary>
         public string Pointer { get; set; }
-
     }
 }

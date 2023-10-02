@@ -186,7 +186,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiSchema AdditionalProperties { get; set; }
 
-
         /// <summary>
         /// Adds support for polymorphism. The discriminator is an object name that is used to differentiate
         /// between other schemas which may satisfy the payload description.
@@ -530,14 +529,13 @@ namespace Microsoft.OpenApi.Models
                 }
             }
 
-
             if (parentRequiredProperties == null)
             {
                 parentRequiredProperties = new HashSet<string>();
             }
 
             target.SerializeAsV2WithoutReference(writer, parentRequiredProperties, propertyName);
-           
+
             if (Reference != null)
             {
                 settings.LoopDetector.PopLoop<OpenApiSchema>();
@@ -578,7 +576,7 @@ namespace Microsoft.OpenApi.Models
                     AnyOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format ??
                     OneOf?.FirstOrDefault(static x => !string.IsNullOrEmpty(x.Format))?.Format;
             }
-            
+
             writer.WriteProperty(OpenApiConstants.Format, Format);
 
             // items

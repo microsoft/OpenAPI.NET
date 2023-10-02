@@ -40,9 +40,7 @@ paths: {}";
             var result = await reader.ReadAsync(stream);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
-
         }
-
 
         [Fact]
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
@@ -81,9 +79,7 @@ paths: {}";
                                             .Where(p => p.Name == "filter").FirstOrDefault();
           
             Assert.Equal("string", referencedParameter.Schema.Type);
-
         }
-
 
     }
 
@@ -99,7 +95,6 @@ paths: {}";
             return null;
         }
     }
-
 
     public class ResourceLoader : IStreamLoader
     {

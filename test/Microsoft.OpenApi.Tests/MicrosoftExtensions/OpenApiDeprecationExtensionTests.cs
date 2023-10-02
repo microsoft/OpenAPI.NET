@@ -99,7 +99,6 @@ public class OpenApiDeprecationExtensionTests
         using TextWriter sWriter = new StringWriter();
         OpenApiJsonWriter writer = new(sWriter);
 
-
         value.Write(writer, OpenApiSpecVersion.OpenApi3_0);
         var result = sWriter.ToString();
         Assert.Equal("{\n  \"removalDate\": \"2023-05-04T16:00:00.0000000+04:00\",\n  \"date\": \"2023-05-04T16:00:00.0000000+04:00\",\n  \"version\": \"v1.0\",\n  \"description\": \"removing\"\n}", result);

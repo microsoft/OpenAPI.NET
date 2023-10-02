@@ -69,7 +69,6 @@ namespace Microsoft.OpenApi.Tests.Validations
             // Act
             var errors = document.Validate(new ValidationRuleSet { new AlwaysFailRule<OpenApiSchema>() });
 
-
             // Assert
             Assert.True(errors.Count() == 1);
         }

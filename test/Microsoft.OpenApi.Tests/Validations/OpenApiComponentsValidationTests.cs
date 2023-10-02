@@ -34,7 +34,6 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Act
             bool result = !errors.Any();
 
-
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);

@@ -70,7 +70,6 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
-
         /// <summary>
         /// Visits <see cref="OpenApiLicense"/>
         /// </summary>
@@ -148,7 +147,6 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
-
         /// <summary>
         /// Visits headers.
         /// </summary>
@@ -211,7 +209,6 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(OpenApiComponents components)
         {
         }
-
 
         /// <summary>
         /// Visits <see cref="OpenApiComponents"/>

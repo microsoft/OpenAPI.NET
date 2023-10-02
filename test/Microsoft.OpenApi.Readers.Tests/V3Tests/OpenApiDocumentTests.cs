@@ -74,7 +74,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             }
         }
 
-
         public OpenApiDocumentTests(ITestOutputHelper output)
         {
             _output = output;
@@ -860,7 +859,6 @@ paths: {}",
                         Type = ReferenceType.Tag
                     }
                 };
-
 
                 var tag2 = new OpenApiTag
                 {

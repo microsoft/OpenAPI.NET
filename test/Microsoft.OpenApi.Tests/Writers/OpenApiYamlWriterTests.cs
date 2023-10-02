@@ -385,8 +385,6 @@ components: { }";
             Assert.Equal(expected, actual);
         }
 
-
-
         [Fact]
         public void WriteInlineSchemaV2()
         {
@@ -644,6 +642,5 @@ definitions:
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
         }
-
     }
 }

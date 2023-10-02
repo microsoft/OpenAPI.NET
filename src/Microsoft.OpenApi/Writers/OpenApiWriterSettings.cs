@@ -25,7 +25,6 @@ namespace Microsoft.OpenApi.Writers
         InlineAllReferences
     }
 
-
     /// <summary>
     /// Configuration settings to control how OpenAPI documents are written
     /// </summary>
@@ -41,7 +40,7 @@ namespace Microsoft.OpenApi.Writers
         [Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
         public ReferenceInlineSetting ReferenceInline {
             get { return referenceInline; }
-            set { 
+            set {
                 referenceInline = value;
                 switch(referenceInline)
                 {
@@ -75,6 +74,5 @@ namespace Microsoft.OpenApi.Writers
             return (reference.IsLocal && InlineLocalReferences)
                              || (reference.IsExternal && InlineExternalReferences);
         }
-
     }
 }

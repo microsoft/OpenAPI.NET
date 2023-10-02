@@ -107,7 +107,6 @@ namespace Microsoft.OpenApi.Models
                 throw Error.ArgumentNull(nameof(writer));
             }
 
-
             if (Reference != null)
             {
                 Reference.SerializeAsV3(writer);

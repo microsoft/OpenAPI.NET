@@ -17,7 +17,6 @@ namespace Microsoft.OpenApi.Readers.Services
         private readonly Uri baseUrl;
         private HttpClient _httpClient = new HttpClient();
 
-
         public DefaultStreamLoader(Uri baseUrl)
         {
             this.baseUrl = baseUrl;

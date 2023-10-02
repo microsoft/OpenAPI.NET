@@ -83,7 +83,6 @@ namespace Microsoft.OpenApi.Readers
             return await new OpenApiYamlDocumentReader(this._settings).ReadAsync(yamlDocument, cancellationToken);
         }
 
-
         /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.
         /// </summary>

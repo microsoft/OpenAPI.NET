@@ -30,7 +30,6 @@ namespace Microsoft.OpenApi.Readers.V3
             {"callbacks", (o, n) => o.Callbacks = n.CreateMapWithReference(ReferenceType.Callback, LoadCallback)},
         };
 
-
         private static PatternFieldMap<OpenApiComponents> _componentsPatternFields =
             new PatternFieldMap<OpenApiComponents>
             {

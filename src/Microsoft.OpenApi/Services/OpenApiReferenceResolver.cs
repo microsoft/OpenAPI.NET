@@ -170,7 +170,6 @@ namespace Microsoft.OpenApi.Services
             ResolveMap(parameter.Examples);
         }
 
-
         /// <summary>
         /// Resolve all references to links
         /// </summary>

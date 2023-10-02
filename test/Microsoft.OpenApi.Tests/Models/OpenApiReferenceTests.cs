@@ -84,7 +84,6 @@ namespace Microsoft.OpenApi.Tests.Models
             reference.ReferenceV2.Should().Be(expected);
         }
 
-
         [Fact]
         public void SerializeSchemaReferenceAsJsonV3Works()
         {

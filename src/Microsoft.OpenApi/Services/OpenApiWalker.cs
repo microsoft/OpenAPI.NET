@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
             });
-            
+
             Walk(OpenApiConstants.SecuritySchemes, () =>
             {
                 if (components.SecuritySchemes != null)
@@ -127,7 +127,7 @@ namespace Microsoft.OpenApi.Services
                     }
                 }
             });
-            
+
             Walk(OpenApiConstants.Callbacks, () =>
             {
                 if (components.Callbacks != null)
@@ -522,7 +522,6 @@ namespace Microsoft.OpenApi.Services
                 }
             }
         }
-
 
         /// <summary>
         /// Visits list of <see cref="OpenApiParameter"/>

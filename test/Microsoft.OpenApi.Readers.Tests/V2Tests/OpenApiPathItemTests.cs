@@ -298,6 +298,5 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Assert.True(pathItem.Operations[OperationType.Post].RequestBody != null);
             Assert.Equal(2, pathItem.Operations.Count(o => o.Value.RequestBody != null));
         }
-
     }
 }

@@ -17,8 +17,6 @@ namespace Microsoft.OpenApi.Readers.Tests
             Diagnostic = new OpenApiDiagnostic();
         }
 
-
-
         [Fact]
         public void ParseExternalReference()
         {

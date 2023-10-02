@@ -40,7 +40,6 @@ namespace Microsoft.OpenApi.Workbench
 
         private string _renderTime;
 
-
         /// <summary>
         /// Default format.
         /// </summary>
@@ -50,7 +49,6 @@ namespace Microsoft.OpenApi.Workbench
         /// Default version.
         /// </summary>
         private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_0;
-
 
         private HttpClient _httpClient = new HttpClient();
 
@@ -230,7 +228,6 @@ namespace Microsoft.OpenApi.Workbench
                     stream = CreateStream(_input);
                 }
 
-
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
 
@@ -308,7 +305,7 @@ namespace Microsoft.OpenApi.Workbench
         private string WriteContents(OpenApiDocument document)
         {
             var outputStream = new MemoryStream();
-            
+
             document.Serialize(
                 outputStream,
                 Version,
@@ -318,7 +315,7 @@ namespace Microsoft.OpenApi.Workbench
                     InlineLocalReferences = InlineLocal,
                     InlineExternalReferences = InlineExternal
                 });
-            
+
             outputStream.Position = 0;
 
             return new StreamReader(outputStream).ReadToEnd();
