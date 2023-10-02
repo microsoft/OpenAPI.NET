@@ -158,10 +158,10 @@ namespace Microsoft.OpenApi.Readers
             }
             else if (!_scopedTempStorage.TryGetValue(scope, out storage))
             {
-                return default(T);
+                return default;
             }
 
-            return storage.TryGetValue(key, out var value) ? (T)value : default(T);
+            return storage.TryGetValue(key, out var value) ? (T)value : default;
         }
 
         /// <summary>

@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     {
                         Context.StartObject(key);
                         value = n.Value as YamlMappingNode == null
-                          ? default(T)
+                          ? default
                           : map(new MapNode(Context, n.Value as YamlMappingNode));
                     } 
                     finally
