@@ -21,14 +21,15 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
         public void FormatOperationIdsInOpenAPIDocument(string operationId, string expectedOperationId, OperationType operationType, string path = "/foo")
         {
             // Arrange
-            var openApiDocument = new OpenApiDocument()
+            var openApiDocument = new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer>() { new() { Url = "https://localhost/" } },
+                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new()
                 {
                     { path, new() {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>() {
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
+                        {
                             { operationType, new() { OperationId = operationId } }
                           }
                         }
@@ -92,14 +93,14 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
 
         private static OpenApiDocument GetSampleOpenApiDocument()
         {
-            return new OpenApiDocument()
+            return new OpenApiDocument
             {
                 Info = new() { Title = "Test", Version = "1.0" },
-                Servers = new List<OpenApiServer>() { new() { Url = "https://localhost/" } },
+                Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
                 Paths = new() {
                     { "/foo", new()
                         {
-                            Operations = new Dictionary<OperationType, OpenApiOperation>()
+                            Operations = new Dictionary<OperationType, OpenApiOperation>
                             {
                                 {
                                     OperationType.Get, new()
@@ -107,7 +108,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                         OperationId = "Foo.GetFoo",
                                         Parameters = new List<OpenApiParameter>
                                         {
-                                            new OpenApiParameter()
+                                            new OpenApiParameter
                                             {
                                                 Name = "ids",
                                                 In = ParameterLocation.Query,

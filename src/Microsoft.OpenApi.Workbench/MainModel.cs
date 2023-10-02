@@ -4,7 +4,6 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -313,7 +312,8 @@ namespace Microsoft.OpenApi.Workbench
                 outputStream,
                 Version,
                 Format,
-                new OpenApiWriterSettings() {
+                new OpenApiWriterSettings
+                {
                     InlineLocalReferences = InlineLocal,
                     InlineExternalReferences = InlineExternal
                 });

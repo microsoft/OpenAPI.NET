@@ -220,7 +220,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 port = int.Parse(pieces.Last(), CultureInfo.InvariantCulture);
             }
 
-            var uriBuilder = new UriBuilder()
+            var uriBuilder = new UriBuilder
             {
                 Scheme = scheme,
                 Host = host,
@@ -327,10 +327,10 @@ namespace Microsoft.OpenApi.Readers.V2
             if (body != null)
             {
                 operation.Parameters.Remove(body);
-                operation.RequestBody = new OpenApiRequestBody()
+                operation.RequestBody = new OpenApiRequestBody
                 {
                     UnresolvedReference = true,
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Id = body.Reference.Id,
                         Type = ReferenceType.RequestBody
