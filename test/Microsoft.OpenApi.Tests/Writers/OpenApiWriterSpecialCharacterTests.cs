@@ -157,11 +157,11 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteStringAsYamlDoesNotDependOnSystemCulture(string input, string expected, string culture)
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
-            
+
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
-            
+
             // Act
             writer.WriteValue(input);
             var actual = outputStringWriter.GetStringBuilder().ToString();

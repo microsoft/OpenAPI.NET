@@ -1633,7 +1633,7 @@ paths: { }";
         public void TestHashCodesForSimilarOpenApiDocuments()
         {
             // Arrange
-            var sampleFolderPath = "Models/Samples/";            
+            var sampleFolderPath = "Models/Samples/";
 
             var doc1 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
             var doc2 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
@@ -1720,7 +1720,7 @@ paths:
                     }
                 }
             };
-            
+
             // Act
             var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
 
