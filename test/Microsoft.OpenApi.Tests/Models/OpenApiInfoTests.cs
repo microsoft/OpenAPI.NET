@@ -43,10 +43,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 yield return new object[]
                 {
                     specVersion,
-                    @"{
-  ""title"": ""Sample Pet Store App"",
-  ""version"": ""1.0""
-}"
+                    """
+                    {
+                      "title": "Sample Pet Store App",
+                      "version": "1.0"
+                    }
+                    """
                 };
             }
         }
@@ -72,8 +74,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 yield return new object[]
                 {
                     specVersion,
-                    @"title: Sample Pet Store App
-version: '1.0'"
+                    """
+                    title: Sample Pet Store App
+                    version: '1.0'
+                    """
                 };
             }
         }
@@ -99,24 +103,26 @@ version: '1.0'"
                 yield return new object[]
                 {
                     specVersion,
-                    @"{
-  ""title"": ""Sample Pet Store App"",
-  ""description"": ""This is a sample server for a pet store."",
-  ""termsOfService"": ""http://example.com/terms/"",
-  ""contact"": {
-    ""name"": ""API Support"",
-    ""url"": ""http://www.example.com/support"",
-    ""email"": ""support@example.com"",
-    ""x-internal-id"": 42
-  },
-  ""license"": {
-    ""name"": ""Apache 2.0"",
-    ""url"": ""http://www.apache.org/licenses/LICENSE-2.0.html"",
-    ""x-copyright"": ""Abc""
-  },
-  ""version"": ""1.1.1"",
-  ""x-updated"": ""metadata""
-}"
+                    """
+                    {
+                      "title": "Sample Pet Store App",
+                      "description": "This is a sample server for a pet store.",
+                      "termsOfService": "http://example.com/terms/",
+                      "contact": {
+                        "name": "API Support",
+                        "url": "http://www.example.com/support",
+                        "email": "support@example.com",
+                        "x-internal-id": 42
+                      },
+                      "license": {
+                        "name": "Apache 2.0",
+                        "url": "http://www.apache.org/licenses/LICENSE-2.0.html",
+                        "x-copyright": "Abc"
+                      },
+                      "version": "1.1.1",
+                      "x-updated": "metadata"
+                    }
+                    """
                 };
             }
         }
@@ -142,20 +148,22 @@ version: '1.0'"
                 yield return new object[]
                 {
                     specVersion,
-                    @"title: Sample Pet Store App
-description: This is a sample server for a pet store.
-termsOfService: http://example.com/terms/
-contact:
-  name: API Support
-  url: http://www.example.com/support
-  email: support@example.com
-  x-internal-id: 42
-license:
-  name: Apache 2.0
-  url: http://www.apache.org/licenses/LICENSE-2.0.html
-  x-copyright: Abc
-version: '1.1.1'
-x-updated: metadata"
+                    """
+                    title: Sample Pet Store App
+                    description: This is a sample server for a pet store.
+                    termsOfService: http://example.com/terms/
+                    contact:
+                      name: API Support
+                      url: http://www.example.com/support
+                      email: support@example.com
+                      x-internal-id: 42
+                    license:
+                      name: Apache 2.0
+                      url: http://www.apache.org/licenses/LICENSE-2.0.html
+                      x-copyright: Abc
+                    version: '1.1.1'
+                    x-updated: metadata
+                    """
                 };
             }
         }
@@ -184,8 +192,10 @@ x-updated: metadata"
             };
 
             var expected =
-                @"title: Sample Pet Store App
-version: '2017-03-01'";
+                """
+                title: Sample Pet Store App
+                version: '2017-03-01'
+                """;
 
             // Act
             var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);

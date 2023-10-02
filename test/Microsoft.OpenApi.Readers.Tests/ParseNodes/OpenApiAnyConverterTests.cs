@@ -20,13 +20,14 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
         [Fact]
         public void ParseObjectAsAnyShouldSucceed()
         {
-            var input = @"
-aString: fooBar
-aInteger: 10
-aDouble: 2.34
-aDateTime: 2017-01-01
-aDate: 2017-01-02
-                ";
+            var input =
+                """
+                aString: fooBar
+                aInteger: 10
+                aDouble: 2.34
+                aDateTime: 2017-01-01
+                aDate: 2017-01-02
+                """;
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
@@ -88,30 +89,31 @@ aDate: 2017-01-02
         [Fact]
         public void ParseNestedObjectAsAnyShouldSucceed()
         {
-            var input = @"
-    aString: fooBar
-    aInteger: 10
-    aArray:
-      - 1
-      - 2
-      - 3
-    aNestedArray:
-      - aFloat: 1
-        aPassword: 1234
-        aArray: [abc, def]
-        aDictionary:
-          arbitraryProperty: 1
-          arbitraryProperty2: 2
-      - aFloat: 1.6
-        aArray: [123]
-        aDictionary:
-          arbitraryProperty: 1
-          arbitraryProperty3: 20
-    aObject:
-      aDate: 2017-02-03
-    aDouble: 2.34
-    aDateTime: 2017-01-01
-                    ";
+            var input =
+                """
+                aString: fooBar
+                aInteger: 10
+                aArray:
+                  - 1
+                  - 2
+                  - 3
+                aNestedArray:
+                  - aFloat: 1
+                    aPassword: 1234
+                    aArray: [abc, def]
+                    aDictionary:
+                      arbitraryProperty: 1
+                      arbitraryProperty2: 2
+                  - aFloat: 1.6
+                    aArray: [123]
+                    aDictionary:
+                      arbitraryProperty: 1
+                      arbitraryProperty3: 20
+                aObject:
+                  aDate: 2017-02-03
+                aDouble: 2.34
+                aDateTime: 2017-01-01
+                """;
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
@@ -267,30 +269,31 @@ aDate: 2017-01-02
         [Fact]
         public void ParseNestedObjectAsAnyWithPartialSchemaShouldSucceed()
         {
-            var input = @"
-        aString: fooBar
-        aInteger: 10
-        aArray:
-          - 1
-          - 2
-          - 3
-        aNestedArray:
-          - aFloat: 1
-            aPassword: 1234
-            aArray: [abc, def]
-            aDictionary:
-              arbitraryProperty: 1
-              arbitraryProperty2: 2
-          - aFloat: 1.6
-            aArray: [123]
-            aDictionary:
-              arbitraryProperty: 1
-              arbitraryProperty3: 20
-        aObject:
-          aDate: 2017-02-03
-        aDouble: 2.34
-        aDateTime: 2017-01-01
-                        ";
+            var input =
+                """
+                aString: fooBar
+                aInteger: 10
+                aArray:
+                  - 1
+                  - 2
+                  - 3
+                aNestedArray:
+                  - aFloat: 1
+                    aPassword: 1234
+                    aArray: [abc, def]
+                    aDictionary:
+                      arbitraryProperty: 1
+                      arbitraryProperty2: 2
+                  - aFloat: 1.6
+                    aArray: [123]
+                    aDictionary:
+                      arbitraryProperty: 1
+                      arbitraryProperty3: 20
+                aObject:
+                  aDate: 2017-02-03
+                aDouble: 2.34
+                aDateTime: 2017-01-01
+                """;
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
@@ -422,30 +425,31 @@ aDate: 2017-01-02
         [Fact]
         public void ParseNestedObjectAsAnyWithoutUsingSchemaShouldSucceed()
         {
-            var input = @"
-        aString: fooBar
-        aInteger: 10
-        aArray:
-          - 1
-          - 2
-          - 3
-        aNestedArray:
-          - aFloat: 1
-            aPassword: 1234
-            aArray: [abc, def]
-            aDictionary:
-              arbitraryProperty: 1
-              arbitraryProperty2: 2
-          - aFloat: 1.6
-            aArray: [123]
-            aDictionary:
-              arbitraryProperty: 1
-              arbitraryProperty3: 20
-        aObject:
-          aDate: 2017-02-03
-        aDouble: 2.34
-        aDateTime: 2017-01-01
-                        ";
+            var input =
+                """
+                aString: fooBar
+                aInteger: 10
+                aArray:
+                  - 1
+                  - 2
+                  - 3
+                aNestedArray:
+                  - aFloat: 1
+                    aPassword: 1234
+                    aArray: [abc, def]
+                    aDictionary:
+                      arbitraryProperty: 1
+                      arbitraryProperty2: 2
+                  - aFloat: 1.6
+                    aArray: [123]
+                    aDictionary:
+                      arbitraryProperty: 1
+                      arbitraryProperty3: 20
+                aObject:
+                  aDate: 2017-02-03
+                aDouble: 2.34
+                aDateTime: 2017-01-01
+                """;
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;

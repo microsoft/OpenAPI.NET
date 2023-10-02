@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;

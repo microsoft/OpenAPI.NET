@@ -8,10 +8,7 @@ using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -23,20 +20,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ShouldThrowWhenReferenceTypeIsInvalid()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-paths: 
-  '/':
-    get:
-      responses:
-        '200':
-          description: ok
-          schema:
-            $ref: '#/defi888nition/does/notexist'
-";
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths:
+                  '/':
+                    get:
+                      responses:
+                        '200':
+                          description: ok
+                          schema:
+                            $ref: '#/defi888nition/does/notexist'
+                """;
 
             var reader = new OpenApiStringReader();
             var doc = reader.Read(input, out var diagnostic);
@@ -49,21 +47,22 @@ paths:
         [Fact]
         public void ShouldThrowWhenReferenceDoesNotExist()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-paths: 
-  '/':
-    get:
-      produces: ['application/json']
-      responses:
-        '200':
-          description: ok
-          schema:
-            $ref: '#/definitions/doesnotexist'
-";
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths:
+                  '/':
+                    get:
+                      produces: ['application/json']
+                      responses:
+                        '200':
+                          description: ok
+                          schema:
+                            $ref: '#/definitions/doesnotexist'
+                """;
 
             var reader = new OpenApiStringReader();
 
@@ -86,23 +85,24 @@ paths:
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
             var openApiDoc = new OpenApiStringReader().Read(
-                @"
-swagger: 2.0
-info: 
-  title: Simple Document
-  version: 0.9.1
-  x-extension: 2.335
-definitions:
-  sampleSchema:
-    type: object
-    properties:
-      sampleProperty:
-        type: double
-        minimum: 100.54
-        maximum: 60000000.35
-        exclusiveMaximum: true
-        exclusiveMinimum: false
-paths: {}",
+                """
+                swagger: 2.0
+                info:
+                  title: Simple Document
+                  version: 0.9.1
+                  x-extension: 2.335
+                definitions:
+                  sampleSchema:
+                    type: object
+                    properties:
+                      sampleProperty:
+                        type: double
+                        minimum: 100.54
+                        maximum: 60000000.35
+                        exclusiveMaximum: true
+                        exclusiveMinimum: false
+                paths: {}
+                """,
                 out var context);
 
             openApiDoc.Should().BeEquivalentTo(

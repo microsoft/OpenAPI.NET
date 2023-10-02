@@ -45,8 +45,7 @@ namespace Microsoft.OpenApi.SmokeTests
             var json = JObject.Parse(listJsonStr);
             foreach (var item in json.Properties())
             {
-                var versions = GetProp(item.Value, "versions") as JObject;
-                if (versions == null)
+                if (GetProp(item.Value, "versions") is not JObject versions)
                     continue;
                 foreach (var prop in versions.Properties())
                 {

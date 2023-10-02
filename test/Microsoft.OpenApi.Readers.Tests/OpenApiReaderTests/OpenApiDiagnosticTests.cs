@@ -7,7 +7,6 @@ using System;
 using FluentAssertions;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests;
 using Xunit;
 using Microsoft.OpenApi.Readers.Interface;
 using System.IO;

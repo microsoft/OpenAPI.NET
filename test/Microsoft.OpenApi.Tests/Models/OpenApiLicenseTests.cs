@@ -37,9 +37,11 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""name"": ""Apache 2.0""
-}";
+                """
+                {
+                  "name": "Apache 2.0"
+                }
+                """;
 
             // Act
             var actual = BasicLicense.SerializeAsJson(version);
@@ -74,11 +76,13 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""name"": ""Apache 2.0"",
-  ""url"": ""http://www.apache.org/licenses/LICENSE-2.0.html"",
-  ""x-copyright"": ""Abc""
-}";
+                """
+                {
+                  "name": "Apache 2.0",
+                  "url": "http://www.apache.org/licenses/LICENSE-2.0.html",
+                  "x-copyright": "Abc"
+                }
+                """;
 
             // Act
             var actual = AdvanceLicense.SerializeAsJson(version);
@@ -96,9 +100,11 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"name: Apache 2.0
-url: http://www.apache.org/licenses/LICENSE-2.0.html
-x-copyright: Abc";
+                """
+                name: Apache 2.0
+                url: http://www.apache.org/licenses/LICENSE-2.0.html
+                x-copyright: Abc
+                """;
 
             // Act
             var actual = AdvanceLicense.SerializeAsYaml(version);

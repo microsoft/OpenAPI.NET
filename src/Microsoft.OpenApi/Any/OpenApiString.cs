@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Any
         /// <summary>
         /// The primitive class this object represents.
         /// </summary>
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.String;
+        public override PrimitiveType PrimitiveType => PrimitiveType.String;
 
         /// <summary>
         /// True if string was specified explicitly by the means of double quotes, single quotes, or literal or folded style.

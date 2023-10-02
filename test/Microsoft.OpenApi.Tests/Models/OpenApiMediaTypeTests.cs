@@ -147,17 +147,19 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""example"": 42,
-  ""encoding"": {
-    ""testEncoding"": {
-      ""contentType"": ""image/png, image/jpeg"",
-      ""style"": ""simple"",
-      ""explode"": true,
-      ""allowReserved"": true
-    }
-  }
-}";
+                """
+                {
+                  "example": 42,
+                  "encoding": {
+                    "testEncoding": {
+                      "contentType": "image/png, image/jpeg",
+                      "style": "simple",
+                      "explode": true,
+                      "allowReserved": true
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvanceMediaType.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -173,13 +175,15 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"example: 42
-encoding:
-  testEncoding:
-    contentType: 'image/png, image/jpeg'
-    style: simple
-    explode: true
-    allowReserved: true";
+                """
+                example: 42
+                encoding:
+                  testEncoding:
+                    contentType: 'image/png, image/jpeg'
+                    style: simple
+                    explode: true
+                    allowReserved: true
+                """;
 
             // Act
             var actual = AdvanceMediaType.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -195,24 +199,26 @@ encoding:
         {
             // Arrange
             var expected =
-                @"example:
-  versions:
-    - status: Status1
-      id: v1
-      links:
-        - href: http://example.com/1
-          rel: sampleRel1
-    - status: Status2
-      id: v2
-      links:
-        - href: http://example.com/2
-          rel: sampleRel2
-encoding:
-  testEncoding:
-    contentType: 'image/png, image/jpeg'
-    style: simple
-    explode: true
-    allowReserved: true";
+                """
+                example:
+                  versions:
+                    - status: Status1
+                      id: v1
+                      links:
+                        - href: http://example.com/1
+                          rel: sampleRel1
+                    - status: Status2
+                      id: v2
+                      links:
+                        - href: http://example.com/2
+                          rel: sampleRel2
+                encoding:
+                  testEncoding:
+                    contentType: 'image/png, image/jpeg'
+                    style: simple
+                    explode: true
+                    allowReserved: true
+                """;
 
             // Act
             var actual = MediaTypeWithObjectExample.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -228,40 +234,42 @@ encoding:
         {
             // Arrange
             var expected =
-                @"{
-  ""example"": {
-    ""versions"": [
-      {
-        ""status"": ""Status1"",
-        ""id"": ""v1"",
-        ""links"": [
-          {
-            ""href"": ""http://example.com/1"",
-            ""rel"": ""sampleRel1""
-          }
-        ]
-      },
-      {
-        ""status"": ""Status2"",
-        ""id"": ""v2"",
-        ""links"": [
-          {
-            ""href"": ""http://example.com/2"",
-            ""rel"": ""sampleRel2""
-          }
-        ]
-      }
-    ]
-  },
-  ""encoding"": {
-    ""testEncoding"": {
-      ""contentType"": ""image/png, image/jpeg"",
-      ""style"": ""simple"",
-      ""explode"": true,
-      ""allowReserved"": true
-    }
-  }
-}";
+                """
+                {
+                  "example": {
+                    "versions": [
+                      {
+                        "status": "Status1",
+                        "id": "v1",
+                        "links": [
+                          {
+                            "href": "http://example.com/1",
+                            "rel": "sampleRel1"
+                          }
+                        ]
+                      },
+                      {
+                        "status": "Status2",
+                        "id": "v2",
+                        "links": [
+                          {
+                            "href": "http://example.com/2",
+                            "rel": "sampleRel2"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "encoding": {
+                    "testEncoding": {
+                      "contentType": "image/png, image/jpeg",
+                      "style": "simple",
+                      "explode": true,
+                      "allowReserved": true
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = MediaTypeWithObjectExample.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -277,13 +285,15 @@ encoding:
         {
             // Arrange
             var expected =
-                @"example: <xml>123</xml>
-encoding:
-  testEncoding:
-    contentType: 'image/png, image/jpeg'
-    style: simple
-    explode: true
-    allowReserved: true";
+                """
+                example: <xml>123</xml>
+                encoding:
+                  testEncoding:
+                    contentType: 'image/png, image/jpeg'
+                    style: simple
+                    explode: true
+                    allowReserved: true
+                """;
 
             // Act
             var actual = MediaTypeWithXmlExample.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -298,17 +308,20 @@ encoding:
         public void SerializeMediaTypeWithXmlExampleAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""example"": ""<xml>123</xml>"",
-  ""encoding"": {
-    ""testEncoding"": {
-      ""contentType"": ""image/png, image/jpeg"",
-      ""style"": ""simple"",
-      ""explode"": true,
-      ""allowReserved"": true
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "example": "<xml>123</xml>",
+                  "encoding": {
+                    "testEncoding": {
+                      "contentType": "image/png, image/jpeg",
+                      "style": "simple",
+                      "explode": true,
+                      "allowReserved": true
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = MediaTypeWithXmlExample.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -323,26 +336,29 @@ encoding:
         public void SerializeMediaTypeWithObjectExamplesAsV3YamlWorks()
         {
             // Arrange
-            var expected = @"examples:
-  object1:
-    value:
-      versions:
-        - status: Status1
-          id: v1
-          links:
-            - href: http://example.com/1
-              rel: sampleRel1
-        - status: Status2
-          id: v2
-          links:
-            - href: http://example.com/2
-              rel: sampleRel2
-encoding:
-  testEncoding:
-    contentType: 'image/png, image/jpeg'
-    style: simple
-    explode: true
-    allowReserved: true";
+            var expected =
+                """
+                examples:
+                  object1:
+                    value:
+                      versions:
+                        - status: Status1
+                          id: v1
+                          links:
+                            - href: http://example.com/1
+                              rel: sampleRel1
+                        - status: Status2
+                          id: v2
+                          links:
+                            - href: http://example.com/2
+                              rel: sampleRel2
+                encoding:
+                  testEncoding:
+                    contentType: 'image/png, image/jpeg'
+                    style: simple
+                    explode: true
+                    allowReserved: true
+                """;
 
             // Act
             var actual = MediaTypeWithObjectExamples.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -358,44 +374,47 @@ encoding:
         public void SerializeMediaTypeWithObjectExamplesAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""examples"": {
-    ""object1"": {
-      ""value"": {
-        ""versions"": [
-          {
-            ""status"": ""Status1"",
-            ""id"": ""v1"",
-            ""links"": [
-              {
-                ""href"": ""http://example.com/1"",
-                ""rel"": ""sampleRel1""
-              }
-            ]
-          },
-          {
-            ""status"": ""Status2"",
-            ""id"": ""v2"",
-            ""links"": [
-              {
-                ""href"": ""http://example.com/2"",
-                ""rel"": ""sampleRel2""
-              }
-            ]
-          }
-        ]
-      }
-    }
-  },
-  ""encoding"": {
-    ""testEncoding"": {
-      ""contentType"": ""image/png, image/jpeg"",
-      ""style"": ""simple"",
-      ""explode"": true,
-      ""allowReserved"": true
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "examples": {
+                    "object1": {
+                      "value": {
+                        "versions": [
+                          {
+                            "status": "Status1",
+                            "id": "v1",
+                            "links": [
+                              {
+                                "href": "http://example.com/1",
+                                "rel": "sampleRel1"
+                              }
+                            ]
+                          },
+                          {
+                            "status": "Status2",
+                            "id": "v2",
+                            "links": [
+                              {
+                                "href": "http://example.com/2",
+                                "rel": "sampleRel2"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "encoding": {
+                    "testEncoding": {
+                      "contentType": "image/png, image/jpeg",
+                      "style": "simple",
+                      "explode": true,
+                      "allowReserved": true
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = MediaTypeWithObjectExamples.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);

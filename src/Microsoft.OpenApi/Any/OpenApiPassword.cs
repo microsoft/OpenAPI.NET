@@ -19,6 +19,6 @@ namespace Microsoft.OpenApi.Any
         /// <summary>
         /// The primitive type this object represents.
         /// </summary>
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Password;
+        public override PrimitiveType PrimitiveType => PrimitiveType.Password;
     }
 }

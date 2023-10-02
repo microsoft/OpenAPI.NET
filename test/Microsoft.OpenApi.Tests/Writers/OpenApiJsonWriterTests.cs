@@ -208,10 +208,10 @@ namespace Microsoft.OpenApi.Tests.Writers
 
                 writer.WriteEndObject();
             }
-            else if (typeof(IEnumerable).IsAssignableFrom(value.GetType()))
+            else if (value is IEnumerable enumerable)
             {
                 writer.WriteStartArray();
-                foreach (var elementValue in (IEnumerable)value)
+                foreach (var elementValue in enumerable)
                 {
                     WriteValueRecursive(writer, elementValue);
                 }

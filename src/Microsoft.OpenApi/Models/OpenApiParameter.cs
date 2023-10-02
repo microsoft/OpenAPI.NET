@@ -410,10 +410,10 @@ namespace Microsoft.OpenApi.Models
         {
             Style = In switch
             {
-                ParameterLocation.Query => (ParameterStyle?)ParameterStyle.Form,
-                ParameterLocation.Header => (ParameterStyle?)ParameterStyle.Simple,
-                ParameterLocation.Path => (ParameterStyle?)ParameterStyle.Simple,
-                ParameterLocation.Cookie => (ParameterStyle?)ParameterStyle.Form,
+                ParameterLocation.Query => ParameterStyle.Form,
+                ParameterLocation.Header => ParameterStyle.Simple,
+                ParameterLocation.Path => ParameterStyle.Simple,
+                ParameterLocation.Cookie => ParameterStyle.Form,
                 _ => (ParameterStyle?)ParameterStyle.Simple,
             };
 

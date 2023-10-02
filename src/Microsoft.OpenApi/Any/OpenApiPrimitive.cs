@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Any
         /// <summary>
         /// The kind of <see cref="IOpenApiAny"/>.
         /// </summary>
-        public AnyType AnyType { get; } = AnyType.Primitive;
+        public AnyType AnyType => AnyType.Primitive;
 
         /// <summary>
         /// The primitive class this object represents.

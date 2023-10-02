@@ -44,14 +44,16 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""default"": ""8443"",
-  ""description"": ""test description"",
-  ""enum"": [
-    ""8443"",
-    ""443""
-  ]
-}";
+                """
+                {
+                  "default": "8443",
+                  "description": "test description",
+                  "enum": [
+                    "8443",
+                    "443"
+                  ]
+                }
+                """;
 
             // Act
             var actual = AdvancedServerVariable.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -67,11 +69,13 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"default: '8443'
-description: test description
-enum:
-  - '8443'
-  - '443'";
+                """
+                default: '8443'
+                description: test description
+                enum:
+                  - '8443'
+                  - '443'
+                """;
 
             // Act
             var actual = AdvancedServerVariable.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);

@@ -40,12 +40,14 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""contentType"": ""image/png, image/jpeg"",
-  ""style"": ""simple"",
-  ""explode"": true,
-  ""allowReserved"": true
-}";
+                """
+                {
+                  "contentType": "image/png, image/jpeg",
+                  "style": "simple",
+                  "explode": true,
+                  "allowReserved": true
+                }
+                """;
 
             // Act
             var actual = AdvanceEncoding.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -61,10 +63,12 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"contentType: 'image/png, image/jpeg'
-style: simple
-explode: true
-allowReserved: true";
+                """
+                contentType: 'image/png, image/jpeg'
+                style: simple
+                explode: true
+                allowReserved: true
+                """;
 
             // Act
             var actual = AdvanceEncoding.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);

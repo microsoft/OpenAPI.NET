@@ -103,7 +103,7 @@ namespace Microsoft.OpenApi.Readers
             {
                 diagnostic = new OpenApiDiagnostic();
                 diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
-                return default(T);
+                return default;
             }
 
             return new OpenApiYamlDocumentReader(this._settings).ReadFragment<T>(yamlDocument, version, out diagnostic);
