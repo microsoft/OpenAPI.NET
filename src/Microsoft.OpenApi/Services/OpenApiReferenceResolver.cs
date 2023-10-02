@@ -241,7 +241,7 @@ namespace Microsoft.OpenApi.Services
                 return schema;
             }
 
-            var refUri = $"http://everything.json{reference.OriginalString.TrimStart('#')}";
+            var refUri = $"http://everything.json{reference.OriginalString.Split('#').LastOrDefault()}";
             var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(refUri));
 
             if (resolvedSchema != null)

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,6 +70,7 @@ paths: {}";
                                     .Responses["200"]
                                     .Content["application/json"]
                                     .Schema;
+
             var x = referencedSchema.GetProperties().TryGetValue("subject", out var schema);
             Assert.Equal(SchemaValueType.Object, referencedSchema.GetJsonType());
             Assert.Equal(SchemaValueType.String, schema.GetJsonType());
