@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Hidi
 
         internal static RootCommand CreateRootCommand()
         {
-            var rootCommand = new RootCommand() { };
+            var rootCommand = new RootCommand { };
 
             var commandOptions = new CommandOptions();
 

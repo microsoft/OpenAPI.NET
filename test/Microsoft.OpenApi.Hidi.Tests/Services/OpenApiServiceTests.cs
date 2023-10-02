@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
 
             // create a dummy ILogger instance for testing
-            var options = new HidiOptions()
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 Output = new FileInfo("sample.md")
@@ -151,7 +151,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task ShowCommandGeneratesMermaidHtmlFileWithMermaidDiagram()
         {
-            var options = new HidiOptions()
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml")
             };
@@ -162,7 +162,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileFromCsdlWithMermaidDiagram()
         {
-            var options = new HidiOptions()
+            var options = new HidiOptions
             {
                 Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
                 CsdlFilter = "todos",

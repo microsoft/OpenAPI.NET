@@ -228,11 +228,11 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                                 Description = "Sample description",
                                 Required = new HashSet<string> {"name" },
                                 Properties = {
-                                    ["name"] = new OpenApiSchema()
+                                    ["name"] = new OpenApiSchema
                                     {
                                         Type = "string"
                                     },
-                                    ["tag"] = new OpenApiSchema()
+                                    ["tag"] = new OpenApiSchema
                                     {
                                         Type = "string"
                                     }

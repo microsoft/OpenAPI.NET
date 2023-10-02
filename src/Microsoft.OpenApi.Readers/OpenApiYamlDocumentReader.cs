@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Readers
                 }
             }
 
-            return new ReadResult()
+            return new ReadResult
             {
                 OpenApiDocument = document,
                 OpenApiDiagnostic = diagnostic

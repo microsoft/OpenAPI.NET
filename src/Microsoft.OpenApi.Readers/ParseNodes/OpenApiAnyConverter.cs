@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return openApiAny;
             }
 
-            if (value == null || value == "null")
+            if (value is null or "null")
             {
                 return new OpenApiNull();
             }
