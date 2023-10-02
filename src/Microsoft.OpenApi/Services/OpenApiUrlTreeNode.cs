@@ -59,12 +59,17 @@ namespace Microsoft.OpenApi.Services
         {
             Utils.CheckArgumentNullOrEmpty(label, nameof(label));
 
-            if (!(PathItems?.ContainsKey(label) ?? false))
+            if (PathItems == null)
             {
                 return false;
             }
 
-            return PathItems[label].Operations?.Any() ?? false;
+            if (PathItems.TryGetValue(label, out var item))
+            {
+                return item.Operations?.Any() ?? false;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -190,14 +195,15 @@ namespace Microsoft.OpenApi.Services
             }
 
             // If the child segment has already been defined, then insert into it
-            if (Children.ContainsKey(segment))
+            if (Children.TryGetValue(segment, out var child))
             {
                 var newPath = currentPath + PathSeparator + segment;
 
-                return Children[segment].Attach(segments: segments.Skip(1),
-                                                pathItem: pathItem,
-                                                label: label,
-                                                currentPath: newPath);
+                return child.Attach(
+                    segments: segments.Skip(1),
+                    pathItem: pathItem,
+                    label: label,
+                    currentPath: newPath);
             }
             else
             {
@@ -227,14 +233,7 @@ namespace Microsoft.OpenApi.Services
 
             foreach (var item in additionalData)
             {
-                if (AdditionalData.ContainsKey(item.Key))
-                {
-                    AdditionalData[item.Key] = item.Value;
-                }
-                else
-                {
-                    AdditionalData.Add(item.Key, item.Value);
-                }
+                AdditionalData[item.Key] = item.Value;
             }
         }
 
