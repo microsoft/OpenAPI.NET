@@ -12,8 +12,7 @@ namespace Microsoft.OpenApi.Readers
     {
         public static string GetScalarValue(this YamlNode node)
         {
-            var scalarNode = node as YamlScalarNode;
-            if (scalarNode == null)
+            if (node is not YamlScalarNode scalarNode)
             {
                 throw new OpenApiException($"Expected scalar at line {node.Start.Line}");
             }
