@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers
 
             switch (inputVersion)
             {
-                case string version when version == "2.0":
+                case string and "2.0":
                     VersionService = new OpenApiV2VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
