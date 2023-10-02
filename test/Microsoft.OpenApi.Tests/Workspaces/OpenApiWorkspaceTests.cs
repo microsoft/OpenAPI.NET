@@ -28,9 +28,54 @@ namespace Microsoft.OpenApi.Tests
         {
             var workspace = new OpenApiWorkspace();
 
-            workspace.AddDocument("root", new OpenApiDocument {Paths = new OpenApiPaths {["/"] = new OpenApiPathItem {Operations = new Dictionary<OperationType, OpenApiOperation> {[OperationType.Get] = new OpenApiOperation {Responses = new OpenApiResponses {["200"] = new OpenApiResponse {Content = new Dictionary<string, OpenApiMediaType> {["application/json"] = new OpenApiMediaType {Schema = new OpenApiSchema {Reference = new OpenApiReference {Id = "test", Type = ReferenceType.Schema}}}}}}}}}}});
-            workspace.AddDocument("common", new OpenApiDocument {Components = new OpenApiComponents {Schemas = {["test"] = new OpenApiSchema {Type = "string", Description = "The referenced one"}}}});
-
+            workspace.AddDocument("root", new OpenApiDocument
+            {
+                Paths = new OpenApiPaths
+                {
+                    ["/"] = new OpenApiPathItem
+                    {
+                        Operations  = new Dictionary<OperationType, OpenApiOperation>
+                        {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Responses = new OpenApiResponses
+                                {
+                                    ["200"] = new OpenApiResponse
+                                    {
+                                       Content = new Dictionary<string,OpenApiMediaType>
+                                       {
+                                           ["application/json"] = new OpenApiMediaType
+                                           {
+                                               Schema = new OpenApiSchema
+                                               {
+                                                   Reference = new OpenApiReference
+                                                   {
+                                                       Id = "test",
+                                                       Type = ReferenceType.Schema
+                                                   }
+                                               }
+                                           }
+                                       }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            workspace.AddDocument("common", new OpenApiDocument
+            {
+                Components = new OpenApiComponents
+                {
+                    Schemas = {
+                        ["test"] = new OpenApiSchema
+                        {
+                            Type = "string",
+                            Description = "The referenced one"
+                        }
+                    }
+                }
+            });
             Assert.Equal(2, workspace.Documents.Count());
         }
 
