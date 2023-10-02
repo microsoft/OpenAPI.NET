@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.Services
             _readerSettings = readerSettings;
         }
 
-        internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference, OpenApiDocument document, CancellationToken cancellationToken, OpenApiDiagnostic diagnostic = null)
+        internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference, OpenApiDocument document, OpenApiDiagnostic diagnostic = null, CancellationToken cancellationToken = default)
         {
             _workspace.AddDocument(reference.ExternalResource, document);
             document.Workspace = _workspace;
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.Services
                     }
                     if (result.OpenApiDocument != null)
                     {
-                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, cancellationToken, diagnostic);
+                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, diagnostic, cancellationToken);
                         diagnostic = loadDiagnostic;
                     }
                 }
