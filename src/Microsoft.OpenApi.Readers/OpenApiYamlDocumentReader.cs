@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers
             };
         }
 
-        private async Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken)
+        private async Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken = default)
         {
             // Create workspace for all documents to live in.
             var openApiWorkSpace = new OpenApiWorkspace();
