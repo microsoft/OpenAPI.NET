@@ -212,70 +212,70 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         private static readonly OpenApiOperation _operationWithFormData =
-            new OpenApiOperation()
+            new OpenApiOperation
             {
                 Summary = "Updates a pet in the store with form data",
                 Description = "",
                 OperationId = "updatePetWithForm",
-                Parameters = new List<OpenApiParameter>()
+                Parameters = new List<OpenApiParameter>
                 {
-                    new OpenApiParameter()
+                    new OpenApiParameter
                     {
                         Name = "petId",
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema = new OpenApiSchema()
+                        Schema = new OpenApiSchema
                         {
                             Type = "string"
                         }
                     }
                 },
-                RequestBody = new OpenApiRequestBody()
+                RequestBody = new OpenApiRequestBody
                 {
                     Content =
                     {
-                        ["application/x-www-form-urlencoded"] = new OpenApiMediaType()
+                        ["application/x-www-form-urlencoded"] = new OpenApiMediaType
                         {
-                            Schema = new OpenApiSchema()
+                            Schema = new OpenApiSchema
                             {
                                 Properties =
                                 {
-                                    ["name"] = new OpenApiSchema()
+                                    ["name"] = new OpenApiSchema
                                     {
                                         Description = "Updated name of the pet",
                                         Type = "string"
                                     },
-                                    ["status"] = new OpenApiSchema()
+                                    ["status"] = new OpenApiSchema
                                     {
                                         Description = "Updated status of the pet",
                                         Type = "string"
                                     }
                                 },
-                                Required = new HashSet<string>()
+                                Required = new HashSet<string>
                                 {
                                     "name"
                                 }
                             }
                         },
-                        ["multipart/form-data"] = new OpenApiMediaType()
+                        ["multipart/form-data"] = new OpenApiMediaType
                         {
-                            Schema = new OpenApiSchema()
+                            Schema = new OpenApiSchema
                             {
                                 Properties =
                                 {
-                                    ["name"] = new OpenApiSchema()
+                                    ["name"] = new OpenApiSchema
                                     {
                                         Description = "Updated name of the pet",
                                         Type = "string"
                                     },
-                                    ["status"] = new OpenApiSchema()
+                                    ["status"] = new OpenApiSchema
                                     {
                                         Description = "Updated status of the pet",
                                         Type = "string"
                                     }
                                 },
-                                Required = new HashSet<string>()
+                                Required = new HashSet<string>
                                 {
                                     "name"
                                 }
@@ -283,13 +283,13 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 },
-                Responses = new OpenApiResponses()
+                Responses = new OpenApiResponses
                 {
-                    ["200"] = new OpenApiResponse()
+                    ["200"] = new OpenApiResponse
                     {
                         Description = "Pet updated."
                     },
-                    ["405"] = new OpenApiResponse()
+                    ["405"] = new OpenApiResponse
                     {
                         Description = "Invalid input"
                     }

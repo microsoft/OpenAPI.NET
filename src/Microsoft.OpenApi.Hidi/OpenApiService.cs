@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Hidi
                 using var outputStream = options.Output.Create();
                 using var textWriter = new StreamWriter(outputStream);
 
-                var settings = new OpenApiWriterSettings()
+                var settings = new OpenApiWriterSettings
                 {
                     InlineLocalReferences = options.InlineLocal,
                     InlineExternalReferences = options.InlineExternal
@@ -738,7 +738,7 @@ namespace Microsoft.OpenApi.Hidi
             WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
 
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
-            var manifest = new OpenAIPluginManifest()
+            var manifest = new OpenAIPluginManifest
             {
                 NameForHuman = document.Info.Title,
                 DescriptionForHuman = document.Info.Description,

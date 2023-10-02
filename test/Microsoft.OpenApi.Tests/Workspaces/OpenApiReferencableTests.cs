@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
         private static readonly OpenApiCallback _callbackFragment = new OpenApiCallback();
         private static readonly OpenApiExample _exampleFragment = new OpenApiExample();
         private static readonly OpenApiLink _linkFragment = new OpenApiLink();
-        private static readonly OpenApiHeader _headerFragment = new OpenApiHeader()
+        private static readonly OpenApiHeader _headerFragment = new OpenApiHeader
         {
             Schema = new OpenApiSchema(),
             Examples = new Dictionary<string, OpenApiExample>
@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             }
         };
         private static readonly OpenApiRequestBody _requestBodyFragment = new OpenApiRequestBody();
-        private static readonly OpenApiResponse _responseFragment = new OpenApiResponse()
+        private static readonly OpenApiResponse _responseFragment = new OpenApiResponse
         {
             Headers = new Dictionary<string, OpenApiHeader>
             {
