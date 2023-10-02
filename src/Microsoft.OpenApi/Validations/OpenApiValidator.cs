@@ -310,8 +310,7 @@ namespace Microsoft.OpenApi.Validations
             }
 
             // Validate unresolved references as references
-            var potentialReference = item as IOpenApiReferenceable;
-            if (potentialReference != null && potentialReference.UnresolvedReference)
+            if (item is IOpenApiReferenceable potentialReference && potentialReference.UnresolvedReference)
             {
                 type = typeof(IOpenApiReferenceable);
             }

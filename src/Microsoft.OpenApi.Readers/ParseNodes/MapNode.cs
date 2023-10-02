@@ -152,8 +152,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     try
                     {
                         Context.StartObject(key);
-                        YamlScalarNode scalarNode = n.Value as YamlScalarNode;
-                        if (scalarNode == null)
+                        if (n.Value is not YamlScalarNode scalarNode)
                         {
                             throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);
                         }
@@ -205,8 +204,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public string GetScalarValue(ValueNode key)
         {
-            var scalarNode = _node.Children[new YamlScalarNode(key.GetScalarValue())] as YamlScalarNode;
-            if (scalarNode == null)
+            if (_node.Children[new YamlScalarNode(key.GetScalarValue())] is not YamlScalarNode scalarNode)
             {
                 throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
             }
