@@ -268,7 +268,7 @@ namespace Microsoft.OpenApi.Services
             { "DELETE", new MermaidNodeStyle("Tomato", MermaidNodeShape.Rhombus) },
             { "OTHER", new MermaidNodeStyle("White", MermaidNodeShape.SquareCornerRectangle) },
         };
-        
+
         private static void ProcessNode(OpenApiUrlTreeNode node, TextWriter writer)
         {
             var path = string.IsNullOrEmpty(node.Path) ? "/" : SanitizeMermaidNode(node.Path);
@@ -329,7 +329,7 @@ namespace Microsoft.OpenApi.Services
                     .Replace(".", "_")
                     .Replace("(", "_")
                     .Replace(")", "_")
-                    .Replace(";", "_")                    
+                    .Replace(";", "_")
                     .Replace("-", "_")
                     .Replace("graph", "gra_ph")  // graph is a reserved word
                     .Replace("default", "def_ault");  // default is a reserved word for classes

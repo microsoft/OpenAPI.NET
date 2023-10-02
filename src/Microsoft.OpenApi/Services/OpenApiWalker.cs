@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -297,7 +297,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Visits <see cref="IOpenApiExtension"/> 
+        /// Visits <see cref="IOpenApiExtension"/>
         /// </summary>
         internal void Walk(IOpenApiExtension extension)
         {

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.ComponentModel;
@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Workbench
 
         private string _renderTime;
 
-                
+
         /// <summary>
         /// Default format.
         /// </summary>
@@ -215,7 +215,7 @@ namespace Microsoft.OpenApi.Workbench
                     if (_inputFile.StartsWith("http"))
                     {
                         stream = await _httpClient.GetStreamAsync(_inputFile);
-                    } 
+                    }
                     else
                     {
                         stream = new FileStream(_inputFile, FileMode.Open);

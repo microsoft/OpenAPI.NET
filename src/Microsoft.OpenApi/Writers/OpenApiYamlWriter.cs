@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Writers
                 }
 
                 Writer.Write("|");
-                
+
                 WriteChompingIndicator(value);
 
                 // Write indentation indicator when it starts with spaces
@@ -193,7 +193,7 @@ namespace Microsoft.OpenApi.Writers
                 {
                     Writer.Write(IndentationString.Length);
                 }
-                
+
                 Writer.WriteLine();
 
                 IncreaseIndentation();
@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Writers
                             firstLine = false;
                         else
                             Writer.WriteLine();
-                        
+
                         // Indentations for empty lines aren't needed.
                         if (line.Length > 0)
                         {

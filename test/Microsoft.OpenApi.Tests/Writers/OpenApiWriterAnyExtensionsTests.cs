@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             get
             {
                 return
-                    from input in new [] {         
+                    from input in new [] {
                         "2017-1-2",
                         "1999-01-02T12:10:22",
                         "1999-01-03",

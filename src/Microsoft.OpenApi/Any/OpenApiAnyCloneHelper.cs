@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Any
                     {
                         return (IOpenApiAny)ci.Invoke(new object[] { obj });
                     }
-                }                
+                }
             }
             
             return obj;

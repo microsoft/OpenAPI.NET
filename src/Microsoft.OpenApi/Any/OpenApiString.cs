@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Any
 {
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Any
             : this(value, false)
         {
         }
-        
+
         /// <summary>
         /// Initializes the <see cref="OpenApiString"/> class.
         /// </summary>

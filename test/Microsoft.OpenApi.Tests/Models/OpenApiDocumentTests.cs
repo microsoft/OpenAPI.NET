@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -1697,10 +1697,10 @@ paths:
             {
                 Info = new OpenApiInfo(),
                 Paths = new OpenApiPaths
-                {                    
+                {
                     ["/foo"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation> 
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
@@ -1730,7 +1730,7 @@ paths:
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
-        
+
         [Fact]
         public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
         {
@@ -1818,6 +1818,6 @@ paths:
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
-        } 
+        }
     }
 }

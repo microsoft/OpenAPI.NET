@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -487,7 +487,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property 
+        /// Serialize <see cref="OpenApiSchema"/> to Open Api v2.0 and handles not marking the provided property
         /// as readonly if its included in the provided list of required properties of parent schema.
         /// </summary>
         /// <param name="writer">The open api writer.</param>
@@ -545,7 +545,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Serialize to OpenAPI V2 document without using reference and handles not marking the provided property 
+        /// Serialize to OpenAPI V2 document without using reference and handles not marking the provided property
         /// as readonly if its included in the provided list of required properties of parent schema.
         /// </summary>
         /// <param name="writer">The open api writer.</param>
@@ -771,7 +771,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiSchema object based on the presence of a $ref 
+        /// Returns an effective OpenApiSchema object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiSchema</returns>

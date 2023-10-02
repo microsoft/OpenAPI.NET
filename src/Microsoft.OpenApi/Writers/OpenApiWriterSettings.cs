@@ -39,8 +39,8 @@ namespace Microsoft.OpenApi.Writers
         /// Indicates how references in the source document should be handled.
         /// </summary>
         [Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]
-        public ReferenceInlineSetting ReferenceInline { 
-            get { return referenceInline; } 
+        public ReferenceInlineSetting ReferenceInline {
+            get { return referenceInline; }
             set { 
                 referenceInline = value;
                 switch(referenceInline)

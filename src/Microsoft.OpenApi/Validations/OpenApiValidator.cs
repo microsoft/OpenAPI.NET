@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -300,7 +300,7 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        /// This overload allows applying rules based on actual object type, rather than matched interface.  This is 
+        /// This overload allows applying rules based on actual object type, rather than matched interface.  This is
         /// needed for validating extensions.
         /// </summary>
         private void Validate(object item, Type type)

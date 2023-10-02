@@ -99,7 +99,7 @@ paths: {}";
             return null;
         }
     }
-    
+
 
     public class ResourceLoader : IStreamLoader
     {

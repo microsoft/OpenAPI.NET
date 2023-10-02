@@ -11,7 +11,7 @@ using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers.Services
 {
-    internal class OpenApiWorkspaceLoader 
+    internal class OpenApiWorkspaceLoader
     {
         private OpenApiWorkspace _workspace;
         private IStreamLoader _loader;

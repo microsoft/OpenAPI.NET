@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Globalization;
 using System.IO;
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Extensions
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format, 
+            OpenApiFormat format,
             OpenApiWriterSettings settings)
             where T : IOpenApiSerializable
         {

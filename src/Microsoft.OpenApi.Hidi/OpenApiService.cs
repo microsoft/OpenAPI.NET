@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Hidi
                 requestUrls = EnumerateJsonDocument(postmanCollection.RootElement, new());
                 logger.LogTrace("Finished fetching the list of paths and Http methods defined in the Postman collection.");
             }
-            else 
+            else
             {
                 requestUrls = new();
                 logger.LogTrace("No filter options provided.");
@@ -211,7 +211,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        // Get OpenAPI document either from OpenAPI or CSDL 
+        // Get OpenAPI document either from OpenAPI or CSDL
         private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, CancellationToken cancellationToken, string? metadataVersion = null)
         {
 
@@ -285,7 +285,7 @@ namespace Microsoft.OpenApi.Hidi
 
         private static Dictionary<string, List<string>> GetRequestUrlsFromManifest(ApiDependency apiDependency)
         {
-            // Get the request URLs from the API Dependencies in the API manifest 
+            // Get the request URLs from the API Dependencies in the API manifest
             var requests = apiDependency
                     .Requests.Where(static r => !r.Exclude && !string.IsNullOrEmpty(r.UriTemplate) && !string.IsNullOrEmpty(r.Method))
                                 .Select(static r => new { UriTemplate = r.UriTemplate!, Method = r.Method! })

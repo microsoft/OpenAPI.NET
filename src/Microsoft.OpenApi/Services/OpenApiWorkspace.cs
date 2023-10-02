@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Services
             get {
                 return _documents.Values;
             }
-        }  
+        }
 
         /// <summary>
         /// A list of document fragments that are contained in the workspace
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Services
         public OpenApiWorkspace(OpenApiWorkspace workspace){}
 
         /// <summary>
-        /// Verify if workspace contains a document based on its URL. 
+        /// Verify if workspace contains a document based on its URL.
         /// </summary>
         /// <param name="location">A relative or absolute URL of the file.  Use file:// for folder locations.</param>
         /// <returns>Returns true if a matching document is found.</returns>
@@ -95,7 +95,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         /// <param name="location"></param>
         /// <param name="fragment"></param>
-        /// <remarks>Not sure how this is going to work.  Does the reference just point to the fragment as a whole, or do we need to 
+        /// <remarks>Not sure how this is going to work.  Does the reference just point to the fragment as a whole, or do we need to
         /// to be able to point into the fragment.  Keeping it private until we figure it out.
         /// </remarks>
         public void AddFragment(string location, IOpenApiReferenceable fragment)

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
@@ -102,7 +102,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV3(writer);
                     return;
-                } 
+                }
                 else
                 {
                     target = GetEffective(Reference.HostDocument);
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiPathItem object based on the presence of a $ref 
+        /// Returns an effective OpenApiPathItem object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiPathItem</returns>
@@ -146,7 +146,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV2(writer);
                     return;
-                } 
+                }
                 else
                 {
                     target = this.GetEffective(Reference.HostDocument);

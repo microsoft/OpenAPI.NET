@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 OneOf = new List<OpenApiSchema>
                 {
                     new OpenApiSchema { Type = "number", Format = "double" },
-                    new OpenApiSchema { Type = "string" }                        
+                    new OpenApiSchema { Type = "string" }
                 }
             },
             Examples = new Dictionary<string, OpenApiExample>

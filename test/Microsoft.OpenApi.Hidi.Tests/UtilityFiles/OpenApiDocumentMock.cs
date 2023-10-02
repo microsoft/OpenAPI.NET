@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Tests.UtilityFiles
                                     Type = "string"
                                 }
                             }
-                        }                                    
+                        }
                     },
                     ["/users"] = new OpenApiPathItem
                     {

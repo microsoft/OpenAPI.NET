@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Globalization;
@@ -260,7 +260,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             // If data conflicts with the given type, return a string.
-            // This converter is used in the parser, so it does not perform any validations, 
+            // This converter is used in the parser, so it does not perform any validations,
             // but the validator can be used to validate whether the data and given type conflicts.
             return openApiAny;
         }

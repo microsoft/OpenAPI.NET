@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Models
         /// for cookie - form.
         /// </summary>
         public ParameterStyle? Style
-        { 
+        {
             get => _style ?? SetDefaultStyleValue();
             set => _style = value;
         }
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV3(writer);
                     return;
-                } 
+                }
                 else
                 {
                     target = this.GetEffective(Reference.HostDocument);
@@ -201,7 +201,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiParameter object based on the presence of a $ref 
+        /// Returns an effective OpenApiParameter object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiParameter</returns>
@@ -289,7 +289,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV2(writer);
                     return;
-                } 
+                }
                 else
                 {
                     target = this.GetEffective(Reference.HostDocument);

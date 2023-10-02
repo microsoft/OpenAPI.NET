@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Readers.Services
         }
 
         /// <summary>
-        /// Collect reference for each reference 
+        /// Collect reference for each reference
         /// </summary>
         /// <param name="referenceable"></param>
         public override void Visit(IOpenApiReferenceable referenceable)
@@ -54,6 +54,6 @@ namespace Microsoft.OpenApi.Readers.Services
                     }
                 }
             }
-        }    
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -430,7 +430,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 OneOf = new List<OpenApiSchema>
                 {
                     new OpenApiSchema
-                    { 
+                    {
                         Type = "number",
                         Format = "decimal"
                     },

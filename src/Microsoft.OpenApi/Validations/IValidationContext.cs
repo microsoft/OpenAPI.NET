@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Validations
 {
@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations
         void AddWarning(OpenApiValidatorWarning warning);
 
         /// <summary>
-        /// Allow Rule to indicate validation error occured at a deeper context level.  
+        /// Allow Rule to indicate validation error occured at a deeper context level.
         /// </summary>
         /// <param name="segment">Identifier for context</param>
         void Enter(string segment);
