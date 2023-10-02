@@ -21,202 +21,188 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseHttpSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSecurityScheme.yaml")))
-            {
-                var document = LoadYamlDocument(stream);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "basicSecurityScheme.yaml"));
+            var document = LoadYamlDocument(stream);
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
 
-                // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.Http,
-                        Scheme = OpenApiConstants.Basic
-                    });
-            }
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = OpenApiConstants.Basic
+                });
         }
 
         [Fact]
         public void ParseApiKeySecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml")))
-            {
-                var document = LoadYamlDocument(stream);
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"));
+            var document = LoadYamlDocument(stream);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
 
-                // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.ApiKey,
-                        Name = "api_key",
-                        In = ParameterLocation.Header
-                    });
-            }
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    Name = "api_key",
+                    In = ParameterLocation.Header
+                });
         }
 
         [Fact]
         public void ParseOAuth2ImplicitSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ImplicitSecurityScheme.yaml")))
-            {
-                var document = LoadYamlDocument(stream);
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ImplicitSecurityScheme.yaml"));
+            var document = LoadYamlDocument(stream);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
 
-                // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows
+                        Implicit = new OpenApiOAuthFlow
                         {
-                            Implicit = new OpenApiOAuthFlow
+                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
+                            Scopes =
                             {
-                                AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                                Scopes =
-                                {
-                                    ["write:pets"] = "modify pets in your account",
-                                    ["read:pets"] = "read your pets"
-                                }
+                                ["write:pets"] = "modify pets in your account",
+                                ["read:pets"] = "read your pets"
                             }
                         }
-                    });
-            }
+                    }
+                });
         }
 
         [Fact]
         public void ParseOAuth2PasswordSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2PasswordSecurityScheme.yaml")))
-            {
-                var document = LoadYamlDocument(stream);
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2PasswordSecurityScheme.yaml"));
+            var document = LoadYamlDocument(stream);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
 
-                // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows
+                        Password = new OpenApiOAuthFlow
                         {
-                            Password = new OpenApiOAuthFlow
+                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
+                            Scopes =
                             {
-                                AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                                Scopes =
-                                {
-                                    ["write:pets"] = "modify pets in your account",
-                                    ["read:pets"] = "read your pets"
-                                }
+                                ["write:pets"] = "modify pets in your account",
+                                ["read:pets"] = "read your pets"
                             }
                         }
-                    });
-            }
+                    }
+                });
         }
 
         [Fact]
         public void ParseOAuth2ApplicationSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ApplicationSecurityScheme.yaml")))
-            {
-                var document = LoadYamlDocument(stream);
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2ApplicationSecurityScheme.yaml"));
+            var document = LoadYamlDocument(stream);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
 
-                // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows
+                        ClientCredentials = new OpenApiOAuthFlow
                         {
-                            ClientCredentials = new OpenApiOAuthFlow
+                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
+                            Scopes =
                             {
-                                AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                                Scopes =
-                                {
-                                    ["write:pets"] = "modify pets in your account",
-                                    ["read:pets"] = "read your pets"
-                                }
+                                ["write:pets"] = "modify pets in your account",
+                                ["read:pets"] = "read your pets"
                             }
                         }
-                    });
-            }
+                    }
+                });
         }
 
         [Fact]
         public void ParseOAuth2AccessCodeSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2AccessCodeSecurityScheme.yaml")))
-            {
-                var document = LoadYamlDocument(stream);
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2AccessCodeSecurityScheme.yaml"));
+            var document = LoadYamlDocument(stream);
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)document.RootNode);
+            var node = new MapNode(context, (YamlMappingNode)document.RootNode);
 
-                // Act
-                var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV2Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
                     {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows
+                        AuthorizationCode = new OpenApiOAuthFlow
                         {
-                            AuthorizationCode = new OpenApiOAuthFlow
+                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
+                            Scopes =
                             {
-                                AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
-                                Scopes =
-                                {
-                                    ["write:pets"] = "modify pets in your account",
-                                    ["read:pets"] = "read your pets"
-                                }
+                                ["write:pets"] = "modify pets in your account",
+                                ["read:pets"] = "read your pets"
                             }
                         }
-                    });
-            }
+                    }
+                });
         }
 
         static YamlDocument LoadYamlDocument(Stream input)
         {
-            using (var reader = new StreamReader(input))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(reader);
-                return yamlStream.Documents.First();
-            }
+            using var reader = new StreamReader(input);
+            var yamlStream = new YamlStream();
+            yamlStream.Load(reader);
+            return yamlStream.Documents.First();
         }
     }
 }
