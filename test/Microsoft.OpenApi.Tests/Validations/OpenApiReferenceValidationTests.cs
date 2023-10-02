@@ -157,7 +157,6 @@ namespace Microsoft.OpenApi.Tests.Validations
     {
         public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
         {
-
         }
     }
 }

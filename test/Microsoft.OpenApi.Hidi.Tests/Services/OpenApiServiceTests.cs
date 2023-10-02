@@ -291,7 +291,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             };
             await Assert.ThrowsAsync<ArgumentException>(async () =>
                 await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken()));
-
         }
 
         [Fact]

@@ -39,7 +39,6 @@ namespace Microsoft.OpenApi.Readers.V3
                     o.ExternalValue = n.GetScalarValue();
                 }
             },
-
         };
 
         private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =

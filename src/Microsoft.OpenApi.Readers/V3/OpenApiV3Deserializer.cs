@@ -33,7 +33,6 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap);
             }
-
         }
 
         private static void ProcessAnyFields<T>(

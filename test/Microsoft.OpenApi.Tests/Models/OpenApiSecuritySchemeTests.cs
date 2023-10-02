@@ -33,7 +33,6 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "description1",
             Type = SecuritySchemeType.Http,
             Scheme = OpenApiConstants.Basic
-
         };
 
         public static OpenApiSecurityScheme HttpBearerSecurityScheme = new OpenApiSecurityScheme

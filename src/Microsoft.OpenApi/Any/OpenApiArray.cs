@@ -45,7 +45,6 @@ namespace Microsoft.OpenApi.Any
             }
 
             writer.WriteEndArray();
-
         }
     }
 }

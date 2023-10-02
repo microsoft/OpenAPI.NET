@@ -137,7 +137,6 @@ namespace Microsoft.OpenApi.Any
                             SRResource.PrimitiveTypeNotSupported,
                             this.PrimitiveType));
             }
-
         }
     }
 }

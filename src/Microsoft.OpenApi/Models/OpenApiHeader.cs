@@ -137,7 +137,6 @@ namespace Microsoft.OpenApi.Models
                 }
             }
             target.SerializeAsV3WithoutReference(writer);
-
         }
 
         /// <summary>

@@ -104,7 +104,6 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _responseFragment, "/content" },
             new object[] { _responseFragment, "/content/" },
             new object[] { _responseFragment, "/content/a" }
-
         };
 
         [Theory]

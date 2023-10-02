@@ -99,7 +99,6 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 }
             }
-
         }
     }
 }

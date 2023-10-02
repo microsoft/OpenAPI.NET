@@ -86,7 +86,6 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             }
-
         };
 
         public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
@@ -108,7 +107,6 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             }
-
         };
 
         public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter

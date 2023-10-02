@@ -165,7 +165,6 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Single(compositeExpression.ContainedExpressions);
-
         }
 
         [Fact]

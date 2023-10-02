@@ -51,7 +51,6 @@ namespace Microsoft.OpenApi.Services
             Walk(OpenApiConstants.ExternalDocs, () => Walk(doc.ExternalDocs));
             Walk(OpenApiConstants.Tags, () => Walk(doc.Tags));
             Walk(doc as IOpenApiExtensible);
-
         }
 
         /// <summary>
