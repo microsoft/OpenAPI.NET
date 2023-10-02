@@ -313,7 +313,8 @@ namespace Microsoft.OpenApi.Workbench
                 outputStream,
                 Version,
                 Format,
-                new OpenApiWriterSettings() {
+                new OpenApiWriterSettings
+                {
                     InlineLocalReferences = InlineLocal,
                     InlineExternalReferences = InlineExternal
                 });

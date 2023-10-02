@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.SmokeTests
         {
             _output = output;
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            _httpClient = new HttpClient(new HttpClientHandler()
+            _httpClient = new HttpClient(new HttpClientHandler
             {                AutomaticDecompression = DecompressionMethods.GZip
             });
             _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));

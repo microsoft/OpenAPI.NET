@@ -45,10 +45,10 @@ namespace Microsoft.OpenApi.Readers.V2
             ParsingContext context,
             string schemeName)
         {
-            var securitySchemeObject = new OpenApiSecurityScheme()
+            var securitySchemeObject = new OpenApiSecurityScheme
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference()
+                Reference = new OpenApiReference
                 {
                     Id = schemeName,
                     Type = ReferenceType.SecurityScheme

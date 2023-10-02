@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         public async Task DiagnosticReportMergedForExternalReference()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),

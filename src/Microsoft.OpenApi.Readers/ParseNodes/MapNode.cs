@@ -120,7 +120,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         // If the component isn't a reference to another component, then point it to itself.
                         if (entry.value.Reference == null)
                         {
-                            entry.value.Reference = new OpenApiReference()
+                            entry.value.Reference = new OpenApiReference
                             {
                                 Type = referenceType,
                                 Id = entry.key
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId)
             where T : IOpenApiReferenceable, new()
         {
-            return new T()
+            return new T
             {
                 UnresolvedReference = true,
                 Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType)

@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
     {
-                    tag.Reference = new OpenApiReference()
+                    tag.Reference = new OpenApiReference
                     {
                         Id = tag.Name,
                         Type = ReferenceType.Tag

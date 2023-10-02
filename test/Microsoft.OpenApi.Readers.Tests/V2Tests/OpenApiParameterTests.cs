@@ -155,15 +155,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 new OpenApiLong(4),
                             }
                         },
-                        Default = new OpenApiArray() {
+                        Default = new OpenApiArray
+                        {
                             new OpenApiLong(1),
                             new OpenApiLong(2)
                         },
                         Enum = new List<IOpenApiAny>
                         {
-                            new OpenApiArray() { new OpenApiLong(1), new OpenApiLong(2) },
-                            new OpenApiArray() { new OpenApiLong(2), new OpenApiLong(3) },
-                            new OpenApiArray() { new OpenApiLong(3), new OpenApiLong(4) }
+                            new OpenApiArray { new OpenApiLong(1), new OpenApiLong(2) },
+                            new OpenApiArray { new OpenApiLong(2), new OpenApiLong(3) },
+                            new OpenApiArray { new OpenApiLong(3), new OpenApiLong(4) }
                         }
                     }
                 });
@@ -207,15 +208,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 new OpenApiString("4"),
                             }
                         },
-                        Default = new OpenApiArray() {
+                        Default = new OpenApiArray
+                        {
                             new OpenApiString("1"),
                             new OpenApiString("2")
                         },
                         Enum = new List<IOpenApiAny>
                         {
-                            new OpenApiArray() { new OpenApiString("1"), new OpenApiString("2") },
-                            new OpenApiArray() { new OpenApiString("2"), new OpenApiString("3") },
-                            new OpenApiArray() { new OpenApiString("3"), new OpenApiString("4") }
+                            new OpenApiArray { new OpenApiString("1"), new OpenApiString("2") },
+                            new OpenApiArray { new OpenApiString("2"), new OpenApiString("3") },
+                            new OpenApiArray { new OpenApiString("3"), new OpenApiString("4") }
                         }
                     }
                 });

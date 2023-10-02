@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Tests.Services
         public void ResponseMustHaveADescription()
         {
             var openApiDocument = new OpenApiDocument();
-            openApiDocument.Info = new OpenApiInfo()
+            openApiDocument.Info = new OpenApiInfo
             {
                 Title = "foo",
                 Version = "1.2.2"
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var openApiDocument = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new OpenApiInfo
                 {
                     Title = "foo",
                     Version = "1.2.2"
@@ -117,7 +117,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var openApiDocument = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new OpenApiInfo
                 {
                     Title = "foo",
                     Version = "1.2.2"
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 Paths = new OpenApiPaths()
             };
 
-            var fooExtension = new FooExtension()
+            var fooExtension = new FooExtension
             {
                 Bar = "hey",
                 Baz = "baz"
