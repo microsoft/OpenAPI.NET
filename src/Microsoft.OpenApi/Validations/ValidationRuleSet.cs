@@ -30,8 +30,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>Either the rules related to the type, or an empty list.</returns>
         public IList<ValidationRule> FindRules(Type type)
         {
-            IList<ValidationRule> results = null;
-            _rules.TryGetValue(type, out results);
+            _rules.TryGetValue(type, out var results);
             return results ?? _emptyRules;
         }
 

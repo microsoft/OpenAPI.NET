@@ -21,10 +21,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
 }
 ";
             var reader = new OpenApiStringReader();
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var contact = reader.ReadFragment<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var contact = reader.ReadFragment<OpenApiContact>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());

@@ -206,8 +206,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>If method returns false a loop was detected and the key is not added.</returns>
         public bool PushLoop(string loopId, string key)
         {
-            Stack<string> stack;
-            if (!_loopStacks.TryGetValue(loopId, out stack))
+            if (!_loopStacks.TryGetValue(loopId, out var stack))
             {
                 stack = new Stack<string>();
                 _loopStacks.Add(loopId, stack);

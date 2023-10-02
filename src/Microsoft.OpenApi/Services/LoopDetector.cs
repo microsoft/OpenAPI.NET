@@ -17,8 +17,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>If method returns false a loop was detected and the key is not added.</returns>
         public bool PushLoop<T>(T key)
         {
-            Stack<object> stack;
-            if (!_loopStacks.TryGetValue(typeof(T), out stack))
+            if (!_loopStacks.TryGetValue(typeof(T), out var stack))
             {
                 stack = new Stack<object>();
                 _loopStacks.Add(typeof(T), stack);
