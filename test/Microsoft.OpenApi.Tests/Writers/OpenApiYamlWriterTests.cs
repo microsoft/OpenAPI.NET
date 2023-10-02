@@ -446,7 +446,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         private static OpenApiDocument CreateDocWithSimpleSchemaToInline()
         {
             // Arrange
-            var thingSchema = new OpenApiSchema()
+            var thingSchema = new OpenApiSchema
             {
                 Type = "object",
                 UnresolvedReference = false,
@@ -457,24 +457,26 @@ namespace Microsoft.OpenApi.Tests.Writers
                 }
             };
 
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new OpenApiInfo
                 {
                     Title = "Demo",
                     Version = "1.0.0"
                 },
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
                     ["/"] = new OpenApiPathItem
                     {
                         Operations = {
-                            [OperationType.Get] = new OpenApiOperation() {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
                                 Responses = {
                                     ["200"] = new OpenApiResponse {
                                         Description = "OK",
                                         Content = {
-                                             ["application/json"] = new OpenApiMediaType() {
+                                             ["application/json"] = new OpenApiMediaType
+                                             {
                                                      Schema = thingSchema
                                              }
                                         }
@@ -555,7 +557,7 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         private static OpenApiDocument CreateDocWithRecursiveSchemaReference()
         {
-            var thingSchema = new OpenApiSchema()
+            var thingSchema = new OpenApiSchema
             {
                 Type = "object",
                 UnresolvedReference = false,
@@ -567,31 +569,33 @@ namespace Microsoft.OpenApi.Tests.Writers
             };
             thingSchema.Properties["children"] = thingSchema;
 
-            var relatedSchema = new OpenApiSchema()
+            var relatedSchema = new OpenApiSchema
             {
                 Type = "integer",
             };
 
             thingSchema.Properties["related"] = relatedSchema;
 
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new OpenApiInfo
                 {
                     Title = "Demo",
                     Version = "1.0.0"
                 },
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
                     ["/"] = new OpenApiPathItem
                     {
                         Operations = {
-                            [OperationType.Get] = new OpenApiOperation() {
+                            [OperationType.Get] = new OpenApiOperation
+                            {
                                 Responses = {
                                     ["200"] = new OpenApiResponse {
                                         Description = "OK",
                                         Content = {
-                                             ["application/json"] = new OpenApiMediaType() {
+                                             ["application/json"] = new OpenApiMediaType
+                                             {
                                                      Schema = thingSchema
                                              }
                                         }

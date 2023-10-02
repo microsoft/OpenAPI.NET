@@ -170,13 +170,13 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
+        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents
         {
             Schemas =
             {
                 ["schema1"] = new OpenApiSchema
                 {
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema2"
@@ -187,7 +187,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
+        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents
         {
             Schemas =
             {
@@ -205,12 +205,12 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
                     },
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema1"
@@ -221,7 +221,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
@@ -230,13 +230,13 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
+        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents
         {
             Schemas =
             {
                 ["schema1"] = new OpenApiSchema
                 {
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema1"

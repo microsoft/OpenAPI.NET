@@ -122,16 +122,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             ["x-extension"] = new OpenApiDouble(2.335)
                         }
                     },
-                    Components = new OpenApiComponents()
+                    Components = new OpenApiComponents
                     {
                         Schemas =
                         {
-                            ["sampleSchema"] = new OpenApiSchema()
+                            ["sampleSchema"] = new OpenApiSchema
                             {
                                 Type = "object",
                                 Properties =
                                 {
-                                    ["sampleProperty"] = new OpenApiSchema()
+                                    ["sampleProperty"] = new OpenApiSchema
                                     {
                                         Type = "double",
                                         Minimum = (decimal)100.54,
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                         ExclusiveMinimum = false
                                     }
                                 },
-                                Reference = new OpenApiReference()
+                                Reference = new OpenApiReference
                                 {
                                     Id = "sampleSchema",
                                     Type = ReferenceType.Schema
@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 });
 
             context.Should().BeEquivalentTo(
-                new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
+                new OpenApiDiagnostic { SpecificationVersion = OpenApiSpecVersion.OpenApi2_0 });
         }
 
         [Fact]
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 var reader = new OpenApiStreamReader();
                 var doc = reader.Read(stream, out var diagnostic);
 
-                var okSchema = new OpenApiSchema()
+                var okSchema = new OpenApiSchema
                 {
                     Reference = new OpenApiReference
                     {
@@ -171,9 +171,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Id = "Item",
                         HostDocument = doc
                     },
-                    Properties = new Dictionary<string, OpenApiSchema>()
+                    Properties = new Dictionary<string, OpenApiSchema>
                     {
-                        { "id", new OpenApiSchema()
+                        { "id", new OpenApiSchema
                             {
                                 Type = "string",
                                 Description = "Item identifier."
@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     }
                 };
 
-                var errorSchema = new OpenApiSchema()
+                var errorSchema = new OpenApiSchema
                 {
                     Reference = new OpenApiReference
                     {
@@ -190,20 +190,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Id = "Error",
                         HostDocument = doc
                     },
-                    Properties = new Dictionary<string, OpenApiSchema>()
+                    Properties = new Dictionary<string, OpenApiSchema>
                     {
-                        { "code", new OpenApiSchema()
+                        { "code", new OpenApiSchema
                             {
                                 Type = "integer",
                                 Format = "int32"
                             }
                         },
-                        { "message", new OpenApiSchema()
+                        { "message", new OpenApiSchema
                             {
                                 Type = "string"
                             }
                         },
-                        { "fields", new OpenApiSchema()
+                        { "fields", new OpenApiSchema
                             {
                                 Type = "string"
                             }

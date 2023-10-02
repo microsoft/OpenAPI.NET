@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         };
                     }
 
-                    if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
+                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
                         return new OpenApiReference
                         {

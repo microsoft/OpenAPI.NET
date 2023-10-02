@@ -24,13 +24,13 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiDocumentTests
     {
-        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
+        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents
         {
             Schemas =
             {
                 ["schema1"] = new OpenApiSchema
                 {
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema2"
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
@@ -50,7 +50,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
+        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents
         {
             Schemas =
             {
@@ -59,12 +59,12 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
                     },
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema1"
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     Type = "object",
                     Properties =
                     {
-                        ["property1"] = new OpenApiSchema()
+                        ["property1"] = new OpenApiSchema
                         {
                             Type = "string"
                         }
@@ -84,13 +84,13 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
+        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents
         {
             Schemas =
             {
                 ["schema1"] = new OpenApiSchema
                 {
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Type = ReferenceType.Schema,
                         Id = "schema1"
@@ -99,27 +99,27 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelReferencingComponents = new OpenApiDocument()
+        public static OpenApiDocument SimpleDocumentWithTopLevelReferencingComponents = new OpenApiDocument
         {
-            Info = new OpenApiInfo()
+            Info = new OpenApiInfo
             {
                 Version = "1.0.0"
             },
             Components = TopLevelReferencingComponents
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiDocument()
+        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiDocument
         {
-            Info = new OpenApiInfo()
+            Info = new OpenApiInfo
             {
                 Version = "1.0.0"
             },
             Components = TopLevelSelfReferencingComponentsWithOtherProperties
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponents = new OpenApiDocument()
+        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponents = new OpenApiDocument
         {
-            Info = new OpenApiInfo()
+            Info = new OpenApiInfo
             {
                 Version = "1.0.0"
             },
@@ -1410,21 +1410,18 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeSimpleDocumentWithTopLevelReferencingComponentsAsYamlV2Works()
         {
             // Arrange
-            var expected =
-                """
-                swagger: '2.0'
-                info:
-                  version: 1.0.0
-                paths: { }
-                definitions:
-                  schema1:
-                    $ref: '#/definitions/schema2'
-                  schema2:
-                    type: object
-                    properties:
-                      property1:
-                        type: string
-                """;
+            var expected = @"swagger: '2.0'
+info:
+  version: 1.0.0
+paths: { }
+definitions:
+  schema1:
+    $ref: '#/definitions/schema2'
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
 
             // Act
             var actual = SimpleDocumentWithTopLevelReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -1439,15 +1436,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeSimpleDocumentWithTopLevelSelfReferencingComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected =
-                """
-                swagger: '2.0'
-                info:
-                  version: 1.0.0
-                paths: { }
-                definitions:
-                  schema1: { }
-                """;
+            var expected = @"swagger: '2.0'
+info:
+  version: 1.0.0
+paths: { }
+definitions:
+  schema1: { }";
 
             // Act
             var actual = SimpleDocumentWithTopLevelSelfReferencingComponents.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -1462,24 +1456,21 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeSimpleDocumentWithTopLevelSelfReferencingWithOtherPropertiesComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected =
-                """
-                swagger: '2.0'
-                info:
-                  version: 1.0.0
-                paths: { }
-                definitions:
-                  schema1:
-                    type: object
-                    properties:
-                      property1:
-                        type: string
-                  schema2:
-                    type: object
-                    properties:
-                      property1:
-                        type: string
-                """;
+            var expected = @"swagger: '2.0'
+info:
+  version: 1.0.0
+paths: { }
+definitions:
+  schema1:
+    type: object
+    properties:
+      property1:
+        type: string
+  schema2:
+    type: object
+    properties:
+      property1:
+        type: string";
 
             // Act
             var actual = SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
@@ -1494,7 +1485,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeDocumentWithReferenceButNoComponents()
         {
             // Arrange
-            var document = new OpenApiDocument()
+            var document = new OpenApiDocument
             {
                 Info = new OpenApiInfo
                 {
@@ -1513,7 +1504,7 @@ namespace Microsoft.OpenApi.Tests.Models
                                 {
                                     ["200"] = new OpenApiResponse
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
@@ -1550,18 +1541,17 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                """
-                swagger: '2.0'
-                info:
-                  version: 1.0.0
-                basePath: /server1
-                paths: { }
-                """;
-            var doc = new OpenApiDocument()
+                @"swagger: '2.0'
+info:
+  version: 1.0.0
+basePath: /server1
+paths: { }";
+            var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
-                    new OpenApiServer()
+                Info = new OpenApiInfo { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
                     {
                         Url = "/server1"
                     }
@@ -1582,19 +1572,18 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                """
-                swagger: '2.0'
-                info:
-                  version: 1.0.0
-                host: //example.org
-                basePath: /server1
-                paths: { }
-                """;
-            var doc = new OpenApiDocument()
+                @"swagger: '2.0'
+info:
+  version: 1.0.0
+host: //example.org
+basePath: /server1
+paths: { }";
+            var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
-                    new OpenApiServer()
+                Info = new OpenApiInfo { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
                     {
                         Url = "//example.org/server1"
                     }
@@ -1615,18 +1604,17 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                """
-                swagger: '2.0'
-                info:
-                  version: 1.0.0
-                host: //example.org
-                paths: { }
-                """;
-            var doc = new OpenApiDocument()
+                @"swagger: '2.0'
+info:
+  version: 1.0.0
+host: //example.org
+paths: { }";
+            var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo() { Version = "1.0.0" },
-                Servers = new List<OpenApiServer>() {
-                    new OpenApiServer()
+                Info = new OpenApiInfo { Version = "1.0.0" },
+                Servers = new List<OpenApiServer>
+                {
+                    new OpenApiServer
                     {
                         Url = "//example.org/"
                     }
@@ -1695,18 +1683,15 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeV2DocumentWithNonArraySchemaTypeDoesNotWriteOutCollectionFormat()
         {
             // Arrange
-            var expected =
-                """
-                swagger: '2.0'
-                info: { }
-                paths:
-                  /foo:
-                    get:
-                      parameters:
-                        - in: query
-                          type: string
-                      responses: { }
-                """;
+            var expected = @"swagger: '2.0'
+info: { }
+paths:
+  /foo:
+    get:
+      parameters:
+        - in: query
+          type: string
+      responses: { }";
 
             var doc = new OpenApiDocument
             {
@@ -1750,30 +1735,27 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
         {
             // Arrange
-            var expected =
-                """
-                openapi: 3.0.1
-                info:
-                  title: magic style
-                  version: 1.0.0
-                paths:
-                  /foo:
-                    get:
-                      parameters:
-                        - name: id
-                          in: query
-                          schema:
-                            type: object
-                            additionalProperties:
-                              type: integer
-                      responses:
-                        '200':
-                          description: foo
-                          content:
-                            text/plain:
-                              schema:
-                                type: string
-                """;
+            var expected = @"openapi: 3.0.1
+info:
+  title: magic style
+  version: 1.0.0
+paths:
+  /foo:
+    get:
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: object
+            additionalProperties:
+              type: integer
+      responses:
+        '200':
+          description: foo
+          content:
+            text/plain:
+              schema:
+                type: string";
 
             var doc = new OpenApiDocument
             {

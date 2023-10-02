@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public override IOpenApiAny CreateAny()
         {
             var value = GetScalarValue();
-            return new OpenApiString(value, this._node.Style == ScalarStyle.SingleQuoted || this._node.Style == ScalarStyle.DoubleQuoted || this._node.Style == ScalarStyle.Literal || this._node.Style == ScalarStyle.Folded);
+            return new OpenApiString(value, this._node.Style is ScalarStyle.SingleQuoted or ScalarStyle.DoubleQuoted or ScalarStyle.Literal or ScalarStyle.Folded);
         }
     }
 }

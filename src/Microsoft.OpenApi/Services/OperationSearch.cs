@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Services
 
                 if (_predicate(CurrentKeys.Path, operationType, operation))
                 {
-                    _searchResults.Add(new SearchResult()
+                    _searchResults.Add(new SearchResult
                     {
                         Operation = operation,
                         Parameters = pathItem.Parameters,

@@ -19,20 +19,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     {
         private const string SampleFolderPath = "V2Tests/Samples/OpenApiPathItem/";
 
-        private static readonly OpenApiPathItem _basicPathItemWithFormData = new OpenApiPathItem()
+        private static readonly OpenApiPathItem _basicPathItemWithFormData = new OpenApiPathItem
         {
             Parameters = new List<OpenApiParameter>
             {
-                new OpenApiParameter()
+                new OpenApiParameter
                 {
                     Name = "id",
                     In = ParameterLocation.Path,
                     Description = "ID of pet to use",
                     Required = true,
-                    Schema = new OpenApiSchema()
+                    Schema = new OpenApiSchema
                     {
                         Type = "array",
-                        Items = new OpenApiSchema()
+                        Items = new OpenApiSchema
                         {
                             Type = "string"
                         }

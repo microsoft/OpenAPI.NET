@@ -186,7 +186,7 @@ namespace Microsoft.OpenApi.Hidi
                 using var outputStream = options.Output.Create();
                 using var textWriter = new StreamWriter(outputStream);
 
-                var settings = new OpenApiWriterSettings()
+                var settings = new OpenApiWriterSettings
                 {
                     InlineLocalReferences = options.InlineLocal,
                     InlineExternalReferences = options.InlineExternal
@@ -510,13 +510,15 @@ namespace Microsoft.OpenApi.Hidi
                         var fileInput = new FileInfo(input);
                         stream = fileInput.OpenRead();
                     }
-                    catch (Exception ex) when (ex is FileNotFoundException ||
-                        ex is PathTooLongException ||
-                        ex is DirectoryNotFoundException ||
-                        ex is IOException ||
-                        ex is UnauthorizedAccessException ||
-                        ex is SecurityException ||
-                        ex is NotSupportedException)
+                    catch (Exception ex) when (
+                        ex is
+                            FileNotFoundException or
+                            PathTooLongException or
+                            DirectoryNotFoundException or
+                            IOException or
+                            UnauthorizedAccessException or
+                            SecurityException or
+                            NotSupportedException)
                     {
                         throw new InvalidOperationException($"Could not open the file at {input}", ex);
                     }
@@ -745,7 +747,7 @@ namespace Microsoft.OpenApi.Hidi
             WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
 
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
-            var manifest = new OpenAIPluginManifest()
+            var manifest = new OpenAIPluginManifest
             {
                 NameForHuman = document.Info.Title,
                 DescriptionForHuman = document.Info.Description,

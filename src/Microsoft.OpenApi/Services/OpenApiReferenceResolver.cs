@@ -206,7 +206,7 @@ namespace Microsoft.OpenApi.Services
 
                     if (resolvedTag == null)
                     {
-                        resolvedTag = new OpenApiTag()
+                        resolvedTag = new OpenApiTag
                         {
                             Name = tag.Reference.Id
                         };
@@ -291,7 +291,7 @@ namespace Microsoft.OpenApi.Services
             else
             {
                 // Leave as unresolved reference
-                return new T()
+                return new T
                 {
                     UnresolvedReference = true,
                     Reference = reference

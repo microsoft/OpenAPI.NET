@@ -28,7 +28,8 @@ namespace Microsoft.OpenApi.Tests
             var reader = new OpenApiStringReader();
             reader.Read(input, out var diagnostic);
 
-            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
+            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
+            {
                 new OpenApiError(new OpenApiReaderException("Expected a value.") {
                     Pointer = "#line=4"
                 })
@@ -57,7 +58,8 @@ namespace Microsoft.OpenApi.Tests
             var reader = new OpenApiStringReader();
             reader.Read(input, out var diagnostic);
 
-            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>() {
+            diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
+            {
                 new OpenApiError(new OpenApiReaderException("schema must be a map/object") {
                     Pointer = "#/paths/~1foo/get/responses/200/content/application~1json/schema"
                 })

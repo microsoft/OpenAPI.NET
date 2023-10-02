@@ -31,25 +31,27 @@ namespace Microsoft.OpenApi.Tests
         {
             var workspace = new OpenApiWorkspace();
 
-            workspace.AddDocument("root", new OpenApiDocument() {
-                Paths = new OpenApiPaths()
+            workspace.AddDocument("root", new OpenApiDocument
+            {
+                Paths = new OpenApiPaths
                 {
-                    ["/"] = new OpenApiPathItem()
+                    ["/"] = new OpenApiPathItem
                     {
-                        Operations  = new Dictionary<OperationType, OpenApiOperation>()
+                        Operations  = new Dictionary<OperationType, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation() {
-                                Responses = new OpenApiResponses()
+                            [OperationType.Get] = new OpenApiOperation
+                            {
+                                Responses = new OpenApiResponses
                                 {
-                                    ["200"] = new OpenApiResponse()
+                                    ["200"] = new OpenApiResponse
                                     {
-                                       Content = new Dictionary<string,OpenApiMediaType>()
+                                       Content = new Dictionary<string,OpenApiMediaType>
                                        {
-                                           ["application/json"] = new OpenApiMediaType()
+                                           ["application/json"] = new OpenApiMediaType
                                            {
-                                               Schema = new OpenApiSchema()
+                                               Schema = new OpenApiSchema
                                                {
-                                                   Reference = new OpenApiReference()
+                                                   Reference = new OpenApiReference
                                                    {
                                                        Id = "test",
                                                        Type = ReferenceType.Schema
@@ -64,11 +66,13 @@ namespace Microsoft.OpenApi.Tests
                     }
                 }
             });
-            workspace.AddDocument("common", new OpenApiDocument() {
-                Components = new OpenApiComponents()
+            workspace.AddDocument("common", new OpenApiDocument
+            {
+                Components = new OpenApiComponents
                 {
                     Schemas = {
-                        ["test"] = new OpenApiSchema() {
+                        ["test"] = new OpenApiSchema
+                        {
                             Type = "string",
                             Description = "The referenced one"
                         }
@@ -84,7 +88,7 @@ namespace Microsoft.OpenApi.Tests
         {
             var workspace = new OpenApiWorkspace();
             workspace.AddDocument("common", CreateCommonDocument());
-            var schema = workspace.ResolveReference(new OpenApiReference()
+            var schema = workspace.ResolveReference(new OpenApiReference
             {
                 Id = "test",
                 Type = ReferenceType.Schema,
@@ -109,7 +113,7 @@ namespace Microsoft.OpenApi.Tests
                   {
                       re.Description = "Success";
                       re.CreateContent("application/json", co =>
-                          co.Schema = new OpenApiSchema()
+                          co.Schema = new OpenApiSchema
                           {
                               Reference = new OpenApiReference()  // Reference
                               {
@@ -165,7 +169,7 @@ namespace Microsoft.OpenApi.Tests
             workspace.AddFragment("fragment", schemaFragment);
 
             // Act
-            var schema = workspace.ResolveReference(new OpenApiReference()
+            var schema = workspace.ResolveReference(new OpenApiReference
             {
                 ExternalResource = "fragment"
             }) as OpenApiSchema;
@@ -180,7 +184,7 @@ namespace Microsoft.OpenApi.Tests
         {
             // Arrange
             var workspace = new OpenApiWorkspace();
-            var responseFragment = new OpenApiResponse()
+            var responseFragment = new OpenApiResponse
             {
                 Headers = new Dictionary<string, OpenApiHeader>
                 {
@@ -190,7 +194,7 @@ namespace Microsoft.OpenApi.Tests
             workspace.AddFragment("fragment", responseFragment);
 
             // Act
-            var resolvedElement = workspace.ResolveReference(new OpenApiReference()
+            var resolvedElement = workspace.ResolveReference(new OpenApiReference
             {
                 Id = "headers/header1",
                 ExternalResource = "fragment"
@@ -205,12 +209,13 @@ namespace Microsoft.OpenApi.Tests
 
         private static OpenApiDocument CreateCommonDocument()
         {
-            return new OpenApiDocument()
+            return new OpenApiDocument
             {
-                Components = new OpenApiComponents()
+                Components = new OpenApiComponents
                 {
                     Schemas = {
-                        ["test"] = new OpenApiSchema() {
+                        ["test"] = new OpenApiSchema
+                        {
                             Type = "string",
                             Description = "The referenced one"
                         }

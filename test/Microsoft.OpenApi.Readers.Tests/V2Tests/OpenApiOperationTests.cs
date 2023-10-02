@@ -330,39 +330,39 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             operation.Should().BeEquivalentTo(
-                new OpenApiOperation()
+                new OpenApiOperation
                 {
-                    Responses = new OpenApiResponses()
+                    Responses = new OpenApiResponses
                     {
-                        { "200", new OpenApiResponse()
+                        { "200", new OpenApiResponse
                         {
                             Description = "An array of float response",
                             Content =
                             {
-                                ["application/json"] = new OpenApiMediaType()
+                                ["application/json"] = new OpenApiMediaType
                                 {
-                                    Schema = new OpenApiSchema()
+                                    Schema = new OpenApiSchema
                                     {
                                         Type = "array",
-                                        Items = new OpenApiSchema()
+                                        Items = new OpenApiSchema
                                         {
                                             Type = "number",
                                             Format = "float"
                                         }
                                     },
-                                    Example = new OpenApiArray()
+                                    Example = new OpenApiArray
                                     {
                                         new OpenApiFloat(5),
                                         new OpenApiFloat(6),
                                         new OpenApiFloat(7),
                                     }
                                 },
-                                ["application/xml"] = new OpenApiMediaType()
+                                ["application/xml"] = new OpenApiMediaType
                                 {
-                                    Schema = new OpenApiSchema()
+                                    Schema = new OpenApiSchema
                                     {
                                         Type = "array",
-                                        Items = new OpenApiSchema()
+                                        Items = new OpenApiSchema
                                         {
                                             Type = "number",
                                             Format = "float"
@@ -389,18 +389,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             // Assert
             operation.Should().BeEquivalentTo(
-                new OpenApiOperation()
+                new OpenApiOperation
                 {
-                    Responses = new OpenApiResponses()
+                    Responses = new OpenApiResponses
                     {
-                        { "200", new OpenApiResponse()
+                        { "200", new OpenApiResponse
                         {
                             Description = "OK",
                             Content =
                             {
-                                ["application/octet-stream"] = new OpenApiMediaType()
+                                ["application/octet-stream"] = new OpenApiMediaType
                                 {
-                                    Schema = new OpenApiSchema()
+                                    Schema = new OpenApiSchema
                                     {
                                         Format = "binary",
                                         Description = "The content of the file.",
