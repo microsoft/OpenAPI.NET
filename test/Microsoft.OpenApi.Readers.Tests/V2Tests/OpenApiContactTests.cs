@@ -13,13 +13,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void ParseStringContactFragmentShouldSucceed()
         {
-            var input = @"
-{
-  ""name"": ""API Support"",
-  ""url"": ""http://www.swagger.io/support"",
-  ""email"": ""support@swagger.io""
-}
-";
+            var input =
+                """
+                {
+                  "name": "API Support",
+                  "url": "http://www.swagger.io/support",
+                  "email": "support@swagger.io"
+                }
+                """;
             var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
 

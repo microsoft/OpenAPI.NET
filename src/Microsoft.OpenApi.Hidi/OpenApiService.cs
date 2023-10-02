@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
-        public static async Task TransformOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
+        public static async Task TransformOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(options.OpenApi) && string.IsNullOrEmpty(options.Csdl) && string.IsNullOrEmpty(options.FilterOptions?.FilterByApiManifest))
             {
@@ -81,11 +81,11 @@ namespace Microsoft.OpenApi.Hidi
                 if (!string.IsNullOrEmpty(options.FilterOptions?.FilterByCollection))
                 {
                     using var collectionStream = await GetStream(options.FilterOptions.FilterByCollection, logger, cancellationToken).ConfigureAwait(false);
-                    postmanCollection = JsonDocument.Parse(collectionStream);
+                    postmanCollection = await JsonDocument.ParseAsync(collectionStream, cancellationToken: cancellationToken).ConfigureAwait(false);
                 }
 
                 // Load OpenAPI document
-                OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion).ConfigureAwait(false);
+                OpenApiDocument document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
                 {
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static async Task<ApiDependency?> FindApiDependency(string? apiManifestPath, ILogger logger, CancellationToken cancellationToken)
+        private static async Task<ApiDependency?> FindApiDependency(string? apiManifestPath, ILogger logger, CancellationToken cancellationToken = default)
         {
             ApiDependency? apiDependency = null;
             // If API Manifest is provided, load it, use it get the OpenAPI path
@@ -132,7 +132,8 @@ namespace Microsoft.OpenApi.Hidi
                 }
                 using (var fileStream = await GetStream(apiManifestRef[0], logger, cancellationToken).ConfigureAwait(false))
                 {
-                    apiManifest = ApiManifestDocument.Load(JsonDocument.Parse(fileStream).RootElement);
+                    var document = await JsonDocument.ParseAsync(fileStream, cancellationToken: cancellationToken).ConfigureAwait(false);
+                    apiManifest = ApiManifestDocument.Load(document.RootElement);
                 }
 
                 apiDependency = !string.IsNullOrEmpty(apiDependencyName) && apiManifest.ApiDependencies.TryGetValue(apiDependencyName, out var dependency) ? dependency : apiManifest.ApiDependencies.First().Value;
@@ -185,7 +186,7 @@ namespace Microsoft.OpenApi.Hidi
                 using var outputStream = options.Output.Create();
                 using var textWriter = new StreamWriter(outputStream);
 
-                var settings = new OpenApiWriterSettings()
+                var settings = new OpenApiWriterSettings
                 {
                     InlineLocalReferences = options.InlineLocal,
                     InlineExternalReferences = options.InlineExternal
@@ -211,7 +212,7 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL 
-        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, CancellationToken cancellationToken, string? metadataVersion = null)
+        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
         {
 
             OpenApiDocument document;
@@ -325,7 +326,7 @@ namespace Microsoft.OpenApi.Hidi
         public static async Task ValidateOpenApiDocument(
             string openApi,
             ILogger logger,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(openApi))
             {
@@ -360,7 +361,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken)
+        private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
         {
             ReadResult result;
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -453,13 +454,13 @@ namespace Microsoft.OpenApi.Hidi
                         // Fetch list of methods and urls from collection, store them in a dictionary
                         var path = request.GetProperty("url").GetProperty("raw").ToString();
                         var method = request.GetProperty("method").ToString();
-                        if (!paths.ContainsKey(path))
+                        if (paths.TryGetValue(path, out var value))
                         {
-                            paths.Add(path, new List<string> { method });
+                            value.Add(method);
                         }
                         else
                         {
-                            paths[path].Add(method);
+                            paths.Add(path, new List<string> {method});
                         }
                     }
                     else
@@ -479,7 +480,7 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Reads stream from file system or makes HTTP request depending on the input string
         /// </summary>
-        private static async Task<Stream> GetStream(string input, ILogger logger, CancellationToken cancellationToken)
+        private static async Task<Stream> GetStream(string input, ILogger logger, CancellationToken cancellationToken = default)
         {
             Stream stream;
             using (logger.BeginScope("Reading input stream"))
@@ -509,13 +510,15 @@ namespace Microsoft.OpenApi.Hidi
                         var fileInput = new FileInfo(input);
                         stream = fileInput.OpenRead();
                     }
-                    catch (Exception ex) when (ex is FileNotFoundException ||
-                        ex is PathTooLongException ||
-                        ex is DirectoryNotFoundException ||
-                        ex is IOException ||
-                        ex is UnauthorizedAccessException ||
-                        ex is SecurityException ||
-                        ex is NotSupportedException)
+                    catch (Exception ex) when (
+                        ex is
+                            FileNotFoundException or
+                            PathTooLongException or
+                            DirectoryNotFoundException or
+                            IOException or
+                            UnauthorizedAccessException or
+                            SecurityException or
+                            NotSupportedException)
                     {
                         throw new InvalidOperationException($"Could not open the file at {input}", ex);
                     }
@@ -553,7 +556,7 @@ namespace Microsoft.OpenApi.Hidi
             return extension;
         }
 
-        internal static async Task<string?> ShowOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
+        internal static async Task<string?> ShowOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -562,7 +565,7 @@ namespace Microsoft.OpenApi.Hidi
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var document = await GetOpenApi(options, logger, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApi(options, logger, null, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
@@ -661,18 +664,21 @@ namespace Microsoft.OpenApi.Hidi
         {
             var rootNode = OpenApiUrlTreeNode.Create(document, "main");
 
-            writer.WriteLine(@"<!doctype html>
-<html>
-<head>
-  <meta charset=""utf-8""/>
-  <script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js""></script>
-</head>
-<style>
-    body {
-        font-family: Verdana, sans-serif;
-    }
-</style>
-<body>");
+            writer.WriteLine(
+                """
+                <!doctype html>
+                <html>
+                <head>
+                  <meta charset="utf-8"/>
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js"></script>
+                </head>
+                <style>
+                    body {
+                        font-family: Verdana, sans-serif;
+                    }
+                </style>
+                <body>
+                """);
             writer.WriteLine("<h1>" + document.Info.Title + "</h1>");
             writer.WriteLine();
             writer.WriteLine($"<h3> API Description: <a href='{sourceUrl}'>{sourceUrl}</a></h3>");
@@ -683,6 +689,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 writer.WriteLine($"<span style=\"padding:2px;background-color:{style.Value.Color};border: 2px solid\">{style.Key.Replace("_", " ", StringComparison.OrdinalIgnoreCase)}</span>");
             }
+
             writer.WriteLine("</div>");
             writer.WriteLine("<hr/>");
             writer.WriteLine("<code class=\"language-mermaid\">");
@@ -690,23 +697,26 @@ namespace Microsoft.OpenApi.Hidi
             writer.WriteLine("</code>");
 
             // Write script tag to include JS library for rendering markdown
-            writer.WriteLine(@"<script>
-  var config = {
-      startOnLoad:true,
-      theme: 'forest',
-      flowchart:{
-              useMaxWidth:false,
-              htmlLabels:true
-          }
-  };
-  mermaid.initialize(config);
-  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-  </script>");
+            writer.WriteLine(
+                """
+                <script>
+                  var config = {
+                      startOnLoad:true,
+                      theme: 'forest',
+                      flowchart:{
+                              useMaxWidth:false,
+                              htmlLabels:true
+                          }
+                  };
+                  mermaid.initialize(config);
+                  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+                </script>
+                """);
             // Write script tag to include JS library for rendering mermaid
             writer.WriteLine("</html");
         }
 
-        internal static async Task PluginManifest(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
+        internal static async Task PluginManifest(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             // If ApiManifest is provided, set the referenced OpenAPI document
             var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
@@ -716,7 +726,7 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             // Load OpenAPI document
-            OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion).ConfigureAwait(false);
+            OpenApiDocument document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -737,7 +747,7 @@ namespace Microsoft.OpenApi.Hidi
             WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
 
             // Create OpenAIPluginManifest from ApiDependency and OpenAPI document
-            var manifest = new OpenAIPluginManifest()
+            var manifest = new OpenAIPluginManifest
             {
                 NameForHuman = document.Info.Title,
                 DescriptionForHuman = document.Info.Description,
@@ -755,7 +765,7 @@ namespace Microsoft.OpenApi.Hidi
             using var file = new FileStream(manifestFile.FullName, FileMode.Create);
             using var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
             manifest.Write(jsonWriter);
-            jsonWriter.Flush();
+            await jsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

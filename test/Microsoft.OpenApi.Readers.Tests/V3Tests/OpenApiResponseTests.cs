@@ -3,11 +3,6 @@
 
 using System.IO;
 using System.Linq;
-using FluentAssertions;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V3;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V3Tests

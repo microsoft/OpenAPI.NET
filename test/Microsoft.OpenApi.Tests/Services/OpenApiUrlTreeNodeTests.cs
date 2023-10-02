@@ -15,27 +15,28 @@ namespace Microsoft.OpenApi.Tests.Services
     [UsesVerify]
     public class OpenApiUrlTreeNodeTests
     {
-        private OpenApiDocument OpenApiDocumentSample_1 => new OpenApiDocument()
+        private OpenApiDocument OpenApiDocumentSample_1 => new OpenApiDocument
         {
-            Paths = new OpenApiPaths()
+            Paths = new OpenApiPaths
             {
-                ["/"] = new OpenApiPathItem() {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                ["/"] = new OpenApiPathItem
+                {
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
                         [OperationType.Get] = new OpenApiOperation(),
                     }
                 },
-                ["/houses"] = new OpenApiPathItem()
+                ["/houses"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
                         [OperationType.Get] = new OpenApiOperation(),
                         [OperationType.Post] = new OpenApiOperation()
                     }
                 },
-                ["/cars"] = new OpenApiPathItem()
+                ["/cars"] = new OpenApiPathItem
                 {
-                    Operations = new Dictionary<OperationType, OpenApiOperation>()
+                    Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
                         [OperationType.Post] = new OpenApiOperation()
                     }
@@ -43,9 +44,9 @@ namespace Microsoft.OpenApi.Tests.Services
             }
         };
 
-        private OpenApiDocument OpenApiDocumentSample_2 => new OpenApiDocument()
+        private OpenApiDocument OpenApiDocumentSample_2 => new OpenApiDocument
         {
-            Paths = new OpenApiPaths()
+            Paths = new OpenApiPaths
             {
                 ["/"] = new OpenApiPathItem(),
                 ["/hotels"] = new OpenApiPathItem(),
@@ -64,9 +65,9 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void CreateSingleRootWorks()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
                     ["/"] = new OpenApiPathItem()
                 }
@@ -84,9 +85,9 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void CreatePathWithoutRootWorks()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
                     ["/houses"] = new OpenApiPathItem()
                 }
@@ -154,10 +155,10 @@ namespace Microsoft.OpenApi.Tests.Services
                         OperationType.Get, new OpenApiOperation
                         {
                             OperationId = "motorcycles.ListMotorcycle",
-                            Responses = new OpenApiResponses()
+                            Responses = new OpenApiResponses
                             {
                                 {
-                                    "200", new OpenApiResponse()
+                                    "200", new OpenApiResponse
                                     {
                                         Description = "Retrieved entities"
                                     }
@@ -179,10 +180,10 @@ namespace Microsoft.OpenApi.Tests.Services
                         OperationType.Get, new OpenApiOperation
                         {
                             OperationId = "computers.ListComputer",
-                            Responses = new OpenApiResponses()
+                            Responses = new OpenApiResponses
                             {
                                 {
-                                    "200", new OpenApiResponse()
+                                    "200", new OpenApiResponse
                                     {
                                         Description = "Retrieved entities"
                                     }
@@ -207,9 +208,9 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void CreatePathsWithMultipleSegmentsWorks()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
                     ["/"] = new OpenApiPathItem(),
                     ["/houses/apartments/{apartment-id}"] = new OpenApiPathItem(),
@@ -232,13 +233,13 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void HasOperationsWorks()
         {
-            var doc1 = new OpenApiDocument()
+            var doc1 = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
                     ["/"] = new OpenApiPathItem(),
                     ["/houses"] = new OpenApiPathItem(),
-                    ["/cars/{car-id}"] = new OpenApiPathItem()
+                    ["/cars/{car-id}"] = new OpenApiPathItem
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -246,10 +247,10 @@ namespace Microsoft.OpenApi.Tests.Services
                                 OperationType.Get, new OpenApiOperation
                                 {
                                     OperationId = "cars.GetCar",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new OpenApiResponses
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new OpenApiResponse
                                             {
                                                 Description = "Retrieved entity"
                                             }
@@ -262,11 +263,11 @@ namespace Microsoft.OpenApi.Tests.Services
                 }
             };
 
-            var doc2 = new OpenApiDocument()
+            var doc2 = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
-                    ["/cars/{car-id}"] = new OpenApiPathItem()
+                    ["/cars/{car-id}"] = new OpenApiPathItem
                     {
                         Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
@@ -274,10 +275,10 @@ namespace Microsoft.OpenApi.Tests.Services
                                 OperationType.Get, new OpenApiOperation
                                 {
                                     OperationId = "cars.GetCar",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new OpenApiResponses
                                     {
                                         {
-                                            "200", new OpenApiResponse()
+                                            "200", new OpenApiResponse
                                             {
                                                 Description = "Retrieved entity"
                                             }
@@ -289,10 +290,10 @@ namespace Microsoft.OpenApi.Tests.Services
                                 OperationType.Put, new OpenApiOperation
                                 {
                                     OperationId = "cars.UpdateCar",
-                                    Responses = new OpenApiResponses()
+                                    Responses = new OpenApiResponses
                                     {
                                         {
-                                            "204", new OpenApiResponse()
+                                            "204", new OpenApiResponse
                                             {
                                                 Description = "Success."
                                             }
@@ -326,9 +327,9 @@ namespace Microsoft.OpenApi.Tests.Services
         [Fact]
         public void SegmentIsParameterWorks()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
                     ["/"] = new OpenApiPathItem(),
                     ["/houses/apartments/{apartment-id}"] = new OpenApiPathItem()

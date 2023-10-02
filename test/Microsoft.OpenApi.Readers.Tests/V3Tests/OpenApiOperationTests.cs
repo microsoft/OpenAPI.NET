@@ -42,14 +42,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var operation = OpenApiV3Deserializer.LoadOperation(node);
 
             // Assert
-            operation.Should().BeEquivalentTo(new OpenApiOperation()
+            operation.Should().BeEquivalentTo(new OpenApiOperation
             {
                 Tags =
                 {
                     new OpenApiTag
                     {
                         UnresolvedReference = true,
-                        Reference = new OpenApiReference()
+                        Reference = new OpenApiReference
                         {
                             Id = "user",
                             Type = ReferenceType.Tag

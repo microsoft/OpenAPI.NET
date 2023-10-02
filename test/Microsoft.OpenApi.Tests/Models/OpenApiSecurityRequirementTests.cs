@@ -100,18 +100,20 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""scheme1"": [
-    ""scope1"",
-    ""scope2"",
-    ""scope3""
-  ],
-  ""scheme2"": [
-    ""scope4"",
-    ""scope5""
-  ],
-  ""scheme3"": [ ]
-}";
+                """
+                {
+                  "scheme1": [
+                    "scope1",
+                    "scope2",
+                    "scope3"
+                  ],
+                  "scheme2": [
+                    "scope4",
+                    "scope5"
+                  ],
+                  "scheme3": [ ]
+                }
+                """;
 
             // Act
             var actual =
@@ -128,18 +130,20 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""scheme1"": [
-    ""scope1"",
-    ""scope2"",
-    ""scope3""
-  ],
-  ""scheme2"": [
-    ""scope4"",
-    ""scope5""
-  ],
-  ""scheme3"": [ ]
-}";
+                """
+                {
+                  "scheme1": [
+                    "scope1",
+                    "scope2",
+                    "scope3"
+                  ],
+                  "scheme2": [
+                    "scope4",
+                    "scope5"
+                  ],
+                  "scheme3": [ ]
+                }
+                """;
 
             // Act
             var actual = SecurityRequirementWithReferencedSecurityScheme.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -156,14 +160,16 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""scheme1"": [
-    ""scope1"",
-    ""scope2"",
-    ""scope3""
-  ],
-  ""scheme3"": [ ]
-}";
+                """
+                {
+                  "scheme1": [
+                    "scope1",
+                    "scope2",
+                    "scope3"
+                  ],
+                  "scheme3": [ ]
+                }
+                """;
 
             // Act
             var actual =
@@ -181,14 +187,16 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""scheme1"": [
-    ""scope1"",
-    ""scope2"",
-    ""scope3""
-  ],
-  ""scheme3"": [ ]
-}";
+                """
+                {
+                  "scheme1": [
+                    "scope1",
+                    "scope2",
+                    "scope3"
+                  ],
+                  "scheme3": [ ]
+                }
+                """;
 
             // Act
             var actual =

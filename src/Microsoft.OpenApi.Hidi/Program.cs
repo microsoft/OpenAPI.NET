@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.CommandLine;
-using System.CommandLine.Parsing;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Hidi.Handlers;
 using Microsoft.OpenApi.Hidi.Options;
@@ -22,7 +21,7 @@ namespace Microsoft.OpenApi.Hidi
 
         internal static RootCommand CreateRootCommand()
         {
-            var rootCommand = new RootCommand() { };
+            var rootCommand = new RootCommand { };
 
             var commandOptions = new CommandOptions();
 
