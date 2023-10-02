@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
 
 			visitor = new TestVisitor();
 
-			visitor.Enter(default(string));
+			visitor.Enter(default);
 			visitor.Visit(default(OpenApiDocument));
 			visitor.Visit(default(OpenApiInfo));
 			visitor.Visit(default(OpenApiContact));
