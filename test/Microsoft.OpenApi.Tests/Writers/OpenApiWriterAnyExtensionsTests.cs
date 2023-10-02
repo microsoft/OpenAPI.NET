@@ -274,7 +274,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Act
             var value = new StreamReader(stream).ReadToEnd();
 
-            if (any.AnyType == AnyType.Primitive || any.AnyType == AnyType.Null)
+            if (any.AnyType is AnyType.Primitive or AnyType.Null)
             {
                 return value;
             }

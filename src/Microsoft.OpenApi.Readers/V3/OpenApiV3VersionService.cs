@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 var segments = reference.Split('#');
                 if (segments.Length == 1)
                 {
-                    if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
+                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
                         return new OpenApiReference
                         {
