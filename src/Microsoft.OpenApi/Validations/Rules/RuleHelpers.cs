@@ -75,15 +75,13 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 // If value is not a string and also not an object, there is a data mismatch.
-                if (!(value is OpenApiObject))
+                if (!(value is OpenApiObject anyObject))
                 {
                     context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                     return;
                 }
-
-                var anyObject = (OpenApiObject)value;
 
                 foreach (var key in anyObject.Keys)
                 {
@@ -115,15 +113,13 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 // If value is not a string and also not an array, there is a data mismatch.
-                if (!(value is OpenApiArray))
+                if (!(value is OpenApiArray anyArray))
                 {
                     context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                     return;
                 }
-
-                var anyArray = (OpenApiArray)value;
 
                 for (int i = 0; i < anyArray.Count; i++)
                 {
