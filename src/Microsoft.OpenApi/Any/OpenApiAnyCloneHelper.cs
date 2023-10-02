@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Any
                     }
                 }
             }
-            
+
             return obj;
         }
     }
