@@ -211,10 +211,13 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicParameterAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""name"": ""name1"",
-  ""in"": ""path""
-}";
+            var expected =
+                """
+                {
+                  "name": "name1",
+                  "in": "path"
+                }
+                """;
 
             // Act
             var actual = BasicParameter.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -229,33 +232,36 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedParameterAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""name"": ""name1"",
-  ""in"": ""path"",
-  ""description"": ""description1"",
-  ""required"": true,
-  ""style"": ""simple"",
-  ""explode"": true,
-  ""schema"": {
-    ""title"": ""title2"",
-    ""oneOf"": [
-      {
-        ""type"": ""number"",
-        ""format"": ""double""
-      },
-      {
-        ""type"": ""string""
-      }
-    ],
-    ""description"": ""description2""
-  },
-  ""examples"": {
-    ""test"": {
-      ""summary"": ""summary3"",
-      ""description"": ""description3""
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "name": "name1",
+                  "in": "path",
+                  "description": "description1",
+                  "required": true,
+                  "style": "simple",
+                  "explode": true,
+                  "schema": {
+                    "title": "title2",
+                    "oneOf": [
+                      {
+                        "type": "number",
+                        "format": "double"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "description": "description2"
+                  },
+                  "examples": {
+                    "test": {
+                      "summary": "summary3",
+                      "description": "description3"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -270,13 +276,16 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedParameterAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""in"": ""path"",
-  ""name"": ""name1"",
-  ""description"": ""description1"",
-  ""required"": true,
-  ""format"": ""double""
-}";
+            var expected =
+                """
+                {
+                  "in": "path",
+                  "name": "name1",
+                  "description": "description1",
+                  "required": true,
+                  "format": "double"
+                }
+                """;
 
             // Act
             var actual = AdvancedPathParameterWithSchema.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);

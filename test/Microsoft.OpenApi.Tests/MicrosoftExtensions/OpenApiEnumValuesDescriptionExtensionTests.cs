@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Microsoft.OpenApi.MicrosoftExtensions;
 using Microsoft.OpenApi.Writers;
-using Moq;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.MicrosoftExtensions;

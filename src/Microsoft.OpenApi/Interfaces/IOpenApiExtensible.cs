@@ -2,7 +2,6 @@
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 
 namespace Microsoft.OpenApi.Interfaces
 {

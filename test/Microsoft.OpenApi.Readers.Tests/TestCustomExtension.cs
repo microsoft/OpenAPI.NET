@@ -14,16 +14,17 @@ namespace Microsoft.OpenApi.Readers.Tests
         [Fact]
         public void ParseCustomExtension()
         {
-            var description = @"
-openapi: 3.0.0
-info: 
-    title: A doc with an extension
-    version: 1.0.0
-    x-foo: 
-        bar: hey
-        baz: hi!
-paths: {}
-";
+            var description =
+                """
+                openapi: 3.0.0
+                info:
+                    title: A doc with an extension
+                    version: 1.0.0
+                    x-foo:
+                        bar: hey
+                        baz: hi!
+                paths: {}
+                """;
             var settings = new OpenApiReaderSettings
             {
                 ExtensionParsers = { { "x-foo", (a,v) => {

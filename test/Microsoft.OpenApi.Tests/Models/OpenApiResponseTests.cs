@@ -126,9 +126,13 @@ namespace Microsoft.OpenApi.Tests.Models
             OpenApiFormat format)
         {
             // Arrange
-            var expected = format == OpenApiFormat.Json ? @"{
-  ""description"": null
-}" : @"description: ";
+            var expected = format == OpenApiFormat.Json ?
+                """
+                {
+                  "description": null
+                }
+                """ :
+                @"description: ";
 
             // Act
             var actual = BasicResponse.Serialize(version, format);
@@ -143,35 +147,37 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedResponseAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""description"": ""A complex object array response"",
-  ""headers"": {
-    ""X-Rate-Limit-Limit"": {
-      ""description"": ""The number of allowed requests in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
-    },
-    ""X-Rate-Limit-Reset"": {
-      ""description"": ""The number of seconds left in the current period"",
-      ""schema"": {
-        ""type"": ""integer""
-      }
-    }
-  },
-  ""content"": {
-    ""text/plain"": {
-      ""schema"": {
-        ""type"": ""array"",
-        ""items"": {
-          ""$ref"": ""#/components/schemas/customType""
-        }
-      },
-      ""example"": ""Blabla"",
-      ""myextension"": ""myextensionvalue""
-    }
-  }
-}";
+            var expected = """
+                           {
+                             "description": "A complex object array response",
+                             "headers": {
+                               "X-Rate-Limit-Limit": {
+                                 "description": "The number of allowed requests in the current period",
+                                 "schema": {
+                                   "type": "integer"
+                                 }
+                               },
+                               "X-Rate-Limit-Reset": {
+                                 "description": "The number of seconds left in the current period",
+                                 "schema": {
+                                   "type": "integer"
+                                 }
+                               }
+                             },
+                             "content": {
+                               "text/plain": {
+                                 "schema": {
+                                   "type": "array",
+                                   "items": {
+                                     "$ref": "#/components/schemas/customType"
+                                   }
+                                 },
+                                 "example": "Blabla",
+                                 "myextension": "myextensionvalue"
+                               }
+                             }
+                           }
+                           """;
 
             // Act
             var actual = AdvancedResponse.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -187,24 +193,26 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"description: A complex object array response
-headers:
-  X-Rate-Limit-Limit:
-    description: The number of allowed requests in the current period
-    schema:
-      type: integer
-  X-Rate-Limit-Reset:
-    description: The number of seconds left in the current period
-    schema:
-      type: integer
-content:
-  text/plain:
-    schema:
-      type: array
-      items:
-        $ref: '#/components/schemas/customType'
-    example: Blabla
-    myextension: myextensionvalue";
+                """
+                description: A complex object array response
+                headers:
+                  X-Rate-Limit-Limit:
+                    description: The number of allowed requests in the current period
+                    schema:
+                      type: integer
+                  X-Rate-Limit-Reset:
+                    description: The number of seconds left in the current period
+                    schema:
+                      type: integer
+                content:
+                  text/plain:
+                    schema:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/customType'
+                    example: Blabla
+                    myextension: myextensionvalue
+                """;
 
             // Act
             var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi3_0);
@@ -219,29 +227,32 @@ content:
         public void SerializeAdvancedResponseAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""description"": ""A complex object array response"",
-  ""schema"": {
-    ""type"": ""array"",
-    ""items"": {
-      ""$ref"": ""#/definitions/customType""
-    }
-  },
-  ""examples"": {
-    ""text/plain"": ""Blabla""
-  },
-  ""myextension"": ""myextensionvalue"",
-  ""headers"": {
-    ""X-Rate-Limit-Limit"": {
-      ""description"": ""The number of allowed requests in the current period"",
-      ""type"": ""integer""
-    },
-    ""X-Rate-Limit-Reset"": {
-      ""description"": ""The number of seconds left in the current period"",
-      ""type"": ""integer""
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "description": "A complex object array response",
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/customType"
+                    }
+                  },
+                  "examples": {
+                    "text/plain": "Blabla"
+                  },
+                  "myextension": "myextensionvalue",
+                  "headers": {
+                    "X-Rate-Limit-Limit": {
+                      "description": "The number of allowed requests in the current period",
+                      "type": "integer"
+                    },
+                    "X-Rate-Limit-Reset": {
+                      "description": "The number of seconds left in the current period",
+                      "type": "integer"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedResponse.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -257,21 +268,23 @@ content:
         {
             // Arrange
             var expected =
-                @"description: A complex object array response
-schema:
-  type: array
-  items:
-    $ref: '#/definitions/customType'
-examples:
-  text/plain: Blabla
-myextension: myextensionvalue
-headers:
-  X-Rate-Limit-Limit:
-    description: The number of allowed requests in the current period
-    type: integer
-  X-Rate-Limit-Reset:
-    description: The number of seconds left in the current period
-    type: integer";
+                """
+                description: A complex object array response
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/definitions/customType'
+                examples:
+                  text/plain: Blabla
+                myextension: myextensionvalue
+                headers:
+                  X-Rate-Limit-Limit:
+                    description: The number of allowed requests in the current period
+                    type: integer
+                  X-Rate-Limit-Reset:
+                    description: The number of seconds left in the current period
+                    type: integer
+                """;
 
             // Act
             var actual = AdvancedResponse.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);

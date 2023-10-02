@@ -2,7 +2,6 @@
 // Licensed under the MIT license. 
 
 using Microsoft.OpenApi.Writers;
-using System;
 using System.Collections.Generic;
 
 namespace Microsoft.OpenApi.Any

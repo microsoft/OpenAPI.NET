@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -20,7 +17,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
 
 			visitor = new TestVisitor();
 
-			visitor.Enter(default(string));
+			visitor.Enter(default);
 			visitor.Visit(default(OpenApiDocument));
 			visitor.Visit(default(OpenApiInfo));
 			visitor.Visit(default(OpenApiContact));
