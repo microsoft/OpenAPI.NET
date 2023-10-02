@@ -503,7 +503,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeOperationWithFormDataAsV3JsonWorks()
         {
             // Arrange
-            var expected = 
+            var expected =
                 """
                 {
                   "summary": "Updates a pet in the store with form data",

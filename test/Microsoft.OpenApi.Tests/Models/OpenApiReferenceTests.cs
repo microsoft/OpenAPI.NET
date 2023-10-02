@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var reference = new OpenApiReference { Type = ReferenceType.Schema, Id = "Pet" };
-            var expected = 
+            var expected =
                 """
                 {
                   "$ref": "#/components/schemas/Pet"
@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "Pet"
             };
 
-            var expected = 
+            var expected =
                 """
                 {
                   "$ref": "#/definitions/Pet"

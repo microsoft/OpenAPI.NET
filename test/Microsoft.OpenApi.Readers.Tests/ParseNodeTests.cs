@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Tests
         [Fact]
         public void BrokenSimpleList()
         {
-            var input = 
+            var input =
                 """
                 swagger: 2.0
                 info:

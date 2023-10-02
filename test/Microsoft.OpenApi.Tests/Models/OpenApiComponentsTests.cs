@@ -396,7 +396,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = 
+            var expected =
                 """
                 schemas:
                   schema1:
