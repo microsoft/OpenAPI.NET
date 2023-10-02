@@ -30,9 +30,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             IDictionary<string, Action<T, ParseNode>> fixedFields,
             IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields)
         {
-            var found = fixedFields.TryGetValue(Name, out var fixedFieldMap);
-
-            if (fixedFieldMap != null)
+            if (fixedFields.TryGetValue(Name, out var fixedFieldMap))
             {
                 try
                 {
