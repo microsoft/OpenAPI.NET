@@ -177,25 +177,25 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public async Task ThrowIfOpenApiUrlIsNotProvidedWhenValidating()
+        public Task ThrowIfOpenApiUrlIsNotProvidedWhenValidating()
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("", _logger, new CancellationToken()));
+            return Assert.ThrowsAsync<ArgumentNullException>(() =>
+                OpenApiService.ValidateOpenApiDocument("", _logger, new CancellationToken()));
         }
 
 
         [Fact]
-        public async Task ThrowIfURLIsNotResolvableWhenValidating()
+        public Task ThrowIfURLIsNotResolvableWhenValidating()
         {
-            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("https://example.org/itdoesnmatter", _logger, new CancellationToken()));
+            return Assert.ThrowsAsync<InvalidOperationException>(() =>
+                OpenApiService.ValidateOpenApiDocument("https://example.org/itdoesnmatter", _logger, new CancellationToken()));
         }
 
         [Fact]
-        public async Task ThrowIfFileDoesNotExistWhenValidating()
+        public Task ThrowIfFileDoesNotExistWhenValidating()
         {
-            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("aFileThatBetterNotExist.fake", _logger, new CancellationToken()));
+            return Assert.ThrowsAsync<InvalidOperationException>(() =>
+                OpenApiService.ValidateOpenApiDocument("aFileThatBetterNotExist.fake", _logger, new CancellationToken()));
         }
 
         [Fact]
@@ -285,7 +285,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         }
 
         [Fact]
-        public async Task ThrowTransformCommandIfOpenApiAndCsdlAreEmpty()
+        public Task ThrowTransformCommandIfOpenApiAndCsdlAreEmpty()
         {
             HidiOptions options = new HidiOptions
             {
@@ -294,8 +294,8 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 InlineLocal = false,
                 InlineExternal = false,
             };
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken()));
+            return Assert.ThrowsAsync<ArgumentException>(() =>
+                OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken()));
 
         }
 
