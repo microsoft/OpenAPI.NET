@@ -84,12 +84,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
             var openApiDoc = new OpenApiStringReader().Read(
-                @"
-openapi : 3.0.0
-info:
-    title: Simple Document
-    version: 0.9.1
-paths: {}",
+                """
+
+                openapi : 3.0.0
+                info:
+                    title: Simple Document
+                    version: 0.9.1
+                paths: {}
+                """,
                 out var context);
 
             openApiDoc.Should().BeEquivalentTo(
@@ -119,23 +121,24 @@ paths: {}",
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
             var openApiDoc = new OpenApiStringReader().Read(
-                @"
-openapi : 3.0.0
-info:
-    title: Simple Document
-    version: 0.9.1
-components:
-  schemas:
-    sampleSchema:
-      type: object
-      properties:
-        sampleProperty:
-          type: double
-          minimum: 100.54
-          maximum: 60000000.35
-          exclusiveMaximum: true
-          exclusiveMinimum: false
-paths: {}",
+                """
+                openapi : 3.0.0
+                info:
+                    title: Simple Document
+                    version: 0.9.1
+                components:
+                  schemas:
+                    sampleSchema:
+                      type: object
+                      properties:
+                        sampleProperty:
+                          type: double
+                          minimum: 100.54
+                          maximum: 60000000.35
+                          exclusiveMaximum: true
+                          exclusiveMinimum: false
+                paths: {}
+                """,
                 out var context);
 
             openApiDoc.Should().BeEquivalentTo(

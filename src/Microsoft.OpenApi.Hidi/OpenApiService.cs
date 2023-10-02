@@ -664,18 +664,21 @@ namespace Microsoft.OpenApi.Hidi
         {
             var rootNode = OpenApiUrlTreeNode.Create(document, "main");
 
-            writer.WriteLine(@"<!doctype html>
-<html>
-<head>
-  <meta charset=""utf-8""/>
-  <script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js""></script>
-</head>
-<style>
-    body {
-        font-family: Verdana, sans-serif;
-    }
-</style>
-<body>");
+            writer.WriteLine(
+                """
+                <!doctype html>
+                <html>
+                <head>
+                  <meta charset="utf-8"/>
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js"></script>
+                </head>
+                <style>
+                    body {
+                        font-family: Verdana, sans-serif;
+                    }
+                </style>
+                <body>
+                """);
             writer.WriteLine("<h1>" + document.Info.Title + "</h1>");
             writer.WriteLine();
             writer.WriteLine($"<h3> API Description: <a href='{sourceUrl}'>{sourceUrl}</a></h3>");
@@ -686,6 +689,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 writer.WriteLine($"<span style=\"padding:2px;background-color:{style.Value.Color};border: 2px solid\">{style.Key.Replace("_", " ", StringComparison.OrdinalIgnoreCase)}</span>");
             }
+
             writer.WriteLine("</div>");
             writer.WriteLine("<hr/>");
             writer.WriteLine("<code class=\"language-mermaid\">");
@@ -693,18 +697,21 @@ namespace Microsoft.OpenApi.Hidi
             writer.WriteLine("</code>");
 
             // Write script tag to include JS library for rendering markdown
-            writer.WriteLine(@"<script>
-  var config = {
-      startOnLoad:true,
-      theme: 'forest',
-      flowchart:{
-              useMaxWidth:false,
-              htmlLabels:true
-          }
-  };
-  mermaid.initialize(config);
-  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-  </script>");
+            writer.WriteLine(
+                """
+                <script>
+                  var config = {
+                      startOnLoad:true,
+                      theme: 'forest',
+                      flowchart:{
+                              useMaxWidth:false,
+                              htmlLabels:true
+                          }
+                  };
+                  mermaid.initialize(config);
+                  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+                </script>
+                """);
             // Write script tag to include JS library for rendering mermaid
             writer.WriteLine("</html");
         }

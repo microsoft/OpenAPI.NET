@@ -54,14 +54,16 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""name"": ""animal"",
-  ""namespace"": ""http://swagger.io/schema/sample"",
-  ""prefix"": ""sample"",
-  ""attribute"": true,
-  ""wrapped"": true,
-  ""x-xml-extension"": 7
-}";
+                """
+                {
+                  "name": "animal",
+                  "namespace": "http://swagger.io/schema/sample",
+                  "prefix": "sample",
+                  "attribute": true,
+                  "wrapped": true,
+                  "x-xml-extension": 7
+                }
+                """;
 
             // Act
             var actual = AdvancedXml.SerializeAsJson(version);
@@ -79,12 +81,14 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"name: animal
-namespace: http://swagger.io/schema/sample
-prefix: sample
-attribute: true
-wrapped: true
-x-xml-extension: 7";
+                """
+                name: animal
+                namespace: http://swagger.io/schema/sample
+                prefix: sample
+                attribute: true
+                wrapped: true
+                x-xml-extension: 7
+                """;
 
             // Act
             var actual = AdvancedXml.SerializeAsYaml(version);

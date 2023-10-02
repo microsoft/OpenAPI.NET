@@ -27,11 +27,13 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 
             // Todo: this should be ReadAsync
             var stream = new MemoryStream();
-            var doc = @"openapi: 3.0.0
-info:
-  title: foo
-  version: 1.0.0
-paths: {}";
+            var doc = """
+                      openapi: 3.0.0
+                      info:
+                        title: foo
+                        version: 1.0.0
+                      paths: {}
+                      """;
             var wr = new StreamWriter(stream);
             wr.Write(doc);
             wr.Flush();
