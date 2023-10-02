@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Load OpenAPI document
-                OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion).ConfigureAwait(false);
+                OpenApiDocument document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
                 {
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL 
-        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, CancellationToken cancellationToken, string? metadataVersion = null)
+        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
         {
 
             OpenApiDocument document;
@@ -565,7 +565,7 @@ namespace Microsoft.OpenApi.Hidi
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var document = await GetOpenApi(options, logger, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApi(options, logger, null, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
@@ -719,7 +719,7 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             // Load OpenAPI document
-            OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion).ConfigureAwait(false);
+            OpenApiDocument document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
 
