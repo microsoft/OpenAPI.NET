@@ -59,17 +59,7 @@ namespace Microsoft.OpenApi.Services
         {
             Utils.CheckArgumentNullOrEmpty(label, nameof(label));
 
-            if (PathItems == null)
-            {
-                return false;
-            }
-
-            if (PathItems.TryGetValue(label, out var item))
-            {
-                return item.Operations?.Any() ?? false;
-            }
-
-            return false;
+            return PathItems is not null && PathItems.TryGetValue(label, out var item) && item.Operations is not null && item.Operations.Any();
         }
 
         /// <summary>
