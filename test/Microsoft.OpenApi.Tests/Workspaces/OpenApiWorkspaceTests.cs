@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
 using System;
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Tests
             var workspace = new OpenApiWorkspace();
             var doc = CreateCommonDocument();
             var location = "common";
-
+            
             workspace.AddDocument(location, doc);
 
             var schema = workspace.ResolveJsonSchemaReference(new Uri("http://everything.json/common#/components/schemas/test"));
@@ -144,13 +144,10 @@ namespace Microsoft.OpenApi.Tests
             // Arrange
             var workspace = new OpenApiWorkspace();
             var schemaFragment = new JsonSchemaBuilder().Type(SchemaValueType.String).Description("Schema from a fragment").Build();
-            //workspace.AddFragment("fragment", schemaFragment);
+            workspace.AddSchemaFragment("fragment", schemaFragment);
 
             // Act
-            var schema = workspace.ResolveReference(new OpenApiReference()
-            {
-                ExternalResource = "fragment"
-            }) as JsonSchema;
+            var schema = workspace.ResolveJsonSchemaReference(new Uri("http://everything.json/common#/components/schemas/test"));
 
             // Assert
             Assert.NotNull(schema);

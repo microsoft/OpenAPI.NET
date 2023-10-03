@@ -31,12 +31,12 @@ webhooks:
                    schema:
                        type: array
                        items:
-                         "$ref": '#/components/schemas/pet'
+                         "$ref": '#/components/schemas/pet1'
                application/xml:
                    schema:
                        type: array
                        items:
-                         "$ref": '#/components/schemas/pet'
+                         "$ref": '#/components/schemas/pet1'
       post:
         requestBody:
           description: Information about a new pet in the system
@@ -51,10 +51,10 @@ webhooks:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/pet'
+                  $ref: '#/components/schemas/pet1'
 components:
   schemas:
-    pet:
+    pet1:
         type: object
         required:
         - id

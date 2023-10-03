@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Microsoft.OpenApi.Readers.Tests.V31Tests
 {
@@ -69,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             {
                 Schemas =
                 {
-                    ["pet"] = petSchema,
+                    ["pet1"] = petSchema,
                     ["newPet"] = newPetSchema
                 }
             };
@@ -175,6 +176,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Assert
+            var schema = actual.Webhooks["/pets"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema;
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
             actual.Should().BeEquivalentTo(expected);
         }
@@ -190,7 +192,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             {
                 Schemas = new Dictionary<string, JsonSchema>
                 {
-                    ["pet"] = new JsonSchemaBuilder()
+                    ["petSchema"] = new JsonSchemaBuilder()
                                 .Type(SchemaValueType.Object)
                                 .Required("id", "name")
                                 .Properties(
@@ -208,7 +210,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             };
 
             // Create a clone of the schema to avoid modifying things in components.
-            var petSchema = components.Schemas["pet"];
+            var petSchema = components.Schemas["petSchema"];
             var newPetSchema = components.Schemas["newPet"];
 
             components.PathItems = new Dictionary<string, OpenApiPathItem>
@@ -321,7 +323,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
             actual.Should().BeEquivalentTo(expected);
             context.Should().BeEquivalentTo(
     new OpenApiDiagnostic() { SpecificationVersion = OpenApiSpecVersion.OpenApi3_1 });
-
         }
 
         [Fact]
