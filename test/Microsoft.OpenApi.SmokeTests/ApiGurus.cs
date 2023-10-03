@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.SmokeTests
 
             JToken GetProp(JToken obj, string prop)
             {
-                if (!(obj is JObject jObj))
+                if (obj is not JObject jObj)
                     return null;
                 if (!jObj.TryGetValue(prop, out var jToken))
                     return null;

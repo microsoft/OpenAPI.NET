@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public ValueNode(ParsingContext context, YamlNode node) : base(
             context)
         {
-            if (!(node is YamlScalarNode scalarNode))
+            if (node is not YamlScalarNode scalarNode)
             {
                 throw new OpenApiReaderException("Expected a value.", node);
             }

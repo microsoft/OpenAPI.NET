@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public MapNode CheckMapNode(string nodeName)
         {
-            if (!(this is MapNode mapNode))
+            if (this is not MapNode mapNode)
             {
                 throw new OpenApiReaderException($"{nodeName} must be a map/object", Context);
             }
