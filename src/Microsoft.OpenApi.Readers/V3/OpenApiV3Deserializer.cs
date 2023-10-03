@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,6 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 propertyNode.ParseField(domainObject, fixedFieldMap, patternFieldMap);
             }
-
         }
 
         private static void ProcessAnyFields<T>(

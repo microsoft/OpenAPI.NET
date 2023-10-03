@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.IO;
@@ -296,6 +296,5 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Assert.True(pathItem.Operations[OperationType.Post].RequestBody != null);
             Assert.Equal(2, pathItem.Operations.Count(o => o.Value.RequestBody != null));
         }
-
     }
 }

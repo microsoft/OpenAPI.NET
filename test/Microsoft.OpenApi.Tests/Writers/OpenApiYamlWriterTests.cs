@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
@@ -405,8 +405,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Equal(expected, actual);
         }
 
-
-
         [Fact]
         public void WriteInlineSchemaV2()
         {
@@ -670,6 +668,5 @@ namespace Microsoft.OpenApi.Tests.Writers
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
         }
-
     }
 }

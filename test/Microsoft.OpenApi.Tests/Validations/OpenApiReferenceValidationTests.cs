@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +65,6 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             // Act
             var errors = document.Validate(new ValidationRuleSet { new AlwaysFailRule<OpenApiSchema>() });
-
 
             // Assert
             Assert.True(errors.Count() == 1);
@@ -155,7 +154,6 @@ namespace Microsoft.OpenApi.Tests.Validations
     {
         public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
         {
-
         }
     }
 }

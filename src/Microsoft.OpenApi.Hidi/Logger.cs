@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Hidi
                     {
                         c.IncludeScopes = true;
                     })
-#if DEBUG   
+#if DEBUG
                     .AddDebug()
 #endif
                     .SetMinimumLevel(logLevel);

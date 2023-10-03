@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Hidi.Options
 {
@@ -8,6 +8,6 @@ namespace Microsoft.OpenApi.Hidi.Options
         public string? FilterByOperationIds { get; internal set; }
         public string? FilterByTags { get; internal set; }
         public string? FilterByCollection { get; internal set; }
-        public string? FilterByApiManifest { get; internal set; }        
+        public string? FilterByApiManifest { get; internal set; }
     }
 }

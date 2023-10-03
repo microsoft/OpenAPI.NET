@@ -28,8 +28,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Throws<ArgumentException>("expression", test);
         }
 
-
-
         [Theory]
         [InlineData("$unknown")]
         [InlineData("$abc")]
@@ -151,7 +149,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Equal(runtimeExpression1, runtimeExpression2);
         }
 
-
         [Fact]
         public void CompositeRuntimeExpressionContainsExpression()
         {
@@ -168,7 +165,6 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Single(compositeExpression.ContainedExpressions);
-
         }
 
         [Fact]

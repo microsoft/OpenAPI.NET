@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -58,7 +58,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoReference.yaml"));
             result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
                 new OpenApiError( new OpenApiException("[File: ./TodoReference.yaml] Invalid Reference identifier 'object-not-existing'.")) });
-
         }
     }
 

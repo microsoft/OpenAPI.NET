@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,8 +13,6 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 {
-
-
     public class OpenApiDocumentTests
     {
         private const string SampleFolderPath = "V2Tests/Samples/";
@@ -399,7 +397,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 xml.Schema.Should().BeEquivalentTo(targetSchema);
             }
         }
-
 
         [Fact]
         public void ShouldAllowComponentsThatJustContainAReference()

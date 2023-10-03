@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Text;
@@ -137,7 +137,6 @@ namespace Microsoft.OpenApi.Any
                             SRResource.PrimitiveTypeNotSupported,
                             this.PrimitiveType));
             }
-
         }
     }
 }

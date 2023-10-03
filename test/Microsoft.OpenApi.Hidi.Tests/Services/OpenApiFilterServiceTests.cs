@@ -103,7 +103,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
             Assert.False(predicate("/foo", OperationType.Patch, null));
         }
 
-
         [Fact]
         public void ShouldParseNestedPostmanCollection()
         {

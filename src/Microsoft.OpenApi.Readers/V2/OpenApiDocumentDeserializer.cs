@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -304,7 +304,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static bool IsHostValid(string host)
         {
-            //Check if the host contains :// 
+            //Check if the host contains ://
             if (host.Contains(Uri.SchemeDelimiter))
             {
                 return false;
@@ -342,7 +342,5 @@ namespace Microsoft.OpenApi.Readers.V2
                 };
             }
         }
-
-
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Globalization;
@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public static class SpecialCharacterStringExtensions
     {
-        // Plain style strings cannot start with indicators. 
+        // Plain style strings cannot start with indicators.
         // http://www.yaml.org/spec/1.2/spec.html#indicator//
         private static readonly char[] _yamlIndicators =
         {
@@ -170,9 +170,9 @@ namespace Microsoft.OpenApi.Writers
                 return $"\"{input}\"";
             }
 
-            // If string 
+            // If string
             // 1) includes a character forbidden in plain string,
-            // 2) starts with an indicator, OR 
+            // 2) starts with an indicator, OR
             // 3) has trailing/leading white spaces,
             // wrap the string in single quote.
             // http://www.yaml.org/spec/1.2/spec.html#style/flow/plain

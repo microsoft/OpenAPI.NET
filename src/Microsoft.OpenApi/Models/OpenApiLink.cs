@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
@@ -106,11 +106,10 @@ namespace Microsoft.OpenApi.Models
                 }
             }
             target.SerializeAsV3WithoutReference(writer);
-
         }
 
         /// <summary>
-        /// Returns an effective OpenApiLink object based on the presence of a $ref 
+        /// Returns an effective OpenApiLink object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiLink</returns>
@@ -125,7 +124,6 @@ namespace Microsoft.OpenApi.Models
                 return this;
             }
         }
-
 
         /// <summary>
         /// Serialize to OpenAPI V3 document without using reference.

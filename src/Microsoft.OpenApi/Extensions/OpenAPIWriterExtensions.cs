@@ -9,7 +9,7 @@ namespace Microsoft.OpenApi
         /// </summary>
         /// <param name="openApiWriter"></param>
         /// <returns></returns>
-        internal static OpenApiWriterSettings GetSettings(this IOpenApiWriter openApiWriter) 
+        internal static OpenApiWriterSettings GetSettings(this IOpenApiWriter openApiWriter)
         {
             if (openApiWriter is OpenApiWriterBase @base)
             {

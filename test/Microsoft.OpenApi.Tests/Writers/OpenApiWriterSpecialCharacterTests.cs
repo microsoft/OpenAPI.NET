@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -157,11 +157,11 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteStringAsYamlDoesNotDependOnSystemCulture(string input, string expected, string culture)
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
-            
+
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
-            
+
             // Act
             writer.WriteValue(input);
             var actual = outputStringWriter.GetStringBuilder().ToString();

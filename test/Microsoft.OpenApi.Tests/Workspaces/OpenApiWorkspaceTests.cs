@@ -10,7 +10,6 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests
 {
-
     public class OpenApiWorkspaceTests
     {
         [Fact]
@@ -77,7 +76,6 @@ namespace Microsoft.OpenApi.Tests
                     }
                 }
             });
-
             Assert.Equal(2, workspace.Documents.Count());
         }
 
@@ -86,12 +84,7 @@ namespace Microsoft.OpenApi.Tests
         {
             var workspace = new OpenApiWorkspace();
             workspace.AddDocument("common", CreateCommonDocument());
-            var schema = workspace.ResolveReference(new OpenApiReference
-            {
-                Id = "test",
-                Type = ReferenceType.Schema,
-                ExternalResource ="common"
-            }) as OpenApiSchema;
+            var schema = workspace.ResolveReference(new OpenApiReference {Id = "test", Type = ReferenceType.Schema, ExternalResource = "common"}) as OpenApiSchema;
 
             Assert.NotNull(schema);
             Assert.Equal("The referenced one", schema.Description);
@@ -107,22 +100,20 @@ namespace Microsoft.OpenApi.Tests
             {
                 p.Description = "Consumer";
                 p.CreateOperation(OperationType.Get, op =>
-                  op.CreateResponse("200", re =>
-                  {
-                      re.Description = "Success";
-                      re.CreateContent("application/json", co =>
-                          co.Schema = new OpenApiSchema
-                          {
-                              Reference = new OpenApiReference()  // Reference
-                              {
-                                  Id = "test",
-                                  Type = ReferenceType.Schema,
-                                  ExternalResource = "common"
-                              },
-                              UnresolvedReference = true
-                          }
-                      );
-                  })
+                    op.CreateResponse("200", re =>
+                    {
+                        re.Description = "Success";
+                        re.CreateContent("application/json", co =>
+                            co.Schema = new OpenApiSchema
+                            {
+                                Reference = new OpenApiReference() // Reference
+                                {
+                                    Id = "test", Type = ReferenceType.Schema, ExternalResource = "common"
+                                },
+                                UnresolvedReference = true
+                            }
+                        );
+                    })
                 );
             });
 
@@ -163,14 +154,11 @@ namespace Microsoft.OpenApi.Tests
         {
             // Arrange
             var workspace = new OpenApiWorkspace();
-            var schemaFragment = new OpenApiSchema { Type = "string", Description = "Schema from a fragment" };
+            var schemaFragment = new OpenApiSchema {Type = "string", Description = "Schema from a fragment"};
             workspace.AddFragment("fragment", schemaFragment);
 
             // Act
-            var schema = workspace.ResolveReference(new OpenApiReference
-            {
-                ExternalResource = "fragment"
-            }) as OpenApiSchema;
+            var schema = workspace.ResolveReference(new OpenApiReference {ExternalResource = "fragment"}) as OpenApiSchema;
 
             // Assert
             Assert.NotNull(schema);
@@ -202,9 +190,7 @@ namespace Microsoft.OpenApi.Tests
             Assert.Same(responseFragment.Headers["header1"], resolvedElement);
         }
 
-
         // Test artifacts
-
         private static OpenApiDocument CreateCommonDocument()
         {
             return new OpenApiDocument
@@ -223,40 +209,39 @@ namespace Microsoft.OpenApi.Tests
         }
     }
 
-    public static class OpenApiFactoryExtensions {
-
-    public static OpenApiDocument CreatePathItem(this OpenApiDocument document, string path, Action<OpenApiPathItem> config)
+    public static class OpenApiFactoryExtensions
     {
-        var pathItem = new OpenApiPathItem();
-        config(pathItem);
-        document.Paths = new OpenApiPaths();
-        document.Paths.Add(path, pathItem);
-        return document;
-    }
+        public static OpenApiDocument CreatePathItem(this OpenApiDocument document, string path, Action<OpenApiPathItem> config)
+        {
+            var pathItem = new OpenApiPathItem();
+            config(pathItem);
+            document.Paths = new OpenApiPaths();
+            document.Paths.Add(path, pathItem);
+            return document;
+        }
 
-    public static OpenApiPathItem CreateOperation(this OpenApiPathItem parent, OperationType opType, Action<OpenApiOperation> config)
-    {
-        var child = new OpenApiOperation();
-        config(child);
-        parent.Operations.Add(opType, child);
-        return parent;
-    }
+        public static OpenApiPathItem CreateOperation(this OpenApiPathItem parent, OperationType opType, Action<OpenApiOperation> config)
+        {
+            var child = new OpenApiOperation();
+            config(child);
+            parent.Operations.Add(opType, child);
+            return parent;
+        }
 
-    public static OpenApiOperation CreateResponse(this OpenApiOperation parent, string status, Action<OpenApiResponse> config)
-    {
-        var child = new OpenApiResponse();
-        config(child);
-        parent.Responses.Add(status, child);
-        return parent;
-    }
+        public static OpenApiOperation CreateResponse(this OpenApiOperation parent, string status, Action<OpenApiResponse> config)
+        {
+            var child = new OpenApiResponse();
+            config(child);
+            parent.Responses.Add(status, child);
+            return parent;
+        }
 
-    public static OpenApiResponse CreateContent(this OpenApiResponse parent, string mediaType, Action<OpenApiMediaType> config)
-    {
-        var child = new OpenApiMediaType();
-        config(child);
-        parent.Content.Add(mediaType, child);
-        return parent;
+        public static OpenApiResponse CreateContent(this OpenApiResponse parent, string mediaType, Action<OpenApiMediaType> config)
+        {
+            var child = new OpenApiMediaType();
+            config(child);
+            parent.Content.Add(mediaType, child);
+            return parent;
+        }
     }
-
-}
 }

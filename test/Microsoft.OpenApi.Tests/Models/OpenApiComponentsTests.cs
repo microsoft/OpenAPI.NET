@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -396,7 +396,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedComponentsAsYamlV3Works()
         {
             // Arrange
-            var expected = 
+            var expected =
                 """
                 schemas:
                   schema1:

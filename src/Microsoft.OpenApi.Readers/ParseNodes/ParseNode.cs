@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public static ParseNode Create(ParsingContext context, YamlNode node)
         {
-
             if (node is YamlSequenceNode listNode)
             {
                 return new ListNode(context, listNode);

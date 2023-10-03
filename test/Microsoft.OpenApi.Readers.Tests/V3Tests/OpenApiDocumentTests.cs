@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -61,7 +61,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             var result = streamReader.ReadToEnd();
             return new OpenApiStringReader().ReadFragment<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
         }
-
 
         public OpenApiDocumentTests(ITestOutputHelper output)
         {
@@ -845,7 +844,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Type = ReferenceType.Tag
                     }
                 };
-
 
                 var tag2 = new OpenApiTag
                 {

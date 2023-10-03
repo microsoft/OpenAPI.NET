@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -387,7 +387,6 @@ namespace Microsoft.OpenApi.Tests.Models
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
-
             // Act
             ReferencedSchema.SerializeAsV3WithoutReference(writer);
             writer.Flush();
@@ -439,7 +438,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 OneOf = new List<OpenApiSchema>
                 {
                     new OpenApiSchema
-                    { 
+                    {
                         Type = "number",
                         Format = "decimal"
                     },

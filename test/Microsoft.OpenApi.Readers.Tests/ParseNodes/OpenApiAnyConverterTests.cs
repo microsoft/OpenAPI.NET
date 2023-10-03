@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Globalization;
@@ -85,7 +85,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
                     ["aDate"] = new OpenApiDate(DateTimeOffset.Parse("2017-01-02", CultureInfo.InvariantCulture).Date),
                 });
         }
-
 
         [Fact]
         public void ParseNestedObjectAsAnyShouldSucceed()
@@ -266,7 +265,6 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
                     ["aDateTime"] = new OpenApiDateTime(DateTimeOffset.Parse("2017-01-01", CultureInfo.InvariantCulture))
                 });
         }
-
 
         [Fact]
         public void ParseNestedObjectAsAnyWithPartialSchemaShouldSucceed()

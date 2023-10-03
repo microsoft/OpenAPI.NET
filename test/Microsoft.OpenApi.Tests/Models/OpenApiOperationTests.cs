@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -503,7 +503,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeOperationWithFormDataAsV3JsonWorks()
         {
             // Arrange
-            var expected = 
+            var expected =
                 """
                 {
                   "summary": "Updates a pet in the store with form data",

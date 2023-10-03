@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -12,7 +12,6 @@ namespace Microsoft.OpenApi.Readers.Interface
     /// </summary>
     internal interface IOpenApiVersionService
     {
-
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>

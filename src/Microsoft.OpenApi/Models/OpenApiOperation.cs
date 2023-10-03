@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -314,7 +314,7 @@ namespace Microsoft.OpenApi.Models
 
             // schemes
             // All schemes in the Servers are extracted, regardless of whether the host matches
-            // the host defined in the outermost Swagger object. This is due to the 
+            // the host defined in the outermost Swagger object. This is due to the
             // inaccessibility of information for that host in the context of an inner object like this Operation.
             if (Servers != null)
             {

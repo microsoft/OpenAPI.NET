@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.IO;
@@ -600,7 +600,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     }
                 }, options => options.Excluding(m => m.Name == "HostDocument"));
         }
-
 
         [Fact]
         public void ParseSelfReferencingSchemaShouldNotStackOverflow()

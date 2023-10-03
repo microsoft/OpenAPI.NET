@@ -18,7 +18,6 @@ namespace Microsoft.OpenApi.Hidi
 
             if (int.TryParse(res, out int result))
             {
-
                 if (result >= 2 && result < 3)
                 {
                     return OpenApiSpecVersion.OpenApi2_0;
