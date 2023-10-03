@@ -1,40 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>Latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
-        <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Authors>Microsoft</Authors>
-        <Company>Microsoft</Company>
-        <Title>Microsoft.OpenApi</Title>
-        <PackageId>Microsoft.OpenApi</PackageId>
         <Version>1.6.9</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
-        <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-        <PackageTags>OpenAPI .NET</PackageTags>
-        <RepositoryUrl>https://github.com/Microsoft/OpenAPI.NET</RepositoryUrl>
-        <PackageReleaseNotes>https://github.com/microsoft/OpenAPI.NET/releases</PackageReleaseNotes>
-        <AssemblyName>Microsoft.OpenApi</AssemblyName>
-        <RootNamespace>Microsoft.OpenApi</RootNamespace>
         <SignAssembly>true</SignAssembly>
         <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <NoWarn>NU5048</NoWarn>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
         <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
-    </PropertyGroup>
-
-    <!-- https://github.com/clairernovotny/DeterministicBuilds#deterministic-builds -->
-    <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
     <ItemGroup>
