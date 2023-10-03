@@ -20,10 +20,7 @@ namespace Microsoft.OpenApi.Expressions
         public HeaderExpression(string token)
             : base(token)
         {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(token));
-            }
+            Utils.CheckArgumentNullOrEmpty(token);
         }
 
         /// <summary>

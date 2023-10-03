@@ -392,10 +392,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="name">property name</param>
         protected void VerifyCanWritePropertyName(string name)
         {
-            if (name == null)
-            {
-                throw Error.ArgumentNull(nameof(name));
-            }
+            Utils.CheckArgumentNull(name);
 
             if (Scopes.Count == 0)
             {

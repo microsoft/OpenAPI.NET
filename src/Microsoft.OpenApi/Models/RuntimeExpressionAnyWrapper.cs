@@ -67,10 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void WriteValue(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (_any != null)
             {

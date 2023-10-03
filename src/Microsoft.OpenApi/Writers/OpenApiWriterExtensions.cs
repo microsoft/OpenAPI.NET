@@ -404,33 +404,21 @@ namespace Microsoft.OpenApi.Writers
         {
             CheckArguments(writer, name);
 
-            if (action == null)
-            {
-                throw Error.ArgumentNull(nameof(action));
-            }
+            Utils.CheckArgumentNull(action);
         }
 
         private static void CheckArguments<T>(IOpenApiWriter writer, string name, Action<IOpenApiWriter, string, T> action)
         {
             CheckArguments(writer, name);
 
-            if (action == null)
-            {
-                throw Error.ArgumentNull(nameof(action));
-            }
+            Utils.CheckArgumentNull(action);
         }
 
         private static void CheckArguments(IOpenApiWriter writer, string name)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
+            Utils.CheckArgumentNullOrEmpty(name);
         }
     }
 }

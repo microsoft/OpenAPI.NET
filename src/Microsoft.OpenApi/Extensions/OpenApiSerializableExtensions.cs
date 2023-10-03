@@ -78,10 +78,7 @@ namespace Microsoft.OpenApi.Extensions
             OpenApiWriterSettings settings)
             where T : IOpenApiSerializable
         {
-            if (stream == null)
-            {
-                throw Error.ArgumentNull(nameof(stream));
-            }
+            Utils.CheckArgumentNull(stream);
 
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
 
@@ -105,15 +102,8 @@ namespace Microsoft.OpenApi.Extensions
         public static void Serialize<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion)
             where T : IOpenApiSerializable
         {
-            if (element == null)
-            {
-                throw Error.ArgumentNull(nameof(element));
-            }
-
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(element);
+            Utils.CheckArgumentNull(writer);
 
             switch (specVersion)
             {
@@ -174,10 +164,7 @@ namespace Microsoft.OpenApi.Extensions
             OpenApiFormat format)
             where T : IOpenApiSerializable
         {
-            if (element == null)
-            {
-                throw Error.ArgumentNull(nameof(element));
-            }
+            Utils.CheckArgumentNull(element);
 
             using (var stream = new MemoryStream())
             {

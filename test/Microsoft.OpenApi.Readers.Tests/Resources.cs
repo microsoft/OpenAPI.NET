@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
 
 namespace Microsoft.OpenApi.Readers.Tests
@@ -33,8 +34,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
             if (stream == null)
             {
-                string message = Error.Format("The embedded resource '{0}' was not found.", path);
-                throw new FileNotFoundException(message, path);
+                throw new FileNotFoundException($"The embedded resource '{path}' was not found.", path);
             }
 
             return stream;

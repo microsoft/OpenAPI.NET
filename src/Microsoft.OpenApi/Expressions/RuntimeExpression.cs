@@ -29,10 +29,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <returns>The built runtime expression object.</returns>
         public static RuntimeExpression Build(string expression)
         {
-            if (string.IsNullOrWhiteSpace(expression))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(expression));
-            }
+            Utils.CheckArgumentNullOrEmpty(expression);
 
             if (!expression.StartsWith(Prefix))
             {

@@ -20,10 +20,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="specVersion">Version of the OpenAPI specification that that will be output.</param>
         public static void WriteExtensions(this IOpenApiWriter writer, IDictionary<string, IOpenApiExtension> extensions, OpenApiSpecVersion specVersion)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (extensions != null)
             {
@@ -43,10 +40,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="any">The Any value</param>
         public static void WriteAny<T>(this IOpenApiWriter writer, T any) where T : IOpenApiAny
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (any == null)
             {
@@ -79,15 +73,8 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WriteArray(this IOpenApiWriter writer, OpenApiArray array)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (array == null)
-            {
-                throw Error.ArgumentNull(nameof(array));
-            }
+            Utils.CheckArgumentNull(writer);
+            Utils.CheckArgumentNull(array);
 
             writer.WriteStartArray();
 
@@ -101,15 +88,8 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WriteObject(this IOpenApiWriter writer, OpenApiObject entity)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (entity == null)
-            {
-                throw Error.ArgumentNull(nameof(entity));
-            }
+            Utils.CheckArgumentNull(writer);
+            Utils.CheckArgumentNull(entity);
 
             writer.WriteStartObject();
 
@@ -124,15 +104,8 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WritePrimitive(this IOpenApiWriter writer, IOpenApiPrimitive primitive)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
-            if (primitive == null)
-            {
-                throw Error.ArgumentNull(nameof(primitive));
-            }
+            Utils.CheckArgumentNull(writer);
+            Utils.CheckArgumentNull(primitive);
 
             // The Spec version is meaning for the Any type, so it's ok to use the latest one.
             primitive.Write(writer, OpenApiSpecVersion.OpenApi3_0);
