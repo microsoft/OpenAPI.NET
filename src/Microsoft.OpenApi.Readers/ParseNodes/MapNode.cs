@@ -66,8 +66,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             var nodes = yamlMap.Select(
-                n => {
-
+                n =>
+                {
                     var key = n.Key.GetScalarValue();
                     T value;
                     try

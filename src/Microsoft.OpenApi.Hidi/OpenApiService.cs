@@ -214,7 +214,6 @@ namespace Microsoft.OpenApi.Hidi
         // Get OpenAPI document either from OpenAPI or CSDL
         private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
         {
-
             OpenApiDocument document;
             Stream stream;
 

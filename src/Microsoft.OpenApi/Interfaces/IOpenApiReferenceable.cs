@@ -11,7 +11,6 @@ namespace Microsoft.OpenApi.Interfaces
     /// </summary>
     public interface IOpenApiReferenceable : IOpenApiSerializable
     {
-
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>

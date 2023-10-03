@@ -12,7 +12,6 @@ namespace Microsoft.OpenApi.Readers.Interface
     /// </summary>
     internal interface IOpenApiVersionService
     {
-
         /// <summary>
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>

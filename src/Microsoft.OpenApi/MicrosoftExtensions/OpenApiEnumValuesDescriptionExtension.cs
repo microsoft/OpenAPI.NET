@@ -86,8 +86,8 @@ public class EnumDescription : IOpenApiElement
     /// </summary>
     public EnumDescription()
     {
-
     }
+
     /// <summary>
     /// Constructor from a raw OpenApiObject
     /// </summary>

@@ -342,7 +342,6 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
-
             writer.WriteStartObject();
 
             // title

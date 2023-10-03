@@ -81,7 +81,6 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new OpenApiServer
                 {
-
                 },
             },
                 Paths = new OpenApiPaths()

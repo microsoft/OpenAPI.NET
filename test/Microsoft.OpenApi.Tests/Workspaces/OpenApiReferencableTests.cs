@@ -12,7 +12,6 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Workspaces
 {
-
     public class OpenApiReferencableTests
     {
         private static readonly OpenApiCallback _callbackFragment = new OpenApiCallback();

@@ -35,7 +35,6 @@ namespace Microsoft.OpenApi.Hidi.Options
 
         public HidiOptions()
         {
-
         }
 
         private void ParseHidiOptions(ParseResult parseResult, CommandOptions options)

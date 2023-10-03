@@ -129,11 +129,9 @@ namespace Microsoft.OpenApi.Hidi.Tests
             Assert.Contains("graph LR", output, StringComparison.Ordinal);
         }
 
-
         [Fact]
         public async Task ShowCommandGeneratesMermaidMarkdownFileWithMermaidDiagram()
         {
-
             // create a dummy ILogger instance for testing
             var options = new HidiOptions
             {

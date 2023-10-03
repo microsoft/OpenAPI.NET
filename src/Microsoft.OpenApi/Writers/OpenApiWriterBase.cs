@@ -14,7 +14,6 @@ namespace Microsoft.OpenApi.Writers
     /// </summary>
     public abstract class OpenApiWriterBase : IOpenApiWriter
     {
-
         /// <summary>
         /// Settings for controlling how the OpenAPI document will be written out.
         /// </summary>

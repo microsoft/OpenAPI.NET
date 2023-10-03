@@ -20,7 +20,6 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiInfo>(
                 (context, item) =>
                 {
-
                     // title
                     context.Enter("title");
                     if (item.Title == null)

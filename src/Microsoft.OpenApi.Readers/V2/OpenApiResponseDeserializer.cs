@@ -80,7 +80,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var produce in produces)
             {
-
                 if (response.Content.TryGetValue(produce, out var produceValue))
                 {
                     if (schema != null)

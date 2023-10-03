@@ -34,7 +34,6 @@ namespace Microsoft.OpenApi.Readers.V3
 
     private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
             new PatternFieldMap<OpenApiExternalDocs> {
-
                     {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
                 };
 

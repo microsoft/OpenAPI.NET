@@ -15,7 +15,6 @@ namespace Microsoft.OpenApi.Readers.V3
     {
         private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new FixedFieldMap<OpenApiPathItem>
         {
-
             {
                 "$ref", (o,n) => {
                     o.Reference = new OpenApiReference { ExternalResource = n.GetScalarValue() };

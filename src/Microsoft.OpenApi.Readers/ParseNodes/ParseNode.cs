@@ -32,7 +32,6 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public static ParseNode Create(ParsingContext context, YamlNode node)
         {
-
             if (node is YamlSequenceNode listNode)
             {
                 return new ListNode(context, listNode);

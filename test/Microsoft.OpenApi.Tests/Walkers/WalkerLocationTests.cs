@@ -13,7 +13,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
 {
     public class WalkerLocationTests
     {
-
         [Fact]
         public void LocateTopLevelObjects()
         {
@@ -161,7 +160,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateReferences()
         {
-
             var baseSchema = new OpenApiSchema
             {
                 Reference = new OpenApiReference
