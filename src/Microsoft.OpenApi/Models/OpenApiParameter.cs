@@ -61,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
         /// </summary>
-        public bool Deprecated { get; set; } = false;
+        public bool Deprecated { get; set; }
 
         /// <summary>
         /// Sets the ability to pass empty-valued parameters.
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Models
         /// If style is used, and if behavior is n/a (cannot be serialized),
         /// the value of allowEmptyValue SHALL be ignored.
         /// </summary>
-        public bool AllowEmptyValue { get; set; } = false;
+        public bool AllowEmptyValue { get; set; }
 
         /// <summary>
         /// Describes how the parameter value will be serialized depending on the type of the parameter value.
