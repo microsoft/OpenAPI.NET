@@ -115,9 +115,11 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void WalkDOMWithCycles()
         {
-            var loopySchema = new JsonSchemaBuilder().Type(SchemaValueType.Object).Properties(("name", new JsonSchemaBuilder().Type(SchemaValueType.String)));
+            var loopySchema = new JsonSchemaBuilder()
+                                .Type(SchemaValueType.Object)
+                                .Properties(("name", new JsonSchemaBuilder().Type(SchemaValueType.String)));
 
-            loopySchema.Properties(("parent", loopySchema.Build()));
+            loopySchema.Properties(("parent", loopySchema));
 
             var doc = new OpenApiDocument()
             {
@@ -140,7 +142,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 "#/paths",
                 "#/components",
                 "#/components/schemas/loopy",
-                "#/components/schemas/loopy/properties/name",
+                "#/components/schemas/loopy/properties/parent",
+                "#/components/schemas/loopy/properties/parent/properties/name",
                 "#/tags"
             });
         }
