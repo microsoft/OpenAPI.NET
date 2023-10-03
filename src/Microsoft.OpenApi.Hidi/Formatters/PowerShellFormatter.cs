@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
 
                 singularizedSegments.Add(segment);
             }
-            return string.Join(".", singularizedSegments);
+            return string.Join('.', singularizedSegments);
         }
 
         private static string RemoveHashSuffix(string operationId)
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
                     segments.Remove(keyTypeExtension);
                 }
             }
-            return string.Join(".", segments);
+            return string.Join('.', segments);
         }
 
         private static IList<OpenApiParameter> ResolveFunctionParameters(IList<OpenApiParameter> parameters)

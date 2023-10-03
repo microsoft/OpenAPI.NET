@@ -213,7 +213,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             int? port = null;
 
-            if (!String.IsNullOrEmpty(host) && host.Contains(":"))
+            if (!String.IsNullOrEmpty(host) && host.Contains(':'))
             {
                 var pieces = host.Split(':');
                 host = pieces.First();

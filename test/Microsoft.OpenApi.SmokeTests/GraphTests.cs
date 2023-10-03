@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.SmokeTests
             if (diagnostic.Errors.Count > 0)
             {
                 _output.WriteLine($"Errors parsing");
-                _output.WriteLine(String.Join("\n", diagnostic.Errors));
+                _output.WriteLine(String.Join('\n', diagnostic.Errors));
                 //               Assert.True(false);  // Uncomment to identify descriptions with errors.
             }
 
