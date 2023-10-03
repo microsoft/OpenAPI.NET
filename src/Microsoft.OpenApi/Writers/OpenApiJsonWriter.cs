@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Indicates whether or not the produced document will be written in a compact or pretty fashion.
         /// </summary>
-        private bool _produceTerseOutput;
+        private readonly bool _produceTerseOutput;
 
         /// <summary>
         /// Base Indentation Level.
