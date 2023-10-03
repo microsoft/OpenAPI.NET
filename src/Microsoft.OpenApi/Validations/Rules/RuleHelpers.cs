@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Any;
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "integer" && format == "int32")
             {
-                if (!(value is OpenApiInteger))
+                if (value is not OpenApiInteger)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "integer" && format == "int64")
             {
-                if (!(value is OpenApiLong))
+                if (value is not OpenApiLong)
                 {
                     context.CreateWarning(
                        ruleName,
@@ -157,9 +157,9 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && !(value is OpenApiInteger))
+            if (type == "integer" && value is not OpenApiInteger)
             {
-                if (!(value is OpenApiInteger))
+                if (value is not OpenApiInteger)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number" && format == "float")
             {
-                if (!(value is OpenApiFloat))
+                if (value is not OpenApiFloat)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -183,7 +183,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number" && format == "double")
             {
-                if (!(value is OpenApiDouble))
+                if (value is not OpenApiDouble)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number")
             {
-                if (!(value is OpenApiDouble))
+                if (value is not OpenApiDouble)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "byte")
             {
-                if (!(value is OpenApiByte))
+                if (value is not OpenApiByte)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "date")
             {
-                if (!(value is OpenApiDate))
+                if (value is not OpenApiDate)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -231,7 +231,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "date-time")
             {
-                if (!(value is OpenApiDateTime))
+                if (value is not OpenApiDateTime)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -243,7 +243,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "password")
             {
-                if (!(value is OpenApiPassword))
+                if (value is not OpenApiPassword)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -255,7 +255,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string")
             {
-                if (!(value is OpenApiString))
+                if (value is not OpenApiString)
                 {
                     context.CreateWarning(
                         ruleName,
@@ -267,7 +267,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "boolean")
             {
-                if (!(value is OpenApiBoolean))
+                if (value is not OpenApiBoolean)
                 {
                     context.CreateWarning(
                         ruleName,

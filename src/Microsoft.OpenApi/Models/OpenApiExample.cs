@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiExample>
+    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiExample>
     {
         /// <summary>
         /// Short description for the example.
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
         /// </summary>
-        public bool UnresolvedReference { get; set; } = false;
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Parameter-less constructor
@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiExample object based on the presence of a $ref 
+        /// Returns an effective OpenApiExample object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiExample</returns>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations
-{    
+{
     /// <summary>
      /// Warnings detected when validating an OpenAPI Element
      /// </summary>

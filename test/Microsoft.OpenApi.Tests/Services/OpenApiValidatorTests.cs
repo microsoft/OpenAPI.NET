@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,20 +12,12 @@ using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
     [Collection("DefaultSettings")]
     public class OpenApiValidatorTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiValidatorTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void ResponseMustHaveADescription()
         {
@@ -81,7 +73,6 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new OpenApiServer
                 {
-
                 },
             },
                 Paths = new OpenApiPaths()
@@ -98,7 +89,6 @@ namespace Microsoft.OpenApi.Tests.Services
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
         });
         }
-
 
         [Fact]
         public void ValidateCustomExtension()
@@ -143,7 +133,6 @@ namespace Microsoft.OpenApi.Tests.Services
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
                    });
         }
-
     }
 
     internal class FooExtension : IOpenApiExtension, IOpenApiElement

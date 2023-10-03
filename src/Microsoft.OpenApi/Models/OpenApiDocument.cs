@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -187,7 +187,7 @@ namespace Microsoft.OpenApi.Models
             }
             else
             {
-                // Serialize each referenceable object as full object without reference if the reference in the object points to itself. 
+                // Serialize each referenceable object as full object without reference if the reference in the object points to itself.
                 // If the reference exists but points to other objects, the object is serialized to just that reference.
                 // definitions
                 writer.WriteOptionalMap(
@@ -208,8 +208,8 @@ namespace Microsoft.OpenApi.Models
                     });
             }
             // parameters
-            var parameters = Components?.Parameters != null 
-                ? new Dictionary<string, OpenApiParameter>(Components.Parameters) 
+            var parameters = Components?.Parameters != null
+                ? new Dictionary<string, OpenApiParameter>(Components.Parameters)
                 : new Dictionary<string, OpenApiParameter>();
 
             if (Components?.RequestBodies != null)
@@ -309,7 +309,7 @@ namespace Microsoft.OpenApi.Models
                 return;
             }
 
-            // Arbitrarily choose the first server given that V2 only allows 
+            // Arbitrarily choose the first server given that V2 only allows
             // one host, port, and base path.
             var serverUrl = ParseServerUrl(servers.First());
 
@@ -323,7 +323,7 @@ namespace Microsoft.OpenApi.Models
                 writer.WriteProperty(
                     OpenApiConstants.Host,
                     firstServerUrl.GetComponents(UriComponents.Host | UriComponents.Port, UriFormat.SafeUnescaped));
-                
+
                 // basePath
                 if (firstServerUrl.AbsolutePath != "/")
                 {
@@ -407,7 +407,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Takes in an OpenApi document instance and generates its hash value 
+        /// Takes in an OpenApi document instance and generates its hash value
         /// </summary>
         /// <param name="doc">The OpenAPI description to hash.</param>
         /// <returns>The hash value.</returns>

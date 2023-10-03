@@ -1,5 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Globalization;
@@ -140,10 +140,10 @@ namespace Microsoft.OpenApi.Readers.V2
                     OpenApiConstants.Default,
                     new AnyFieldMapParameter<OpenApiHeader>(
                         p => p.Schema?.Default,
-                        (p, v) => 
+                        (p, v) =>
                         {
                             if(p.Schema == null) return;
-                            p.Schema.Default = v; 
+                            p.Schema.Default = v;
                         },
                         p => p.Schema)
                 }
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         (p, v) =>
                         {
                             if(p.Schema == null) return;
-                            p.Schema.Enum = v; 
+                            p.Schema.Enum = v;
                         },
                         p => p.Schema)
                 },

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -139,7 +139,7 @@ namespace Microsoft.OpenApi.Readers
             };
         }
 
-        private async Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken = default)
+        private Task<OpenApiDiagnostic> LoadExternalRefs(OpenApiDocument document, CancellationToken cancellationToken = default)
         {
             // Create workspace for all documents to live in.
             var openApiWorkSpace = new OpenApiWorkspace();
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Readers
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
-            return await workspaceLoader.LoadAsync(new OpenApiReference { ExternalResource = "/" }, document, null, cancellationToken);
+            return workspaceLoader.LoadAsync(new OpenApiReference { ExternalResource = "/" }, document, null, cancellationToken);
         }
 
         private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)

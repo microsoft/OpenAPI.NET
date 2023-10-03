@@ -42,9 +42,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             var result = await reader.ReadAsync(stream);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
-
         }
-
 
         [Fact]
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
@@ -81,11 +79,9 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
                                             .Operations[OperationType.Get]
                                             .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
                                             .Where(p => p.Name == "filter").FirstOrDefault();
-          
+
             Assert.Equal("string", referencedParameter.Schema.Type);
-
         }
-
 
     }
 
@@ -101,7 +97,6 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             return null;
         }
     }
-    
 
     public class ResourceLoader : IStreamLoader
     {

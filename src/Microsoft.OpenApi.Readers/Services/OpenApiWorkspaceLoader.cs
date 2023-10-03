@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers.Services
 {
-    internal class OpenApiWorkspaceLoader 
+    internal class OpenApiWorkspaceLoader
     {
         private OpenApiWorkspace _workspace;
         private IStreamLoader _loader;
@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Services
             document.Workspace = _workspace;
 
             // Collect remote references by walking document
-            var referenceCollector = new OpenApiRemoteReferenceCollector(document);
+            var referenceCollector = new OpenApiRemoteReferenceCollector();
             var collectorWalker = new OpenApiWalker(referenceCollector);
             collectorWalker.Walk(document);
 

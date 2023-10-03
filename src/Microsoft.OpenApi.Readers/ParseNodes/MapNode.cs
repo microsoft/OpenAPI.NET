@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public MapNode(ParsingContext context, YamlNode node) : base(
             context)
         {
-            if (!(node is YamlMappingNode mapNode))
+            if (node is not YamlMappingNode mapNode)
             {
                 throw new OpenApiReaderException("Expected map.", Context);
             }
@@ -65,8 +65,8 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             var nodes = yamlMap.Select(
-                n => {
-                    
+                n =>
+                {
                     var key = n.Key.GetScalarValue();
                     T value;
                     try
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         value = n.Value as YamlMappingNode == null
                           ? default
                           : map(new MapNode(Context, n.Value as YamlMappingNode));
-                    } 
+                    }
                     finally
                     {
                         Context.EndObject();
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override Dictionary<string, T> CreateMapWithReference<T>(
             ReferenceType referenceType,
-            Func<MapNode, T> map) 
+            Func<MapNode, T> map)
         {
             var yamlMap = _node;
             if (yamlMap == null)
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             var yamlMap = _node;
             if (yamlMap == null)
-            { 
+            {
                 throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             }
 

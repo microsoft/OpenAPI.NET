@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.CommandLine.Parsing;
 using System.IO;
@@ -35,7 +35,6 @@ namespace Microsoft.OpenApi.Hidi.Options
 
         public HidiOptions()
         {
-
         }
 
         private void ParseHidiOptions(ParseResult parseResult, CommandOptions options)

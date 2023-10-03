@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Globalization;
 using System.IO;
@@ -8,7 +8,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -52,13 +51,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiRequestBodyTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(true)]

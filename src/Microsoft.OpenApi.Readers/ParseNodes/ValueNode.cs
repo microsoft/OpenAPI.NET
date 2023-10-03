@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Readers.Exceptions;
@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public ValueNode(ParsingContext context, YamlNode node) : base(
             context)
         {
-            if (!(node is YamlScalarNode scalarNode))
+            if (node is not YamlScalarNode scalarNode)
             {
                 throw new OpenApiReaderException("Expected a value.", node);
             }

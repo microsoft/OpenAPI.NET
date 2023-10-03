@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.IO;
@@ -16,7 +16,6 @@ namespace Microsoft.OpenApi.Readers.Services
     {
         private readonly Uri baseUrl;
         private HttpClient _httpClient = new HttpClient();
-
 
         public DefaultStreamLoader(Uri baseUrl)
         {

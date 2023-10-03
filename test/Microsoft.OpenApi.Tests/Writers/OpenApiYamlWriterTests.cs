@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
@@ -10,20 +10,12 @@ using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
     public class OpenApiYamlWriterTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiYamlWriterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         public static IEnumerable<object[]> WriteStringListAsYamlShouldMatchExpectedTestCases()
         {
             yield return new object[]
@@ -405,8 +397,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Equal(expected, actual);
         }
 
-
-
         [Fact]
         public void WriteInlineSchemaV2()
         {
@@ -670,6 +660,5 @@ namespace Microsoft.OpenApi.Tests.Writers
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             Assert.Equal(expected, actual);
         }
-
     }
 }

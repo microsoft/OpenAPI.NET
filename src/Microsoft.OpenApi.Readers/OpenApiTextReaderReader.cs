@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 using System.Linq;
@@ -82,7 +82,6 @@ namespace Microsoft.OpenApi.Readers
 
             return await new OpenApiYamlDocumentReader(this._settings).ReadAsync(yamlDocument, cancellationToken);
         }
-
 
         /// <summary>
         /// Reads the stream input and parses the fragment of an OpenAPI description into an Open API Element.

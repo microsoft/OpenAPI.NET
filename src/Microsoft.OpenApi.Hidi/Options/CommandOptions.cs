@@ -104,6 +104,6 @@ namespace Microsoft.OpenApi.Hidi.Options
                 LogLevelOption
             };
         }
-
     }
+
 }

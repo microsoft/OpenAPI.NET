@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Extensions;
@@ -33,7 +33,6 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
                 new PatternFieldMap<OpenApiExternalDocs> {
-
                     {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
                     };
 

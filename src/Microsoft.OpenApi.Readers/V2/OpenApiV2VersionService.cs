@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,6 @@ using Microsoft.OpenApi.Readers.Exceptions;
 using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
-
 
 namespace Microsoft.OpenApi.Readers.V2
 {
@@ -197,7 +196,6 @@ namespace Microsoft.OpenApi.Readers.V2
                         }
                         id = localSegments[2];
                     }
-
 
                     // $ref: externalSource.yaml#/Pet
                     return new OpenApiReference

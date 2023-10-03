@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Globalization;
 using System.IO;
@@ -40,13 +40,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 Format = "int32"
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiHeaderTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(true)]

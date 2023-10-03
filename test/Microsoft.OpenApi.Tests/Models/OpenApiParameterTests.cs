@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -54,7 +53,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 OneOf = new List<OpenApiSchema>
                 {
                     new OpenApiSchema { Type = "number", Format = "double" },
-                    new OpenApiSchema { Type = "string" }                        
+                    new OpenApiSchema { Type = "string" }
                 }
             },
             Examples = new Dictionary<string, OpenApiExample>
@@ -86,7 +85,6 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             }
-
         };
 
         public static OpenApiParameter ParameterWithFormStyleAndExplodeTrue = new OpenApiParameter
@@ -108,7 +106,6 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             }
-
         };
 
         public static OpenApiParameter AdvancedHeaderParameterWithSchemaReference = new OpenApiParameter
@@ -163,13 +160,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiParameterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(ParameterStyle.Form, true)]

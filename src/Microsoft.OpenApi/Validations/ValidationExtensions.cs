@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Validations
 {
@@ -25,6 +25,5 @@ namespace Microsoft.OpenApi.Validations
             OpenApiValidatorWarning warning = new OpenApiValidatorWarning(ruleName, context.PathString, message);
             context.AddWarning(warning);
         }
-
     }
 }

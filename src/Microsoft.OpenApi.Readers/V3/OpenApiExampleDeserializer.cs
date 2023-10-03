@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -39,7 +39,6 @@ namespace Microsoft.OpenApi.Readers.V3
                     o.ExternalValue = n.GetScalarValue();
                 }
             },
-
         };
 
         private static readonly PatternFieldMap<OpenApiExample> _examplePatternFields =

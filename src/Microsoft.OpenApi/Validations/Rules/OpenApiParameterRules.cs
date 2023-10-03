@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Models;
@@ -97,13 +97,13 @@ namespace Microsoft.OpenApi.Validations.Rules
                 });
 
         /// <summary>
-        /// Validate that a path parameter should always appear in the path 
+        /// Validate that a path parameter should always appear in the path
         /// </summary>
         public static ValidationRule<OpenApiParameter> PathParameterShouldBeInThePath =>
             new ValidationRule<OpenApiParameter>(
                 (context, parameter) =>
                 {
-                    if (parameter.In == ParameterLocation.Path && 
+                    if (parameter.In == ParameterLocation.Path &&
                            !(context.PathString.Contains("{" + parameter.Name + "}") || context.PathString.Contains("#/components")))
                     {
                         context.Enter("in");
