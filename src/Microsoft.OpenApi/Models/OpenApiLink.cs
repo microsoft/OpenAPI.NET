@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiLink>
+    public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiLink>
     {
         /// <summary>
         /// A relative or absolute reference to an OAS operation.

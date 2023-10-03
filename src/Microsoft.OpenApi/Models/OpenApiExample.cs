@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Example Object.
     /// </summary>
-    public class OpenApiExample : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiExample>
+    public class OpenApiExample : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiExample>
     {
         /// <summary>
         /// Short description for the example.

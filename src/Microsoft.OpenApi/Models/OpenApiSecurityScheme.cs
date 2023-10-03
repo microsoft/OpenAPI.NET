@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
-    public class OpenApiSecurityScheme : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiSecurityScheme : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The type of the security scheme. Valid values are "apiKey", "http", "oauth2", "openIdConnect".

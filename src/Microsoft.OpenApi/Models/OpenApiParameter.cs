@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
+    public class OpenApiParameter : IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
     {
         private bool? _explode;
         /// <summary>
