@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Schema Object.
     /// </summary>
-    public class OpenApiSchema : IOpenApiSerializable, IOpenApiReferenceable, IEffective<OpenApiSchema>, IOpenApiExtensible
+    public class OpenApiSchema : IOpenApiReferenceable, IEffective<OpenApiSchema>, IOpenApiExtensible
     {
         /// <summary>
         /// Follow JSON Schema definition. Short text providing information about the data.

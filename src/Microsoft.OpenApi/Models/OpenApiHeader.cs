@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiHeader>
+    public class OpenApiHeader : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiHeader>
     {
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data

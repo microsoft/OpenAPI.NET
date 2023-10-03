@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiSerializable, IOpenApiExtensible, IOpenApiReferenceable, IEffective<OpenApiPathItem>
+    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable, IEffective<OpenApiPathItem>
     {
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
