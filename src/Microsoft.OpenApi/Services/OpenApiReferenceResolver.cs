@@ -234,6 +234,13 @@ namespace Microsoft.OpenApi.Services
             return resolvedSchemas;
         }
 
+        /// <summary>
+        /// Resolves the target to a JSON schema reference by retrieval from Schema registry
+        /// </summary>
+        /// <param name="reference">The JSON schema reference.</param>
+        /// <param name="description">The schema's description.</param>
+        /// <param name="summary">The schema's summary.</param>
+        /// <returns></returns>
         public JsonSchema ResolveJsonSchemaReference(Uri reference, string description = null, string summary = null)
         {
             var refUri = $"http://everything.json{reference.OriginalString.Split('#').LastOrDefault()}";
@@ -306,10 +313,12 @@ namespace Microsoft.OpenApi.Services
         {
             if (schema == null) return;
             var reference = schema.GetRef();
+            var description = schema.GetDescription();
+            var summary = schema.GetSummary();
 
             if (reference != null)
             {
-                assign(ResolveJsonSchemaReference(reference));
+                assign(ResolveJsonSchemaReference(reference, description, summary));
             }
         }
 
@@ -366,7 +375,6 @@ namespace Microsoft.OpenApi.Services
             {
                 var entity = map[key];
                 var reference = entity.GetRef();
-
                 if (reference != null)
                 {
                     map[key] = ResolveJsonSchemaReference(reference);

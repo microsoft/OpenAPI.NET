@@ -1,10 +1,11 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Json.More;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -19,6 +20,7 @@ namespace Microsoft.OpenApi.Services
     {
         private Dictionary<Uri, OpenApiDocument> _documents = new Dictionary<Uri, OpenApiDocument>();
         private Dictionary<Uri, IOpenApiReferenceable> _fragments = new Dictionary<Uri, IOpenApiReferenceable>();
+        private Dictionary<Uri, JsonSchema> _schemaFragments = new Dictionary<Uri, JsonSchema>();
         private Dictionary<Uri, Stream> _artifacts = new Dictionary<Uri, Stream>();
 
         /// <summary>
@@ -104,6 +106,11 @@ namespace Microsoft.OpenApi.Services
             _fragments.Add(ToLocationUrl(location), fragment);
         }
 
+        public void AddSchemaFragment(string location, JsonSchema fragment)
+        {
+            _schemaFragments.Add(ToLocationUrl(location), fragment);
+        }
+
         /// <summary>
         /// Add a stream based artificat to the workspace.  Useful for images, examples, alternative schemas.
         /// </summary>
@@ -134,25 +141,38 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Returns the target of a JSON schema reference from within the workspace
+        /// Resolve the target of a JSON schema reference from within the workspace
         /// </summary>
-        /// <param name="reference"></param>
+        /// <param name="reference">An instance of a JSON schema reference.</param>
         /// <returns></returns>
         public JsonSchema ResolveJsonSchemaReference(Uri reference)
         {
-            var doc = _documents.Values.First();
-            if (doc != null)
+            var docs = _documents.Values;
+            if (docs.Any())
             {
-                foreach (var jsonSchema in doc.Components.Schemas)
+                var doc = docs.FirstOrDefault();
+                if (doc != null)
                 {
-                    var refUri = new Uri($"http://everything.json/components/schemas/{jsonSchema.Key}");
-                    SchemaRegistry.Global.Register(refUri, jsonSchema.Value);
+                    foreach (var jsonSchema in doc.Components.Schemas)
+                    {
+                        var refUri = new Uri($"http://everything.json/components/schemas/{jsonSchema.Key}");
+                        SchemaRegistry.Global.Register(refUri, jsonSchema.Value);
+                    }
+
+                    var resolver = new OpenApiReferenceResolver(doc);
+                    return resolver.ResolveJsonSchemaReference(reference);
+                }
+                return null;
+            }
+            else
+            {
+                foreach (var jsonSchema in _schemaFragments)
+                {
+                    SchemaRegistry.Global.Register(reference, jsonSchema.Value);
                 }
 
-                var resolver = new OpenApiReferenceResolver(doc);
-                return resolver.ResolveJsonSchemaReference(reference);
+                return FetchSchemaFromRegistry(reference);                
             }
-            return null;
         }
 
         /// <summary>
@@ -168,6 +188,12 @@ namespace Microsoft.OpenApi.Services
         private Uri ToLocationUrl(string location)
         {
             return new Uri(BaseUrl, location);
+        }
+
+        private static JsonSchema FetchSchemaFromRegistry(Uri reference)
+        {
+            var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(reference);
+            return resolvedSchema;
         }
     }
 }
