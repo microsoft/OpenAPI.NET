@@ -47,8 +47,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             get
             {
-                YamlNode node;
-                if (this._node.Children.TryGetValue(new YamlScalarNode(key), out node))
+                if (this._node.Children.TryGetValue(new YamlScalarNode(key), out var node))
                 {
                     return new PropertyNode(Context, key, node);
                 }
@@ -192,9 +191,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public string GetReferencePointer()
         {
-            YamlNode refNode;
-
-            if (!_node.Children.TryGetValue(new YamlScalarNode("$ref"), out refNode))
+            if (!_node.Children.TryGetValue(new YamlScalarNode("$ref"), out var refNode))
             {
                 return null;
             }

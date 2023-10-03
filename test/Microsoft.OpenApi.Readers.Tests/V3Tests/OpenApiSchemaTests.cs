@@ -51,10 +51,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "primitiveSchema.yaml"));
             var reader = new OpenApiStreamReader();
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var schema = reader.ReadFragment<OpenApiSchema>(stream, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var schema = reader.ReadFragment<OpenApiSchema>(stream, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -79,10 +78,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 }
                 """;
             var reader = new OpenApiStringReader();
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var schema = reader.ReadFragment<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var schema = reader.ReadFragment<OpenApiSchema>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -107,10 +105,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 }
                 """;
             var reader = new OpenApiStringReader();
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -138,10 +135,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 ]
                 """;
             var reader = new OpenApiStringReader();
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = reader.ReadFragment<IOpenApiAny>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
@@ -214,10 +210,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                       description: Ok
                 """;
             var reader = new OpenApiStringReader();
-            var diagnostic = new OpenApiDiagnostic();
 
             // Act
-            var openApiAny = reader.ReadFragment<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
+            var openApiAny = reader.ReadFragment<OpenApiPathItem>(input, OpenApiSpecVersion.OpenApi3_0, out var diagnostic);
 
             // Assert
             diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
