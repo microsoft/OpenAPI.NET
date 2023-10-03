@@ -179,16 +179,12 @@ namespace Microsoft.OpenApi.Extensions
                 throw Error.ArgumentNull(nameof(element));
             }
 
-            using (var stream = new MemoryStream())
-            {
-                element.Serialize(stream, specVersion, format);
-                stream.Position = 0;
+            using var stream = new MemoryStream();
+            element.Serialize(stream, specVersion, format);
+            stream.Position = 0;
 
-                using (var streamReader = new StreamReader(stream))
-                {
-                    return streamReader.ReadToEnd();
-                }
-            }
+            using var streamReader = new StreamReader(stream);
+            return streamReader.ReadToEnd();
         }
     }
 }
