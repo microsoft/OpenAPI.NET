@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Indicates object is a placeholder reference to an actual object and does not contain valid data.
         /// </summary>
-        public bool UnresolvedReference { get; set; } = false;
+        public bool UnresolvedReference { get; set; }
 
         /// <summary>
         /// Parameter-less constructor

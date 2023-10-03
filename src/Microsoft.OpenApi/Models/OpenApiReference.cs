@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
-        public OpenApiDocument HostDocument { get; set; } = null;
+        public OpenApiDocument HostDocument { get; set; }
 
         /// <summary>
         /// Gets the full reference string for v3.0.

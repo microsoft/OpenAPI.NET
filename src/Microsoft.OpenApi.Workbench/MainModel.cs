@@ -24,10 +24,10 @@ namespace Microsoft.OpenApi.Workbench
     {
         private string _input;
 
-        private bool _inlineLocal = false;
-        private bool _inlineExternal = false;
+        private bool _inlineLocal;
+        private bool _inlineExternal;
 
-        private bool _resolveExternal = false;
+        private bool _resolveExternal;
 
         private string _inputFile;
 

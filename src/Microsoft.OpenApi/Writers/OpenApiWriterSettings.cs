@@ -63,12 +63,12 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Indicates if local references should be rendered as an inline object
         /// </summary>
-        public bool InlineLocalReferences { get; set; } = false;
+        public bool InlineLocalReferences { get; set; }
 
         /// <summary>
         /// Indicates if external references should be rendered as an inline object
         /// </summary>
-        public bool InlineExternalReferences { get; set; } = false;
+        public bool InlineExternalReferences { get; set; }
 
         internal bool ShouldInlineReference(OpenApiReference reference)
         {
