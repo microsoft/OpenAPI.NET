@@ -2,12 +2,8 @@
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -24,7 +20,7 @@ namespace Microsoft.OpenApi.SmokeTests
         {
             _output = output;
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            _httpClient = new HttpClient(new HttpClientHandler()
+            _httpClient = new HttpClient(new HttpClientHandler
             {                AutomaticDecompression = DecompressionMethods.GZip
             });
             _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));

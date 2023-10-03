@@ -179,7 +179,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
         {
             if (schema != null && !_schemaLoop.Contains(schema) && "object".Equals(schema.Type, StringComparison.OrdinalIgnoreCase))
             {
-                schema.AdditionalProperties = new OpenApiSchema() { Type = "object" };
+                schema.AdditionalProperties = new OpenApiSchema { Type = "object" };
 
                 /* Because 'additionalProperties' are now being walked,
                  * we need a way to keep track of visited schemas to avoid

@@ -11,14 +11,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [Fact]
         public void NoServer()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
             });
 
@@ -30,16 +31,17 @@ paths: {}
         [Fact]
         public void JustSchemeNoDefault()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-schemes:
-  - http
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                schemes:
+                  - http
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
             });
 
@@ -51,15 +53,16 @@ paths: {}
         [Fact]
         public void JustHostNoDefault()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-host: www.foo.com
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: www.foo.com
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
             });
 
@@ -73,17 +76,18 @@ paths: {}
         [Fact]
         public void NoBasePath()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-host: www.foo.com
-schemes:
-  - http
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: www.foo.com
+                schemes:
+                  - http
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://www.foo.com/spec.yaml")
             });
@@ -98,15 +102,16 @@ paths: {}
         [Fact]
         public void JustBasePathNoDefault()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-basePath: /baz
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                basePath: /baz
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
             });
 
@@ -120,16 +125,17 @@ paths: {}
         [Fact]
         public void JustSchemeWithCustomHost()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-schemes:
-  - http
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                schemes:
+                  - http
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com/foo")
             });
@@ -144,16 +150,17 @@ paths: {}
         [Fact]
         public void JustSchemeWithCustomHostWithEmptyPath()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-schemes:
-  - http
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                schemes:
+                  - http
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });
@@ -168,15 +175,16 @@ paths: {}
         [Fact]
         public void JustBasePathWithCustomHost()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-basePath: /api
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                basePath: /api
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });
@@ -191,15 +199,16 @@ paths: {}
         [Fact]
         public void JustHostWithCustomHost()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-host: www.example.com
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: www.example.com
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });
@@ -214,15 +223,16 @@ paths: {}
         [Fact]
         public void JustHostWithCustomHostWithApi()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-host: prod.bing.com
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: prod.bing.com
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://dev.bing.com/api/description.yaml")
             });
@@ -237,17 +247,18 @@ paths: {}
         [Fact]
         public void MultipleServers()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-schemes:
-  - http
-  - https
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                schemes:
+                  - http
+                  - https
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://dev.bing.com/api")
             });
@@ -263,15 +274,16 @@ paths: {}
         [Fact]
         public void LocalHostWithCustomHost()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-host: localhost:23232
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: localhost:23232
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });
@@ -286,15 +298,16 @@ paths: {}
         [Fact]
         public void InvalidHostShouldYieldError()
         {
-            var input = @"
-swagger: 2.0
-info: 
-  title: test
-  version: 1.0.0
-host: http://test.microsoft.com
-paths: {}
-";
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings()
+            var input =
+                """
+                swagger: 2.0
+                info:
+                  title: test
+                  version: 1.0.0
+                host: http://test.microsoft.com
+                paths: {}
+                """;
+            var reader = new OpenApiStringReader(new OpenApiReaderSettings
             {
                 BaseUrl = new Uri("https://bing.com")
             });

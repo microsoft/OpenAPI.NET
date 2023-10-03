@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.SmokeTests
         static ApisGuruTests()
         {
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            _httpClient = new HttpClient(new HttpClientHandler()
+            _httpClient = new HttpClient(new HttpClientHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip
             });
@@ -45,8 +45,7 @@ namespace Microsoft.OpenApi.SmokeTests
             var json = JObject.Parse(listJsonStr);
             foreach (var item in json.Properties())
             {
-                var versions = GetProp(item.Value, "versions") as JObject;
-                if (versions == null)
+                if (GetProp(item.Value, "versions") is not JObject versions)
                     continue;
                 foreach (var prop in versions.Properties())
                 {
