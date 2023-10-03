@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 using Microsoft.OpenApi.Interfaces;
@@ -29,10 +29,8 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public OpenApiDocument Read(string input, out OpenApiDiagnostic diagnostic)
         {
-            using (var reader = new StringReader(input))
-            {
-                return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
-            }
+            using var reader = new StringReader(input);
+            return new OpenApiTextReaderReader(_settings).Read(reader, out diagnostic);
         }
 
         /// <summary>
@@ -40,10 +38,8 @@ namespace Microsoft.OpenApi.Readers
         /// </summary>
         public T ReadFragment<T>(string input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
         {
-            using (var reader = new StringReader(input))
-            {
-                return new OpenApiTextReaderReader(_settings).ReadFragment<T>(reader, version, out diagnostic);
-            }
+            using var reader = new StringReader(input);
+            return new OpenApiTextReaderReader(_settings).ReadFragment<T>(reader, version, out diagnostic);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Extensions;
@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Path Item Object: to describe the operations available on a single path.
     /// </summary>
-    public class OpenApiPathItem : IOpenApiSerializable, IOpenApiExtensible, IOpenApiReferenceable, IEffective<OpenApiPathItem>
+    public class OpenApiPathItem : IOpenApiExtensible, IOpenApiReferenceable, IEffective<OpenApiPathItem>
     {
         /// <summary>
         /// An optional, string summary, intended to apply to all operations in this path.
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV3(writer);
                     return;
-                } 
+                }
                 else
                 {
                     target = GetEffective(Reference.HostDocument);
@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Models
         }
 
         /// <summary>
-        /// Returns an effective OpenApiPathItem object based on the presence of a $ref 
+        /// Returns an effective OpenApiPathItem object based on the presence of a $ref
         /// </summary>
         /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
         /// <returns>OpenApiPathItem</returns>
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     Reference.SerializeAsV2(writer);
                     return;
-                } 
+                }
                 else
                 {
                     target = this.GetEffective(Reference.HostDocument);
@@ -185,7 +185,6 @@ namespace Microsoft.OpenApi.Models
             writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
-
         }
 
         /// <summary>
@@ -194,7 +193,6 @@ namespace Microsoft.OpenApi.Models
         /// <param name="writer"></param>
         public void SerializeAsV3WithoutReference(IOpenApiWriter writer)
         {
-
             writer.WriteStartObject();
 
             // summary

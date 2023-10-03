@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Security Scheme Object.
     /// </summary>
-    public class OpenApiSecurityScheme : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiSecurityScheme : IOpenApiReferenceable, IOpenApiExtensible
     {
         /// <summary>
         /// REQUIRED. The type of the security scheme. Valid values are "apiKey", "http", "oauth2", "openIdConnect".
@@ -101,7 +101,6 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV3(IOpenApiWriter writer)
         {
             Utils.CheckArgumentNull(writer);
-
 
             if (Reference != null)
             {

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -219,13 +218,6 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiSchemaTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void SerializeBasicSchemaAsV3JsonWorks()
         {
@@ -387,7 +379,6 @@ namespace Microsoft.OpenApi.Tests.Models
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
-
             // Act
             ReferencedSchema.SerializeAsV3WithoutReference(writer);
             writer.Flush();
@@ -439,7 +430,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 OneOf = new List<OpenApiSchema>
                 {
                     new OpenApiSchema
-                    { 
+                    {
                         Type = "number",
                         Format = "decimal"
                     },

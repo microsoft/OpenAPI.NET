@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -84,13 +84,12 @@ namespace Microsoft.OpenApi.Tests.Models
             reference.ReferenceV2.Should().Be(expected);
         }
 
-
         [Fact]
         public void SerializeSchemaReferenceAsJsonV3Works()
         {
             // Arrange
             var reference = new OpenApiReference { Type = ReferenceType.Schema, Id = "Pet" };
-            var expected = 
+            var expected =
                 """
                 {
                   "$ref": "#/components/schemas/Pet"
@@ -135,7 +134,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "Pet"
             };
 
-            var expected = 
+            var expected =
                 """
                 {
                   "$ref": "#/definitions/Pet"

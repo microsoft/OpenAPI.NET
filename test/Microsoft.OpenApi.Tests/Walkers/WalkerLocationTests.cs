@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
 {
     public class WalkerLocationTests
     {
-
         [Fact]
         public void LocateTopLevelObjects()
         {
@@ -161,7 +160,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateReferences()
         {
-
             var baseSchema = new OpenApiSchema
             {
                 Reference = new OpenApiReference

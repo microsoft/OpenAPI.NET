@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -30,10 +30,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             IDictionary<string, Action<T, ParseNode>> fixedFields,
             IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields)
         {
-            Action<T, ParseNode> fixedFieldMap;
-            var found = fixedFields.TryGetValue(Name, out fixedFieldMap);
-
-            if (fixedFieldMap != null)
+            if (fixedFields.TryGetValue(Name, out var fixedFieldMap))
             {
                 try
                 {

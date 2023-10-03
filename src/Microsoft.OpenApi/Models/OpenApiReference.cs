@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Extensions;
@@ -54,7 +54,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The OpenApiDocument that is hosting the OpenApiReference instance. This is used to enable dereferencing the reference.
         /// </summary>
-        public OpenApiDocument HostDocument { get; set; } = null;
+        public OpenApiDocument HostDocument { get; set; }
 
         /// <summary>
         /// Gets the full reference string for v3.0.
@@ -200,7 +200,7 @@ namespace Microsoft.OpenApi.Models
                 {
                     return ExternalResource + "#" + Id;
                 }
-                
+
                 return ExternalResource + "#/components/" + Type.GetDisplayName() + "/"+ Id;
             }
 

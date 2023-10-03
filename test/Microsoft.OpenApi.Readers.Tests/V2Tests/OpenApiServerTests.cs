@@ -324,6 +324,5 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     SpecificationVersion = OpenApiSpecVersion.OpenApi2_0
                 });
         }
-
     }
 }

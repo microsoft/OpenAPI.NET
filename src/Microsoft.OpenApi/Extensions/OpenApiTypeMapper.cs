@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Extensions
             [typeof(DateTimeOffset)] = () => new OpenApiSchema { Type = "string", Format = "date-time" },
             [typeof(Guid)] = () => new OpenApiSchema { Type = "string", Format = "uuid" },
             [typeof(char)] = () => new OpenApiSchema { Type = "string" },
-            
+
             // Nullable types
             [typeof(bool?)] = () => new OpenApiSchema { Type = "boolean", Nullable = true },
             [typeof(byte?)] = () => new OpenApiSchema { Type = "string", Format = "byte", Nullable = true },
@@ -123,7 +123,7 @@ namespace Microsoft.OpenApi.Extensions
                 ("boolean", null, true) => typeof(bool?),
                 _ => typeof(string),
             };
-            
+
             return type;
         }
     }

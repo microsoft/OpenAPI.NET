@@ -15,11 +15,9 @@ namespace Microsoft.OpenApi.Readers.Tests
         /// <returns>The file contents.</returns>
         public static string GetString(string fileName)
         {
-            using (Stream stream = GetStream(fileName))
-            using (TextReader reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
+            using Stream stream = GetStream(fileName);
+            using TextReader reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Globalization;
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Validations
                 return;
             }
 
-            if (!(item is T))
+            if (item is not T)
             {
                 throw new ArgumentException(string.Format(SRResource.InputItemShouldBeType, typeof(T).FullName));
             }

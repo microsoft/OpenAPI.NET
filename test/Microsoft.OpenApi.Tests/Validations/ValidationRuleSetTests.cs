@@ -2,19 +2,11 @@
 // Licensed under the MIT license.
 
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Validations.Tests
 {
     public class ValidationRuleSetTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public ValidationRuleSetTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void DefaultRuleSetReturnsTheCorrectRules()
         {

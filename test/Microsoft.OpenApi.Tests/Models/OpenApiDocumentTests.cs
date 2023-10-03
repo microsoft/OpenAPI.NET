@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -1278,13 +1278,6 @@ namespace Microsoft.OpenApi.Tests.Models
             Components = AdvancedComponents
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiDocumentTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
@@ -1533,7 +1526,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             };
 
-
             var reference = document.Paths["/"].Operations[OperationType.Get].Responses["200"].Content["application/json"].Schema.Reference;
 
             // Act
@@ -1647,7 +1639,7 @@ namespace Microsoft.OpenApi.Tests.Models
         public void TestHashCodesForSimilarOpenApiDocuments()
         {
             // Arrange
-            var sampleFolderPath = "Models/Samples/";            
+            var sampleFolderPath = "Models/Samples/";
 
             var doc1 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
             var doc2 = ParseInputFile(Path.Combine(sampleFolderPath, "sampleDocument.yaml"));
@@ -1713,10 +1705,10 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 Info = new OpenApiInfo(),
                 Paths = new OpenApiPaths
-                {                    
+                {
                     ["/foo"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation> 
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
@@ -1737,7 +1729,7 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             };
-            
+
             // Act
             var actual = doc.SerializeAsYaml(OpenApiSpecVersion.OpenApi2_0);
 
@@ -1746,7 +1738,7 @@ namespace Microsoft.OpenApi.Tests.Models
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
         }
-        
+
         [Fact]
         public void SerializeV2DocumentWithStyleAsNullDoesNotWriteOutStyleValue()
         {
@@ -1837,6 +1829,6 @@ namespace Microsoft.OpenApi.Tests.Models
             actual = actual.MakeLineBreaksEnvironmentNeutral();
             expected = expected.MakeLineBreaksEnvironmentNeutral();
             actual.Should().Be(expected);
-        } 
+        }
     }
 }

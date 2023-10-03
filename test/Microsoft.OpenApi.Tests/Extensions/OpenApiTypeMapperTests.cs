@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Extensions
             new object[] { new OpenApiSchema { Type = "number", Format = "float", Nullable = true }, typeof(float?) },
             new object[] { new OpenApiSchema { Type = "string", Format = "date-time" }, typeof(DateTimeOffset) }
         };
-        
+
         [Theory]
         [MemberData(nameof(PrimitiveTypeData))]
         public void MapTypeToOpenApiPrimitiveTypeShouldSucceed(Type type, OpenApiSchema expected)

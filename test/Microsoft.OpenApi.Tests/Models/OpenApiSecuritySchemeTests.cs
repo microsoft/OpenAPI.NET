@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -32,8 +31,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
-            Scheme = OpenApiConstants.Basic           
-
+            Scheme = OpenApiConstants.Basic
         };
 
         public static OpenApiSecurityScheme HttpBearerSecurityScheme = new OpenApiSecurityScheme
@@ -120,13 +118,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "sampleSecurityScheme"
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiSecuritySchemeTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Fact]
         public void SerializeApiKeySecuritySchemeAsV3JsonWorks()
@@ -325,7 +316,7 @@ namespace Microsoft.OpenApi.Tests.Models
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
 
             // Act
-            // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme 
+            // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme
             // as property name.
             writer.WriteStartObject();
             ReferencedSecurityScheme.SerializeAsV3(writer);

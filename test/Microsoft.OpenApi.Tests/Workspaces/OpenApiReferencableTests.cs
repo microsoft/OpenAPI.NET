@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,6 @@ using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Workspaces
 {
-
     public class OpenApiReferencableTests
     {
         private static readonly OpenApiCallback _callbackFragment = new OpenApiCallback();
@@ -104,7 +103,6 @@ namespace Microsoft.OpenApi.Tests.Workspaces
             new object[] { _responseFragment, "/content" },
             new object[] { _responseFragment, "/content/" },
             new object[] { _responseFragment, "/content/a" }
-
         };
 
         [Theory]

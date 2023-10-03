@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Indicates whether or not the produced document will be written in a compact or pretty fashion.
         /// </summary>
-        private bool _produceTerseOutput = false;
+        private readonly bool _produceTerseOutput;
 
         /// <summary>
         /// Base Indentation Level.

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Models
             IDictionary<string, IOpenApiExtension> extensions = null) : base (dictionary)
         {
             Extensions = extensions != null ? new Dictionary<string, IOpenApiExtension>(extensions) : null;
-        }       
+        }
 
         /// <summary>
         /// This object MAY be extended with Specification Extensions.
