@@ -10,20 +10,12 @@ using FluentAssertions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
     public class OpenApiYamlWriterTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiYamlWriterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         public static IEnumerable<object[]> WriteStringListAsYamlShouldMatchExpectedTestCases()
         {
             yield return new object[]

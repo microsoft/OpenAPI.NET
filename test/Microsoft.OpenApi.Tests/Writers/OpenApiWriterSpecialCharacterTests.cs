@@ -8,20 +8,12 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
     public class OpenApiWriterSpecialCharacterTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiWriterSpecialCharacterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         static bool[] shouldProduceTerseOutputValues = new[] { true, false };
 
         public static IEnumerable<object[]> StringWithSpecialCharacters

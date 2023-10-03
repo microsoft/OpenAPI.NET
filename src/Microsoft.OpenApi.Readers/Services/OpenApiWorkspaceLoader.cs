@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Services
             document.Workspace = _workspace;
 
             // Collect remote references by walking document
-            var referenceCollector = new OpenApiRemoteReferenceCollector(document);
+            var referenceCollector = new OpenApiRemoteReferenceCollector();
             var collectorWalker = new OpenApiWalker(referenceCollector);
             collectorWalker.Walk(document);
 

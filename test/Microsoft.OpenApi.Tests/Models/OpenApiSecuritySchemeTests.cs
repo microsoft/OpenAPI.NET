@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -119,13 +118,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 Id = "sampleSecurityScheme"
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiSecuritySchemeTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Fact]
         public void SerializeApiKeySecuritySchemeAsV3JsonWorks()

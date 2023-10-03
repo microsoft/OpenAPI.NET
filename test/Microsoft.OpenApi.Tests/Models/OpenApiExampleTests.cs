@@ -11,7 +11,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -100,13 +99,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 ["aDate"] = new OpenApiDate(DateTime.Parse("12/12/2022 00:00:00"))
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiExampleTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(true)]

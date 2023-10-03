@@ -41,13 +41,6 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiHeaderTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Theory]
         [InlineData(true)]
         [InlineData(false)]

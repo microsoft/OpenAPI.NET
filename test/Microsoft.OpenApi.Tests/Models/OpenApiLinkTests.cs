@@ -10,7 +10,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -70,13 +69,6 @@ namespace Microsoft.OpenApi.Tests.Models
                 Description = "serverDescription1"
             }
         };
-
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiLinkTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
 
         [Theory]
         [InlineData(true)]

@@ -11,20 +11,12 @@ using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Newtonsoft.Json;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
     public class OpenApiJsonWriterTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiJsonWriterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         static bool[] shouldProduceTerseOutputValues = new[] { true, false };
 
         public static IEnumerable<object[]> WriteStringListAsJsonShouldMatchExpectedTestCases()

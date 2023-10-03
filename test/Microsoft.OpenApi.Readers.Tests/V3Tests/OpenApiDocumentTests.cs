@@ -24,8 +24,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
     {
         private const string SampleFolderPath = "V3Tests/Samples/OpenApiDocument/";
 
-        private readonly ITestOutputHelper _output;
-
         public T Clone<T>(T element) where T : IOpenApiSerializable
         {
             using var stream = new MemoryStream();
