@@ -3,7 +3,6 @@
 
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.CommandLine.Parsing;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -142,7 +141,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 Output = new FileInfo("sample.md")
             };
 
-            await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
+            await OpenApiService.ShowOpenApiDocument(options, _logger);
 
             var output = await File.ReadAllTextAsync(options.Output.FullName);
             Assert.Contains("graph LR", output, StringComparison.Ordinal);
@@ -155,7 +154,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml")
             };
-            var filePath = await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
+            var filePath = await OpenApiService.ShowOpenApiDocument(options, _logger);
             Assert.True(File.Exists(filePath));
         }
 
@@ -170,7 +169,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             };
 
             // create a dummy ILogger instance for testing
-            await OpenApiService.ShowOpenApiDocument(options, _logger, new CancellationToken());
+            await OpenApiService.ShowOpenApiDocument(options, _logger);
 
             var output = await File.ReadAllTextAsync(options.Output.FullName);
             Assert.Contains("graph LR", output, StringComparison.Ordinal);
@@ -180,7 +179,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public async Task ThrowIfOpenApiUrlIsNotProvidedWhenValidating()
         {
             await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("", _logger, new CancellationToken()));
+                await OpenApiService.ValidateOpenApiDocument("", _logger));
         }
 
 
@@ -188,21 +187,21 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public async Task ThrowIfURLIsNotResolvableWhenValidating()
         {
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("https://example.org/itdoesnmatter", _logger, new CancellationToken()));
+                await OpenApiService.ValidateOpenApiDocument("https://example.org/itdoesnmatter", _logger));
         }
 
         [Fact]
         public async Task ThrowIfFileDoesNotExistWhenValidating()
         {
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-                await OpenApiService.ValidateOpenApiDocument("aFileThatBetterNotExist.fake", _logger, new CancellationToken()));
+                await OpenApiService.ValidateOpenApiDocument("aFileThatBetterNotExist.fake", _logger));
         }
 
         [Fact]
         public async Task ValidateCommandProcessesOpenApi()
         {
             // create a dummy ILogger instance for testing
-            await OpenApiService.ValidateOpenApiDocument(Path.Combine("UtilityFiles", "SampleOpenApi.yml"), _logger, new CancellationToken());
+            await OpenApiService.ValidateOpenApiDocument(Path.Combine("UtilityFiles", "SampleOpenApi.yml"), _logger);
 
             Assert.True(true);
         }
@@ -221,7 +220,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 InlineExternal = false,
             };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger);
 
             var output = await File.ReadAllTextAsync("sample.json");
             Assert.NotEmpty(output);
@@ -240,7 +239,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 InlineExternal = false,
             };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger);
 
             var output = await File.ReadAllTextAsync("output.yml");
             Assert.NotEmpty(output);
@@ -258,7 +257,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 InlineExternal = false,
             };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger);
 
             var output = await File.ReadAllTextAsync("output.yml");
             Assert.NotEmpty(output);
@@ -278,7 +277,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 InlineExternal = false,
             };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger);
 
             var output = await File.ReadAllTextAsync("output.yml");
             Assert.NotEmpty(output);
@@ -295,7 +294,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 InlineExternal = false,
             };
             await Assert.ThrowsAsync<ArgumentException>(async () =>
-                await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken()));
+                await OpenApiService.TransformOpenApiDocument(options, _logger));
 
         }
 
@@ -315,7 +314,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 SettingsConfig = SettingsUtilities.GetConfiguration(settingsPath)
             };
             // create a dummy ILogger instance for testing
-            await OpenApiService.TransformOpenApiDocument(options, _logger, new CancellationToken());
+            await OpenApiService.TransformOpenApiDocument(options, _logger);
 
             var output = await File.ReadAllTextAsync("output.yml");
             Assert.NotEmpty(output);

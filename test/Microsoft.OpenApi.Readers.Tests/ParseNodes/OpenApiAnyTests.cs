@@ -17,12 +17,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseMapAsAnyShouldSucceed()
         {
-            var input = @"
-aString: fooBar
-aInteger: 10
-aDouble: 2.34
-aDateTime: 2017-01-01
-                ";
+            var input =
+                """
+                aString: fooBar
+                aInteger: 10
+                aDouble: 2.34
+                aDateTime: 2017-01-01
+                """;
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
@@ -49,12 +50,13 @@ aDateTime: 2017-01-01
         [Fact]
         public void ParseListAsAnyShouldSucceed()
         {
-            var input = @"
-- fooBar
-- 10
-- 2.34
-- 2017-01-01
-                ";
+            var input =
+                """
+                - fooBar
+                - 10
+                - 2.34
+                - 2017-01-01
+                """;
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
@@ -81,9 +83,7 @@ aDateTime: 2017-01-01
         [Fact]
         public void ParseScalarIntegerAsAnyShouldSucceed()
         {
-            var input = @"
-10
-                ";
+            var input = "10";
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;
@@ -105,9 +105,7 @@ aDateTime: 2017-01-01
         [Fact]
         public void ParseScalarDateTimeAsAnyShouldSucceed()
         {
-            var input = @"
-2012-07-23T12:33:00
-                ";
+            var input = "2012-07-23T12:33:00";
             var yamlStream = new YamlStream();
             yamlStream.Load(new StringReader(input));
             var yamlNode = yamlStream.Documents.First().RootNode;

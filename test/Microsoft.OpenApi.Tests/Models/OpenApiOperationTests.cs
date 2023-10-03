@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
-using NuGet.Frameworks;
 using Xunit;
 
 namespace Microsoft.OpenApi.Tests.Models
@@ -299,9 +298,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicOperationAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""responses"": { }
-}";
+            var expected =
+                """
+                {
+                  "responses": { }
+                }
+                """;
 
             // Act
             var actual = _basicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -316,61 +318,64 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeOperationWithBodyAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""summary"": ""summary1"",
-  ""description"": ""operationDescription"",
-  ""externalDocs"": {
-    ""description"": ""externalDocsDescription"",
-    ""url"": ""http://external.com""
-  },
-  ""operationId"": ""operationId1"",
-  ""parameters"": [
-    {
-      ""name"": ""parameter1"",
-      ""in"": ""path""
-    },
-    {
-      ""name"": ""parameter2"",
-      ""in"": ""header""
-    }
-  ],
-  ""requestBody"": {
-    ""description"": ""description2"",
-    ""content"": {
-      ""application/json"": {
-        ""schema"": {
-          ""maximum"": 10,
-          ""minimum"": 5,
-          ""type"": ""number""
-        }
-      }
-    },
-    ""required"": true
-  },
-  ""responses"": {
-    ""200"": {
-      ""$ref"": ""#/components/responses/response1""
-    },
-    ""400"": {
-      ""description"": null,
-      ""content"": {
-        ""application/json"": {
-          ""schema"": {
-            ""maximum"": 10,
-            ""minimum"": 5,
-            ""type"": ""number""
-          }
-        }
-      }
-    }
-  },
-  ""servers"": [
-    {
-      ""url"": ""http://server.com"",
-      ""description"": ""serverDescription""
-    }
-  ]
-}";
+            var expected =
+                """
+                {
+                  "summary": "summary1",
+                  "description": "operationDescription",
+                  "externalDocs": {
+                    "description": "externalDocsDescription",
+                    "url": "http://external.com"
+                  },
+                  "operationId": "operationId1",
+                  "parameters": [
+                    {
+                      "name": "parameter1",
+                      "in": "path"
+                    },
+                    {
+                      "name": "parameter2",
+                      "in": "header"
+                    }
+                  ],
+                  "requestBody": {
+                    "description": "description2",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "maximum": 10,
+                          "minimum": 5,
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": true
+                  },
+                  "responses": {
+                    "200": {
+                      "$ref": "#/components/responses/response1"
+                    },
+                    "400": {
+                      "description": null,
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "maximum": 10,
+                            "minimum": 5,
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "servers": [
+                    {
+                      "url": "http://server.com",
+                      "description": "serverDescription"
+                    }
+                  ]
+                }
+                """;
 
             // Act
             var actual = _operationWithBody.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -385,74 +390,77 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedOperationWithTagAndSecurityAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""tags"": [
-    ""tagName1"",
-    ""tagId1""
-  ],
-  ""summary"": ""summary1"",
-  ""description"": ""operationDescription"",
-  ""externalDocs"": {
-    ""description"": ""externalDocsDescription"",
-    ""url"": ""http://external.com""
-  },
-  ""operationId"": ""operationId1"",
-  ""parameters"": [
-    {
-      ""name"": ""parameter1"",
-      ""in"": ""path""
-    },
-    {
-      ""name"": ""parameter2"",
-      ""in"": ""header""
-    }
-  ],
-  ""requestBody"": {
-    ""description"": ""description2"",
-    ""content"": {
-      ""application/json"": {
-        ""schema"": {
-          ""maximum"": 10,
-          ""minimum"": 5,
-          ""type"": ""number""
-        }
-      }
-    },
-    ""required"": true
-  },
-  ""responses"": {
-    ""200"": {
-      ""$ref"": ""#/components/responses/response1""
-    },
-    ""400"": {
-      ""description"": null,
-      ""content"": {
-        ""application/json"": {
-          ""schema"": {
-            ""maximum"": 10,
-            ""minimum"": 5,
-            ""type"": ""number""
-          }
-        }
-      }
-    }
-  },
-  ""security"": [
-    {
-      ""securitySchemeId1"": [ ],
-      ""securitySchemeId2"": [
-        ""scopeName1"",
-        ""scopeName2""
-      ]
-    }
-  ],
-  ""servers"": [
-    {
-      ""url"": ""http://server.com"",
-      ""description"": ""serverDescription""
-    }
-  ]
-}";
+            var expected =
+                """
+                {
+                  "tags": [
+                    "tagName1",
+                    "tagId1"
+                  ],
+                  "summary": "summary1",
+                  "description": "operationDescription",
+                  "externalDocs": {
+                    "description": "externalDocsDescription",
+                    "url": "http://external.com"
+                  },
+                  "operationId": "operationId1",
+                  "parameters": [
+                    {
+                      "name": "parameter1",
+                      "in": "path"
+                    },
+                    {
+                      "name": "parameter2",
+                      "in": "header"
+                    }
+                  ],
+                  "requestBody": {
+                    "description": "description2",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "maximum": 10,
+                          "minimum": 5,
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": true
+                  },
+                  "responses": {
+                    "200": {
+                      "$ref": "#/components/responses/response1"
+                    },
+                    "400": {
+                      "description": null,
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "maximum": 10,
+                            "minimum": 5,
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "security": [
+                    {
+                      "securitySchemeId1": [ ],
+                      "securitySchemeId2": [
+                        "scopeName1",
+                        "scopeName2"
+                      ]
+                    }
+                  ],
+                  "servers": [
+                    {
+                      "url": "http://server.com",
+                      "description": "serverDescription"
+                    }
+                  ]
+                }
+                """;
 
             // Act
             var actual = _advancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -467,9 +475,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeBasicOperationAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""responses"": { }
-}";
+            var expected =
+                """
+                {
+                  "responses": { }
+                }
+                """;
 
             // Act
             var actual = _basicOperation.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -484,68 +495,71 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeOperationWithFormDataAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""summary"": ""Updates a pet in the store with form data"",
-  ""description"": """",
-  ""operationId"": ""updatePetWithForm"",
-  ""parameters"": [
-    {
-      ""name"": ""petId"",
-      ""in"": ""path"",
-      ""description"": ""ID of pet that needs to be updated"",
-      ""required"": true,
-      ""schema"": {
-        ""type"": ""string""
-      }
-    }
-  ],
-  ""requestBody"": {
-    ""content"": {
-      ""application/x-www-form-urlencoded"": {
-        ""schema"": {
-          ""required"": [
-            ""name""
-          ],
-          ""properties"": {
-            ""name"": {
-              ""type"": ""string"",
-              ""description"": ""Updated name of the pet""
-            },
-            ""status"": {
-              ""type"": ""string"",
-              ""description"": ""Updated status of the pet""
-            }
-          }
-        }
-      },
-      ""multipart/form-data"": {
-        ""schema"": {
-          ""required"": [
-            ""name""
-          ],
-          ""properties"": {
-            ""name"": {
-              ""type"": ""string"",
-              ""description"": ""Updated name of the pet""
-            },
-            ""status"": {
-              ""type"": ""string"",
-              ""description"": ""Updated status of the pet""
-            }
-          }
-        }
-      }
-    }
-  },
-  ""responses"": {
-    ""200"": {
-      ""description"": ""Pet updated.""
-    },
-    ""405"": {
-      ""description"": ""Invalid input""
-    }
-  }
-}";
+            var expected = 
+                """
+                {
+                  "summary": "Updates a pet in the store with form data",
+                  "description": "",
+                  "operationId": "updatePetWithForm",
+                  "parameters": [
+                    {
+                      "name": "petId",
+                      "in": "path",
+                      "description": "ID of pet that needs to be updated",
+                      "required": true,
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  ],
+                  "requestBody": {
+                    "content": {
+                      "application/x-www-form-urlencoded": {
+                        "schema": {
+                          "required": [
+                            "name"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "description": "Updated name of the pet"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Updated status of the pet"
+                            }
+                          }
+                        }
+                      },
+                      "multipart/form-data": {
+                        "schema": {
+                          "required": [
+                            "name"
+                          ],
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "description": "Updated name of the pet"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Updated status of the pet"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "responses": {
+                    "200": {
+                      "description": "Pet updated."
+                    },
+                    "405": {
+                      "description": "Invalid input"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = _operationWithFormData.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -560,45 +574,48 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeOperationWithFormDataAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""summary"": ""Updates a pet in the store with form data"",
-  ""description"": """",
-  ""operationId"": ""updatePetWithForm"",
-  ""consumes"": [
-    ""application/x-www-form-urlencoded"",
-    ""multipart/form-data""
-  ],
-  ""parameters"": [
-    {
-      ""in"": ""path"",
-      ""name"": ""petId"",
-      ""description"": ""ID of pet that needs to be updated"",
-      ""required"": true,
-      ""type"": ""string""
-    },
-    {
-      ""in"": ""formData"",
-      ""name"": ""name"",
-      ""description"": ""Updated name of the pet"",
-      ""required"": true,
-      ""type"": ""string""
-    },
-    {
-      ""in"": ""formData"",
-      ""name"": ""status"",
-      ""description"": ""Updated status of the pet"",
-      ""type"": ""string""
-    }
-  ],
-  ""responses"": {
-    ""200"": {
-      ""description"": ""Pet updated.""
-    },
-    ""405"": {
-      ""description"": ""Invalid input""
-    }
-  }
-}";
+            var expected =
+                """
+                {
+                  "summary": "Updates a pet in the store with form data",
+                  "description": "",
+                  "operationId": "updatePetWithForm",
+                  "consumes": [
+                    "application/x-www-form-urlencoded",
+                    "multipart/form-data"
+                  ],
+                  "parameters": [
+                    {
+                      "in": "path",
+                      "name": "petId",
+                      "description": "ID of pet that needs to be updated",
+                      "required": true,
+                      "type": "string"
+                    },
+                    {
+                      "in": "formData",
+                      "name": "name",
+                      "description": "Updated name of the pet",
+                      "required": true,
+                      "type": "string"
+                    },
+                    {
+                      "in": "formData",
+                      "name": "status",
+                      "description": "Updated status of the pet",
+                      "type": "string"
+                    }
+                  ],
+                  "responses": {
+                    "200": {
+                      "description": "Pet updated."
+                    },
+                    "405": {
+                      "description": "Invalid input"
+                    }
+                  }
+                }
+                """;
 
             // Act
             var actual = _operationWithFormData.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -613,58 +630,61 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeOperationWithBodyAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""summary"": ""summary1"",
-  ""description"": ""operationDescription"",
-  ""externalDocs"": {
-    ""description"": ""externalDocsDescription"",
-    ""url"": ""http://external.com""
-  },
-  ""operationId"": ""operationId1"",
-  ""consumes"": [
-    ""application/json""
-  ],
-  ""produces"": [
-    ""application/json""
-  ],
-  ""parameters"": [
-    {
-      ""in"": ""path"",
-      ""name"": ""parameter1""
-    },
-    {
-      ""in"": ""header"",
-      ""name"": ""parameter2""
-    },
-    {
-      ""in"": ""body"",
-      ""name"": ""body"",
-      ""description"": ""description2"",
-      ""required"": true,
-      ""schema"": {
-        ""maximum"": 10,
-        ""minimum"": 5,
-        ""type"": ""number""
-      }
-    }
-  ],
-  ""responses"": {
-    ""200"": {
-      ""$ref"": ""#/responses/response1""
-    },
-    ""400"": {
-      ""description"": null,
-      ""schema"": {
-        ""maximum"": 10,
-        ""minimum"": 5,
-        ""type"": ""number""
-      }
-    }
-  },
-  ""schemes"": [
-    ""http""
-  ]
-}";
+            var expected =
+                """
+                {
+                  "summary": "summary1",
+                  "description": "operationDescription",
+                  "externalDocs": {
+                    "description": "externalDocsDescription",
+                    "url": "http://external.com"
+                  },
+                  "operationId": "operationId1",
+                  "consumes": [
+                    "application/json"
+                  ],
+                  "produces": [
+                    "application/json"
+                  ],
+                  "parameters": [
+                    {
+                      "in": "path",
+                      "name": "parameter1"
+                    },
+                    {
+                      "in": "header",
+                      "name": "parameter2"
+                    },
+                    {
+                      "in": "body",
+                      "name": "body",
+                      "description": "description2",
+                      "required": true,
+                      "schema": {
+                        "maximum": 10,
+                        "minimum": 5,
+                        "type": "number"
+                      }
+                    }
+                  ],
+                  "responses": {
+                    "200": {
+                      "$ref": "#/responses/response1"
+                    },
+                    "400": {
+                      "description": null,
+                      "schema": {
+                        "maximum": 10,
+                        "minimum": 5,
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "schemes": [
+                    "http"
+                  ]
+                }
+                """;
 
             // Act
             var actual = _operationWithBody.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -679,71 +699,74 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedOperationWithTagAndSecurityAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""tags"": [
-    ""tagName1"",
-    ""tagId1""
-  ],
-  ""summary"": ""summary1"",
-  ""description"": ""operationDescription"",
-  ""externalDocs"": {
-    ""description"": ""externalDocsDescription"",
-    ""url"": ""http://external.com""
-  },
-  ""operationId"": ""operationId1"",
-  ""consumes"": [
-    ""application/json""
-  ],
-  ""produces"": [
-    ""application/json""
-  ],
-  ""parameters"": [
-    {
-      ""in"": ""path"",
-      ""name"": ""parameter1""
-    },
-    {
-      ""in"": ""header"",
-      ""name"": ""parameter2""
-    },
-    {
-      ""in"": ""body"",
-      ""name"": ""body"",
-      ""description"": ""description2"",
-      ""required"": true,
-      ""schema"": {
-        ""maximum"": 10,
-        ""minimum"": 5,
-        ""type"": ""number""
-      }
-    }
-  ],
-  ""responses"": {
-    ""200"": {
-      ""$ref"": ""#/responses/response1""
-    },
-    ""400"": {
-      ""description"": null,
-      ""schema"": {
-        ""maximum"": 10,
-        ""minimum"": 5,
-        ""type"": ""number""
-      }
-    }
-  },
-  ""schemes"": [
-    ""http""
-  ],
-  ""security"": [
-    {
-      ""securitySchemeId1"": [ ],
-      ""securitySchemeId2"": [
-        ""scopeName1"",
-        ""scopeName2""
-      ]
-    }
-  ]
-}";
+            var expected =
+                """
+                {
+                  "tags": [
+                    "tagName1",
+                    "tagId1"
+                  ],
+                  "summary": "summary1",
+                  "description": "operationDescription",
+                  "externalDocs": {
+                    "description": "externalDocsDescription",
+                    "url": "http://external.com"
+                  },
+                  "operationId": "operationId1",
+                  "consumes": [
+                    "application/json"
+                  ],
+                  "produces": [
+                    "application/json"
+                  ],
+                  "parameters": [
+                    {
+                      "in": "path",
+                      "name": "parameter1"
+                    },
+                    {
+                      "in": "header",
+                      "name": "parameter2"
+                    },
+                    {
+                      "in": "body",
+                      "name": "body",
+                      "description": "description2",
+                      "required": true,
+                      "schema": {
+                        "maximum": 10,
+                        "minimum": 5,
+                        "type": "number"
+                      }
+                    }
+                  ],
+                  "responses": {
+                    "200": {
+                      "$ref": "#/responses/response1"
+                    },
+                    "400": {
+                      "description": null,
+                      "schema": {
+                        "maximum": 10,
+                        "minimum": 5,
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "schemes": [
+                    "http"
+                  ],
+                  "security": [
+                    {
+                      "securitySchemeId1": [ ],
+                      "securitySchemeId2": [
+                        "scopeName1",
+                        "scopeName2"
+                      ]
+                    }
+                  ]
+                }
+                """;
 
             // Act
             var actual = _advancedOperationWithTagsAndSecurity.SerializeAsJson(OpenApiSpecVersion.OpenApi2_0);
@@ -758,9 +781,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeOperationWithNullCollectionAsV2JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""responses"": { }
-}";
+            var expected =
+                """
+                {
+                  "responses": { }
+                }
+                """;
             var operation = new OpenApiOperation
             {
                 Parameters = null,

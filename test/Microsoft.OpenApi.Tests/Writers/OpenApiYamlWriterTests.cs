@@ -31,23 +31,27 @@ namespace Microsoft.OpenApi.Tests.Writers
                     "string7",
                     "string8"
                 },
-                @"- string1
-- string2
-- string3
-- string4
-- string5
-- string6
-- string7
-- string8"
+                """
+                - string1
+                - string2
+                - string3
+                - string4
+                - string5
+                - string6
+                - string7
+                - string8
+                """
             };
 
             yield return new object[]
             {
                 new[] {"string1", "string1", "string1", "string1"},
-                @"- string1
-- string1
-- string1
-- string1"
+                """
+                - string1
+                - string1
+                - string1
+                - string1
+                """
             };
         }
 
@@ -91,10 +95,12 @@ namespace Microsoft.OpenApi.Tests.Writers
                     ["property3"] = "value3",
                     ["property4"] = "value4"
                 },
-                @"property1: value1
-property2: value2
-property3: value3
-property4: value4"
+                """
+                property1: value1
+                property2: value2
+                property3: value3
+                property4: value4
+                """
             };
 
             // Simple map with duplicate value
@@ -107,10 +113,12 @@ property4: value4"
                     ["property3"] = "value1",
                     ["property4"] = "value1"
                 },
-                @"property1: value1
-property2: value1
-property3: value1
-property4: value1"
+                """
+                property1: value1
+                property2: value1
+                property3: value1
+                property4: value1
+                """
             };
         }
 
@@ -129,11 +137,13 @@ property4: value1"
                     },
                     ["property4"] = "value4"
                 },
-                @"property1: { }
-property2: [ ]
-property3:
-  - { }
-property4: value4"
+                """
+                property1: { }
+                property2: [ ]
+                property3:
+                  - { }
+                property4: value4
+                """
             };
 
             // Number, boolean, and null handling
@@ -153,17 +163,19 @@ property4: value4"
                     ["property10"] = "null",
                     ["property11"] = "",
                 },
-                @"property1: '10.0'
-property2: '10'
-property3: '-5'
-property4: 10.0
-property5: 10
-property6: -5
-property7: true
-property8: 'true'
-property9: 
-property10: 'null'
-property11: ''"
+                """
+                property1: '10.0'
+                property2: '10'
+                property3: '-5'
+                property4: 10.0
+                property5: 10
+                property6: -5
+                property7: true
+                property8: 'true'
+                property9:
+                property10: 'null'
+                property11: ''
+                """
             };
 
             // DateTime
@@ -175,9 +187,11 @@ property11: ''"
                     ["property2"] = new DateTimeOffset(new DateTime(1970, 01, 01), TimeSpan.FromHours(3)),
                     ["property3"] = new DateTime(2018, 04, 03),
                 },
-                @"property1: '1970-01-01T00:00:00.0000000'
-property2: '1970-01-01T00:00:00.0000000+03:00'
-property3: '2018-04-03T00:00:00.0000000'"
+                """
+                property1: '1970-01-01T00:00:00.0000000'
+                property2: '1970-01-01T00:00:00.0000000+03:00'
+                property3: '2018-04-03T00:00:00.0000000'
+                """
             };
 
             // Nested map
@@ -196,12 +210,14 @@ property3: '2018-04-03T00:00:00.0000000'"
                     },
                     ["property4"] = "value4"
                 },
-                @"property1:
-  innerProperty1: innerValue1
-property2: value2
-property3:
-  innerProperty3: innerValue3
-property4: value4"
+                """
+                property1:
+                  innerProperty1: innerValue1
+                property2: value2
+                property3:
+                  innerProperty3: innerValue3
+                property4: value4
+                """
             };
 
             // Nested map and list
@@ -230,17 +246,19 @@ property4: value4"
                     },
                     ["property4"] = "value4"
                 },
-                @"property1: { }
-property2: [ ]
-property3:
-  - { }
-  - string1
-  - innerProperty1: [ ]
-    innerProperty2: string2
-    innerProperty3:
-      - 
-        - string3
-property4: value4"
+                """
+                property1: { }
+                property2: [ ]
+                property3:
+                  - { }
+                  - string1
+                  - innerProperty1: [ ]
+                    innerProperty2: string2
+                    innerProperty3:
+                      -
+                        - string3
+                property4: value4
+                """
             };
         }
 
@@ -268,10 +286,10 @@ property4: value4"
 
                 writer.WriteEndObject();
             }
-            else if (typeof(IEnumerable).IsAssignableFrom(value.GetType()))
+            else if (value is IEnumerable enumerable)
             {
                 writer.WriteStartArray();
-                foreach (var elementValue in (IEnumerable)value)
+                foreach (var elementValue in enumerable)
                 {
                     WriteValueRecursive(writer, elementValue);
                 }
@@ -348,21 +366,23 @@ property4: value4"
             var doc = CreateDocWithSimpleSchemaToInline();
 
             var expected =
-@"openapi: 3.0.1
-info:
-  title: Demo
-  version: 1.0.0
-paths:
-  /:
-    get:
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-components: { }";
+                """
+                openapi: 3.0.1
+                info:
+                  title: Demo
+                  version: 1.0.0
+                paths:
+                  /:
+                    get:
+                      responses:
+                        '200':
+                          description: OK
+                          content:
+                            application/json:
+                              schema:
+                                type: object
+                components: { }
+                """;
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true } );
@@ -385,20 +405,22 @@ components: { }";
             var doc = CreateDocWithSimpleSchemaToInline();
 
             var expected =
-@"swagger: '2.0'
-info:
-  title: Demo
-  version: 1.0.0
-paths:
-  /:
-    get:
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: object";
+                """
+                swagger: '2.0'
+                info:
+                  title: Demo
+                  version: 1.0.0
+                paths:
+                  /:
+                    get:
+                      produces:
+                        - application/json
+                      responses:
+                        '200':
+                          description: OK
+                          schema:
+                            type: object
+                """;
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
@@ -475,39 +497,41 @@ paths:
             var doc = CreateDocWithRecursiveSchemaReference();
 
             var expected =
-@"openapi: 3.0.1
-info:
-  title: Demo
-  version: 1.0.0
-paths:
-  /:
-    get:
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  children:
-                    $ref: '#/components/schemas/thing'
-                  related:
-                    type: integer
-components:
-  schemas:
-    thing:
-      type: object
-      properties:
-        children:
-          type: object
-          properties:
-            children:
-              $ref: '#/components/schemas/thing'
-            related:
-              type: integer
-        related:
-          type: integer";
+                """
+                openapi: 3.0.1
+                info:
+                  title: Demo
+                  version: 1.0.0
+                paths:
+                  /:
+                    get:
+                      responses:
+                        '200':
+                          description: OK
+                          content:
+                            application/json:
+                              schema:
+                                type: object
+                                properties:
+                                  children:
+                                    $ref: '#/components/schemas/thing'
+                                  related:
+                                    type: integer
+                components:
+                  schemas:
+                    thing:
+                      type: object
+                      properties:
+                        children:
+                          type: object
+                          properties:
+                            children:
+                              $ref: '#/components/schemas/thing'
+                            related:
+                              type: integer
+                        related:
+                          type: integer
+                """;
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
@@ -590,38 +614,40 @@ components:
             var doc = CreateDocWithRecursiveSchemaReference();
 
             var expected =
-@"swagger: '2.0'
-info:
-  title: Demo
-  version: 1.0.0
-paths:
-  /:
-    get:
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: OK
-          schema:
-            type: object
-            properties:
-              children:
-                $ref: '#/definitions/thing'
-              related:
-                type: integer
-definitions:
-  thing:
-    type: object
-    properties:
-      children:
-        type: object
-        properties:
-          children:
-            $ref: '#/definitions/thing'
-          related:
-            type: integer
-      related:
-        type: integer";
+                """
+                swagger: '2.0'
+                info:
+                  title: Demo
+                  version: 1.0.0
+                paths:
+                  /:
+                    get:
+                      produces:
+                        - application/json
+                      responses:
+                        '200':
+                          description: OK
+                          schema:
+                            type: object
+                            properties:
+                              children:
+                                $ref: '#/definitions/thing'
+                              related:
+                                type: integer
+                definitions:
+                  thing:
+                    type: object
+                    properties:
+                      children:
+                        type: object
+                        properties:
+                          children:
+                            $ref: '#/definitions/thing'
+                          related:
+                            type: integer
+                      related:
+                        type: integer
+                """;
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);

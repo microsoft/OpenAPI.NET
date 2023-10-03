@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Implementation of the transform command
         /// </summary>
-        public static async Task TransformOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
+        public static async Task TransformOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(options.OpenApi) && string.IsNullOrEmpty(options.Csdl) && string.IsNullOrEmpty(options.FilterOptions?.FilterByApiManifest))
             {
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Hidi
                 }
 
                 // Load OpenAPI document
-                OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion).ConfigureAwait(false);
+                OpenApiDocument document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
                 if (options.FilterOptions != null)
                 {
@@ -116,7 +116,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static async Task<ApiDependency?> FindApiDependency(string? apiManifestPath, ILogger logger, CancellationToken cancellationToken)
+        private static async Task<ApiDependency?> FindApiDependency(string? apiManifestPath, ILogger logger, CancellationToken cancellationToken = default)
         {
             ApiDependency? apiDependency = null;
             // If API Manifest is provided, load it, use it get the OpenAPI path
@@ -212,7 +212,7 @@ namespace Microsoft.OpenApi.Hidi
         }
 
         // Get OpenAPI document either from OpenAPI or CSDL 
-        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, CancellationToken cancellationToken, string? metadataVersion = null)
+        private static async Task<OpenApiDocument> GetOpenApi(HidiOptions options, ILogger logger, string? metadataVersion = null, CancellationToken cancellationToken = default)
         {
 
             OpenApiDocument document;
@@ -326,7 +326,7 @@ namespace Microsoft.OpenApi.Hidi
         public static async Task ValidateOpenApiDocument(
             string openApi,
             ILogger logger,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(openApi))
             {
@@ -361,7 +361,7 @@ namespace Microsoft.OpenApi.Hidi
             }
         }
 
-        private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken)
+        private static async Task<ReadResult> ParseOpenApi(string openApiFile, bool inlineExternal, ILogger logger, Stream stream, CancellationToken cancellationToken = default)
         {
             ReadResult result;
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -480,7 +480,7 @@ namespace Microsoft.OpenApi.Hidi
         /// <summary>
         /// Reads stream from file system or makes HTTP request depending on the input string
         /// </summary>
-        private static async Task<Stream> GetStream(string input, ILogger logger, CancellationToken cancellationToken)
+        private static async Task<Stream> GetStream(string input, ILogger logger, CancellationToken cancellationToken = default)
         {
             Stream stream;
             using (logger.BeginScope("Reading input stream"))
@@ -556,7 +556,7 @@ namespace Microsoft.OpenApi.Hidi
             return extension;
         }
 
-        internal static async Task<string?> ShowOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
+        internal static async Task<string?> ShowOpenApiDocument(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -565,7 +565,7 @@ namespace Microsoft.OpenApi.Hidi
                     throw new ArgumentException("Please input a file path or URL");
                 }
 
-                var document = await GetOpenApi(options, logger, cancellationToken).ConfigureAwait(false);
+                var document = await GetOpenApi(options, logger, null, cancellationToken).ConfigureAwait(false);
 
                 using (logger.BeginScope("Creating diagram"))
                 {
@@ -664,18 +664,21 @@ namespace Microsoft.OpenApi.Hidi
         {
             var rootNode = OpenApiUrlTreeNode.Create(document, "main");
 
-            writer.WriteLine(@"<!doctype html>
-<html>
-<head>
-  <meta charset=""utf-8""/>
-  <script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js""></script>
-</head>
-<style>
-    body {
-        font-family: Verdana, sans-serif;
-    }
-</style>
-<body>");
+            writer.WriteLine(
+                """
+                <!doctype html>
+                <html>
+                <head>
+                  <meta charset="utf-8"/>
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js"></script>
+                </head>
+                <style>
+                    body {
+                        font-family: Verdana, sans-serif;
+                    }
+                </style>
+                <body>
+                """);
             writer.WriteLine("<h1>" + document.Info.Title + "</h1>");
             writer.WriteLine();
             writer.WriteLine($"<h3> API Description: <a href='{sourceUrl}'>{sourceUrl}</a></h3>");
@@ -686,6 +689,7 @@ namespace Microsoft.OpenApi.Hidi
             {
                 writer.WriteLine($"<span style=\"padding:2px;background-color:{style.Value.Color};border: 2px solid\">{style.Key.Replace("_", " ", StringComparison.OrdinalIgnoreCase)}</span>");
             }
+
             writer.WriteLine("</div>");
             writer.WriteLine("<hr/>");
             writer.WriteLine("<code class=\"language-mermaid\">");
@@ -693,23 +697,26 @@ namespace Microsoft.OpenApi.Hidi
             writer.WriteLine("</code>");
 
             // Write script tag to include JS library for rendering markdown
-            writer.WriteLine(@"<script>
-  var config = {
-      startOnLoad:true,
-      theme: 'forest',
-      flowchart:{
-              useMaxWidth:false,
-              htmlLabels:true
-          }
-  };
-  mermaid.initialize(config);
-  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-  </script>");
+            writer.WriteLine(
+                """
+                <script>
+                  var config = {
+                      startOnLoad:true,
+                      theme: 'forest',
+                      flowchart:{
+                              useMaxWidth:false,
+                              htmlLabels:true
+                          }
+                  };
+                  mermaid.initialize(config);
+                  window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+                </script>
+                """);
             // Write script tag to include JS library for rendering mermaid
             writer.WriteLine("</html");
         }
 
-        internal static async Task PluginManifest(HidiOptions options, ILogger logger, CancellationToken cancellationToken)
+        internal static async Task PluginManifest(HidiOptions options, ILogger logger, CancellationToken cancellationToken = default)
         {
             // If ApiManifest is provided, set the referenced OpenAPI document
             var apiDependency = await FindApiDependency(options.FilterOptions?.FilterByApiManifest, logger, cancellationToken).ConfigureAwait(false);
@@ -719,7 +726,7 @@ namespace Microsoft.OpenApi.Hidi
             }
 
             // Load OpenAPI document
-            OpenApiDocument document = await GetOpenApi(options, logger, cancellationToken, options.MetadataVersion).ConfigureAwait(false);
+            OpenApiDocument document = await GetOpenApi(options, logger, options.MetadataVersion, cancellationToken).ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested();
 

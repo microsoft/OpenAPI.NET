@@ -3,21 +3,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -82,12 +78,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
             var openApiDoc = new OpenApiStringReader().Read(
-                @"
-openapi : 3.0.0
-info:
-    title: Simple Document
-    version: 0.9.1
-paths: {}",
+                """
+
+                openapi : 3.0.0
+                info:
+                    title: Simple Document
+                    version: 0.9.1
+                paths: {}
+                """,
                 out var context);
 
             openApiDoc.Should().BeEquivalentTo(
@@ -117,23 +115,24 @@ paths: {}",
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 
             var openApiDoc = new OpenApiStringReader().Read(
-                @"
-openapi : 3.0.0
-info:
-    title: Simple Document
-    version: 0.9.1
-components:
-  schemas:
-    sampleSchema:
-      type: object
-      properties:
-        sampleProperty:
-          type: double
-          minimum: 100.54
-          maximum: 60000000.35
-          exclusiveMaximum: true
-          exclusiveMinimum: false
-paths: {}",
+                """
+                openapi : 3.0.0
+                info:
+                    title: Simple Document
+                    version: 0.9.1
+                components:
+                  schemas:
+                    sampleSchema:
+                      type: object
+                      properties:
+                        sampleProperty:
+                          type: double
+                          minimum: 100.54
+                          maximum: 60000000.35
+                          exclusiveMaximum: true
+                          exclusiveMinimum: false
+                paths: {}
+                """,
                 out var context);
 
             openApiDoc.Should().BeEquivalentTo(

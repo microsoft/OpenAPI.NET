@@ -74,12 +74,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParsePrimitiveStringSchemaFragmentShouldSucceed()
         {
-            var input = @"
-{ ""type"": ""integer"",
-""format"": ""int64"",
-""default"": 88
-}
-";
+            var input =
+                """
+                {
+                  "type": "integer",
+                  "format": "int64",
+                  "default": 88
+                }
+                """;
             var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
 
@@ -101,11 +103,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseExampleStringFragmentShouldSucceed()
         {
-            var input = @"
-{ 
-  ""foo"": ""bar"",
-  ""baz"": [ 1,2]
-}";
+            var input =
+                """
+                {
+                  "foo": "bar",
+                  "baz": [ 1,2]
+                }
+                """;
             var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
 
@@ -130,11 +134,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseEnumFragmentShouldSucceed()
         {
-            var input = @"
-[ 
-  ""foo"",
-  ""baz""
-]";
+            var input =
+                """
+                [
+                  "foo",
+                  "baz"
+                ]
+                """;
             var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
 
@@ -205,13 +211,14 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParsePathFragmentShouldSucceed()
         {
-            var input = @"
-summary: externally referenced path item
-get:
-  responses:
-    '200':
-      description: Ok
-";
+            var input =
+                """
+                summary: externally referenced path item
+                get:
+                  responses:
+                    '200':
+                      description: Ok
+                """;
             var reader = new OpenApiStringReader();
             var diagnostic = new OpenApiDiagnostic();
 

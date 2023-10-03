@@ -1,15 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
-using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
