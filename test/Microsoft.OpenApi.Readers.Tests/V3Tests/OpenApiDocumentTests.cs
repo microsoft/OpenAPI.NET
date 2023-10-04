@@ -60,11 +60,6 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
             return new OpenApiStringReader().ReadFragment<OpenApiSecurityScheme>(result, OpenApiSpecVersion.OpenApi3_0, out OpenApiDiagnostic diagnostic4);
         }
 
-        public OpenApiDocumentTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void ParseDocumentFromInlineStringShouldSucceed()
         {
