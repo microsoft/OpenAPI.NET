@@ -40,7 +40,7 @@ public class OpenApiPrimaryErrorMessageExtension : IOpenApiExtension
     public static OpenApiPrimaryErrorMessageExtension Parse(IOpenApiAny source)
     {
         if (source is not OpenApiBoolean rawObject) throw new ArgumentOutOfRangeException(nameof(source));
-        return new OpenApiPrimaryErrorMessageExtension
+        return new()
         {
             IsPrimaryErrorMessage = rawObject.Value
         };

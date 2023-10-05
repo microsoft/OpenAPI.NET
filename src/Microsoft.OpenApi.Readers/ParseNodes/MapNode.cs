@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             {
                 if (this._node.Children.TryGetValue(new YamlScalarNode(key), out var node))
                 {
-                    return new PropertyNode(Context, key, node);
+                    return new(Context, key, node);
                 }
 
                 return null;
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         Context.StartObject(key);
                         value = n.Value as YamlMappingNode == null
                           ? default
-                          : map(new MapNode(Context, n.Value as YamlMappingNode));
+                          : map(new(Context, n.Value as YamlMappingNode));
                     }
                     finally
                     {
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         Context.StartObject(key);
                         entry = (
                             key: key,
-                            value: map(new MapNode(Context, (YamlMappingNode)n.Value))
+                            value: map(new(Context, (YamlMappingNode)n.Value))
                         );
                         if (entry.value == null)
                         {
@@ -119,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         // If the component isn't a reference to another component, then point it to itself.
                         if (entry.value.Reference == null)
                         {
-                            entry.value.Reference = new OpenApiReference
+                            entry.value.Reference = new()
                             {
                                 Type = referenceType,
                                 Id = entry.key
@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         {
                             throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);
                         }
-                        return (key, value: map(new ValueNode(Context, (YamlScalarNode)n.Value)));
+                        return (key, value: map(new(Context, (YamlScalarNode)n.Value)));
                     } finally {
                         Context.EndObject();
                     }
@@ -175,14 +175,14 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override string GetRaw()
         {
-            var x = new Serializer(new SerializerSettings(new JsonSchema()) { EmitJsonComptible = true });
+            var x = new Serializer(new(new JsonSchema()) { EmitJsonComptible = true });
             return x.Serialize(_node);
         }
 
         public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId)
             where T : IOpenApiReferenceable, new()
         {
-            return new T
+            return new()
             {
                 UnresolvedReference = true,
                 Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType)

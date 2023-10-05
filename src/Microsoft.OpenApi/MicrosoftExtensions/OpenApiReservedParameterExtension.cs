@@ -42,7 +42,7 @@ public class OpenApiReservedParameterExtension : IOpenApiExtension
     public static OpenApiReservedParameterExtension Parse(IOpenApiAny source)
     {
         if (source is not OpenApiBoolean rawBoolean) throw new ArgumentOutOfRangeException(nameof(source));
-        return new OpenApiReservedParameterExtension
+        return new()
         {
             IsReserved = rawBoolean.Value
         };

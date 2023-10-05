@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Hidi.Options
             LogLevel = parseResult.GetValueForOption(options.LogLevelOption);
             InlineLocal = parseResult.GetValueForOption(options.InlineLocalOption);
             InlineExternal = parseResult.GetValueForOption(options.InlineExternalOption);
-            FilterOptions = new FilterOptions
+            FilterOptions = new()
             {
                 FilterByOperationIds = parseResult.GetValueForOption(options.FilterByOperationIdsOption),
                 FilterByTags = parseResult.GetValueForOption(options.FilterByTagsOption),

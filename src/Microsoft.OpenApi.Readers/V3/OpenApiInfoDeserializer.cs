@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        public static FixedFieldMap<OpenApiInfo> InfoFixedFields = new FixedFieldMap<OpenApiInfo>
+        public static FixedFieldMap<OpenApiInfo> InfoFixedFields = new()
         {
             {
                 "title", (o, n) =>
@@ -38,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "termsOfService", (o, n) =>
                 {
-                    o.TermsOfService = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                    o.TermsOfService = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                 }
             },
             {
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Readers.V3
             }
         };
 
-        public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new PatternFieldMap<OpenApiInfo>
+        public static PatternFieldMap<OpenApiInfo> InfoPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, k, n) => o.AddExtension(k,LoadExtension(k, n))}
         };

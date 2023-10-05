@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Models
             }
             // parameters
             var parameters = Components?.Parameters != null
-                ? new Dictionary<string, OpenApiParameter>(Components.Parameters)
+                ? new(Components.Parameters)
                 : new Dictionary<string, OpenApiParameter>();
 
             if (Components?.RequestBodies != null)
@@ -411,7 +411,7 @@ namespace Microsoft.OpenApi.Models
             using var cryptoStream = new CryptoStream(Stream.Null, sha, CryptoStreamMode.Write);
             using var streamWriter = new StreamWriter(cryptoStream);
 
-            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new OpenApiJsonWriterSettings { Terse = true });
+            var openApiJsonWriter = new OpenApiJsonWriter(streamWriter, new() { Terse = true });
             doc.SerializeAsV3(openApiJsonWriter);
             openApiJsonWriter.Flush();
 

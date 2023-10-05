@@ -63,7 +63,7 @@ namespace Microsoft.OpenApi.Services
             // Fetch and copy title, graphVersion and server info from OpenApiDoc
             var subset = new OpenApiDocument
             {
-                Info = new OpenApiInfo
+                Info = new()
                 {
                     Title = source.Info.Title + " - Subset",
                     Description = source.Info.Description,
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Services
                     Extensions = source.Info.Extensions
                 },
 
-                Components = new OpenApiComponents { SecuritySchemes = source.Components.SecuritySchemes },
+                Components = new() { SecuritySchemes = source.Components.SecuritySchemes },
                 SecurityRequirements = source.SecurityRequirements,
                 Servers = source.Servers
             };
@@ -87,15 +87,15 @@ namespace Microsoft.OpenApi.Services
 
                 if (subset.Paths == null)
                 {
-                    subset.Paths = new OpenApiPaths();
-                    pathItem = new OpenApiPathItem();
+                    subset.Paths = new();
+                    pathItem = new();
                     subset.Paths.Add(pathKey, pathItem);
                 }
                 else
                 {
                     if (!subset.Paths.TryGetValue(pathKey, out pathItem))
                     {
-                        pathItem = new OpenApiPathItem();
+                        pathItem = new();
                         subset.Paths.Add(pathKey, pathItem);
                     }
                 }
@@ -284,7 +284,7 @@ namespace Microsoft.OpenApi.Services
                                     .FirstOrDefault(c => url.Contains(c));
 
             return baseUrl == null ?
-                    new Uri(new Uri(SRResource.DefaultBaseUri), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped)
+                    new Uri(new(SRResource.DefaultBaseUri), url).GetComponents(UriComponents.Path | UriComponents.KeepDelimiter, UriFormat.Unescaped)
                     : url.Split(new[] { baseUrl }, StringSplitOptions.None)[1];
         }
 

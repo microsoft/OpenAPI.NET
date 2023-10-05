@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiExternalDocs> _externalDocsFixedFields =
-            new FixedFieldMap<OpenApiExternalDocs>
+            new()
             {
                 // $ref
                 {
@@ -27,13 +27,14 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "url", (o, n) =>
                     {
-                        o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                        o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
             };
 
     private static readonly PatternFieldMap<OpenApiExternalDocs> _externalDocsPatternFields =
-            new PatternFieldMap<OpenApiExternalDocs> {
+            new()
+            {
                     {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
                 };
 

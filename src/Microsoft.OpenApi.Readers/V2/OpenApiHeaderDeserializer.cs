@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new FixedFieldMap<OpenApiHeader>
+        private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new()
         {
             {
                 "description", (o, n) =>
@@ -128,17 +128,17 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         };
 
-        private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new PatternFieldMap<OpenApiHeader>
+        private static readonly PatternFieldMap<OpenApiHeader> _headerPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
         private static readonly AnyFieldMap<OpenApiHeader> _headerAnyFields =
-            new AnyFieldMap<OpenApiHeader>
+            new()
             {
                 {
                     OpenApiConstants.Default,
-                    new AnyFieldMapParameter<OpenApiHeader>(
+                    new(
                         p => p.Schema?.Default,
                         (p, v) =>
                         {
@@ -150,11 +150,11 @@ namespace Microsoft.OpenApi.Readers.V2
             };
 
         private static readonly AnyListFieldMap<OpenApiHeader> _headerAnyListFields =
-            new AnyListFieldMap<OpenApiHeader>
+            new()
             {
                 {
                     OpenApiConstants.Enum,
-                    new AnyListFieldMapParameter<OpenApiHeader>(
+                    new(
                         p => p.Schema?.Enum,
                         (p, v) =>
                         {

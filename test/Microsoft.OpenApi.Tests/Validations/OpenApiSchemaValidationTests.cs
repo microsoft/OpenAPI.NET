@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                     },
                 },
                 Type = "object",
-                AdditionalProperties = new OpenApiSchema
+                AdditionalProperties = new()
                 {
                     Type = "integer",
                 }
@@ -151,33 +151,33 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Type = "object",
                 Properties =
                 {
-                    ["property1"] = new OpenApiSchema
+                    ["property1"] = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
                             Type = "integer",
                             Format = "int64"
                         }
                     },
-                    ["property2"] = new OpenApiSchema
+                    ["property2"] = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
                             Type = "object",
-                            AdditionalProperties = new OpenApiSchema
+                            AdditionalProperties = new()
                             {
                                 Type = "boolean"
                             }
                         }
                     },
-                    ["property3"] = new OpenApiSchema
+                    ["property3"] = new()
                     {
                         Type = "string",
                         Format = "password"
                     },
-                    ["property4"] = new OpenApiSchema
+                    ["property4"] = new()
                     {
                         Type = "string"
                     }
@@ -245,8 +245,8 @@ namespace Microsoft.OpenApi.Validations.Tests
                         new OpenApiSchema
                         {
                             Type = "object",
-                            Discriminator = new OpenApiDiscriminator { PropertyName = "property1" },
-                            Reference = new OpenApiReference { Id = "schema1" }
+                            Discriminator = new() { PropertyName = "property1" },
+                            Reference = new() { Id = "schema1" }
                         }
                     }
                 }
@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             result.Should().BeFalse();
             errors.Should().BeEquivalentTo(new List<OpenApiValidatorError>
             {
-                    new OpenApiValidatorError(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
+                    new(nameof(OpenApiSchemaRules.ValidateSchemaDiscriminator),"#/schemas/schema1/discriminator",
                         string.Format(SRResource.Validation_SchemaRequiredFieldListMustContainThePropertySpecifiedInTheDiscriminator,
                                     "schema1", "property1"))
             });
@@ -282,13 +282,13 @@ namespace Microsoft.OpenApi.Validations.Tests
                         new OpenApiSchema
                         {
                             Type = "array",
-                            Discriminator = new OpenApiDiscriminator
+                            Discriminator = new()
                             {
                                 PropertyName = "type"
                             },
                             OneOf = new List<OpenApiSchema>
                             {
-                                new OpenApiSchema
+                                new()
                                 {
                                     Properties =
                                     {
@@ -300,14 +300,14 @@ namespace Microsoft.OpenApi.Validations.Tests
                                             }
                                         }
                                     },
-                                    Reference = new OpenApiReference
+                                    Reference = new()
                                     {
                                         Type = ReferenceType.Schema,
                                         Id = "Person"
                                     }
                                 }
                             },
-                            Reference = new OpenApiReference { Id = "Person" }
+                            Reference = new() { Id = "Person" }
                         }
                     }
                 }

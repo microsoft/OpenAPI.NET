@@ -14,9 +14,9 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiMediaTypeTests
     {
-        public static OpenApiMediaType BasicMediaType = new OpenApiMediaType();
+        public static OpenApiMediaType BasicMediaType = new();
 
-        public static OpenApiMediaType AdvanceMediaType = new OpenApiMediaType
+        public static OpenApiMediaType AdvanceMediaType = new()
         {
             Example = new OpenApiInteger(42),
             Encoding = new Dictionary<string, OpenApiEncoding>
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiMediaType MediaTypeWithObjectExample = new OpenApiMediaType
+        public static OpenApiMediaType MediaTypeWithObjectExample = new()
         {
             Example = new OpenApiObject
             {
@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiMediaType MediaTypeWithXmlExample = new OpenApiMediaType
+        public static OpenApiMediaType MediaTypeWithXmlExample = new()
         {
             Example = new OpenApiString("<xml>123</xml>"),
             Encoding = new Dictionary<string, OpenApiEncoding>
@@ -75,10 +75,10 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiMediaType MediaTypeWithObjectExamples = new OpenApiMediaType
+        public static OpenApiMediaType MediaTypeWithObjectExamples = new()
         {
             Examples = {
-                ["object1"] = new OpenApiExample
+                ["object1"] = new()
                 {
                     Value = new OpenApiObject
                     {

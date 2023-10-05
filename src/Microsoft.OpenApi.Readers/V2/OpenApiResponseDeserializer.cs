@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new FixedFieldMap<OpenApiResponse>
+        private static readonly FixedFieldMap<OpenApiResponse> _responseFixedFields = new()
         {
             {
                 "description", (o, n) =>
@@ -43,17 +43,17 @@ namespace Microsoft.OpenApi.Readers.V2
         };
 
         private static readonly PatternFieldMap<OpenApiResponse> _responsePatternFields =
-            new PatternFieldMap<OpenApiResponse>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiMediaType> _mediaTypeAnyFields =
-            new AnyFieldMap<OpenApiMediaType>
+            new()
             {
                 {
                     OpenApiConstants.Example,
-                    new AnyFieldMapParameter<OpenApiMediaType>(
+                    new(
                         m => m.Example,
                         (m, v) => m.Example = v,
                         m => m.Schema)
@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
             else
             {
-                mediaTypeObject = new OpenApiMediaType
+                mediaTypeObject = new()
                 {
                     Schema = node.Context.GetFromTempStorage<OpenApiSchema>(TempStorageKeys.ResponseSchema, response)
                 };

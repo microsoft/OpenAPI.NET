@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiServerVariable> _serverVariableFixedFields =
-            new FixedFieldMap<OpenApiServerVariable>
+            new()
             {
                 {
                     "enum", (o, n) =>
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V3
             };
 
         private static readonly PatternFieldMap<OpenApiServerVariable> _serverVariablePatternFields =
-            new PatternFieldMap<OpenApiServerVariable>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

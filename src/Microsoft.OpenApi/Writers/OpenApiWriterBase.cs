@@ -52,10 +52,10 @@ namespace Microsoft.OpenApi.Writers
             Writer = textWriter;
             Writer.NewLine = "\n";
 
-            Scopes = new Stack<Scope>();
+            Scopes = new();
             if (settings == null)
             {
-                settings = new OpenApiWriterSettings();
+                settings = new();
             }
             Settings = settings;
         }

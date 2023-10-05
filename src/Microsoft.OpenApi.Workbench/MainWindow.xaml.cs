@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Workbench
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly MainModel _mainModel = new MainModel();
+        private readonly MainModel _mainModel = new();
 
         public MainWindow()
         {

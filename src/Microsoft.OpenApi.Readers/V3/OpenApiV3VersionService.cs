@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
-                        return new OpenApiReference
+                        return new()
                         {
                             Type = type,
                             Id = reference
@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
                     // Either this is an external reference as an entire file
                     // or a simple string-style reference for tag and security scheme.
-                    return new OpenApiReference
+                    return new()
                     {
                         Type = type,
                         ExternalResource = segments[0]
@@ -106,7 +106,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         }
                         catch (OpenApiException ex)
                         {
-                            Diagnostic.Errors.Add(new OpenApiError(ex));
+                            Diagnostic.Errors.Add(new(ex));
                         }
                     }
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 if (segments[1] == "components")
                 {
                     var referenceType = segments[2].GetEnumFromDisplayName<ReferenceType>();
-                    return new OpenApiReference { Type = referenceType, Id = segments[3] };
+                    return new() { Type = referenceType, Id = segments[3] };
                 }
             }
 

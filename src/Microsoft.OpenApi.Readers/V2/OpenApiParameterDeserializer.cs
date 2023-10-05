@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Readers.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
-            new FixedFieldMap<OpenApiParameter>
+            new()
             {
                 {
                     "name", (o, n) =>
@@ -136,17 +136,17 @@ namespace Microsoft.OpenApi.Readers.V2
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
-            new PatternFieldMap<OpenApiParameter>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields =
-            new AnyFieldMap<OpenApiParameter>
+            new()
             {
                 {
                     OpenApiConstants.Default,
-                    new AnyFieldMapParameter<OpenApiParameter>(
+                    new(
                         p => p.Schema?.Default,
                         (p, v) => {
                             if (p.Schema != null || v != null)
@@ -159,11 +159,11 @@ namespace Microsoft.OpenApi.Readers.V2
             };
 
         private static readonly AnyListFieldMap<OpenApiParameter> _parameterAnyListFields =
-            new AnyListFieldMap<OpenApiParameter>
+            new()
             {
                 {
                     OpenApiConstants.Enum,
-                    new AnyListFieldMapParameter<OpenApiParameter>(
+                    new(
                         p => p.Schema?.Enum,
                         (p, v) => {
                             if (p.Schema != null || v != null && v.Count > 0)
@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             if (p.Schema == null)
             {
-                p.Schema = new OpenApiSchema();
+                p.Schema = new();
             }
 
             return p.Schema;
@@ -218,7 +218,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             if (p.Schema == null)
             {
-                p.Schema = new OpenApiSchema();
+                p.Schema = new();
             }
 
             return p.Schema;
@@ -238,7 +238,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     var formParameters = n.Context.GetFromTempStorage<List<OpenApiParameter>>("formParameters");
                     if (formParameters == null)
                     {
-                        formParameters = new List<OpenApiParameter>();
+                        formParameters = new();
                         n.Context.SetTempStorage("formParameters", formParameters);
                     }
 

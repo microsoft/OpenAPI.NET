@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Hidi
                 if (options.Output == null)
                 {
                     var inputExtension = GetInputPathExtension(options.OpenApi, options.Csdl);
-                    options.Output = new FileInfo($"./output{inputExtension}");
+                    options.Output = new($"./output{inputExtension}");
                 };
 
                 if (options.CleanOutput && options.Output.Exists)
@@ -194,7 +194,7 @@ namespace Microsoft.OpenApi.Hidi
 
                 IOpenApiWriter writer = openApiFormat switch
                 {
-                    OpenApiFormat.Json => options.TerseOutput ? new OpenApiJsonWriter(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
+                    OpenApiFormat.Json => options.TerseOutput ? new(textWriter, settings, options.TerseOutput) : new OpenApiJsonWriter(textWriter, settings, false),
                     OpenApiFormat.Yaml => new OpenApiYamlWriter(textWriter, settings),
                     _ => throw new ArgumentException("Unknown format"),
                 };
@@ -368,11 +368,11 @@ namespace Microsoft.OpenApi.Hidi
             {
                 stopwatch.Start();
 
-                result = await new OpenApiStreamReader(new OpenApiReaderSettings
-                {
+                result = await new OpenApiStreamReader(new()
+                    {
                     LoadExternalRefs = inlineExternal,
                     BaseUrl = openApiFile.StartsWith("http", StringComparison.OrdinalIgnoreCase) ?
-                        new Uri(openApiFile) :
+                        new(openApiFile) :
                         new Uri("file://" + new FileInfo(openApiFile).DirectoryName + Path.DirectorySeparatorChar)
                 }
                 ).ReadAsync(stream, cancellationToken).ConfigureAwait(false);
@@ -459,7 +459,7 @@ namespace Microsoft.OpenApi.Hidi
                         }
                         else
                         {
-                            paths.Add(path, new List<string> {method});
+                            paths.Add(path, new() {method});
                         }
                     }
                     else
@@ -741,7 +741,7 @@ namespace Microsoft.OpenApi.Hidi
                 outputFolder.Create();
             }
             // Write OpenAPI to Output folder
-            options.Output = new FileInfo(Path.Combine(options.OutputFolder, "openapi.json"));
+            options.Output = new(Path.Combine(options.OutputFolder, "openapi.json"));
             options.TerseOutput = true;
             WriteOpenApi(options, OpenApiFormat.Json, OpenApiSpecVersion.OpenApi3_0, document, logger);
 
@@ -762,7 +762,7 @@ namespace Microsoft.OpenApi.Hidi
             // Write OpenAIPluginManifest to Output folder
             var manifestFile = new FileInfo(Path.Combine(options.OutputFolder, "ai-plugin.json"));
             using var file = new FileStream(manifestFile.FullName, FileMode.Create);
-            using var jsonWriter = new Utf8JsonWriter(file, new JsonWriterOptions { Indented = true });
+            using var jsonWriter = new Utf8JsonWriter(file, new() { Indented = true });
             manifest.Write(jsonWriter);
             await jsonWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
         }

@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     new OpenApiTag
                     {
                         UnresolvedReference = true,
-                        Reference = new OpenApiReference
+                        Reference = new()
                         {
                             Id = "user",
                             Type = ReferenceType.Tag
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Name = "username",
                         Description = "The user name for login",
                         Required = true,
-                        Schema = new OpenApiSchema
+                        Schema = new()
                         {
                             Type = "string"
                         }
@@ -75,7 +75,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Description = "The password for login in clear text",
                         In = ParameterLocation.Query,
                         Required = true,
-                        Schema = new OpenApiSchema
+                        Schema = new()
                         {
                             Type = "string"
                         }

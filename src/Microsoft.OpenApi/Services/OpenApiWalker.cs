@@ -16,8 +16,8 @@ namespace Microsoft.OpenApi.Services
     public class OpenApiWalker
     {
         private readonly OpenApiVisitorBase _visitor;
-        private readonly Stack<OpenApiSchema> _schemaLoop = new Stack<OpenApiSchema>();
-        private readonly Stack<OpenApiPathItem> _pathItemLoop = new Stack<OpenApiPathItem>();
+        private readonly Stack<OpenApiSchema> _schemaLoop = new();
+        private readonly Stack<OpenApiPathItem> _pathItemLoop = new();
 
         /// <summary>
         /// Initializes the <see cref="OpenApiWalker"/> class.

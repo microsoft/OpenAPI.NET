@@ -40,11 +40,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
         public async Task DiagnosticReportMergedForExternalReference()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
+            var reader = new OpenApiStreamReader(new()
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
-                BaseUrl = new Uri("fie://c:\\")
+                BaseUrl = new("fie://c:\\")
             });
 
             ReadResult result;
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
             Assert.NotNull(result.OpenApiDocument.Workspace);
             Assert.True(result.OpenApiDocument.Workspace.Contains("TodoReference.yaml"));
             result.OpenApiDiagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new OpenApiError( new OpenApiException("[File: ./TodoReference.yaml] Invalid Reference identifier 'object-not-existing'.")) });
+                new( new OpenApiException("[File: ./TodoReference.yaml] Invalid Reference identifier 'object-not-existing'.")) });
         }
     }
 
@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiReaderTests
 
         public Task<Stream> LoadAsync(Uri uri)
         {
-            var path = new Uri(new Uri("http://example.org/OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/"), uri).AbsolutePath;
+            var path = new Uri(new("http://example.org/OpenApiReaderTests/Samples/OpenApiDiagnosticReportMerged/"), uri).AbsolutePath;
             path = path.Substring(1); // remove leading slash
             return Task.FromResult(Resources.GetStream(path));
         }

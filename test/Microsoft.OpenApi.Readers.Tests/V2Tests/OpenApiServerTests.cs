@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Linq;
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   version: 1.0.0
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
             });
 
@@ -41,7 +40,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
             });
 
@@ -62,7 +61,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: www.foo.com
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
             });
 
@@ -87,9 +86,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://www.foo.com/spec.yaml")
+                BaseUrl = new("https://www.foo.com/spec.yaml")
             });
 
             var doc = reader.Read(input, out var diagnostic);
@@ -111,7 +110,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 basePath: /baz
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
             });
 
@@ -135,9 +134,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://bing.com/foo")
+                BaseUrl = new("https://bing.com/foo")
             });
 
             var doc = reader.Read(input, out var diagnostic);
@@ -160,9 +159,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - http
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://bing.com")
+                BaseUrl = new("https://bing.com")
             });
 
             var doc = reader.Read(input, out var diagnostic);
@@ -184,9 +183,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 basePath: /api
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://bing.com")
+                BaseUrl = new("https://bing.com")
             });
 
             var doc = reader.Read(input, out var diagnostic);
@@ -208,9 +207,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: www.example.com
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://bing.com")
+                BaseUrl = new("https://bing.com")
             });
 
             var doc = reader.Read(input, out var diagnostic);
@@ -232,9 +231,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: prod.bing.com
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://dev.bing.com/api/description.yaml")
+                BaseUrl = new("https://dev.bing.com/api/description.yaml")
             });
 
             var doc = reader.Read(input, out var _);
@@ -258,9 +257,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                   - https
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://dev.bing.com/api")
+                BaseUrl = new("https://dev.bing.com/api")
             });
 
             var doc = reader.Read(input, out var diagnostic);
@@ -283,9 +282,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: localhost:23232
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://bing.com")
+                BaseUrl = new("https://bing.com")
             });
 
             var doc = reader.Read(input, out var diagnostic);
@@ -307,9 +306,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 host: http://test.microsoft.com
                 paths: {}
                 """;
-            var reader = new OpenApiStringReader(new OpenApiReaderSettings
+            var reader = new OpenApiStringReader(new()
             {
-                BaseUrl = new Uri("https://bing.com")
+                BaseUrl = new("https://bing.com")
             });
 
             var doc = reader.Read(input, out var diagnostic);

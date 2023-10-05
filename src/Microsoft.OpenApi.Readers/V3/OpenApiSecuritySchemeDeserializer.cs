@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiSecurityScheme> _securitySchemeFixedFields =
-            new FixedFieldMap<OpenApiSecurityScheme>
+            new()
             {
                 {
                     "type", (o, n) =>
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 {
                     "openIdConnectUrl", (o, n) =>
                     {
-                        o.OpenIdConnectUrl = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                        o.OpenIdConnectUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.V3
             };
 
         private static readonly PatternFieldMap<OpenApiSecurityScheme> _securitySchemePatternFields =
-            new PatternFieldMap<OpenApiSecurityScheme>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

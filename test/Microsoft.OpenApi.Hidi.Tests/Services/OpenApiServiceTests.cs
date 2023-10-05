@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var openApiDoc = new OpenApiDocument
             {
-                Info = new OpenApiInfo
+                Info = new()
                 {
                     Title = "Test",
                     Version = "1.0.0"
@@ -113,7 +113,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var openApiDoc = new OpenApiDocument
             {
-                Info = new OpenApiInfo
+                Info = new()
                 {
                     Title = "Test",
                     Version = "1.0.0"
@@ -136,7 +136,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
-                Output = new FileInfo("sample.md")
+                Output = new("sample.md")
             };
 
             await OpenApiService.ShowOpenApiDocument(options, _logger);
@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             {
                 Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
                 CsdlFilter = "todos",
-                Output = new FileInfo("sample.md")
+                Output = new("sample.md")
             };
 
             // create a dummy ILogger instance for testing
@@ -211,7 +211,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
             HidiOptions options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
-                Output = new FileInfo("sample.json"),
+                Output = new("sample.json"),
                 CleanOutput = true,
                 TerseOutput = false,
                 InlineLocal = false,
