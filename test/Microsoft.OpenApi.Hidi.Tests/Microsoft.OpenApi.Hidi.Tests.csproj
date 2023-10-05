@@ -28,6 +28,9 @@
     <None Update="UtilityFiles\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Update="UtilityFiles\OpenApiDocumentMock.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
   </ItemGroup>
 
 </Project>
