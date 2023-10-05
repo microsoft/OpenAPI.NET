@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.SmokeTests
 
         static ApisGuruTests()
         {
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             _httpClient = new(new HttpClientHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip
