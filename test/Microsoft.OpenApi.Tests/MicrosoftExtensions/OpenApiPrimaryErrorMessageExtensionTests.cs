@@ -16,7 +16,7 @@ public class OpenApiPrimaryErrorMessageExtensionTests
     public void ExtensionNameMatchesExpected()
     {
         // Act
-        string name = Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Name;
+        string name = MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Name;
         string expectedName = "x-ms-primary-error-message";
 
         // Assert
@@ -50,7 +50,7 @@ public class OpenApiPrimaryErrorMessageExtensionTests
         var value = new OpenApiBoolean(true);
 
         // Act
-        var extension = Microsoft.OpenApi.MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Parse(value);
+        var extension = MicrosoftExtensions.OpenApiPrimaryErrorMessageExtension.Parse(value);
 
         // Assert
         Assert.True(extension.IsPrimaryErrorMessage);
