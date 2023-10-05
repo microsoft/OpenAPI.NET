@@ -33,10 +33,7 @@ namespace Microsoft.OpenApi.Expressions
         public BodyExpression(JsonPointer pointer)
             : base(pointer?.ToString())
         {
-            if (pointer == null)
-            {
-                throw Error.ArgumentNull(nameof(pointer));
-            }
+            Utils.CheckArgumentNull(pointer);
         }
 
         /// <summary>

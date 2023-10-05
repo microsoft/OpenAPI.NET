@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => new PathExpression(name);
 
             // Act
-            Assert.Throws<ArgumentException>("name", test);
+            Assert.Throws<ArgumentNullException>("name", test);
         }
 
         [Fact]

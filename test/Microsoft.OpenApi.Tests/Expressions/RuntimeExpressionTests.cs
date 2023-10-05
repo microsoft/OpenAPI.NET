@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => RuntimeExpression.Build(expression);
 
             // Assert
-            Assert.Throws<ArgumentException>("expression", test);
+            Assert.Throws<ArgumentNullException>("expression", test);
         }
 
         [Theory]

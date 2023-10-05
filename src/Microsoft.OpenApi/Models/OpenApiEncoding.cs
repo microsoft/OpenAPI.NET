@@ -75,10 +75,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull("writer");
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

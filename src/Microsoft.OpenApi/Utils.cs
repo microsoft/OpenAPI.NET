@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Microsoft.OpenApi
 {
@@ -17,7 +18,9 @@ namespace Microsoft.OpenApi
         /// <param name="value">The input value.</param>
         /// <param name="parameterName">The input parameter name.</param>
         /// <returns>The input value.</returns>
-        internal static T CheckArgumentNull<T>(T value, string parameterName) where T : class
+        internal static T CheckArgumentNull<T>(
+            T value,
+            [CallerArgumentExpression("value")] string parameterName = "")
         {
             return value ?? throw new ArgumentNullException(parameterName, $"Value cannot be null: {parameterName}");
         }
@@ -28,9 +31,11 @@ namespace Microsoft.OpenApi
         /// <param name="value">The input string value.</param>
         /// <param name="parameterName">The input parameter name.</param>
         /// <returns>The input value.</returns>
-        internal static string CheckArgumentNullOrEmpty(string value, string parameterName)
+        internal static string CheckArgumentNullOrEmpty(
+            string value,
+            [CallerArgumentExpression(nameof(value))] string parameterName = "")
         {
-            return string.IsNullOrEmpty(value) ? throw new ArgumentNullException(parameterName, $"Value cannot be null or empty: {parameterName}") : value;
+            return string.IsNullOrWhiteSpace(value) ? throw new ArgumentNullException(parameterName, $"Value cannot be null or empty: {parameterName}") : value;
         }
     }
 }

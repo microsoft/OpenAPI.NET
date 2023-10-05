@@ -55,10 +55,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="error">Error to register.</param>
         public void AddError(OpenApiValidatorError error)
         {
-            if (error == null)
-            {
-                throw Error.ArgumentNull(nameof(error));
-            }
+            Utils.CheckArgumentNull(error);
 
             _errors.Add(error);
         }
@@ -69,10 +66,7 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="warning">Error to register.</param>
         public void AddWarning(OpenApiValidatorWarning warning)
         {
-            if (warning == null)
-            {
-                throw Error.ArgumentNull(nameof(warning));
-            }
+            Utils.CheckArgumentNull(warning);
 
             _warnings.Add(warning);
         }

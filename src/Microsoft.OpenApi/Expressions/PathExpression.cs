@@ -20,10 +20,7 @@ namespace Microsoft.OpenApi.Expressions
         public PathExpression(string name)
             : base(name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw Error.ArgumentNullOrWhiteSpace(nameof(name));
-            }
+            Utils.CheckArgumentNullOrEmpty(name);
         }
 
         /// <summary>

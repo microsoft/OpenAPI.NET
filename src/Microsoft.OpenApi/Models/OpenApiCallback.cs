@@ -57,15 +57,8 @@ namespace Microsoft.OpenApi.Models
         /// <param name="pathItem">The path item.</param>
         public void AddPathItem(RuntimeExpression expression, OpenApiPathItem pathItem)
         {
-            if (expression == null)
-            {
-                throw Error.ArgumentNull(nameof(expression));
-            }
-
-            if (pathItem == null)
-            {
-                throw Error.ArgumentNull(nameof(pathItem));
-            }
+            Utils.CheckArgumentNull(expression);
+            Utils.CheckArgumentNull(pathItem);
 
             if (PathItems == null)
             {
@@ -80,10 +73,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             var target = this;
 
