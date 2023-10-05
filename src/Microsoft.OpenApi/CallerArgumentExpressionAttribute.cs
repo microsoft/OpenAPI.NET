@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿#if !NETCOREAPP3_1_OR_GREATER
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace System.Runtime.CompilerServices;
@@ -14,3 +15,4 @@ sealed class CallerArgumentExpressionAttribute :
 
     public string ParameterName { get; }
 }
+#endif
