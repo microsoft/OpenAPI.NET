@@ -18,7 +18,9 @@ namespace Microsoft.OpenApi.Tests
         {
             return input.Replace("\r\n", "\n")
                 .Replace('\r', '\n')
-                .Replace("\n", Environment.NewLine);
+                .Replace("\n", Environment.NewLine)
+                .Replace($" {Environment.NewLine}", Environment.NewLine)// also cleanup new lines preceded with spaces
+                .TrimEnd();
         }
     }
 }
