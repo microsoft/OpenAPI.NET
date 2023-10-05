@@ -35,7 +35,7 @@ namespace Microsoft.OpenApi
             string value,
             [CallerArgumentExpression(nameof(value))] string parameterName = "")
         {
-            return string.IsNullOrEmpty(value) ? throw new ArgumentNullException(parameterName, $"Value cannot be null or empty: {parameterName}") : value;
+            return string.IsNullOrWhiteSpace(value) ? throw new ArgumentNullException(parameterName, $"Value cannot be null or empty: {parameterName}") : value;
         }
     }
 }

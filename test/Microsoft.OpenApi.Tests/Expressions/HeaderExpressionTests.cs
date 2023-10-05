@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => new HeaderExpression(token);
 
             // Act
-            Assert.Throws<ArgumentException>("token", test);
+            Assert.Throws<ArgumentNullException>("token", test);
         }
 
         [Fact]
