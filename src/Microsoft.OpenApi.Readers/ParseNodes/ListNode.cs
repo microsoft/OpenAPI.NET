@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override List<IOpenApiAny> CreateListOfAny()
         {
-            return _nodeList.Select(n => ParseNode.Create(Context, n).CreateAny())
+            return _nodeList.Select(n => Create(Context, n).CreateAny())
                 .Where(i => i != null)
                 .ToList();
         }

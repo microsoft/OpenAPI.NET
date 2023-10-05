@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.SmokeTests
         public GraphTests(ITestOutputHelper output)
         {
             _output = output;
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             _httpClient = new HttpClient(new HttpClientHandler
             {                AutomaticDecompression = DecompressionMethods.GZip
             });

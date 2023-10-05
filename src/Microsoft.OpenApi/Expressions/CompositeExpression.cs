@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Expressions
             foreach (var item in matches.Cast<Match>())
             {
                 var value = item.Groups["exp"].Captures.Cast<Capture>().First().Value;
-                ContainedExpressions.Add(RuntimeExpression.Build(value));
+                ContainedExpressions.Add(Build(value));
             }
         }
 
