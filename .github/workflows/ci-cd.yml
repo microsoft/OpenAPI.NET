@@ -59,85 +59,10 @@ jobs:
         id: build_projects
         shell: pwsh
         run: |
-          $projectsArray = @(
-            '.\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj',
-            '.\src\Microsoft.OpenApi.Readers\Microsoft.OpenApi.Readers.csproj',
-            '.\src\Microsoft.OpenApi.Hidi\Microsoft.OpenApi.Hidi.csproj'
-          )
-          $gitNewVersion = if ("${{ steps.tag_generator.outputs.new_version }}") {"${{ steps.tag_generator.outputs.new_version }}"} else {$null}
-          $projectCurrentVersion = ([xml](Get-Content .\src\Microsoft.OpenApi\Microsoft.OpenApi.csproj)).Project.PropertyGroup.Version
-          $projectNewVersion = $gitNewVersion ?? $projectCurrentVersion
-
-          $projectsArray | ForEach-Object {
-            dotnet build $PSItem `
-            -c Release # `
-            # -o $env:ARTIFACTS_FOLDER `
-            # /p:Version=$projectNewVersion 
-          }
-
-          # Move NuGet packages to separate folder for pipeline convenience
-          # New-Item Artifacts/NuGet -ItemType Directory
-          # Get-ChildItem Artifacts/*.nupkg | Move-Item -Destination "Artifacts/NuGet"
+          dotnet build Microsoft.OpenApi.sln -c Release
 
       - name: Run unit tests
         id: run_unit_tests
         shell: pwsh
         run: |
-          $testProjectsArray = @(
-            '.\test\Microsoft.OpenApi.Tests\Microsoft.OpenApi.Tests.csproj',
-            '.\test\Microsoft.OpenApi.Readers.Tests\Microsoft.OpenApi.Readers.Tests.csproj',
-            '.\test\Microsoft.OpenApi.SmokeTests\Microsoft.OpenApi.SmokeTests.csproj'
-          )
-
-          $testProjectsArray | ForEach-Object {
-            dotnet test $PSItem `
-            -c Release
-          }
-
-      # - if: steps.tag_generator.outputs.new_version != ''
-      #   name: Upload NuGet packages as artifacts
-      #   id: ul_packages_artifact
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: NuGet packages
-      #     path: Artifacts/NuGet/
-
-  cd:
-    if: needs.ci.outputs.is_default_branch == 'true' && needs.ci.outputs.latest_version != ''
-    name: Continuous Deployment
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-      # - name: Download and extract NuGet packages
-      #   id: dl_packages_artifact
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: NuGet packages
-      #     path: NuGet/
-
-      # - name: Push NuGet packages to NuGet.org
-      #   id: push_nuget_packages
-      #   continue-on-error: true
-      #   shell: pwsh
-      #   run: |
-      #     Get-ChildItem NuGet/*.nupkg | ForEach-Object {
-      #       nuget push $PSItem `
-      #       -ApiKey $env:NUGET_API_KEY `
-      #       -Source https://api.nuget.org/v3/index.json
-      #     }
-      #   env:
-      #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-
-      - name: Create and publish release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: OpenApi v${{ needs.ci.outputs.latest_version }}
-          tag_name: v${{ needs.ci.outputs.latest_version }}
-          # files: |
-          #   NuGet/Microsoft.OpenApi.${{ needs.ci.outputs.latest_version }}.nupkg
-          #   NuGet/Microsoft.OpenApi.Readers.${{ needs.ci.outputs.latest_version }}.nupkg
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-# Built with ❤ by [Pipeline Foundation](https://pipeline.foundation)
+          dotnet test Microsoft.OpenApi.sln -c Release -v n
