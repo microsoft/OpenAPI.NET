@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static FixedFieldMap<OpenApiContact> _contactFixedFields = new FixedFieldMap<OpenApiContact>
+        private static FixedFieldMap<OpenApiContact> _contactFixedFields = new()
         {
             {
                 "name", (o, n) =>
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "url", (o, n) =>
                 {
-                    o.Url = new Uri(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
+                    o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                 }
             },
             {
@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Readers.V2
             },
         };
 
-        private static PatternFieldMap<OpenApiContact> _contactPatternFields = new PatternFieldMap<OpenApiContact>
+        private static PatternFieldMap<OpenApiContact> _contactPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };

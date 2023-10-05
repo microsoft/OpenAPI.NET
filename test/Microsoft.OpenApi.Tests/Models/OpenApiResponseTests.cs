@@ -20,21 +20,21 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiResponseTests
     {
-        public static OpenApiResponse BasicResponse = new OpenApiResponse();
+        public static OpenApiResponse BasicResponse = new();
 
-        public static OpenApiResponse AdvancedResponse = new OpenApiResponse
+        public static OpenApiResponse AdvancedResponse = new()
         {
             Description = "A complex object array response",
             Content =
             {
-                ["text/plain"] = new OpenApiMediaType
+                ["text/plain"] = new()
                 {
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
-                            Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
+                            Reference = new() {Type = ReferenceType.Schema, Id = "customType"}
                         }
                     },
                     Example = new OpenApiString("Blabla"),
@@ -46,18 +46,18 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Headers =
             {
-                ["X-Rate-Limit-Limit"] = new OpenApiHeader
+                ["X-Rate-Limit-Limit"] = new()
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "integer"
                     }
                 },
-                ["X-Rate-Limit-Reset"] = new OpenApiHeader
+                ["X-Rate-Limit-Reset"] = new()
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "integer"
                     }
@@ -65,9 +65,9 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiResponse ReferencedResponse = new OpenApiResponse
+        public static OpenApiResponse ReferencedResponse = new()
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Response,
                 Id = "example1"
@@ -75,32 +75,32 @@ namespace Microsoft.OpenApi.Tests.Models
             Description = "A complex object array response",
             Content =
             {
-                ["text/plain"] = new OpenApiMediaType
+                ["text/plain"] = new()
                 {
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
-                            Reference = new OpenApiReference {Type = ReferenceType.Schema, Id = "customType"}
+                            Reference = new() {Type = ReferenceType.Schema, Id = "customType"}
                         }
                     }
                 }
             },
             Headers =
             {
-                ["X-Rate-Limit-Limit"] = new OpenApiHeader
+                ["X-Rate-Limit-Limit"] = new()
                 {
                     Description = "The number of allowed requests in the current period",
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "integer"
                     }
                 },
-                ["X-Rate-Limit-Reset"] = new OpenApiHeader
+                ["X-Rate-Limit-Reset"] = new()
                 {
                     Description = "The number of seconds left in the current period",
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "integer"
                     }
@@ -294,7 +294,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedResponse.SerializeAsV3(writer);
@@ -311,7 +311,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedResponse.SerializeAsV3WithoutReference(writer);
@@ -328,7 +328,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedResponse.SerializeAsV2(writer);
@@ -345,7 +345,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedResponse.SerializeAsV2WithoutReference(writer);

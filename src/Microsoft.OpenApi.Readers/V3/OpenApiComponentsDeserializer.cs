@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
+        private static FixedFieldMap<OpenApiComponents> _componentsFixedFields = new()
         {
             {
                 "schemas", (o, n) => o.Schemas = n.CreateMapWithReference(ReferenceType.Schema, LoadSchema)
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.V3
         };
 
         private static PatternFieldMap<OpenApiComponents> _componentsPatternFields =
-            new PatternFieldMap<OpenApiComponents>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };

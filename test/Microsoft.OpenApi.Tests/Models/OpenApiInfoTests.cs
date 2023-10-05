@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -15,11 +14,11 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiInfoTests
     {
-        public static OpenApiInfo AdvanceInfo = new OpenApiInfo
+        public static OpenApiInfo AdvanceInfo = new()
         {
             Title = "Sample Pet Store App",
             Description = "This is a sample server for a pet store.",
-            TermsOfService = new Uri("http://example.com/terms/"),
+            TermsOfService = new("http://example.com/terms/"),
             Contact = OpenApiContactTests.AdvanceContact,
             License = OpenApiLicenseTests.AdvanceLicense,
             Version = "1.1.1",
@@ -29,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiInfo BasicInfo = new OpenApiInfo
+        public static OpenApiInfo BasicInfo = new()
         {
             Title = "Sample Pet Store App",
             Version = "1.0"

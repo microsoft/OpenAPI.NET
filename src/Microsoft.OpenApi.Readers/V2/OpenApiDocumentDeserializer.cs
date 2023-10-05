@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
                 "swagger", (o, n) =>
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     if (o.Components == null)
                     {
-                        o.Components = new OpenApiComponents();
+                        o.Components = new();
                     }
 
                     o.Components.Schemas = n.CreateMapWithReference(
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     if (o.Components == null)
                     {
-                        o.Components = new OpenApiComponents();
+                        o.Components = new();
                     }
 
                     o.Components.Parameters = n.CreateMapWithReference(
@@ -99,7 +99,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     if (o.Components == null)
                     {
-                        o.Components = new OpenApiComponents();
+                        o.Components = new();
                     }
 
                     o.Components.Responses = n.CreateMapWithReference(
@@ -112,7 +112,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     if (o.Components == null)
                     {
-                        o.Components = new OpenApiComponents();
+                        o.Components = new();
                     }
 
                     o.Components.SecuritySchemes = n.CreateMapWithReference(
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)}
         };
 
-        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new()
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
@@ -154,7 +154,7 @@ namespace Microsoft.OpenApi.Readers.V2
             //Validate host
             if (host != null && !IsHostValid(host))
             {
-                rootNode.Context.Diagnostic.Errors.Add(new OpenApiError(rootNode.Context.GetLocation(), "Invalid host"));
+                rootNode.Context.Diagnostic.Errors.Add(new(rootNode.Context.GetLocation(), "Invalid host"));
                 return;
             }
 
@@ -331,10 +331,10 @@ namespace Microsoft.OpenApi.Readers.V2
             if (body != null)
             {
                 operation.Parameters.Remove(body);
-                operation.RequestBody = new OpenApiRequestBody
+                operation.RequestBody = new()
                 {
                     UnresolvedReference = true,
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Id = body.Reference.Id,
                         Type = ReferenceType.RequestBody

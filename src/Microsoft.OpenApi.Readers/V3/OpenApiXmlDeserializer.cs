@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiXml> _xmlFixedFields = new FixedFieldMap<OpenApiXml>
+        private static readonly FixedFieldMap<OpenApiXml> _xmlFixedFields = new()
         {
             {
                 "name", (o, n) =>
@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "namespace", (o, n) =>
                 {
-                    o.Namespace = new Uri(n.GetScalarValue(), UriKind.Absolute);
+                    o.Namespace = new(n.GetScalarValue(), UriKind.Absolute);
                 }
             },
             {
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.V3
         };
 
         private static readonly PatternFieldMap<OpenApiXml> _xmlPatternFields =
-            new PatternFieldMap<OpenApiXml>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

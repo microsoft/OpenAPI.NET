@@ -44,26 +44,26 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
                 Type = "object",
                 Properties =
                 {
-                    ["aString"] = new OpenApiSchema
+                    ["aString"] = new()
                     {
                         Type = "string"
                     },
-                    ["aInteger"] = new OpenApiSchema
+                    ["aInteger"] = new()
                     {
                         Type = "integer",
                         Format = "int32"
                     },
-                    ["aDouble"] = new OpenApiSchema
+                    ["aDouble"] = new()
                     {
                         Type = "number",
                         Format = "double"
                     },
-                    ["aDateTime"] = new OpenApiSchema
+                    ["aDateTime"] = new()
                     {
                         Type = "string",
                         Format = "date-time"
                     },
-                    ["aDate"] = new OpenApiSchema
+                    ["aDate"] = new()
                     {
                         Type = "string",
                         Format = "date"
@@ -130,54 +130,54 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
                 Type = "object",
                 Properties =
                     {
-                        ["aString"] = new OpenApiSchema
+                        ["aString"] = new()
                         {
                             Type = "string"
                         },
-                        ["aInteger"] = new OpenApiSchema
+                        ["aInteger"] = new()
                         {
                             Type = "integer",
                             Format = "int32"
                         },
-                        ["aArray"] = new OpenApiSchema
+                        ["aArray"] = new()
                         {
                             Type = "array",
-                            Items = new OpenApiSchema
+                            Items = new()
                             {
                                 Type = "integer",
                                 Format = "int64"
                             }
                         },
-                        ["aNestedArray"] = new OpenApiSchema
+                        ["aNestedArray"] = new()
                         {
                             Type = "array",
-                            Items = new OpenApiSchema
+                            Items = new()
                             {
                                 Type = "object",
                                 Properties =
                                 {
-                                    ["aFloat"] = new OpenApiSchema
+                                    ["aFloat"] = new()
                                     {
                                         Type = "number",
                                         Format = "float"
                                     },
-                                    ["aPassword"] = new OpenApiSchema
+                                    ["aPassword"] = new()
                                     {
                                         Type = "string",
                                         Format = "password"
                                     },
-                                    ["aArray"] = new OpenApiSchema
+                                    ["aArray"] = new()
                                     {
                                         Type = "array",
-                                        Items = new OpenApiSchema
+                                        Items = new()
                                         {
                                             Type = "string",
                                         }
                                     },
-                                    ["aDictionary"] = new OpenApiSchema
+                                    ["aDictionary"] = new()
                                     {
                                         Type = "object",
-                                        AdditionalProperties = new OpenApiSchema
+                                        AdditionalProperties = new()
                                         {
                                             Type = "integer",
                                             Format = "int64"
@@ -186,24 +186,24 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
                                 }
                             }
                         },
-                        ["aObject"] = new OpenApiSchema
+                        ["aObject"] = new()
                         {
                             Type = "array",
                             Properties =
                             {
-                                ["aDate"] = new OpenApiSchema
+                                ["aDate"] = new()
                                 {
                                     Type = "string",
                                     Format = "date"
                                 }
                             }
                         },
-                        ["aDouble"] = new OpenApiSchema
+                        ["aDouble"] = new()
                         {
                             Type = "number",
                             Format = "double"
                         },
-                        ["aDateTime"] = new OpenApiSchema
+                        ["aDateTime"] = new()
                         {
                             Type = "string",
                             Format = "date-time"
@@ -310,36 +310,36 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
                 Type = "object",
                 Properties =
                         {
-                            ["aString"] = new OpenApiSchema
+                            ["aString"] = new()
                             {
                                 Type = "string"
                             },
-                            ["aArray"] = new OpenApiSchema
+                            ["aArray"] = new()
                             {
                                 Type = "array",
-                                Items = new OpenApiSchema
+                                Items = new()
                                 {
                                     Type = "integer"
                                 }
                             },
-                            ["aNestedArray"] = new OpenApiSchema
+                            ["aNestedArray"] = new()
                             {
                                 Type = "array",
-                                Items = new OpenApiSchema
+                                Items = new()
                                 {
                                     Type = "object",
                                     Properties =
                                     {
-                                        ["aFloat"] = new OpenApiSchema
+                                        ["aFloat"] = new()
                                         {
                                         },
-                                        ["aPassword"] = new OpenApiSchema
+                                        ["aPassword"] = new()
                                         {
                                         },
-                                        ["aArray"] = new OpenApiSchema
+                                        ["aArray"] = new()
                                         {
                                             Type = "array",
-                                            Items = new OpenApiSchema
+                                            Items = new()
                                             {
                                                 Type = "string",
                                             }
@@ -347,21 +347,21 @@ namespace Microsoft.OpenApi.Readers.Tests.ParseNodes
                                     }
                                 }
                             },
-                            ["aObject"] = new OpenApiSchema
+                            ["aObject"] = new()
                             {
                                 Type = "array",
                                 Properties =
                                 {
-                                    ["aDate"] = new OpenApiSchema
+                                    ["aDate"] = new()
                                     {
                                         Type = "string"
                                     }
                                 }
                             },
-                            ["aDouble"] = new OpenApiSchema
+                            ["aDouble"] = new()
                             {
                             },
-                            ["aDateTime"] = new OpenApiSchema
+                            ["aDateTime"] = new()
                             {
                             }
                         }

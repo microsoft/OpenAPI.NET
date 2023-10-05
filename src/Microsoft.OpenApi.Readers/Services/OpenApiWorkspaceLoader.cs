@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Readers.Services
 
             if (diagnostic is null)
             {
-                diagnostic = new OpenApiDiagnostic();
+                diagnostic = new();
             }
 
             // Walk references
@@ -43,7 +43,7 @@ namespace Microsoft.OpenApi.Readers.Services
                 // If not already in workspace, load it and process references
                 if (!_workspace.Contains(item.ExternalResource))
                 {
-                    var input = await _loader.LoadAsync(new Uri(item.ExternalResource, UriKind.RelativeOrAbsolute));
+                    var input = await _loader.LoadAsync(new(item.ExternalResource, UriKind.RelativeOrAbsolute));
                     var result = await reader.ReadAsync(input, cancellationToken);
                     // Merge diagnostics
                     if (result.OpenApiDiagnostic != null)

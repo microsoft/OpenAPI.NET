@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
@@ -13,40 +12,40 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiOperationTests
     {
-        private static readonly OpenApiOperation _basicOperation = new OpenApiOperation();
+        private static readonly OpenApiOperation _basicOperation = new();
 
-        private static readonly OpenApiOperation _operationWithBody = new OpenApiOperation
+        private static readonly OpenApiOperation _operationWithBody = new()
         {
             Summary = "summary1",
             Description = "operationDescription",
-            ExternalDocs = new OpenApiExternalDocs
+            ExternalDocs = new()
             {
                 Description = "externalDocsDescription",
-                Url = new Uri("http://external.com")
+                Url = new("http://external.com")
             },
             OperationId = "operationId1",
             Parameters = new List<OpenApiParameter>
             {
-                new OpenApiParameter
+                new()
                 {
                     In = ParameterLocation.Path,
                     Name = "parameter1",
                 },
-                new OpenApiParameter
+                new()
                 {
                     In = ParameterLocation.Header,
                     Name = "parameter2"
                 }
             },
-            RequestBody = new OpenApiRequestBody
+            RequestBody = new()
             {
                 Description = "description2",
                 Required = true,
                 Content = new Dictionary<string, OpenApiMediaType>
                 {
-                    ["application/json"] = new OpenApiMediaType
+                    ["application/json"] = new()
                     {
-                        Schema = new OpenApiSchema
+                        Schema = new()
                         {
                             Type = "number",
                             Minimum = 5,
@@ -55,23 +54,23 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Responses = new OpenApiResponses
+            Responses = new()
             {
-                ["200"] = new OpenApiResponse
+                ["200"] = new()
                 {
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Id = "response1",
                         Type = ReferenceType.Response
                     }
                 },
-                ["400"] = new OpenApiResponse
+                ["400"] = new()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new OpenApiMediaType
+                        ["application/json"] = new()
                         {
-                            Schema = new OpenApiSchema
+                            Schema = new()
                             {
                                 Type = "number",
                                 Minimum = 5,
@@ -83,7 +82,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Servers = new List<OpenApiServer>
             {
-                new OpenApiServer
+                new()
                 {
                     Url = "http://server.com",
                     Description = "serverDescription"
@@ -91,18 +90,18 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private static readonly OpenApiOperation _advancedOperationWithTagsAndSecurity = new OpenApiOperation
+        private static readonly OpenApiOperation _advancedOperationWithTagsAndSecurity = new()
         {
             Tags = new List<OpenApiTag>
             {
-                new OpenApiTag
+                new()
                 {
                     Name = "tagName1",
                     Description = "tagDescription1",
                 },
-                new OpenApiTag
+                new()
                 {
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Id = "tagId1",
                         Type = ReferenceType.Tag
@@ -111,34 +110,34 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Summary = "summary1",
             Description = "operationDescription",
-            ExternalDocs = new OpenApiExternalDocs
+            ExternalDocs = new()
             {
                 Description = "externalDocsDescription",
-                Url = new Uri("http://external.com")
+                Url = new("http://external.com")
             },
             OperationId = "operationId1",
             Parameters = new List<OpenApiParameter>
             {
-                new OpenApiParameter
+                new()
                 {
                     In = ParameterLocation.Path,
                     Name = "parameter1"
                 },
-                new OpenApiParameter
+                new()
                 {
                     In = ParameterLocation.Header,
                     Name = "parameter2"
                 }
             },
-            RequestBody = new OpenApiRequestBody
+            RequestBody = new()
             {
                 Description = "description2",
                 Required = true,
                 Content = new Dictionary<string, OpenApiMediaType>
                 {
-                    ["application/json"] = new OpenApiMediaType
+                    ["application/json"] = new()
                     {
-                        Schema = new OpenApiSchema
+                        Schema = new()
                         {
                             Type = "number",
                             Minimum = 5,
@@ -147,23 +146,23 @@ namespace Microsoft.OpenApi.Tests.Models
                     }
                 }
             },
-            Responses = new OpenApiResponses
+            Responses = new()
             {
-                ["200"] = new OpenApiResponse
+                ["200"] = new()
                 {
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Id = "response1",
                         Type = ReferenceType.Response
                     }
                 },
-                ["400"] = new OpenApiResponse
+                ["400"] = new()
                 {
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new OpenApiMediaType
+                        ["application/json"] = new()
                         {
-                            Schema = new OpenApiSchema
+                            Schema = new()
                             {
                                 Type = "number",
                                 Minimum = 5,
@@ -175,19 +174,19 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Security = new List<OpenApiSecurityRequirement>
             {
-                new OpenApiSecurityRequirement
+                new()
                 {
-                    [new OpenApiSecurityScheme
+                    [new()
                     {
-                        Reference = new OpenApiReference
+                        Reference = new()
                         {
                             Id = "securitySchemeId1",
                             Type = ReferenceType.SecurityScheme
                         }
                     }] = new List<string>(),
-                    [new OpenApiSecurityScheme
+                    [new()
                     {
-                        Reference = new OpenApiReference
+                        Reference = new()
                         {
                             Id = "securitySchemeId2",
                             Type = ReferenceType.SecurityScheme
@@ -201,7 +200,7 @@ namespace Microsoft.OpenApi.Tests.Models
             },
             Servers = new List<OpenApiServer>
             {
-                new OpenApiServer
+                new()
                 {
                     Url = "http://server.com",
                     Description = "serverDescription"
@@ -210,41 +209,41 @@ namespace Microsoft.OpenApi.Tests.Models
         };
 
         private static readonly OpenApiOperation _operationWithFormData =
-            new OpenApiOperation
+            new()
             {
                 Summary = "Updates a pet in the store with form data",
                 Description = "",
                 OperationId = "updatePetWithForm",
                 Parameters = new List<OpenApiParameter>
                 {
-                    new OpenApiParameter
+                    new()
                     {
                         Name = "petId",
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema = new OpenApiSchema
+                        Schema = new()
                         {
                             Type = "string"
                         }
                     }
                 },
-                RequestBody = new OpenApiRequestBody
+                RequestBody = new()
                 {
                     Content =
                     {
-                        ["application/x-www-form-urlencoded"] = new OpenApiMediaType
+                        ["application/x-www-form-urlencoded"] = new()
                         {
-                            Schema = new OpenApiSchema
+                            Schema = new()
                             {
                                 Properties =
                                 {
-                                    ["name"] = new OpenApiSchema
+                                    ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
                                         Type = "string"
                                     },
-                                    ["status"] = new OpenApiSchema
+                                    ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
                                         Type = "string"
@@ -256,18 +255,18 @@ namespace Microsoft.OpenApi.Tests.Models
                                 }
                             }
                         },
-                        ["multipart/form-data"] = new OpenApiMediaType
+                        ["multipart/form-data"] = new()
                         {
-                            Schema = new OpenApiSchema
+                            Schema = new()
                             {
                                 Properties =
                                 {
-                                    ["name"] = new OpenApiSchema
+                                    ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
                                         Type = "string"
                                     },
-                                    ["status"] = new OpenApiSchema
+                                    ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
                                         Type = "string"
@@ -281,13 +280,13 @@ namespace Microsoft.OpenApi.Tests.Models
                         }
                     }
                 },
-                Responses = new OpenApiResponses
+                Responses = new()
                 {
-                    ["200"] = new OpenApiResponse
+                    ["200"] = new()
                     {
                         Description = "Pet updated."
                     },
-                    ["405"] = new OpenApiResponse
+                    ["405"] = new()
                     {
                         Description = "Invalid input"
                     }

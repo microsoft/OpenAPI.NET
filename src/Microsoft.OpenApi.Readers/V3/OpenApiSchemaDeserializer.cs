@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiSchema> _schemaFixedFields = new FixedFieldMap<OpenApiSchema>
+        private static readonly FixedFieldMap<OpenApiSchema> _schemaFixedFields = new()
         {
             {
                 "title", (o, n) =>
@@ -237,34 +237,34 @@ namespace Microsoft.OpenApi.Readers.V3
             },
         };
 
-        private static readonly PatternFieldMap<OpenApiSchema> _schemaPatternFields = new PatternFieldMap<OpenApiSchema>
+        private static readonly PatternFieldMap<OpenApiSchema> _schemaPatternFields = new()
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };
 
-        private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new AnyFieldMap<OpenApiSchema>
+        private static readonly AnyFieldMap<OpenApiSchema> _schemaAnyFields = new()
         {
             {
                 OpenApiConstants.Default,
-                new AnyFieldMapParameter<OpenApiSchema>(
+                new(
                     s => s.Default,
                     (s, v) => s.Default = v,
                     s => s)
             },
             {
                  OpenApiConstants.Example,
-                new AnyFieldMapParameter<OpenApiSchema>(
+                new(
                     s => s.Example,
                     (s, v) => s.Example = v,
                     s => s)
             }
         };
 
-        private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new AnyListFieldMap<OpenApiSchema>
+        private static readonly AnyListFieldMap<OpenApiSchema> _schemaAnyListFields = new()
         {
             {
                 OpenApiConstants.Enum,
-                new AnyListFieldMapParameter<OpenApiSchema>(
+                new(
                     s => s.Enum,
                     (s, v) => s.Enum = v,
                     s => s)
@@ -279,7 +279,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (pointer != null)
             {
-                return new OpenApiSchema
+                return new()
                 {
                     UnresolvedReference = true,
                     Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema)

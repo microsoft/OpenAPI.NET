@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 In = ParameterLocation.Path,
                 Required = true,
                 Example = new OpenApiInteger(55),
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Type = "string",
                 }
@@ -110,21 +110,21 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Type = "object",
-                    AdditionalProperties = new OpenApiSchema
+                    AdditionalProperties = new()
                     {
                         Type = "integer",
                     }
                 },
                 Examples =
                     {
-                        ["example0"] = new OpenApiExample
+                        ["example0"] = new()
                         {
                             Value = new OpenApiString("1"),
                         },
-                        ["example1"] = new OpenApiExample
+                        ["example1"] = new()
                         {
                            Value = new OpenApiObject
                            {
@@ -133,7 +133,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                 ["z"] = new OpenApiString("200")
                             }
                         },
-                        ["example2"] = new OpenApiExample
+                        ["example2"] = new()
                         {
                             Value =
                             new OpenApiArray
@@ -141,7 +141,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                                 new OpenApiInteger(3)
                             }
                         },
-                        ["example3"] = new OpenApiExample
+                        ["example3"] = new()
                         {
                             Value = new OpenApiObject
                             {
@@ -190,7 +190,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Type = "string",
                 }
@@ -228,7 +228,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Type = "string",
                 }

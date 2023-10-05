@@ -66,7 +66,7 @@ namespace Microsoft.OpenApi.Tests.Visitors
 
         internal protected class TestVisitor : OpenApiVisitorBase
         {
-            public Stack<string> CallStack { get; } = new Stack<string>();
+            public Stack<string> CallStack { get; } = new();
 
             private string EncodeCall([CallerMemberName] string name = "", [CallerLineNumber] int lineNumber = 0)
             {

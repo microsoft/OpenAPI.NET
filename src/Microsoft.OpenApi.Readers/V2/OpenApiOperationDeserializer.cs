@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Readers.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
-            new FixedFieldMap<OpenApiOperation>
+            new()
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
@@ -93,16 +93,15 @@ namespace Microsoft.OpenApi.Readers.V2
             };
 
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
-            new PatternFieldMap<OpenApiOperation>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
-        private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields =
-            new FixedFieldMap<OpenApiResponses>();
+        private static readonly FixedFieldMap<OpenApiResponses> _responsesFixedFields = new();
 
         private static readonly PatternFieldMap<OpenApiResponses> _responsesPatternFields =
-            new PatternFieldMap<OpenApiResponses>
+            new()
             {
                 {s => !s.StartsWith("x-"), (o, p, n) => o.Add(p, LoadResponse(n))},
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
@@ -163,7 +162,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             var mediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Properties = formParameters.ToDictionary(
                         k => k.Name,
@@ -224,7 +223,7 @@ namespace Microsoft.OpenApi.Readers.V2
             var tagObject = new OpenApiTag
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference { Id = tagName, Type = ReferenceType.Tag }
+                Reference = new() { Id = tagName, Type = ReferenceType.Tag }
             };
 
             return tagObject;

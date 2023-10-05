@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -19,7 +18,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiSecuritySchemeTests
     {
-        public static OpenApiSecurityScheme ApiKeySecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme ApiKeySecurityScheme = new()
         {
             Description = "description1",
             Name = "parameterName",
@@ -27,14 +26,14 @@ namespace Microsoft.OpenApi.Tests.Models
             In = ParameterLocation.Query,
         };
 
-        public static OpenApiSecurityScheme HttpBasicSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme HttpBasicSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
             Scheme = OpenApiConstants.Basic
         };
 
-        public static OpenApiSecurityScheme HttpBearerSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme HttpBearerSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.Http,
@@ -42,77 +41,77 @@ namespace Microsoft.OpenApi.Tests.Models
             BearerFormat = OpenApiConstants.Jwt
         };
 
-        public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme OAuth2SingleFlowSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OAuth2,
-            Flows = new OpenApiOAuthFlows
+            Flows = new()
             {
-                Implicit = new OpenApiOAuthFlow
+                Implicit = new()
                 {
                     Scopes = new Dictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
                     },
-                    AuthorizationUrl = new Uri("https://example.com/api/oauth")
+                    AuthorizationUrl = new("https://example.com/api/oauth")
                 }
             }
         };
 
-        public static OpenApiSecurityScheme OAuth2MultipleFlowSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme OAuth2MultipleFlowSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OAuth2,
-            Flows = new OpenApiOAuthFlows
+            Flows = new()
             {
-                Implicit = new OpenApiOAuthFlow
+                Implicit = new()
                 {
                     Scopes = new Dictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
                     },
-                    AuthorizationUrl = new Uri("https://example.com/api/oauth")
+                    AuthorizationUrl = new("https://example.com/api/oauth")
                 },
-                ClientCredentials = new OpenApiOAuthFlow
+                ClientCredentials = new()
                 {
                     Scopes = new Dictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
                     },
-                    TokenUrl = new Uri("https://example.com/api/token"),
-                    RefreshUrl = new Uri("https://example.com/api/refresh"),
+                    TokenUrl = new("https://example.com/api/token"),
+                    RefreshUrl = new("https://example.com/api/refresh"),
                 },
-                AuthorizationCode = new OpenApiOAuthFlow
+                AuthorizationCode = new()
                 {
                     Scopes = new Dictionary<string, string>
                     {
                         ["operation1:object1"] = "operation 1 on object 1",
                         ["operation2:object2"] = "operation 2 on object 2"
                     },
-                    TokenUrl = new Uri("https://example.com/api/token"),
-                    AuthorizationUrl = new Uri("https://example.com/api/oauth"),
+                    TokenUrl = new("https://example.com/api/token"),
+                    AuthorizationUrl = new("https://example.com/api/oauth"),
                 }
             }
         };
 
-        public static OpenApiSecurityScheme OpenIdConnectSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme OpenIdConnectSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
             Scheme = OpenApiConstants.Bearer,
-            OpenIdConnectUrl = new Uri("https://example.com/openIdConnect")
+            OpenIdConnectUrl = new("https://example.com/openIdConnect")
         };
 
-        public static OpenApiSecurityScheme ReferencedSecurityScheme = new OpenApiSecurityScheme
+        public static OpenApiSecurityScheme ReferencedSecurityScheme = new()
         {
             Description = "description1",
             Type = SecuritySchemeType.OpenIdConnect,
             Scheme = OpenApiConstants.Bearer,
-            OpenIdConnectUrl = new Uri("https://example.com/openIdConnect"),
-            Reference = new OpenApiReference
+            OpenIdConnectUrl = new("https://example.com/openIdConnect"),
+            Reference = new()
             {
                 Type = ReferenceType.SecurityScheme,
                 Id = "sampleSecurityScheme"
@@ -313,7 +312,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             // Add dummy start object, value, and end object to allow SerializeAsV3 to output security scheme
@@ -335,7 +334,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedSecurityScheme.SerializeAsV3WithoutReference(writer);

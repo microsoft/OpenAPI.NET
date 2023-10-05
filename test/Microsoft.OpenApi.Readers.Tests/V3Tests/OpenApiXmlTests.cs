@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -39,7 +38,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiXml
                 {
                     Name = "name1",
-                    Namespace = new Uri("http://example.com/schema/namespaceSample"),
+                    Namespace = new("http://example.com/schema/namespaceSample"),
                     Prefix = "samplePrefix",
                     Wrapped = true
                 });

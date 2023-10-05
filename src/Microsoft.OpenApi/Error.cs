@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi
         /// <returns>The logged <see cref="Exception"/>.</returns>
         internal static ArgumentException Argument(string messageFormat, params object[] messageArgs)
         {
-            return new ArgumentException(Format(messageFormat, messageArgs));
+            return new(Format(messageFormat, messageArgs));
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi
             string messageFormat,
             params object[] messageArgs)
         {
-            return new ArgumentException(Format(messageFormat, messageArgs), parameterName);
+            return new(Format(messageFormat, messageArgs), parameterName);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi
         /// <returns>The logged <see cref="Exception"/>.</returns>
         internal static ArgumentNullException ArgumentNull(string parameterName)
         {
-            return new ArgumentNullException(parameterName);
+            return new(parameterName);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Microsoft.OpenApi
             string messageFormat,
             params object[] messageArgs)
         {
-            return new ArgumentNullException(parameterName, Format(messageFormat, messageArgs));
+            return new(parameterName, Format(messageFormat, messageArgs));
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Microsoft.OpenApi
         /// <returns>The logged <see cref="Exception"/>.</returns>
         internal static NotSupportedException NotSupported(string messageFormat, params object[] messageArgs)
         {
-            return new NotSupportedException(Format(messageFormat, messageArgs));
+            return new(Format(messageFormat, messageArgs));
         }
     }
 }

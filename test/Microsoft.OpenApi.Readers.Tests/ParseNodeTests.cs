@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Tests
 
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
             {
-                new OpenApiError(new OpenApiReaderException("Expected a value.") {
+                new(new OpenApiReaderException("Expected a value.") {
                     Pointer = "#line=4"
                 })
             });
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Tests
 
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError>
             {
-                new OpenApiError(new OpenApiReaderException("schema must be a map/object") {
+                new(new OpenApiReaderException("schema must be a map/object") {
                     Pointer = "#/paths/~1foo/get/responses/200/content/application~1json/schema"
                 })
             });

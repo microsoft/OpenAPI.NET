@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// A relative path to an individual endpoint. The field name MUST begin with a slash.
         /// </summary>
         public static ValidationRule<OpenApiPaths> PathNameMustBeginWithSlash =>
-            new ValidationRule<OpenApiPaths>(
+            new(
                 (context, item) =>
                 {
                     foreach (var pathName in item.Keys)

@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiRequestBody> _requestBodyFixedFields =
-            new FixedFieldMap<OpenApiRequestBody>
+            new()
             {
                 {
                     "description", (o, n) =>
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Readers.V3
             };
 
         private static readonly PatternFieldMap<OpenApiRequestBody> _requestBodyPatternFields =
-            new PatternFieldMap<OpenApiRequestBody>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
