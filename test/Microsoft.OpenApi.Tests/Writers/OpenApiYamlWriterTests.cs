@@ -385,7 +385,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 """;
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true } );
+            var writer = new OpenApiYamlWriter(outputString, new() { InlineLocalReferences = true } );
 
             // Act
             doc.SerializeAsV3(writer);
@@ -421,7 +421,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                 """;
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
+            var writer = new OpenApiYamlWriter(outputString, new() { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV2(writer);
@@ -440,7 +440,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             {
                 Type = "object",
                 UnresolvedReference = false,
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Id = "thing",
                     Type = ReferenceType.Schema
@@ -449,23 +449,24 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo
+                Info = new()
                 {
                     Title = "Demo",
                     Version = "1.0.0"
                 },
-                Paths = new OpenApiPaths
+                Paths = new()
                 {
-                    ["/"] = new OpenApiPathItem
+                    ["/"] = new()
                     {
                         Operations = {
-                            [OperationType.Get] = new OpenApiOperation
+                            [OperationType.Get] = new()
                             {
                                 Responses = {
-                                    ["200"] = new OpenApiResponse {
+                                    ["200"] = new()
+                                    {
                                         Description = "OK",
                                         Content = {
-                                             ["application/json"] = new OpenApiMediaType
+                                             ["application/json"] = new()
                                              {
                                                      Schema = thingSchema
                                              }
@@ -476,7 +477,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                         }
                     }
                 },
-                Components = new OpenApiComponents
+                Components = new()
                 {
                     Schemas = {
                         ["thing"] = thingSchema}
@@ -533,7 +534,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
+            var writer = new OpenApiYamlWriter(outputString, new() { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV3(writer);
@@ -551,7 +552,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             {
                 Type = "object",
                 UnresolvedReference = false,
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Id = "thing",
                     Type = ReferenceType.Schema
@@ -568,23 +569,24 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             var doc = new OpenApiDocument
             {
-                Info = new OpenApiInfo
+                Info = new()
                 {
                     Title = "Demo",
                     Version = "1.0.0"
                 },
-                Paths = new OpenApiPaths
+                Paths = new()
                 {
-                    ["/"] = new OpenApiPathItem
+                    ["/"] = new()
                     {
                         Operations = {
-                            [OperationType.Get] = new OpenApiOperation
+                            [OperationType.Get] = new()
                             {
                                 Responses = {
-                                    ["200"] = new OpenApiResponse {
+                                    ["200"] = new()
+                                    {
                                         Description = "OK",
                                         Content = {
-                                             ["application/json"] = new OpenApiMediaType
+                                             ["application/json"] = new()
                                              {
                                                      Schema = thingSchema
                                              }
@@ -595,7 +597,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                         }
                     }
                 },
-                Components = new OpenApiComponents
+                Components = new()
                 {
                     Schemas = {
                         ["thing"] = thingSchema}
@@ -649,7 +651,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             // Component schemas that are there due to cycles are still inlined because the items they reference may not exist in the components because they don't have cycles.
 
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiYamlWriter(outputString, new OpenApiWriterSettings { InlineLocalReferences = true });
+            var writer = new OpenApiYamlWriter(outputString, new() { InlineLocalReferences = true });
 
             // Act
             doc.SerializeAsV2(writer);

@@ -20,11 +20,11 @@ namespace Microsoft.OpenApi.SmokeTests
         {
             _output = output;
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            _httpClient = new HttpClient(new HttpClientHandler
+            _httpClient = new(new HttpClientHandler
             {                AutomaticDecompression = DecompressionMethods.GZip
             });
-            _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip"));
-            _httpClient.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("OpenApi.Net.Tests", "1.0"));
+            _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new("gzip"));
+            _httpClient.DefaultRequestHeaders.UserAgent.Add(new("OpenApi.Net.Tests", "1.0"));
 
             var response = _httpClient.GetAsync(graphOpenApiUrl)
                                 .GetAwaiter().GetResult();

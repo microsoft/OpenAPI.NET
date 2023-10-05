@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -85,10 +85,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
                             Type = "string"
                         }
@@ -140,10 +140,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
                             Type = "integer",
                             Format = "int64",
@@ -193,10 +193,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
                             Type = "string",
                             Format = "date-time",
@@ -244,7 +244,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -272,7 +272,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -324,7 +324,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -352,7 +352,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "number",
                         Format = "float",
@@ -382,7 +382,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "number",
                         Format = "float",

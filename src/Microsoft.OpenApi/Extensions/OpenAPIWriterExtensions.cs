@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi
             {
                 return @base.Settings;
             }
-            return new OpenApiWriterSettings();
+            return new();
         }
     }
 }

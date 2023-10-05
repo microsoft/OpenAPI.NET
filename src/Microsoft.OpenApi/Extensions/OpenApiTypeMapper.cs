@@ -14,38 +14,38 @@ namespace Microsoft.OpenApi.Extensions
     {
         private static readonly Dictionary<Type, Func<OpenApiSchema>> _simpleTypeToOpenApiSchema = new()
         {
-            [typeof(bool)] = () => new OpenApiSchema { Type = "boolean" },
-            [typeof(byte)] = () => new OpenApiSchema { Type = "string", Format = "byte" },
-            [typeof(int)] = () => new OpenApiSchema { Type = "integer", Format = "int32" },
-            [typeof(uint)] = () => new OpenApiSchema { Type = "integer", Format = "int32" },
-            [typeof(long)] = () => new OpenApiSchema { Type = "integer", Format = "int64" },
-            [typeof(ulong)] = () => new OpenApiSchema { Type = "integer", Format = "int64" },
-            [typeof(float)] = () => new OpenApiSchema { Type = "number", Format = "float" },
-            [typeof(double)] = () => new OpenApiSchema { Type = "number", Format = "double" },
-            [typeof(decimal)] = () => new OpenApiSchema { Type = "number", Format = "double" },
-            [typeof(DateTime)] = () => new OpenApiSchema { Type = "string", Format = "date-time" },
-            [typeof(DateTimeOffset)] = () => new OpenApiSchema { Type = "string", Format = "date-time" },
-            [typeof(Guid)] = () => new OpenApiSchema { Type = "string", Format = "uuid" },
-            [typeof(char)] = () => new OpenApiSchema { Type = "string" },
+            [typeof(bool)] = () => new() { Type = "boolean" },
+            [typeof(byte)] = () => new() { Type = "string", Format = "byte" },
+            [typeof(int)] = () => new() { Type = "integer", Format = "int32" },
+            [typeof(uint)] = () => new() { Type = "integer", Format = "int32" },
+            [typeof(long)] = () => new() { Type = "integer", Format = "int64" },
+            [typeof(ulong)] = () => new() { Type = "integer", Format = "int64" },
+            [typeof(float)] = () => new() { Type = "number", Format = "float" },
+            [typeof(double)] = () => new() { Type = "number", Format = "double" },
+            [typeof(decimal)] = () => new() { Type = "number", Format = "double" },
+            [typeof(DateTime)] = () => new() { Type = "string", Format = "date-time" },
+            [typeof(DateTimeOffset)] = () => new() { Type = "string", Format = "date-time" },
+            [typeof(Guid)] = () => new() { Type = "string", Format = "uuid" },
+            [typeof(char)] = () => new() { Type = "string" },
 
             // Nullable types
-            [typeof(bool?)] = () => new OpenApiSchema { Type = "boolean", Nullable = true },
-            [typeof(byte?)] = () => new OpenApiSchema { Type = "string", Format = "byte", Nullable = true },
-            [typeof(int?)] = () => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true },
-            [typeof(uint?)] = () => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true },
-            [typeof(long?)] = () => new OpenApiSchema { Type = "integer", Format = "int64", Nullable = true },
-            [typeof(ulong?)] = () => new OpenApiSchema { Type = "integer", Format = "int64", Nullable = true },
-            [typeof(float?)] = () => new OpenApiSchema { Type = "number", Format = "float", Nullable = true },
-            [typeof(double?)] = () => new OpenApiSchema { Type = "number", Format = "double", Nullable = true },
-            [typeof(decimal?)] = () => new OpenApiSchema { Type = "number", Format = "double", Nullable = true },
-            [typeof(DateTime?)] = () => new OpenApiSchema { Type = "string", Format = "date-time", Nullable = true },
-            [typeof(DateTimeOffset?)] = () => new OpenApiSchema { Type = "string", Format = "date-time", Nullable = true },
-            [typeof(Guid?)] = () => new OpenApiSchema { Type = "string", Format = "uuid", Nullable = true },
-            [typeof(char?)] = () => new OpenApiSchema { Type = "string", Nullable = true },
+            [typeof(bool?)] = () => new() { Type = "boolean", Nullable = true },
+            [typeof(byte?)] = () => new() { Type = "string", Format = "byte", Nullable = true },
+            [typeof(int?)] = () => new() { Type = "integer", Format = "int32", Nullable = true },
+            [typeof(uint?)] = () => new() { Type = "integer", Format = "int32", Nullable = true },
+            [typeof(long?)] = () => new() { Type = "integer", Format = "int64", Nullable = true },
+            [typeof(ulong?)] = () => new() { Type = "integer", Format = "int64", Nullable = true },
+            [typeof(float?)] = () => new() { Type = "number", Format = "float", Nullable = true },
+            [typeof(double?)] = () => new() { Type = "number", Format = "double", Nullable = true },
+            [typeof(decimal?)] = () => new() { Type = "number", Format = "double", Nullable = true },
+            [typeof(DateTime?)] = () => new() { Type = "string", Format = "date-time", Nullable = true },
+            [typeof(DateTimeOffset?)] = () => new() { Type = "string", Format = "date-time", Nullable = true },
+            [typeof(Guid?)] = () => new() { Type = "string", Format = "uuid", Nullable = true },
+            [typeof(char?)] = () => new() { Type = "string", Nullable = true },
 
-            [typeof(Uri)] = () => new OpenApiSchema { Type = "string", Format = "uri"}, // Uri is treated as simple string
-            [typeof(string)] = () => new OpenApiSchema { Type = "string" },
-            [typeof(object)] = () => new OpenApiSchema { Type = "object" }
+            [typeof(Uri)] = () => new() { Type = "string", Format = "uri"}, // Uri is treated as simple string
+            [typeof(string)] = () => new() { Type = "string" },
+            [typeof(object)] = () => new() { Type = "object" }
         };
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Microsoft.OpenApi.Extensions
 
             return _simpleTypeToOpenApiSchema.TryGetValue(type, out var result)
                 ? result()
-                : new OpenApiSchema { Type = "string" };
+                : new() { Type = "string" };
         }
 
         /// <summary>

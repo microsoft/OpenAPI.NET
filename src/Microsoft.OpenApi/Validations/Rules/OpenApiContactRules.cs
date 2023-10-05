@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Email field MUST be email address.
         /// </summary>
         public static ValidationRule<OpenApiContact> EmailMustBeEmailFormat =>
-            new ValidationRule<OpenApiContact>(
+            new(
                 (context, item) =>
                 {
                     context.Enter("email");

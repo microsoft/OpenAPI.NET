@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Services
     {
         private OpenApiDocument _currentDocument;
         private readonly bool _resolveRemoteReferences;
-        private List<OpenApiError> _errors = new List<OpenApiError>();
+        private List<OpenApiError> _errors = new();
 
         /// <summary>
         /// Initializes the <see cref="OpenApiReferenceResolver"/> class.
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Services
 
                     if (resolvedTag == null)
                     {
-                        resolvedTag = new OpenApiTag
+                        resolvedTag = new()
                         {
                             Name = tag.Reference.Id
                         };
@@ -290,7 +290,7 @@ namespace Microsoft.OpenApi.Services
             else
             {
                 // Leave as unresolved reference
-                return new T
+                return new()
                 {
                     UnresolvedReference = true,
                     Reference = reference

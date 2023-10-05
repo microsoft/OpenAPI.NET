@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputString, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputString, new() { Terse = produceTerseOutput });
 
             // Act
             writer.WriteStartArray();
@@ -128,7 +128,7 @@ namespace Microsoft.OpenApi.Tests.Writers
                     new Dictionary<string, object>
                     {
                         ["property1"] = new DateTime(1970, 01, 01),
-                        ["property2"] = new DateTimeOffset(new DateTime(1970, 01, 01)),
+                        ["property2"] = new DateTimeOffset(new(1970, 01, 01)),
                         ["property3"] = new DateTime(2018, 04, 03),
                     },
 
@@ -219,7 +219,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputString, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputString, new() { Terse = produceTerseOutput });
 
             // Act
             WriteValueRecursive(writer, inputMap);
@@ -235,8 +235,8 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             return
                 from input in new DateTimeOffset[] {
-                    new DateTimeOffset(2018, 1, 1, 10, 20, 30, TimeSpan.Zero),
-                    new DateTimeOffset(2018, 1, 1, 10, 20, 30, 100, TimeSpan.FromHours(14)),
+                    new(2018, 1, 1, 10, 20, 30, TimeSpan.Zero),
+                    new(2018, 1, 1, 10, 20, 30, 100, TimeSpan.FromHours(14)),
                     DateTimeOffset.UtcNow + TimeSpan.FromDays(4),
                     DateTime.UtcNow + TimeSpan.FromDays(4),
                 }
@@ -250,7 +250,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         {
             // Arrange
             var outputString = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputString, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputString, new() { Terse = produceTerseOutput });
 
             // Act
             writer.WriteValue(dateTimeOffset);

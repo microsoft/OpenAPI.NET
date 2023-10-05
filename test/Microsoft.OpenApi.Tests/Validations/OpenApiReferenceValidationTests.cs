@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             var sharedSchema = new OpenApiSchema
             {
                 Type = "string",
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Id = "test"
                 },
@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             OpenApiDocument document = new OpenApiDocument();
-            document.Components = new OpenApiComponents
+            document.Components = new()
             {
                 Schemas = new Dictionary<string, OpenApiSchema>
                 {
@@ -37,21 +37,21 @@ namespace Microsoft.OpenApi.Tests.Validations
                 }
             };
 
-            document.Paths = new OpenApiPaths
+            document.Paths = new()
             {
-                ["/"] = new OpenApiPathItem
+                ["/"] = new()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [OperationType.Get] = new()
                         {
-                            Responses = new OpenApiResponses
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse
+                                ["200"] = new()
                                 {
                                     Content = new Dictionary<string, OpenApiMediaType>
                                     {
-                                        ["application/json"] = new OpenApiMediaType
+                                        ["application/json"] = new()
                                         {
                                             Schema = sharedSchema
                                         }
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet { new AlwaysFailRule<OpenApiSchema>() });
+            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
 
             // Assert
             Assert.True(errors.Count() == 1);
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             var sharedSchema = new OpenApiSchema
             {
                 Type = "string",
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Id = "test"
                 },
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             OpenApiDocument document = new OpenApiDocument();
-            document.Components = new OpenApiComponents
+            document.Components = new()
             {
                 Schemas = new Dictionary<string, OpenApiSchema>
                 {
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet { new AlwaysFailRule<OpenApiSchema>() });
+            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
 
             // Assert
             Assert.True(errors.Count() == 0);
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             var sharedSchema = new OpenApiSchema
             {
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Id = "test"
                 },
@@ -116,21 +116,21 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             OpenApiDocument document = new OpenApiDocument();
 
-            document.Paths = new OpenApiPaths
+            document.Paths = new()
             {
-                ["/"] = new OpenApiPathItem
+                ["/"] = new()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [OperationType.Get] = new()
                         {
-                            Responses = new OpenApiResponses
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse
+                                ["200"] = new()
                                 {
                                     Content = new Dictionary<string, OpenApiMediaType>
                                     {
-                                        ["application/json"] = new OpenApiMediaType
+                                        ["application/json"] = new()
                                         {
                                             Schema = sharedSchema
                                         }
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet { new AlwaysFailRule<OpenApiSchema>() });
+            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
 
             // Assert
             Assert.True(errors.Count() == 0);

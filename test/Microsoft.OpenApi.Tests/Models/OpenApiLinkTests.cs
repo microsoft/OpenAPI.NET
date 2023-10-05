@@ -17,17 +17,17 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiLinkTests
     {
-        public static OpenApiLink AdvancedLink = new OpenApiLink
+        public static OpenApiLink AdvancedLink = new()
         {
             OperationId = "operationId1",
             Parameters =
             {
-                ["parameter1"] = new RuntimeExpressionAnyWrapper
+                ["parameter1"] = new()
                 {
                     Expression = RuntimeExpression.Build("$request.path.id")
                 }
             },
-            RequestBody = new RuntimeExpressionAnyWrapper
+            RequestBody = new()
             {
                 Any = new OpenApiObject
                 {
@@ -35,15 +35,15 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             },
             Description = "description1",
-            Server = new OpenApiServer
+            Server = new()
             {
                 Description = "serverDescription1"
             }
         };
 
-        public static OpenApiLink ReferencedLink = new OpenApiLink
+        public static OpenApiLink ReferencedLink = new()
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Link,
                 Id = "example1",
@@ -51,12 +51,12 @@ namespace Microsoft.OpenApi.Tests.Models
             OperationId = "operationId1",
             Parameters =
             {
-                ["parameter1"] = new RuntimeExpressionAnyWrapper
+                ["parameter1"] = new()
                 {
                     Expression = RuntimeExpression.Build("$request.path.id")
                 }
             },
-            RequestBody = new RuntimeExpressionAnyWrapper
+            RequestBody = new()
             {
                 Any = new OpenApiObject
                 {
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             },
             Description = "description1",
-            Server = new OpenApiServer
+            Server = new()
             {
                 Description = "serverDescription1"
             }
@@ -77,7 +77,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedLink.SerializeAsV3(writer);
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedLink.SerializeAsV3(writer);
@@ -111,7 +111,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedLink.SerializeAsV3WithoutReference(writer);

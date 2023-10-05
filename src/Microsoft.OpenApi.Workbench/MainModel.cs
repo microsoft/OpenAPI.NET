@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.OpenApi.Services;
 using Microsoft.OpenApi.Validations;
-using Microsoft.OpenApi.Writers;
 
 namespace Microsoft.OpenApi.Workbench
 {
@@ -49,7 +48,7 @@ namespace Microsoft.OpenApi.Workbench
         /// </summary>
         private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_0;
 
-        private HttpClient _httpClient = new HttpClient();
+        private HttpClient _httpClient = new();
 
         public string Input
         {
@@ -194,7 +193,7 @@ namespace Microsoft.OpenApi.Workbench
             var handler = PropertyChanged;
             if (handler != null)
             {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new(propertyName));
             }
         }
 
@@ -239,11 +238,11 @@ namespace Microsoft.OpenApi.Workbench
                 {
                     if (_inputFile.StartsWith("http"))
                     {
-                        settings.BaseUrl = new Uri(_inputFile);
+                        settings.BaseUrl = new(_inputFile);
                     }
                     else
                     {
-                        settings.BaseUrl = new Uri("file://" + Path.GetDirectoryName(_inputFile) + "/");
+                        settings.BaseUrl = new("file://" + Path.GetDirectoryName(_inputFile) + "/");
                     }
                 }
                 var readResult = await new OpenApiStreamReader(settings
@@ -309,7 +308,7 @@ namespace Microsoft.OpenApi.Workbench
                 outputStream,
                 Version,
                 Format,
-                new OpenApiWriterSettings
+                new()
                 {
                     InlineLocalReferences = InlineLocal,
                     InlineExternalReferences = InlineExternal

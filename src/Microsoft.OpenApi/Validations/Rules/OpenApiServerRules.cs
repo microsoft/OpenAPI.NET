@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiServer> ServerRequiredFields =>
-            new ValidationRule<OpenApiServer>(
+            new(
                 (context, server) =>
                 {
                     context.Enter("url");

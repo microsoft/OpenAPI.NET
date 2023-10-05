@@ -14,12 +14,12 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public abstract class OpenApiVisitorBase
     {
-        private readonly Stack<string> _path = new Stack<string>();
+        private readonly Stack<string> _path = new();
 
         /// <summary>
         /// Properties available to identify context of where an object is within OpenAPI Document
         /// </summary>
-        public CurrentKeys CurrentKeys { get; } = new CurrentKeys();
+        public CurrentKeys CurrentKeys { get; } = new();
 
         /// <summary>
         /// Allow Rule to indicate validation error occured at a deeper context level.

@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers
             {
                 // Buffer stream so that OpenApiTextReaderReader can process it synchronously
                 // YamlDocument doesn't support async reading.
-                bufferedStream = new MemoryStream();
+                bufferedStream = new();
                 await input.CopyToAsync(bufferedStream, 81920, cancellationToken);
                 bufferedStream.Position = 0;
             }

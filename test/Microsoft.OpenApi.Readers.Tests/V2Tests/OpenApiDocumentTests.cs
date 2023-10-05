@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Threading;
 using FluentAssertions;
@@ -40,7 +39,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var doc = reader.Read(input, out var diagnostic);
 
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new OpenApiError( new OpenApiException("Unknown reference type 'defi888nition'")) });
+                new( new OpenApiException("Unknown reference type 'defi888nition'")) });
             doc.Should().NotBeNull();
         }
 
@@ -69,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var doc = reader.Read(input, out var diagnostic);
 
             diagnostic.Errors.Should().BeEquivalentTo(new List<OpenApiError> {
-                new OpenApiError( new OpenApiException("Invalid Reference identifier 'doesnotexist'.")) });
+                new( new OpenApiException("Invalid Reference identifier 'doesnotexist'.")) });
             doc.Should().NotBeNull();
         }
 
@@ -81,8 +80,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         [InlineData("da-DK")]
         public void ParseDocumentWithDifferentCultureShouldSucceed(string culture)
         {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+            Thread.CurrentThread.CurrentCulture = new(culture);
+            Thread.CurrentThread.CurrentUICulture = new(culture);
 
             var openApiDoc = new OpenApiStringReader().Read(
                 """
@@ -108,7 +107,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             openApiDoc.Should().BeEquivalentTo(
                 new OpenApiDocument
                 {
-                    Info = new OpenApiInfo
+                    Info = new()
                     {
                         Title = "Simple Document",
                         Version = "0.9.1",
@@ -117,16 +116,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             ["x-extension"] = new OpenApiDouble(2.335)
                         }
                     },
-                    Components = new OpenApiComponents
+                    Components = new()
                     {
                         Schemas =
                         {
-                            ["sampleSchema"] = new OpenApiSchema
+                            ["sampleSchema"] = new()
                             {
                                 Type = "object",
                                 Properties =
                                 {
-                                    ["sampleProperty"] = new OpenApiSchema
+                                    ["sampleProperty"] = new()
                                     {
                                         Type = "double",
                                         Minimum = (decimal)100.54,
@@ -135,7 +134,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                         ExclusiveMinimum = false
                                     }
                                 },
-                                Reference = new OpenApiReference
+                                Reference = new()
                                 {
                                     Id = "sampleSchema",
                                     Type = ReferenceType.Schema
@@ -143,7 +142,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     },
-                    Paths = new OpenApiPaths()
+                    Paths = new()
                 });
 
             context.Should().BeEquivalentTo(
@@ -159,7 +158,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okSchema = new OpenApiSchema
             {
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Type = ReferenceType.Schema,
                     Id = "Item",
@@ -178,7 +177,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var errorSchema = new OpenApiSchema
             {
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Type = ReferenceType.Schema,
                     Id = "Error",
@@ -207,7 +206,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             var okMediaType = new OpenApiMediaType
             {
-                Schema = new OpenApiSchema
+                Schema = new()
                 {
                     Type = "array",
                     Items = okSchema
@@ -221,7 +220,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
 
             doc.Should().BeEquivalentTo(new OpenApiDocument
             {
-                Info = new OpenApiInfo
+                Info = new()
                 {
                     Title = "Two responses",
                     Version = "1.0.0"
@@ -233,17 +232,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         Url = "https://"
                     }
                 },
-                Paths = new OpenApiPaths
+                Paths = new()
                 {
-                    ["/items"] = new OpenApiPathItem
+                    ["/items"] = new()
                     {
                         Operations =
                         {
-                            [OperationType.Get] = new OpenApiOperation
+                            [OperationType.Get] = new()
                             {
                                 Responses =
                                 {
-                                    ["200"] = new OpenApiResponse
+                                    ["200"] = new()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -252,7 +251,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["application/xml"] = okMediaType,
                                         }
                                     },
-                                    ["default"] = new OpenApiResponse
+                                    ["default"] = new()
                                     {
                                         Description = "An error response",
                                         Content =
@@ -263,11 +262,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     }
                                 }
                             },
-                            [OperationType.Post] = new OpenApiOperation
+                            [OperationType.Post] = new()
                             {
                                 Responses =
                                 {
-                                    ["200"] = new OpenApiResponse
+                                    ["200"] = new()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -275,7 +274,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["html/text"] = okMediaType
                                         }
                                     },
-                                    ["default"] = new OpenApiResponse
+                                    ["default"] = new()
                                     {
                                         Description = "An error response",
                                         Content =
@@ -285,11 +284,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                     }
                                 }
                             },
-                            [OperationType.Patch] = new OpenApiOperation
+                            [OperationType.Patch] = new()
                             {
                                 Responses =
                                 {
-                                    ["200"] = new OpenApiResponse
+                                    ["200"] = new()
                                     {
                                         Description = "An OK response",
                                         Content =
@@ -298,7 +297,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                             ["application/xml"] = okMediaType,
                                         }
                                     },
-                                    ["default"] = new OpenApiResponse
+                                    ["default"] = new()
                                     {
                                         Description = "An error response",
                                         Content =
@@ -312,7 +311,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                     }
                 },
-                Components = new OpenApiComponents
+                Components = new()
                 {
                     Schemas =
                     {
@@ -338,7 +337,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             var successSchema = new OpenApiSchema
             {
                 Type = "array",
-                Items = new OpenApiSchema
+                Items = new()
                 {
                     Properties = {
                         { "id", new OpenApiSchema
@@ -348,7 +347,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                             }
                         }
                     },
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Id = "Item",
                         Type = ReferenceType.Schema,
@@ -376,7 +375,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                     }
                 },
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Id = "Error",
                     Type = ReferenceType.Schema,
@@ -418,7 +417,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
         public void ParseDocumentWithDefaultContentTypeSettingShouldSucceed()
         {
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithEmptyProduces.yaml"));
-            var doc = new OpenApiStreamReader(new OpenApiReaderSettings { DefaultContentType =  new List<string> { "application/json" } })
+            var doc = new OpenApiStreamReader(new() { DefaultContentType =  new() { "application/json" } })
                 .Read(stream, out OpenApiDiagnostic diags);
             var mediaType = doc.Paths["/example"].Operations[OperationType.Get].Responses["200"].Content;
             Assert.Contains("application/json", mediaType);

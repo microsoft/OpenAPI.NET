@@ -19,9 +19,9 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiTagTests
     {
-        public static OpenApiTag BasicTag = new OpenApiTag();
+        public static OpenApiTag BasicTag = new();
 
-        public static OpenApiTag AdvancedTag = new OpenApiTag
+        public static OpenApiTag AdvancedTag = new()
         {
             Name = "pet",
             Description = "Pets operations",
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiTag ReferencedTag = new OpenApiTag
+        public static OpenApiTag ReferencedTag = new()
         {
             Name = "pet",
             Description = "Pets operations",
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Tests.Models
             {
                 {"x-tag-extension", new OpenApiNull()}
             },
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Tag,
                 Id = "pet"
@@ -55,7 +55,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             BasicTag.SerializeAsV3WithoutReference(writer);
@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             BasicTag.SerializeAsV2WithoutReference(writer);
@@ -126,7 +126,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedTag.SerializeAsV3WithoutReference(writer);
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedTag.SerializeAsV2WithoutReference(writer);
@@ -214,7 +214,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedTag.SerializeAsV3(writer);
@@ -231,7 +231,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedTag.SerializeAsV2(writer);
@@ -288,7 +288,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedTag.SerializeAsV3(writer);
@@ -305,7 +305,7 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedTag.SerializeAsV2(writer);

@@ -13,11 +13,11 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new FixedFieldMap<OpenApiPathItem>
+        private static readonly FixedFieldMap<OpenApiPathItem> _pathItemFixedFields = new()
         {
             {
                 "$ref", (o,n) => {
-                    o.Reference = new OpenApiReference { ExternalResource = n.GetScalarValue() };
+                    o.Reference = new() { ExternalResource = n.GetScalarValue() };
                     o.UnresolvedReference =true;
                 }
             },
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.V3
         };
 
         private static readonly PatternFieldMap<OpenApiPathItem> _pathItemPatternFields =
-            new PatternFieldMap<OpenApiPathItem>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };

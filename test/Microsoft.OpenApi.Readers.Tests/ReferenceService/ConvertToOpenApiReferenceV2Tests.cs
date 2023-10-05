@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.Tests
 
         public ConvertToOpenApiReferenceV2Tests()
         {
-            Diagnostic = new OpenApiDiagnostic();
+            Diagnostic = new();
         }
 
         [Fact]

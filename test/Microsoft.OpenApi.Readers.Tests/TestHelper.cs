@@ -16,9 +16,9 @@ namespace Microsoft.OpenApi.Readers.Tests
             yamlStream.Load(new StreamReader(stream));
             var yamlNode = yamlStream.Documents.First().RootNode;
 
-            var context = new ParsingContext(new OpenApiDiagnostic());
+            var context = new ParsingContext(new());
 
-            return new MapNode(context, (YamlMappingNode)yamlNode);
+            return new(context, (YamlMappingNode)yamlNode);
         }
     }
 }

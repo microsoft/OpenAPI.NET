@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
-            new FixedFieldMap<OpenApiParameter>
+            new()
             {
                 {
                     "name", (o, n) =>
@@ -110,16 +110,16 @@ namespace Microsoft.OpenApi.Readers.V3
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
-            new PatternFieldMap<OpenApiParameter>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new AnyFieldMap<OpenApiParameter>
+        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new()
         {
             {
                 OpenApiConstants.Example,
-                new AnyFieldMapParameter<OpenApiParameter>(
+                new(
                     s => s.Example,
                     (s, v) => s.Example = v,
                     s => s.Schema)
@@ -127,11 +127,11 @@ namespace Microsoft.OpenApi.Readers.V3
         };
 
         private static readonly AnyMapFieldMap<OpenApiParameter, OpenApiExample> _parameterAnyMapOpenApiExampleFields =
-            new AnyMapFieldMap<OpenApiParameter, OpenApiExample>
-        {
+            new()
+            {
             {
                 OpenApiConstants.Examples,
-                new AnyMapFieldMapParameter<OpenApiParameter, OpenApiExample>(
+                new(
                     m => m.Examples,
                     e => e.Value,
                     (e, v) => e.Value = v,

@@ -11,9 +11,9 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiEncodingTests
     {
-        public static OpenApiEncoding BasicEncoding = new OpenApiEncoding();
+        public static OpenApiEncoding BasicEncoding = new();
 
-        public static OpenApiEncoding AdvanceEncoding = new OpenApiEncoding
+        public static OpenApiEncoding AdvanceEncoding = new()
         {
             ContentType = "image/png, image/jpeg",
             Style = ParameterStyle.Simple,

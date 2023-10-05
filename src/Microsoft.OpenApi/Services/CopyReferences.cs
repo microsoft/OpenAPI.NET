@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (_target.Components == null)
             {
-                _target.Components = new OpenApiComponents();
+                _target.Components = new();
             }
         }
 

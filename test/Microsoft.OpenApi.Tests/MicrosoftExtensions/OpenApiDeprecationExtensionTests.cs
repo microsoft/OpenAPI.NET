@@ -74,8 +74,8 @@ public class OpenApiDeprecationExtensionTests
     {
         var oaiValue = new OpenApiObject
         {
-            { "date", new OpenApiDateTime(new DateTimeOffset(2023,05,04, 16, 0, 0, 0, 0, new TimeSpan(4, 0, 0)))},
-            { "removalDate", new OpenApiDateTime(new DateTimeOffset(2023,05,04, 16, 0, 0, 0, 0, new TimeSpan(4, 0, 0)))},
+            { "date", new OpenApiDateTime(new(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0)))},
+            { "removalDate", new OpenApiDateTime(new(2023,05,04, 16, 0, 0, 0, 0, new(4, 0, 0)))},
             { "version", new OpenApiString("v1.0")},
             { "description", new OpenApiString("removing")}
         };
@@ -83,16 +83,16 @@ public class OpenApiDeprecationExtensionTests
         Assert.NotNull(value);
         Assert.Equal("v1.0", value.Version);
         Assert.Equal("removing", value.Description);
-        Assert.Equal(new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new TimeSpan(4, 0, 0)), value.Date);
-        Assert.Equal(new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new TimeSpan(4, 0, 0)), value.RemovalDate);
+        Assert.Equal(new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new(4, 0, 0)), value.Date);
+        Assert.Equal(new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new(4, 0, 0)), value.RemovalDate);
     }
     [Fact]
     public void Serializes()
     {
         var value = new OpenApiDeprecationExtension
         {
-            Date = new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new TimeSpan(4, 0, 0)),
-            RemovalDate = new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new TimeSpan(4, 0, 0)),
+            Date = new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new(4, 0, 0)),
+            RemovalDate = new DateTimeOffset(2023, 05, 04, 16, 0, 0, 0, 0, new(4, 0, 0)),
             Version = "v1.0",
             Description = "removing"
         };

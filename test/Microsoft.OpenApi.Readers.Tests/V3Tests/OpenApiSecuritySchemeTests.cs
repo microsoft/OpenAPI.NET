@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -116,11 +115,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
+                    Flows = new()
                     {
-                        Implicit = new OpenApiOAuthFlow
+                        Implicit = new()
                         {
-                            AuthorizationUrl = new Uri("https://example.com/api/oauth/dialog"),
+                            AuthorizationUrl = new("https://example.com/api/oauth/dialog"),
                             Scopes =
                             {
                                 ["write:pets"] = "modify pets in your account",
@@ -153,7 +152,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Type = SecuritySchemeType.OpenIdConnect,
                     Description = "Sample Description",
-                    OpenIdConnectUrl = new Uri("http://www.example.com")
+                    OpenIdConnectUrl = new("http://www.example.com")
                 });
         }
     }

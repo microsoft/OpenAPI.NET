@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>The root node of the created <see cref="OpenApiUrlTreeNode"/> directory structure.</returns>
         public static OpenApiUrlTreeNode Create()
         {
-            return new OpenApiUrlTreeNode(RootPathSegment);
+            return new(RootPathSegment);
         }
 
         /// <summary>

@@ -93,7 +93,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
 
         private static OpenApiDocument GetSampleOpenApiDocument()
         {
-            return new OpenApiDocument
+            return new()
             {
                 Info = new() { Title = "Test", Version = "1.0" },
                 Servers = new List<OpenApiServer> { new() { Url = "https://localhost/" } },
@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                         OperationId = "Foo.GetFoo",
                                         Parameters = new List<OpenApiParameter>
                                         {
-                                            new OpenApiParameter
+                                            new()
                                             {
                                                 Name = "ids",
                                                 In = ParameterLocation.Query,
@@ -118,10 +118,10 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                                         "application/json",
                                                         new OpenApiMediaType
                                                         {
-                                                            Schema = new OpenApiSchema
+                                                            Schema = new()
                                                             {
                                                                 Type = "array",
-                                                                Items = new OpenApiSchema
+                                                                Items = new()
                                                                 {
                                                                     Type = "string"
                                                                 }
@@ -157,8 +157,8 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                         {
                                             AnyOf = new List<OpenApiSchema>
                                             {
-                                                new OpenApiSchema { Type = "number" },
-                                                new OpenApiSchema { Type = "string" }
+                                                new() { Type = "number" },
+                                                new() { Type = "string" }
                                             },
                                             Format = "float",
                                             Nullable = true
@@ -169,8 +169,8 @@ namespace Microsoft.OpenApi.Hidi.Tests.Formatters
                                         {
                                             OneOf = new List<OpenApiSchema>
                                             {
-                                                new OpenApiSchema { Type = "number", Format = "double" },
-                                                new OpenApiSchema { Type = "string" }
+                                                new() { Type = "number", Format = "double" },
+                                                new() { Type = "string" }
                                             }
                                         }
                                     }
