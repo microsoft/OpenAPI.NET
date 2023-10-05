@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 else
                 {
                     mapNode.Context.Diagnostic.Errors.Add(
-                        new OpenApiError(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
+                        new(node.Context.GetLocation(), $"Scheme {property.Name} is not found"));
                 }
             }
 
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers.V3
             var securitySchemeObject = new OpenApiSecurityScheme
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Id = schemeName,
                     Type = ReferenceType.SecurityScheme

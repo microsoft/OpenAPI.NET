@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Validations
 
             // We create a new instance of ValidationRuleSet per call as a safeguard
             // against unintentional modification of the private _defaultRuleSet.
-            return new ValidationRuleSet(_defaultRuleSet);
+            return new(_defaultRuleSet);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Validations
         {
             // We create a new instance of ValidationRuleSet per call as a safeguard
             // against unintentional modification of the private _defaultRuleSet.
-            return new ValidationRuleSet();
+            return new();
         }
 
         /// <summary>

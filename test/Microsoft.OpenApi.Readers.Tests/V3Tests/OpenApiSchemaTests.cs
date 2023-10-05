@@ -179,15 +179,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     },
                     Properties =
                     {
-                        ["name"] = new OpenApiSchema
+                        ["name"] = new()
                         {
                             Type = "string"
                         },
-                        ["address"] = new OpenApiSchema
+                        ["address"] = new()
                         {
                             Type = "string"
                         },
-                        ["age"] = new OpenApiSchema
+                        ["age"] = new()
                         {
                             Type = "integer",
                             Format = "int32",
@@ -223,11 +223,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Summary = "externally referenced path item",
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation
+                        [OperationType.Get] = new()
                         {
-                            Responses = new OpenApiResponses
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse
+                                ["200"] = new()
                                 {
                                     Description = "Ok"
                                 }
@@ -260,7 +260,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 new OpenApiSchema
                 {
                     Type = "object",
-                    AdditionalProperties = new OpenApiSchema
+                    AdditionalProperties = new()
                     {
                         Type = "string"
                     }
@@ -292,12 +292,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Type = "object",
                     Properties =
                     {
-                        ["id"] = new OpenApiSchema
+                        ["id"] = new()
                         {
                             Type = "integer",
                             Format = "int64"
                         },
-                        ["name"] = new OpenApiSchema
+                        ["name"] = new()
                         {
                             Type = "string"
                         }
@@ -332,23 +332,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Schemas =
                     {
-                        ["ErrorModel"] = new OpenApiSchema
+                        ["ErrorModel"] = new()
                         {
                             Type = "object",
                             Properties =
                             {
-                                ["code"] = new OpenApiSchema
+                                ["code"] = new()
                                 {
                                     Type = "integer",
                                     Minimum = 100,
                                     Maximum = 600
                                 },
-                                ["message"] = new OpenApiSchema
+                                ["message"] = new()
                                 {
                                     Type = "string"
                                 }
                             },
-                            Reference = new OpenApiReference
+                            Reference = new()
                             {
                                 Type = ReferenceType.Schema,
                                 Id = "ErrorModel",
@@ -360,9 +360,9 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 "code"
                             }
                         },
-                        ["ExtendedErrorModel"] = new OpenApiSchema
+                        ["ExtendedErrorModel"] = new()
                         {
-                            Reference = new OpenApiReference
+                            Reference = new()
                             {
                                 Type = ReferenceType.Schema,
                                 Id = "ExtendedErrorModel",
@@ -372,7 +372,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             {
                                 new OpenApiSchema
                                 {
-                                    Reference = new OpenApiReference
+                                    Reference = new()
                                     {
                                         Type = ReferenceType.Schema,
                                         Id = "ErrorModel",
@@ -383,13 +383,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     Type = "object",
                                     Properties =
                                     {
-                                        ["code"] = new OpenApiSchema
+                                        ["code"] = new()
                                         {
                                             Type = "integer",
                                             Minimum = 100,
                                             Maximum = 600
                                         },
-                                        ["message"] = new OpenApiSchema
+                                        ["message"] = new()
                                         {
                                             Type = "string"
                                         }
@@ -406,7 +406,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     Required = {"rootCause"},
                                     Properties =
                                     {
-                                        ["rootCause"] = new OpenApiSchema
+                                        ["rootCause"] = new()
                                         {
                                             Type = "string"
                                         }
@@ -436,20 +436,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     Schemas =
                     {
-                        ["Pet"] = new OpenApiSchema
+                        ["Pet"] = new()
                         {
                             Type = "object",
-                            Discriminator = new OpenApiDiscriminator
+                            Discriminator = new()
                             {
                                 PropertyName = "petType"
                             },
                             Properties =
                             {
-                                ["name"] = new OpenApiSchema
+                                ["name"] = new()
                                 {
                                     Type = "string"
                                 },
-                                ["petType"] = new OpenApiSchema
+                                ["petType"] = new()
                                 {
                                     Type = "string"
                                 }
@@ -459,21 +459,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                 "name",
                                 "petType"
                             },
-                            Reference = new OpenApiReference
+                            Reference = new()
                             {
                                 Id= "Pet",
                                 Type = ReferenceType.Schema,
                                 HostDocument = openApiDoc
                             }
                         },
-                        ["Cat"] = new OpenApiSchema
+                        ["Cat"] = new()
                         {
                             Description = "A representation of a cat",
                             AllOf =
                             {
                                 new OpenApiSchema
                                 {
-                                    Reference = new OpenApiReference
+                                    Reference = new()
                                     {
                                         Type = ReferenceType.Schema,
                                         Id = "Pet",
@@ -482,17 +482,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     // Schema should be dereferenced in our model, so all the properties
                                     // from the Pet above should be propagated here.
                                     Type = "object",
-                                    Discriminator = new OpenApiDiscriminator
+                                    Discriminator = new()
                                     {
                                         PropertyName = "petType"
                                     },
                                     Properties =
                                     {
-                                        ["name"] = new OpenApiSchema
+                                        ["name"] = new()
                                         {
                                             Type = "string"
                                         },
-                                        ["petType"] = new OpenApiSchema
+                                        ["petType"] = new()
                                         {
                                             Type = "string"
                                         }
@@ -509,7 +509,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     Required = {"huntingSkill"},
                                     Properties =
                                     {
-                                        ["huntingSkill"] = new OpenApiSchema
+                                        ["huntingSkill"] = new()
                                         {
                                             Type = "string",
                                             Description = "The measured skill for hunting",
@@ -524,21 +524,21 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             },
-                            Reference = new OpenApiReference
+                            Reference = new()
                             {
                                 Id= "Cat",
                                 Type = ReferenceType.Schema,
                                 HostDocument = openApiDoc
                             }
                         },
-                        ["Dog"] = new OpenApiSchema
+                        ["Dog"] = new()
                         {
                             Description = "A representation of a dog",
                             AllOf =
                             {
                                 new OpenApiSchema
                                 {
-                                    Reference = new OpenApiReference
+                                    Reference = new()
                                     {
                                         Type = ReferenceType.Schema,
                                         Id = "Pet",
@@ -547,17 +547,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     // Schema should be dereferenced in our model, so all the properties
                                     // from the Pet above should be propagated here.
                                     Type = "object",
-                                    Discriminator = new OpenApiDiscriminator
+                                    Discriminator = new()
                                     {
                                         PropertyName = "petType"
                                     },
                                     Properties =
                                     {
-                                        ["name"] = new OpenApiSchema
+                                        ["name"] = new()
                                         {
                                             Type = "string"
                                         },
-                                        ["petType"] = new OpenApiSchema
+                                        ["petType"] = new()
                                         {
                                             Type = "string"
                                         }
@@ -574,7 +574,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     Required = {"packSize"},
                                     Properties =
                                     {
-                                        ["packSize"] = new OpenApiSchema
+                                        ["packSize"] = new()
                                         {
                                             Type = "integer",
                                             Format = "int32",
@@ -585,7 +585,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                     }
                                 }
                             },
-                            Reference = new OpenApiReference
+                            Reference = new()
                             {
                                 Id= "Dog",
                                 Type = ReferenceType.Schema,
@@ -616,22 +616,22 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         Title = "schemaExtension",
                         Type = "object",
                         Properties = {
-                            ["description"] = new OpenApiSchema { Type = "string", Nullable = true},
-                            ["targetTypes"] = new OpenApiSchema
+                            ["description"] = new() { Type = "string", Nullable = true},
+                            ["targetTypes"] = new()
                             {
                                 Type = "array",
-                                Items = new OpenApiSchema
+                                Items = new()
                                 {
                                     Type = "string"
                                 }
                             },
-                            ["status"] = new OpenApiSchema { Type = "string"},
-                            ["owner"] = new OpenApiSchema { Type = "string"},
+                            ["status"] = new() { Type = "string"},
+                            ["owner"] = new() { Type = "string"},
                             ["child"] = null
                         }
                     }
                 },
-                Reference = new OpenApiReference
+                Reference = new()
                 {
                     Type = ReferenceType.Schema,
                     Id = "microsoft.graph.schemaExtension"

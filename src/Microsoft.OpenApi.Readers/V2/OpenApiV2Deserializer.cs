@@ -6,7 +6,6 @@ using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
 using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
 namespace Microsoft.OpenApi.Readers.V2
@@ -57,7 +56,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {
@@ -98,7 +97,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 catch (OpenApiException exception)
                 {
                     exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
+                    mapNode.Context.Diagnostic.Errors.Add(new(exception));
                 }
                 finally
                 {

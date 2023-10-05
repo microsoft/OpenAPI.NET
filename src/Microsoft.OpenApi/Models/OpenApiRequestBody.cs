@@ -182,7 +182,7 @@ namespace Microsoft.OpenApi.Models
                     paramSchema.Type = "file";
                     paramSchema.Format = null;
                 }
-                yield return new OpenApiFormDataParameter
+                yield return new()
                 {
                     Description = property.Value.Description,
                     Name = property.Key,

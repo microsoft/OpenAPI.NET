@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Validations.Rules
         /// Validate the field is required.
         /// </summary>
         public static ValidationRule<OpenApiOAuthFlow> OAuthFlowRequiredFields =>
-            new ValidationRule<OpenApiOAuthFlow>(
+            new(
                 (context, flow) =>
                 {
                     // authorizationUrl

@@ -46,9 +46,9 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (YamlException ex)
             {
-                diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
-                return new OpenApiDocument();
+                diagnostic = new();
+                diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
+                return new();
             }
 
             return new OpenApiYamlDocumentReader(this._settings).Read(yamlDocument, out diagnostic);
@@ -72,8 +72,8 @@ namespace Microsoft.OpenApi.Readers
             catch (YamlException ex)
             {
                 var diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
-                return new ReadResult
+                diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
+                return new()
                 {
                     OpenApiDocument = null,
                     OpenApiDiagnostic = diagnostic
@@ -101,8 +101,8 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (YamlException ex)
             {
-                diagnostic = new OpenApiDiagnostic();
-                diagnostic.Errors.Add(new OpenApiError($"#line={ex.Start.Line}", ex.Message));
+                diagnostic = new();
+                diagnostic.Errors.Add(new($"#line={ex.Start.Line}", ex.Message));
                 return default;
             }
 

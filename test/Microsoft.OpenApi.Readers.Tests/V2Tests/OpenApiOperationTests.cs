@@ -19,75 +19,75 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     {
         private const string SampleFolderPath = "V2Tests/Samples/OpenApiOperation/";
 
-        private static readonly OpenApiOperation _basicOperation = new OpenApiOperation
+        private static readonly OpenApiOperation _basicOperation = new()
         {
             Summary = "Updates a pet in the store",
             Description = "",
             OperationId = "updatePet",
             Parameters = new List<OpenApiParameter>
             {
-                new OpenApiParameter
+                new()
                 {
                     Name = "petId",
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
                 }
             },
-            Responses = new OpenApiResponses
+            Responses = new()
             {
-                ["200"] = new OpenApiResponse
+                ["200"] = new()
                 {
                     Description = "Pet updated.",
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new OpenApiMediaType(),
-                        ["application/xml"] = new OpenApiMediaType()
+                        ["application/json"] = new(),
+                        ["application/xml"] = new()
                     }
                 }
             }
         };
 
         private static readonly OpenApiOperation _operationWithFormData =
-            new OpenApiOperation
+            new()
             {
                 Summary = "Updates a pet in the store with form data",
                 Description = "",
                 OperationId = "updatePetWithForm",
                 Parameters = new List<OpenApiParameter>
                 {
-                    new OpenApiParameter
+                    new()
                     {
                         Name = "petId",
                         In = ParameterLocation.Path,
                         Description = "ID of pet that needs to be updated",
                         Required = true,
-                        Schema = new OpenApiSchema
+                        Schema = new()
                         {
                             Type = "string"
                         }
                     }
                 },
-                RequestBody = new OpenApiRequestBody
+                RequestBody = new()
                 {
                     Content =
                     {
-                        ["application/x-www-form-urlencoded"] = new OpenApiMediaType
+                        ["application/x-www-form-urlencoded"] = new()
                         {
-                            Schema = new OpenApiSchema
+                            Schema = new()
                             {
                                 Properties =
                                 {
-                                    ["name"] = new OpenApiSchema
+                                    ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
                                         Type = "string"
                                     },
-                                    ["status"] = new OpenApiSchema
+                                    ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
                                         Type = "string"
@@ -99,18 +99,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 }
                             }
                         },
-                        ["multipart/form-data"] = new OpenApiMediaType
+                        ["multipart/form-data"] = new()
                         {
-                            Schema = new OpenApiSchema
+                            Schema = new()
                             {
                                 Properties =
                                 {
-                                    ["name"] = new OpenApiSchema
+                                    ["name"] = new()
                                     {
                                         Description = "Updated name of the pet",
                                         Type = "string"
                                     },
-                                    ["status"] = new OpenApiSchema
+                                    ["status"] = new()
                                     {
                                         Description = "Updated status of the pet",
                                         Type = "string"
@@ -124,58 +124,58 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                         }
                     }
                 },
-                Responses = new OpenApiResponses
+                Responses = new()
                 {
-                    ["200"] = new OpenApiResponse
+                    ["200"] = new()
                     {
                         Description = "Pet updated.",
                         Content = new Dictionary<string, OpenApiMediaType>
                         {
-                            ["application/json"] = new OpenApiMediaType(),
-                            ["application/xml"] = new OpenApiMediaType()
+                            ["application/json"] = new(),
+                            ["application/xml"] = new()
                         }
 
                     },
-                    ["405"] = new OpenApiResponse
+                    ["405"] = new()
                     {
                         Description = "Invalid input",
                         Content = new Dictionary<string, OpenApiMediaType>
                         {
-                            ["application/json"] = new OpenApiMediaType(),
-                            ["application/xml"] = new OpenApiMediaType()
+                            ["application/json"] = new(),
+                            ["application/xml"] = new()
                         }
                     }
                 }
             };
 
-        private static readonly OpenApiOperation _operationWithBody = new OpenApiOperation
+        private static readonly OpenApiOperation _operationWithBody = new()
         {
             Summary = "Updates a pet in the store with request body",
             Description = "",
             OperationId = "updatePetWithBody",
             Parameters = new List<OpenApiParameter>
             {
-                new OpenApiParameter
+                new()
                 {
                     Name = "petId",
                     In = ParameterLocation.Path,
                     Description = "ID of pet that needs to be updated",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
                 },
             },
-            RequestBody = new OpenApiRequestBody
+            RequestBody = new()
             {
                 Description = "Pet to update with",
                 Required = true,
                 Content =
                 {
-                    ["application/json"] = new OpenApiMediaType
+                    ["application/json"] = new()
                     {
-                        Schema = new OpenApiSchema
+                        Schema = new()
                         {
                             Type = "object"
                         }
@@ -185,24 +185,24 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     [OpenApiConstants.BodyName] = new OpenApiString("petObject")
                 }
             },
-            Responses = new OpenApiResponses
+            Responses = new()
             {
-                ["200"] = new OpenApiResponse
+                ["200"] = new()
                 {
                     Description = "Pet updated.",
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new OpenApiMediaType(),
-                        ["application/xml"] = new OpenApiMediaType()
+                        ["application/json"] = new(),
+                        ["application/xml"] = new()
                     }
                 },
-                ["405"] = new OpenApiResponse
+                ["405"] = new()
                 {
                     Description = "Invalid input",
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new OpenApiMediaType(),
-                        ["application/xml"] = new OpenApiMediaType()
+                        ["application/json"] = new(),
+                        ["application/xml"] = new()
                     }
 
                 }
@@ -331,19 +331,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             operation.Should().BeEquivalentTo(
                 new OpenApiOperation
                 {
-                    Responses = new OpenApiResponses
+                    Responses = new()
                     {
-                        { "200", new OpenApiResponse
+                        { "200", new()
                         {
                             Description = "An array of float response",
                             Content =
                             {
-                                ["application/json"] = new OpenApiMediaType
+                                ["application/json"] = new()
                                 {
-                                    Schema = new OpenApiSchema
+                                    Schema = new()
                                     {
                                         Type = "array",
-                                        Items = new OpenApiSchema
+                                        Items = new()
                                         {
                                             Type = "number",
                                             Format = "float"
@@ -356,12 +356,12 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                         new OpenApiFloat(7),
                                     }
                                 },
-                                ["application/xml"] = new OpenApiMediaType
+                                ["application/xml"] = new()
                                 {
-                                    Schema = new OpenApiSchema
+                                    Schema = new()
                                     {
                                         Type = "array",
-                                        Items = new OpenApiSchema
+                                        Items = new()
                                         {
                                             Type = "number",
                                             Format = "float"
@@ -390,16 +390,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             operation.Should().BeEquivalentTo(
                 new OpenApiOperation
                 {
-                    Responses = new OpenApiResponses
+                    Responses = new()
                     {
-                        { "200", new OpenApiResponse
+                        { "200", new()
                         {
                             Description = "OK",
                             Content =
                             {
-                                ["application/octet-stream"] = new OpenApiMediaType
+                                ["application/octet-stream"] = new()
                                 {
-                                    Schema = new OpenApiSchema
+                                    Schema = new()
                                     {
                                         Format = "binary",
                                         Description = "The content of the file.",

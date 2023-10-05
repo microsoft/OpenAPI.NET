@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Expressions
                         return new BodyExpression();
                     }
 
-                    return new BodyExpression(new JsonPointer(subString));
+                    return new BodyExpression(new(subString));
                 }
             }
 

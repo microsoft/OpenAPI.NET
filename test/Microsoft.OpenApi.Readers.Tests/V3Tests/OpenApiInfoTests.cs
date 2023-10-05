@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -42,8 +41,8 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Title = "Advanced Info",
                     Description = "Sample Description",
                     Version = "1.0.0",
-                    TermsOfService = new Uri("http://example.org/termsOfService"),
-                    Contact = new OpenApiContact
+                    TermsOfService = new("http://example.org/termsOfService"),
+                    Contact = new()
                     {
                         Email = "example@example.com",
                         Extensions =
@@ -51,13 +50,13 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             ["x-twitter"] = new OpenApiString("@exampleTwitterHandler")
                         },
                         Name = "John Doe",
-                        Url = new Uri("http://www.example.com/url1")
+                        Url = new("http://www.example.com/url1")
                     },
-                    License = new OpenApiLicense
+                    License = new()
                     {
                         Extensions = { ["x-disclaimer"] = new OpenApiString("Sample Extension String Disclaimer") },
                         Name = "licenseName",
-                        Url = new Uri("http://www.example.com/url2")
+                        Url = new("http://www.example.com/url2")
                     },
                     Extensions =
                     {
@@ -100,17 +99,17 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Title = "Basic Info",
                     Description = "Sample Description",
                     Version = "1.0.1",
-                    TermsOfService = new Uri("http://swagger.io/terms/"),
-                    Contact = new OpenApiContact
+                    TermsOfService = new("http://swagger.io/terms/"),
+                    Contact = new()
                     {
                         Email = "support@swagger.io",
                         Name = "API Support",
-                        Url = new Uri("http://www.swagger.io/support")
+                        Url = new("http://www.swagger.io/support")
                     },
-                    License = new OpenApiLicense
+                    License = new()
                     {
                         Name = "Apache 2.0",
-                        Url = new Uri("http://www.apache.org/licenses/LICENSE-2.0.html")
+                        Url = new("http://www.apache.org/licenses/LICENSE-2.0.html")
                     }
                 });
         }

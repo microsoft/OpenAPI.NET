@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using FluentAssertions;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -12,11 +11,11 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiExternalDocsTests
     {
-        public static OpenApiExternalDocs BasicExDocs = new OpenApiExternalDocs();
+        public static OpenApiExternalDocs BasicExDocs = new();
 
-        public static OpenApiExternalDocs AdvanceExDocs = new OpenApiExternalDocs
+        public static OpenApiExternalDocs AdvanceExDocs = new()
         {
-            Url = new Uri("https://example.com"),
+            Url = new("https://example.com"),
             Description = "Find more info here"
         };
 

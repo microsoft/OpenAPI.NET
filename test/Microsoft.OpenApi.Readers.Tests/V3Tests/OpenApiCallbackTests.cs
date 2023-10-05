@@ -44,23 +44,23 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     PathItems =
                     {
                         [RuntimeExpression.Build("$request.body#/url")]
-                            = new OpenApiPathItem
+                            = new()
                             {
                                 Operations =
                                 {
                                     [OperationType.Post] =
-                                        new OpenApiOperation
+                                        new()
                                         {
-                                            RequestBody = new OpenApiRequestBody
+                                            RequestBody = new()
                                             {
                                                 Content =
                                                 {
                                                     ["application/json"] = null
                                                 }
                                             },
-                                            Responses = new OpenApiResponses
+                                            Responses = new()
                                             {
-                                                ["200"] = new OpenApiResponse
+                                                ["200"] = new()
                                                 {
                                                     Description = "Success"
                                                 }
@@ -93,17 +93,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     PathItems =
                     {
-                        [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
+                        [RuntimeExpression.Build("$request.body#/url")]= new()
+                        {
                             Operations = {
-                                [OperationType.Post] = new OpenApiOperation
+                                [OperationType.Post] = new()
                                 {
-                                    RequestBody = new OpenApiRequestBody
+                                    RequestBody = new()
                                     {
                                         Content =
                                         {
-                                            ["application/json"] = new OpenApiMediaType
+                                            ["application/json"] = new()
                                             {
-                                                Schema = new OpenApiSchema
+                                                Schema = new()
                                                 {
                                                     Type = "object"
                                                 }
@@ -111,7 +112,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         }
                                     },
                                     Responses = {
-                                        ["200"]= new OpenApiResponse
+                                        ["200"]= new()
                                         {
                                             Description = "Success"
                                         }
@@ -120,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     },
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.Callback,
                         Id = "simpleHook",
@@ -150,17 +151,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     PathItems =
                     {
-                        [RuntimeExpression.Build("$request.body#/url")]= new OpenApiPathItem {
+                        [RuntimeExpression.Build("$request.body#/url")]= new()
+                        {
                             Operations = {
-                                [OperationType.Post] = new OpenApiOperation
+                                [OperationType.Post] = new()
                                 {
-                                    RequestBody = new OpenApiRequestBody
+                                    RequestBody = new()
                                     {
                                         Content =
                                         {
-                                            ["application/json"] = new OpenApiMediaType
+                                            ["application/json"] = new()
                                             {
-                                                Schema = new OpenApiSchema
+                                                Schema = new()
                                                 {
                                                     Type = "object"
                                                 }
@@ -168,7 +170,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         }
                                     },
                                     Responses = {
-                                        ["200"]= new OpenApiResponse
+                                        ["200"]= new()
                                         {
                                             Description = "Success"
                                         }
@@ -177,7 +179,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                             }
                         }
                     },
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.Callback,
                         Id = "simpleHook",
@@ -191,18 +193,19 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     PathItems =
                     {
-                        [RuntimeExpression.Build("/simplePath")]= new OpenApiPathItem {
+                        [RuntimeExpression.Build("/simplePath")]= new()
+                        {
                             Operations = {
-                                [OperationType.Post] = new OpenApiOperation
+                                [OperationType.Post] = new()
                                 {
-                                    RequestBody = new OpenApiRequestBody
+                                    RequestBody = new()
                                     {
                                         Description = "Callback 2",
                                         Content =
                                         {
-                                            ["application/json"] = new OpenApiMediaType
+                                            ["application/json"] = new()
                                             {
-                                                Schema = new OpenApiSchema
+                                                Schema = new()
                                                 {
                                                     Type = "string"
                                                 }
@@ -210,7 +213,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         }
                                     },
                                     Responses = {
-                                        ["400"]= new OpenApiResponse
+                                        ["400"]= new()
                                         {
                                             Description = "Callback Response"
                                         }
@@ -227,17 +230,18 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                 {
                     PathItems =
                     {
-                        [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new OpenApiPathItem {
+                        [RuntimeExpression.Build(@"http://example.com?transactionId={$request.body#/id}&email={$request.body#/email}")] = new()
+                        {
                             Operations = {
-                                [OperationType.Post] = new OpenApiOperation
+                                [OperationType.Post] = new()
                                 {
-                                    RequestBody = new OpenApiRequestBody
+                                    RequestBody = new()
                                     {
                                         Content =
                                         {
-                                            ["application/xml"] = new OpenApiMediaType
+                                            ["application/xml"] = new()
                                             {
-                                                Schema = new OpenApiSchema
+                                                Schema = new()
                                                 {
                                                     Type = "object"
                                                 }
@@ -245,15 +249,15 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                                         }
                                     },
                                     Responses = {
-                                        ["200"]= new OpenApiResponse
+                                        ["200"]= new()
                                         {
                                             Description = "Success"
                                         },
-                                        ["401"]= new OpenApiResponse
+                                        ["401"]= new()
                                         {
                                             Description = "Unauthorized"
                                         },
-                                        ["404"]= new OpenApiResponse
+                                        ["404"]= new()
                                         {
                                             Description = "Not Found"
                                         }

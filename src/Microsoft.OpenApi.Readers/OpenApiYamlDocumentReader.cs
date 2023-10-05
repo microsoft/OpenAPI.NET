@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public OpenApiDocument Read(YamlDocument input, out OpenApiDiagnostic diagnostic)
         {
-            diagnostic = new OpenApiDiagnostic();
+            diagnostic = new();
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers,
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (OpenApiException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError(ex));
+                diagnostic.Errors.Add(new(ex));
             }
 
             // Validate the document
@@ -115,7 +115,7 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (OpenApiException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError(ex));
+                diagnostic.Errors.Add(new(ex));
             }
 
             // Validate the document
@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Readers
                 }
             }
 
-            return new ReadResult
+            return new()
             {
                 OpenApiDocument = document,
                 OpenApiDiagnostic = diagnostic
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Readers
             // Load this root document into the workspace
             var streamLoader = new DefaultStreamLoader(_settings.BaseUrl);
             var workspaceLoader = new OpenApiWorkspaceLoader(openApiWorkSpace, _settings.CustomExternalLoader ?? streamLoader, _settings);
-            return workspaceLoader.LoadAsync(new OpenApiReference { ExternalResource = "/" }, document, null, cancellationToken);
+            return workspaceLoader.LoadAsync(new() { ExternalResource = "/" }, document, null, cancellationToken);
         }
 
         private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
@@ -181,7 +181,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public T ReadFragment<T>(YamlDocument input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiElement
         {
-            diagnostic = new OpenApiDiagnostic();
+            diagnostic = new();
             var context = new ParsingContext(diagnostic)
             {
                 ExtensionParsers = _settings.ExtensionParsers
@@ -195,7 +195,7 @@ namespace Microsoft.OpenApi.Readers
             }
             catch (OpenApiException ex)
             {
-                diagnostic.Errors.Add(new OpenApiError(ex));
+                diagnostic.Errors.Add(new(ex));
             }
 
             // Validate the element

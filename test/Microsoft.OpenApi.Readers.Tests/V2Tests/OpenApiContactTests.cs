@@ -3,7 +3,6 @@
 
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using System;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.V2Tests
@@ -34,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 {
                     Email = "support@swagger.io",
                     Name = "API Support",
-                    Url = new Uri("http://www.swagger.io/support")
+                    Url = new("http://www.swagger.io/support")
                 });
         }
     }

@@ -70,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 var id = localReference.Substring(
                     segments[0].Length + "/".Length + segments[1].Length + "/".Length);
 
-                return new OpenApiReference { Type = referenceType, Id = id };
+                return new() { Type = referenceType, Id = id };
             }
 
             throw new OpenApiException(
@@ -145,7 +145,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     if (type == null)
                     {
                         // "$ref": "Pet.json"
-                        return new OpenApiReference
+                        return new()
                         {
                             ExternalResource = segments[0]
                         };
@@ -153,7 +153,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
                     if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
-                        return new OpenApiReference
+                        return new()
                         {
                             Type = type,
                             Id = reference
@@ -171,7 +171,7 @@ namespace Microsoft.OpenApi.Readers.V2
                         }
                         catch (OpenApiException ex)
                         {
-                            Diagnostic.Errors.Add(new OpenApiError(ex));
+                            Diagnostic.Errors.Add(new(ex));
                             return null;
                         }
                     }
@@ -198,7 +198,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
 
                     // $ref: externalSource.yaml#/Pet
-                    return new OpenApiReference
+                    return new()
                     {
                         ExternalResource = segments[0],
                         Type = type,

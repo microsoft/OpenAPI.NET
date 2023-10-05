@@ -265,7 +265,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var stream = new MemoryStream();
             IOpenApiWriter writer = new OpenApiJsonWriter(
                 new StreamWriter(stream),
-                new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
+                new() { Terse = produceTerseOutput });
 
             writer.WriteAny(any);
             writer.Flush();

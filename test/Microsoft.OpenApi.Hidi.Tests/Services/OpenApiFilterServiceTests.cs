@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public OpenApiFilterServiceTests()
         {
             _openApiDocumentMock = OpenApiDocumentMock.CreateOpenApiDocument();
-            _mockLogger = new Mock<ILogger<OpenApiFilterServiceTests>>();
+            _mockLogger = new();
             _logger = _mockLogger.Object;
         }
 

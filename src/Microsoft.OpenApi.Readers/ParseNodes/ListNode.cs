@@ -29,7 +29,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList.Select(n => map(new MapNode(Context, n as YamlMappingNode)))
+            return _nodeList.Select(n => map(new(Context, n as YamlMappingNode)))
                 .Where(i => i != null)
                 .ToList();
         }
@@ -49,7 +49,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}", _nodeList);
             }
 
-            return _nodeList.Select(n => map(new ValueNode(Context, n))).ToList();
+            return _nodeList.Select(n => map(new(Context, n))).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()

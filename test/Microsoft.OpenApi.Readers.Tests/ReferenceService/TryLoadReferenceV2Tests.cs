@@ -46,21 +46,21 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     },
                     Properties =
                     {
-                        ["id"] = new OpenApiSchema
+                        ["id"] = new()
                         {
                             Type = "integer",
                             Format = "int64"
                         },
-                        ["name"] = new OpenApiSchema
+                        ["name"] = new()
                         {
                             Type = "string"
                         },
-                        ["tag"] = new OpenApiSchema
+                        ["tag"] = new()
                         {
                             Type = "string"
                         }
                     },
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.Schema,
                         Id = "SampleObject"
@@ -98,12 +98,12 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     In = ParameterLocation.Query,
                     Description = "number of items to skip",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "integer",
                         Format = "int32"
                     },
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.Parameter,
                         Id = "skipParam"
@@ -140,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     Type = SecuritySchemeType.ApiKey,
                     Name = "api_key",
                     In = ParameterLocation.Header,
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.SecurityScheme,
                         Id = "api_key_sample"
@@ -175,14 +175,14 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                 new OpenApiResponse
                 {
                     Description = "Entity not found.",
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.Response,
                         Id = "NotFound"
                     },
                     Content = new Dictionary<string, OpenApiMediaType>
                     {
-                        ["application/json"] = new OpenApiMediaType()
+                        ["application/json"] = new()
                     }
                 }
             );
@@ -216,24 +216,24 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                     Description = "General Error",
                     Content =
                     {
-                        ["application/json"] = new OpenApiMediaType
+                        ["application/json"] = new()
                         {
-                            Schema = new OpenApiSchema
+                            Schema = new()
                             {
                                 Description = "Sample description",
                                 Required = new HashSet<string> {"name" },
                                 Properties = {
-                                    ["name"] = new OpenApiSchema
+                                    ["name"] = new()
                                     {
                                         Type = "string"
                                     },
-                                    ["tag"] = new OpenApiSchema
+                                    ["tag"] = new()
                                     {
                                         Type = "string"
                                     }
                                 },
 
-                                Reference = new OpenApiReference
+                                Reference = new()
                                 {
                                     Type = ReferenceType.Schema,
                                     Id = "SampleObject2",
@@ -242,7 +242,7 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                             }
                         }
                     },
-                    Reference = new OpenApiReference
+                    Reference = new()
                     {
                         Type = ReferenceType.Response,
                         Id = "GeneralError"

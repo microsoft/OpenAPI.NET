@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -82,11 +81,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
+                    Flows = new()
                     {
-                        Implicit = new OpenApiOAuthFlow
+                        Implicit = new()
                         {
-                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
+                            AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
                             Scopes =
                             {
                                 ["write:pets"] = "modify pets in your account",
@@ -115,11 +114,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
+                    Flows = new()
                     {
-                        Password = new OpenApiOAuthFlow
+                        Password = new()
                         {
-                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
+                            AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
                             Scopes =
                             {
                                 ["write:pets"] = "modify pets in your account",
@@ -148,11 +147,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
+                    Flows = new()
                     {
-                        ClientCredentials = new OpenApiOAuthFlow
+                        ClientCredentials = new()
                         {
-                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
+                            AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
                             Scopes =
                             {
                                 ["write:pets"] = "modify pets in your account",
@@ -182,11 +181,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                 new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
+                    Flows = new()
                     {
-                        AuthorizationCode = new OpenApiOAuthFlow
+                        AuthorizationCode = new()
                         {
-                            AuthorizationUrl = new Uri("http://swagger.io/api/oauth/dialog"),
+                            AuthorizationUrl = new("http://swagger.io/api/oauth/dialog"),
                             Scopes =
                             {
                                 ["write:pets"] = "modify pets in your account",
