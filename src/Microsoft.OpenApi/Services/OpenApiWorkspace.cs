@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         public OpenApiWorkspace()
         {
-            BaseUrl = new Uri("file://" + Environment.CurrentDirectory + "\\" );
+            BaseUrl = new Uri("file://" + Environment.CurrentDirectory + $"{Path.DirectorySeparatorChar}" );
         }
 
         /// <summary>
