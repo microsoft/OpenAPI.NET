@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -11,7 +7,7 @@ using Microsoft.OpenApi.Services;
 
 namespace Microsoft.OpenApi.Readers.Services
 {
-    internal class OpenApiWorkspaceLoader 
+    internal class OpenApiWorkspaceLoader
     {
         private OpenApiWorkspace _workspace;
         private IStreamLoader _loader;
@@ -24,13 +20,13 @@ namespace Microsoft.OpenApi.Readers.Services
             _readerSettings = readerSettings;
         }
 
-        internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference, OpenApiDocument document, CancellationToken cancellationToken, OpenApiDiagnostic diagnostic = null)
+        internal async Task<OpenApiDiagnostic> LoadAsync(OpenApiReference reference, OpenApiDocument document, OpenApiDiagnostic diagnostic = null, CancellationToken cancellationToken = default)
         {
             _workspace.AddDocument(reference.ExternalResource, document);
             document.Workspace = _workspace;
 
             // Collect remote references by walking document
-            var referenceCollector = new OpenApiRemoteReferenceCollector(document);
+            var referenceCollector = new OpenApiRemoteReferenceCollector();
             var collectorWalker = new OpenApiWalker(referenceCollector);
             collectorWalker.Walk(document);
 
@@ -56,7 +52,7 @@ namespace Microsoft.OpenApi.Readers.Services
                     }
                     if (result.OpenApiDocument != null)
                     {
-                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, cancellationToken, diagnostic);
+                        var loadDiagnostic = await LoadAsync(item, result.OpenApiDocument, diagnostic, cancellationToken);
                         diagnostic = loadDiagnostic;
                     }
                 }

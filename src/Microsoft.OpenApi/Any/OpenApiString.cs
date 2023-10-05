@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Any
 {
@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Any
             : this(value, false)
         {
         }
-        
+
         /// <summary>
         /// Initializes the <see cref="OpenApiString"/> class.
         /// </summary>
@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Any
         /// <summary>
         /// The primitive class this object represents.
         /// </summary>
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.String;
+        public override PrimitiveType PrimitiveType => PrimitiveType.String;
 
         /// <summary>
         /// True if string was specified explicitly by the means of double quotes, single quotes, or literal or folded style.

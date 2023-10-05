@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
-using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.V2;
@@ -19,20 +17,20 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
     {
         private const string SampleFolderPath = "V2Tests/Samples/OpenApiPathItem/";
 
-        private static readonly OpenApiPathItem _basicPathItemWithFormData = new OpenApiPathItem()
+        private static readonly OpenApiPathItem _basicPathItemWithFormData = new OpenApiPathItem
         {
             Parameters = new List<OpenApiParameter>
             {
-                new OpenApiParameter()
+                new OpenApiParameter
                 {
                     Name = "id",
                     In = ParameterLocation.Path,
                     Description = "ID of pet to use",
                     Required = true,
-                    Schema = new OpenApiSchema()
+                    Schema = new OpenApiSchema
                     {
                         Type = "array",
-                        Items = new OpenApiSchema()
+                        Items = new OpenApiSchema
                         {
                             Type = "string"
                         }
@@ -298,6 +296,5 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             Assert.True(pathItem.Operations[OperationType.Post].RequestBody != null);
             Assert.Equal(2, pathItem.Operations.Count(o => o.Value.RequestBody != null));
         }
-
     }
 }

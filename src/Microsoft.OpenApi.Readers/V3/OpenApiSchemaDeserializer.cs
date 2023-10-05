@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -27,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.MultipleOf = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture); 
+                    o.MultipleOf = decimal.Parse(n.GetScalarValue(), NumberStyles.Float, CultureInfo.InvariantCulture);
                 }
             },
             {
@@ -280,7 +279,7 @@ namespace Microsoft.OpenApi.Readers.V3
 
             if (pointer != null)
             {
-                return new OpenApiSchema()
+                return new OpenApiSchema
                 {
                     UnresolvedReference = true,
                     Reference = node.Context.VersionService.ConvertToOpenApiReference(pointer, ReferenceType.Schema)

@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -300,7 +299,7 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        /// This overload allows applying rules based on actual object type, rather than matched interface.  This is 
+        /// This overload allows applying rules based on actual object type, rather than matched interface.  This is
         /// needed for validating extensions.
         /// </summary>
         private void Validate(object item, Type type)
@@ -311,8 +310,7 @@ namespace Microsoft.OpenApi.Validations
             }
 
             // Validate unresolved references as references
-            var potentialReference = item as IOpenApiReferenceable;
-            if (potentialReference != null && potentialReference.UnresolvedReference)
+            if (item is IOpenApiReferenceable potentialReference && potentialReference.UnresolvedReference)
             {
                 type = typeof(IOpenApiReferenceable);
             }

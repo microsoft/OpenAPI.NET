@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Linq;
@@ -30,8 +30,7 @@ namespace Microsoft.OpenApi.Validations
         /// <returns>Either the rules related to the type, or an empty list.</returns>
         public IList<ValidationRule> FindRules(Type type)
         {
-            IList<ValidationRule> results = null;
-            _rules.TryGetValue(type, out results);
+            _rules.TryGetValue(type, out var results);
             return results ?? _emptyRules;
         }
 
@@ -176,8 +175,7 @@ namespace Microsoft.OpenApi.Validations
             foreach (var property in rules)
             {
                 var propertyValue = property.GetValue(null); // static property
-                ValidationRule rule = propertyValue as ValidationRule;
-                if (rule != null)
+                if (propertyValue is ValidationRule rule)
                 {
                     ruleSet.Add(rule);
                 }

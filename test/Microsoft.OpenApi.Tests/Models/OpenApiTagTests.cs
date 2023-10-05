@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -160,12 +160,14 @@ namespace Microsoft.OpenApi.Tests.Models
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
             var expected =
-                @"name: pet
-description: Pets operations
-externalDocs:
-  description: Find more info here
-  url: https://example.com
-x-tag-extension: ";
+                """
+                name: pet
+                description: Pets operations
+                externalDocs:
+                  description: Find more info here
+                  url: https://example.com
+                x-tag-extension:
+                """;
 
             // Act
             AdvancedTag.SerializeAsV3WithoutReference(writer);
@@ -185,12 +187,14 @@ x-tag-extension: ";
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
             var expected =
-                @"name: pet
-description: Pets operations
-externalDocs:
-  description: Find more info here
-  url: https://example.com
-x-tag-extension: ";
+                """
+                name: pet
+                description: Pets operations
+                externalDocs:
+                  description: Find more info here
+                  url: https://example.com
+                x-tag-extension:
+                """;
 
             // Act
             AdvancedTag.SerializeAsV2WithoutReference(writer);

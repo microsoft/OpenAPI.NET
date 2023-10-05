@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -170,7 +170,6 @@ namespace Microsoft.OpenApi.Services
             ResolveMap(parameter.Examples);
         }
 
-
         /// <summary>
         /// Resolve all references to links
         /// </summary>
@@ -206,7 +205,7 @@ namespace Microsoft.OpenApi.Services
 
                     if (resolvedTag == null)
                     {
-                        resolvedTag = new OpenApiTag()
+                        resolvedTag = new OpenApiTag
                         {
                             Name = tag.Reference.Id
                         };
@@ -291,7 +290,7 @@ namespace Microsoft.OpenApi.Services
             else
             {
                 // Leave as unresolved reference
-                return new T()
+                return new T
                 {
                     UnresolvedReference = true,
                     Reference = reference

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
@@ -168,12 +167,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public static OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new OpenApiSchema
         {
             Title = "title1",
-            Required = new HashSet<string>() { "property1" },
+            Required = new HashSet<string> { "property1" },
             Properties = new Dictionary<string, OpenApiSchema>
             {
                 ["property1"] = new OpenApiSchema
                 {
-                    Required = new HashSet<string>() { "property3" },
+                    Required = new HashSet<string> { "property3" },
                     Properties = new Dictionary<string, OpenApiSchema>
                     {
                         ["property2"] = new OpenApiSchema
@@ -219,13 +218,6 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiSchemaTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void SerializeBasicSchemaAsV3JsonWorks()
         {
@@ -245,19 +237,22 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedSchemaNumberAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""title"": ""title1"",
-  ""multipleOf"": 3,
-  ""maximum"": 42,
-  ""minimum"": 10,
-  ""exclusiveMinimum"": true,
-  ""type"": ""integer"",
-  ""default"": 15,
-  ""nullable"": true,
-  ""externalDocs"": {
-    ""url"": ""http://example.com/externalDocs""
-  }
-}";
+            var expected =
+                """
+                {
+                  "title": "title1",
+                  "multipleOf": 3,
+                  "maximum": 42,
+                  "minimum": 10,
+                  "exclusiveMinimum": true,
+                  "type": "integer",
+                  "default": 15,
+                  "nullable": true,
+                  "externalDocs": {
+                    "url": "http://example.com/externalDocs"
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedSchemaNumber.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -272,41 +267,44 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedSchemaObjectAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""title"": ""title1"",
-  ""properties"": {
-    ""property1"": {
-      ""properties"": {
-        ""property2"": {
-          ""type"": ""integer""
-        },
-        ""property3"": {
-          ""maxLength"": 15,
-          ""type"": ""string""
-        }
-      }
-    },
-    ""property4"": {
-      ""properties"": {
-        ""property5"": {
-          ""properties"": {
-            ""property6"": {
-              ""type"": ""boolean""
-            }
-          }
-        },
-        ""property7"": {
-          ""minLength"": 2,
-          ""type"": ""string""
-        }
-      }
-    }
-  },
-  ""nullable"": true,
-  ""externalDocs"": {
-    ""url"": ""http://example.com/externalDocs""
-  }
-}";
+            var expected =
+                """
+                {
+                  "title": "title1",
+                  "properties": {
+                    "property1": {
+                      "properties": {
+                        "property2": {
+                          "type": "integer"
+                        },
+                        "property3": {
+                          "maxLength": 15,
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "property4": {
+                      "properties": {
+                        "property5": {
+                          "properties": {
+                            "property6": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "property7": {
+                          "minLength": 2,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "nullable": true,
+                  "externalDocs": {
+                    "url": "http://example.com/externalDocs"
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedSchemaObject.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -321,44 +319,47 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAdvancedSchemaWithAllOfAsV3JsonWorks()
         {
             // Arrange
-            var expected = @"{
-  ""title"": ""title1"",
-  ""allOf"": [
-    {
-      ""title"": ""title2"",
-      ""properties"": {
-        ""property1"": {
-          ""type"": ""integer""
-        },
-        ""property2"": {
-          ""maxLength"": 15,
-          ""type"": ""string""
-        }
-      }
-    },
-    {
-      ""title"": ""title3"",
-      ""properties"": {
-        ""property3"": {
-          ""properties"": {
-            ""property4"": {
-              ""type"": ""boolean""
-            }
-          }
-        },
-        ""property5"": {
-          ""minLength"": 2,
-          ""type"": ""string""
-        }
-      },
-      ""nullable"": true
-    }
-  ],
-  ""nullable"": true,
-  ""externalDocs"": {
-    ""url"": ""http://example.com/externalDocs""
-  }
-}";
+            var expected =
+                """
+                {
+                  "title": "title1",
+                  "allOf": [
+                    {
+                      "title": "title2",
+                      "properties": {
+                        "property1": {
+                          "type": "integer"
+                        },
+                        "property2": {
+                          "maxLength": 15,
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "title": "title3",
+                      "properties": {
+                        "property3": {
+                          "properties": {
+                            "property4": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "property5": {
+                          "minLength": 2,
+                          "type": "string"
+                        }
+                      },
+                      "nullable": true
+                    }
+                  ],
+                  "nullable": true,
+                  "externalDocs": {
+                    "url": "http://example.com/externalDocs"
+                  }
+                }
+                """;
 
             // Act
             var actual = AdvancedSchemaWithAllOf.SerializeAsJson(OpenApiSpecVersion.OpenApi3_0);
@@ -377,7 +378,6 @@ namespace Microsoft.OpenApi.Tests.Models
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiJsonWriter(outputStringWriter, new OpenApiJsonWriterSettings { Terse = produceTerseOutput });
-
 
             // Act
             ReferencedSchema.SerializeAsV3WithoutReference(writer);
@@ -425,12 +425,12 @@ namespace Microsoft.OpenApi.Tests.Models
         public void SerializeAsV2ShouldSetFormatPropertyInParentSchemaIfPresentInChildrenSchema()
         {
             // Arrange
-            var schema = new OpenApiSchema()
+            var schema = new OpenApiSchema
             {
                 OneOf = new List<OpenApiSchema>
                 {
                     new OpenApiSchema
-                    { 
+                    {
                         Type = "number",
                         Format = "decimal"
                     },
@@ -448,15 +448,18 @@ namespace Microsoft.OpenApi.Tests.Models
 
             var v2Schema = outputStringWriter.GetStringBuilder().ToString().MakeLineBreaksEnvironmentNeutral();
 
-            var expectedV2Schema = @"{
-  ""format"": ""decimal"",
-  ""allOf"": [
-    {
-      ""format"": ""decimal"",
-      ""type"": ""number""
-    }
-  ]
-}".MakeLineBreaksEnvironmentNeutral();
+            var expectedV2Schema =
+                """
+                {
+                  "format": "decimal",
+                  "allOf": [
+                    {
+                      "format": "decimal",
+                      "type": "number"
+                    }
+                  ]
+                }
+                """.MakeLineBreaksEnvironmentNeutral();
 
             // Assert
             Assert.Equal(expectedV2Schema, v2Schema);
@@ -465,7 +468,7 @@ namespace Microsoft.OpenApi.Tests.Models
         [Fact]
         public void OpenApiSchemaCopyConstructorSucceeds()
         {
-            var baseSchema = new OpenApiSchema()
+            var baseSchema = new OpenApiSchema
             {
                 Type = "string",
                 Format = "date"

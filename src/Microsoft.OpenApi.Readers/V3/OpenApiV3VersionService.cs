@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Readers.V3
                 var segments = reference.Split('#');
                 if (segments.Length == 1)
                 {
-                    if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
+                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
                         return new OpenApiReference
                         {
@@ -121,7 +121,7 @@ namespace Microsoft.OpenApi.Readers.V3
                         if (type == null)
                         {
                             type = referencedType;
-                        } 
+                        }
                         else
                         {
                             if (type != referencedType)

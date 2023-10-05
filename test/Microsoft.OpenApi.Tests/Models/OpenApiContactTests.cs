@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -54,12 +54,14 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"{
-  ""name"": ""API Support"",
-  ""url"": ""http://www.example.com/support"",
-  ""email"": ""support@example.com"",
-  ""x-internal-id"": 42
-}";
+                """
+                {
+                  "name": "API Support",
+                  "url": "http://www.example.com/support",
+                  "email": "support@example.com",
+                  "x-internal-id": 42
+                }
+                """;
 
             // Act
             var actual = AdvanceContact.SerializeAsJson(version);
@@ -77,10 +79,12 @@ namespace Microsoft.OpenApi.Tests.Models
         {
             // Arrange
             var expected =
-                @"name: API Support
-url: http://www.example.com/support
-email: support@example.com
-x-internal-id: 42";
+                """
+                name: API Support
+                url: http://www.example.com/support
+                email: support@example.com
+                x-internal-id: 42
+                """;
 
             // Act
             var actual = AdvanceContact.SerializeAsYaml(version);

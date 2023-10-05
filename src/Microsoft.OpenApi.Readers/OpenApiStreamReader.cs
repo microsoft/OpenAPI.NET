@@ -60,9 +60,9 @@ namespace Microsoft.OpenApi.Readers
         public async Task<ReadResult> ReadAsync(Stream input, CancellationToken cancellationToken = default)
         {
             MemoryStream bufferedStream;
-            if (input is MemoryStream)
+            if (input is MemoryStream stream)
             {
-                bufferedStream = (MemoryStream)input;
+                bufferedStream = stream;
             }
             else
             {
@@ -73,10 +73,8 @@ namespace Microsoft.OpenApi.Readers
                 bufferedStream.Position = 0;
             }
 
-            using (var reader = new StreamReader(bufferedStream))
-            {
-                return await new OpenApiTextReaderReader(_settings).ReadAsync(reader, cancellationToken);
-            }
+            using var reader = new StreamReader(bufferedStream);
+            return await new OpenApiTextReaderReader(_settings).ReadAsync(reader, cancellationToken);
         }
 
         /// <summary>
@@ -88,10 +86,8 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>Instance of newly created OpenApiDocument</returns>
         public T ReadFragment<T>(Stream input, OpenApiSpecVersion version, out OpenApiDiagnostic diagnostic) where T : IOpenApiReferenceable
         {
-            using (var reader = new StreamReader(input))
-            {
-                return new OpenApiTextReaderReader(_settings).ReadFragment<T>(reader, version, out diagnostic);
-            }
+            using var reader = new StreamReader(input);
+            return new OpenApiTextReaderReader(_settings).ReadFragment<T>(reader, version, out diagnostic);
         }
     }
 }

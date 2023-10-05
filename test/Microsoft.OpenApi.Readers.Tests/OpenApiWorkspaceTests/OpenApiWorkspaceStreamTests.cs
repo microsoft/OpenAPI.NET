@@ -18,7 +18,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public async Task LoadingDocumentWithResolveAllReferencesShouldLoadDocumentIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new MockLoader(),
@@ -27,11 +27,13 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
 
             // Todo: this should be ReadAsync
             var stream = new MemoryStream();
-            var doc = @"openapi: 3.0.0
-info:
-  title: foo
-  version: 1.0.0
-paths: {}";
+            var doc = """
+                      openapi: 3.0.0
+                      info:
+                        title: foo
+                        version: 1.0.0
+                      paths: {}
+                      """;
             var wr = new StreamWriter(stream);
             wr.Write(doc);
             wr.Flush();
@@ -40,15 +42,13 @@ paths: {}";
             var result = await reader.ReadAsync(stream);
 
             Assert.NotNull(result.OpenApiDocument.Workspace);
-
         }
-
 
         [Fact]
         public async Task LoadDocumentWithExternalReferenceShouldLoadBothDocumentsIntoWorkspace()
         {
             // Create a reader that will resolve all references
-            var reader = new OpenApiStreamReader(new OpenApiReaderSettings()
+            var reader = new OpenApiStreamReader(new OpenApiReaderSettings
             {
                 LoadExternalRefs = true,
                 CustomExternalLoader = new ResourceLoader(),
@@ -79,11 +79,9 @@ paths: {}";
                                             .Operations[OperationType.Get]
                                             .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
                                             .Where(p => p.Name == "filter").FirstOrDefault();
-          
+
             Assert.Equal("string", referencedParameter.Schema.Type);
-
         }
-
 
     }
 
@@ -99,7 +97,6 @@ paths: {}";
             return null;
         }
     }
-    
 
     public class ResourceLoader : IStreamLoader
     {

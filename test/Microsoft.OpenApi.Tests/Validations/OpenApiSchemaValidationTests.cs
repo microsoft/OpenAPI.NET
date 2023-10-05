@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new OpenApiSchema()
+            var schema = new OpenApiSchema
             {
                 Default = new OpenApiInteger(55),
                 Type = "string",
@@ -53,7 +53,7 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new OpenApiSchema()
+            var schema = new OpenApiSchema
             {
                 Example = new OpenApiLong(55),
                 Default = new OpenApiPassword("1234"),
@@ -87,29 +87,29 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new OpenApiSchema()
+            var schema = new OpenApiSchema
             {
                 Enum =
                 {
                     new OpenApiString("1"),
-                    new OpenApiObject()
+                    new OpenApiObject
                     {
                         ["x"] = new OpenApiInteger(2),
                         ["y"] = new OpenApiString("20"),
                         ["z"] = new OpenApiString("200")
                     },
-                    new OpenApiArray()
+                    new OpenApiArray
                     {
                         new OpenApiInteger(3)
                     },
-                    new OpenApiObject()
+                    new OpenApiObject
                     {
                         ["x"] = new OpenApiInteger(4),
                         ["y"] = new OpenApiInteger(40),
                     },
                 },
                 Type = "object",
-                AdditionalProperties = new OpenApiSchema()
+                AdditionalProperties = new OpenApiSchema
                 {
                     Type = "integer",
                 }
@@ -146,54 +146,54 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> warnings;
-            var schema = new OpenApiSchema()
+            var schema = new OpenApiSchema
             {
                 Type = "object",
                 Properties =
                 {
-                    ["property1"] = new OpenApiSchema()
+                    ["property1"] = new OpenApiSchema
                     {
                         Type = "array",
-                        Items = new OpenApiSchema()
+                        Items = new OpenApiSchema
                         {
                             Type = "integer",
                             Format = "int64"
                         }
                     },
-                    ["property2"] = new OpenApiSchema()
+                    ["property2"] = new OpenApiSchema
                     {
                         Type = "array",
-                        Items = new OpenApiSchema()
+                        Items = new OpenApiSchema
                         {
                             Type = "object",
-                            AdditionalProperties = new OpenApiSchema()
+                            AdditionalProperties = new OpenApiSchema
                             {
                                 Type = "boolean"
                             }
                         }
                     },
-                    ["property3"] = new OpenApiSchema()
+                    ["property3"] = new OpenApiSchema
                     {
                         Type = "string",
                         Format = "password"
                     },
-                    ["property4"] = new OpenApiSchema()
+                    ["property4"] = new OpenApiSchema
                     {
                         Type = "string"
                     }
                 },
-                Default = new OpenApiObject()
+                Default = new OpenApiObject
                 {
-                    ["property1"] = new OpenApiArray()
+                    ["property1"] = new OpenApiArray
                     {
                         new OpenApiInteger(12),
                         new OpenApiLong(13),
                         new OpenApiString("1"),
                     },
-                    ["property2"] = new OpenApiArray()
+                    ["property2"] = new OpenApiArray
                     {
                         new OpenApiInteger(2),
-                        new OpenApiObject()
+                        new OpenApiObject
                         {
                             ["x"] = new OpenApiBoolean(true),
                             ["y"] = new OpenApiBoolean(false),
@@ -275,7 +275,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             // Arrange
             var components = new OpenApiComponents
             {
-                Schemas = 
+                Schemas =
                 {
                     {
                         "Person",
@@ -309,7 +309,7 @@ namespace Microsoft.OpenApi.Validations.Tests
                             },
                             Reference = new OpenApiReference { Id = "Person" }
                         }
-                    }                    
+                    }
                 }
             };
 

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 
 namespace Microsoft.OpenApi.Validations
-{    
+{
     /// <summary>
      /// Warnings detected when validating an OpenAPI Element
      /// </summary>

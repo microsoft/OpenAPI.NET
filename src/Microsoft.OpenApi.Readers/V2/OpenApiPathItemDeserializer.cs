@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "$ref", (o, n) =>
                 {
-                    o.Reference = new OpenApiReference() { ExternalResource = n.GetScalarValue() };
+                    o.Reference = new OpenApiReference { ExternalResource = n.GetScalarValue() };
                     o.UnresolvedReference =true;
                 }
             },
@@ -99,7 +99,6 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 }
             }
-
         }
     }
 }

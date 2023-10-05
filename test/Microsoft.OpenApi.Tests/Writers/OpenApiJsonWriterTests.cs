@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
@@ -11,20 +11,12 @@ using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Newtonsoft.Json;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
     public class OpenApiJsonWriterTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiJsonWriterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         static bool[] shouldProduceTerseOutputValues = new[] { true, false };
 
         public static IEnumerable<object[]> WriteStringListAsJsonShouldMatchExpectedTestCases()
@@ -208,10 +200,10 @@ namespace Microsoft.OpenApi.Tests.Writers
 
                 writer.WriteEndObject();
             }
-            else if (typeof(IEnumerable).IsAssignableFrom(value.GetType()))
+            else if (value is IEnumerable enumerable)
             {
                 writer.WriteStartArray();
-                foreach (var elementValue in (IEnumerable)value)
+                foreach (var elementValue in enumerable)
                 {
                     WriteValueRecursive(writer, elementValue);
                 }

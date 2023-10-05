@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
@@ -142,8 +142,7 @@ namespace Microsoft.OpenApi.Writers
         {
             if (value != null)
             {
-                var values = value as IEnumerable;
-                if (values != null && !values.GetEnumerator().MoveNext())
+                if (value is IEnumerable values && !values.GetEnumerator().MoveNext())
                 {
                     return; // Don't render optional empty collections
                 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace Microsoft.OpenApi.Services
         public CurrentKeys CurrentKeys { get; } = new CurrentKeys();
 
         /// <summary>
-        /// Allow Rule to indicate validation error occured at a deeper context level.  
+        /// Allow Rule to indicate validation error occured at a deeper context level.
         /// </summary>
         /// <param name="segment">Identifier for context</param>
         public virtual void Enter(string segment)
@@ -69,7 +69,6 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(OpenApiContact contact)
         {
         }
-
 
         /// <summary>
         /// Visits <see cref="OpenApiLicense"/>
@@ -148,7 +147,6 @@ namespace Microsoft.OpenApi.Services
         {
         }
 
-
         /// <summary>
         /// Visits headers.
         /// </summary>
@@ -211,7 +209,6 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(OpenApiComponents components)
         {
         }
-
 
         /// <summary>
         /// Visits <see cref="OpenApiComponents"/>

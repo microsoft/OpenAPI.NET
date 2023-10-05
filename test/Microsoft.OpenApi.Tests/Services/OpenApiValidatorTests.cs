@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,25 +12,17 @@ using Microsoft.OpenApi.Validations;
 using Microsoft.OpenApi.Validations.Rules;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Services
 {
     [Collection("DefaultSettings")]
     public class OpenApiValidatorTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiValidatorTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void ResponseMustHaveADescription()
         {
             var openApiDocument = new OpenApiDocument();
-            openApiDocument.Info = new OpenApiInfo()
+            openApiDocument.Info = new OpenApiInfo
             {
                 Title = "foo",
                 Version = "1.2.2"
@@ -69,7 +61,7 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var openApiDocument = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new OpenApiInfo
                 {
                     Title = "foo",
                     Version = "1.2.2"
@@ -81,7 +73,6 @@ namespace Microsoft.OpenApi.Tests.Services
                 },
                 new OpenApiServer
                 {
-
                 },
             },
                 Paths = new OpenApiPaths()
@@ -98,7 +89,6 @@ namespace Microsoft.OpenApi.Tests.Services
                             String.Format(SRResource.Validation_FieldIsRequired, "url", "server"))
         });
         }
-
 
         [Fact]
         public void ValidateCustomExtension()
@@ -117,7 +107,7 @@ namespace Microsoft.OpenApi.Tests.Services
 
             var openApiDocument = new OpenApiDocument
             {
-                Info = new OpenApiInfo()
+                Info = new OpenApiInfo
                 {
                     Title = "foo",
                     Version = "1.2.2"
@@ -125,7 +115,7 @@ namespace Microsoft.OpenApi.Tests.Services
                 Paths = new OpenApiPaths()
             };
 
-            var fooExtension = new FooExtension()
+            var fooExtension = new FooExtension
             {
                 Bar = "hey",
                 Baz = "baz"
@@ -143,7 +133,6 @@ namespace Microsoft.OpenApi.Tests.Services
                        new OpenApiValidatorError("FooExtensionRule", "#/info/x-foo", "Don't say hey")
                    });
         }
-
     }
 
     internal class FooExtension : IOpenApiExtension, IOpenApiElement

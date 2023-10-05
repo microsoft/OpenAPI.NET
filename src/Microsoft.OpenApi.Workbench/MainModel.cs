@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -25,10 +24,10 @@ namespace Microsoft.OpenApi.Workbench
     {
         private string _input;
 
-        private bool _inlineLocal = false;
-        private bool _inlineExternal = false;
+        private bool _inlineLocal;
+        private bool _inlineExternal;
 
-        private bool _resolveExternal = false;
+        private bool _resolveExternal;
 
         private string _inputFile;
 
@@ -40,7 +39,6 @@ namespace Microsoft.OpenApi.Workbench
 
         private string _renderTime;
 
-                
         /// <summary>
         /// Default format.
         /// </summary>
@@ -50,7 +48,6 @@ namespace Microsoft.OpenApi.Workbench
         /// Default version.
         /// </summary>
         private OpenApiSpecVersion _version = OpenApiSpecVersion.OpenApi3_0;
-
 
         private HttpClient _httpClient = new HttpClient();
 
@@ -215,7 +212,7 @@ namespace Microsoft.OpenApi.Workbench
                     if (_inputFile.StartsWith("http"))
                     {
                         stream = await _httpClient.GetStreamAsync(_inputFile);
-                    } 
+                    }
                     else
                     {
                         stream = new FileStream(_inputFile, FileMode.Open);
@@ -229,7 +226,6 @@ namespace Microsoft.OpenApi.Workbench
                     }
                     stream = CreateStream(_input);
                 }
-
 
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
@@ -308,16 +304,17 @@ namespace Microsoft.OpenApi.Workbench
         private string WriteContents(OpenApiDocument document)
         {
             var outputStream = new MemoryStream();
-            
+
             document.Serialize(
                 outputStream,
                 Version,
                 Format,
-                new OpenApiWriterSettings() {
+                new OpenApiWriterSettings
+                {
                     InlineLocalReferences = InlineLocal,
                     InlineExternalReferences = InlineExternal
                 });
-            
+
             outputStream.Position = 0;
 
             return new StreamReader(outputStream).ReadToEnd();

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -213,14 +213,18 @@ namespace Microsoft.OpenApi.Readers.V2
 
             int? port = null;
 
-            if (!String.IsNullOrEmpty(host) && host.Contains(":"))
+#if NETSTANDARD2_1_OR_GREATER
+            if (!String.IsNullOrEmpty(host) && host.Contains(':', StringComparison.OrdinalIgnoreCase))
+#else
+            if (!String.IsNullOrEmpty(host) && host.Contains(':'))
+#endif
             {
                 var pieces = host.Split(':');
                 host = pieces.First();
                 port = int.Parse(pieces.Last(), CultureInfo.InvariantCulture);
             }
 
-            var uriBuilder = new UriBuilder()
+            var uriBuilder = new UriBuilder
             {
                 Scheme = scheme,
                 Host = host,
@@ -300,7 +304,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
         private static bool IsHostValid(string host)
         {
-            //Check if the host contains :// 
+            //Check if the host contains ://
             if (host.Contains(Uri.SchemeDelimiter))
             {
                 return false;
@@ -327,10 +331,10 @@ namespace Microsoft.OpenApi.Readers.V2
             if (body != null)
             {
                 operation.Parameters.Remove(body);
-                operation.RequestBody = new OpenApiRequestBody()
+                operation.RequestBody = new OpenApiRequestBody
                 {
                     UnresolvedReference = true,
-                    Reference = new OpenApiReference()
+                    Reference = new OpenApiReference
                     {
                         Id = body.Reference.Id,
                         Type = ReferenceType.RequestBody
@@ -338,7 +342,5 @@ namespace Microsoft.OpenApi.Readers.V2
                 };
             }
         }
-
-
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.SmokeTests
         static ApisGuruTests()
         {
             System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            _httpClient = new HttpClient(new HttpClientHandler()
+            _httpClient = new HttpClient(new HttpClientHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip
             });
@@ -45,8 +45,7 @@ namespace Microsoft.OpenApi.SmokeTests
             var json = JObject.Parse(listJsonStr);
             foreach (var item in json.Properties())
             {
-                var versions = GetProp(item.Value, "versions") as JObject;
-                if (versions == null)
+                if (GetProp(item.Value, "versions") is not JObject versions)
                     continue;
                 foreach (var prop in versions.Properties())
                 {
@@ -62,7 +61,7 @@ namespace Microsoft.OpenApi.SmokeTests
 
             JToken GetProp(JToken obj, string prop)
             {
-                if (!(obj is JObject jObj))
+                if (obj is not JObject jObj)
                     return null;
                 if (!jObj.TryGetValue(prop, out var jToken))
                     return null;
@@ -94,7 +93,7 @@ namespace Microsoft.OpenApi.SmokeTests
             if (diagnostic.Errors.Count > 0)
             {
                 _output.WriteLine($"Errors parsing {url}");
-                _output.WriteLine(String.Join("\n", diagnostic.Errors));
+                _output.WriteLine(String.Join('\n', diagnostic.Errors));
                 //               Assert.True(false);  // Uncomment to identify descriptions with errors.
             }
 

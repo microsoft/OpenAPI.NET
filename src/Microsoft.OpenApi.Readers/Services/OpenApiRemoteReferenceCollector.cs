@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Interfaces;
@@ -13,12 +13,7 @@ namespace Microsoft.OpenApi.Readers.Services
     /// </summary>
     internal class OpenApiRemoteReferenceCollector : OpenApiVisitorBase
     {
-        private OpenApiDocument _document;
         private Dictionary<string, OpenApiReference> _references = new Dictionary<string, OpenApiReference>();
-        public OpenApiRemoteReferenceCollector(OpenApiDocument document)
-        {
-            _document = document;
-        }
 
         /// <summary>
         /// List of external references collected from OpenApiDocument
@@ -31,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.Services
         }
 
         /// <summary>
-        /// Collect reference for each reference 
+        /// Collect reference for each reference
         /// </summary>
         /// <param name="referenceable"></param>
         public override void Visit(IOpenApiReferenceable referenceable)
@@ -54,6 +49,6 @@ namespace Microsoft.OpenApi.Readers.Services
                     }
                 }
             }
-        }    
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
@@ -30,7 +30,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public MapNode(ParsingContext context, YamlNode node) : base(
             context)
         {
-            if (!(node is YamlMappingNode mapNode))
+            if (node is not YamlMappingNode mapNode)
             {
                 throw new OpenApiReaderException("Expected map.", Context);
             }
@@ -47,8 +47,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             get
             {
-                YamlNode node;
-                if (this._node.Children.TryGetValue(new YamlScalarNode(key), out node))
+                if (this._node.Children.TryGetValue(new YamlScalarNode(key), out var node))
                 {
                     return new PropertyNode(Context, key, node);
                 }
@@ -66,17 +65,17 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             }
 
             var nodes = yamlMap.Select(
-                n => {
-                    
+                n =>
+                {
                     var key = n.Key.GetScalarValue();
                     T value;
                     try
                     {
                         Context.StartObject(key);
                         value = n.Value as YamlMappingNode == null
-                          ? default(T)
+                          ? default
                           : map(new MapNode(Context, n.Value as YamlMappingNode));
-                    } 
+                    }
                     finally
                     {
                         Context.EndObject();
@@ -93,7 +92,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public override Dictionary<string, T> CreateMapWithReference<T>(
             ReferenceType referenceType,
-            Func<MapNode, T> map) 
+            Func<MapNode, T> map)
         {
             var yamlMap = _node;
             if (yamlMap == null)
@@ -120,7 +119,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                         // If the component isn't a reference to another component, then point it to itself.
                         if (entry.value.Reference == null)
                         {
-                            entry.value.Reference = new OpenApiReference()
+                            entry.value.Reference = new OpenApiReference
                             {
                                 Type = referenceType,
                                 Id = entry.key
@@ -141,7 +140,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             var yamlMap = _node;
             if (yamlMap == null)
-            { 
+            {
                 throw new OpenApiReaderException($"Expected map while parsing {typeof(T).Name}", Context);
             }
 
@@ -152,8 +151,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     try
                     {
                         Context.StartObject(key);
-                        YamlScalarNode scalarNode = n.Value as YamlScalarNode;
-                        if (scalarNode == null)
+                        if (n.Value is not YamlScalarNode scalarNode)
                         {
                             throw new OpenApiReaderException($"Expected scalar while parsing {typeof(T).Name}", Context);
                         }
@@ -184,7 +182,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         public T GetReferencedObject<T>(ReferenceType referenceType, string referenceId)
             where T : IOpenApiReferenceable, new()
         {
-            return new T()
+            return new T
             {
                 UnresolvedReference = true,
                 Reference = Context.VersionService.ConvertToOpenApiReference(referenceId, referenceType)
@@ -193,9 +191,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public string GetReferencePointer()
         {
-            YamlNode refNode;
-
-            if (!_node.Children.TryGetValue(new YamlScalarNode("$ref"), out refNode))
+            if (!_node.Children.TryGetValue(new YamlScalarNode("$ref"), out var refNode))
             {
                 return null;
             }
@@ -205,8 +201,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
 
         public string GetScalarValue(ValueNode key)
         {
-            var scalarNode = _node.Children[new YamlScalarNode(key.GetScalarValue())] as YamlScalarNode;
-            if (scalarNode == null)
+            if (_node.Children[new YamlScalarNode(key.GetScalarValue())] is not YamlScalarNode scalarNode)
             {
                 throw new OpenApiReaderException($"Expected scalar at line {_node.Start.Line} for key {key.GetScalarValue()}", Context);
             }

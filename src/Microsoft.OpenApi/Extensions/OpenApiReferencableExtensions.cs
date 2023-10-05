@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -31,17 +31,17 @@ namespace Microsoft.OpenApi.Extensions
             var mapKey = pointer.Tokens.ElementAtOrDefault(1);
             try
             {
-                if (element.GetType() == typeof(OpenApiHeader))
+                if (element is OpenApiHeader header)
                 {
-                    return ResolveReferenceOnHeaderElement((OpenApiHeader)element, propertyName, mapKey, pointer);
+                    return ResolveReferenceOnHeaderElement(header, propertyName, mapKey, pointer);
                 }
-                if (element.GetType() == typeof(OpenApiParameter))
+                if (element is OpenApiParameter parameter)
                 {
-                    return ResolveReferenceOnParameterElement((OpenApiParameter)element, propertyName, mapKey, pointer);
+                    return ResolveReferenceOnParameterElement(parameter, propertyName, mapKey, pointer);
                 }
-                if (element.GetType() == typeof(OpenApiResponse))
+                if (element is OpenApiResponse response)
                 {
-                    return ResolveReferenceOnResponseElement((OpenApiResponse)element, propertyName, mapKey, pointer);
+                    return ResolveReferenceOnResponseElement(response, propertyName, mapKey, pointer);
                 }
             }
             catch (KeyNotFoundException)

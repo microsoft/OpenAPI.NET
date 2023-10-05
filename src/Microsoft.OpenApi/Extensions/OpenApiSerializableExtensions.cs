@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Globalization;
 using System.IO;
@@ -74,7 +74,7 @@ namespace Microsoft.OpenApi.Extensions
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format, 
+            OpenApiFormat format,
             OpenApiWriterSettings settings)
             where T : IOpenApiSerializable
         {
@@ -132,7 +132,6 @@ namespace Microsoft.OpenApi.Extensions
             writer.Flush();
         }
 
-
         /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in JSON format.
         /// </summary>
@@ -179,16 +178,12 @@ namespace Microsoft.OpenApi.Extensions
                 throw Error.ArgumentNull(nameof(element));
             }
 
-            using (var stream = new MemoryStream())
-            {
-                element.Serialize(stream, specVersion, format);
-                stream.Position = 0;
+            using var stream = new MemoryStream();
+            element.Serialize(stream, specVersion, format);
+            stream.Position = 0;
 
-                using (var streamReader = new StreamReader(stream))
-                {
-                    return streamReader.ReadToEnd();
-                }
-            }
+            using var streamReader = new StreamReader(stream);
+            return streamReader.ReadToEnd();
         }
     }
 }

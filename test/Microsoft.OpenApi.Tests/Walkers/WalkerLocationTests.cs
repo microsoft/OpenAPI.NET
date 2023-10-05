@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,6 @@ namespace Microsoft.OpenApi.Tests.Walkers
 {
     public class WalkerLocationTests
     {
-
         [Fact]
         public void LocateTopLevelObjects()
         {
@@ -32,14 +31,15 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateTopLevelArrayItems()
         {
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
-                Servers = new List<OpenApiServer>() {
+                Servers = new List<OpenApiServer>
+                {
                     new OpenApiServer(),
                     new OpenApiServer()
                 },
                 Paths = new OpenApiPaths(),
-                Tags = new List<OpenApiTag>()
+                Tags = new List<OpenApiTag>
                 {
                     new OpenApiTag()
                 }
@@ -66,15 +66,15 @@ namespace Microsoft.OpenApi.Tests.Walkers
             {
                 Paths = new OpenApiPaths()
             };
-            doc.Paths.Add("/test", new OpenApiPathItem()
+            doc.Paths.Add("/test", new OpenApiPathItem
             {
-                Operations = new Dictionary<OperationType, OpenApiOperation>()
+                Operations = new Dictionary<OperationType, OpenApiOperation>
                 {
-                    [OperationType.Get] = new OpenApiOperation()
+                    [OperationType.Get] = new OpenApiOperation
                     {
-                        Responses = new OpenApiResponses()
+                        Responses = new OpenApiResponses
                         {
-                            ["200"] = new OpenApiResponse()
+                            ["200"] = new OpenApiResponse
                             {
                                 Content = new Dictionary<string, OpenApiMediaType>
                                 {
@@ -117,21 +117,21 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void WalkDOMWithCycles()
         {
-            var loopySchema = new OpenApiSchema()
+            var loopySchema = new OpenApiSchema
             {
                 Type = "object",
-                Properties = new Dictionary<string, OpenApiSchema>()
+                Properties = new Dictionary<string, OpenApiSchema>
                 {
-                    ["name"] = new OpenApiSchema() { Type = "string" }
+                    ["name"] = new OpenApiSchema { Type = "string" }
                 }
             };
 
             loopySchema.Properties.Add("parent", loopySchema);
 
-            var doc = new OpenApiDocument()
+            var doc = new OpenApiDocument
             {
                 Paths = new OpenApiPaths(),
-                Components = new OpenApiComponents()
+                Components = new OpenApiComponents
                 {
                     Schemas = new Dictionary<string, OpenApiSchema>
                     {
@@ -160,10 +160,9 @@ namespace Microsoft.OpenApi.Tests.Walkers
         [Fact]
         public void LocateReferences()
         {
-
-            var baseSchema = new OpenApiSchema()
+            var baseSchema = new OpenApiSchema
             {
-                Reference = new OpenApiReference()
+                Reference = new OpenApiReference
                 {
                     Id = "base",
                     Type = ReferenceType.Schema
@@ -173,8 +172,8 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             var derivedSchema = new OpenApiSchema
             {
-                AnyOf = new List<OpenApiSchema>() { baseSchema },
-                Reference = new OpenApiReference()
+                AnyOf = new List<OpenApiSchema> { baseSchema },
+                Reference = new OpenApiReference
                 {
                     Id = "derived",
                     Type = ReferenceType.Schema
@@ -182,10 +181,10 @@ namespace Microsoft.OpenApi.Tests.Walkers
                 UnresolvedReference = false
             };
 
-            var testHeader = new OpenApiHeader()
+            var testHeader = new OpenApiHeader
             {
                 Schema = derivedSchema,
-                Reference = new OpenApiReference()
+                Reference = new OpenApiReference
                 {
                     Id = "test-header",
                     Type = ReferenceType.Header
@@ -195,26 +194,26 @@ namespace Microsoft.OpenApi.Tests.Walkers
 
             var doc = new OpenApiDocument
             {
-                Paths = new OpenApiPaths()
+                Paths = new OpenApiPaths
                 {
-                    ["/"] = new OpenApiPathItem()
+                    ["/"] = new OpenApiPathItem
                     {
-                        Operations = new Dictionary<OperationType, OpenApiOperation>()
+                        Operations = new Dictionary<OperationType, OpenApiOperation>
                         {
-                            [OperationType.Get] = new OpenApiOperation()
+                            [OperationType.Get] = new OpenApiOperation
                             {
-                                Responses = new OpenApiResponses()
+                                Responses = new OpenApiResponses
                                 {
-                                    ["200"] = new OpenApiResponse()
+                                    ["200"] = new OpenApiResponse
                                     {
-                                        Content = new Dictionary<string, OpenApiMediaType>()
+                                        Content = new Dictionary<string, OpenApiMediaType>
                                         {
-                                            ["application/json"] = new OpenApiMediaType()
+                                            ["application/json"] = new OpenApiMediaType
                                             {
                                                 Schema = derivedSchema
                                             }
                                         },
-                                        Headers = new Dictionary<string, OpenApiHeader>()
+                                        Headers = new Dictionary<string, OpenApiHeader>
                                         {
                                             ["test-header"] = testHeader
                                         }
@@ -224,14 +223,14 @@ namespace Microsoft.OpenApi.Tests.Walkers
                         }
                     }
                 },
-                Components = new OpenApiComponents()
+                Components = new OpenApiComponents
                 {
-                    Schemas = new Dictionary<string, OpenApiSchema>()
+                    Schemas = new Dictionary<string, OpenApiSchema>
                     {
                         ["derived"] = derivedSchema,
                         ["base"] = baseSchema,
                     },
-                    Headers = new Dictionary<string, OpenApiHeader>()
+                    Headers = new Dictionary<string, OpenApiHeader>
                     {
                         ["test-header"] = testHeader
                     }

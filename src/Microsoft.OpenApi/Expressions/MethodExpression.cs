@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Expressions
 {
@@ -16,7 +16,7 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the expression string.
         /// </summary>
-        public override string Expression { get; } = Method;
+        public override string Expression => Method;
 
         /// <summary>
         /// Private constructor.

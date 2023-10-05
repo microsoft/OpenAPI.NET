@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Readers
 
             switch (inputVersion)
             {
-                case string version when version == "2.0":
+                case string and "2.0":
                     VersionService = new OpenApiV2VersionService(Diagnostic);
                     doc = VersionService.LoadDocument(RootNode);
                     this.Diagnostic.SpecificationVersion = OpenApiSpecVersion.OpenApi2_0;
@@ -158,10 +158,10 @@ namespace Microsoft.OpenApi.Readers
             }
             else if (!_scopedTempStorage.TryGetValue(scope, out storage))
             {
-                return default(T);
+                return default;
             }
 
-            return storage.TryGetValue(key, out var value) ? (T)value : default(T);
+            return storage.TryGetValue(key, out var value) ? (T)value : default;
         }
 
         /// <summary>
@@ -206,8 +206,7 @@ namespace Microsoft.OpenApi.Readers
         /// <returns>If method returns false a loop was detected and the key is not added.</returns>
         public bool PushLoop(string loopId, string key)
         {
-            Stack<string> stack;
-            if (!_loopStacks.TryGetValue(loopId, out stack))
+            if (!_loopStacks.TryGetValue(loopId, out var stack))
             {
                 stack = new Stack<string>();
                 _loopStacks.Add(loopId, stack);
@@ -244,6 +243,5 @@ namespace Microsoft.OpenApi.Readers
                 _loopStacks[loopid].Pop();
             }
         }
-
     }
 }

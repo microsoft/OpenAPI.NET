@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Microsoft.OpenApi.Models;
@@ -59,12 +58,7 @@ namespace Microsoft.OpenApi.Services
         {
             Utils.CheckArgumentNullOrEmpty(label, nameof(label));
 
-            if (!(PathItems?.ContainsKey(label) ?? false))
-            {
-                return false;
-            }
-
-            return PathItems[label].Operations?.Any() ?? false;
+            return PathItems is not null && PathItems.TryGetValue(label, out var item) && item.Operations is not null && item.Operations.Any();
         }
 
         /// <summary>
@@ -190,14 +184,15 @@ namespace Microsoft.OpenApi.Services
             }
 
             // If the child segment has already been defined, then insert into it
-            if (Children.ContainsKey(segment))
+            if (Children.TryGetValue(segment, out var child))
             {
                 var newPath = currentPath + PathSeparator + segment;
 
-                return Children[segment].Attach(segments: segments.Skip(1),
-                                                pathItem: pathItem,
-                                                label: label,
-                                                currentPath: newPath);
+                return child.Attach(
+                    segments: segments.Skip(1),
+                    pathItem: pathItem,
+                    label: label,
+                    currentPath: newPath);
             }
             else
             {
@@ -227,14 +222,7 @@ namespace Microsoft.OpenApi.Services
 
             foreach (var item in additionalData)
             {
-                if (AdditionalData.ContainsKey(item.Key))
-                {
-                    AdditionalData[item.Key] = item.Value;
-                }
-                else
-                {
-                    AdditionalData.Add(item.Key, item.Value);
-                }
+                AdditionalData[item.Key] = item.Value;
             }
         }
 
@@ -268,7 +256,7 @@ namespace Microsoft.OpenApi.Services
             { "DELETE", new MermaidNodeStyle("Tomato", MermaidNodeShape.Rhombus) },
             { "OTHER", new MermaidNodeStyle("White", MermaidNodeShape.SquareCornerRectangle) },
         };
-        
+
         private static void ProcessNode(OpenApiUrlTreeNode node, TextWriter writer)
         {
             var path = string.IsNullOrEmpty(node.Path) ? "/" : SanitizeMermaidNode(node.Path);
@@ -296,7 +284,6 @@ namespace Microsoft.OpenApi.Services
 
         private static (string, string) GetShapeDelimiters(string methods)
         {
-            
             if (MermaidNodeStyles.TryGetValue(methods, out var style))
             {
                 //switch on shape
@@ -329,7 +316,7 @@ namespace Microsoft.OpenApi.Services
                     .Replace(".", "_")
                     .Replace("(", "_")
                     .Replace(")", "_")
-                    .Replace(";", "_")                    
+                    .Replace(";", "_")
                     .Replace("-", "_")
                     .Replace("graph", "gra_ph")  // graph is a reserved word
                     .Replace("default", "def_ault");  // default is a reserved word for classes

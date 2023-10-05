@@ -1,15 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers.ParseNodes;
-using Microsoft.OpenApi.Readers.V2;
-using SharpYaml.Serialization;
 using Xunit;
 
 namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
@@ -228,11 +223,11 @@ namespace Microsoft.OpenApi.Readers.Tests.ReferenceService
                                 Description = "Sample description",
                                 Required = new HashSet<string> {"name" },
                                 Properties = {
-                                    ["name"] = new OpenApiSchema()
+                                    ["name"] = new OpenApiSchema
                                     {
                                         Type = "string"
                                     },
-                                    ["tag"] = new OpenApiSchema()
+                                    ["tag"] = new OpenApiSchema
                                     {
                                         Type = "string"
                                     }

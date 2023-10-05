@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,20 +8,12 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OpenApi.Writers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Writers
 {
     [Collection("DefaultSettings")]
     public class OpenApiWriterSpecialCharacterTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiWriterSpecialCharacterTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         static bool[] shouldProduceTerseOutputValues = new[] { true, false };
 
         public static IEnumerable<object[]> StringWithSpecialCharacters
@@ -157,11 +149,11 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void WriteStringAsYamlDoesNotDependOnSystemCulture(string input, string expected, string culture)
         {
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(culture);
-            
+
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
             var writer = new OpenApiYamlWriter(outputStringWriter);
-            
+
             // Act
             writer.WriteValue(input);
             var actual = outputStringWriter.GetStringBuilder().ToString();

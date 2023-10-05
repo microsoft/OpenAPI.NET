@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using FluentAssertions;
 using Microsoft.OpenApi.Models;
@@ -16,8 +16,6 @@ namespace Microsoft.OpenApi.Readers.Tests
         {
             Diagnostic = new OpenApiDiagnostic();
         }
-
-
 
         [Fact]
         public void ParseExternalReference()

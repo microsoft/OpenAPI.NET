@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.CommandLine;
-using System.CommandLine.Parsing;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Hidi.Handlers;
 using Microsoft.OpenApi.Hidi.Options;
@@ -12,17 +11,17 @@ namespace Microsoft.OpenApi.Hidi
 {
     static class Program
     {
-        static async Task<int> Main(string[] args)
+        static Task<int> Main(string[] args)
         {
             var rootCommand = CreateRootCommand();
 
             // Parse the incoming args and invoke the handler
-            return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
+            return rootCommand.InvokeAsync(args);
         }
 
         internal static RootCommand CreateRootCommand()
         {
-            var rootCommand = new RootCommand() { };
+            var rootCommand = new RootCommand { };
 
             var commandOptions = new CommandOptions();
 

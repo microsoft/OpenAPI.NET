@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.IO;
 using FluentAssertions;
@@ -329,11 +329,11 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                     Required = true,
                     Examples =
                     {
-                        ["example1"] = new OpenApiExample()
+                        ["example1"] = new OpenApiExample
                         {
                             Value = new OpenApiFloat(5),
                         },
-                        ["example2"] = new OpenApiExample()
+                        ["example2"] = new OpenApiExample
                         {
                             Value = new OpenApiFloat((float)7.5),
                         }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -221,10 +221,10 @@ namespace Microsoft.OpenApi.Readers.V2
             ParsingContext context,
             string tagName)
         {
-            var tagObject = new OpenApiTag()
+            var tagObject = new OpenApiTag
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference() { Id = tagName, Type = ReferenceType.Tag }
+                Reference = new OpenApiReference { Id = tagName, Type = ReferenceType.Tag }
             };
 
             return tagObject;

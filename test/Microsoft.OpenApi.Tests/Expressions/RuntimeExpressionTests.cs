@@ -28,8 +28,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Throws<ArgumentException>("expression", test);
         }
 
-
-
         [Theory]
         [InlineData("$unknown")]
         [InlineData("$abc")]
@@ -151,7 +149,6 @@ namespace Microsoft.OpenApi.Tests.Writers
             Assert.Equal(runtimeExpression1, runtimeExpression2);
         }
 
-
         [Fact]
         public void CompositeRuntimeExpressionContainsExpression()
         {
@@ -168,7 +165,6 @@ namespace Microsoft.OpenApi.Tests.Writers
 
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Single(compositeExpression.ContainedExpressions);
-
         }
 
         [Fact]
@@ -188,7 +184,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             var compositeExpression = runtimeExpression as CompositeExpression;
             Assert.Equal(2, compositeExpression.ContainedExpressions.Count);
 
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
+            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))
@@ -232,7 +228,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             response.Expression.Should().Be(expression);
 
             var compositeExpression = runtimeExpression as CompositeExpression;
-            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>()
+            compositeExpression.ContainedExpressions.Should().BeEquivalentTo(new List<RuntimeExpression>
             {
                 new UrlExpression(),
                 new RequestExpression(new HeaderExpression("foo"))
