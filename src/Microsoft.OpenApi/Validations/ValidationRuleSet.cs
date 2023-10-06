@@ -134,7 +134,7 @@ namespace Microsoft.OpenApi.Validations
                 throw new OpenApiException(SRResource.Validation_RuleAddTwice);
             }
 
-            _rules[rule.ElementType].Add(rule);
+            item.Add(rule);
         }
 
         /// <summary>
