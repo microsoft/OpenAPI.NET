@@ -38,8 +38,8 @@ namespace Microsoft.OpenApi.Validations
         /// Gets the default validation rule sets.
         /// </summary>
         /// <remarks>
-        /// This is a method instead of a property to signal that a new default ruleset object is created
-        /// per call. Making this a property may be misleading callers to think the returned rulesets from multiple calls
+        /// This is a method instead of a property to signal that a new default rule-set object is created
+        /// per call. Making this a property may be misleading callers to think the returned rule-sets from multiple calls
         /// are the same objects.
         /// </remarks>
         public static ValidationRuleSet GetDefaultRuleSet()
@@ -56,7 +56,7 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        /// Return Ruleset with no rules
+        /// Return <see cref="ValidationRuleSet"/> with no rules
         /// </summary>
         public static ValidationRuleSet GetEmptyRuleSet()
         {

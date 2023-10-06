@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Models
                     break;
 
                 case SecuritySchemeType.OAuth2:
-                    // These properties apply to ouauth2 type only.
+                    // These properties apply to oauth2 type only.
                     // flow
                     // authorizationUrl
                     // tokenUrl

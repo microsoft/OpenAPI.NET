@@ -26,7 +26,7 @@ namespace Microsoft.OpenApi.Readers.V3
         /// <summary>
         /// Create Parsing Context
         /// </summary>
-        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
         public OpenApiV3VersionService(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;
@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Readers.V3
         /// Parse the string to a <see cref="OpenApiReference"/> object.
         /// </summary>
         /// <param name="reference">The URL of the reference</param>
-        /// <param name="type">The type of object refefenced based on the context of the reference</param>
+        /// <param name="type">The type of object referenced based on the context of the reference</param>
         public OpenApiReference ConvertToOpenApiReference(
             string reference,
             ReferenceType? type)

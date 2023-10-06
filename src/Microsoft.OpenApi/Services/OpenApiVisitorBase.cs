@@ -31,7 +31,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Exit from path context elevel.  Enter and Exit calls should be matched.
+        /// Exit from path context level.  Enter and Exit calls should be matched.
         /// </summary>
         public virtual void Exit()
         {
