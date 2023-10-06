@@ -108,7 +108,7 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
         public Task<Stream> LoadAsync(Uri uri)
         {
             var path = new Uri(new("http://example.org/V3Tests/Samples/OpenApiWorkspace/"), uri).AbsolutePath;
-            path = path.Substring(1); // remove leading slash
+            path = path[1..]; // remove leading slash
             return Task.FromResult(Resources.GetStream(path));
         }
     }

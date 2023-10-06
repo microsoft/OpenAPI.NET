@@ -199,10 +199,10 @@ namespace Microsoft.OpenApi.Tests.Services
             rootNode.Attach(path2, pathItem2, label2);
 
             Assert.Equal(4, rootNode.Children.Count);
-            Assert.True(rootNode.Children.ContainsKey(path1.Substring(1)));
-            Assert.True(rootNode.Children.ContainsKey(path2.Substring(1)));
-            Assert.True(rootNode.Children[path1.Substring(1)].PathItems.ContainsKey(label1));
-            Assert.True(rootNode.Children[path2.Substring(1)].PathItems.ContainsKey(label2));
+            Assert.True(rootNode.Children.ContainsKey(path1[1..]));
+            Assert.True(rootNode.Children.ContainsKey(path2[1..]));
+            Assert.True(rootNode.Children[path1[1..]].PathItems.ContainsKey(label1));
+            Assert.True(rootNode.Children[path2[1..]].PathItems.ContainsKey(label2));
         }
 
         [Fact]
