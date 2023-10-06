@@ -17,11 +17,11 @@ namespace Microsoft.OpenApi.Validations
     /// </summary>
     public sealed class ValidationRuleSet : IEnumerable<ValidationRule>
     {
-        private IDictionary<Type, IList<ValidationRule>> _rules = new Dictionary<Type, IList<ValidationRule>>();
+        private Dictionary<Type, IList<ValidationRule>> _rules = new();
 
         private static ValidationRuleSet _defaultRuleSet;
 
-        private IList<ValidationRule> _emptyRules = new List<ValidationRule>();
+        private List<ValidationRule> _emptyRules = new();
 
         /// <summary>
         /// Retrieve the rules that are related to a specific type

@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V3
             Diagnostic = diagnostic;
         }
 
-        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        private Dictionary<Type, Func<ParseNode, object>> _loaders = new()
         {
             [typeof(IOpenApiAny)] = OpenApiV3Deserializer.LoadAny,
             [typeof(OpenApiCallback)] = OpenApiV3Deserializer.LoadCallback,
