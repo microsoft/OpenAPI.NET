@@ -323,10 +323,12 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             _requestBodies = requestBodies;
         }
+
         public override void Visit(OpenApiOperation operation)
         {
-            var body = operation.Parameters.Where(p => p.UnresolvedReference == true
-            && _requestBodies.ContainsKey(p.Reference.Id)).FirstOrDefault();
+            var body = operation.Parameters.FirstOrDefault(
+                p => p.UnresolvedReference
+                     && _requestBodies.ContainsKey(p.Reference.Id));
 
             if (body != null)
             {

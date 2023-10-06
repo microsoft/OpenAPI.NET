@@ -75,10 +75,11 @@ namespace Microsoft.OpenApi.Readers.Tests.OpenApiWorkspaceTests
             Assert.False(referencedSchema.UnresolvedReference);
 
             var referencedParameter = result.OpenApiDocument
-                                            .Paths["/todos"]
-                                            .Operations[OperationType.Get]
-                                            .Parameters.Select(p => p.GetEffective(result.OpenApiDocument))
-                                            .Where(p => p.Name == "filter").FirstOrDefault();
+                .Paths["/todos"]
+                .Operations[OperationType.Get]
+                .Parameters
+                .Select(p => p.GetEffective(result.OpenApiDocument))
+                .FirstOrDefault(p => p.Name == "filter");
 
             Assert.Equal("string", referencedParameter.Schema.Type);
         }
