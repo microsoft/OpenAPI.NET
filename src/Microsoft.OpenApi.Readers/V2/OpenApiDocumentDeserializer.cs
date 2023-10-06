@@ -36,13 +36,14 @@ namespace Microsoft.OpenApi.Readers.V2
             },
             {
                 "consumes",
-                (o, n) => {
+                (o, n) =>
+                {
                     var consumes = n.CreateSimpleList(s => s.GetScalarValue());
                     if (consumes.Count > 0)
                     {
                         n.Context.SetTempStorage(TempStorageKeys.GlobalConsumes, consumes);
                     }
-                   }
+                }
             },
             {
                 "produces", (o, n) => {
