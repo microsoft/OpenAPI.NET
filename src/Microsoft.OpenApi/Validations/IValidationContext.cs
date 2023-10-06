@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Validations
         void Enter(string segment);
 
         /// <summary>
-        /// Exit from path context elevel.  Enter and Exit calls should be matched.
+        /// Exit from path context level.  Enter and Exit calls should be matched.
         /// </summary>
         void Exit();
 

@@ -308,7 +308,7 @@ namespace Microsoft.OpenApi.Models
             var serverUrl = ParseServerUrl(servers.First());
 
             // Divide the URL in the Url property into host and basePath required in OpenAPI V2
-            // The Url property cannotcontain path templating to be valid for V2 serialization.
+            // The Url property cannot contain path templating to be valid for V2 serialization.
             var firstServerUrl = new Uri(serverUrl, UriKind.RelativeOrAbsolute);
 
             // host

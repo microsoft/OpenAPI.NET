@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Readers.V2
         /// <summary>
         /// Create Parsing Context
         /// </summary>
-        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
         public OpenApiV2VersionService(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;

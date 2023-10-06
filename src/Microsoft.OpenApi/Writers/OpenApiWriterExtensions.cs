@@ -132,7 +132,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer">The Open API writer.</param>
         /// <param name="name">The property name.</param>
         /// <param name="value">The property value.</param>
-        /// <param name="action">The proprety value writer action.</param>
+        /// <param name="action">The property value writer action.</param>
         public static void WriteOptionalObject<T>(
             this IOpenApiWriter writer,
             string name,
@@ -158,7 +158,7 @@ namespace Microsoft.OpenApi.Writers
         /// <param name="writer">The Open API writer.</param>
         /// <param name="name">The property name.</param>
         /// <param name="value">The property value.</param>
-        /// <param name="action">The proprety value writer action.</param>
+        /// <param name="action">The property value writer action.</param>
         public static void WriteRequiredObject<T>(
             this IOpenApiWriter writer,
             string name,

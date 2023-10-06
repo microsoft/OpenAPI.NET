@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Writers
         public OpenApiWriterSettings Settings { get; set; }
 
         /// <summary>
-        /// The indentation string to prepand to each line for each indentation level.
+        /// The indentation string to prepend to each line for each indentation level.
         /// </summary>
         protected const string IndentationString = "  ";
 

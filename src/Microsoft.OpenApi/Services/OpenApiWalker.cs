@@ -896,7 +896,7 @@ namespace Microsoft.OpenApi.Services
                 return;
             }
 
-            // Visit Schemass
+            // Visit Schemas
             if (schemas != null)
             {
                 for (int i = 0; i < schemas.Count; i++)

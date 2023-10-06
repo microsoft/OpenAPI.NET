@@ -101,7 +101,7 @@ namespace Microsoft.OpenApi.Services
         }
 
         /// <summary>
-        /// Add a stream based artificat to the workspace.  Useful for images, examples, alternative schemas.
+        /// Add a stream based artifact to the workspace.  Useful for images, examples, alternative schemas.
         /// </summary>
         /// <param name="location"></param>
         /// <param name="artifact"></param>

@@ -39,7 +39,7 @@ namespace Microsoft.OpenApi.Readers
         /// <summary>
         /// Create Parsing Context
         /// </summary>
-        /// <param name="diagnostic">Provide instance for diagnotic object for collecting and accessing information about the parsing.</param>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
         public ParsingContext(OpenApiDiagnostic diagnostic)
         {
             Diagnostic = diagnostic;
@@ -165,7 +165,7 @@ namespace Microsoft.OpenApi.Readers
         }
 
         /// <summary>
-        /// Sets the temporary storge for this key and value.
+        /// Sets the temporary storage for this key and value.
         /// </summary>
         public void SetTempStorage(string key, object value, object scope = null)
         {
