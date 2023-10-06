@@ -26,13 +26,13 @@ namespace Microsoft.OpenApi.Readers.V3
             {"components", (o, n) => o.Components = LoadComponents(n)},
             {"tags", (o, n) => {o.Tags = n.CreateList(LoadTag);
                 foreach (var tag in o.Tags)
-    {
+                {
                     tag.Reference = new()
                     {
                         Id = tag.Name,
                         Type = ReferenceType.Tag
                     };
-    }
+                }
             } },
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)},
             {"security", (o, n) => o.SecurityRequirements = n.CreateList(LoadSecurityRequirement)}

@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                                 Id = entry.key
                             };
                         }
-                     }
+                    }
                     finally
                     {
                         Context.EndObject();
