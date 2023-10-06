@@ -21,33 +21,26 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 return baseYamlNode;
             }
 
-            try
+            var pointer = baseYamlNode;
+            foreach (var token in currentPointer.Tokens)
             {
-                var pointer = baseYamlNode;
-                foreach (var token in currentPointer.Tokens)
+                if (pointer is YamlSequenceNode sequence)
                 {
-                    if (pointer is YamlSequenceNode sequence)
+                    pointer = sequence.Children[Convert.ToInt32(token)];
+                }
+                else
+                {
+                    if (pointer is YamlMappingNode map)
                     {
-                        pointer = sequence.Children[Convert.ToInt32(token)];
-                    }
-                    else
-                    {
-                        if (pointer is YamlMappingNode map)
+                        if (!map.Children.TryGetValue(new YamlScalarNode(token), out pointer))
                         {
-                            if (!map.Children.TryGetValue(new YamlScalarNode(token), out pointer))
-                            {
-                                return null;
-                            }
+                            return null;
                         }
                     }
                 }
+            }
 
-                return pointer;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return pointer;
         }
     }
 }
