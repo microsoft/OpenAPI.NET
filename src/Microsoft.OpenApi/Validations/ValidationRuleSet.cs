@@ -123,12 +123,13 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="rule">The rule.</param>
         public void Add(ValidationRule rule)
         {
-            if (!_rules.ContainsKey(rule.ElementType))
+            if (!_rules.TryGetValue(rule.ElementType, out var item))
             {
-                _rules[rule.ElementType] = new List<ValidationRule>();
+                _rules[rule.ElementType] = new List<ValidationRule> {rule};
+                return;
             }
 
-            if (_rules[rule.ElementType].Contains(rule))
+            if (item.Contains(rule))
             {
                 throw new OpenApiException(SRResource.Validation_RuleAddTwice);
             }
