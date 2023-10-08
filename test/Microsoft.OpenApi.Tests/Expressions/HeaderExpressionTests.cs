@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BodyExpressionWorksWithConstructor()
         {
             // Arrange
-            string expression = "accept";
+            var expression = "accept";
 
             // Act
             var header = new HeaderExpression(expression);

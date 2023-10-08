@@ -109,7 +109,7 @@ namespace Microsoft.OpenApi.Tests.Services
         {
             var doc = OpenApiDocumentSample_1;
 
-            string label = "assets";
+            var label = "assets";
             var rootNode = OpenApiUrlTreeNode.Create(doc, label);
 
             Assert.NotNull(rootNode);

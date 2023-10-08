@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                 UnresolvedReference = false
             };
 
-            OpenApiDocument document = new OpenApiDocument();
+            var document = new OpenApiDocument();
             document.Components = new()
             {
                 Schemas = new Dictionary<string, OpenApiSchema>
@@ -84,7 +84,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                 UnresolvedReference = true
             };
 
-            OpenApiDocument document = new OpenApiDocument();
+            var document = new OpenApiDocument();
             document.Components = new()
             {
                 Schemas = new Dictionary<string, OpenApiSchema>
@@ -114,7 +114,7 @@ namespace Microsoft.OpenApi.Tests.Validations
                 UnresolvedReference = true
             };
 
-            OpenApiDocument document = new OpenApiDocument();
+            var document = new OpenApiDocument();
 
             document.Paths = new()
             {

@@ -208,7 +208,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformCommandConvertsOpenApi()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 Output = new("sample.json"),
@@ -228,7 +228,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputName()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformCommandConvertsCsdlWithDefaultOutputName()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
                 CleanOutput = true,
@@ -264,7 +264,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputNameAndSwitchFormat()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
@@ -284,7 +284,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public Task ThrowTransformCommandIfOpenApiAndCsdlAreEmpty()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 CleanOutput = true,
                 TerseOutput = false,
@@ -299,7 +299,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public async Task TransformToPowerShellCompliantOpenApi()
         {
             var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "examplepowershellsettings.json");
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,

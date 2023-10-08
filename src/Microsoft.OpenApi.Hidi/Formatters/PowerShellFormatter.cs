@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Hidi.Formatters
             var lastSegmentIndex = segmentsCount - 1;
             var singularizedSegments = new List<string>();
 
-            for (int x = 0; x < segmentsCount; x++)
+            for (var x = 0; x < segmentsCount; x++)
             {
                 var segment = operationIdSegments[x].Singularize(inputIsKnownToBePlural: false);
 

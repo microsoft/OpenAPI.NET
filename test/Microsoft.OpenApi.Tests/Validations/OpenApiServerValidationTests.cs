@@ -17,18 +17,18 @@ namespace Microsoft.OpenApi.Validations.Tests
         {
             // Arrange
             IEnumerable<OpenApiError> errors;
-            OpenApiServer server = new OpenApiServer();
+            var server = new OpenApiServer();
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
             validator.Visit(server);
             errors = validator.Errors;
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             // Assert
             Assert.False(result);
             Assert.NotNull(errors);
-            OpenApiError error = Assert.Single(errors);
+            var error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "server"), error.Message);
         }
     }

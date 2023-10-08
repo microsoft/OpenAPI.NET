@@ -62,7 +62,7 @@ namespace Microsoft.OpenApi.Validations
                 throw new ArgumentException(string.Format(SRResource.InputItemShouldBeType, typeof(T).FullName));
             }
 
-            T typedItem = (T)item;
+            var typedItem = (T)item;
             this._validate(context, typedItem);
         }
     }

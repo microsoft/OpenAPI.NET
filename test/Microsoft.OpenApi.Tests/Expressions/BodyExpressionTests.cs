@@ -34,8 +34,8 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BodyExpressionConstructorCreateCorrectBodyExpression()
         {
             // Arrange
-            string expression = "#/user/uuid";
-            JsonPointer pointer = new JsonPointer(expression);
+            var expression = "#/user/uuid";
+            var pointer = new JsonPointer(expression);
 
             // Act
             var body = new BodyExpression(pointer);

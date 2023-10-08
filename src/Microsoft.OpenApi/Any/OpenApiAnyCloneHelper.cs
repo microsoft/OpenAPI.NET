@@ -20,9 +20,9 @@ namespace Microsoft.OpenApi.Any
             if (obj != null)
             {
                 var t = obj.GetType();
-                foreach (ConstructorInfo ci in t.GetConstructors())
+                foreach (var ci in t.GetConstructors())
                 {
-                    ParameterInfo[] pi = ci.GetParameters();
+                    var pi = ci.GetParameters();
                     if (pi.Length == 1 && pi[0].ParameterType == t)
                     {
                         return (IOpenApiAny)ci.Invoke(new object[] { obj });
