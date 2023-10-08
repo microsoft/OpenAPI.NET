@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="UtilityFiles\*.*">
+    <None Update="UtilityFiles\*.(json|yml|xml)">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Update="UtilityFiles\OpenApiDocumentMock.cs">
