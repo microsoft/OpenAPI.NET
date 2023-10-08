@@ -12,7 +12,7 @@ namespace Microsoft.OpenApi.Any
         /// Initializes the <see cref="OpenApiByte"/> class.
         /// </summary>
         public OpenApiByte(byte value)
-            : this(new byte[] { value })
+            : this(new[] { value })
         {
         }
 
