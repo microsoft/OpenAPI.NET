@@ -122,9 +122,9 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             OpenApiMediaType mediaTypeObject;
-            if (response.Content.ContainsKey(mediaType))
+            if (response.Content.TryGetValue(mediaType, out var value))
             {
-                mediaTypeObject = response.Content[mediaType];
+                mediaTypeObject = value;
             }
             else
             {

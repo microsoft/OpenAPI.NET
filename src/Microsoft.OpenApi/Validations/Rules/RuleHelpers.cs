@@ -87,9 +87,10 @@ namespace Microsoft.OpenApi.Validations.Rules
                 {
                     context.Enter(key);
 
-                    if (schema.Properties != null && schema.Properties.ContainsKey(key))
+                    if (schema.Properties != null &&
+                        schema.Properties.TryGetValue(key, out var property))
                     {
-                        ValidateDataTypeMismatch(context, ruleName, anyObject[key], schema.Properties[key]);
+                        ValidateDataTypeMismatch(context, ruleName, anyObject[key], property);
                     }
                     else
                     {
