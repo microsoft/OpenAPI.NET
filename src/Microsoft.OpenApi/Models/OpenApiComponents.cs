@@ -128,8 +128,7 @@ namespace Microsoft.OpenApi.Models
                 Schemas,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
+                    if (component.Reference is {Type: ReferenceType.Schema} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -146,8 +145,7 @@ namespace Microsoft.OpenApi.Models
                 Responses,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Response &&
+                    if (component.Reference is {Type: ReferenceType.Response} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -164,8 +162,7 @@ namespace Microsoft.OpenApi.Models
                 Parameters,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Parameter &&
+                    if (component.Reference is {Type: ReferenceType.Parameter} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -182,8 +179,7 @@ namespace Microsoft.OpenApi.Models
                 Examples,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Example &&
+                    if (component.Reference is {Type: ReferenceType.Example} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -200,8 +196,7 @@ namespace Microsoft.OpenApi.Models
                 RequestBodies,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.RequestBody &&
+                    if (component.Reference is {Type: ReferenceType.RequestBody} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -218,8 +213,7 @@ namespace Microsoft.OpenApi.Models
                 Headers,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Header &&
+                    if (component.Reference is {Type: ReferenceType.Header} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -236,8 +230,7 @@ namespace Microsoft.OpenApi.Models
                 SecuritySchemes,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                    if (component.Reference is {Type: ReferenceType.SecurityScheme} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -254,8 +247,7 @@ namespace Microsoft.OpenApi.Models
                 Links,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Link &&
+                    if (component.Reference is {Type: ReferenceType.Link} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -272,8 +264,7 @@ namespace Microsoft.OpenApi.Models
                 Callbacks,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Callback &&
+                    if (component.Reference is {Type: ReferenceType.Callback} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);

@@ -189,8 +189,7 @@ namespace Microsoft.OpenApi.Models
                     Components?.Schemas,
                     (w, key, component) =>
                     {
-                        if (component.Reference != null &&
-                            component.Reference.Type == ReferenceType.Schema &&
+                        if (component.Reference is {Type: ReferenceType.Schema} &&
                             component.Reference.Id == key)
                         {
                             component.SerializeAsV2WithoutReference(w);
@@ -218,8 +217,7 @@ namespace Microsoft.OpenApi.Models
                 parameters,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Parameter &&
+                    if (component.Reference is {Type: ReferenceType.Parameter} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);
@@ -236,8 +234,7 @@ namespace Microsoft.OpenApi.Models
                 Components?.Responses,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Response &&
+                    if (component.Reference is {Type: ReferenceType.Response} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);
@@ -254,8 +251,7 @@ namespace Microsoft.OpenApi.Models
                 Components?.SecuritySchemes,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                    if (component.Reference is {Type: ReferenceType.SecurityScheme} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV2WithoutReference(w);

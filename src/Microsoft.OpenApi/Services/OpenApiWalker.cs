@@ -614,12 +614,9 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(requestBody);
 
-            if (requestBody != null)
+            if (requestBody is {Content: not null})
             {
-                if (requestBody.Content != null)
-                {
-                    Walk(OpenApiConstants.Content, () => Walk(requestBody.Content));
-                }
+                Walk(OpenApiConstants.Content, () => Walk(requestBody.Content));
             }
             Walk(requestBody as IOpenApiExtensible);
         }

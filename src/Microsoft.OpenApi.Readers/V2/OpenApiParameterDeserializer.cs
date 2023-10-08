@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     new(
                         p => p.Schema?.Enum,
                         (p, v) => {
-                            if (p.Schema != null || v != null && v.Count > 0)
+                            if (p.Schema != null || v is {Count: > 0})
                             {
                                 GetOrCreateSchema(p).Enum = v;
                             }

@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Object);
 
-            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            if (previousScope is {Type: ScopeType.Array})
             {
                 currentScope.IsInArray = true;
 
@@ -76,7 +76,7 @@ namespace Microsoft.OpenApi.Writers
             if (previousScope.ObjectCount == 0)
             {
                 // If we are in an object, write a white space preceding the braces.
-                if (currentScope != null && currentScope.Type == ScopeType.Object)
+                if (currentScope is {Type: ScopeType.Object})
                 {
                     Writer.Write(" ");
                 }
@@ -94,7 +94,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Array);
 
-            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            if (previousScope is {Type: ScopeType.Array})
             {
                 currentScope.IsInArray = true;
 
@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Writers
             if (previousScope.ObjectCount == 0)
             {
                 // If we are in an object, write a white space preceding the braces.
-                if (currentScope != null && currentScope.Type == ScopeType.Object)
+                if (currentScope is {Type: ScopeType.Object})
                 {
                     Writer.Write(" ");
                 }

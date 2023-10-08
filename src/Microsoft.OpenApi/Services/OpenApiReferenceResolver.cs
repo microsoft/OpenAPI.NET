@@ -300,7 +300,7 @@ namespace Microsoft.OpenApi.Services
 
         private bool IsUnresolvedReference(IOpenApiReferenceable possibleReference)
         {
-            return (possibleReference != null && possibleReference.UnresolvedReference);
+            return possibleReference is {UnresolvedReference: true};
         }
     }
 }

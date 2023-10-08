@@ -172,7 +172,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
 
             // Create the Server objects
-            if (schemes != null && schemes.Count > 0)
+            if (schemes is {Count: > 0})
             {
                 foreach (var scheme in schemes)
                 {
@@ -295,7 +295,7 @@ namespace Microsoft.OpenApi.Readers.V2
         {
             // Walk all unresolved parameter references
             // if id matches with request body Id, change type
-            if (doc.Components?.RequestBodies != null && doc.Components?.RequestBodies.Count > 0)
+            if (doc.Components?.RequestBodies is {Count: > 0})
             {
                 var fixer = new RequestBodyReferenceFixer(doc.Components?.RequestBodies);
                 var walker = new OpenApiWalker(fixer);
