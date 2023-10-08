@@ -493,8 +493,6 @@ namespace Microsoft.OpenApi.Models
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
-            Utils.CheckArgumentNull(writer);
-
             var settings = writer.GetSettings();
             var target = this;
 
@@ -554,8 +552,6 @@ namespace Microsoft.OpenApi.Models
 
         internal void WriteAsItemsProperties(IOpenApiWriter writer)
         {
-            Utils.CheckArgumentNull(writer);
-
             // type
             writer.WriteProperty(OpenApiConstants.Type, Type);
 
@@ -625,8 +621,6 @@ namespace Microsoft.OpenApi.Models
             ISet<string> parentRequiredProperties,
             string propertyName)
         {
-            Utils.CheckArgumentNull(writer);
-
             // format
             if (string.IsNullOrEmpty(Format))
             {
