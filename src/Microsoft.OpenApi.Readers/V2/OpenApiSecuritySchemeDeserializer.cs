@@ -47,27 +47,27 @@ namespace Microsoft.OpenApi.Readers.V2
                 {"name", (o, n) => o.Name = n.GetScalarValue()},
                 {"in", (o, n) => o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>()},
                 {
-                    "flow", (o, n) =>
+                    "flow", (_, n) =>
                     {
                         _flowValue = n.GetScalarValue();
                     }
                 },
                 {
                     "authorizationUrl",
-                    (o, n) =>
+                    (_, n) =>
                     {
                         _flow.AuthorizationUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
                     "tokenUrl",
-                    (o, n) =>
+                    (_, n) =>
                     {
                         _flow.TokenUrl = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
                     }
                 },
                 {
-                    "scopes", (o, n) =>
+                    "scopes", (_, n) =>
                     {
                         _flow.Scopes = n.CreateSimpleMap(LoadString);
                     }

@@ -173,7 +173,7 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                        OpenApiConstants.Definitions,
                        openApiSchemas,
-                       (w, key, component) =>
+                       (w, _, component) =>
                        {
                            component.SerializeAsV2WithoutReference(w);
                        });
