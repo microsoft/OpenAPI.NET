@@ -111,10 +111,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         public IList<ValidationRule> Rules
         {
-            get
-            {
-                return _rules.Values.SelectMany(v => v).ToList();
-            }
+            get => _rules.Values.SelectMany(v => v).ToList();
         }
 
         /// <summary>
