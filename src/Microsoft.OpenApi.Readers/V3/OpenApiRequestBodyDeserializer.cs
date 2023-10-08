@@ -17,22 +17,16 @@ namespace Microsoft.OpenApi.Readers.V3
             new()
             {
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "content", (o, n) =>
-                    {
-                        o.Content = n.CreateMap(LoadMediaType);
-                    }
+                    "content",
+                    (o, n) => o.Content = n.CreateMap(LoadMediaType)
                 },
                 {
-                    "required", (o, n) =>
-                    {
-                        o.Required = bool.Parse(n.GetScalarValue());
-                    }
+                    "required",
+                    (o, n) => o.Required = bool.Parse(n.GetScalarValue())
                 },
             };
 

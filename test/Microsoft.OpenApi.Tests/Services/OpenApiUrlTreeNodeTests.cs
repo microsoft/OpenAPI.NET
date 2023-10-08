@@ -378,28 +378,13 @@ namespace Microsoft.OpenApi.Tests.Services
             Assert.Equal(4, rootNode.AdditionalData.Count);
             Assert.True(rootNode.AdditionalData.ContainsKey("DatePurchased"));
             Assert.Collection(rootNode.AdditionalData["Location"],
-                item =>
-                {
-                    Assert.Equal("Seattle, WA", item);
-                });
+                item => Assert.Equal("Seattle, WA", item));
             Assert.Collection(rootNode.Children["houses"].AdditionalData["Bedrooms"],
-                item =>
-                {
-                    Assert.Equal("Five", item);
-                });
+                item => Assert.Equal("Five", item));
             Assert.Collection(rootNode.Children["cars"].AdditionalData["Categories"],
-                item =>
-                {
-                    Assert.Equal("Coupe", item);
-                },
-                item =>
-                {
-                    Assert.Equal("Sedan", item);
-                },
-                item =>
-                {
-                    Assert.Equal("Convertible", item);
-                });
+                item => Assert.Equal("Coupe", item),
+                item => Assert.Equal("Sedan", item),
+                item => Assert.Equal("Convertible", item));
         }
 
         [Fact]

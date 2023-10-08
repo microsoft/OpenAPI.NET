@@ -180,7 +180,6 @@ namespace Microsoft.OpenApi.Hidi.Tests
                 OpenApiService.ValidateOpenApiDocument("", _logger));
         }
 
-
         [Fact]
         public Task ThrowIfURLIsNotResolvableWhenValidating()
         {

@@ -17,10 +17,7 @@ namespace Microsoft.OpenApi.Hidi
             return LoggerFactory.Create((builder) =>
             {
                 builder
-                    .AddSimpleConsole(c =>
-                    {
-                        c.IncludeScopes = true;
-                    })
+                    .AddSimpleConsole(c => c.IncludeScopes = true)
 #if DEBUG
                     .AddDebug()
 #endif

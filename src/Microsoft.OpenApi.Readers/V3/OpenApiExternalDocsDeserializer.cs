@@ -19,16 +19,12 @@ namespace Microsoft.OpenApi.Readers.V3
             {
                 // $ref
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "url", (o, n) =>
-                    {
-                        o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    "url",
+                    (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
             };
 

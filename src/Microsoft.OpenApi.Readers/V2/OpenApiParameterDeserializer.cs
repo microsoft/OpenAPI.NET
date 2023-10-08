@@ -20,118 +20,80 @@ namespace Microsoft.OpenApi.Readers.V2
             new()
             {
                 {
-                    "name", (o, n) =>
-                    {
-                        o.Name = n.GetScalarValue();
-                    }
+                    "name",
+                    (o, n) => o.Name = n.GetScalarValue()
                 },
                 {
-                    "in", (o, n) =>
-                    {
-                        ProcessIn(o, n);
-                    }
+                    "in",
+                    ProcessIn
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "required", (o, n) =>
-                    {
-                        o.Required = bool.Parse(n.GetScalarValue());
-                    }
+                    "required",
+                    (o, n) => o.Required = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "deprecated", (o, n) =>
-                    {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
-                    }
+                    "deprecated",
+                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "allowEmptyValue", (o, n) =>
-                    {
-                        o.AllowEmptyValue = bool.Parse(n.GetScalarValue());
-                    }
+                    "allowEmptyValue",
+                    (o, n) => o.AllowEmptyValue = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "type", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).Type = n.GetScalarValue();
-                    }
+                    "type",
+                    (o, n) => GetOrCreateSchema(o).Type = n.GetScalarValue()
                 },
                 {
-                    "items", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).Items = LoadSchema(n);
-                    }
+                    "items",
+                    (o, n) => GetOrCreateSchema(o).Items = LoadSchema(n)
                 },
                 {
-                    "collectionFormat", (o, n) =>
-                    {
-                        LoadStyle(o, n.GetScalarValue());
-                    }
+                    "collectionFormat",
+                    (o, n) => LoadStyle(o, n.GetScalarValue())
                 },
                 {
-                    "format", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).Format = n.GetScalarValue();
-                    }
+                    "format",
+                    (o, n) => GetOrCreateSchema(o).Format = n.GetScalarValue()
                 },
                 {
-                    "minimum", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                    }
+                    "minimum",
+                    (o, n) => GetOrCreateSchema(o).Minimum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
                 },
                 {
-                    "maximum", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                    }
+                    "maximum",
+                    (o, n) => GetOrCreateSchema(o).Maximum = decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
                 },
                 {
-                    "maxLength", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                    }
+                    "maxLength",
+                    (o, n) => GetOrCreateSchema(o).MaxLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
                 },
                 {
-                    "minLength", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture);
-                    }
+                    "minLength",
+                    (o, n) => GetOrCreateSchema(o).MinLength = int.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture)
                 },
                 {
-                    "readOnly", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue());
-                    }
+                    "readOnly",
+                    (o, n) => GetOrCreateSchema(o).ReadOnly = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "default", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).Default = n.CreateAny();
-                    }
+                    "default",
+                    (o, n) => GetOrCreateSchema(o).Default = n.CreateAny()
                 },
                 {
-                    "pattern", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).Pattern = n.GetScalarValue();
-                    }
+                    "pattern",
+                    (o, n) => GetOrCreateSchema(o).Pattern = n.GetScalarValue()
                 },
                 {
-                    "enum", (o, n) =>
-                    {
-                        GetOrCreateSchema(o).Enum = n.CreateListOfAny();
-                    }
+                    "enum",
+                    (o, n) => GetOrCreateSchema(o).Enum = n.CreateListOfAny()
                 },
                 {
-                    "schema", (o, n) =>
-                    {
-                        o.Schema = LoadSchema(n);
-                    }
+                    "schema",
+                    (o, n) => o.Schema = LoadSchema(n)
                 },
             };
 

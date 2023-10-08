@@ -17,22 +17,16 @@ namespace Microsoft.OpenApi.Readers.V2
         private static FixedFieldMap<OpenApiContact> _contactFixedFields = new()
         {
             {
-                "name", (o, n) =>
-                {
-                    o.Name = n.GetScalarValue();
-                }
+                "name",
+                (o, n) => o.Name = n.GetScalarValue()
             },
             {
-                "url", (o, n) =>
-                {
-                    o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                }
+                "url",
+                (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
             },
             {
-                "email", (o, n) =>
-                {
-                    o.Email = n.GetScalarValue();
-                }
+                "email",
+                (o, n) => o.Email = n.GetScalarValue()
             },
         };
 

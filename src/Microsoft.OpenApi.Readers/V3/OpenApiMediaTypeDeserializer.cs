@@ -17,28 +17,20 @@ namespace Microsoft.OpenApi.Readers.V3
             new()
             {
                 {
-                    OpenApiConstants.Schema, (o, n) =>
-                    {
-                        o.Schema = LoadSchema(n);
-                    }
+                    OpenApiConstants.Schema,
+                    (o, n) => o.Schema = LoadSchema(n)
                 },
                 {
-                    OpenApiConstants.Examples, (o, n) =>
-                    {
-                        o.Examples = n.CreateMap(LoadExample);
-                    }
+                    OpenApiConstants.Examples,
+                    (o, n) => o.Examples = n.CreateMap(LoadExample)
                 },
                 {
-                    OpenApiConstants.Example, (o, n) =>
-                    {
-                        o.Example = n.CreateAny();
-                    }
+                    OpenApiConstants.Example,
+                    (o, n) => o.Example = n.CreateAny()
                 },
                 {
-                    OpenApiConstants.Encoding, (o, n) =>
-                    {
-                        o.Encoding = n.CreateMap(LoadEncoding);
-                    }
+                    OpenApiConstants.Encoding,
+                    (o, n) => o.Encoding = n.CreateMap(LoadEncoding)
                 },
             };
 
