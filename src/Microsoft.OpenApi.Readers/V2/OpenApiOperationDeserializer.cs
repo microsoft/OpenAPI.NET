@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "consumes", (o, n) => {
+                    "consumes", (_, n) => {
                         var consumes = n.CreateSimpleList(s => s.GetScalarValue());
                         if (consumes.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationConsumes,consumes);
@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
                 },
                 {
-                    "produces", (o, n) => {
+                    "produces", (_, n) => {
                         var produces = n.CreateSimpleList(s => s.GetScalarValue());
                         if (produces.Count > 0) {
                             n.Context.SetTempStorage(TempStorageKeys.OperationProduces, produces);
@@ -185,7 +185,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 Content = consumes.ToDictionary(
                     k => k,
-                    v => mediaType)
+                    _ => mediaType)
             };
 
             return formBody;
@@ -205,7 +205,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 Required = bodyParameter.Required,
                 Content = consumes.ToDictionary(
                     k => k,
-                    v => new OpenApiMediaType
+                    _ => new OpenApiMediaType
                     {
                         Schema = bodyParameter.Schema
                     }),

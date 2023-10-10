@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Tests.Validations
 
     public class AlwaysFailRule<T> : ValidationRule<T> where T : IOpenApiElement
     {
-        public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
+        public AlwaysFailRule() : base((c, _) => c.CreateError("x", "y"))
         {
         }
     }

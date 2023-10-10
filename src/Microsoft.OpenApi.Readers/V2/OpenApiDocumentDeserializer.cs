@@ -21,22 +21,22 @@ namespace Microsoft.OpenApi.Readers.V2
         private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "swagger", (o, n) =>
+                "swagger", (_, _) =>
                 {
                 } /* Version is valid field but we already parsed it */
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
-            {"host", (o, n) => n.Context.SetTempStorage("host", n.GetScalarValue())},
-            {"basePath", (o, n) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
+            {"host", (_, n) => n.Context.SetTempStorage("host", n.GetScalarValue())},
+            {"basePath", (_, n) => n.Context.SetTempStorage("basePath", n.GetScalarValue())},
             {
-                "schemes", (o, n) => n.Context.SetTempStorage(
+                "schemes", (_, n) => n.Context.SetTempStorage(
                     "schemes",
                     n.CreateSimpleList(
                         s => s.GetScalarValue()))
             },
             {
                 "consumes",
-                (o, n) =>
+                (_, n) =>
                 {
                     var consumes = n.CreateSimpleList(s => s.GetScalarValue());
                     if (consumes.Count > 0)
@@ -46,7 +46,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
             {
-                "produces", (o, n) => {
+                "produces", (_, n) => {
                     var produces = n.CreateSimpleList(s => s.GetScalarValue());
                     if (produces.Count > 0)
                     {
