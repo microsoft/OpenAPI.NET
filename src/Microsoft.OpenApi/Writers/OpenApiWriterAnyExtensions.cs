@@ -73,9 +73,6 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WriteArray(this IOpenApiWriter writer, OpenApiArray array)
         {
-            Utils.CheckArgumentNull(writer);
-            Utils.CheckArgumentNull(array);
-
             writer.WriteStartArray();
 
             foreach (var item in array)
@@ -88,9 +85,6 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WriteObject(this IOpenApiWriter writer, OpenApiObject entity)
         {
-            Utils.CheckArgumentNull(writer);
-            Utils.CheckArgumentNull(entity);
-
             writer.WriteStartObject();
 
             foreach (var item in entity)
@@ -104,9 +98,6 @@ namespace Microsoft.OpenApi.Writers
 
         private static void WritePrimitive(this IOpenApiWriter writer, IOpenApiPrimitive primitive)
         {
-            Utils.CheckArgumentNull(writer);
-            Utils.CheckArgumentNull(primitive);
-
             // The Spec version is meaning for the Any type, so it's ok to use the latest one.
             primitive.Write(writer, OpenApiSpecVersion.OpenApi3_0);
         }

@@ -50,8 +50,6 @@ namespace Microsoft.OpenApi.Validations
 
         internal override void Evaluate(IValidationContext context, object item)
         {
-            Utils.CheckArgumentNull(context);
-
             if (item == null)
             {
                 return;
