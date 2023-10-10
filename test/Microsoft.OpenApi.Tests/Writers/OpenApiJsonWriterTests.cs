@@ -22,7 +22,8 @@ namespace Microsoft.OpenApi.Tests.Writers
         public static IEnumerable<object[]> WriteStringListAsJsonShouldMatchExpectedTestCases()
         {
             return
-                from input in new string[][] {
+                from input in new[]
+                {
                     new[]
                     {
                         "string1",
@@ -234,7 +235,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public static IEnumerable<object[]> WriteDateTimeAsJsonTestCases()
         {
             return
-                from input in new DateTimeOffset[] {
+                from input in new[] {
                     new(2018, 1, 1, 10, 20, 30, TimeSpan.Zero),
                     new(2018, 1, 1, 10, 20, 30, 100, TimeSpan.FromHours(14)),
                     DateTimeOffset.UtcNow + TimeSpan.FromDays(4),
