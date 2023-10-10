@@ -122,7 +122,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     return;
                 }
 
-                for (int i = 0; i < anyArray.Count; i++)
+                for (var i = 0; i < anyArray.Count; i++)
                 {
                     context.Enter(i.ToString());
 

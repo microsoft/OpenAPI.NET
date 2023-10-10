@@ -160,7 +160,7 @@ namespace Microsoft.OpenApi.Models
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
 
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                         .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
@@ -425,8 +425,8 @@ namespace Microsoft.OpenApi.Models
         {
             // Build the final string by converting each byte
             // into hex and appending it to a StringBuilder
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
+            var sb = new StringBuilder();
+            for (var i = 0; i < hash.Length; i++)
             {
                 sb.Append(hash[i].ToString("X2"));
             }

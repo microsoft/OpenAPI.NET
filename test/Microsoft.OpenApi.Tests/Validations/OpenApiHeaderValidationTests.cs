@@ -36,7 +36,7 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             errors = validator.Errors;
             var warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -107,7 +107,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(header);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();

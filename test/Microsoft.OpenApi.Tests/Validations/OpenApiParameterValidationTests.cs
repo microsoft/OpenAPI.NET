@@ -21,8 +21,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInParameter()
         {
             // Arrange
-            string nameError = String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
-            string inError = String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
+            var nameError = String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
+            var inError = String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
             var parameter = new OpenApiParameter();
 
             // Act
@@ -85,7 +85,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -159,7 +159,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
 
             warnings = validator.Warnings;
-            bool result = !warnings.Any();
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
@@ -203,7 +203,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
 
             errors = validator.Errors;
-            bool result = errors.Any();
+            var result = errors.Any();
 
             // Assert
             result.Should().BeTrue();
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(parameter);
 
             errors = validator.Errors;
-            bool result = errors.Any();
+            var result = errors.Any();
 
             // Assert
             result.Should().BeFalse();

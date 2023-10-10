@@ -24,10 +24,10 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void RequestExpressionConstructorWorks()
         {
             // Arrange
-            SourceExpression source = SourceExpression.Build("header.accept");
+            var source = SourceExpression.Build("header.accept");
 
             // Act
-            RequestExpression request = new RequestExpression(source);
+            var request = new RequestExpression(source);
 
             // Assert
             Assert.Same(source, request.Source);

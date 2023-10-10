@@ -265,9 +265,9 @@ namespace Microsoft.OpenApi.Tests.Models
             securityRequirement.Add(securityScheme1, new List<string>());
             securityRequirement.Add(securityScheme2, new List<string> { "scope1", "scope2" });
 
-            Action addSecurityScheme1Duplicate = () =>
+            var addSecurityScheme1Duplicate = () =>
                 securityRequirement.Add(securityScheme1Duplicate, new List<string>());
-            Action addSecurityScheme1WithDifferentProperties = () =>
+            var addSecurityScheme1WithDifferentProperties = () =>
                 securityRequirement.Add(securityScheme1WithDifferentProperties, new List<string>());
 
             // Assert

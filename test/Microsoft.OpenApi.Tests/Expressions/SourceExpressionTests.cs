@@ -24,7 +24,7 @@ namespace Microsoft.OpenApi.Tests.Writers
             Action test = () => SourceExpression.Build(expression);
 
             // Assert
-            OpenApiException exception = Assert.Throws<OpenApiException>(test);
+            var exception = Assert.Throws<OpenApiException>(test);
             Assert.Equal(String.Format(SRResource.SourceExpressionHasInvalidFormat, expression), exception.Message);
         }
 
@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildHeaderExpressionReturnsHeaderExpression()
         {
             // Arrange
-            string expression = "header.accept";
+            var expression = "header.accept";
 
             // Act
             var sourceExpression = SourceExpression.Build(expression);
@@ -48,7 +48,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildQueryExpressionReturnsQueryExpression()
         {
             // Arrange
-            string expression = "query.anyValue";
+            var expression = "query.anyValue";
 
             // Act
             var sourceExpression = SourceExpression.Build(expression);
@@ -64,7 +64,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildPathExpressionReturnsPathExpression()
         {
             // Arrange
-            string expression = "path.anyValue";
+            var expression = "path.anyValue";
 
             // Act
             var sourceExpression = SourceExpression.Build(expression);
@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void BuildBodyExpressionReturnsBodyExpression()
         {
             // Arrange
-            string expression = "body#/user/uuid";
+            var expression = "body#/user/uuid";
 
             // Act
             var sourceExpression = SourceExpression.Build(expression);

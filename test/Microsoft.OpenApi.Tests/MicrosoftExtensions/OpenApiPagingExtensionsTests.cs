@@ -13,7 +13,7 @@ public class OpenApiPagingExtensionsTests
     public void ExtensionNameMatchesExpected()
     {
         // Act
-        string name = OpenApiPagingExtension.Name;
+        var name = OpenApiPagingExtension.Name;
         var expectedName = "x-ms-pageable";
 
         // Assert
