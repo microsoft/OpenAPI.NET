@@ -180,13 +180,10 @@ namespace Microsoft.OpenApi.Tests.Writers
 
         public static IEnumerable<object[]> BooleanInputs
         {
-            get
-            {
-                return
-                    from input in new [] { true, false }
-                    from shouldBeTerse in shouldProduceTerseOutputValues
-                    select new object[] { input, shouldBeTerse };
-            }
+            get =>
+                from input in new [] { true, false }
+                from shouldBeTerse in shouldProduceTerseOutputValues
+                select new object[] { input, shouldBeTerse };
         }
 
         [Theory]

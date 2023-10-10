@@ -26,23 +26,11 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the expression string.
         /// </summary>
-        public override string Expression
-        {
-            get
-            {
-                return Path + Value;
-            }
-        }
+        public override string Expression { get => Path + Value; }
 
         /// <summary>
         /// Gets the name string.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return Value;
-            }
-        }
+        public string Name { get => Value; }
     }
 }

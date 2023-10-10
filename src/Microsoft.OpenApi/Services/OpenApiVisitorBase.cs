@@ -41,13 +41,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// Pointer to source of validation error in document
         /// </summary>
-        public string PathString
-        {
-            get
-            {
-                return "#/" + String.Join("/", _path.Reverse());
-            }
-        }
+        public string PathString { get => "#/" + String.Join("/", _path.Reverse()); }
 
         /// <summary>
         /// Visits <see cref="OpenApiDocument"/>
