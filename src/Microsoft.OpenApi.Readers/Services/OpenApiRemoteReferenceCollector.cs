@@ -39,12 +39,10 @@ namespace Microsoft.OpenApi.Readers.Services
         /// </summary>
         private void AddReference(OpenApiReference reference)
         {
-            if (reference is {IsExternal: true})
+            if (reference is {IsExternal: true} &&
+                !_references.ContainsKey(reference.ExternalResource))
             {
-                if (!_references.ContainsKey(reference.ExternalResource))
-                {
-                    _references.Add(reference.ExternalResource, reference);
-                }
+                _references.Add(reference.ExternalResource, reference);
             }
         }
     }
