@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Tests
         /// <returns>The file contents.</returns>
         public static string GetString(string fileName)
         {
-            using Stream stream = GetStream(fileName);
+            using var stream = GetStream(fileName);
             using TextReader reader = new StreamReader(stream);
             return reader.ReadToEnd();
         }
@@ -27,8 +27,8 @@ namespace Microsoft.OpenApi.Readers.Tests
         /// <returns>The file stream.</returns>
         public static Stream GetStream(string fileName)
         {
-            string path = GetPath(fileName);
-            Stream stream = typeof(Resources).Assembly.GetManifestResourceStream(path);
+            var path = GetPath(fileName);
+            var stream = typeof(Resources).Assembly.GetManifestResourceStream(path);
 
             if (stream == null)
             {

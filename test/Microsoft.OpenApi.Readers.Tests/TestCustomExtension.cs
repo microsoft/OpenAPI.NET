@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Readers.Tests
                 """;
             var settings = new OpenApiReaderSettings
             {
-                ExtensionParsers = { { "x-foo", (a,v) => {
+                ExtensionParsers = { { "x-foo", (a,_) => {
                         var fooNode = (OpenApiObject)a;
                         return new FooExtension
                         {

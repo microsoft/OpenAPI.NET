@@ -83,7 +83,7 @@ namespace Microsoft.OpenApi.Validations
                 return;
             }
 
-            foreach (ValidationRule rule in ruleSet)
+            foreach (var rule in ruleSet)
             {
                 Add(rule);
             }
@@ -100,7 +100,7 @@ namespace Microsoft.OpenApi.Validations
                 return;
             }
 
-            foreach (ValidationRule rule in rules)
+            foreach (var rule in rules)
             {
                 Add(rule);
             }
@@ -111,10 +111,7 @@ namespace Microsoft.OpenApi.Validations
         /// </summary>
         public IList<ValidationRule> Rules
         {
-            get
-            {
-                return _rules.Values.SelectMany(v => v).ToList();
-            }
+            get => _rules.Values.SelectMany(v => v).ToList();
         }
 
         /// <summary>
@@ -163,10 +160,10 @@ namespace Microsoft.OpenApi.Validations
 
         private static ValidationRuleSet BuildDefaultRuleSet()
         {
-            ValidationRuleSet ruleSet = new ValidationRuleSet();
-            Type validationRuleType = typeof(ValidationRule);
+            var ruleSet = new ValidationRuleSet();
+            var validationRuleType = typeof(ValidationRule);
 
-            IEnumerable<PropertyInfo> rules = typeof(ValidationRuleSet).Assembly.GetTypes()
+            var rules = typeof(ValidationRuleSet).Assembly.GetTypes()
                 .Where(t => t.IsClass
                             && t != typeof(object)
                             && t.GetCustomAttributes(typeof(OpenApiRuleAttribute), false).Any())

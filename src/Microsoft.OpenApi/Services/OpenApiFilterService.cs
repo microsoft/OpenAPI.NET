@@ -304,12 +304,12 @@ namespace Microsoft.OpenApi.Services
         {
             if (operationIds == "*")
             {
-                return (url, operationType, operation) => true;  // All operations
+                return (_, _, _) => true;  // All operations
             }
             else
             {
                 var operationIdsArray = operationIds.Split(',');
-                return (url, operationType, operation) => operationIdsArray.Contains(operation.OperationId);
+                return (_, _, operation) => operationIdsArray.Contains(operation.OperationId);
             }
         }
 
@@ -319,11 +319,11 @@ namespace Microsoft.OpenApi.Services
             if (tagsArray.Length == 1)
             {
                 var regex = new Regex(tagsArray[0]);
-                return (url, operationType, operation) => operation.Tags.Any(tag => regex.IsMatch(tag.Name));
+                return (_, _, operation) => operation.Tags.Any(tag => regex.IsMatch(tag.Name));
             }
             else
             {
-                return (url, operationType, operation) => operation.Tags.Any(tag => tagsArray.Contains(tag.Name));
+                return (_, _, operation) => operation.Tags.Any(tag => tagsArray.Contains(tag.Name));
             }
         }
 
@@ -357,7 +357,7 @@ namespace Microsoft.OpenApi.Services
             }
 
             // predicate for matching url and operationTypes
-            return (path, operationType, operation) => operationTypes.Contains(operationType + path);
+            return (path, operationType, _) => operationTypes.Contains(operationType + path);
         }
 
         private static List<string> GetOperationTypes(IDictionary<OperationType, OpenApiOperation> openApiOperations, List<string> url, string path)

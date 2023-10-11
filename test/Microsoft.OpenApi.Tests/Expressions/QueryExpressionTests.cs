@@ -27,7 +27,7 @@ namespace Microsoft.OpenApi.Tests.Writers
         public void QueryExpressionConstructorWorks()
         {
             // Arrange
-            string name = "anyValue";
+            var name = "anyValue";
 
             // Act
             var query = new QueryExpression(name);

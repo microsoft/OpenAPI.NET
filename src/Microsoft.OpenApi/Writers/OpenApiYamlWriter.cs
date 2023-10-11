@@ -200,7 +200,7 @@ namespace Microsoft.OpenApi.Writers
 
                 using (var reader = new StringReader(value))
                 {
-                    bool firstLine = true;
+                    var firstLine = true;
                     while (reader.ReadLine() is var line && line != null)
                     {
                         if (firstLine)

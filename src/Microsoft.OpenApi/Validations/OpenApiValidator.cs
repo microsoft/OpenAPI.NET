@@ -30,24 +30,12 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the validation errors.
         /// </summary>
-        public IEnumerable<OpenApiValidatorError> Errors
-        {
-            get
-            {
-                return _errors;
-            }
-        }
+        public IEnumerable<OpenApiValidatorError> Errors { get => _errors; }
 
         /// <summary>
         /// Gets the validation warnings.
         /// </summary>
-        public IEnumerable<OpenApiValidatorWarning> Warnings
-        {
-            get
-            {
-                return _warnings;
-            }
-        }
+        public IEnumerable<OpenApiValidatorWarning> Warnings { get => _warnings; }
 
         /// <summary>
         /// Register an error with the validation context.
