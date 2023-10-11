@@ -207,7 +207,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformCommandConvertsOpenApi()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 Output = new("sample.json"),
@@ -227,7 +227,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputName()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
@@ -245,7 +245,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformCommandConvertsCsdlWithDefaultOutputName()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 Csdl = Path.Combine("UtilityFiles", "Todo.xml"),
                 CleanOutput = true,
@@ -263,7 +263,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public async Task TransformCommandConvertsOpenApiWithDefaultOutputNameAndSwitchFormat()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
@@ -283,7 +283,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         [Fact]
         public Task ThrowTransformCommandIfOpenApiAndCsdlAreEmpty()
         {
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 CleanOutput = true,
                 TerseOutput = false,
@@ -298,7 +298,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         public async Task TransformToPowerShellCompliantOpenApi()
         {
             var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UtilityFiles", "examplepowershellsettings.json");
-            HidiOptions options = new HidiOptions
+            var options = new HidiOptions
             {
                 OpenApi = Path.Combine("UtilityFiles", "SampleOpenApi.yml"),
                 CleanOutput = true,
@@ -321,7 +321,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var rootCommand = Program.CreateRootCommand();
             var openapi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
-            var args = new string[] { "transform", "-d", openapi, "-o", "sample.json", "--co" };
+            var args = new[] { "transform", "-d", openapi, "-o", "sample.json", "--co" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "transform").First().Handler;
             var context = new InvocationContext(parseResult);
@@ -338,7 +338,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var rootCommand = Program.CreateRootCommand();
             var openApi = Path.Combine(".", "UtilityFiles", "SampleOpenApi.yml");
-            var args = new string[] { "show", "-d", openApi, "-o", "sample.md" };
+            var args = new[] { "show", "-d", openApi, "-o", "sample.md" };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "show").First().Handler;
             var context = new InvocationContext(parseResult);
@@ -354,7 +354,7 @@ namespace Microsoft.OpenApi.Hidi.Tests
         {
             var rootCommand = Program.CreateRootCommand();
             var manifest = Path.Combine(".", "UtilityFiles", "exampleapimanifest.json");
-            var args = new string[] { "plugin", "-m", manifest, "--of", AppDomain.CurrentDomain.BaseDirectory };
+            var args = new[] { "plugin", "-m", manifest, "--of", AppDomain.CurrentDomain.BaseDirectory };
             var parseResult = rootCommand.Parse(args);
             var handler = rootCommand.Subcommands.Where(c => c.Name == "plugin").First().Handler;
             var context = new InvocationContext(parseResult);

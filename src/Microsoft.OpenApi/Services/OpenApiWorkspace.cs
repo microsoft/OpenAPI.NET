@@ -72,7 +72,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns>Returns true if a matching document is found.</returns>
         public bool Contains(string location)
         {
-            Uri key = ToLocationUrl(location);
+            var key = ToLocationUrl(location);
             return _documents.ContainsKey(key) || _fragments.ContainsKey(key) || _artifacts.ContainsKey(key);
         }
 

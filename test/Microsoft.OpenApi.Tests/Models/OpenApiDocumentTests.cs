@@ -1655,7 +1655,7 @@ namespace Microsoft.OpenApi.Tests.Models
         private static OpenApiDocument ParseInputFile(string filePath)
         {
             // Read in the input yaml file
-            using FileStream stream = File.OpenRead(filePath);
+            using var stream = File.OpenRead(filePath);
             var openApiDoc = new OpenApiStreamReader().Read(stream, out var diagnostic);
 
             return openApiDoc;

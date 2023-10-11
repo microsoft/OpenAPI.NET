@@ -16,18 +16,18 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateUrlIsRequiredInExternalDocs()
         {
             // Arrange
-            OpenApiExternalDocs externalDocs = new OpenApiExternalDocs();
+            var externalDocs = new OpenApiExternalDocs();
 
             // Act
             var errors = externalDocs.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
 
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             Assert.False(result);
             Assert.NotNull(errors);
-            OpenApiError error = Assert.Single(errors);
+            var error = Assert.Single(errors);
             Assert.Equal(String.Format(SRResource.Validation_FieldIsRequired, "url", "External Documentation"), error.Message);
         }
     }

@@ -68,8 +68,6 @@ namespace Microsoft.OpenApi.Models
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            Utils.CheckArgumentNull(writer);
-
             writer.WriteStartObject();
 
             // name

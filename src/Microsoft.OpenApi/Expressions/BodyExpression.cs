@@ -55,12 +55,6 @@ namespace Microsoft.OpenApi.Expressions
         /// <summary>
         /// Gets the fragment string.
         /// </summary>
-        public string Fragment
-        {
-            get
-            {
-                return Value;
-            }
-        }
+        public string Fragment { get => Value; }
     }
 }

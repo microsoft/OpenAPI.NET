@@ -13,8 +13,8 @@ public class OpenApiDeprecationExtensionTests
     public void ExtensionNameMatchesExpected()
     {
         // Act
-        string name = OpenApiDeprecationExtension.Name;
-        string expectedName = "x-ms-deprecation";
+        var name = OpenApiDeprecationExtension.Name;
+        var expectedName = "x-ms-deprecation";
 
         // Assert
         Assert.Equal(expectedName, name);
@@ -30,7 +30,7 @@ public class OpenApiDeprecationExtensionTests
 
         // Act
         extension.Write(writer, OpenApiSpecVersion.OpenApi3_0);
-        string result = sWriter.ToString();
+        var result = sWriter.ToString();
 
         // Assert
         Assert.Null(extension.Date);
@@ -55,7 +55,7 @@ public class OpenApiDeprecationExtensionTests
 
         // Act
         extension.Write(writer, OpenApiSpecVersion.OpenApi3_0);
-        string result = sWriter.ToString();
+        var result = sWriter.ToString();
 
         // Assert
         Assert.NotNull(extension.Date);

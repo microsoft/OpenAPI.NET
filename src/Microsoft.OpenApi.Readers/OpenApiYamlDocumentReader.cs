@@ -152,7 +152,7 @@ namespace Microsoft.OpenApi.Readers
 
         private void ResolveReferences(OpenApiDiagnostic diagnostic, OpenApiDocument document)
         {
-            List<OpenApiError> errors = new List<OpenApiError>();
+            var errors = new List<OpenApiError>();
 
             // Resolve References if requested
             switch (_settings.ReferenceResolution)

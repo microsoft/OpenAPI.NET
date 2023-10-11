@@ -196,7 +196,7 @@ namespace Microsoft.OpenApi.Services
         /// </summary>
         private void ResolveTags(IList<OpenApiTag> tags)
         {
-            for (int i = 0; i < tags.Count; i++)
+            for (var i = 0; i < tags.Count; i++)
             {
                 var tag = tags[i];
                 if (IsUnresolvedReference(tag))
@@ -229,7 +229,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (list == null) return;
 
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 var entity = list[i];
                 if (IsUnresolvedReference(entity))

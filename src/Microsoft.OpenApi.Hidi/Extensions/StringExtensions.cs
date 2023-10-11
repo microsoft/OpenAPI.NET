@@ -40,7 +40,7 @@ namespace Microsoft.OpenApi.Hidi.Extensions
             {
                 return new List<string>();
             }
-            return target.Split(new char[] { separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            return target.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
         }
     }
 }

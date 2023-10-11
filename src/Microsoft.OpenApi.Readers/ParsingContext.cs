@@ -89,7 +89,7 @@ namespace Microsoft.OpenApi.Readers
         {
             var node = ParseNode.Create(this, yamlDocument.RootNode);
 
-            T element = default(T);
+            var element = default(T);
 
             switch (version)
             {

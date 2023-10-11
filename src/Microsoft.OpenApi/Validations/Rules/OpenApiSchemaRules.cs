@@ -45,7 +45,7 @@ namespace Microsoft.OpenApi.Validations.Rules
 
                     if (schema.Enum != null)
                     {
-                        for (int i = 0; i < schema.Enum.Count; i++)
+                        for (var i = 0; i < schema.Enum.Count; i++)
                         {
                             context.Enter(i.ToString());
                             RuleHelpers.ValidateDataTypeMismatch(context, nameof(SchemaMismatchedDataType), schema.Enum[i], schema);

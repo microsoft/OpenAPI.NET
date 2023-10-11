@@ -11,8 +11,8 @@ public class OpenApiEnumValuesDescriptionExtensionTests
     public void ExtensionNameMatchesExpected()
     {
         // Act
-        string name = OpenApiEnumValuesDescriptionExtension.Name;
-        string expectedName = "x-ms-enum";
+        var name = OpenApiEnumValuesDescriptionExtension.Name;
+        var expectedName = "x-ms-enum";
 
         // Assert
         Assert.Equal(expectedName, name);
@@ -27,7 +27,7 @@ public class OpenApiEnumValuesDescriptionExtensionTests
 
         // Act
         extension.Write(writer, OpenApiSpecVersion.OpenApi3_0);
-        string result = sWriter.ToString();
+        var result = sWriter.ToString();
 
         // Assert
         Assert.Empty(extension.EnumName);
@@ -55,7 +55,7 @@ public class OpenApiEnumValuesDescriptionExtensionTests
 
         // Act
         extension.Write(writer, OpenApiSpecVersion.OpenApi3_0);
-        string result = sWriter.ToString();
+        var result = sWriter.ToString();
 
         // Assert
         Assert.Contains("values", result);

@@ -367,7 +367,7 @@ namespace Microsoft.OpenApi.Writers
             IDictionary<string, T> elements,
             Action<IOpenApiWriter, T> action)
         {
-            WriteMapInternal(writer, name, elements, (w, k, s) => action(w, s));
+            WriteMapInternal(writer, name, elements, (w, _, s) => action(w, s));
         }
 
         private static void WriteMapInternal<T>(
@@ -402,22 +402,16 @@ namespace Microsoft.OpenApi.Writers
 
         private static void CheckArguments<T>(IOpenApiWriter writer, string name, Action<IOpenApiWriter, T> action)
         {
-            CheckArguments(writer, name);
-
             Utils.CheckArgumentNull(action);
         }
 
         private static void CheckArguments<T>(IOpenApiWriter writer, string name, Action<IOpenApiWriter, string, T> action)
         {
-            CheckArguments(writer, name);
-
             Utils.CheckArgumentNull(action);
         }
 
         private static void CheckArguments(IOpenApiWriter writer, string name)
         {
-            Utils.CheckArgumentNull(writer);
-
             Utils.CheckArgumentNullOrEmpty(name);
         }
     }

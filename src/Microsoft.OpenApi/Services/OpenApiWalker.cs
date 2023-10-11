@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Services
             // Visit tags
             if (tags != null)
             {
-                for (int i = 0; i < tags.Count; i++)
+                for (var i = 0; i < tags.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(tags[i]));
                 }
@@ -246,7 +246,7 @@ namespace Microsoft.OpenApi.Services
             // Visit Servers
             if (servers != null)
             {
-                for (int i = 0; i < servers.Count; i++)
+                for (var i = 0; i < servers.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(servers[i]));
                 }
@@ -515,7 +515,7 @@ namespace Microsoft.OpenApi.Services
 
             if (securityRequirements != null)
             {
-                for (int i = 0; i < securityRequirements.Count; i++)
+                for (var i = 0; i < securityRequirements.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(securityRequirements[i]));
                 }
@@ -536,7 +536,7 @@ namespace Microsoft.OpenApi.Services
 
             if (parameters != null)
             {
-                for (int i = 0; i < parameters.Count; i++)
+                for (var i = 0; i < parameters.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(parameters[i]));
                 }
@@ -614,12 +614,9 @@ namespace Microsoft.OpenApi.Services
 
             _visitor.Visit(requestBody);
 
-            if (requestBody != null)
+            if (requestBody is {Content: not null})
             {
-                if (requestBody.Content != null)
-                {
-                    Walk(OpenApiConstants.Content, () => Walk(requestBody.Content));
-                }
+                Walk(OpenApiConstants.Content, () => Walk(requestBody.Content));
             }
             Walk(requestBody as IOpenApiExtensible);
         }
@@ -879,7 +876,7 @@ namespace Microsoft.OpenApi.Services
             // Visit Examples
             if (examples != null)
             {
-                for (int i = 0; i < examples.Count; i++)
+                for (var i = 0; i < examples.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(examples[i]));
                 }
@@ -899,7 +896,7 @@ namespace Microsoft.OpenApi.Services
             // Visit Schemas
             if (schemas != null)
             {
-                for (int i = 0; i < schemas.Count; i++)
+                for (var i = 0; i < schemas.Count; i++)
                 {
                     Walk(i.ToString(), () => Walk(schemas[i]));
                 }

@@ -177,7 +177,7 @@ namespace Microsoft.OpenApi.Readers.V2
                     }
 
                     // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
-                    string id = segments[1];
+                    var id = segments[1];
                     // $ref: externalSource.yaml#/Pet
                     if (id.StartsWith("/definitions/"))
                     {
