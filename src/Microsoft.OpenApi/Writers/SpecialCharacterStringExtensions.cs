@@ -65,7 +65,7 @@ namespace Microsoft.OpenApi.Writers
 
         // Double-quoted strings are needed for these non-printable control characters.
         // http://www.yaml.org/spec/1.2/spec.html#style/flow/double-quoted
-        private static readonly Dictionary<char, string> _yamlControlCharacterReplacements = new()
+        private static readonly Dictionary<char, string> _yamlControlCharacterCharReplacements = new()
         {
             {'\0', "\\0"},
             {'\x01', "\\x01"},
@@ -100,6 +100,9 @@ namespace Microsoft.OpenApi.Writers
             {'\x1e', "\\x1e"},
             {'\x1f', "\\x1f"},
         };
+        
+        private static readonly Dictionary<string, string> _yamlControlCharacterStringReplacements = _yamlControlCharacterCharReplacements
+            .ToDictionary(x => x.Key.ToString(), x => x.Value);
 
         /// <summary>
         /// Escapes all special characters and put the string in quotes if necessary to
@@ -107,26 +110,21 @@ namespace Microsoft.OpenApi.Writers
         /// </summary>
         internal static string GetYamlCompatibleString(this string input)
         {
-            // If string is an empty string, wrap it in quote to ensure it is not recognized as null.
-            if (input == "")
+            switch (input)
             {
-                return "''";
-            }
-
-            // If string is the word null, wrap it in quote to ensure it is not recognized as empty scalar null.
-            if (input == "null")
-            {
-                return "'null'";
-            }
-
-            // If string is the letter ~, wrap it in quote to ensure it is not recognized as empty scalar null.
-            if (input == "~")
-            {
-                return "'~'";
+                // If string is an empty string, wrap it in quote to ensure it is not recognized as null.
+                case "":
+                    return "''";
+                // If string is the word null, wrap it in quote to ensure it is not recognized as empty scalar null.
+                case "null":
+                    return "'null'";
+                // If string is the letter ~, wrap it in quote to ensure it is not recognized as empty scalar null.
+                case "~":
+                    return "'~'";
             }
 
             // If string includes a control character, wrapping in double quote is required.
-            if (input.Any(c => _yamlControlCharacterReplacements.ContainsKey(c)))
+            if (input.Any(c => _yamlControlCharacterCharReplacements.ContainsKey(c)))
             {
                 // Replace the backslash first, so that the new backslashes created by other Replaces are not duplicated.
                 input = input.Replace("\\", "\\\\");
@@ -135,9 +133,9 @@ namespace Microsoft.OpenApi.Writers
                 input = input.Replace("\"", "\\\"");
 
                 // Escape all the control characters.
-                foreach (var replacement in _yamlControlCharacterReplacements)
+                foreach (var replacement in _yamlControlCharacterStringReplacements)
                 {
-                    input = input.Replace(replacement.Key.ToString(), replacement.Value);
+                    input = input.Replace(replacement.Key, replacement.Value);
                 }
                 
                 return $"\"{input}\"";
@@ -162,10 +160,10 @@ namespace Microsoft.OpenApi.Writers
 
             // If string can be mistaken as a number, c-style hexadecimal notation, a boolean, or a timestamp,
             // wrap it in quote to indicate that this is indeed a string, not a number, c-style hexadecimal notation, a boolean, or a timestamp
-            if (decimal.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out var _) ||
+            if (decimal.TryParse(input, NumberStyles.Float, CultureInfo.InvariantCulture, out _) ||
                 IsHexadecimalNotation(input) ||
-                bool.TryParse(input, out var _) ||
-                DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out var _))
+                bool.TryParse(input, out _) ||
+                DateTime.TryParse(input, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
                 return $"'{input}'";
             }
