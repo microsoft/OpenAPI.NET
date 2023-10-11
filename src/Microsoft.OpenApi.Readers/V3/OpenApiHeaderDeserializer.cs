@@ -16,64 +16,44 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiHeader> _headerFixedFields = new()
         {
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {
-                "required", (o, n) =>
-                {
-                    o.Required = bool.Parse(n.GetScalarValue());
-                }
+                "required",
+                (o, n) => o.Required = bool.Parse(n.GetScalarValue())
             },
             {
-                "deprecated", (o, n) =>
-                {
-                    o.Deprecated = bool.Parse(n.GetScalarValue());
-                }
+                "deprecated",
+                (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
             },
             {
-                "allowEmptyValue", (o, n) =>
-                {
-                    o.AllowEmptyValue = bool.Parse(n.GetScalarValue());
-                }
+                "allowEmptyValue",
+                (o, n) => o.AllowEmptyValue = bool.Parse(n.GetScalarValue())
             },
             {
-                "allowReserved", (o, n) =>
-                {
-                    o.AllowReserved = bool.Parse(n.GetScalarValue());
-                }
+                "allowReserved",
+                (o, n) => o.AllowReserved = bool.Parse(n.GetScalarValue())
             },
             {
-                "style", (o, n) =>
-                {
-                    o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
-                }
+                "style",
+                (o, n) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
             },
             {
-                "explode", (o, n) =>
-                {
-                    o.Explode = bool.Parse(n.GetScalarValue());
-                }
+                "explode",
+                (o, n) => o.Explode = bool.Parse(n.GetScalarValue())
             },
             {
-                "schema", (o, n) =>
-                {
-                    o.Schema = LoadSchema(n);
-                }
+                "schema",
+                (o, n) => o.Schema = LoadSchema(n)
             },
             {
-                "examples", (o, n) =>
-                {
-                    o.Examples = n.CreateMap(LoadExample);
-                }
+                "examples",
+                (o, n) => o.Examples = n.CreateMap(LoadExample)
             },
             {
-                "example", (o, n) =>
-                {
-                    o.Example = n.CreateAny();
-                }
+                "example",
+                (o, n) => o.Example = n.CreateAny()
             },
         };
 

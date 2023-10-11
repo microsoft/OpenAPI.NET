@@ -16,22 +16,16 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiServer> _serverFixedFields = new()
         {
             {
-                "url", (o, n) =>
-                {
-                    o.Url = n.GetScalarValue();
-                }
+                "url",
+                (o, n) => o.Url = n.GetScalarValue()
             },
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {
-                "variables", (o, n) =>
-                {
-                    o.Variables = n.CreateMap(LoadServerVariable);
-                }
+                "variables",
+                (o, n) => o.Variables = n.CreateMap(LoadServerVariable)
             }
         };
 

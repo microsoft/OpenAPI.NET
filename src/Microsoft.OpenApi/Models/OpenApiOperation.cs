@@ -143,10 +143,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
                 Tags,
-                (w, t) =>
-                {
-                    t.SerializeAsV3(w);
-                });
+                (w, t) => t.SerializeAsV3(w));
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);
@@ -200,10 +197,7 @@ namespace Microsoft.OpenApi.Models
             writer.WriteOptionalCollection(
                 OpenApiConstants.Tags,
                 Tags,
-                (w, t) =>
-                {
-                    t.SerializeAsV2(w);
-                });
+                (w, t) => t.SerializeAsV2(w));
 
             // summary
             writer.WriteProperty(OpenApiConstants.Summary, Summary);

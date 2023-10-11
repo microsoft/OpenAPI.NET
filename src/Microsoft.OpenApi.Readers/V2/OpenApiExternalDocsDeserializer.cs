@@ -18,16 +18,12 @@ namespace Microsoft.OpenApi.Readers.V2
             new()
             {
                 {
-                    OpenApiConstants.Description, (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    OpenApiConstants.Description,
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    OpenApiConstants.Url, (o, n) =>
-                    {
-                        o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute);
-                    }
+                    OpenApiConstants.Url,
+                    (o, n) => o.Url = new(n.GetScalarValue(), UriKind.RelativeOrAbsolute)
                 },
             };
 

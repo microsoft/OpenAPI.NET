@@ -22,16 +22,12 @@ namespace Microsoft.OpenApi.Readers.V3
                 }
             },
             {
-                "summary", (o, n) =>
-                {
-                    o.Summary = n.GetScalarValue();
-                }
+                "summary",
+                (o, n) => o.Summary = n.GetScalarValue()
             },
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {"get", (o, n) => o.AddOperation(OperationType.Get, LoadOperation(n))},
             {"put", (o, n) => o.AddOperation(OperationType.Put, LoadOperation(n))},

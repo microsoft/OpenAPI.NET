@@ -18,10 +18,8 @@ namespace Microsoft.OpenApi.Readers.V2
         private static readonly FixedFieldMap<OpenApiXml> _xmlFixedFields = new()
         {
             {
-                "name", (o, n) =>
-                {
-                    o.Name = n.GetScalarValue();
-                }
+                "name",
+                (o, n) => o.Name = n.GetScalarValue()
             },
             {
                 "namespace", (o, n) =>
@@ -37,22 +35,16 @@ namespace Microsoft.OpenApi.Readers.V2
                 }
             },
             {
-                "prefix", (o, n) =>
-                {
-                    o.Prefix = n.GetScalarValue();
-                }
+                "prefix",
+                (o, n) => o.Prefix = n.GetScalarValue()
             },
             {
-                "attribute", (o, n) =>
-                {
-                    o.Attribute = bool.Parse(n.GetScalarValue());
-                }
+                "attribute",
+                (o, n) => o.Attribute = bool.Parse(n.GetScalarValue())
             },
             {
-                "wrapped", (o, n) =>
-                {
-                    o.Wrapped = bool.Parse(n.GetScalarValue());
-                }
+                "wrapped",
+                (o, n) => o.Wrapped = bool.Parse(n.GetScalarValue())
             },
         };
 

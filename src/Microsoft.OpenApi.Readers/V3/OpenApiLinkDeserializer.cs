@@ -16,34 +16,24 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiLink> _linkFixedFields = new()
         {
             {
-                "operationRef", (o, n) =>
-                {
-                    o.OperationRef = n.GetScalarValue();
-                }
+                "operationRef",
+                (o, n) => o.OperationRef = n.GetScalarValue()
             },
             {
-                "operationId", (o, n) =>
-                {
-                    o.OperationId = n.GetScalarValue();
-                }
+                "operationId",
+                (o, n) => o.OperationId = n.GetScalarValue()
             },
             {
-                "parameters", (o, n) =>
-                {
-                    o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper);
-                }
+                "parameters",
+                (o, n) => o.Parameters = n.CreateSimpleMap(LoadRuntimeExpressionAnyWrapper)
             },
             {
-                "requestBody", (o, n) =>
-                {
-                    o.RequestBody = LoadRuntimeExpressionAnyWrapper(n);
-                }
+                "requestBody",
+                (o, n) => o.RequestBody = LoadRuntimeExpressionAnyWrapper(n)
             },
             {
-                "description", (o, n) =>
-                {
-                    o.Description = n.GetScalarValue();
-                }
+                "description",
+                (o, n) => o.Description = n.GetScalarValue()
             },
             {"server", (o, n) => o.Server = LoadServer(n)}
         };

@@ -16,34 +16,24 @@ namespace Microsoft.OpenApi.Readers.V3
         private static readonly FixedFieldMap<OpenApiEncoding> _encodingFixedFields = new()
         {
             {
-                "contentType", (o, n) =>
-                {
-                    o.ContentType = n.GetScalarValue();
-                }
+                "contentType",
+                (o, n) => o.ContentType = n.GetScalarValue()
             },
             {
-                "headers", (o, n) =>
-                {
-                    o.Headers = n.CreateMap(LoadHeader);
-                }
+                "headers",
+                (o, n) => o.Headers = n.CreateMap(LoadHeader)
             },
             {
-                "style", (o, n) =>
-                {
-                    o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
-                }
+                "style",
+                (o, n) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
             },
             {
-                "explode", (o, n) =>
-                {
-                    o.Explode = bool.Parse(n.GetScalarValue());
-                }
+                "explode",
+                (o, n) => o.Explode = bool.Parse(n.GetScalarValue())
             },
             {
-                "allowedReserved", (o, n) =>
-                {
-                    o.AllowReserved = bool.Parse(n.GetScalarValue());
-                }
+                "allowedReserved", 
+                (o, n) => o.AllowReserved = bool.Parse(n.GetScalarValue())
             },
         };
 

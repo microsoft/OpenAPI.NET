@@ -21,9 +21,8 @@ namespace Microsoft.OpenApi.Readers.V2
         private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new()
         {
             {
-                "swagger", (_, _) =>
-                {
-                } /* Version is valid field but we already parsed it */
+                "swagger", (_, _) => {}
+                /* Version is valid field but we already parsed it */
             },
             {"info", (o, n) => o.Info = LoadInfo(n)},
             {"host", (_, n) => n.Context.SetTempStorage("host", n.GetScalarValue())},

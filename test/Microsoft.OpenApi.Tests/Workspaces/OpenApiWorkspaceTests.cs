@@ -103,7 +103,8 @@ namespace Microsoft.OpenApi.Tests
                     op.CreateResponse("200", re =>
                     {
                         re.Description = "Success";
-                        re.CreateContent("application/json", co =>
+                        re.CreateContent("application/json",
+                            co =>
                             co.Schema = new()
                             {
                                 Reference = new() // Reference
