@@ -1,5 +1,6 @@
-﻿using System.Text.Json.Nodes;
-using System.Text.Json;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
 using System;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
@@ -43,7 +44,7 @@ namespace Microsoft.OpenApi.Readers.V31
 
             foreach (var schema in components.Schemas)
             {
-                var refUri = new Uri($"http://everything.json/components/schemas/{schema.Key}");
+                var refUri = new Uri(OpenApiConstants.v3ReferenceUri + schema.Key);
                 SchemaRegistry.Global.Register(refUri, schema.Value);
             }
 

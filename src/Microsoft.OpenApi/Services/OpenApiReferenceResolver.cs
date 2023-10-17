@@ -245,7 +245,7 @@ namespace Microsoft.OpenApi.Services
         /// <returns></returns>
         public JsonSchema ResolveJsonSchemaReference(Uri reference, string description = null, string summary = null)
         {
-            var refUri = $"http://everything.json{reference.OriginalString.Split('#').LastOrDefault()}";
+            var refUri = $"https://everything.json{reference.OriginalString.Split('#').LastOrDefault()}";
             var resolvedSchema = (JsonSchema)SchemaRegistry.Global.Get(new Uri(refUri));
 
             if (resolvedSchema != null)

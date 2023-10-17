@@ -595,6 +595,16 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public static readonly Uri defaultUrl = new Uri("http://localhost/");
 
+        /// <summary>
+        /// Field: V3 JsonSchema Reference Uri
+        /// </summary>
+        public const string v3ReferenceUri = "https://everything.json/components/schemas/";
+
+        /// <summary>
+        /// Field: V2 JsonSchema Reference Uri
+        /// </summary>
+        public const string v2ReferenceUri = "https://everything.json/definitions/";
+
         #region V2.0
 
         /// <summary>

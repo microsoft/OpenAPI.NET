@@ -155,7 +155,7 @@ namespace Microsoft.OpenApi.Services
                 {
                     foreach (var jsonSchema in doc.Components.Schemas)
                     {
-                        var refUri = new Uri($"http://everything.json/components/schemas/{jsonSchema.Key}");
+                        var refUri = new Uri(OpenApiConstants.v3ReferenceUri + jsonSchema.Key);
                         SchemaRegistry.Global.Register(refUri, jsonSchema.Value);
                     }
 

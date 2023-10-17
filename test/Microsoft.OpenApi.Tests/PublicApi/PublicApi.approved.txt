@@ -460,6 +460,8 @@ namespace Microsoft.OpenApi.Models
         public const string Wrapped = "wrapped";
         public const string WriteOnly = "writeOnly";
         public const string Xml = "xml";
+        public const string v2ReferenceUri = "https://everything.json/definitions/";
+        public const string v3ReferenceUri = "https://everything.json/components/schemas/";
         public static readonly System.Uri defaultUrl;
         public static readonly System.Version version2_0;
         public static readonly System.Version version3_0_0;

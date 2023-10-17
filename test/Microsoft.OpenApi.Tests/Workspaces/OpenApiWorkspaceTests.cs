@@ -80,7 +80,7 @@ namespace Microsoft.OpenApi.Tests
             
             workspace.AddDocument(location, doc);
 
-            var schema = workspace.ResolveJsonSchemaReference(new Uri("http://everything.json/common#/components/schemas/test"));
+            var schema = workspace.ResolveJsonSchemaReference(new Uri("https://everything.json/common#/components/schemas/test"));
             
             Assert.NotNull(schema);
             Assert.Equal("The referenced one", schema.GetDescription());
@@ -147,7 +147,7 @@ namespace Microsoft.OpenApi.Tests
             workspace.AddSchemaFragment("fragment", schemaFragment);
 
             // Act
-            var schema = workspace.ResolveJsonSchemaReference(new Uri("http://everything.json/common#/components/schemas/test"));
+            var schema = workspace.ResolveJsonSchemaReference(new Uri("https://everything.json/common#/components/schemas/test"));
 
             // Assert
             Assert.NotNull(schema);

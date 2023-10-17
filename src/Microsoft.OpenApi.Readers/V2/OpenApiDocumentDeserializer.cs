@@ -321,7 +321,7 @@ namespace Microsoft.OpenApi.Readers.V2
 
             foreach (var schema in schemas)
             {
-                var refUri = new Uri($"http://everything.json/definitions/{schema.Key}");
+                var refUri = new Uri(OpenApiConstants.v2ReferenceUri + schema.Key);
                 SchemaRegistry.Global.Register(refUri, schema.Value);
             }
         }
