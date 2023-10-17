@@ -218,47 +218,5 @@ namespace Microsoft.OpenApi.Extensions
                 _ => throw new NotSupportedException(),
             };
         }
-
-        //internal static string GetValueType(Type type)
-        //{
-        //    if (type == typeof(string))
-        //    {
-        //        return "string";
-        //    }
-        //    else if (type == typeof(int) || type == typeof(int?))
-        //    {
-        //        return "integer";
-        //    }
-        //    else if (type == typeof(long) || type == typeof(long?))
-        //    {
-        //        return "integer";
-        //    }
-        //    else if (type == typeof(bool) || type == typeof(bool?))
-        //    {
-        //        return "bool";
-        //    }
-        //    else if (type == typeof(float) || type == typeof(float?))
-        //    {
-        //        return "float";
-        //    }
-        //    else if (type == typeof(double) || type == typeof(double?))
-        //    {
-        //        return "double";
-        //    }
-        //    else if (type == typeof(decimal) || type == typeof(decimal?))
-        //    {
-        //        return "decimal";
-        //    }
-        //    else if (type == typeof(DateTime) || type == typeof(DateTime?))
-        //    {
-        //        return "date-time";
-        //    }
-        //    else if (type == typeof(DateTimeOffset) || type == typeof(DateTimeOffset?))
-        //    {
-        //        return "date-time";
-        //    }
-
-        //    return null;
-        //}
     }
 }

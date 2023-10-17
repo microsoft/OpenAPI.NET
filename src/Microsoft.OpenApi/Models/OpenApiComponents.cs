@@ -75,11 +75,6 @@ namespace Microsoft.OpenApi.Models
         public virtual IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
-        /// The indentation string to prepand to each line for each indentation level.
-        /// </summary>
-        protected const string IndentationString = "  ";
-
-        /// <summary>
         /// Parameter-less constructor
         /// </summary>
         public OpenApiComponents() { }
