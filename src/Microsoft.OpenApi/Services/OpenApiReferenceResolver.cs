@@ -221,6 +221,8 @@ namespace Microsoft.OpenApi.Services
             schema = builder.Build();
         }
 
+        public override void Visit(IBaseDocument document) { }
+
         private Dictionary<string, JsonSchema> ResolveJsonSchemas(IDictionary<string, JsonSchema> schemas)
         {
             var resolvedSchemas = new Dictionary<string, JsonSchema>();

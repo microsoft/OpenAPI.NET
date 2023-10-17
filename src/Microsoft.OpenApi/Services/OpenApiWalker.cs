@@ -808,7 +808,7 @@ namespace Microsoft.OpenApi.Services
         internal JsonSchema Walk(JsonSchema schema, bool isComponent = false)
         {
             if (schema == null
-                || (schema.GetRef() != null && !isComponent))
+                || ProcessSchemaAsReference(schema, isComponent))
             {
                 return schema;
             }
@@ -1160,6 +1160,18 @@ namespace Microsoft.OpenApi.Services
             {
                 Walk(referenceable);
             }
+            return isReference;
+        }
+
+        private bool ProcessSchemaAsReference(IBaseDocument baseDocument, bool isComponent = false)
+        {
+            var schema = baseDocument as JsonSchema;
+            var isReference = schema?.GetRef() != null && !isComponent;
+            if (isReference)
+            {
+                _visitor.Visit(baseDocument);
+            }
+
             return isReference;
         }
     }

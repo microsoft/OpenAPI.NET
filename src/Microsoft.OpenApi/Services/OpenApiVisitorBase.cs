@@ -243,7 +243,9 @@ namespace Microsoft.OpenApi.Services
         public virtual void Visit(ref JsonSchema schema)
         {
         }
-        
+
+        public virtual void Visit(IBaseDocument document) { }
+
         /// <summary>
         /// Visits <see cref="JsonSchema"/>
         /// </summary>
