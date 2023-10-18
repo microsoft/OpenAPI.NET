@@ -47,7 +47,7 @@ namespace Microsoft.OpenApi.Readers.V3
             
             foreach (var schema in components.Schemas)
             {
-                var refUri = new Uri($"http://everything.json/components/schemas/{schema.Key}");
+                var refUri = new Uri(OpenApiConstants.v3ReferenceUri + schema.Key);
                 SchemaRegistry.Global.Register(refUri, schema.Value);
             }
 
