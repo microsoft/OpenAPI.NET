@@ -15,7 +15,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V31Tests
     {
         private const string SampleFolderPath = "V31Tests/Samples/OpenApiDocument/";
 
-        public T Clone<T>(T element) where T : IOpenApiSerializable
+        public static T Clone<T>(T element) where T : IOpenApiSerializable
         {
             using var stream = new MemoryStream();
             IOpenApiWriter writer;

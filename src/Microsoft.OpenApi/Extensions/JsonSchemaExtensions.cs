@@ -7,12 +7,15 @@ using Microsoft.OpenApi.Interfaces;
 
 namespace Microsoft.OpenApi.Extensions
 {
+    /// <summary>
+    /// Specifies Extension methods to be applied on a JSON schema instance
+    /// </summary>
     public static class JsonSchemaExtensions
     {
         /// <summary>
         /// Gets the `discriminator` keyword if it exists.
         /// </summary>
-        public static DiscriminatorKeyword? GetOpenApiDiscriminator(this JsonSchema schema)
+        public static DiscriminatorKeyword GetOpenApiDiscriminator(this JsonSchema schema)
         {
             return schema.TryGetKeyword<DiscriminatorKeyword>(DiscriminatorKeyword.Name, out var k) ? k! : null;
         }
@@ -20,13 +23,13 @@ namespace Microsoft.OpenApi.Extensions
         /// <summary>
         /// Gets the `summary` keyword if it exists.
         /// </summary>
-        public static string? GetSummary(this JsonSchema schema)
+        public static string GetSummary(this JsonSchema schema)
         {
             return schema.TryGetKeyword<SummaryKeyword>(SummaryKeyword.Name, out var k) ? k.Summary! : null;
         }
 
         /// <summary>
-        /// 
+        /// Gets the nullable value if it exists
         /// </summary>
         /// <param name="schema"></param>
         /// <returns></returns>
@@ -36,7 +39,7 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Gets the additional properties value if it exists
         /// </summary>
         /// <param name="schema"></param>
         /// <returns></returns>
@@ -46,7 +49,7 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Gets the exclusive maximum value if it exists
         /// </summary>
         /// <param name="schema"></param>
         /// <returns></returns>
@@ -56,7 +59,7 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Gets the exclusive minimum value if it exists
         /// </summary>
         /// <param name="schema"></param>
         /// <returns></returns>
@@ -66,7 +69,7 @@ namespace Microsoft.OpenApi.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Gets the custom extensions if it exists
         /// </summary>
         /// <param name="schema"></param>
         /// <returns></returns>

@@ -537,7 +537,7 @@ paths: {}",
                 {
                     Schemas = new Dictionary<string, JsonSchema>
                     {
-                        ["pet"] = new JsonSchemaBuilder()
+                        ["pet1"] = new JsonSchemaBuilder()
                             .Type(SchemaValueType.Object)
                             .Required("id", "name")
                             .Properties(
@@ -587,7 +587,7 @@ paths: {}",
                     }
                 };
 
-                var petSchema = components.Schemas["pet"];
+                var petSchema = components.Schemas["pet1"];
 
                 var newPetSchema = components.Schemas["newPet"];
 
@@ -1056,25 +1056,6 @@ paths: {}",
         }
 
         [Fact]
-        public void DoesNotChangeExternalReferences()
-        {
-            // Arrange
-            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "documentWithExternalRefs.yaml"));
-
-            // Act
-            var doc = new OpenApiStreamReader(
-                new OpenApiReaderSettings { ReferenceResolution = ReferenceResolutionSetting.DoNotResolveReferences })
-                .Read(stream, out var diagnostic);
-
-            var externalRef = doc.Components.Schemas["Nested"].GetProperties();//.GetAnyOf().First().Reference.ReferenceV3;
-            var externalRef2 = doc.Components.Schemas["Nested"].GetProperties();//.GetAnyOf().Last().Reference.ReferenceV3;
-
-            // Assert
-            //Assert.Equal("file:///C:/MySchemas.json#/definitions/ArrayObject", externalRef);
-            //Assert.Equal("../foo/schemas.yaml#/components/schemas/Number", externalRef2);
-        }
-
-        [Fact]
         public void ParseDocumentWithReferencedSecuritySchemeWorks()
         {
             // Arrange
@@ -1094,7 +1075,7 @@ paths: {}",
         }
 
         [Fact]
-        public async void ParseDocumentWithJsonSchemaReferencesWorks() 
+        public void ParseDocumentWithJsonSchemaReferencesWorks() 
         {
             // Arrange
             using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "docWithJsonSchema.yaml"));

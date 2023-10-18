@@ -29,19 +29,19 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "type", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue()));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue()));
                 }
             },
             {
                 "format", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).Format(n.GetScalarValue());
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Format(n.GetScalarValue());
                 }
             },
             {
                 "items", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).Items(LoadSchema(n));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Items(LoadSchema(n));
                 }
             },
             {
@@ -53,79 +53,79 @@ namespace Microsoft.OpenApi.Readers.V2
             {
                 "default", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).Default(n.CreateAny().Node);
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Default(n.CreateAny().Node);
                 }
             },
             {
                 "maximum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMaximum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().ExclusiveMaximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minimum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "exclusiveMinimum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().ExclusiveMinimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "maxLength", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minLength", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "pattern", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).Pattern(n.GetScalarValue());
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Pattern(n.GetScalarValue());
                 }
             },
             {
                 "maxItems", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).MaxItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().MaxItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "minItems", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).MinItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().MinItems(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "uniqueItems", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).UniqueItems(bool.Parse(n.GetScalarValue()));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().UniqueItems(bool.Parse(n.GetScalarValue()));
                 }
             },
             {
                 "multipleOf", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).MultipleOf(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().MultipleOf(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                 }
             },
             {
                 "enum", (o, n) =>
                 {
-                    o.Schema = GetOrCreateSchemaBuilder(o).Enum(n.CreateListOfAny()).Build();
+                    o.Schema = GetOrCreateHeaderSchemaBuilder().Enum(n.CreateListOfAny()).Build();
                 }
             }            
         };
@@ -135,7 +135,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
         };
 
-        private static JsonSchemaBuilder GetOrCreateSchemaBuilder(OpenApiHeader p)
+        private static JsonSchemaBuilder GetOrCreateHeaderSchemaBuilder()
         {
             _headerJsonSchemaBuilder ??= new JsonSchemaBuilder();
             return _headerJsonSchemaBuilder;

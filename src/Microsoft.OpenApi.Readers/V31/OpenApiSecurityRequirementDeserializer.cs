@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Readers.V31
                     summary = node.Context.VersionService.GetReferenceScalarValues(mapNode, OpenApiConstants.Summary);
                 }
 
-                var scheme = LoadSecuritySchemeByReference(mapNode.Context, property.Name, summary, description);
+                var scheme = LoadSecuritySchemeByReference(property.Name, summary, description);
 
                 var scopes = property.Value.CreateSimpleList(value => value.GetScalarValue());
 
@@ -47,7 +47,6 @@ namespace Microsoft.OpenApi.Readers.V31
         }
 
         private static OpenApiSecurityScheme LoadSecuritySchemeByReference(
-            ParsingContext context,
             string schemeName,
             string summary = null,
             string description = null)

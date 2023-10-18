@@ -181,10 +181,10 @@ namespace Microsoft.OpenApi.Extensions
         public static bool? GetAdditionalPropertiesAllowed(this Json.Schema.JsonSchema schema) { }
         public static System.Collections.Generic.IDictionary<string, Microsoft.OpenApi.Interfaces.IOpenApiExtension> GetExtensions(this Json.Schema.JsonSchema schema) { }
         public static bool? GetNullable(this Json.Schema.JsonSchema schema) { }
-        public static Microsoft.OpenApi.Extensions.DiscriminatorKeyword? GetOpenApiDiscriminator(this Json.Schema.JsonSchema schema) { }
+        public static Microsoft.OpenApi.Extensions.DiscriminatorKeyword GetOpenApiDiscriminator(this Json.Schema.JsonSchema schema) { }
         public static bool? GetOpenApiExclusiveMaximum(this Json.Schema.JsonSchema schema) { }
         public static bool? GetOpenApiExclusiveMinimum(this Json.Schema.JsonSchema schema) { }
-        public static string? GetSummary(this Json.Schema.JsonSchema schema) { }
+        public static string GetSummary(this Json.Schema.JsonSchema schema) { }
     }
     [Json.Schema.SchemaKeyword("nullable")]
     public class NullableKeyword : Json.Schema.IJsonSchemaKeyword
@@ -1514,7 +1514,6 @@ namespace Microsoft.OpenApi.Writers
     public class OpenApiWriterSettings
     {
         public OpenApiWriterSettings() { }
-        public int Indentation { get; }
         public bool InlineExternalReferences { get; set; }
         public bool InlineLocalReferences { get; set; }
         [System.Obsolete("Use InlineLocalReference and InlineExternalReference settings instead")]

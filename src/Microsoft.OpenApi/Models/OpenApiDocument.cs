@@ -21,8 +21,6 @@ namespace Microsoft.OpenApi.Models
     /// </summary>
     public class OpenApiDocument : IOpenApiSerializable, IOpenApiExtensible, IBaseDocument
     {
-        private readonly Dictionary<JsonPointer, JsonSchema> _lookup = new();
-
         /// <summary>
         /// Related workspace containing OpenApiDocuments that are referenced in this document
         /// </summary>
@@ -239,7 +237,7 @@ namespace Microsoft.OpenApi.Models
 
                 if (loops.TryGetValue(typeof(JsonSchema), out List<object> schemas))
                 {
-                    var openApiSchemas = schemas.Cast<JsonSchema>().Distinct().ToList()
+                    var openApiSchemas = schemas.Cast<JsonSchema>().Distinct()
                         .ToDictionary(k => k.GetRef().ToString());
 
                     foreach (var schema in openApiSchemas.Values.ToList())

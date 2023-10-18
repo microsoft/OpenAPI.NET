@@ -19,7 +19,6 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static readonly JsonSchemaBuilder builder = new();        
         private static JsonSchemaBuilder _parameterJsonSchemaBuilder;
         private static FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
@@ -63,13 +62,13 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "type", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue()));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Type(SchemaTypeConverter.ConvertToSchemaValueType(n.GetScalarValue()));
                     }
                 },
                 {
                     "items", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).Items(LoadSchema(n));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Items(LoadSchema(n));
                     }
                 },
                 {
@@ -81,55 +80,55 @@ namespace Microsoft.OpenApi.Readers.V2
                 {
                     "format", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).Format(n.GetScalarValue());
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Format(n.GetScalarValue());
                     }
                 },
                 {
                     "minimum", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Minimum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "maximum", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Maximum(decimal.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "maxLength", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().MaxLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "minLength", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().MinLength(uint.Parse(n.GetScalarValue(), CultureInfo.InvariantCulture));
                     }
                 },
                 {
                     "readOnly", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).ReadOnly(bool.Parse(n.GetScalarValue()));
+                        o.Schema = GetOrCreateParameterSchemaBuilder().ReadOnly(bool.Parse(n.GetScalarValue()));
                     }
                 },
                 {
                     "default", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).Default(n.CreateAny().Node);
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Default(n.CreateAny().Node);
                     }
                 },
                 {
                     "pattern", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).Pattern(n.GetScalarValue());
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Pattern(n.GetScalarValue());
                     }
                 },
                 {
                     "enum", (o, n) =>
                     {
-                        o.Schema = GetOrCreateSchemaBuilder(o).Enum(n.CreateListOfAny()).Build();
+                        o.Schema = GetOrCreateParameterSchemaBuilder().Enum(n.CreateListOfAny()).Build();
                     }
                 },
                 {
@@ -144,40 +143,6 @@ namespace Microsoft.OpenApi.Readers.V2
             new PatternFieldMap<OpenApiParameter>
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
-            };
-
-        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields =
-            new AnyFieldMap<OpenApiParameter>
-            {
-                {
-                    OpenApiConstants.Default,
-                    new AnyFieldMapParameter<OpenApiParameter>(
-                        p => new OpenApiAny(p.Schema?.GetDefault()),
-                        (p, v) => {
-                            if (p.Schema != null || v != null)
-                            {
-                                p.Schema = GetOrCreateSchemaBuilder(p).Default(v.Node);
-                            }
-                        },
-                        p => p.Schema)
-                }
-            };
-
-        private static readonly AnyListFieldMap<OpenApiParameter> _parameterAnyListFields =
-            new AnyListFieldMap<OpenApiParameter>
-            {
-                {
-                    OpenApiConstants.Enum,
-                    new AnyListFieldMapParameter<OpenApiParameter>(
-                        p => p.Schema?.GetEnum().ToList(),
-                        (p, v) => {
-                            if (p.Schema != null || v != null && v.Count > 0)
-                            {
-                                p.Schema = GetOrCreateSchemaBuilder(p).Enum(v);
-                            }
-                        },
-                        p => p.Schema)
-                },
             };
 
         private static void LoadStyle(OpenApiParameter p, string v)
@@ -209,7 +174,7 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
         
-        private static JsonSchemaBuilder GetOrCreateSchemaBuilder(OpenApiParameter p)
+        private static JsonSchemaBuilder GetOrCreateParameterSchemaBuilder()
         {
             _parameterJsonSchemaBuilder ??= new JsonSchemaBuilder();
             return _parameterJsonSchemaBuilder;

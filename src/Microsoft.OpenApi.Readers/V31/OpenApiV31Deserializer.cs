@@ -71,42 +71,6 @@ namespace Microsoft.OpenApi.Readers.V31
             }
         }
 
-        private static void ProcessAnyListFields<T>(
-            MapNode mapNode,
-            T domainObject,
-            AnyListFieldMap<T> anyListFieldMap)
-        {
-            foreach (var anyListFieldName in anyListFieldMap.Keys.ToList())
-            {
-                try
-                {
-                    var newProperty = new List<JsonNode>();
-
-                    mapNode.Context.StartObject(anyListFieldName);
-
-                    var propertyGetter = anyListFieldMap[anyListFieldName].PropertyGetter(domainObject);
-                    if (propertyGetter != null)
-                    {
-                        foreach (var propertyElement in propertyGetter)
-                        {
-                            newProperty.Add(propertyElement);
-                        }
-
-                        anyListFieldMap[anyListFieldName].PropertySetter(domainObject, newProperty);
-                    }
-                }
-                catch (OpenApiException exception)
-                {
-                    exception.Pointer = mapNode.Context.GetLocation();
-                    mapNode.Context.Diagnostic.Errors.Add(new OpenApiError(exception));
-                }
-                finally
-                {
-                    mapNode.Context.EndObject();
-                }
-            }
-        }
-
         private static void ProcessAnyMapFields<T, U>(
             MapNode mapNode,
             T domainObject,

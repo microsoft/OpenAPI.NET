@@ -18,10 +18,10 @@ namespace Microsoft.OpenApi.Services
     /// </summary>
     public class OpenApiWorkspace
     {
-        private Dictionary<Uri, OpenApiDocument> _documents = new Dictionary<Uri, OpenApiDocument>();
-        private Dictionary<Uri, IOpenApiReferenceable> _fragments = new Dictionary<Uri, IOpenApiReferenceable>();
-        private Dictionary<Uri, JsonSchema> _schemaFragments = new Dictionary<Uri, JsonSchema>();
-        private Dictionary<Uri, Stream> _artifacts = new Dictionary<Uri, Stream>();
+        private readonly Dictionary<Uri, OpenApiDocument> _documents = new();
+        private readonly Dictionary<Uri, IOpenApiReferenceable> _fragments = new();
+        private readonly Dictionary<Uri, JsonSchema> _schemaFragments = new();
+        private readonly Dictionary<Uri, Stream> _artifacts = new();
 
         /// <summary>
         /// A list of OpenApiDocuments contained in the workspace
@@ -106,6 +106,11 @@ namespace Microsoft.OpenApi.Services
             _fragments.Add(ToLocationUrl(location), fragment);
         }
 
+        /// <summary>
+        /// Adds a schema fragment of an OpenApiDocument to the workspace.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="fragment"></param>
         public void AddSchemaFragment(string location, JsonSchema fragment)
         {
             _schemaFragments.Add(ToLocationUrl(location), fragment);

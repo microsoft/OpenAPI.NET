@@ -16,9 +16,7 @@ namespace Microsoft.OpenApi.Readers.V31
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
                         valueNode =>
-                            LoadTagByReference(
-                                valueNode.Context,
-                                valueNode.GetScalarValue()))
+                            LoadTagByReference(valueNode.GetScalarValue()))
                 },
                 {
                     "summary", (o, n) =>
@@ -105,9 +103,7 @@ namespace Microsoft.OpenApi.Readers.V31
             return operation;
         }
 
-        private static OpenApiTag LoadTagByReference(
-            ParsingContext context,
-            string tagName)
+        private static OpenApiTag LoadTagByReference(string tagName)
         {
             var tagObject = new OpenApiTag()
             {

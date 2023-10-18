@@ -221,6 +221,10 @@ namespace Microsoft.OpenApi.Services
             schema = builder.Build();
         }
 
+        /// <summary>
+        /// Visits an IBaseDocument instance
+        /// </summary>
+        /// <param name="document"></param>
         public override void Visit(IBaseDocument document) { }
 
         private Dictionary<string, JsonSchema> ResolveJsonSchemas(IDictionary<string, JsonSchema> schemas)
@@ -252,7 +256,7 @@ namespace Microsoft.OpenApi.Services
             {
                 var resolvedSchemaBuilder = new JsonSchemaBuilder();
 
-                foreach (var keyword in resolvedSchema?.Keywords)
+                foreach (var keyword in resolvedSchema.Keywords)
                 {
                     resolvedSchemaBuilder.Add(keyword);
 

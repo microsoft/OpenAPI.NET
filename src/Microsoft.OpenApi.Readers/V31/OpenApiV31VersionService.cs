@@ -193,7 +193,7 @@ namespace Microsoft.OpenApi.Readers.V31
                 if (segments[2] == "pathItems")
                 {
                     refId = "/" + segments[3];
-                };
+                }
 
                 var parsedReference = new OpenApiReference
                 {
