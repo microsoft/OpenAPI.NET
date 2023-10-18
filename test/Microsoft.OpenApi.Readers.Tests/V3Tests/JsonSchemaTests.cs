@@ -50,53 +50,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
                         .Format("email")
                         .Build());
             }
-        }
-
-        [Fact]
-        public void ParsePrimitiveSchemaFragmentShouldSucceed()
-        {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "primitiveSchema.yaml")))
-            {
-                var reader = new OpenApiStreamReader();
-                var diagnostic = new OpenApiDiagnostic();
-
-                // Act
-                //var schema = reader.ReadFragment<JsonSchema>(stream, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
-
-                //// Assert
-                //diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
-
-                //schema.Should().BeEquivalentTo(
-                //    new JsonSchemaBuilder()
-                //        .Type(SchemaValueType.String)
-                //        .Format("email"));
-            }
-        }
-
-        [Fact]
-        public void ParsePrimitiveStringSchemaFragmentShouldSucceed()
-        {
-            var input = @"
-{ ""type"": ""integer"",
-""format"": ""int64"",
-""default"": 88
-}
-";
-            var reader = new OpenApiStringReader();
-            var diagnostic = new OpenApiDiagnostic();
-
-            // Act
-            //var schema = reader.ReadFragment<JsonSchema>(input, OpenApiSpecVersion.OpenApi3_0, out diagnostic);
-
-            //// Assert
-            //diagnostic.Should().BeEquivalentTo(new OpenApiDiagnostic());
-
-            //schema.Should().BeEquivalentTo(
-            //    new JsonSchemaBuilder()
-            //            .Type(SchemaValueType.Integer)
-            //            .Format("int64")
-            //            .Default(88), options => options.IgnoringCyclicReferences());
-        }
+        }       
 
         [Fact]
         public void ParseExampleStringFragmentShouldSucceed()
