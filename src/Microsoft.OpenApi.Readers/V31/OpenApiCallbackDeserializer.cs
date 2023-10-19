@@ -25,8 +25,7 @@ namespace Microsoft.OpenApi.Readers.V31
         {
             var mapNode = node.CheckMapNode("callback");
 
-            var pointer = mapNode.GetReferencePointer();
-            if (pointer != null)
+            if (mapNode.GetReferencePointer() is {} pointer)
             {
                 return mapNode.GetReferencedObject<OpenApiCallback>(ReferenceType.Callback, pointer);
             }
