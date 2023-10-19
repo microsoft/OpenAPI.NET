@@ -10,16 +10,16 @@ namespace Microsoft.OpenApi.Readers
     {
         internal static SchemaValueType ConvertToSchemaValueType(string value)
         {
+            value = value.ToLowerInvariant();
             return value switch
             {
                 "string" => SchemaValueType.String,
-                "number" => SchemaValueType.Number,
+                "number" or "double" => SchemaValueType.Number,
                 "integer" => SchemaValueType.Integer,
                 "boolean" => SchemaValueType.Boolean,
                 "array" => SchemaValueType.Array,
                 "object" => SchemaValueType.Object,
                 "null" => SchemaValueType.Null,
-                "double" => SchemaValueType.Number,
                 _ => throw new NotSupportedException(),
             };
         }
