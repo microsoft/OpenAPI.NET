@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Readers.V31
         private static readonly PatternFieldMap<OpenApiCallback> _callbackPatternFields =
             new PatternFieldMap<OpenApiCallback>
             {
-            {s => !s.StartsWith("x-"), (o, p, n) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n))},
+            {s => !s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddPathItem(RuntimeExpression.Build(p), LoadPathItem(n))},
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
 
