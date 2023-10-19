@@ -32,7 +32,7 @@ namespace Microsoft.OpenApi.Readers.V31
         private static PatternFieldMap<OpenApiComponents> _componentsPatternFields =
             new PatternFieldMap<OpenApiComponents>
             {
-            {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
+            {s => s.StartsWith("x-", StringComparison.OrdinalIgnoreCase), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };
 
         public static OpenApiComponents LoadComponents(ParseNode node)
