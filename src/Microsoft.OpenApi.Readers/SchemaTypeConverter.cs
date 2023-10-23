@@ -10,7 +10,7 @@ namespace Microsoft.OpenApi.Readers
     {
         internal static SchemaValueType ConvertToSchemaValueType(string value)
         {
-            return value switch
+            return value.ToLowerInvariant() switch
             {
                 "string" => SchemaValueType.String,
                 "number" => SchemaValueType.Number,
