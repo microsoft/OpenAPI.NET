@@ -29,16 +29,9 @@ namespace Microsoft.OpenApi.Readers.V3
                     {
                         var inString = n.GetScalarValue();
 
-                        if ( Enum.GetValues(typeof(ParameterLocation)).Cast<ParameterLocation>()
+                        o.In = Enum.GetValues(typeof(ParameterLocation)).Cast<ParameterLocation>()
                             .Select( e => e.GetDisplayName() )
-                            .Contains(inString) )
-                        {
-                            o.In = n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>();
-                        }
-                        else
-                        {
-                            o.In = null;
-                        }
+                            .Contains(inString) ? n.GetScalarValue().GetEnumFromDisplayName<ParameterLocation>() : null;
                     }
                 },
                 {
