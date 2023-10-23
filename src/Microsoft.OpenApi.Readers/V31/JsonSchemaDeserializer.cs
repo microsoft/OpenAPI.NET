@@ -22,8 +22,7 @@ namespace Microsoft.OpenApi.Readers.V31
             var builder = new JsonSchemaBuilder();
 
             // check for a $ref and if present, add it to the builder as a Ref keyword
-            var pointer = mapNode.GetReferencePointer();
-            if (pointer != null)
+            if (mapNode.GetReferencePointer() is {} pointer)
             {
                 builder = builder.Ref(pointer);
 

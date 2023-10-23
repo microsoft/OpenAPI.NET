@@ -11,7 +11,7 @@ namespace Microsoft.OpenApi.Readers.V31
     /// </summary>
     internal static partial class OpenApiV31Deserializer
     {
-        private static FixedFieldMap<OpenApiLicense> _licenseFixedFields = new FixedFieldMap<OpenApiLicense>
+        private static readonly FixedFieldMap<OpenApiLicense> _licenseFixedFields = new FixedFieldMap<OpenApiLicense>
         {
             {
                 "name", (o, n) =>
@@ -33,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.V31
             },
         };
 
-        private static PatternFieldMap<OpenApiLicense> _licensePatternFields = new PatternFieldMap<OpenApiLicense>
+        private static readonly PatternFieldMap<OpenApiLicense> _licensePatternFields = new PatternFieldMap<OpenApiLicense>
         {
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
         };

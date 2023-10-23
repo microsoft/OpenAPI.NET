@@ -19,7 +19,7 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal static partial class OpenApiV2Deserializer
     {
-        private static FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
+        private static readonly FixedFieldMap<OpenApiDocument> _openApiFixedFields = new FixedFieldMap<OpenApiDocument>
         {
             {
                 "swagger", (o, n) =>
@@ -125,7 +125,7 @@ namespace Microsoft.OpenApi.Readers.V2
             {"externalDocs", (o, n) => o.ExternalDocs = LoadExternalDocs(n)}
         };
 
-        private static PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
+        private static readonly PatternFieldMap<OpenApiDocument> _openApiPatternFields = new PatternFieldMap<OpenApiDocument>
         {
             // We have no semantics to verify X- nodes, therefore treat them as just values.
             {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}

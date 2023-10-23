@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System;
@@ -13,13 +13,12 @@ namespace Microsoft.OpenApi.Readers
             return value.ToLowerInvariant() switch
             {
                 "string" => SchemaValueType.String,
-                "number" => SchemaValueType.Number,
+                "number" or "double" => SchemaValueType.Number,
                 "integer" => SchemaValueType.Integer,
                 "boolean" => SchemaValueType.Boolean,
                 "array" => SchemaValueType.Array,
                 "object" => SchemaValueType.Object,
                 "null" => SchemaValueType.Null,
-                "double" => SchemaValueType.Number,
                 _ => throw new NotSupportedException(),
             };
         }

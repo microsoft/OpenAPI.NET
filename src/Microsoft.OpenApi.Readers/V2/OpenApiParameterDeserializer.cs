@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Readers.V2
     internal static partial class OpenApiV2Deserializer
     {
         private static JsonSchemaBuilder _parameterJsonSchemaBuilder;
-        private static FixedFieldMap<OpenApiParameter> _parameterFixedFields =
+        private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
             new FixedFieldMap<OpenApiParameter>
             {
                 {
