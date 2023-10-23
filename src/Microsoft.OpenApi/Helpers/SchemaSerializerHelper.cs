@@ -1,7 +1,8 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. 
 
 using System.Collections.Generic;
+using System.Linq;
 using Json.Schema;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
@@ -100,13 +101,10 @@ namespace Microsoft.OpenApi.Helpers
         {
             if (schema != null)
             {
-                foreach (var item in schema)
-                {
-                    if (!string.IsNullOrEmpty(item.GetFormat()?.Key))
-                    {
-                        return item.GetFormat().Key;
-                    }
-                }
+                return schema
+                    .Where(item => !string.IsNullOrEmpty(item.GetFormat()?.Key))
+                    .Select(item => item.GetFormat().Key)
+                    .FirstOrDefault();
             }
 
             return null;
