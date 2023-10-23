@@ -163,7 +163,7 @@ namespace Microsoft.OpenApi.Models
             Style = parameter?.Style ?? Style;
             Explode = parameter?.Explode ?? Explode;
             AllowReserved = parameter?.AllowReserved ?? AllowReserved;
-            Schema = JsonNodeCloneHelper.CloneJsonSchema(Schema);
+            Schema = InitializeSchema();
             Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
             Example = JsonNodeCloneHelper.Clone(parameter?.Example);
             Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
@@ -446,6 +446,15 @@ namespace Microsoft.OpenApi.Models
             };
 
             return Style;
+        }
+
+        /// <summary>
+        /// Clones an instance of a JSON schema
+        /// </summary>
+        /// <returns></returns>
+        protected JsonSchema InitializeSchema()
+        {
+            return JsonNodeCloneHelper.CloneJsonSchema(Schema);
         }
     }
 

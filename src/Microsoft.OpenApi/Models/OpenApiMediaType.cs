@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public OpenApiMediaType(OpenApiMediaType mediaType)
         {
-            Schema = JsonNodeCloneHelper.CloneJsonSchema(Schema);
+            Schema = InitializeSchema();
             Example = JsonNodeCloneHelper.Clone(mediaType?.Example);
             Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
             Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
@@ -114,6 +114,15 @@ namespace Microsoft.OpenApi.Models
         public void SerializeAsV2(IOpenApiWriter writer)
         {
             // Media type does not exist in V2.
+        }
+
+        /// <summary>
+        /// Clones a JSON schema instance
+        /// </summary>
+        /// <returns></returns>
+        protected JsonSchema InitializeSchema()
+        {
+            return JsonNodeCloneHelper.CloneJsonSchema(Schema);
         }
     }
 }
