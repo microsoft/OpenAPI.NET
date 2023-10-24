@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -17,10 +17,10 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFixedFieldsIsRequiredInResponse()
         {
             // Arrange
-            string authorizationUrlError = String.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow");
-            string tokenUrlError = String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow");
+            var authorizationUrlError = String.Format(SRResource.Validation_FieldIsRequired, "authorizationUrl", "OAuth Flow");
+            var tokenUrlError = String.Format(SRResource.Validation_FieldIsRequired, "tokenUrl", "OAuth Flow");
             IEnumerable<OpenApiError> errors;
-            OpenApiOAuthFlow oAuthFlow = new OpenApiOAuthFlow();
+            var oAuthFlow = new OpenApiOAuthFlow();
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
@@ -28,7 +28,7 @@ namespace Microsoft.OpenApi.Validations.Tests
             walker.Walk(oAuthFlow);
 
             errors = validator.Errors;
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             // Assert
             Assert.False(result);

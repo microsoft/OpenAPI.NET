@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -50,14 +49,30 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiInfo() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiInfo"/> object
+        /// </summary>
+        public OpenApiInfo(OpenApiInfo info)
+        {
+            Title = info?.Title ?? Title;
+            Description = info?.Description ?? Description;
+            Version = info?.Version ?? Version;
+            TermsOfService = info?.TermsOfService ?? TermsOfService;
+            Contact = info?.Contact != null ? new(info?.Contact) : null;
+            License = info?.License != null ? new(info?.License) : null;
+            Extensions = info?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(info.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiInfo"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 
@@ -90,10 +105,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

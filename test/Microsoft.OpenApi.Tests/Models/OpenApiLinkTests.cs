@@ -1,32 +1,33 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Globalization;
 using System.IO;
-using FluentAssertions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
+using VerifyXunit;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.OpenApi.Tests.Models
 {
     [Collection("DefaultSettings")]
+    [UsesVerify]
     public class OpenApiLinkTests
     {
-        public static OpenApiLink AdvancedLink = new OpenApiLink
+        public static readonly OpenApiLink AdvancedLink = new()
         {
             OperationId = "operationId1",
             Parameters =
             {
-                ["parameter1"] = new RuntimeExpressionAnyWrapper
+                ["parameter1"] = new()
                 {
                     Expression = RuntimeExpression.Build("$request.path.id")
                 }
             },
-            RequestBody = new RuntimeExpressionAnyWrapper
+            RequestBody = new()
             {
                 Any = new OpenApiObject
                 {
@@ -34,15 +35,15 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             },
             Description = "description1",
-            Server = new OpenApiServer
+            Server = new()
             {
                 Description = "serverDescription1"
             }
         };
 
-        public static OpenApiLink ReferencedLink = new OpenApiLink
+        public static readonly OpenApiLink ReferencedLink = new()
         {
-            Reference = new OpenApiReference
+            Reference = new()
             {
                 Type = ReferenceType.Link,
                 Id = "example1",
@@ -50,12 +51,12 @@ namespace Microsoft.OpenApi.Tests.Models
             OperationId = "operationId1",
             Parameters =
             {
-                ["parameter1"] = new RuntimeExpressionAnyWrapper
+                ["parameter1"] = new()
                 {
                     Expression = RuntimeExpression.Build("$request.path.id")
                 }
             },
-            RequestBody = new RuntimeExpressionAnyWrapper
+            RequestBody = new()
             {
                 Any = new OpenApiObject
                 {
@@ -63,103 +64,91 @@ namespace Microsoft.OpenApi.Tests.Models
                 }
             },
             Description = "description1",
-            Server = new OpenApiServer
+            Server = new()
             {
                 Description = "serverDescription1"
             }
         };
 
-        private readonly ITestOutputHelper _output;
-
-        public OpenApiLinkTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
-        [Fact]
-        public void SerializeAdvancedLinkAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeAdvancedLinkAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""operationId"": ""operationId1"",
-  ""parameters"": {
-    ""parameter1"": ""$request.path.id""
-  },
-  ""requestBody"": {
-    ""property1"": true
-  },
-  ""description"": ""description1"",
-  ""server"": {
-    ""description"": ""serverDescription1""
-  }
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             AdvancedLink.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedLinkAsV3JsonWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedLinkAsV3JsonWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""$ref"": ""#/components/links/example1""
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedLink.SerializeAsV3(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
 
-        [Fact]
-        public void SerializeReferencedLinkAsV3JsonWithoutReferenceWorks()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task SerializeReferencedLinkAsV3JsonWithoutReferenceWorksAsync(bool produceTerseOutput)
         {
             // Arrange
             var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
-            var writer = new OpenApiJsonWriter(outputStringWriter);
-            var expected =
-                @"{
-  ""operationId"": ""operationId1"",
-  ""parameters"": {
-    ""parameter1"": ""$request.path.id""
-  },
-  ""requestBody"": {
-    ""property1"": true
-  },
-  ""description"": ""description1"",
-  ""server"": {
-    ""description"": ""serverDescription1""
-  }
-}";
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = produceTerseOutput });
 
             // Act
             ReferencedLink.SerializeAsV3WithoutReference(writer);
             writer.Flush();
-            var actual = outputStringWriter.GetStringBuilder().ToString();
 
             // Assert
-            actual = actual.MakeLineBreaksEnvironmentNeutral();
-            expected = expected.MakeLineBreaksEnvironmentNeutral();
-            actual.Should().Be(expected);
+            await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
+        }
+
+        [Fact]
+        public void LinkExtensionsSerializationWorks()
+        {
+            // Arrange
+            var link = new OpenApiLink()
+            {
+                Extensions = {
+                { "x-display", new OpenApiString("Abc") }
+}
+            };
+
+            var expected =
+                """
+                {
+                  "x-display": "Abc"
+                }
+                """;
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+
+            // Act
+            link.SerializeAsV3(writer);
+
+            // Assert
+            var actual = outputStringWriter.ToString();
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
         }
     }
 }

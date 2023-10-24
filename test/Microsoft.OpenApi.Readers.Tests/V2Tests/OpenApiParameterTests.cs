@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.IO;
@@ -57,7 +57,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -85,10 +85,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "id",
                     Description = "ID of the object to fetch",
                     Required = false,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
                             Type = "string"
                         }
@@ -140,10 +140,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
                             Type = "integer",
                             Format = "int64",
@@ -155,15 +155,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 new OpenApiLong(4),
                             }
                         },
-                        Default = new OpenApiArray() {
+                        Default = new OpenApiArray
+                        {
                             new OpenApiLong(1),
                             new OpenApiLong(2)
                         },
                         Enum = new List<IOpenApiAny>
                         {
-                            new OpenApiArray() { new OpenApiLong(1), new OpenApiLong(2) },
-                            new OpenApiArray() { new OpenApiLong(2), new OpenApiLong(3) },
-                            new OpenApiArray() { new OpenApiLong(3), new OpenApiLong(4) }
+                            new OpenApiArray { new OpenApiLong(1), new OpenApiLong(2) },
+                            new OpenApiArray { new OpenApiLong(2), new OpenApiLong(3) },
+                            new OpenApiArray { new OpenApiLong(3), new OpenApiLong(4) }
                         }
                     }
                 });
@@ -192,10 +193,10 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Required = true,
                     Style = ParameterStyle.Simple,
 
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "array",
-                        Items = new OpenApiSchema
+                        Items = new()
                         {
                             Type = "string",
                             Format = "date-time",
@@ -207,15 +208,16 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                                 new OpenApiString("4"),
                             }
                         },
-                        Default = new OpenApiArray() {
+                        Default = new OpenApiArray
+                        {
                             new OpenApiString("1"),
                             new OpenApiString("2")
                         },
                         Enum = new List<IOpenApiAny>
                         {
-                            new OpenApiArray() { new OpenApiString("1"), new OpenApiString("2") },
-                            new OpenApiArray() { new OpenApiString("2"), new OpenApiString("3") },
-                            new OpenApiArray() { new OpenApiString("3"), new OpenApiString("4") }
+                            new OpenApiArray { new OpenApiString("1"), new OpenApiString("2") },
+                            new OpenApiArray { new OpenApiString("2"), new OpenApiString("3") },
+                            new OpenApiArray { new OpenApiString("3"), new OpenApiString("4") }
                         }
                     }
                 });
@@ -242,7 +244,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -270,7 +272,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -322,7 +324,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "string"
                     }
@@ -350,7 +352,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "number",
                         Format = "float",
@@ -380,7 +382,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
                     Name = "username",
                     Description = "username to fetch",
                     Required = true,
-                    Schema = new OpenApiSchema
+                    Schema = new()
                     {
                         Type = "number",
                         Format = "float",

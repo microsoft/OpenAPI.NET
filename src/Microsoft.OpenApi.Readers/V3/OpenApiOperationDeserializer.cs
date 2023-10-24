@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
@@ -14,7 +14,7 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiOperation> _operationFixedFields =
-            new FixedFieldMap<OpenApiOperation>
+            new()
             {
                 {
                     "tags", (o, n) => o.Tags = n.CreateSimpleList(
@@ -24,75 +24,53 @@ namespace Microsoft.OpenApi.Readers.V3
                                 valueNode.GetScalarValue()))
                 },
                 {
-                    "summary", (o, n) =>
-                    {
-                        o.Summary = n.GetScalarValue();
-                    }
+                    "summary",
+                    (o, n) => o.Summary = n.GetScalarValue()
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "externalDocs", (o, n) =>
-                    {
-                        o.ExternalDocs = LoadExternalDocs(n);
-                    }
+                    "externalDocs",
+                    (o, n) => o.ExternalDocs = LoadExternalDocs(n)
                 },
                 {
-                    "operationId", (o, n) =>
-                    {
-                        o.OperationId = n.GetScalarValue();
-                    }
+                    "operationId",
+                    (o, n) => o.OperationId = n.GetScalarValue()
                 },
                 {
-                    "parameters", (o, n) =>
-                    {
-                        o.Parameters = n.CreateList(LoadParameter);
-                    }
+                    "parameters",
+                    (o, n) => o.Parameters = n.CreateList(LoadParameter)
                 },
                 {
-                    "requestBody", (o, n) =>
-                    {
-                        o.RequestBody = LoadRequestBody(n);
-                    }
+                    "requestBody",
+                    (o, n) => o.RequestBody = LoadRequestBody(n)
                 },
                 {
-                    "responses", (o, n) =>
-                    {
-                        o.Responses = LoadResponses(n);
-                    }
+                    "responses",
+                    (o, n) => o.Responses = LoadResponses(n)
                 },
                 {
-                    "callbacks", (o, n) =>
-                    {
-                        o.Callbacks = n.CreateMap(LoadCallback);
-                    }
+                    "callbacks",
+                    (o, n) => o.Callbacks = n.CreateMap(LoadCallback)
                 },
                 {
-                    "deprecated", (o, n) =>
-                    {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
-                    }
+                    "deprecated",
+                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "security", (o, n) =>
-                    {
-                        o.Security = n.CreateList(LoadSecurityRequirement);
-                    }
+                    "security",
+                    (o, n) => o.Security = n.CreateList(LoadSecurityRequirement)
                 },
                 {
-                    "servers", (o, n) =>
-                    {
-                        o.Servers = n.CreateList(LoadServer);
-                    }
+                    "servers",
+                    (o, n) => o.Servers = n.CreateList(LoadServer)
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiOperation> _operationPatternFields =
-            new PatternFieldMap<OpenApiOperation>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))},
             };
@@ -112,10 +90,10 @@ namespace Microsoft.OpenApi.Readers.V3
             ParsingContext context,
             string tagName)
         {
-            var tagObject = new OpenApiTag()
+            var tagObject = new OpenApiTag
             {
                 UnresolvedReference = true,
-                Reference = new OpenApiReference()
+                Reference = new()
                 {
                     Type = ReferenceType.Tag,
                     Id = tagName

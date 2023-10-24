@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -21,8 +21,8 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInParameter()
         {
             // Arrange
-            string nameError = String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
-            string inError = String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
+            var nameError = String.Format(SRResource.Validation_FieldIsRequired, "name", "parameter");
+            var inError = String.Format(SRResource.Validation_FieldIsRequired, "in", "parameter");
             var parameter = new OpenApiParameter();
 
             // Act
@@ -41,15 +41,18 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateRequiredIsTrueWhenInIsPathInParameter()
         {
             // Arrange
-            var parameter = new OpenApiParameter()
+            var parameter = new OpenApiParameter
             {
                 Name = "name",
                 In = ParameterLocation.Path
             };
 
             // Act
-            var errors = parameter.Validate(ValidationRuleSet.GetDefaultRuleSet());
-
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("{name}");
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(parameter);
+            var errors = validator.Errors;
             // Assert
             errors.Should().NotBeEmpty();
             errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
@@ -62,14 +65,14 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateExampleShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
-            IEnumerable<OpenApiError> errors;
-            var parameter = new OpenApiParameter()
+            IEnumerable<OpenApiError> warnings;
+            var parameter = new OpenApiParameter
             {
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
                 Example = new OpenApiInteger(55),
-                Schema = new OpenApiSchema()
+                Schema = new()
                 {
                     Type = "string",
                 }
@@ -77,21 +80,22 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("{parameter1}");
             var walker = new OpenApiWalker(validator);
             walker.Walk(parameter);
 
-            errors = validator.Errors;
-            bool result = !errors.Any();
+            warnings = validator.Warnings;
+            var result = !warnings.Any();
 
             // Assert
             result.Should().BeFalse();
-            errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
+            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
             {
                 RuleHelpers.DataTypeMismatchedErrorMessage
             });
-            errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
+            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                "#/example",
+                "#/{parameter1}/example",
             });
         }
 
@@ -99,47 +103,47 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateExamplesShouldNotHaveDataTypeMismatchForSimpleSchema()
         {
             // Arrange
-            IEnumerable<OpenApiError> errors;
+            IEnumerable<OpenApiError> warnings;
 
-            var parameter = new OpenApiParameter()
+            var parameter = new OpenApiParameter
             {
                 Name = "parameter1",
                 In = ParameterLocation.Path,
                 Required = true,
-                Schema = new OpenApiSchema()
+                Schema = new()
                 {
                     Type = "object",
-                    AdditionalProperties = new OpenApiSchema()
+                    AdditionalProperties = new()
                     {
                         Type = "integer",
                     }
                 },
                 Examples =
                     {
-                        ["example0"] = new OpenApiExample()
+                        ["example0"] = new()
                         {
                             Value = new OpenApiString("1"),
                         },
-                        ["example1"] = new OpenApiExample()
+                        ["example1"] = new()
                         {
-                           Value = new OpenApiObject()
-                            {
+                           Value = new OpenApiObject
+                           {
                                 ["x"] = new OpenApiInteger(2),
                                 ["y"] = new OpenApiString("20"),
                                 ["z"] = new OpenApiString("200")
                             }
                         },
-                        ["example2"] = new OpenApiExample()
+                        ["example2"] = new()
                         {
                             Value =
-                            new OpenApiArray()
+                            new OpenApiArray
                             {
                                 new OpenApiInteger(3)
                             }
                         },
-                        ["example3"] = new OpenApiExample()
+                        ["example3"] = new()
                         {
-                            Value = new OpenApiObject()
+                            Value = new OpenApiObject
                             {
                                 ["x"] = new OpenApiInteger(4),
                                 ["y"] = new OpenApiInteger(40),
@@ -150,28 +154,102 @@ namespace Microsoft.OpenApi.Validations.Tests
 
             // Act
             var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("{parameter1}");
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(parameter);
+
+            warnings = validator.Warnings;
+            var result = !warnings.Any();
+
+            // Assert
+            result.Should().BeFalse();
+            warnings.Select(e => e.Message).Should().BeEquivalentTo(new[]
+            {
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+                RuleHelpers.DataTypeMismatchedErrorMessage,
+            });
+            warnings.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
+            {
+                // #enum/0 is not an error since the spec allows
+                // representing an object using a string.
+                "#/{parameter1}/examples/example1/value/y",
+                "#/{parameter1}/examples/example1/value/z",
+                "#/{parameter1}/examples/example2/value"
+            });
+        }
+
+        [Fact]
+        public void PathParameterNotInThePathShouldReturnAnError()
+        {
+            // Arrange
+            IEnumerable<OpenApiError> errors;
+
+            var parameter = new OpenApiParameter
+            {
+                Name = "parameter1",
+                In = ParameterLocation.Path,
+                Required = true,
+                Schema = new()
+                {
+                    Type = "string",
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+
             var walker = new OpenApiWalker(validator);
             walker.Walk(parameter);
 
             errors = validator.Errors;
-            bool result = !errors.Any();
+            var result = errors.Any();
 
             // Assert
-            result.Should().BeFalse();
-            errors.Select(e => e.Message).Should().BeEquivalentTo(new[]
+            result.Should().BeTrue();
+            errors.OfType<OpenApiValidatorError>().Select(e => e.RuleName).Should().BeEquivalentTo(new[]
             {
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
-                RuleHelpers.DataTypeMismatchedErrorMessage,
+                "PathParameterShouldBeInThePath"
             });
             errors.Select(e => e.Pointer).Should().BeEquivalentTo(new[]
             {
-                // #enum/0 is not an error since the spec allows
-                // representing an object using a string.
-                "#/examples/example1/value/y",
-                "#/examples/example1/value/z",
-                "#/examples/example2/value"
+                "#/in"
             });
+        }
+
+        [Fact]
+        public void PathParameterInThePathShouldBeOk()
+        {
+            // Arrange
+            IEnumerable<OpenApiError> errors;
+
+            var parameter = new OpenApiParameter
+            {
+                Name = "parameter1",
+                In = ParameterLocation.Path,
+                Required = true,
+                Schema = new()
+                {
+                    Type = "string",
+                }
+            };
+
+            // Act
+            var validator = new OpenApiValidator(ValidationRuleSet.GetDefaultRuleSet());
+            validator.Enter("paths");
+            validator.Enter("/{parameter1}");
+            validator.Enter("get");
+            validator.Enter("parameters");
+            validator.Enter("1");
+
+            var walker = new OpenApiWalker(validator);
+            walker.Walk(parameter);
+
+            errors = validator.Errors;
+            var result = errors.Any();
+
+            // Assert
+            result.Should().BeFalse();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Writers
 {
@@ -46,13 +46,7 @@ namespace Microsoft.OpenApi.Writers
         /// <summary>
         /// Gets the scope type for this scope.
         /// </summary>
-        public ScopeType Type
-        {
-            get
-            {
-                return _type;
-            }
-        }
+        public ScopeType Type { get => _type; }
 
         /// <summary>
         /// Get/Set the whether it is in previous array scope.

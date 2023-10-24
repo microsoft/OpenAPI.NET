@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using SharpYaml.Serialization;
@@ -26,16 +26,13 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 var pointer = baseYamlNode;
                 foreach (var token in currentPointer.Tokens)
                 {
-                    var sequence = pointer as YamlSequenceNode;
-
-                    if (sequence != null)
+                    if (pointer is YamlSequenceNode sequence)
                     {
                         pointer = sequence.Children[Convert.ToInt32(token)];
                     }
                     else
                     {
-                        var map = pointer as YamlMappingNode;
-                        if (map != null)
+                        if (pointer is YamlMappingNode map)
                         {
                             if (!map.Children.TryGetValue(new YamlScalarNode(token), out pointer))
                             {

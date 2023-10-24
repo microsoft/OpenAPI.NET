@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -42,14 +41,28 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiOAuthFlow() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiOAuthFlow"/> object
+        /// </summary>
+        public OpenApiOAuthFlow(OpenApiOAuthFlow oAuthFlow)
+        {
+            AuthorizationUrl = oAuthFlow?.AuthorizationUrl != null ? new Uri(oAuthFlow.AuthorizationUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            TokenUrl = oAuthFlow?.TokenUrl != null ? new Uri(oAuthFlow.TokenUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            RefreshUrl = oAuthFlow?.RefreshUrl != null ? new Uri(oAuthFlow.RefreshUrl.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            Scopes = oAuthFlow?.Scopes != null ? new Dictionary<string, string>(oAuthFlow.Scopes) : null;
+            Extensions = oAuthFlow?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(oAuthFlow.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiOAuthFlow"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

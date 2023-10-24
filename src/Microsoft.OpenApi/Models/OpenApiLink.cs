@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -11,7 +10,7 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Link Object.
     /// </summary>
-    public class OpenApiLink : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiLink : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiLink>
     {
         /// <summary>
         /// A relative or absolute reference to an OAS operation.
@@ -29,7 +28,7 @@ namespace Microsoft.OpenApi.Models
         /// A map representing parameters to pass to an operation as specified with operationId or identified via operationRef.
         /// </summary>
         public Dictionary<string, RuntimeExpressionAnyWrapper> Parameters { get; set; } =
-            new Dictionary<string, RuntimeExpressionAnyWrapper>();
+            new();
 
         /// <summary>
         /// A literal value or {expression} to use as a request body when calling the target operation.
@@ -62,22 +61,65 @@ namespace Microsoft.OpenApi.Models
         public OpenApiReference Reference { get; set; }
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiLink() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiLink"/> object
+        /// </summary>
+        public OpenApiLink(OpenApiLink link)
+        {
+            OperationRef = link?.OperationRef ?? OperationRef;
+            OperationId = link?.OperationId ?? OperationId;
+            Parameters = link?.Parameters != null ? new(link?.Parameters) : null;
+            RequestBody = link?.RequestBody != null ? new(link?.RequestBody) : null;
+            Description = link?.Description ?? Description;
+            Server = link?.Server != null ? new(link?.Server) : null;
+            Extensions = link?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(link.Extensions) : null;
+            UnresolvedReference = link?.UnresolvedReference ?? UnresolvedReference;
+            Reference = link?.Reference != null ? new(link?.Reference) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiLink"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
+            var target = this;
 
-            SerializeAsV3WithoutReference(writer);
+            if (Reference != null)
+            {
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV3(writer);
+                    return;
+                }
+                else
+                {
+                    target = GetEffective(Reference.HostDocument);
+                }
+            }
+            target.SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Returns an effective OpenApiLink object based on the presence of a $ref
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiLink</returns>
+        public OpenApiLink GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiLink>(this.Reference);
+            }
+            else
+            {
+                return this;
+            }
         }
 
         /// <summary>
@@ -104,6 +146,9 @@ namespace Microsoft.OpenApi.Models
 
             // server
             writer.WriteOptionalObject(OpenApiConstants.Server, Server, (w, s) => s.SerializeAsV3(w));
+
+            // specification extensions
+            writer.WriteExtensions(Extensions, OpenApiSpecVersion.OpenApi3_0);
 
             writer.WriteEndObject();
         }

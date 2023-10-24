@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -24,37 +21,37 @@ namespace Microsoft.OpenApi.Tests.Validations
             var sharedSchema = new OpenApiSchema
             {
                 Type = "string",
-                Reference = new OpenApiReference()
+                Reference = new()
                 {
                     Id = "test"
                 },
                 UnresolvedReference = false
             };
 
-            OpenApiDocument document = new OpenApiDocument();
-            document.Components = new OpenApiComponents()
+            var document = new OpenApiDocument();
+            document.Components = new()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>()
+                Schemas = new Dictionary<string, OpenApiSchema>
                 {
                     [sharedSchema.Reference.Id] = sharedSchema
                 }
             };
 
-            document.Paths = new OpenApiPaths()
+            document.Paths = new()
             {
-                ["/"] = new OpenApiPathItem()
+                ["/"] = new()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation()
+                        [OperationType.Get] = new()
                         {
-                            Responses = new OpenApiResponses()
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse()
+                                ["200"] = new()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, OpenApiMediaType>
                                     {
-                                        ["application/json"] = new OpenApiMediaType()
+                                        ["application/json"] = new()
                                         {
                                             Schema = sharedSchema
                                         }
@@ -67,8 +64,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
-
+            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
 
             // Assert
             Assert.True(errors.Count() == 1);
@@ -81,24 +77,24 @@ namespace Microsoft.OpenApi.Tests.Validations
             var sharedSchema = new OpenApiSchema
             {
                 Type = "string",
-                Reference = new OpenApiReference()
+                Reference = new()
                 {
                     Id = "test"
                 },
                 UnresolvedReference = true
             };
 
-            OpenApiDocument document = new OpenApiDocument();
-            document.Components = new OpenApiComponents()
+            var document = new OpenApiDocument();
+            document.Components = new()
             {
-                Schemas = new Dictionary<string, OpenApiSchema>()
+                Schemas = new Dictionary<string, OpenApiSchema>
                 {
                     [sharedSchema.Reference.Id] = sharedSchema
                 }
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
+            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
 
             // Assert
             Assert.True(errors.Count() == 0);
@@ -111,30 +107,30 @@ namespace Microsoft.OpenApi.Tests.Validations
 
             var sharedSchema = new OpenApiSchema
             {
-                Reference = new OpenApiReference()
+                Reference = new()
                 {
                     Id = "test"
                 },
                 UnresolvedReference = true
             };
 
-            OpenApiDocument document = new OpenApiDocument();
+            var document = new OpenApiDocument();
 
-            document.Paths = new OpenApiPaths()
+            document.Paths = new()
             {
-                ["/"] = new OpenApiPathItem()
+                ["/"] = new()
                 {
                     Operations = new Dictionary<OperationType, OpenApiOperation>
                     {
-                        [OperationType.Get] = new OpenApiOperation()
+                        [OperationType.Get] = new()
                         {
-                            Responses = new OpenApiResponses()
+                            Responses = new()
                             {
-                                ["200"] = new OpenApiResponse()
+                                ["200"] = new()
                                 {
-                                    Content = new Dictionary<string, OpenApiMediaType>()
+                                    Content = new Dictionary<string, OpenApiMediaType>
                                     {
-                                        ["application/json"] = new OpenApiMediaType()
+                                        ["application/json"] = new()
                                         {
                                             Schema = sharedSchema
                                         }
@@ -147,7 +143,7 @@ namespace Microsoft.OpenApi.Tests.Validations
             };
 
             // Act
-            var errors = document.Validate(new ValidationRuleSet() { new AlwaysFailRule<OpenApiSchema>() });
+            var errors = document.Validate(new() { new AlwaysFailRule<OpenApiSchema>() });
 
             // Assert
             Assert.True(errors.Count() == 0);
@@ -156,9 +152,8 @@ namespace Microsoft.OpenApi.Tests.Validations
 
     public class AlwaysFailRule<T> : ValidationRule<T> where T : IOpenApiElement
     {
-        public AlwaysFailRule() : base((c, t) => c.CreateError("x", "y"))
+        public AlwaysFailRule() : base((c, _) => c.CreateError("x", "y"))
         {
-
         }
     }
 }

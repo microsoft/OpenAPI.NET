@@ -1,13 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Extensions;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Properties;
-using Microsoft.OpenApi.Services;
 using Xunit;
 
 namespace Microsoft.OpenApi.Validations.Tests
@@ -18,15 +16,15 @@ namespace Microsoft.OpenApi.Validations.Tests
         public void ValidateFieldIsRequiredInInfo()
         {
             // Arrange
-            string titleError = String.Format(SRResource.Validation_FieldIsRequired, "title", "info");
-            string versionError = String.Format(SRResource.Validation_FieldIsRequired, "version", "info");
+            var titleError = String.Format(SRResource.Validation_FieldIsRequired, "title", "info");
+            var versionError = String.Format(SRResource.Validation_FieldIsRequired, "version", "info");
             var info = new OpenApiInfo();
 
             // Act
             var errors = info.Validate(ValidationRuleSet.GetDefaultRuleSet());
 
             // Assert
-            bool result = !errors.Any();
+            var result = !errors.Any();
 
             // Assert
             Assert.False(result);

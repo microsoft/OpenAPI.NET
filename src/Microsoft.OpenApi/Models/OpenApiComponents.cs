@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -69,22 +67,41 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiComponents() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiComponents"/> object
+        /// </summary>
+        public OpenApiComponents(OpenApiComponents components)
+        {
+            Schemas = components?.Schemas != null ? new Dictionary<string, OpenApiSchema>(components.Schemas) : null;
+            Responses = components?.Responses != null ? new Dictionary<string, OpenApiResponse>(components.Responses) : null;
+            Parameters = components?.Parameters != null ? new Dictionary<string, OpenApiParameter>(components.Parameters) : null;
+            Examples = components?.Examples != null ? new Dictionary<string, OpenApiExample>(components.Examples) : null;
+            RequestBodies = components?.RequestBodies != null ? new Dictionary<string, OpenApiRequestBody>(components.RequestBodies) : null;
+            Headers = components?.Headers != null ? new Dictionary<string, OpenApiHeader>(components.Headers) : null;
+            SecuritySchemes = components?.SecuritySchemes != null ? new Dictionary<string, OpenApiSecurityScheme>(components.SecuritySchemes) : null;
+            Links = components?.Links != null ? new Dictionary<string, OpenApiLink>(components.Links) : null;
+            Callbacks = components?.Callbacks != null ? new Dictionary<string, OpenApiCallback>(components.Callbacks) : null;
+            Extensions = components?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(components.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiComponents"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             // If references have been inlined we don't need the to render the components section
             // however if they have cycles, then we will need a component rendered
-            if (writer.GetSettings().ReferenceInline != ReferenceInlineSetting.DoNotInlineReferences)
+            if (writer.GetSettings().InlineLocalReferences)
             {
                 var loops = writer.GetSettings().LoopDetector.Loops;
                 writer.WriteStartObject();
-                if (loops.TryGetValue(typeof(OpenApiSchema), out List<object> schemas))
+                if (loops.TryGetValue(typeof(OpenApiSchema), out var schemas))
                 {
                     var openApiSchemas = schemas.Cast<OpenApiSchema>().Distinct().ToList()
                         .ToDictionary<OpenApiSchema, string>(k => k.Reference.Id);
@@ -92,12 +109,10 @@ namespace Microsoft.OpenApi.Models
                     writer.WriteOptionalMap(
                        OpenApiConstants.Schemas,
                        Schemas,
-                       (w, key, component) => {
-                           component.SerializeAsV3WithoutReference(w);
-                           });
+                       (w, _, component) => component.SerializeAsV3WithoutReference(w));
                 }
                 writer.WriteEndObject();
-                return;  
+                return;
             }
 
             writer.WriteStartObject();
@@ -111,8 +126,7 @@ namespace Microsoft.OpenApi.Models
                 Schemas,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Schema &&
+                    if (component.Reference is {Type: ReferenceType.Schema} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -129,8 +143,7 @@ namespace Microsoft.OpenApi.Models
                 Responses,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Response &&
+                    if (component.Reference is {Type: ReferenceType.Response} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -147,8 +160,7 @@ namespace Microsoft.OpenApi.Models
                 Parameters,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Parameter &&
+                    if (component.Reference is {Type: ReferenceType.Parameter} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -165,8 +177,7 @@ namespace Microsoft.OpenApi.Models
                 Examples,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Example &&
+                    if (component.Reference is {Type: ReferenceType.Example} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -183,8 +194,7 @@ namespace Microsoft.OpenApi.Models
                 RequestBodies,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.RequestBody &&
+                    if (component.Reference is {Type: ReferenceType.RequestBody} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -201,8 +211,7 @@ namespace Microsoft.OpenApi.Models
                 Headers,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Header &&
+                    if (component.Reference is {Type: ReferenceType.Header} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -219,8 +228,7 @@ namespace Microsoft.OpenApi.Models
                 SecuritySchemes,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.SecurityScheme &&
+                    if (component.Reference is {Type: ReferenceType.SecurityScheme} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -237,8 +245,7 @@ namespace Microsoft.OpenApi.Models
                 Links,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Link &&
+                    if (component.Reference is {Type: ReferenceType.Link} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);
@@ -255,8 +262,7 @@ namespace Microsoft.OpenApi.Models
                 Callbacks,
                 (w, key, component) =>
                 {
-                    if (component.Reference != null &&
-                        component.Reference.Type == ReferenceType.Callback &&
+                    if (component.Reference is {Type: ReferenceType.Callback} &&
                         component.Reference.Id == key)
                     {
                         component.SerializeAsV3WithoutReference(w);

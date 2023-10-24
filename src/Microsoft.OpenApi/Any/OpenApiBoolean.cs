@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 namespace Microsoft.OpenApi.Any
 {
@@ -20,6 +20,6 @@ namespace Microsoft.OpenApi.Any
         /// <summary>
         /// Primitive type this object represents.
         /// </summary>
-        public override PrimitiveType PrimitiveType { get; } = PrimitiveType.Boolean;
+        public override PrimitiveType PrimitiveType => PrimitiveType.Boolean;
     }
 }

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Exceptions;
 
@@ -24,6 +24,15 @@ namespace Microsoft.OpenApi.Models
         {
             Pointer = pointer;
             Message = message;
+        }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiError"/> object
+        /// </summary>
+        public OpenApiError(OpenApiError error)
+        {
+            Pointer = error.Pointer;
+            Message = error.Message;
         }
 
         /// <summary>

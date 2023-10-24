@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Readers.Interface;
 using Microsoft.OpenApi.Readers.ParseNodes;
 using Microsoft.OpenApi.Readers.Properties;
 
-
 namespace Microsoft.OpenApi.Readers.V2
 {
     /// <summary>
@@ -20,9 +19,21 @@ namespace Microsoft.OpenApi.Readers.V2
     /// </summary>
     internal class OpenApiV2VersionService : IOpenApiVersionService
     {
-        private IDictionary<Type, Func<ParseNode, object>> _loaders = new Dictionary<Type, Func<ParseNode, object>>
+        public OpenApiDiagnostic Diagnostic { get; }
+
+        /// <summary>
+        /// Create Parsing Context
+        /// </summary>
+        /// <param name="diagnostic">Provide instance for diagnostic object for collecting and accessing information about the parsing.</param>
+        public OpenApiV2VersionService(OpenApiDiagnostic diagnostic)
+        {
+            Diagnostic = diagnostic;
+        }
+
+        private Dictionary<Type, Func<ParseNode, object>> _loaders = new()
         {
             [typeof(IOpenApiAny)] = OpenApiV2Deserializer.LoadAny,
+            [typeof(OpenApiContact)] = OpenApiV2Deserializer.LoadContact,
             [typeof(OpenApiExternalDocs)] = OpenApiV2Deserializer.LoadExternalDocs,
             [typeof(OpenApiHeader)] = OpenApiV2Deserializer.LoadHeader,
             [typeof(OpenApiInfo)] = OpenApiV2Deserializer.LoadInfo,
@@ -59,7 +70,7 @@ namespace Microsoft.OpenApi.Readers.V2
                 var id = localReference.Substring(
                     segments[0].Length + "/".Length + segments[1].Length + "/".Length);
 
-                return new OpenApiReference { Type = referenceType, Id = id };
+                return new() { Type = referenceType, Id = id };
             }
 
             throw new OpenApiException(
@@ -95,24 +106,24 @@ namespace Microsoft.OpenApi.Readers.V2
             }
         }
 
-        private static string GetReferenceTypeV2Name(ReferenceType referenceType)
+        private static ReferenceType GetReferenceTypeV2FromName(string referenceType)
         {
             switch (referenceType)
             {
-                case ReferenceType.Schema:
-                    return "definitions";
+                case "definitions":
+                    return ReferenceType.Schema;
 
-                case ReferenceType.Parameter:
-                    return "parameters";
+                case "parameters":
+                    return ReferenceType.Parameter;
 
-                case ReferenceType.Response:
-                    return "responses";
+                case "responses":
+                    return ReferenceType.Response;
 
-                case ReferenceType.Tag:
-                    return "tags";
+                case "tags":
+                    return ReferenceType.Tag;
 
-                case ReferenceType.SecurityScheme:
-                    return "securityDefinitions";
+                case "securityDefinitions":
+                    return ReferenceType.SecurityScheme;
 
                 default:
                     throw new ArgumentException();
@@ -134,15 +145,15 @@ namespace Microsoft.OpenApi.Readers.V2
                     if (type == null)
                     {
                         // "$ref": "Pet.json"
-                        return new OpenApiReference
+                        return new()
                         {
                             ExternalResource = segments[0]
                         };
                     }
 
-                    if (type == ReferenceType.Tag || type == ReferenceType.SecurityScheme)
+                    if (type is ReferenceType.Tag or ReferenceType.SecurityScheme)
                     {
-                        return new OpenApiReference
+                        return new()
                         {
                             Type = type,
                             Id = reference
@@ -154,14 +165,44 @@ namespace Microsoft.OpenApi.Readers.V2
                     if (reference.StartsWith("#"))
                     {
                         // "$ref": "#/definitions/Pet"
-                        return ParseLocalReference(segments[1]);
+                        try
+                        {
+                            return ParseLocalReference(segments[1]);
+                        }
+                        catch (OpenApiException ex)
+                        {
+                            Diagnostic.Errors.Add(new(ex));
+                            return null;
+                        }
+                    }
+
+                    // Where fragments point into a non-OpenAPI document, the id will be the complete fragment identifier
+                    var id = segments[1];
+                    // $ref: externalSource.yaml#/Pet
+                    if (id.StartsWith("/definitions/"))
+                    {
+                        var localSegments = id.Split('/');
+                        var referencedType = GetReferenceTypeV2FromName(localSegments[1]);
+                        if (type == null)
+                        {
+                            type = referencedType;
+                        }
+                        else
+                        {
+                            if (type != referencedType)
+                            {
+                                throw new OpenApiException("Referenced type mismatch");
+                            }
+                        }
+                        id = localSegments[2];
                     }
 
                     // $ref: externalSource.yaml#/Pet
-                    return new OpenApiReference
+                    return new()
                     {
                         ExternalResource = segments[0],
-                        Id = segments[1].Substring(1)
+                        Type = type,
+                        Id = id
                     };
                 }
             }

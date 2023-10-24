@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
@@ -13,24 +13,19 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiDiscriminator> _discriminatorFixedFields =
-            new FixedFieldMap<OpenApiDiscriminator>
+            new()
             {
                 {
-                    "propertyName", (o, n) =>
-                    {
-                        o.PropertyName = n.GetScalarValue();
-                    }
+                    "propertyName",
+                    (o, n) => o.PropertyName = n.GetScalarValue()
                 },
                 {
-                    "mapping", (o, n) =>
-                    {
-                        o.Mapping = n.CreateSimpleMap(LoadString);
-                    }
+                    "mapping",
+                    (o, n) => o.Mapping = n.CreateSimpleMap(LoadString)
                 }
             };
 
-        private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields =
-            new PatternFieldMap<OpenApiDiscriminator>();
+        private static readonly PatternFieldMap<OpenApiDiscriminator> _discriminatorPatternFields = new();
 
         public static OpenApiDiscriminator LoadDiscriminator(ParseNode node)
         {

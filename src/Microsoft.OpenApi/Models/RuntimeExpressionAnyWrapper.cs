@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Expressions;
@@ -15,6 +15,20 @@ namespace Microsoft.OpenApi.Models
     {
         private IOpenApiAny _any;
         private RuntimeExpression _expression;
+
+        /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public RuntimeExpressionAnyWrapper() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="RuntimeExpressionAnyWrapper"/> object
+        /// </summary>
+        public RuntimeExpressionAnyWrapper(RuntimeExpressionAnyWrapper runtimeExpressionAnyWrapper)
+        {
+            Any = OpenApiAnyCloneHelper.CloneFromCopyConstructor(runtimeExpressionAnyWrapper?.Any);
+            Expression = runtimeExpressionAnyWrapper?.Expression;
+        }
 
         /// <summary>
         /// Gets/Sets the <see cref="IOpenApiAny"/>
@@ -53,10 +67,7 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void WriteValue(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             if (_any != null)
             {

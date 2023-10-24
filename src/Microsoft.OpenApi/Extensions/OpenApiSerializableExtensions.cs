@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Globalization;
 using System.IO;
@@ -74,29 +74,20 @@ namespace Microsoft.OpenApi.Extensions
             this T element,
             Stream stream,
             OpenApiSpecVersion specVersion,
-            OpenApiFormat format, 
+            OpenApiFormat format,
             OpenApiWriterSettings settings)
             where T : IOpenApiSerializable
         {
-            if (stream == null)
-            {
-                throw Error.ArgumentNull(nameof(stream));
-            }
+            Utils.CheckArgumentNull(stream);
 
-            IOpenApiWriter writer;
             var streamWriter = new FormattingStreamWriter(stream, CultureInfo.InvariantCulture);
-            switch (format)
-            {
-                case OpenApiFormat.Json:
-                    writer = new OpenApiJsonWriter(streamWriter,settings);
-                    break;
-                case OpenApiFormat.Yaml:
-                    writer = new OpenApiYamlWriter(streamWriter, settings);
-                    break;
-                default:
-                    throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format));
-            }
 
+            IOpenApiWriter writer = format switch
+            {
+                OpenApiFormat.Json => new OpenApiJsonWriter(streamWriter, settings, false),
+                OpenApiFormat.Yaml => new OpenApiYamlWriter(streamWriter, settings),
+                _ => throw new OpenApiException(string.Format(SRResource.OpenApiFormatNotSupported, format)),
+            };
             element.Serialize(writer, specVersion);
         }
 
@@ -107,19 +98,11 @@ namespace Microsoft.OpenApi.Extensions
         /// <param name="element">The Open API element.</param>
         /// <param name="writer">The output writer.</param>
         /// <param name="specVersion">Version of the specification the output should conform to</param>
-
         public static void Serialize<T>(this T element, IOpenApiWriter writer, OpenApiSpecVersion specVersion)
             where T : IOpenApiSerializable
         {
-            if (element == null)
-            {
-                throw Error.ArgumentNull(nameof(element));
-            }
-
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(element);
+            Utils.CheckArgumentNull(writer);
 
             switch (specVersion)
             {
@@ -137,7 +120,6 @@ namespace Microsoft.OpenApi.Extensions
 
             writer.Flush();
         }
-
 
         /// <summary>
         /// Serializes the <see cref="IOpenApiSerializable"/> to the Open API document as a string in JSON format.
@@ -180,21 +162,14 @@ namespace Microsoft.OpenApi.Extensions
             OpenApiFormat format)
             where T : IOpenApiSerializable
         {
-            if (element == null)
-            {
-                throw Error.ArgumentNull(nameof(element));
-            }
+            Utils.CheckArgumentNull(element);
 
-            using (var stream = new MemoryStream())
-            {
-                element.Serialize(stream, specVersion, format);
-                stream.Position = 0;
+            using var stream = new MemoryStream();
+            element.Serialize(stream, specVersion, format);
+            stream.Position = 0;
 
-                using (var streamReader = new StreamReader(stream))
-                {
-                    return streamReader.ReadToEnd();
-                }
-            }
+            using var streamReader = new StreamReader(stream);
+            return streamReader.ReadToEnd();
         }
     }
 }

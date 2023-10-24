@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 
@@ -568,12 +568,12 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Field: version3_0_0
         /// </summary>
-        public static readonly Version version3_0_0 = new Version(3, 0, 0);
+        public static readonly Version version3_0_0 = new(3, 0, 0);
 
         /// <summary>
         /// Field: defaultUrl
         /// </summary>
-        public static readonly Uri defaultUrl = new Uri("http://localhost/");
+        public static readonly Uri defaultUrl = new("http://localhost/");
 
         #region V2.0
 
@@ -590,7 +590,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Field: version2_0
         /// </summary>
-        public static readonly Version version2_0 = new Version(2, 0);
+        public static readonly Version version2_0 = new(2, 0);
 
         /// <summary>
         /// Field: BasePath
@@ -616,6 +616,16 @@ namespace Microsoft.OpenApi.Models
         /// Field: Basic
         /// </summary>
         public const string Basic = "basic";
+
+        /// <summary>
+        /// Field: Bearer
+        /// </summary>
+        public const string Bearer = "bearer";
+
+        /// <summary>
+        /// Field: JWT
+        /// </summary>
+        public const string Jwt = "JWT";
 
         /// <summary>
         /// Field: Consumes

@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Writers;
@@ -17,6 +17,19 @@ namespace Microsoft.OpenApi.Any
         public AnyType AnyType { get; } = AnyType.Object;
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiObject() { }
+
+        /// <summary>
+        /// Initializes a copy of <see cref="OpenApiObject"/> object
+        /// </summary>
+        public OpenApiObject(OpenApiObject obj)
+        {
+            AnyType = obj.AnyType;
+        }
+
+        /// <summary>
         /// Serialize OpenApiObject to writer
         /// </summary>
         /// <param name="writer"></param>
@@ -32,7 +45,6 @@ namespace Microsoft.OpenApi.Any
             }
 
             writer.WriteEndObject();
-
         }
     }
 }

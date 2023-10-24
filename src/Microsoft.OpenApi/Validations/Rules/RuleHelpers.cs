@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using Microsoft.OpenApi.Any;
@@ -75,23 +75,22 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 // If value is not a string and also not an object, there is a data mismatch.
-                if (!(value is OpenApiObject))
+                if (value is not OpenApiObject anyObject)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                     return;
                 }
 
-                var anyObject = (OpenApiObject)value;
-
                 foreach (var key in anyObject.Keys)
                 {
                     context.Enter(key);
 
-                    if (schema.Properties != null && schema.Properties.ContainsKey(key))
+                    if (schema.Properties != null &&
+                        schema.Properties.TryGetValue(key, out var property))
                     {
-                        ValidateDataTypeMismatch(context, ruleName, anyObject[key], schema.Properties[key]);
+                        ValidateDataTypeMismatch(context, ruleName, anyObject[key], property);
                     }
                     else
                     {
@@ -115,17 +114,15 @@ namespace Microsoft.OpenApi.Validations.Rules
                 }
 
                 // If value is not a string and also not an array, there is a data mismatch.
-                if (!(value is OpenApiArray))
+                if (value is not OpenApiArray anyArray)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                     return;
                 }
 
-                var anyArray = (OpenApiArray)value;
-
-                for (int i = 0; i < anyArray.Count; i++)
+                for (var i = 0; i < anyArray.Count; i++)
                 {
                     context.Enter(i.ToString());
 
@@ -139,9 +136,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "integer" && format == "int32")
             {
-                if (!(value is OpenApiInteger))
+                if (value is not OpenApiInteger)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -151,9 +148,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "integer" && format == "int64")
             {
-                if (!(value is OpenApiLong))
+                if (value is not OpenApiLong)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                        ruleName,
                        DataTypeMismatchedErrorMessage);
                 }
@@ -161,11 +158,11 @@ namespace Microsoft.OpenApi.Validations.Rules
                 return;
             }
 
-            if (type == "integer" && !(value is OpenApiInteger))
+            if (type == "integer" && value is not OpenApiInteger)
             {
-                if (!(value is OpenApiInteger))
+                if (value is not OpenApiInteger)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -175,9 +172,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number" && format == "float")
             {
-                if (!(value is OpenApiFloat))
+                if (value is not OpenApiFloat)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -187,9 +184,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number" && format == "double")
             {
-                if (!(value is OpenApiDouble))
+                if (value is not OpenApiDouble)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -199,9 +196,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "number")
             {
-                if (!(value is OpenApiDouble))
+                if (value is not OpenApiDouble)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -211,9 +208,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "byte")
             {
-                if (!(value is OpenApiByte))
+                if (value is not OpenApiByte)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -223,9 +220,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "date")
             {
-                if (!(value is OpenApiDate))
+                if (value is not OpenApiDate)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -235,9 +232,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "date-time")
             {
-                if (!(value is OpenApiDateTime))
+                if (value is not OpenApiDateTime)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -247,9 +244,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string" && format == "password")
             {
-                if (!(value is OpenApiPassword))
+                if (value is not OpenApiPassword)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -259,9 +256,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "string")
             {
-                if (!(value is OpenApiString))
+                if (value is not OpenApiString)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }
@@ -271,9 +268,9 @@ namespace Microsoft.OpenApi.Validations.Rules
 
             if (type == "boolean")
             {
-                if (!(value is OpenApiBoolean))
+                if (value is not OpenApiBoolean)
                 {
-                    context.CreateError(
+                    context.CreateWarning(
                         ruleName,
                         DataTypeMismatchedErrorMessage);
                 }

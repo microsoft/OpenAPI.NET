@@ -1,30 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net46; netstandard2.0</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>Latest</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageIconUrl>http://go.microsoft.com/fwlink/?LinkID=288890</PackageIconUrl>
-        <PackageProjectUrl>https://github.com/Microsoft/OpenAPI.NET</PackageProjectUrl>
-        <PackageLicenseUrl>https://raw.githubusercontent.com/Microsoft/OpenAPI.NET/master/LICENSE</PackageLicenseUrl>
-        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <Authors>Microsoft</Authors>
-        <Company>Microsoft</Company>
-        <Title>Microsoft.OpenApi</Title>
-        <PackageId>Microsoft.OpenApi</PackageId>
-        <Version>1.2.3</Version>
+        <Version>1.6.9</Version>
         <Description>.NET models with JSON and YAML writers for OpenAPI specification</Description>
-        <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
-        <PackageTags>OpenAPI .NET</PackageTags>
-        
-        <AssemblyName>Microsoft.OpenApi</AssemblyName>
-        <RootNamespace>Microsoft.OpenApi</RootNamespace>
         <SignAssembly>true</SignAssembly>
+        <!-- https://github.com/dotnet/sourcelink/blob/main/docs/README.md#embeduntrackedsources -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <NoWarn>NU5048</NoWarn>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Microsoft.OpenApi.xml</DocumentationFile>
         <AssemblyOriginatorKeyFile>..\Microsoft.OpenApi.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
-    
+
     <ItemGroup>
         <Compile Update="Properties\SRResource.Designer.cs">
             <DesignTime>True</DesignTime>
@@ -38,5 +30,9 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>SRResource.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="" />
     </ItemGroup>
 </Project>

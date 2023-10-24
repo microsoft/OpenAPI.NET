@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -15,11 +14,11 @@ namespace Microsoft.OpenApi.Tests.Models
     [Collection("DefaultSettings")]
     public class OpenApiInfoTests
     {
-        public static OpenApiInfo AdvanceInfo = new OpenApiInfo
+        public static OpenApiInfo AdvanceInfo = new()
         {
             Title = "Sample Pet Store App",
             Description = "This is a sample server for a pet store.",
-            TermsOfService = new Uri("http://example.com/terms/"),
+            TermsOfService = new("http://example.com/terms/"),
             Contact = OpenApiContactTests.AdvanceContact,
             License = OpenApiLicenseTests.AdvanceLicense,
             Version = "1.1.1",
@@ -29,7 +28,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiInfo BasicInfo = new OpenApiInfo
+        public static OpenApiInfo BasicInfo = new()
         {
             Title = "Sample Pet Store App",
             Version = "1.0"
@@ -43,10 +42,12 @@ namespace Microsoft.OpenApi.Tests.Models
                 yield return new object[]
                 {
                     specVersion,
-                    @"{
-  ""title"": ""Sample Pet Store App"",
-  ""version"": ""1.0""
-}"
+                    """
+                    {
+                      "title": "Sample Pet Store App",
+                      "version": "1.0"
+                    }
+                    """
                 };
             }
         }
@@ -72,8 +73,10 @@ namespace Microsoft.OpenApi.Tests.Models
                 yield return new object[]
                 {
                     specVersion,
-                    @"title: Sample Pet Store App
-version: '1.0'"
+                    """
+                    title: Sample Pet Store App
+                    version: '1.0'
+                    """
                 };
             }
         }
@@ -99,24 +102,26 @@ version: '1.0'"
                 yield return new object[]
                 {
                     specVersion,
-                    @"{
-  ""title"": ""Sample Pet Store App"",
-  ""description"": ""This is a sample server for a pet store."",
-  ""termsOfService"": ""http://example.com/terms/"",
-  ""contact"": {
-    ""name"": ""API Support"",
-    ""url"": ""http://www.example.com/support"",
-    ""email"": ""support@example.com"",
-    ""x-internal-id"": 42
-  },
-  ""license"": {
-    ""name"": ""Apache 2.0"",
-    ""url"": ""http://www.apache.org/licenses/LICENSE-2.0.html"",
-    ""x-copyright"": ""Abc""
-  },
-  ""version"": ""1.1.1"",
-  ""x-updated"": ""metadata""
-}"
+                    """
+                    {
+                      "title": "Sample Pet Store App",
+                      "description": "This is a sample server for a pet store.",
+                      "termsOfService": "http://example.com/terms/",
+                      "contact": {
+                        "name": "API Support",
+                        "url": "http://www.example.com/support",
+                        "email": "support@example.com",
+                        "x-internal-id": 42
+                      },
+                      "license": {
+                        "name": "Apache 2.0",
+                        "url": "http://www.apache.org/licenses/LICENSE-2.0.html",
+                        "x-copyright": "Abc"
+                      },
+                      "version": "1.1.1",
+                      "x-updated": "metadata"
+                    }
+                    """
                 };
             }
         }
@@ -142,20 +147,22 @@ version: '1.0'"
                 yield return new object[]
                 {
                     specVersion,
-                    @"title: Sample Pet Store App
-description: This is a sample server for a pet store.
-termsOfService: http://example.com/terms/
-contact:
-  name: API Support
-  url: http://www.example.com/support
-  email: support@example.com
-  x-internal-id: 42
-license:
-  name: Apache 2.0
-  url: http://www.apache.org/licenses/LICENSE-2.0.html
-  x-copyright: Abc
-version: '1.1.1'
-x-updated: metadata"
+                    """
+                    title: Sample Pet Store App
+                    description: This is a sample server for a pet store.
+                    termsOfService: http://example.com/terms/
+                    contact:
+                      name: API Support
+                      url: http://www.example.com/support
+                      email: support@example.com
+                      x-internal-id: 42
+                    license:
+                      name: Apache 2.0
+                      url: http://www.apache.org/licenses/LICENSE-2.0.html
+                      x-copyright: Abc
+                    version: '1.1.1'
+                    x-updated: metadata
+                    """
                 };
             }
         }
@@ -184,8 +191,10 @@ x-updated: metadata"
             };
 
             var expected =
-                @"title: Sample Pet Store App
-version: '2017-03-01'";
+                """
+                title: Sample Pet Store App
+                version: '2017-03-01'
+                """;
 
             // Act
             var actual = info.Serialize(OpenApiSpecVersion.OpenApi3_0, OpenApiFormat.Yaml);

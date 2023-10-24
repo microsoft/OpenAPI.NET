@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -14,12 +14,11 @@ namespace Microsoft.OpenApi.Validations.Rules
     [OpenApiRule]
     public static class OpenApiPathsRules
     {
-
         /// <summary>
         /// A relative path to an individual endpoint. The field name MUST begin with a slash.
         /// </summary>
         public static ValidationRule<OpenApiPaths> PathNameMustBeginWithSlash =>
-            new ValidationRule<OpenApiPaths>(
+            new(
                 (context, item) =>
                 {
                     foreach (var pathName in item.Keys)

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Extensions;
@@ -12,8 +13,14 @@ namespace Microsoft.OpenApi.Models
     /// <summary>
     /// Parameter Object.
     /// </summary>
-    public class OpenApiParameter : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiParameter : IOpenApiReferenceable, IEffective<OpenApiParameter>, IOpenApiExtensible
     {
+        private bool? _explode;
+        /// <summary>
+        /// The style of the parameter.
+        /// </summary>
+        public ParameterStyle? _style;
+
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
         /// </summary>
@@ -54,7 +61,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
         /// </summary>
-        public bool Deprecated { get; set; } = false;
+        public bool Deprecated { get; set; }
 
         /// <summary>
         /// Sets the ability to pass empty-valued parameters.
@@ -63,14 +70,18 @@ namespace Microsoft.OpenApi.Models
         /// If style is used, and if behavior is n/a (cannot be serialized),
         /// the value of allowEmptyValue SHALL be ignored.
         /// </summary>
-        public bool AllowEmptyValue { get; set; } = false;
+        public bool AllowEmptyValue { get; set; }
 
         /// <summary>
         /// Describes how the parameter value will be serialized depending on the type of the parameter value.
         /// Default values (based on value of in): for query - form; for path - simple; for header - simple;
         /// for cookie - form.
         /// </summary>
-        public ParameterStyle? Style { get; set; }
+        public ParameterStyle? Style
+        {
+            get => _style ?? SetDefaultStyleValue();
+            set => _style = value;
+        }
 
         /// <summary>
         /// When this is true, parameter values of type array or object generate separate parameters
@@ -79,7 +90,11 @@ namespace Microsoft.OpenApi.Models
         /// When style is form, the default value is true.
         /// For all other styles, the default value is false.
         /// </summary>
-        public bool Explode { get; set; }
+        public bool Explode
+        {
+            get => _explode ?? Style == ParameterStyle.Form;
+            set => _explode = value;
+        }
 
         /// <summary>
         /// Determines whether the parameter value SHOULD allow reserved characters,
@@ -130,22 +145,73 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// A parameterless constructor
+        /// </summary>
+        public OpenApiParameter() {}
+
+        /// <summary>
+        /// Initializes a clone instance of <see cref="OpenApiParameter"/> object
+        /// </summary>
+        public OpenApiParameter(OpenApiParameter parameter)
+        {
+            UnresolvedReference = parameter?.UnresolvedReference ?? UnresolvedReference;
+            Reference = parameter?.Reference != null ? new(parameter?.Reference) : null;
+            Name = parameter?.Name ?? Name;
+            In = parameter?.In ?? In;
+            Description = parameter?.Description ?? Description;
+            Required = parameter?.Required ?? Required;
+            Style = parameter?.Style ?? Style;
+            Explode = parameter?.Explode ?? Explode;
+            AllowReserved = parameter?.AllowReserved ?? AllowReserved;
+            Schema = parameter?.Schema != null ? new(parameter?.Schema) : null;
+            Examples = parameter?.Examples != null ? new Dictionary<string, OpenApiExample>(parameter.Examples) : null;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(parameter?.Example);
+            Content = parameter?.Content != null ? new Dictionary<string, OpenApiMediaType>(parameter.Content) : null;
+            Extensions = parameter?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(parameter.Extensions) : null;
+            AllowEmptyValue = parameter?.AllowEmptyValue ?? AllowEmptyValue;
+            Deprecated = parameter?.Deprecated ?? Deprecated;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiParameter"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
+            Utils.CheckArgumentNull(writer);
+
+            var target = this;
+
+            if (Reference != null)
             {
-                throw Error.ArgumentNull(nameof(writer));
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV3(writer);
+                    return;
+                }
+                else
+                {
+                    target = this.GetEffective(Reference.HostDocument);
+                }
             }
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
+            target.SerializeAsV3WithoutReference(writer);
+        }
 
-            SerializeAsV3WithoutReference(writer);
+        /// <summary>
+        /// Returns an effective OpenApiParameter object based on the presence of a $ref
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiParameter</returns>
+        public OpenApiParameter GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiParameter>(this.Reference);
+            }
+            else
+            {
+                return this;
+            }
         }
 
         /// <summary>
@@ -174,10 +240,13 @@ namespace Microsoft.OpenApi.Models
             writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
             // style
-            writer.WriteProperty(OpenApiConstants.Style, Style?.GetDisplayName());
+            if (_style.HasValue)
+            {
+                writer.WriteProperty(OpenApiConstants.Style, _style.Value.GetDisplayName());
+            }
 
             // explode
-            writer.WriteProperty(OpenApiConstants.Explode, Explode, Style.HasValue && Style.Value == ParameterStyle.Form);
+            writer.WriteProperty(OpenApiConstants.Explode, _explode, _style is ParameterStyle.Form);
 
             // allowReserved
             writer.WriteProperty(OpenApiConstants.AllowReserved, AllowReserved, false);
@@ -205,18 +274,23 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
+            Utils.CheckArgumentNull(writer);
+
+            var target = this;
+            if (Reference != null)
             {
-                throw Error.ArgumentNull(nameof(writer));
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV2(writer);
+                    return;
+                }
+                else
+                {
+                    target = this.GetEffective(Reference.HostDocument);
+                }
             }
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV2(writer);
-                return;
-            }
-
-            SerializeAsV2WithoutReference(writer);
+            target.SerializeAsV2WithoutReference(writer);
         }
 
         /// <summary>
@@ -303,7 +377,7 @@ namespace Microsoft.OpenApi.Models
                 // allowEmptyValue
                 writer.WriteProperty(OpenApiConstants.AllowEmptyValue, AllowEmptyValue, false);
 
-                if (this.In == ParameterLocation.Query)
+                if (this.In == ParameterLocation.Query && "array".Equals(Schema?.Type, StringComparison.OrdinalIgnoreCase))
                 {
                     if (this.Style == ParameterStyle.Form && this.Explode == true)
                     {
@@ -320,11 +394,24 @@ namespace Microsoft.OpenApi.Models
                 }
             }
 
-
             // extensions
             writer.WriteExtensions(extensionsClone, OpenApiSpecVersion.OpenApi2_0);
 
             writer.WriteEndObject();
+        }
+
+        private ParameterStyle? SetDefaultStyleValue()
+        {
+            Style = In switch
+            {
+                ParameterLocation.Query => ParameterStyle.Form,
+                ParameterLocation.Header => ParameterStyle.Simple,
+                ParameterLocation.Path => ParameterStyle.Simple,
+                ParameterLocation.Cookie => ParameterStyle.Form,
+                _ => (ParameterStyle?)ParameterStyle.Simple,
+            };
+
+            return Style;
         }
     }
 

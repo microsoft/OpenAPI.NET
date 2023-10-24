@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System;
 using Microsoft.OpenApi.Extensions;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.ParseNodes;
 
@@ -15,7 +13,7 @@ namespace Microsoft.OpenApi.Readers.V3
     /// </summary>
     internal static partial class OpenApiV3Deserializer
     {
-        private static FixedFieldMap<OpenApiComponents> _componentsFixedFields = new FixedFieldMap<OpenApiComponents>
+        private static FixedFieldMap<OpenApiComponents> _componentsFixedFields = new()
         {
             {
                 "schemas", (o, n) => o.Schemas = n.CreateMapWithReference(ReferenceType.Schema, LoadSchema)
@@ -30,9 +28,8 @@ namespace Microsoft.OpenApi.Readers.V3
             {"callbacks", (o, n) => o.Callbacks = n.CreateMapWithReference(ReferenceType.Callback, LoadCallback)},
         };
 
-
         private static PatternFieldMap<OpenApiComponents> _componentsPatternFields =
-            new PatternFieldMap<OpenApiComponents>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p, n))}
             };

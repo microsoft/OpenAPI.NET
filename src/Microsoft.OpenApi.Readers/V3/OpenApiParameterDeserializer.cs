@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Linq;
@@ -16,13 +16,11 @@ namespace Microsoft.OpenApi.Readers.V3
     internal static partial class OpenApiV3Deserializer
     {
         private static readonly FixedFieldMap<OpenApiParameter> _parameterFixedFields =
-            new FixedFieldMap<OpenApiParameter>
+            new()
             {
                 {
-                    "name", (o, n) =>
-                    {
-                        o.Name = n.GetScalarValue();
-                    }
+                    "name",
+                    (o, n) => o.Name = n.GetScalarValue()
                 },
                 {
                     "in", (o, n) =>
@@ -42,84 +40,62 @@ namespace Microsoft.OpenApi.Readers.V3
                     }
                 },
                 {
-                    "description", (o, n) =>
-                    {
-                        o.Description = n.GetScalarValue();
-                    }
+                    "description",
+                    (o, n) => o.Description = n.GetScalarValue()
                 },
                 {
-                    "required", (o, n) =>
-                    {
-                        o.Required = bool.Parse(n.GetScalarValue());
-                    }
+                    "required",
+                    (o, n) => o.Required = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "deprecated", (o, n) =>
-                    {
-                        o.Deprecated = bool.Parse(n.GetScalarValue());
-                    }
+                    "deprecated",
+                    (o, n) => o.Deprecated = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "allowEmptyValue", (o, n) =>
-                    {
-                        o.AllowEmptyValue = bool.Parse(n.GetScalarValue());
-                    }
+                    "allowEmptyValue",
+                    (o, n) => o.AllowEmptyValue = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "allowReserved", (o, n) =>
-                    {
-                        o.AllowReserved = bool.Parse(n.GetScalarValue());
-                    }
+                    "allowReserved",
+                    (o, n) => o.AllowReserved = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "style", (o, n) =>
-                    {
-                        o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>();
-                    }
+                    "style",
+                    (o, n) => o.Style = n.GetScalarValue().GetEnumFromDisplayName<ParameterStyle>()
                 },
                 {
-                    "explode", (o, n) =>
-                    {
-                        o.Explode = bool.Parse(n.GetScalarValue());
-                    }
+                    "explode",
+                    (o, n) => o.Explode = bool.Parse(n.GetScalarValue())
                 },
                 {
-                    "schema", (o, n) =>
-                    {
-                        o.Schema = LoadSchema(n);
-                    }
+                    "schema",
+                    (o, n) => o.Schema = LoadSchema(n)
                 },
                 {
-                    "content", (o, n) =>
-                    {
-                        o.Content = n.CreateMap(LoadMediaType);
-                    }
+                    "content",
+                    (o, n) => o.Content = n.CreateMap(LoadMediaType)
                 },
                 {
-                    "examples", (o, n) =>
-                    {
-                        o.Examples = n.CreateMap(LoadExample);
-                    }
+                    "examples",
+                    (o, n) => o.Examples = n.CreateMap(LoadExample)
                 },
                 {
-                    "example", (o, n) =>
-                    {
-                        o.Example = n.CreateAny();
-                    }
+                    "example",
+                    (o, n) => o.Example = n.CreateAny()
                 },
             };
 
         private static readonly PatternFieldMap<OpenApiParameter> _parameterPatternFields =
-            new PatternFieldMap<OpenApiParameter>
+            new()
             {
                 {s => s.StartsWith("x-"), (o, p, n) => o.AddExtension(p, LoadExtension(p,n))}
             };
 
-        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new AnyFieldMap<OpenApiParameter>
+        private static readonly AnyFieldMap<OpenApiParameter> _parameterAnyFields = new()
         {
             {
                 OpenApiConstants.Example,
-                new AnyFieldMapParameter<OpenApiParameter>(
+                new(
                     s => s.Example,
                     (s, v) => s.Example = v,
                     s => s.Schema)
@@ -127,11 +103,11 @@ namespace Microsoft.OpenApi.Readers.V3
         };
 
         private static readonly AnyMapFieldMap<OpenApiParameter, OpenApiExample> _parameterAnyMapOpenApiExampleFields =
-            new AnyMapFieldMap<OpenApiParameter, OpenApiExample>
-        {
+            new()
+            {
             {
                 OpenApiConstants.Examples,
-                new AnyMapFieldMapParameter<OpenApiParameter, OpenApiExample>(
+                new(
                     m => m.Examples,
                     e => e.Value,
                     (e, v) => e.Value = v,

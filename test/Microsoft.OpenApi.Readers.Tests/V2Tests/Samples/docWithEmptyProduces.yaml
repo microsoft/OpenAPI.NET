@@ -1,0 +1,20 @@
+swagger: '2.0'
+info:
+  title: Sample API
+  version: 1.0.0
+paths:
+  /example:
+    get:
+      summary: Get Example
+      description: Retrieves an example resource.
+      produces: []
+      responses:
+        200:
+          description: Successful response
+          schema: 
+             format: binary,
+             description: The content of the file.,
+             type: string,
+             x-ms-summary: File Content
+components: {}
+            

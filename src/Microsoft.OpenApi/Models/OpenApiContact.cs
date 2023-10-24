@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -36,6 +35,22 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiContact() { }
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiContact"/> instance
+        /// </summary>
+        public OpenApiContact(OpenApiContact contact)
+        {
+            Name = contact?.Name ?? Name;
+            Url = contact?.Url != null ? new Uri(contact.Url.OriginalString, UriKind.RelativeOrAbsolute) : null;
+            Email = contact?.Email ?? Email;
+            Extensions = contact?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(contact.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiContact"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
@@ -53,11 +68,6 @@ namespace Microsoft.OpenApi.Models
 
         private void WriteInternal(IOpenApiWriter writer, OpenApiSpecVersion specVersion)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
-
             writer.WriteStartObject();
 
             // name

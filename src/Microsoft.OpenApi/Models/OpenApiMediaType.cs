@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -44,14 +44,28 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiMediaType() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiMediaType"/> object
+        /// </summary>
+        public OpenApiMediaType(OpenApiMediaType mediaType)
+        {
+            Schema = mediaType?.Schema != null ? new(mediaType?.Schema) : null;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(mediaType?.Example);
+            Examples = mediaType?.Examples != null ? new Dictionary<string, OpenApiExample>(mediaType.Examples) : null;
+            Encoding = mediaType?.Encoding != null ? new Dictionary<string, OpenApiEncoding>(mediaType.Encoding) : null;
+            Extensions = mediaType?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(mediaType.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiMediaType"/> to Open Api v3.0.
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Services;
@@ -17,9 +16,10 @@ namespace Microsoft.OpenApi.Validations
     {
         private readonly ValidationRuleSet _ruleSet;
         private readonly IList<OpenApiValidatorError> _errors = new List<OpenApiValidatorError>();
+        private readonly IList<OpenApiValidatorWarning> _warnings = new List<OpenApiValidatorWarning>();
 
         /// <summary>
-        /// Create a vistor that will validate an OpenAPIDocument
+        /// Create a visitor that will validate an OpenAPIDocument
         /// </summary>
         /// <param name="ruleSet"></param>
         public OpenApiValidator(ValidationRuleSet ruleSet)
@@ -30,13 +30,12 @@ namespace Microsoft.OpenApi.Validations
         /// <summary>
         /// Gets the validation errors.
         /// </summary>
-        public IEnumerable<OpenApiValidatorError> Errors
-        {
-            get
-            {
-                return _errors;
-            }
-        }
+        public IEnumerable<OpenApiValidatorError> Errors { get => _errors; }
+
+        /// <summary>
+        /// Gets the validation warnings.
+        /// </summary>
+        public IEnumerable<OpenApiValidatorWarning> Warnings { get => _warnings; }
 
         /// <summary>
         /// Register an error with the validation context.
@@ -44,14 +43,21 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="error">Error to register.</param>
         public void AddError(OpenApiValidatorError error)
         {
-            if (error == null)
-            {
-                throw Error.ArgumentNull(nameof(error));
-            }
+            Utils.CheckArgumentNull(error);
 
             _errors.Add(error);
         }
 
+        /// <summary>
+        /// Register an error with the validation context.
+        /// </summary>
+        /// <param name="warning">Error to register.</param>
+        public void AddWarning(OpenApiValidatorWarning warning)
+        {
+            Utils.CheckArgumentNull(warning);
+
+            _warnings.Add(warning);
+        }
 
         /// <summary>
         /// Execute validation rules against an <see cref="OpenApiDocument"/>
@@ -179,6 +185,100 @@ namespace Microsoft.OpenApi.Validations
         /// <param name="items">The object to be validated</param>
         public override void Visit(IList<OpenApiExample> items) => Validate(items, items.GetType());
 
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiPathItem"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiPathItem item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiServerVariable"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiServerVariable item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiSecurityScheme"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiSecurityScheme item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiSecurityRequirement"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiSecurityRequirement item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiRequestBody"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiRequestBody item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiPaths"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiPaths item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiLink"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiLink item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiExample"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiExample item) => Validate(item);
+
+        /// <summary>
+        /// Execute validation rules against a <see cref="OpenApiOperation"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(OpenApiOperation item) => Validate(item);
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{OperationType, OpenApiOperation}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<OperationType, OpenApiOperation> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiHeader}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiHeader> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiCallback}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiCallback> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiMediaType}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiMediaType> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiExample}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiExample> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiLink}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiLink> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiServerVariable}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiServerVariable> item) => Validate(item, item.GetType());
+        /// <summary>
+        /// Execute validation rules against a <see cref="IDictionary{String, OpenApiEncoding}"/>
+        /// </summary>
+        /// <param name="item">The object to be validated</param>
+        public override void Visit(IDictionary<string, OpenApiEncoding> item) => Validate(item, item.GetType());
+
         private void Validate<T>(T item)
         {
             var type = typeof(T);
@@ -187,7 +287,7 @@ namespace Microsoft.OpenApi.Validations
         }
 
         /// <summary>
-        /// This overload allows applying rules based on actual object type, rather than matched interface.  This is 
+        /// This overload allows applying rules based on actual object type, rather than matched interface.  This is
         /// needed for validating extensions.
         /// </summary>
         private void Validate(object item, Type type)
@@ -198,8 +298,7 @@ namespace Microsoft.OpenApi.Validations
             }
 
             // Validate unresolved references as references
-            var potentialReference = item as IOpenApiReferenceable;
-            if (potentialReference != null && potentialReference.UnresolvedReference)
+            if (item is IOpenApiReferenceable {UnresolvedReference: true})
             {
                 type = typeof(IOpenApiReferenceable);
             }

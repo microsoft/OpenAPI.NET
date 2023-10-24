@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OpenApi.Any;
@@ -34,7 +33,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema = new OpenApiSchema()
+                    Schema = new()
                     {
                         Type = "number",
                         Format = "float",
@@ -60,7 +59,7 @@ namespace Microsoft.OpenApi.Readers.Tests.V2Tests
             header.Should().BeEquivalentTo(
                 new OpenApiHeader
                 {
-                    Schema = new OpenApiSchema()
+                    Schema = new()
                     {
                         Type = "number",
                         Format = "float",

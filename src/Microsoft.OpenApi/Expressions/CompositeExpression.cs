@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +13,12 @@ namespace Microsoft.OpenApi.Expressions
     public class CompositeExpression : RuntimeExpression
     {
         private readonly string template;
-        private Regex expressionPattern = new Regex(@"{(?<exp>\$[^}]*)");
+        private Regex expressionPattern = new(@"{(?<exp>\$[^}]*)");
 
         /// <summary>
         /// Expressions embedded into string literal
         /// </summary>
-        public List<RuntimeExpression> ContainedExpressions = new List<RuntimeExpression>();
+        public List<RuntimeExpression> ContainedExpressions = new();
 
         /// <summary>
         /// Create a composite expression from a string literal with an embedded expression
@@ -34,7 +34,7 @@ namespace Microsoft.OpenApi.Expressions
             foreach (var item in matches.Cast<Match>())
             {
                 var value = item.Groups["exp"].Captures.Cast<Capture>().First().Value;
-                ContainedExpressions.Add(RuntimeExpression.Build(value));
+                ContainedExpressions.Add(Build(value));
             }
         }
 

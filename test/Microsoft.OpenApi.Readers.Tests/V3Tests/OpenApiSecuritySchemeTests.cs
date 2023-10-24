@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
-using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -21,150 +20,140 @@ namespace Microsoft.OpenApi.Readers.Tests.V3Tests
         [Fact]
         public void ParseHttpSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "httpSecurityScheme.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
-                // Act
-                var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.Http,
-                        Scheme = "basic"
-                    });
-            }
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = OpenApiConstants.Basic
+                });
         }
 
         [Fact]
         public void ParseApiKeySecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "apiKeySecurityScheme.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
-                // Act
-                var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.ApiKey,
-                        Name = "api_key",
-                        In = ParameterLocation.Header
-                    });
-            }
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    Name = "api_key",
+                    In = ParameterLocation.Header
+                });
         }
 
         [Fact]
         public void ParseBearerSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "bearerSecurityScheme.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
-                // Act
-                var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.Http,
-                        Scheme = "bearer",
-                        BearerFormat = "JWT"
-                    });
-            }
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = OpenApiConstants.Bearer,
+                    BearerFormat = OpenApiConstants.Jwt
+                });
         }
 
         [Fact]
         public void ParseOAuth2SecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "oauth2SecurityScheme.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
-                // Act
-                var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new()
                     {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows
+                        Implicit = new()
                         {
-                            Implicit = new OpenApiOAuthFlow
+                            AuthorizationUrl = new("https://example.com/api/oauth/dialog"),
+                            Scopes =
                             {
-                                AuthorizationUrl = new Uri("https://example.com/api/oauth/dialog"),
-                                Scopes =
-                                {
-                                    ["write:pets"] = "modify pets in your account",
-                                    ["read:pets"] = "read your pets"
-                                }
+                                ["write:pets"] = "modify pets in your account",
+                                ["read:pets"] = "read your pets"
                             }
                         }
-                    });
-            }
+                    }
+                });
         }
 
         [Fact]
         public void ParseOpenIdConnectSecuritySchemeShouldSucceed()
         {
-            using (var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml")))
-            {
-                var yamlStream = new YamlStream();
-                yamlStream.Load(new StreamReader(stream));
-                var yamlNode = yamlStream.Documents.First().RootNode;
+            using var stream = Resources.GetStream(Path.Combine(SampleFolderPath, "openIdConnectSecurityScheme.yaml"));
+            var yamlStream = new YamlStream();
+            yamlStream.Load(new StreamReader(stream));
+            var yamlNode = yamlStream.Documents.First().RootNode;
 
-                var diagnostic = new OpenApiDiagnostic();
-                var context = new ParsingContext(diagnostic);
+            var diagnostic = new OpenApiDiagnostic();
+            var context = new ParsingContext(diagnostic);
 
-                var node = new MapNode(context, (YamlMappingNode)yamlNode);
+            var node = new MapNode(context, (YamlMappingNode)yamlNode);
 
-                // Act
-                var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
+            // Act
+            var securityScheme = OpenApiV3Deserializer.LoadSecurityScheme(node);
 
-                // Assert
-                securityScheme.Should().BeEquivalentTo(
-                    new OpenApiSecurityScheme
-                    {
-                        Type = SecuritySchemeType.OpenIdConnect,
-                        Description = "Sample Description",
-                        OpenIdConnectUrl = new Uri("http://www.example.com")
-                    });
-            }
+            // Assert
+            securityScheme.Should().BeEquivalentTo(
+                new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OpenIdConnect,
+                    Description = "Sample Description",
+                    OpenIdConnectUrl = new("http://www.example.com")
+                });
         }
     }
 }

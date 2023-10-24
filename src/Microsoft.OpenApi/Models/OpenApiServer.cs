@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Writers;
 
@@ -37,14 +36,27 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameterless constructor
+        /// </summary>
+        public OpenApiServer() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiServer"/> object
+        /// </summary>
+        public OpenApiServer(OpenApiServer server)
+        {
+            Description = server?.Description ?? Description;
+            Url = server?.Url ?? Url;
+            Variables = server?.Variables != null ? new Dictionary<string, OpenApiServerVariable>(server.Variables) : null;
+            Extensions = server?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(server.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiServer"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
             writer.WriteStartObject();
 

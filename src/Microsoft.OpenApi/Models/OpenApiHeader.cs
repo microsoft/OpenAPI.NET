@@ -1,5 +1,5 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
@@ -13,7 +13,7 @@ namespace Microsoft.OpenApi.Models
     /// Header Object.
     /// The Header Object follows the structure of the Parameter Object.
     /// </summary>
-    public class OpenApiHeader : IOpenApiSerializable, IOpenApiReferenceable, IOpenApiExtensible
+    public class OpenApiHeader : IOpenApiReferenceable, IOpenApiExtensible, IEffective<OpenApiHeader>
     {
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
@@ -87,22 +87,70 @@ namespace Microsoft.OpenApi.Models
         public IDictionary<string, IOpenApiExtension> Extensions { get; set; } = new Dictionary<string, IOpenApiExtension>();
 
         /// <summary>
+        /// Parameter-less constructor
+        /// </summary>
+        public OpenApiHeader() {}
+
+        /// <summary>
+        /// Initializes a copy of an <see cref="OpenApiHeader"/> object
+        /// </summary>
+        public OpenApiHeader(OpenApiHeader header)
+        {
+            UnresolvedReference = header?.UnresolvedReference ?? UnresolvedReference;
+            Reference = header?.Reference != null ? new(header?.Reference) : null;
+            Description = header?.Description ?? Description;
+            Required = header?.Required ?? Required;
+            Deprecated = header?.Deprecated ?? Deprecated;
+            AllowEmptyValue = header?.AllowEmptyValue ?? AllowEmptyValue;
+            Style = header?.Style ?? Style;
+            Explode = header?.Explode ?? Explode;
+            AllowReserved = header?.AllowReserved ?? AllowReserved;
+            Schema = header?.Schema != null ? new(header?.Schema) : null;
+            Example = OpenApiAnyCloneHelper.CloneFromCopyConstructor(header?.Example);
+            Examples = header?.Examples != null ? new Dictionary<string, OpenApiExample>(header.Examples) : null;
+            Content = header?.Content != null ? new Dictionary<string, OpenApiMediaType>(header.Content) : null;
+            Extensions = header?.Extensions != null ? new Dictionary<string, IOpenApiExtension>(header.Extensions) : null;
+        }
+
+        /// <summary>
         /// Serialize <see cref="OpenApiHeader"/> to Open Api v3.0
         /// </summary>
         public void SerializeAsV3(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV3(writer);
-                return;
-            }
+            var target = this;
 
-            SerializeAsV3WithoutReference(writer);
+            if (Reference != null)
+            {
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV3(writer);
+                    return;
+                }
+                else
+                {
+                    target = GetEffective(Reference.HostDocument);
+                }
+            }
+            target.SerializeAsV3WithoutReference(writer);
+        }
+
+        /// <summary>
+        /// Returns an effective OpenApiHeader object based on the presence of a $ref
+        /// </summary>
+        /// <param name="doc">The host OpenApiDocument that contains the reference.</param>
+        /// <returns>OpenApiHeader</returns>
+        public OpenApiHeader GetEffective(OpenApiDocument doc)
+        {
+            if (this.Reference != null)
+            {
+                return doc.ResolveReferenceTo<OpenApiHeader>(this.Reference);
+            }
+            else
+            {
+                return this;
+            }
         }
 
         /// <summary>
@@ -156,18 +204,23 @@ namespace Microsoft.OpenApi.Models
         /// </summary>
         public void SerializeAsV2(IOpenApiWriter writer)
         {
-            if (writer == null)
-            {
-                throw Error.ArgumentNull(nameof(writer));
-            }
+            Utils.CheckArgumentNull(writer);
 
-            if (Reference != null && writer.GetSettings().ReferenceInline != ReferenceInlineSetting.InlineLocalReferences)
-            {
-                Reference.SerializeAsV2(writer);
-                return;
-            }
+            var target = this;
 
-            SerializeAsV2WithoutReference(writer);
+            if (Reference != null)
+            {
+                if (!writer.GetSettings().ShouldInlineReference(Reference))
+                {
+                    Reference.SerializeAsV2(writer);
+                    return;
+                }
+                else
+                {
+                    target = GetEffective(Reference.HostDocument);
+                }
+            }
+            target.SerializeAsV2WithoutReference(writer);
         }
 
         /// <summary>

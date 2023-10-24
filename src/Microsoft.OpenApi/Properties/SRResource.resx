@@ -123,6 +123,9 @@
   <data name="ArgumentNullOrWhiteSpace" xml:space="preserve">
     <value>The argument '{0}' is null, empty or consists only of white-space.</value>
   </data>
+  <data name="DefaultBaseUri" xml:space="preserve">
+    <value>http://localhost/</value>
+  </data>
   <data name="ExtensionFieldNameMustBeginWithXDash" xml:space="preserve">
     <value>The filed name '{0}' of extension doesn't begin with x-.</value>
   </data>
@@ -218,5 +221,8 @@
   </data>
   <data name="Validation_StringMustBeEmailAddress" xml:space="preserve">
     <value>The string '{0}' MUST be in the format of an email address.</value>
+  </data>
+  <data name="WorkspaceRequredForExternalReferenceResolution" xml:space="preserve">
+    <value>OpenAPI document must be added to an OpenApiWorkspace to be able to resolve external references.</value>
   </data>
 </root>

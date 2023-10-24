@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Serialization;
 
@@ -30,10 +29,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
             IDictionary<string, Action<T, ParseNode>> fixedFields,
             IDictionary<Func<string, bool>, Action<T, string, ParseNode>> patternFields)
         {
-            Action<T, ParseNode> fixedFieldMap;
-            var found = fixedFields.TryGetValue(Name, out fixedFieldMap);
-
-            if (fixedFieldMap != null)
+            if (fixedFields.TryGetValue(Name, out var fixedFieldMap))
             {
                 try
                 {
@@ -42,12 +38,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 }
                 catch (OpenApiReaderException ex)
                 {
-                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                    Context.Diagnostic.Errors.Add(new(ex));
                 }
                 catch (OpenApiException ex)
                 {
                     ex.Pointer = Context.GetLocation();
-                    Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                    Context.Diagnostic.Errors.Add(new(ex));
                 }
                 finally
                 {
@@ -66,12 +62,12 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                     }
                     catch (OpenApiReaderException ex)
                     {
-                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                        Context.Diagnostic.Errors.Add(new(ex));
                     }
                     catch (OpenApiException ex)
                     {
                         ex.Pointer = Context.GetLocation();
-                        Context.Diagnostic.Errors.Add(new OpenApiError(ex));
+                        Context.Diagnostic.Errors.Add(new(ex));
                     }
                     finally
                     {
@@ -81,7 +77,7 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
                 else
                 {
                     Context.Diagnostic.Errors.Add(
-                        new OpenApiError("", $"{Name} is not a valid property at {Context.GetLocation()}"));
+                        new("", $"{Name} is not a valid property at {Context.GetLocation()}"));
                 }
             }
         }

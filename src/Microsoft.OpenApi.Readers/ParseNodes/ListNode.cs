@@ -1,14 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT license. 
+// Licensed under the MIT license.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Exceptions;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers.Exceptions;
 using SharpYaml.Serialization;
 
 namespace Microsoft.OpenApi.Readers.ParseNodes
@@ -27,18 +25,17 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (_nodeList == null)
             {
-                throw new OpenApiException(
-                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
-            return _nodeList.Select(n => map(new MapNode(Context, n as YamlMappingNode)))
+            return _nodeList.Select(n => map(new(Context, n as YamlMappingNode)))
                 .Where(i => i != null)
                 .ToList();
         }
 
         public override List<IOpenApiAny> CreateListOfAny()
         {
-            return _nodeList.Select(n => ParseNode.Create(Context, n).CreateAny())
+            return _nodeList.Select(n => Create(Context, n).CreateAny())
                 .Where(i => i != null)
                 .ToList();
         }
@@ -47,11 +44,10 @@ namespace Microsoft.OpenApi.Readers.ParseNodes
         {
             if (_nodeList == null)
             {
-                throw new OpenApiException(
-                    $"Expected list at line {_nodeList.Start.Line} while parsing {typeof(T).Name}");
+                throw new OpenApiReaderException($"Expected list while parsing {typeof(T).Name}");
             }
 
-            return _nodeList.Select(n => map(new ValueNode(Context, n))).ToList();
+            return _nodeList.Select(n => map(new(Context, n))).ToList();
         }
 
         public IEnumerator<ParseNode> GetEnumerator()

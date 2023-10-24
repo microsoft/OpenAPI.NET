@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.OpenApi.Services
 {
     internal class LoopDetector
     {
-        private readonly Dictionary<Type, Stack<object>> _loopStacks = new Dictionary<Type, Stack<object>>();
+        private readonly Dictionary<Type, Stack<object>> _loopStacks = new();
 
         /// <summary>
         /// Maintain history of traversals to avoid stack overflows from cycles
@@ -17,10 +14,9 @@ namespace Microsoft.OpenApi.Services
         /// <returns>If method returns false a loop was detected and the key is not added.</returns>
         public bool PushLoop<T>(T key)
         {
-            Stack<object> stack;
-            if (!_loopStacks.TryGetValue(typeof(T), out stack))
+            if (!_loopStacks.TryGetValue(typeof(T), out var stack))
             {
-                stack = new Stack<object>();
+                stack = new();
                 _loopStacks.Add(typeof(T), stack);
             }
 
@@ -50,7 +46,7 @@ namespace Microsoft.OpenApi.Services
         {
             if (!Loops.ContainsKey(typeof(T)))
             {
-                Loops[typeof(T)] = new List<object>();
+                Loops[typeof(T)] = new();
             }
             Loops[typeof(T)].Add(loop);
         }
@@ -58,7 +54,7 @@ namespace Microsoft.OpenApi.Services
         /// <summary>
         /// List of Loops detected
         /// </summary>
-        public Dictionary<Type, List<object>> Loops { get; } = new Dictionary<Type, List<object>>();
+        public Dictionary<Type, List<object>> Loops { get; } = new();
 
         /// <summary>
         /// Reset loop tracking stack
