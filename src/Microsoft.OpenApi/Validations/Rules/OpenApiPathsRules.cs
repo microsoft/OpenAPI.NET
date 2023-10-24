@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
@@ -35,6 +36,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                     }
                 });
 
+        private static readonly Regex regexPath = new Regex("\\{([^/]+)\\}", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
         /// <summary>
         /// A relative path to an individual endpoint. The field name MUST begin with a slash.
         /// </summary>
@@ -42,14 +44,13 @@ namespace Microsoft.OpenApi.Validations.Rules
             new ValidationRule<OpenApiPaths>(
                 (context, item) =>
                 {
-                    const string regexPath = "\\{([^/]+)\\}";
                     var hashSet = new HashSet<string>();
 
                     foreach (var path in item.Keys)
                     {
                         context.Enter(path);
 
-                        var pathSignature = Regex.Replace(path, regexPath, "{}");
+                        var pathSignature = regexPath.Replace(path, "{}");
                         
                         if (!hashSet.Add(pathSignature))
                             context.CreateError(nameof(PathMustBeUnique),
