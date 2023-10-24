@@ -340,6 +340,15 @@ namespace Microsoft.OpenApi.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The path signature &apos;{0}&apos; MUST begin be unique..
+        /// </summary>
+        internal static string Validation_PathSignatureMustBeUnique {
+            get {
+                return ResourceManager.GetString("Validation_PathSignatureMustBeUnique", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The same rule cannot be in the same rule set twice..
         /// </summary>
         internal static string Validation_RuleAddTwice {

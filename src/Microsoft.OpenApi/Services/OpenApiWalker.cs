@@ -229,6 +229,7 @@ namespace Microsoft.OpenApi.Services
                     _visitor.CurrentKeys.Path = null;
                 }
             }
+
         }
 
         /// <summary>
@@ -1058,6 +1059,7 @@ namespace Microsoft.OpenApi.Services
                 case OpenApiOAuthFlow e: Walk(e); break;
                 case OpenApiOperation e: Walk(e); break;
                 case OpenApiParameter e: Walk(e); break;
+                case OpenApiPaths e: Walk(e); break;
                 case OpenApiRequestBody e: Walk(e); break;
                 case OpenApiResponse e: Walk(e); break;
                 case OpenApiSchema e: Walk(e); break;
