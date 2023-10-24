@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiDocumentTests
     {
-        public static OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
+        public static readonly OpenApiComponents TopLevelReferencingComponents = new OpenApiComponents()
         {
             Schemas =
             {
@@ -37,7 +37,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
+        public static readonly OpenApiComponents TopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiComponents()
         {
             Schemas =
             {
@@ -52,7 +52,7 @@ namespace Microsoft.OpenApi.Tests.Models
 
         };
 
-        public static OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
+        public static readonly OpenApiComponents TopLevelSelfReferencingComponents = new OpenApiComponents()
         {
             Schemas =
             {
@@ -60,7 +60,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelReferencingComponents = new OpenApiDocument()
+        public static readonly OpenApiDocument SimpleDocumentWithTopLevelReferencingComponents = new OpenApiDocument()
         {
             Info = new OpenApiInfo()
             {
@@ -69,7 +69,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Components = TopLevelReferencingComponents
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiDocument()
+        public static readonly OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponentsWithOtherProperties = new OpenApiDocument()
         {
             Info = new OpenApiInfo()
             {
@@ -78,7 +78,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Components = TopLevelSelfReferencingComponentsWithOtherProperties
         };
 
-        public static OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponents = new OpenApiDocument()
+        public static readonly OpenApiDocument SimpleDocumentWithTopLevelSelfReferencingComponents = new OpenApiDocument()
         {
             Info = new OpenApiInfo()
             {
@@ -87,7 +87,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Components = TopLevelSelfReferencingComponents
         };
 
-        public static OpenApiComponents AdvancedComponentsWithReference = new OpenApiComponents
+        public static readonly OpenApiComponents AdvancedComponentsWithReference = new OpenApiComponents
         {
             Schemas = new Dictionary<string, JsonSchema>
             {
@@ -116,14 +116,14 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static JsonSchema PetSchemaWithReference = AdvancedComponentsWithReference.Schemas["pet"];
+        public static readonly JsonSchema PetSchemaWithReference = AdvancedComponentsWithReference.Schemas["pet"];
 
-        public static JsonSchema NewPetSchemaWithReference = AdvancedComponentsWithReference.Schemas["newPet"];
+        public static readonly JsonSchema NewPetSchemaWithReference = AdvancedComponentsWithReference.Schemas["newPet"];
 
-        public static JsonSchema ErrorModelSchemaWithReference =
+        public static readonly JsonSchema ErrorModelSchemaWithReference =
             AdvancedComponentsWithReference.Schemas["errorModel"];
 
-        public static OpenApiDocument AdvancedDocumentWithReference = new OpenApiDocument
+        public static readonly OpenApiDocument AdvancedDocumentWithReference = new OpenApiDocument
         {
             Info = new OpenApiInfo
             {
@@ -402,7 +402,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Components = AdvancedComponentsWithReference
         };
 
-        public static OpenApiComponents AdvancedComponents = new OpenApiComponents
+        public static readonly OpenApiComponents AdvancedComponents = new OpenApiComponents
         {
             Schemas = new Dictionary<string, JsonSchema>
             {
@@ -428,11 +428,11 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static JsonSchema PetSchema = AdvancedComponents.Schemas["pet"];
+        public static readonly JsonSchema PetSchema = AdvancedComponents.Schemas["pet"];
 
-        public static JsonSchema NewPetSchema = AdvancedComponents.Schemas["newPet"];
+        public static readonly JsonSchema NewPetSchema = AdvancedComponents.Schemas["newPet"];
 
-        public static JsonSchema ErrorModelSchema = AdvancedComponents.Schemas["errorModel"];
+        public static readonly JsonSchema ErrorModelSchema = AdvancedComponents.Schemas["errorModel"];
 
         public OpenApiDocument AdvancedDocument = new OpenApiDocument
         {
@@ -719,7 +719,7 @@ namespace Microsoft.OpenApi.Tests.Models
             Components = AdvancedComponents
         };
 
-        public static OpenApiDocument DocumentWithWebhooks = new OpenApiDocument()
+        public static readonly OpenApiDocument DocumentWithWebhooks = new OpenApiDocument()
         {
             Info = new OpenApiInfo
             {
@@ -773,7 +773,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiDocument DuplicateExtensions = new OpenApiDocument
+        public static readonly OpenApiDocument DuplicateExtensions = new OpenApiDocument
         {
             Info = new OpenApiInfo
             {
