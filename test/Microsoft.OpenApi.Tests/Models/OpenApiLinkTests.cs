@@ -17,7 +17,7 @@ namespace Microsoft.OpenApi.Tests.Models
     [UsesVerify]
     public class OpenApiLinkTests
     {
-        public static OpenApiLink AdvancedLink = new()
+        public static readonly OpenApiLink AdvancedLink = new()
         {
             OperationId = "operationId1",
             Parameters =
@@ -41,7 +41,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiLink ReferencedLink = new()
+        public static readonly OpenApiLink ReferencedLink = new()
         {
             Reference = new()
             {
