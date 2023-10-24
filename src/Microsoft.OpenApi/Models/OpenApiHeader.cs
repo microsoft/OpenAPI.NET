@@ -68,7 +68,7 @@ namespace Microsoft.OpenApi.Models
         /// <summary>
         /// The schema defining the type used for the header.
         /// </summary>
-        public virtual JsonSchema Schema { get; protected set; }
+        public virtual JsonSchema Schema { get; set; }
 
         /// <summary>
         /// Example of the media type.
