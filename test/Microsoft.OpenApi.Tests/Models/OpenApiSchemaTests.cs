@@ -25,7 +25,7 @@ namespace Microsoft.OpenApi.Tests.Models
     {
         public static OpenApiSchema BasicSchema = new();
 
-        public static OpenApiSchema AdvancedSchemaNumber = new()
+        public static readonly OpenApiSchema AdvancedSchemaNumber = new()
         {
             Title = "title1",
             MultipleOf = 3,
@@ -42,7 +42,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaObject = new()
+        public static readonly OpenApiSchema AdvancedSchemaObject = new()
         {
             Title = "title1",
             Properties = new Dictionary<string, OpenApiSchema>
@@ -91,7 +91,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaWithAllOf = new()
+        public static readonly OpenApiSchema AdvancedSchemaWithAllOf = new()
         {
             Title = "title1",
             AllOf = new List<OpenApiSchema>
@@ -143,7 +143,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSchema ReferencedSchema = new()
+        public static readonly OpenApiSchema ReferencedSchema = new()
         {
             Title = "title1",
             MultipleOf = 3,
@@ -166,7 +166,7 @@ namespace Microsoft.OpenApi.Tests.Models
             }
         };
 
-        public static OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new()
+        public static readonly OpenApiSchema AdvancedSchemaWithRequiredPropertiesObject = new()
         {
             Title = "title1",
             Required = new HashSet<string> { "property1" },
