@@ -120,5 +120,35 @@ namespace Microsoft.OpenApi.Tests.Models
             // Assert
             await Verifier.Verify(outputStringWriter).UseParameters(produceTerseOutput);
         }
+
+        [Fact]
+        public void LinkExtensionsSerializationWorks()
+        {
+            // Arrange
+            var link = new OpenApiLink()
+            {
+                Extensions = {
+                { "x-display", new OpenApiString("Abc") }
+}
+            };
+
+            var expected =
+                """
+                {
+                  "x-display": "Abc"
+                }
+                """;
+
+            var outputStringWriter = new StringWriter(CultureInfo.InvariantCulture);
+            var writer = new OpenApiJsonWriter(outputStringWriter, new() { Terse = false });
+
+
+            // Act
+            link.SerializeAsV3(writer);
+
+            // Assert
+            var actual = outputStringWriter.ToString();
+            Assert.Equal(expected.MakeLineBreaksEnvironmentNeutral(), actual.MakeLineBreaksEnvironmentNeutral());
+        }
     }
 }
