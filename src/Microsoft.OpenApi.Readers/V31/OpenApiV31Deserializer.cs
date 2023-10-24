@@ -134,14 +134,9 @@ namespace Microsoft.OpenApi.Readers.V31
 
         private static IOpenApiExtension LoadExtension(string name, ParseNode node)
         {
-            if (node.Context.ExtensionParsers.TryGetValue(name, out var parser))
-            {
-                return parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_1);
-            }
-            else
-            {
-                return node.CreateAny();
-            }
+            return node.Context.ExtensionParsers.TryGetValue(name, out var parser)
+                ? parser(node.CreateAny(), OpenApiSpecVersion.OpenApi3_1)
+                : node.CreateAny();
         }
 
         private static string LoadString(ParseNode node)
