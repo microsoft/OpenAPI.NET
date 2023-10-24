@@ -21,7 +21,7 @@ namespace Microsoft.OpenApi.Validations.Rules
                 (context, item) =>
                 {
                     context.Enter("email");
-                    if (item != null && item.Email != null)
+                    if (item is {Email: not null})
                     {
                         if (!item.Email.IsEmailAddress())
                         {

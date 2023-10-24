@@ -59,7 +59,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Object);
 
-            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            if (previousScope is {Type: ScopeType.Array})
             {
                 currentScope.IsInArray = true;
 
@@ -110,7 +110,7 @@ namespace Microsoft.OpenApi.Writers
 
             var currentScope = StartScope(ScopeType.Array);
 
-            if (previousScope != null && previousScope.Type == ScopeType.Array)
+            if (previousScope is {Type: ScopeType.Array})
             {
                 currentScope.IsInArray = true;
 
