@@ -773,6 +773,11 @@ namespace Microsoft.OpenApi.Services
                 Walk("items", () => Walk(schema.Items));
             }
 
+            if (schema.Not != null)
+            {
+                Walk("not", () => Walk(schema.Not));
+            }
+
             if (schema.AllOf != null)
             {
                 Walk("allOf", () => Walk(schema.AllOf));
