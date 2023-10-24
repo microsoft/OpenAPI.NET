@@ -138,12 +138,6 @@ namespace Microsoft.OpenApi.Validations
         public override void Visit(OpenApiParameter item) => Validate(item);
 
         /// <summary>
-        /// Execute validation rules against an <see cref="OpenApiPaths"/>
-        /// </summary>
-        /// <param name="item">The object to be validated</param>
-        public override void Visit(OpenApiPaths item) => Validate(item);
-
-        /// <summary>
         /// Execute validation rules against an <see cref="OpenApiSchema"/>
         /// </summary>
         /// <param name="item">The object to be validated</param>
