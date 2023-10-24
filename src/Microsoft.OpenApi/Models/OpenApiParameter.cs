@@ -20,7 +20,7 @@ namespace Microsoft.OpenApi.Models
     {
         private bool? _explode;
         private ParameterStyle? _style;
-        private JsonSchema _schema;
+        protected JsonSchema _schema;
 
         /// <summary>
         /// Indicates if object is populated with data or is just a reference to the data
